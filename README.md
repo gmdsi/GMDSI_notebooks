@@ -25,9 +25,9 @@ You can do this in one of two ways.
 **Install Python and dependencies:**
  - If you have already installed Python using Anaconda, you can skip this step. If not, install Anaconda https://www.anaconda.com/products/individual (or Miniconda, if you prefer https://docs.conda.io/en/latest/miniconda.html)
  - If you are using Windows: go to the start menu and open "Anaconda prompt". An anaconda command lline window will open. Navigate to the course repo folder on your machine. You can accomplish this by typing "cd *your folder path*" and pressing <enter>. Replace *your folder path* with the  path to the course material repo folder on your computer.
- - Next, type "conda env create -f environment.yml". This will create an anaconda environment called "gmdsituts" and install the python dependencies required for this course. It may take a while. Should you wish, you can inspect the *environment.yml* file in the repo folder to see what dependecies are being installed.
+ - Next, type "conda env create -f environment.yml". This will create an anaconda environment called "gmdsitut" and install the python dependencies required for this course. It may take a while. Should you wish, you can inspect the *environment.yml* file in the repo folder to see what dependecies are being installed.
 
 **Start jupyter notebook**
 You will need to do this step any time you wish to open one of the course notebooks.
- - In Windows, open the Anaconda prompt. In Mac/Linux, open a terminal. Then, type "conda activate gmdsituts"
+ - In Windows, open the Anaconda prompt. In Mac/Linux, open a terminal. Then, type "conda activate gmdsitut"
  - Next, in the Anaconda prompt or terminal, navigate to the course materials reposiotry folder and type "jupyter notebook". A jupyter notebook instance should start within the course repo flder. Using the browser, you can now navigate to the "notebooks" folder and open one.
