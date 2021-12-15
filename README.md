@@ -6,7 +6,7 @@ We have endeavoured to make these tutorials as accesible to as many people as po
 
 Tutorials are designed to be modular and independent of each other. Each tutorial addresses its own specific modelling topic. Hence there is no need to work through them in a pre-ordained sequence. However, they also complement each other. Many employ variations of the same synthetic model, and are based on the same simulator (MODFLOW 6). 
 
-## Pre-requisites
+## Pre-requisites (nice to have; not required)
  - Basic understanding of Python 
  - Basic understanding of Jupyter Notebooks
  - Basic understanding of MODFLOW 6
