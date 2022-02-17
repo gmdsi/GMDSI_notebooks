@@ -1,0 +1,6 @@
+pest_file,model_file
+heads.csv.ins,heads.csv
+sfr.csv.ins,sfr.csv
+sfr.tdiff.csv.ins,sfr.tdiff.csv
+heads.tdiff.csv.ins,heads.tdiff.csv
+heads.tdiff.csv.ins,heads.vdiff.csv
