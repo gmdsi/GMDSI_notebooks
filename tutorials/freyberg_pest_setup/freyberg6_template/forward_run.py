@@ -21,7 +21,7 @@ def process_secondary_obs(ws='.'):
     write_tdif_obs('sfr.csv', 'sfr.tdiff.csv', ws)
 
     #write the vdiff obs csv
-    # this is fraght with the potential for bugs, but oh well...
+    # this is frought with the potential for bugs, but oh well...
     df = pd.read_csv(os.path.join(ws,'heads.csv'), index_col='time')
     df.sort_index(axis=1, inplace=True)
     dh = df.loc[:, [i for i in df.columns if i.startswith('TRGW_0_')]]
@@ -30,6 +30,9 @@ def process_secondary_obs(ws='.'):
 
     print('Secondary observation files processed.')
     return 
+
+
+
 def main():
 
     try:
@@ -55,7 +58,7 @@ def main():
     pyemu.helpers.apply_list_and_array_pars(arr_par_file='mult2model_info.csv',chunk_len=50)
     pyemu.os_utils.run(r'mf6')
 
-    process_secondary_obs()
+    process_secondary_obs(ws='.')
 
 if __name__ == '__main__':
     mp.freeze_support()

@@ -6,6 +6,7 @@ svdmode                                 1
 maxsing                          10000000
 eigthresh                           1e-06
 eigwrite                                1
+ies_parameter_ensemble         prior.jcb
 * parameter groups external
 freyberg_mf6.pargp_data.csv
 * parameter data external
