@@ -1,6 +1,6 @@
 # (DRAFT) Decision Support Modelling Notebooks
 
-***These tutorials/notebooks are in development***
+### ***These tutorials/notebooks are in still under development.***
 
 We have produced a series of tutorial notebooks to assist modellers in setting up and using model-partner software in ways that support the decision-support imperatives of data assimilation and uncertainty quantification. These tutorials provide an introduction to both the concepts and the practicalities of undertaking decision-support groundwater modelling with the PEST/PEST++ and pyEMU suites of software. Their aim is to provide examples of both “how to use” the software as well as “how to think” about using the software. 
 
