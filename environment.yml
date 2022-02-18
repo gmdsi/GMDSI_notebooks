@@ -4,6 +4,7 @@ channels:
   - defaults
 dependencies:
   - python=3.9
+  - pip
   - pandas 
   - geopandas 
   - numpy 
@@ -24,4 +25,8 @@ dependencies:
   - pyshp
   - gdal
   - fiona
+  - flopy=3.3.4
+  - pip:
+    - pyemu==1.2.0
+
 
