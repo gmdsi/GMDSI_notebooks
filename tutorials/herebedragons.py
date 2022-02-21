@@ -5,6 +5,8 @@ import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
 import os
 import shutil
+import pyemu
+import flopy 
 
 def run_notebook(notebook_filename, path):
     notebook_filename = os.path.join(path,notebook_filename)
@@ -29,6 +31,7 @@ def dir_cleancopy(org_d, new_d):
     print(f'Files copied from:{org_d}\nFiles copied to:{new_d}')
     return
 
+####
 
 # removes all the .ipynb checkpoint folders
 for cdir, cpath, cf in os.walk('.'):
@@ -37,10 +40,32 @@ for cdir, cpath, cf in os.walk('.'):
             print('removing {}'.format(cdir))
             shutil.rmtree(cdir)
 
+# make sure there is a truth model 
+truth_d = os.path.join('..','models','freyberg_mf6_truth')
+dir_cleancopy(org_d=os.path.join('..','models','freyberg_mf6'), 
+              new_d=truth_d)
+pyemu.os_utils.run('mf6', cwd=truth_d)
+# rename model output csv because of silly design decisions
+for f in [f for f in os.listdir(truth_d) if f.endswith('.csv')]:
+    os.rename(os.path.join(truth_d, f), os.path.join(truth_d, f.split('.')[0]+'.meas.csv'))
+
+
 # run the freyberg model
 run_notebook('freyberg_intro_model.ipynb', 'freyberg_intro_to_model')
 
 # run the base pest setup and make a backup
 run_notebook('freyberg_setup_pest_interface.ipynb', 'freyberg_pest_setup')
-dir_cleancopy(org_d=os.path.join('freyberg_pest_setup'), 
+dir_cleancopy(org_d=os.path.join('freyberg_pest_setup', 'freyberg6_template'), 
+              new_d=os.path.join('..','models','freyberg_pest_setup'))
+
+### Generate the truth model; chicken and egg situation going on here.
+# Need to re-run the pest setup notebook again to ensure that the correct Obs are used.
+# Alternative is to accept some manual input here and just make sure the "truth" is setup correctly beforehand?
+#...or just update the obs data...meh...this way burns a bit more silicone, but keeps things organized
+run_notebook('freyberg_make_truth.ipynb', 'z_herebedragons')
+
+### Run PEST setup again with correct obs values for consistency...
+# run the base pest setup and make a backup
+run_notebook('freyberg_setup_pest_interface.ipynb', 'freyberg_pest_setup')
+dir_cleancopy(org_d=os.path.join('freyberg_pest_setup', 'freyberg6_template'), 
               new_d=os.path.join('..','models','freyberg_pest_setup'))
