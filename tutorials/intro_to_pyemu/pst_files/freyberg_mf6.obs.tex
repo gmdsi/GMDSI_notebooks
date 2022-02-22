@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage{booktabs}
+\usepackage{pdflscape}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{nopageno}
+\begin{document}
+\begin{center}
+Observation Summary
+\end{center}
+\begin{center}
+\begin{landscape}
+\setlength{\LTleft}{-4.0cm}
+\begin{longtable}{llrrlll}
+\toprule
+group &                   value &  non-zero weight &  zero weight &           weight & standard deviation &       percent error \\
+\midrule
+\endfirsthead
+
+\toprule
+group &                   value &  non-zero weight &  zero weight &           weight & standard deviation &       percent error \\
+\midrule
+\endhead
+\midrule
+\multicolumn{7}{r}{{Continued on next page}} \\
+\midrule
+\endfoot
+
+\bottomrule
+\endlastfoot
+  hds &      33.3672 to 35.4384 &              338 &          312 &       0 to    10 &                0.1 & 0.28218 to 0.299265 \\
+hdstd &   -0.314559 to 0.303136 &              338 &          312 &       0 to   100 &               0.01 &  3.29885 to 2694.98 \\
+hdsvd & -0.0213987 to 0.0104828 &              169 &          156 &       0 to   100 &               0.01 &  46.7319 to 38759.7 \\
+  sfr &          -1113 to  1566 &               39 &           36 &     0 to 1.69159 &   0.59116 to 156.6 &         10 to    10 \\
+sfrtd &       -808.58 to 512.35 &               36 &           39 &     0 to 10.2041 &    0.098 to 65.714 &         10 to    10 \\
+\end{longtable}
+\end{landscape}
+\end{center}
+\end{document}
