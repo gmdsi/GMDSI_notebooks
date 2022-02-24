@@ -1,0 +1,1819 @@
+             pestpp-glm 5.1.3
+
+    by The PEST++ Development Team
+
+
+
+version: 5.1.3
+binary compiled on Oct 22 2021 at 13:38:59
+
+using control file: "temp.pst"
+
+in directory: "c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\intro_to_pyemu\handling_files"
+on host: "DESKTOP-E0R2JQ8"
+started at 02/24/22 09:20:27
+
+
+Note 'NOPTMAX' == 0, switching to forgiveness mode when checking inputs
+
+Note: 3 unused lines in pest control file:
+  -->  line number 6: '2.000000E+01  -3.000000E+00   3.000000E-01   1.000000E-02        -7' 
+  -->  line number 10: '0         0         0' 
+  -->  line number 12: '1' 
+noptmax = 0, resetting max_run_fail = 1
+parameter warning: POROSITY initial value is greater than upper bound
+
+    This software has been approved for release by the
+    U.S.Geological Survey(USGS).Although the software has 
+    been subjected to rigorous review, the USGS reserves the
+    right to update the software as needed pursuant to further
+    analysisand review.No warranty, expressed or implied, is 
+    made by the USGS or the U.S.Government as to the
+    functionality of the softwareand related material nor shall
+    the fact of release constitute any such warranty.
+    Furthermore, the software is released on condition that
+    neither the USGS nor the U.S.Government shall be held
+    liable for any damages resulting from its authorized 
+    or unauthorized use.
+
+
+pestmode:- 
+   regularization
+
+
+Case dimensions:- 
+    Number of parameters = 50
+    Number of adjustable parameters = 49
+    Number of observations = 1013
+    Number of prior estimates = 422
+
+PEST Control Information
+    relparmax = 10
+    facparmax = 10
+    facorig = 0.001
+    phiredswh = 0.1
+    noptmax = 0
+    phiredstp = 0.01
+    nphistp = 3
+    nphinored = 3
+    relparstp = 0.01
+    nrelpar = 3
+
+
+    PEST++ OPTIONS: 
+
+...general options (used in multiple tools): 
+svd_pack: redsvd
+lambda_scale_fac: 1,
+forgive_unknown_args: 0
+max_run_fail: 1
+panther_poll_interval: 1
+parameter_covariance: 
+observation_covariance: 
+hotstart_resfile: 
+overdue_resched_fac: 1.15
+overdue_giveup_fac: 100
+overdue_giveup_minutes: 1e+30
+condor_submit_file: 
+tie_by_group: 0
+par_sigma_range: 4
+enforce_tied_bounds: 0
+debug_parse_only: 0
+check_tplins: 1
+fill_tpl_zeros: 0
+additional_ins_delimiters: 
+random_seed: 358183147
+num_tpl_ins_threads: 1
+save_binary: 0
+ensemble_output_precision: 6
+panther_echo: 1
+panther_agent_restart_on_error: 0
+panther_agent_no_ping_timeout_secs: -1
+panther_debug_loop: 0
+debug_check_par_en_consistency: 0
+panther_agent_freeze_on_fail: 0
+panther_transfer_on_finish: 
+panther_transfer_on_fail: 
+
+...pestpp-glm specific options:
+max_n_super: 1000000
+super_eigthresh: 1e-06
+n_iter_base: -1
+n_iter_super: 3
+super_relparmax: 0.1
+max_super_frz_iter: 20
+max_reg_iter: 20
+lambdas: 0.1,1,10,100,1000,
+iteration_summary: 1
+der_forgive: 1
+uncertainty: 1
+forecasts: TRAVEL_TIME,FA_HEADWATERS_0001,C001FR16C17_19791231,C001FR05C04_19791231,
+base_jacobian: 
+glm_num_reals: 0
+jac_scale: 1
+glm_normal_form: DIAG
+glm_debug_der_fail: 0
+glm_debug_lamb_fail: 0
+glm_debug_real_fail: 0
+glm_accept_mc_phi: 0
+glm_rebase_super: 0
+glm_iter_mc: 0
+
+...pestpp-swp options:
+sweep_parameter_csv_file: 
+sweep_output_csv_file: sweep_out.csv
+sweep_chunk: 500
+sweep_forgive: 0
+sweep_base_run: 0
+
+...pestpp-opt options:
+opt_objective_function: 
+opt_coin_log: 1
+opt_skip_final: 0
+opt_std_weights: 0
+opt_stack_size: 0
+opt_par_stack: 
+opt_obs_stack: 
+opt_decision_variable_groups: 
+opt_external_variable_groups: 
+opt_constraint_groups: 
+opt_risk: 0.5
+opt_iter_derinc_fac: 1
+opt_direction: 1
+opt_iter_tol: 0.001
+opt_recalc_fosm_every: 1
+opt_chance_points: SINGLE
+
+...pestpp-sqp options:
+sqp_dv_en: 
+sqp_obs_restart_en: 
+sqp_num_reals: -1
+sqp_update_hessian: 0
+sqp_scale_facs:
+  1e-05
+  0.0001
+  0.01
+  0.1
+  1
+
+...pestpp-mou options:
+mou_generator: DE
+mou_population_size: 100
+mou_dv_population_file: 
+mou_obs_population_restart_file: 
+mou_objectives: 
+mou_max_archive_size: 500
+mou_risk_objective: 0
+mou_verbose_level: 1
+mou_env_selector: NSGA
+mou_mating_selector: TOURNAMENT
+mou_crossover_prob: 0.75
+mou_mutation_prob: -999
+mou_de_f: 0.8
+mou_save_population_every: -1
+mou_pso_omega: 0.7
+mou_pso_social_const: 2
+mou_pso_cognitive: 2
+mou_population_schedule: 
+mou_simplex_reflections:10
+mou_simplex_factors: 
+ 0.5
+ 0.6
+ 0.7
+ 0.8
+mou_simplex_mutation: 0
+
+...shared pestpp-ies/pestpp-da options:
+(note: 'da' args override 'ies' args when using pestpp-da)
+ies_parameter_ensemble: dummy_ies_par_ensemble.csv
+ies_observation_ensemble: 
+ies_weights_ensemble: 
+ies_restart_parameter_ensemble: 
+ies_restart_observation_ensemble: 
+ies_use_approximate_solution: 1
+ies_lambda_mults: 0.1,1,10,
+ies_initial_lambda: 0
+ies_use_approx: 1
+ies_subset_size: 4
+ies_reg_factor: 0
+ies_verbose_level: 0
+ies_use_prior_scaling: 0
+ies_num_reals: 50
+ies_bad_phi: 1e+300
+ies_bad_phi_sigma: 1e+300
+ies_include_base: 1
+ies_use_empirical_prior: 0
+ies_group_draws: 0
+ies_enforce_bounds: 1
+ies_localizer: 
+ies_accept_phi_fac: 1.05
+ies_lambda_inc_fac: 10
+ies_lambda_dec_fac: 0.75
+ies_save_lambda_ensembles: 0
+ies_subset_how: RANDOM
+ies_localize_how: PARAMETERS
+ies_num_threads: -1
+ies_debug_fail_subset: 0
+ies_debug_fail_remainder: 0
+ies_debug_bad_phi: 0
+ies_debug_upgrade_only: 0
+ies_debug_high_subset_phi: 0
+ies_debug_high_upgrade_phi: 0
+ies_csv_by_reals: 1
+ies_autoadaloc: 0
+ies_autoadaloc_sigma_dist: 1
+ies_enforce_chglim: 0
+ies_center_on: 
+ies_no_noise: 0
+ies_drop_conflicts: 0
+ies_save_rescov:0
+ies_pdc_sigma_distance: -1
+ies_use_mda: 0
+ies_mda_init_fac: 10
+ies_mda_dec_fac: 0.5
+ies_localization_type: LOCAL
+ies_upgrades_in_memory: 1
+ies_ordered_binary: 1
+ies_multimodal_alpha: 1
+
+pestpp-sen options: 
+gsa_method: MORRIS
+gsa_morris_pooled_obs: 0
+gsa_morris_obs_sen: 1
+gsa_morris_p: 4
+gsa_morris_r: 4
+gsa_morris_delta: 0.6666
+gsa_sobol_samples: 4
+gsa_sobol_par_dist: norm
+pestpp-da options (those not shared with pestpp-ies):
+da_parameter_cycle_table: 
+da_observation_cycle_table: 
+da_hotstart_cycle: 0
+da_stop_cycle: 1000000000
+da_use_simulated_states: 1
+
+
+
+Model command line(s):- 
+    python forward_run.py
+
+Model interface files:-
+    template files:
+      freyberg.mpbas.tpl
+      freyberg.rch.tpl
+      freyberg.sfr.tpl
+      hkpp.dat.tpl
+      WEL_0001.dat.temp.tpl
+      WEL_0002.dat.temp.tpl
+      .\special_pars.dat.tpl
+    model input files:
+      freyberg.mpbas
+      freyberg.rch
+      freyberg.sfr
+      hkpp.dat
+      WEL_0001.dat.temp
+      WEL_0002.dat.temp
+      .\special_pars.dat
+
+    instruction files:
+      flux.dat.ins
+      freyberg.hyd.bin.dat.ins
+      freyberg.sfo.processed.ins
+      freyberg.travel.ins
+      vol.dat.ins
+    model output files:
+      flux.dat
+      freyberg.hyd.bin.dat
+      freyberg.sfo.processed
+      freyberg.travel
+      vol.dat
+
+
+Parameter group information
+NAME          INCREMENT TYPE     DERIVATIVE INCREMENT    INCREMENT LOWER BOUND  FORCE CENTRAL     INCREMENT MULTIPLIER
+pargp               RELATIVE                     0.01                        0         SWITCH                        2
+hk                  RELATIVE                     0.01                        0         SWITCH                        2
+w0                  RELATIVE                     0.01                        0         SWITCH                        2
+w1                  RELATIVE                     0.01                        0         SWITCH                        2
+rch                 RELATIVE                     0.01                        0         SWITCH                        2
+porosity            RELATIVE                     0.01                        0         SWITCH                        2
+sfr                 RELATIVE                     0.01                        0         SWITCH                        2
+
+
+
+Parameter information
+NAME         TRANSFORMATION        CHANGE LIMIT  INITIAL VALUE    LOWER BOUND    UPPER BOUND        GROUP          SCALE         OFFSET  DERIVATIVE COMMAND
+hk00         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk01         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk02         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk03         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk04         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk05         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk06         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk07         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk08         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk09         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk10         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk11         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk12         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk13         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk14         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk15         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk16         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk17         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk18         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk19         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk20         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk21         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk22         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk23         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk24         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk25         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk26         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk27         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk28         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk29         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk30         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+hk31         log                     FACTOR            1.1            0.5             50           hk              1              0                   1
+porosity     log                     FACTOR            1.1          0.005           0.02     porosity              1              0                   1
+rch_0        log                     FACTOR            1.1            0.5              2          rch              1              0                   1
+rch_1        log                     FACTOR            1.1           0.25              3          rch              1              0                   1
+sfr          log                     FACTOR            1.1           0.01             10          sfr              1              0                   1
+w0_r09_c16   log                     FACTOR            1.1            0.5              2           w0              1              0                   1
+w0_r11_c13   log                     FACTOR            1.1            0.5              2           w0              1              0                   1
+w0_r20_c14   log                     FACTOR            1.1            0.5              2           w0              1              0                   1
+w0_r26_c10   log                     FACTOR            1.1            0.5              2           w0              1              0                   1
+w0_r29_c06   log                     FACTOR            1.1            0.5              2           w0              1              0                   1
+w0_r34_c12   log                     FACTOR            1.1            0.5              2           w0              1              0                   1
+w1_r09_c16   log                     FACTOR            1.1            0.1             10           w1              1              0                   1
+w1_r11_c13   log                     FACTOR            1.1            0.1             10           w1              1              0                   1
+w1_r20_c14   log                     FACTOR            1.1            0.1             10           w1              1              0                   1
+w1_r26_c10   log                     FACTOR            1.1            0.1             10           w1              1              0                   1
+w1_r29_c06   log                     FACTOR            1.1            0.1             10           w1              1              0                   1
+w1_r34_c12   log                     FACTOR            1.1            0.1             10           w1              1              0                   1
+special_par1 log                     FACTOR              1            0.1             10        pargp              1              0                   1
+special_par2 tied                    FACTOR              1            0.1             10        pargp              1              0                   1
+
+
+
+Observation information
+NAME                                VALUE                GROUP              WEIGHT
+c001cr03c10_19700102              26.6615              calhead                   5
+c001cr03c16_19700102              23.4606              calhead                   5
+c001cr04c09_19700102              28.5135              calhead                   5
+c001cr10c02_19700102              30.7417              calhead                   5
+c001cr14c11_19700102              25.8712              calhead                   5
+c001cr16c17_19700102              19.8172              calhead                   5
+c001cr22c11_19700102              24.8586              calhead                   5
+c001cr23c16_19700102               19.509              calhead                   5
+c001cr25c05_19700102              25.2517              calhead                   5
+c001cr27c07_19700102              25.6559              calhead                   5
+c001cr30c16_19700102              15.7487              calhead                   5
+c001cr34c08_19700102              21.1807              calhead                   5
+c001cr35c11_19700102              18.3819              calhead                   5
+c001fr05c04_19791231              29.4535             forecast                   0
+c001fr16c17_19791231               21.618             forecast                   0
+c001pr01c01_19700102               30.512              pothead                   0
+c001pr01c02_19700102              30.4399              pothead                   0
+c001pr01c03_19700102              30.2793              pothead                   0
+c001pr01c04_19700102              30.0096              pothead                   0
+c001pr01c05_19700102              29.7004              pothead                   0
+c001pr01c06_19700102              29.3602              pothead                   0
+c001pr01c07_19700102              28.9205              pothead                   0
+c001pr01c08_19700102              28.5525              pothead                   0
+c001pr01c09_19700102              28.1269              pothead                   0
+c001pr01c10_19700102              27.6763              pothead                   0
+c001pr01c11_19700102              27.1995              pothead                   0
+c001pr01c12_19700102              26.7303              pothead                   0
+c001pr01c13_19700102              26.2645              pothead                   0
+c001pr01c14_19700102              25.8073              pothead                   0
+c001pr01c15_19700102              25.4208              pothead                   0
+c001pr01c16_19700102              25.0594              pothead                   0
+c001pr01c17_19700102              25.0149              pothead                   0
+c001pr01c18_19700102              24.9897              pothead                   0
+c001pr01c19_19700102               24.982              pothead                   0
+c001pr01c20_19700102              24.9844              pothead                   0
+c001pr02c01_19700102              30.5356              pothead                   0
+c001pr02c02_19700102               30.458              pothead                   0
+c001pr02c03_19700102              30.2925              pothead                   0
+c001pr02c04_19700102              30.0057              pothead                   0
+c001pr02c05_19700102              29.7186              pothead                   0
+c001pr02c06_19700102               29.367              pothead                   0
+c001pr02c07_19700102              28.9278              pothead                   0
+c001pr02c08_19700102              28.5313              pothead                   0
+c001pr02c09_19700102              28.1139              pothead                   0
+c001pr02c10_19700102              27.6197              pothead                   0
+c001pr02c11_19700102              27.1314              pothead                   0
+c001pr02c12_19700102              26.6691              pothead                   0
+c001pr02c13_19700102              26.2048              pothead                   0
+c001pr02c14_19700102              25.7309              pothead                   0
+c001pr02c15_19700102              25.3403              pothead                   0
+c001pr02c16_19700102              24.9322              pothead                   0
+c001pr02c17_19700102              24.9351              pothead                   0
+c001pr02c18_19700102              24.9308              pothead                   0
+c001pr02c19_19700102              24.9311              pothead                   0
+c001pr02c20_19700102              24.9355              pothead                   0
+c001pr03c01_19700102              30.5729              pothead                   0
+c001pr03c02_19700102              30.4965              pothead                   0
+c001pr03c03_19700102              30.3183              pothead                   0
+c001pr03c04_19700102              30.0223              pothead                   0
+c001pr03c05_19700102              29.7411              pothead                   0
+c001pr03c06_19700102              29.3796              pothead                   0
+c001pr03c07_19700102              28.9129              pothead                   0
+c001pr03c08_19700102              28.5161              pothead                   0
+c001pr03c09_19700102                28.05              pothead                   0
+c001pr03c10_19700102              27.5479              pothead                   0
+c001pr03c11_19700102              27.0166              pothead                   0
+c001pr03c12_19700102              26.5469              pothead                   0
+c001pr03c13_19700102              26.0591              pothead                   0
+c001pr03c14_19700102              25.6093              pothead                   0
+c001pr03c15_19700102              25.2179              pothead                   0
+c001pr03c16_19700102              24.7599              pothead                   0
+c001pr03c17_19700102              24.7918              pothead                   0
+c001pr03c18_19700102              24.8115              pothead                   0
+c001pr03c19_19700102              24.8277              pothead                   0
+c001pr03c20_19700102              24.8375              pothead                   0
+c001pr04c01_19700102              30.6508              pothead                   0
+c001pr04c02_19700102              30.5598              pothead                   0
+c001pr04c03_19700102              30.3663              pothead                   0
+c001pr04c04_19700102              30.0703              pothead                   0
+c001pr04c05_19700102              29.7665              pothead                   0
+c001pr04c06_19700102              29.4033              pothead                   0
+c001pr04c07_19700102              28.9044              pothead                   0
+c001pr04c08_19700102              28.4492              pothead                   0
+c001pr04c09_19700102              27.9769              pothead                   0
+c001pr04c10_19700102              27.3676              pothead                   0
+c001pr04c11_19700102              26.8208              pothead                   0
+c001pr04c12_19700102              26.3492              pothead                   0
+c001pr04c13_19700102               25.883              pothead                   0
+c001pr04c14_19700102              25.4462              pothead                   0
+c001pr04c15_19700102              25.0184              pothead                   0
+c001pr04c16_19700102              24.5328              pothead                   0
+c001pr04c17_19700102              24.6155              pothead                   0
+c001pr04c18_19700102              24.6536              pothead                   0
+c001pr04c19_19700102              24.6808              pothead                   0
+c001pr04c20_19700102              24.6939              pothead                   0
+c001pr05c01_19700102              30.7575              pothead                   0
+c001pr05c02_19700102              30.6476              pothead                   0
+c001pr05c03_19700102              30.4377              pothead                   0
+c001pr05c05_19700102              29.8193              pothead                   0
+c001pr05c06_19700102              29.4101              pothead                   0
+c001pr05c07_19700102              28.8954              pothead                   0
+c001pr05c08_19700102              28.4132              pothead                   0
+c001pr05c09_19700102              27.7775              pothead                   0
+c001pr05c10_19700102              27.1579              pothead                   0
+c001pr05c11_19700102              26.6238              pothead                   0
+c001pr05c12_19700102               26.155              pothead                   0
+c001pr05c13_19700102              25.6771              pothead                   0
+c001pr05c14_19700102                25.23              pothead                   0
+c001pr05c15_19700102              24.8037              pothead                   0
+c001pr05c16_19700102              24.2997              pothead                   0
+c001pr05c17_19700102              24.3708              pothead                   0
+c001pr05c18_19700102               24.452              pothead                   0
+c001pr05c19_19700102              24.4898              pothead                   0
+c001pr05c20_19700102              24.5129              pothead                   0
+c001pr06c01_19700102              30.8613              pothead                   0
+c001pr06c02_19700102              30.7767              pothead                   0
+c001pr06c03_19700102              30.5581              pothead                   0
+c001pr06c04_19700102              30.2571              pothead                   0
+c001pr06c05_19700102              29.8821              pothead                   0
+c001pr06c06_19700102              29.4193              pothead                   0
+c001pr06c07_19700102              28.8762              pothead                   0
+c001pr06c08_19700102              28.2342              pothead                   0
+c001pr06c09_19700102              27.6401              pothead                   0
+c001pr06c10_19700102              26.9557              pothead                   0
+c001pr06c11_19700102              26.3604              pothead                   0
+c001pr06c12_19700102              25.8919              pothead                   0
+c001pr06c13_19700102              25.4167              pothead                   0
+c001pr06c14_19700102              24.9839              pothead                   0
+c001pr06c15_19700102               24.546              pothead                   0
+c001pr06c16_19700102               24.035              pothead                   0
+c001pr06c17_19700102               24.122              pothead                   0
+c001pr06c18_19700102              24.2072              pothead                   0
+c001pr06c19_19700102              24.2835              pothead                   0
+c001pr06c20_19700102              24.3076              pothead                   0
+c001pr07c01_19700102               30.973              pothead                   0
+c001pr07c02_19700102              30.8893              pothead                   0
+c001pr07c03_19700102              30.7109              pothead                   0
+c001pr07c04_19700102              30.3904              pothead                   0
+c001pr07c05_19700102               29.973              pothead                   0
+c001pr07c06_19700102              29.4012              pothead                   0
+c001pr07c07_19700102               28.829              pothead                   0
+c001pr07c08_19700102               28.043              pothead                   0
+c001pr07c09_19700102              27.3498              pothead                   0
+c001pr07c10_19700102              26.6292              pothead                   0
+c001pr07c11_19700102              26.0589              pothead                   0
+c001pr07c12_19700102              25.5624              pothead                   0
+c001pr07c13_19700102              25.0978              pothead                   0
+c001pr07c14_19700102              24.6623              pothead                   0
+c001pr07c15_19700102              24.1843              pothead                   0
+c001pr07c16_19700102              23.7129              pothead                   0
+c001pr07c17_19700102               23.836              pothead                   0
+c001pr07c18_19700102              23.9514              pothead                   0
+c001pr07c19_19700102              24.0332              pothead                   0
+c001pr07c20_19700102              24.0725              pothead                   0
+c001pr08c01_19700102              31.1414              pothead                   0
+c001pr08c02_19700102              31.0471              pothead                   0
+c001pr08c03_19700102              30.8803              pothead                   0
+c001pr08c04_19700102              30.5927              pothead                   0
+c001pr08c05_19700102              30.0581              pothead                   0
+c001pr08c06_19700102              29.4211              pothead                   0
+c001pr08c07_19700102              28.7436              pothead                   0
+c001pr08c08_19700102              27.7551              pothead                   0
+c001pr08c09_19700102               26.915              pothead                   0
+c001pr08c10_19700102              26.2247              pothead                   0
+c001pr08c11_19700102              25.6706              pothead                   0
+c001pr08c12_19700102              25.1679              pothead                   0
+c001pr08c13_19700102              24.7205              pothead                   0
+c001pr08c14_19700102              24.2454              pothead                   0
+c001pr08c15_19700102               23.737              pothead                   0
+c001pr08c16_19700102              23.2605              pothead                   0
+c001pr08c17_19700102              23.4482              pothead                   0
+c001pr08c18_19700102              23.6531              pothead                   0
+c001pr08c19_19700102              23.7712              pothead                   0
+c001pr08c20_19700102              23.8367              pothead                   0
+c001pr09c01_19700102              31.2949              pothead                   0
+c001pr09c02_19700102              31.2307              pothead                   0
+c001pr09c03_19700102              31.1213              pothead                   0
+c001pr09c04_19700102              31.0291              pothead                   0
+c001pr09c08_19700102              26.9418              pothead                   0
+c001pr09c09_19700102              26.2077              pothead                   0
+c001pr09c10_19700102              25.7349              pothead                   0
+c001pr09c11_19700102              25.2572              pothead                   0
+c001pr09c12_19700102               24.751              pothead                   0
+c001pr09c13_19700102              24.2797              pothead                   0
+c001pr09c14_19700102              23.8252              pothead                   0
+c001pr09c15_19700102              23.2463              pothead                   0
+c001pr09c16_19700102              22.2145              pothead                   0
+c001pr09c17_19700102              23.0088              pothead                   0
+c001pr09c18_19700102              23.3455              pothead                   0
+c001pr09c19_19700102              23.5243              pothead                   0
+c001pr09c20_19700102              23.5962              pothead                   0
+c001pr10c01_19700102               31.448              pothead                   0
+c001pr10c02_19700102              31.3967              pothead                   0
+c001pr10c03_19700102               31.347              pothead                   0
+c001pr10c04_19700102              31.2858              pothead                   0
+c001pr10c09_19700102              25.5553              pothead                   0
+c001pr10c10_19700102              25.2616              pothead                   0
+c001pr10c11_19700102              24.8201              pothead                   0
+c001pr10c12_19700102                24.32              pothead                   0
+c001pr10c13_19700102              23.7566              pothead                   0
+c001pr10c14_19700102              23.4411              pothead                   0
+c001pr10c15_19700102              23.0945              pothead                   0
+c001pr10c16_19700102              22.7132              pothead                   0
+c001pr10c17_19700102              22.9449              pothead                   0
+c001pr10c18_19700102              23.1698              pothead                   0
+c001pr10c19_19700102              23.3232              pothead                   0
+c001pr10c20_19700102              23.3929              pothead                   0
+c001pr11c01_19700102              31.5526              pothead                   0
+c001pr11c02_19700102              31.5258              pothead                   0
+c001pr11c03_19700102              31.4908              pothead                   0
+c001pr11c04_19700102              31.4662              pothead                   0
+c001pr11c09_19700102              25.0657              pothead                   0
+c001pr11c10_19700102              24.8385              pothead                   0
+c001pr11c11_19700102              24.4528              pothead                   0
+c001pr11c12_19700102              23.8568              pothead                   0
+c001pr11c13_19700102               22.783              pothead                   0
+c001pr11c14_19700102              23.0597              pothead                   0
+c001pr11c15_19700102              22.9096              pothead                   0
+c001pr11c16_19700102              22.6466              pothead                   0
+c001pr11c17_19700102              22.8317              pothead                   0
+c001pr11c18_19700102              23.0081              pothead                   0
+c001pr11c19_19700102               23.133              pothead                   0
+c001pr11c20_19700102              23.2008              pothead                   0
+c001pr12c01_19700102              31.5976              pothead                   0
+c001pr12c02_19700102              31.5911              pothead                   0
+c001pr12c03_19700102              31.5754              pothead                   0
+c001pr12c04_19700102              31.5586              pothead                   0
+c001pr12c09_19700102              24.6807              pothead                   0
+c001pr12c10_19700102              24.5102              pothead                   0
+c001pr12c11_19700102              24.1789              pothead                   0
+c001pr12c12_19700102              23.7419              pothead                   0
+c001pr12c13_19700102              23.2083              pothead                   0
+c001pr12c14_19700102              22.9986              pothead                   0
+c001pr12c15_19700102              22.7707              pothead                   0
+c001pr12c16_19700102              22.4587              pothead                   0
+c001pr12c17_19700102              22.6791              pothead                   0
+c001pr12c18_19700102              22.8276              pothead                   0
+c001pr12c19_19700102              22.9458              pothead                   0
+c001pr12c20_19700102              22.9996              pothead                   0
+c001pr13c01_19700102              31.6052              pothead                   0
+c001pr13c02_19700102              31.6012              pothead                   0
+c001pr13c03_19700102              31.5913              pothead                   0
+c001pr13c04_19700102              31.5754              pothead                   0
+c001pr13c09_19700102              24.4109              pothead                   0
+c001pr13c10_19700102              24.2726              pothead                   0
+c001pr13c11_19700102               23.971              pothead                   0
+c001pr13c12_19700102              23.6119              pothead                   0
+c001pr13c13_19700102              23.2412              pothead                   0
+c001pr13c14_19700102              22.9249              pothead                   0
+c001pr13c15_19700102              22.6217              pothead                   0
+c001pr13c16_19700102              22.2676              pothead                   0
+c001pr13c17_19700102              22.4896              pothead                   0
+c001pr13c18_19700102              22.6392              pothead                   0
+c001pr13c19_19700102               22.749              pothead                   0
+c001pr13c20_19700102              22.8036              pothead                   0
+c001pr14c01_19700102              31.5637              pothead                   0
+c001pr14c02_19700102              31.5623              pothead                   0
+c001pr14c03_19700102              31.5464              pothead                   0
+c001pr14c04_19700102              31.5305              pothead                   0
+c001pr14c09_19700102              24.2181              pothead                   0
+c001pr14c10_19700102              24.0794              pothead                   0
+c001pr14c11_19700102              23.8185              pothead                   0
+c001pr14c12_19700102              23.5057              pothead                   0
+c001pr14c13_19700102              23.1479              pothead                   0
+c001pr14c14_19700102              22.8029              pothead                   0
+c001pr14c15_19700102              22.4691              pothead                   0
+c001pr14c16_19700102               22.062              pothead                   0
+c001pr14c17_19700102              22.2979              pothead                   0
+c001pr14c18_19700102              22.4485              pothead                   0
+c001pr14c19_19700102              22.5397              pothead                   0
+c001pr14c20_19700102              22.5801              pothead                   0
+c001pr15c01_19700102              31.4669              pothead                   0
+c001pr15c02_19700102              31.4666              pothead                   0
+c001pr15c03_19700102              31.4507              pothead                   0
+c001pr15c04_19700102              31.4414              pothead                   0
+c001pr15c09_19700102              24.0546              pothead                   0
+c001pr15c10_19700102               23.929              pothead                   0
+c001pr15c11_19700102              23.6641              pothead                   0
+c001pr15c12_19700102               23.352              pothead                   0
+c001pr15c13_19700102              23.0165              pothead                   0
+c001pr15c14_19700102              22.6593              pothead                   0
+c001pr15c15_19700102              22.2654              pothead                   0
+c001pr15c16_19700102               21.811              pothead                   0
+c001pr15c17_19700102              22.0871              pothead                   0
+c001pr15c18_19700102               22.242              pothead                   0
+c001pr15c19_19700102              22.3381              pothead                   0
+c001pr15c20_19700102              22.3793              pothead                   0
+c001pr16c01_19700102              31.3283              pothead                   0
+c001pr16c02_19700102              31.3244              pothead                   0
+c001pr16c03_19700102              31.3093              pothead                   0
+c001pr16c04_19700102              31.3048              pothead                   0
+c001pr16c09_19700102              23.9244              pothead                   0
+c001pr16c10_19700102              23.7827              pothead                   0
+c001pr16c11_19700102               23.517              pothead                   0
+c001pr16c12_19700102              23.1793              pothead                   0
+c001pr16c13_19700102              22.8329              pothead                   0
+c001pr16c14_19700102              22.4524              pothead                   0
+c001pr16c15_19700102               22.039              pothead                   0
+c001pr16c16_19700102              21.5608              pothead                   0
+c001pr16c18_19700102              22.0289              pothead                   0
+c001pr16c19_19700102              22.1352              pothead                   0
+c001pr16c20_19700102              22.1804              pothead                   0
+c001pr17c01_19700102              31.1285              pothead                   0
+c001pr17c02_19700102              31.1154              pothead                   0
+c001pr17c03_19700102              31.1128              pothead                   0
+c001pr17c04_19700102              31.1175              pothead                   0
+c001pr17c09_19700102              23.8205              pothead                   0
+c001pr17c10_19700102              23.6814              pothead                   0
+c001pr17c11_19700102              23.3693              pothead                   0
+c001pr17c12_19700102              23.0063              pothead                   0
+c001pr17c13_19700102              22.6209              pothead                   0
+c001pr17c14_19700102              22.2044              pothead                   0
+c001pr17c15_19700102              21.7794              pothead                   0
+c001pr17c16_19700102              21.2976              pothead                   0
+c001pr17c17_19700102              21.6053              pothead                   0
+c001pr17c18_19700102              21.8134              pothead                   0
+c001pr17c19_19700102              21.9229              pothead                   0
+c001pr17c20_19700102              21.9685              pothead                   0
+c001pr18c01_19700102              30.9073              pothead                   0
+c001pr18c02_19700102              30.8914              pothead                   0
+c001pr18c03_19700102              30.8718              pothead                   0
+c001pr18c04_19700102              30.8759              pothead                   0
+c001pr18c09_19700102              23.7798              pothead                   0
+c001pr18c10_19700102               23.611              pothead                   0
+c001pr18c11_19700102              23.2763              pothead                   0
+c001pr18c12_19700102              22.8514              pothead                   0
+c001pr18c13_19700102              22.3571              pothead                   0
+c001pr18c14_19700102              21.8839              pothead                   0
+c001pr18c15_19700102              21.4747              pothead                   0
+c001pr18c16_19700102              21.0501              pothead                   0
+c001pr18c17_19700102              21.3489              pothead                   0
+c001pr18c18_19700102              21.5761              pothead                   0
+c001pr18c19_19700102              21.7007              pothead                   0
+c001pr18c20_19700102              21.7607              pothead                   0
+c001pr19c01_19700102              30.6297              pothead                   0
+c001pr19c02_19700102              30.6156              pothead                   0
+c001pr19c03_19700102              30.5911              pothead                   0
+c001pr19c04_19700102              30.5804              pothead                   0
+c001pr19c09_19700102              23.7993              pothead                   0
+c001pr19c10_19700102              23.6048              pothead                   0
+c001pr19c11_19700102              23.2309              pothead                   0
+c001pr19c12_19700102              22.6969              pothead                   0
+c001pr19c13_19700102              22.0363              pothead                   0
+c001pr19c14_19700102              21.4088              pothead                   0
+c001pr19c15_19700102              21.1235              pothead                   0
+c001pr19c16_19700102               20.786              pothead                   0
+c001pr19c17_19700102              21.1152              pothead                   0
+c001pr19c18_19700102              21.3584              pothead                   0
+c001pr19c19_19700102              21.4928              pothead                   0
+c001pr19c20_19700102               21.562              pothead                   0
+c001pr20c01_19700102              30.3099              pothead                   0
+c001pr20c02_19700102              30.2871              pothead                   0
+c001pr20c03_19700102              30.2437              pothead                   0
+c001pr20c04_19700102              30.2172              pothead                   0
+c001pr20c09_19700102              23.8997              pothead                   0
+c001pr20c10_19700102              23.6671              pothead                   0
+c001pr20c11_19700102              23.2279              pothead                   0
+c001pr20c12_19700102              22.5866              pothead                   0
+c001pr20c13_19700102              21.7177              pothead                   0
+c001pr20c14_19700102              20.5306              pothead                   0
+c001pr20c15_19700102               20.751              pothead                   0
+c001pr20c16_19700102              20.5203              pothead                   0
+c001pr20c17_19700102              20.8831              pothead                   0
+c001pr20c18_19700102              21.1459              pothead                   0
+c001pr20c19_19700102              21.2985              pothead                   0
+c001pr20c20_19700102              21.3555              pothead                   0
+c001pr21c01_19700102              29.9453              pothead                   0
+c001pr21c02_19700102              29.9179              pothead                   0
+c001pr21c03_19700102              29.8653              pothead                   0
+c001pr21c04_19700102              29.8105              pothead                   0
+c001pr21c09_19700102               24.099              pothead                   0
+c001pr21c10_19700102              23.7943              pothead                   0
+c001pr21c11_19700102              23.3095              pothead                   0
+c001pr21c12_19700102              22.6697              pothead                   0
+c001pr21c13_19700102              21.8313              pothead                   0
+c001pr21c14_19700102               21.036              pothead                   0
+c001pr21c15_19700102               20.725              pothead                   0
+c001pr21c16_19700102              20.3159              pothead                   0
+c001pr21c17_19700102              20.6756              pothead                   0
+c001pr21c18_19700102              20.9328              pothead                   0
+c001pr21c19_19700102              21.0924              pothead                   0
+c001pr21c20_19700102              21.1588              pothead                   0
+c001pr22c01_19700102              29.5901              pothead                   0
+c001pr22c02_19700102              29.5154              pothead                   0
+c001pr22c03_19700102              29.4118              pothead                   0
+c001pr22c04_19700102              29.3339              pothead                   0
+c001pr22c07_19700102              25.2975              pothead                   0
+c001pr22c08_19700102              25.0275              pothead                   0
+c001pr22c09_19700102              24.4347              pothead                   0
+c001pr22c10_19700102              24.0101              pothead                   0
+c001pr22c11_19700102              23.4218              pothead                   0
+c001pr22c12_19700102              22.7448              pothead                   0
+c001pr22c13_19700102              21.9228              pothead                   0
+c001pr22c14_19700102               21.197              pothead                   0
+c001pr22c15_19700102              20.6893              pothead                   0
+c001pr22c16_19700102               20.127              pothead                   0
+c001pr22c17_19700102              20.4924              pothead                   0
+c001pr22c18_19700102              20.7338              pothead                   0
+c001pr22c19_19700102              20.8826              pothead                   0
+c001pr22c20_19700102              20.9625              pothead                   0
+c001pr23c01_19700102               29.156              pothead                   0
+c001pr23c02_19700102              29.0845              pothead                   0
+c001pr23c03_19700102              28.9501              pothead                   0
+c001pr23c04_19700102              28.7361              pothead                   0
+c001pr23c05_19700102              28.2662              pothead                   0
+c001pr23c07_19700102              25.5033              pothead                   0
+c001pr23c08_19700102               25.181              pothead                   0
+c001pr23c09_19700102              24.6317              pothead                   0
+c001pr23c10_19700102              24.1571              pothead                   0
+c001pr23c11_19700102              23.4992              pothead                   0
+c001pr23c12_19700102              22.8099              pothead                   0
+c001pr23c13_19700102              21.9626              pothead                   0
+c001pr23c14_19700102              21.2085              pothead                   0
+c001pr23c15_19700102              20.6109              pothead                   0
+c001pr23c16_19700102              19.9307              pothead                   0
+c001pr23c17_19700102              20.2907              pothead                   0
+c001pr23c18_19700102              20.5582              pothead                   0
+c001pr23c19_19700102              20.6995              pothead                   0
+c001pr23c20_19700102              20.7774              pothead                   0
+c001pr24c01_19700102              28.7945              pothead                   0
+c001pr24c02_19700102              28.6895              pothead                   0
+c001pr24c03_19700102              28.5185              pothead                   0
+c001pr24c04_19700102              28.2469              pothead                   0
+c001pr24c05_19700102              27.7147              pothead                   0
+c001pr24c06_19700102              26.8259              pothead                   0
+c001pr24c07_19700102              25.9564              pothead                   0
+c001pr24c08_19700102              25.3173              pothead                   0
+c001pr24c09_19700102              24.7972              pothead                   0
+c001pr24c10_19700102              24.2164              pothead                   0
+c001pr24c11_19700102              23.5285              pothead                   0
+c001pr24c12_19700102              22.7998              pothead                   0
+c001pr24c13_19700102              21.9673              pothead                   0
+c001pr24c14_19700102              21.1734              pothead                   0
+c001pr24c15_19700102              20.5335              pothead                   0
+c001pr24c16_19700102              19.7106              pothead                   0
+c001pr24c17_19700102              20.0933              pothead                   0
+c001pr24c18_19700102              20.3558              pothead                   0
+c001pr24c19_19700102              20.5202              pothead                   0
+c001pr24c20_19700102               20.597              pothead                   0
+c001pr25c01_19700102              28.4316              pothead                   0
+c001pr25c02_19700102              28.3202              pothead                   0
+c001pr25c03_19700102              28.1227              pothead                   0
+c001pr25c04_19700102              27.8722              pothead                   0
+c001pr25c05_19700102              27.3233              pothead                   0
+c001pr25c06_19700102              26.6352              pothead                   0
+c001pr25c07_19700102              26.0357              pothead                   0
+c001pr25c08_19700102              25.4461              pothead                   0
+c001pr25c09_19700102              24.8375              pothead                   0
+c001pr25c10_19700102              24.1466              pothead                   0
+c001pr25c11_19700102               23.508              pothead                   0
+c001pr25c12_19700102              22.7533              pothead                   0
+c001pr25c13_19700102              21.9014              pothead                   0
+c001pr25c14_19700102              21.0792              pothead                   0
+c001pr25c15_19700102              20.4006              pothead                   0
+c001pr25c16_19700102              19.4855              pothead                   0
+c001pr25c17_19700102              19.9161              pothead                   0
+c001pr25c18_19700102              20.1683              pothead                   0
+c001pr25c19_19700102               20.339              pothead                   0
+c001pr25c20_19700102              20.4135              pothead                   0
+c001pr26c01_19700102              28.0859              pothead                   0
+c001pr26c02_19700102              27.9832              pothead                   0
+c001pr26c03_19700102              27.8053              pothead                   0
+c001pr26c04_19700102              27.4429              pothead                   0
+c001pr26c05_19700102              27.0019              pothead                   0
+c001pr26c06_19700102              26.4977              pothead                   0
+c001pr26c07_19700102              25.9921              pothead                   0
+c001pr26c08_19700102              25.4293              pothead                   0
+c001pr26c09_19700102              24.8029              pothead                   0
+c001pr26c10_19700102              24.0323              pothead                   0
+c001pr26c11_19700102              23.4035              pothead                   0
+c001pr26c12_19700102              22.6007              pothead                   0
+c001pr26c13_19700102              21.7706              pothead                   0
+c001pr26c14_19700102              20.9784              pothead                   0
+c001pr26c15_19700102              20.2652              pothead                   0
+c001pr26c16_19700102              19.2671              pothead                   0
+c001pr26c17_19700102              19.7173              pothead                   0
+c001pr26c18_19700102              19.9899              pothead                   0
+c001pr26c19_19700102              20.1714              pothead                   0
+c001pr26c20_19700102              20.2476              pothead                   0
+c001pr27c01_19700102              27.7468              pothead                   0
+c001pr27c02_19700102              27.6427              pothead                   0
+c001pr27c03_19700102              27.4574              pothead                   0
+c001pr27c04_19700102              27.1816              pothead                   0
+c001pr27c05_19700102              26.7723              pothead                   0
+c001pr27c06_19700102              26.3506              pothead                   0
+c001pr27c07_19700102              25.9177              pothead                   0
+c001pr27c08_19700102              25.3804              pothead                   0
+c001pr27c09_19700102              24.7551              pothead                   0
+c001pr27c10_19700102              24.1613              pothead                   0
+c001pr27c11_19700102              23.2554              pothead                   0
+c001pr27c12_19700102              22.3466              pothead                   0
+c001pr27c13_19700102              21.6527              pothead                   0
+c001pr27c14_19700102              20.8751              pothead                   0
+c001pr27c15_19700102              20.0447              pothead                   0
+c001pr27c16_19700102              18.9884              pothead                   0
+c001pr27c17_19700102              19.5161              pothead                   0
+c001pr27c18_19700102              19.8172              pothead                   0
+c001pr27c19_19700102              19.9963              pothead                   0
+c001pr27c20_19700102               20.082              pothead                   0
+c001pr28c01_19700102              27.4433              pothead                   0
+c001pr28c02_19700102              27.3317              pothead                   0
+c001pr28c03_19700102               27.155              pothead                   0
+c001pr28c04_19700102              26.8951              pothead                   0
+c001pr28c05_19700102              26.5434              pothead                   0
+c001pr28c06_19700102              26.2099              pothead                   0
+c001pr28c07_19700102              25.8243              pothead                   0
+c001pr28c08_19700102              25.2383              pothead                   0
+c001pr28c09_19700102              24.5798              pothead                   0
+c001pr28c10_19700102              23.9138              pothead                   0
+c001pr28c11_19700102              23.0208              pothead                   0
+c001pr28c12_19700102               22.185              pothead                   0
+c001pr28c13_19700102              21.4748              pothead                   0
+c001pr28c14_19700102              20.6975              pothead                   0
+c001pr28c15_19700102               19.823              pothead                   0
+c001pr28c16_19700102              18.7394              pothead                   0
+c001pr28c17_19700102              19.3105              pothead                   0
+c001pr28c18_19700102              19.6459              pothead                   0
+c001pr28c19_19700102              19.8268              pothead                   0
+c001pr28c20_19700102              19.9176              pothead                   0
+c001pr29c01_19700102              27.1502              pothead                   0
+c001pr29c02_19700102              27.0291              pothead                   0
+c001pr29c03_19700102              26.8637              pothead                   0
+c001pr29c04_19700102              26.6177              pothead                   0
+c001pr29c05_19700102               26.313              pothead                   0
+c001pr29c06_19700102              25.9577              pothead                   0
+c001pr29c07_19700102              25.7568              pothead                   0
+c001pr29c08_19700102              25.0438              pothead                   0
+c001pr29c09_19700102              24.2421              pothead                   0
+c001pr29c10_19700102              23.6438              pothead                   0
+c001pr29c11_19700102              22.7768              pothead                   0
+c001pr29c12_19700102              21.8979              pothead                   0
+c001pr29c13_19700102              21.2336              pothead                   0
+c001pr29c14_19700102              20.4713              pothead                   0
+c001pr29c15_19700102              19.6507              pothead                   0
+c001pr29c16_19700102              18.4255              pothead                   0
+c001pr29c17_19700102               19.113              pothead                   0
+c001pr29c18_19700102              19.4746              pothead                   0
+c001pr29c19_19700102              19.6688              pothead                   0
+c001pr29c20_19700102              19.7556              pothead                   0
+c001pr30c01_19700102              26.8668              pothead                   0
+c001pr30c02_19700102              26.7598              pothead                   0
+c001pr30c03_19700102              26.5702              pothead                   0
+c001pr30c04_19700102              26.3291              pothead                   0
+c001pr30c05_19700102              26.1131              pothead                   0
+c001pr30c06_19700102              25.8925              pothead                   0
+c001pr30c07_19700102                25.52              pothead                   0
+c001pr30c08_19700102              24.7604              pothead                   0
+c001pr30c09_19700102               23.924              pothead                   0
+c001pr30c10_19700102              23.1933              pothead                   0
+c001pr30c11_19700102              22.3254              pothead                   0
+c001pr30c12_19700102              21.4957              pothead                   0
+c001pr30c13_19700102               20.867              pothead                   0
+c001pr30c14_19700102              20.1883              pothead                   0
+c001pr30c15_19700102              19.4241              pothead                   0
+c001pr30c16_19700102              18.1617              pothead                   0
+c001pr30c17_19700102              18.8781              pothead                   0
+c001pr30c18_19700102              19.2853              pothead                   0
+c001pr30c19_19700102              19.4761              pothead                   0
+c001pr30c20_19700102              19.5625              pothead                   0
+c001pr31c01_19700102              26.6405              pothead                   0
+c001pr31c02_19700102              26.5182              pothead                   0
+c001pr31c03_19700102              26.2997              pothead                   0
+c001pr31c04_19700102              26.0702              pothead                   0
+c001pr31c05_19700102              25.7792              pothead                   0
+c001pr31c06_19700102              25.5462              pothead                   0
+c001pr31c07_19700102              25.1262              pothead                   0
+c001pr31c08_19700102              24.2519              pothead                   0
+c001pr31c09_19700102               23.441              pothead                   0
+c001pr31c10_19700102              22.6618              pothead                   0
+c001pr31c11_19700102              21.7755              pothead                   0
+c001pr31c12_19700102               21.045              pothead                   0
+c001pr31c13_19700102              20.4438              pothead                   0
+c001pr31c14_19700102              19.8493              pothead                   0
+c001pr31c15_19700102              19.1755              pothead                   0
+c001pr31c16_19700102              17.7824              pothead                   0
+c001pr31c17_19700102              18.5855              pothead                   0
+c001pr31c18_19700102              19.0354              pothead                   0
+c001pr31c19_19700102              19.2268              pothead                   0
+c001pr31c20_19700102              19.2919              pothead                   0
+c001pr32c01_19700102              26.5065              pothead                   0
+c001pr32c02_19700102              26.2632              pothead                   0
+c001pr32c03_19700102              25.9914              pothead                   0
+c001pr32c04_19700102              25.6069              pothead                   0
+c001pr32c05_19700102              25.3452              pothead                   0
+c001pr32c06_19700102              25.0349              pothead                   0
+c001pr32c07_19700102              24.4744              pothead                   0
+c001pr32c08_19700102              23.6295              pothead                   0
+c001pr32c09_19700102              23.0596              pothead                   0
+c001pr32c10_19700102              22.0889              pothead                   0
+c001pr32c11_19700102              21.2032              pothead                   0
+c001pr32c12_19700102              20.3939              pothead                   0
+c001pr32c13_19700102                 19.9              pothead                   0
+c001pr32c14_19700102              19.3251              pothead                   0
+c001pr32c15_19700102              18.6276              pothead                   0
+c001pr32c16_19700102              17.4603              pothead                   0
+c001pr32c17_19700102              18.2165              pothead                   0
+c001pr32c18_19700102              18.6708              pothead                   0
+c001pr32c19_19700102               18.909              pothead                   0
+c001pr32c20_19700102              18.9787              pothead                   0
+c001pr33c02_19700102              25.9804              pothead                   0
+c001pr33c03_19700102              25.6483              pothead                   0
+c001pr33c04_19700102              25.2141              pothead                   0
+c001pr33c05_19700102              24.8513              pothead                   0
+c001pr33c06_19700102              24.4084              pothead                   0
+c001pr33c07_19700102              23.7561              pothead                   0
+c001pr33c08_19700102              23.3035              pothead                   0
+c001pr33c09_19700102              22.5027              pothead                   0
+c001pr33c10_19700102              21.2364              pothead                   0
+c001pr33c11_19700102              20.2516              pothead                   0
+c001pr33c12_19700102              19.0029              pothead                   0
+c001pr33c13_19700102              18.9141              pothead                   0
+c001pr33c14_19700102              18.5204              pothead                   0
+c001pr33c15_19700102              17.9851              pothead                   0
+c001pr33c16_19700102              17.2611              pothead                   0
+c001pr33c17_19700102              17.8555              pothead                   0
+c001pr33c18_19700102              18.3074              pothead                   0
+c001pr33c19_19700102               18.567              pothead                   0
+c001pr33c20_19700102              18.6673              pothead                   0
+c001pr34c03_19700102              25.2477              pothead                   0
+c001pr34c04_19700102               24.756              pothead                   0
+c001pr34c05_19700102              24.3055              pothead                   0
+c001pr34c06_19700102              23.8151              pothead                   0
+c001pr34c07_19700102               23.188              pothead                   0
+c001pr34c08_19700102              22.6074              pothead                   0
+c001pr34c09_19700102              21.7052              pothead                   0
+c001pr34c10_19700102              20.7205              pothead                   0
+c001pr34c11_19700102              19.1466              pothead                   0
+c001pr34c12_19700102              15.7867              pothead                   0
+c001pr34c13_19700102              17.6147              pothead                   0
+c001pr34c14_19700102              17.8855              pothead                   0
+c001pr34c15_19700102              17.5579              pothead                   0
+c001pr34c16_19700102              17.0147              pothead                   0
+c001pr34c17_19700102              17.5593              pothead                   0
+c001pr34c18_19700102              18.0169              pothead                   0
+c001pr34c19_19700102              18.2754              pothead                   0
+c001pr34c20_19700102              18.4213              pothead                   0
+c001pr35c04_19700102              24.2561              pothead                   0
+c001pr35c05_19700102              23.5826              pothead                   0
+c001pr35c06_19700102              23.0517              pothead                   0
+c001pr35c07_19700102              22.5492              pothead                   0
+c001pr35c08_19700102              22.0327              pothead                   0
+c001pr35c09_19700102               21.289              pothead                   0
+c001pr35c10_19700102              20.4273              pothead                   0
+c001pr35c11_19700102              19.2022              pothead                   0
+c001pr35c12_19700102              17.7177              pothead                   0
+c001pr35c13_19700102              17.6069              pothead                   0
+c001pr35c14_19700102              17.4889              pothead                   0
+c001pr35c15_19700102              17.1916              pothead                   0
+c001pr35c16_19700102              16.7584              pothead                   0
+c001pr35c17_19700102              17.2839              pothead                   0
+c001pr35c18_19700102              17.7351              pothead                   0
+c001pr35c19_19700102              18.0132              pothead                   0
+c001pr35c20_19700102              18.2652              pothead                   0
+c001pr36c05_19700102              22.6227              pothead                   0
+c001pr36c06_19700102              22.2018              pothead                   0
+c001pr36c07_19700102              21.7465              pothead                   0
+c001pr36c08_19700102              21.2306              pothead                   0
+c001pr36c09_19700102              20.6263              pothead                   0
+c001pr36c10_19700102               19.858              pothead                   0
+c001pr36c11_19700102              18.8298              pothead                   0
+c001pr36c12_19700102              17.9748              pothead                   0
+c001pr36c13_19700102              17.4993              pothead                   0
+c001pr36c14_19700102              17.1639              pothead                   0
+c001pr36c15_19700102              16.8741              pothead                   0
+c001pr36c16_19700102              16.4822              pothead                   0
+c001pr36c17_19700102              17.0207              pothead                   0
+c001pr36c18_19700102              17.4361              pothead                   0
+c001pr36c19_19700102              17.6682              pothead                   0
+c001pr37c05_19700102              22.0395              pothead                   0
+c001pr37c06_19700102              21.2847              pothead                   0
+c001pr37c07_19700102              20.7595              pothead                   0
+c001pr37c08_19700102                20.18              pothead                   0
+c001pr37c09_19700102              19.7041              pothead                   0
+c001pr37c10_19700102              19.1039              pothead                   0
+c001pr37c11_19700102              18.2542              pothead                   0
+c001pr37c12_19700102              17.5528              pothead                   0
+c001pr37c13_19700102              17.1132              pothead                   0
+c001pr37c14_19700102              16.7832              pothead                   0
+c001pr37c15_19700102              16.4791              pothead                   0
+c001pr37c16_19700102              16.2075              pothead                   0
+c001pr37c17_19700102              16.7416              pothead                   0
+c001pr37c18_19700102              17.1715              pothead                   0
+c001pr37c19_19700102              17.4784              pothead                   0
+c001pr38c06_19700102              19.7526              pothead                   0
+c001pr38c07_19700102              19.3774              pothead                   0
+c001pr38c08_19700102              18.9882              pothead                   0
+c001pr38c09_19700102              18.7127              pothead                   0
+c001pr38c10_19700102              18.1047              pothead                   0
+c001pr38c11_19700102              17.2686              pothead                   0
+c001pr38c12_19700102              16.6685              pothead                   0
+c001pr38c13_19700102              16.2051              pothead                   0
+c001pr38c14_19700102              15.9795              pothead                   0
+c001pr38c15_19700102              15.7357              pothead                   0
+c001pr38c16_19700102              15.8674              pothead                   0
+c001pr38c17_19700102              16.4252              pothead                   0
+c001pr38c18_19700102              16.8825              pothead                   0
+c001pr39c06_19700102              18.2342              pothead                   0
+c001pr39c07_19700102              18.0888              pothead                   0
+c001pr39c08_19700102              17.7219              pothead                   0
+c001pr39c09_19700102              17.5065              pothead                   0
+c001pr39c10_19700102              16.6915              pothead                   0
+c001pr39c11_19700102              15.8526              pothead                   0
+c001pr39c12_19700102              15.3186              pothead                   0
+c001pr39c13_19700102              14.7795              pothead                   0
+c001pr39c14_19700102              14.4746              pothead                   0
+c001pr39c15_19700102              14.2868              pothead                   0
+c001pr39c16_19700102              15.4985              pothead                   0
+c001pr39c17_19700102              16.0425              pothead                   0
+c001pr40c06_19700102                 16.9              pothead                   0
+c001pr40c07_19700102                 16.4              pothead                   0
+c001pr40c08_19700102                 16.1              pothead                   0
+c001pr40c09_19700102                 15.6              pothead                   0
+c001pr40c10_19700102                 15.1              pothead                   0
+c001pr40c11_19700102                   14              pothead                   0
+c001pr40c12_19700102                   13              pothead                   0
+c001pr40c13_19700102                 12.5              pothead                   0
+c001pr40c14_19700102                   12              pothead                   0
+c001pr40c15_19700102                 11.4              pothead                   0
+fa_headwaters_0000                -895.43                flaqx                   0
+fa_headwaters_0001               -242.577             forecast                   0
+fa_headwaters_0002                      0                flaqx                   0
+fa_seg_01_0000                    -45.197                flaqx                   0
+fa_seg_01_0001                    -10.975                flaqx                   0
+fa_seg_01_0002                          0                flaqx                   0
+fa_seg_02_0000                     -74.86                flaqx                   0
+fa_seg_02_0001                    -40.429                flaqx                   0
+fa_seg_02_0002                          0                flaqx                   0
+fa_seg_03_0000                    -93.264                flaqx                   0
+fa_seg_03_0001                    -58.983                flaqx                   0
+fa_seg_03_0002                          0                flaqx                   0
+fa_seg_04_0000                    -98.076                flaqx                   0
+fa_seg_04_0001                    -63.503                flaqx                   0
+fa_seg_04_0002                          0                flaqx                   0
+fa_seg_05_0000                    -101.47                flaqx                   0
+fa_seg_05_0001                    -64.919                flaqx                   0
+fa_seg_05_0002                          0                flaqx                   0
+fa_seg_06_0000                    -97.039                flaqx                   0
+fa_seg_06_0001                    -57.675                flaqx                   0
+fa_seg_06_0002                          0                flaqx                   0
+fa_seg_07_0000                    -78.422                flaqx                   0
+fa_seg_07_0001                    -34.254                flaqx                   0
+fa_seg_07_0002                          0                flaqx                   0
+fa_seg_08_0000                    -27.471                flaqx                   0
+fa_seg_08_0001                     32.908                flaqx                   0
+fa_seg_08_0002                          0                flaqx                   0
+fa_seg_09_0000                     171.07                flaqx                   0
+fa_seg_09_0001                     252.98                flaqx                   0
+fa_seg_09_0002                          0                flaqx                   0
+fa_seg_10_0000                    -16.633                flaqx                   0
+fa_seg_10_0001                     44.783                flaqx                   0
+fa_seg_10_0002                          0                flaqx                   0
+fa_seg_11_0000                    -62.204                flaqx                   0
+fa_seg_11_0001                    -16.366                flaqx                   0
+fa_seg_11_0002                          0                flaqx                   0
+fa_seg_12_0000                     -77.26                flaqx                   0
+fa_seg_12_0001                     -38.18                flaqx                   0
+fa_seg_12_0002                          0                flaqx                   0
+fa_seg_13_0000                    -91.464                flaqx                   0
+fa_seg_13_0001                     -53.58                flaqx                   0
+fa_seg_13_0002                          0                flaqx                   0
+fa_seg_14_0000                    -101.98                flaqx                   0
+fa_seg_14_0001                    -66.065                flaqx                   0
+fa_seg_14_0002                          0                flaqx                   0
+fa_seg_15_0000                    -101.16                flaqx                   0
+fa_seg_15_0001                    -68.319                flaqx                   0
+fa_seg_15_0002                          0                flaqx                   0
+fa_seg_16_0000                    -100.55                flaqx                   0
+fa_seg_16_0001                    -68.601                flaqx                   0
+fa_seg_16_0002                          0                flaqx                   0
+fa_seg_17_0000                    -96.749                flaqx                   0
+fa_seg_17_0001                    -64.764                flaqx                   0
+fa_seg_17_0002                          0                flaqx                   0
+fa_seg_18_0000                    -96.889                flaqx                   0
+fa_seg_18_0001                     -62.37                flaqx                   0
+fa_seg_18_0002                          0                flaqx                   0
+fa_seg_19_0000                    -92.896                flaqx                   0
+fa_seg_19_0001                    -56.394                flaqx                   0
+fa_seg_19_0002                          0                flaqx                   0
+fa_seg_20_0000                    -88.544                flaqx                   0
+fa_seg_20_0001                    -50.918                flaqx                   0
+fa_seg_20_0002                          0                flaqx                   0
+fa_seg_21_0000                     -99.52                flaqx                   0
+fa_seg_21_0001                    -63.943                flaqx                   0
+fa_seg_21_0002                          0                flaqx                   0
+fa_seg_22_0000                    -114.31                flaqx                   0
+fa_seg_22_0001                    -80.689                flaqx                   0
+fa_seg_22_0002                          0                flaqx                   0
+fa_seg_23_0000                    -127.23                flaqx                   0
+fa_seg_23_0001                     -95.18                flaqx                   0
+fa_seg_23_0002                    -23.452                flaqx                   0
+fa_seg_24_0000                    -134.17                flaqx                   0
+fa_seg_24_0001                    -103.67                flaqx                   0
+fa_seg_24_0002                    -40.915                flaqx                   0
+fa_seg_25_0000                    -139.83                flaqx                   0
+fa_seg_25_0001                    -109.93                flaqx                   0
+fa_seg_25_0002                    -51.049                flaqx                   0
+fa_seg_26_0000                    -147.18                flaqx                   0
+fa_seg_26_0001                    -117.16                flaqx                   0
+fa_seg_26_0002                    -60.451                flaqx                   0
+fa_seg_27_0000                    -139.43                flaqx                   0
+fa_seg_27_0001                    -111.52                flaqx                   0
+fa_seg_27_0002                    -61.671                flaqx                   0
+fa_seg_28_0000                    -139.18                flaqx                   0
+fa_seg_28_0001                    -111.65                flaqx                   0
+fa_seg_28_0002                    -64.209                flaqx                   0
+fa_seg_29_0000                    -122.73                flaqx                   0
+fa_seg_29_0001                    -97.902                flaqx                   0
+fa_seg_29_0002                    -56.983                flaqx                   0
+fa_seg_30_0000                    -118.84                flaqx                   0
+fa_seg_30_0001                    -94.089                flaqx                   0
+fa_seg_30_0002                    -54.589                flaqx                   0
+fa_seg_31_0000                    -86.163                flaqx                   0
+fa_seg_31_0001                    -66.474                flaqx                   0
+fa_seg_31_0002                    -38.043                flaqx                   0
+fa_seg_32_0000                    -67.868                flaqx                   0
+fa_seg_32_0001                    -49.089                flaqx                   0
+fa_seg_32_0002                    -25.262                flaqx                   0
+fa_seg_33_0000                    -80.303                flaqx                   0
+fa_seg_33_0001                    -54.407                flaqx                   0
+fa_seg_33_0002                    -21.192                flaqx                   0
+fa_seg_34_0000                    -80.938                flaqx                   0
+fa_seg_34_0001                    -54.581                flaqx                   0
+fa_seg_34_0002                    -23.775                flaqx                   0
+fa_seg_35_0000                    -79.105                flaqx                   0
+fa_seg_35_0001                    -53.414                flaqx                   0
+fa_seg_35_0002                    -25.317                flaqx                   0
+fa_seg_36_0000                    -72.299                flaqx                   0
+fa_seg_36_0001                    -48.888                flaqx                   0
+fa_seg_36_0002                    -25.023                flaqx                   0
+fa_seg_37_0000                      -65.9                flaqx                   0
+fa_seg_37_0001                     -44.51                flaqx                   0
+fa_seg_37_0002                    -25.058                flaqx                   0
+fa_seg_38_0000                    -43.193                flaqx                   0
+fa_seg_38_0001                    -26.394                flaqx                   0
+fa_seg_38_0002                    -13.452                flaqx                   0
+fa_seg_39_0000                    -13.376                flaqx                   0
+fa_seg_39_0001                   -0.57034                flaqx                   0
+fa_seg_39_0002                     7.2924                flaqx                   0
+fa_seg_40_0000                          0                flaqx                   0
+fa_seg_40_0001                          0                flaqx                   0
+fa_seg_40_0002                          0                flaqx                   0
+flx_constan_19700102             -860.052          flx_constan                   0
+flx_constan_19791231             -740.879          flx_constan                   0
+flx_constan_19800101             -490.431          flx_constan                   0
+flx_in-out_19700102               -2.9966           flx_in-out                   0
+flx_in-out_19791231                1.3086           flx_in-out                   0
+flx_in-out_19800101              0.019531           flx_in-out                   0
+flx_percent_19700102                -0.05          flx_percent                   0
+flx_percent_19791231                 0.02          flx_percent                   0
+flx_percent_19800101                    0          flx_percent                   0
+flx_recharg_19700102               6004.8          flx_recharg                   0
+flx_recharg_19791231                 3475          flx_recharg                   0
+flx_recharg_19800101                 3475          flx_recharg                   0
+flx_storage_19700102                    0          flx_storage                   0
+flx_storage_19791231              1578.27          flx_storage                   0
+flx_storage_19800101                    0          flx_storage                   0
+flx_stream__19700102             -3242.62          flx_stream_                   0
+flx_stream__19791231             -1929.69          flx_stream_                   0
+flx_stream__19800101             -603.149          flx_stream_                   0
+flx_total_19700102               -2.99658            flx_total                   0
+flx_total_19791231                1.30859            flx_total                   0
+flx_total_19800101              0.0195313            flx_total                   0
+flx_wells_19700102               -1905.12            flx_wells                   0
+flx_wells_19791231                -2381.4            flx_wells                   0
+flx_wells_19800101                -2381.4            flx_wells                   0
+fo_headwaters_0000                 7229.3                flout                   0
+fo_headwaters_0001                2151.49                flout                   0
+fo_headwaters_0002                      0                flout                   0
+fo_seg_01_0000                     45.197                flout                   0
+fo_seg_01_0001                     10.975                flout                   0
+fo_seg_01_0002                          0                flout                   0
+fo_seg_02_0000                     120.06                flout                   0
+fo_seg_02_0001                     51.403                flout                   0
+fo_seg_02_0002                          0                flout                   0
+fo_seg_03_0000                     213.32                flout                   0
+fo_seg_03_0001                     110.39                flout                   0
+fo_seg_03_0002                          0                flout                   0
+fo_seg_04_0000                      311.4                flout                   0
+fo_seg_04_0001                     173.89                flout                   0
+fo_seg_04_0002                          0                flout                   0
+fo_seg_05_0000                     412.86                flout                   0
+fo_seg_05_0001                     238.81                flout                   0
+fo_seg_05_0002                          0                flout                   0
+fo_seg_06_0000                      509.9                flout                   0
+fo_seg_06_0001                     296.48                flout                   0
+fo_seg_06_0002                          0                flout                   0
+fo_seg_07_0000                     588.32                flout                   0
+fo_seg_07_0001                     330.74                flout                   0
+fo_seg_07_0002                          0                flout                   0
+fo_seg_08_0000                     615.79                flout                   0
+fo_seg_08_0001                     297.83                flout                   0
+fo_seg_08_0002                          0                flout                   0
+fo_seg_09_0000                     444.73                flout                   0
+fo_seg_09_0001                     44.847                flout                   0
+fo_seg_09_0002                          0                flout                   0
+fo_seg_10_0000                     461.36                flout                   0
+fo_seg_10_0001                   0.063797                flout                   0
+fo_seg_10_0002                          0                flout                   0
+fo_seg_11_0000                     523.56                flout                   0
+fo_seg_11_0001                      16.43                flout                   0
+fo_seg_11_0002                          0                flout                   0
+fo_seg_12_0000                     600.82                flout                   0
+fo_seg_12_0001                      54.61                flout                   0
+fo_seg_12_0002                          0                flout                   0
+fo_seg_13_0000                     692.29                flout                   0
+fo_seg_13_0001                     108.19                flout                   0
+fo_seg_13_0002                          0                flout                   0
+fo_seg_14_0000                     794.27                flout                   0
+fo_seg_14_0001                     174.26                flout                   0
+fo_seg_14_0002                          0                flout                   0
+fo_seg_15_0000                     895.42                flout                   0
+fo_seg_15_0001                     242.57                flout                   0
+fo_seg_15_0002                          0                flout                   0
+fo_seg_16_0000                     995.98                flout                   0
+fo_seg_16_0001                     311.18                flout                   0
+fo_seg_16_0002                          0                flout                   0
+fo_seg_17_0000                     1092.7                flout                   0
+fo_seg_17_0001                     375.94                flout                   0
+fo_seg_17_0002                          0                flout                   0
+fo_seg_18_0000                     1189.6                flout                   0
+fo_seg_18_0001                     438.31                flout                   0
+fo_seg_18_0002                          0                flout                   0
+fo_seg_19_0000                     1282.5                flout                   0
+fo_seg_19_0001                      494.7                flout                   0
+fo_seg_19_0002                          0                flout                   0
+fo_seg_20_0000                     1371.1                flout                   0
+fo_seg_20_0001                     545.62                flout                   0
+fo_seg_20_0002                          0                flout                   0
+fo_seg_21_0000                     1470.6                flout                   0
+fo_seg_21_0001                     609.56                flout                   0
+fo_seg_21_0002                          0                flout                   0
+fo_seg_22_0000                     1584.9                flout                   0
+fo_seg_22_0001                     690.25                flout                   0
+fo_seg_22_0002                          0                flout                   0
+fo_seg_23_0000                     1712.1                flout                   0
+fo_seg_23_0001                     785.43                flout                   0
+fo_seg_23_0002                     23.452                flout                   0
+fo_seg_24_0000                     1846.3                flout                   0
+fo_seg_24_0001                      889.1                flout                   0
+fo_seg_24_0002                     64.368                flout                   0
+fo_seg_25_0000                     1986.1                flout                   0
+fo_seg_25_0001                     999.03                flout                   0
+fo_seg_25_0002                     115.42                flout                   0
+fo_seg_26_0000                     2133.3                flout                   0
+fo_seg_26_0001                     1116.2                flout                   0
+fo_seg_26_0002                     175.87                flout                   0
+fo_seg_27_0000                     2272.7                flout                   0
+fo_seg_27_0001                     1227.7                flout                   0
+fo_seg_27_0002                     237.54                flout                   0
+fo_seg_28_0000                     2411.9                flout                   0
+fo_seg_28_0001                     1339.4                flout                   0
+fo_seg_28_0002                     301.75                flout                   0
+fo_seg_29_0000                     2534.6                flout                   0
+fo_seg_29_0001                     1437.3                flout                   0
+fo_seg_29_0002                     358.73                flout                   0
+fo_seg_30_0000                     2653.5                flout                   0
+fo_seg_30_0001                     1531.4                flout                   0
+fo_seg_30_0002                     413.32                flout                   0
+fo_seg_31_0000                     2739.6                flout                   0
+fo_seg_31_0001                     1597.8                flout                   0
+fo_seg_31_0002                     451.36                flout                   0
+fo_seg_32_0000                     2807.5                flout                   0
+fo_seg_32_0001                     1646.9                flout                   0
+fo_seg_32_0002                     476.62                flout                   0
+fo_seg_33_0000                     2887.8                flout                   0
+fo_seg_33_0001                     1701.3                flout                   0
+fo_seg_33_0002                     497.82                flout                   0
+fo_seg_34_0000                     2968.8                flout                   0
+fo_seg_34_0001                     1755.9                flout                   0
+fo_seg_34_0002                     521.59                flout                   0
+fo_seg_35_0000                     3047.9                flout                   0
+fo_seg_35_0001                     1809.3                flout                   0
+fo_seg_35_0002                     546.91                flout                   0
+fo_seg_36_0000                     3120.2                flout                   0
+fo_seg_36_0001                     1858.2                flout                   0
+fo_seg_36_0002                     571.93                flout                   0
+fo_seg_37_0000                     3186.1                flout                   0
+fo_seg_37_0001                     1902.7                flout                   0
+fo_seg_37_0002                     596.99                flout                   0
+fo_seg_38_0000                     3229.2                flout                   0
+fo_seg_38_0001                     1929.1                flout                   0
+fo_seg_38_0002                     610.44                flout                   0
+fo_seg_39_0000                     3242.6                flout                   0
+fo_seg_39_0001                     1929.7                flout                   0
+fo_seg_39_0002                     603.15                flout                   0
+fo_seg_40_0000                     3242.6              calflux                0.05
+fo_seg_40_0001                     1929.7                flout                   0
+fo_seg_40_0002                     603.15                flout                   0
+travel_time                       26272.5             forecast                   0
+vol_constan_19700102             -860.052          vol_constan                   0
+vol_constan_19791231         -2.70507e+06          vol_constan                   0
+vol_constan_19800101         -2.70556e+06          vol_constan                   0
+vol_in-out_19700102               -2.9966           vol_in-out                   0
+vol_in-out_19791231                  4774           vol_in-out                   0
+vol_in-out_19800101                  4774           vol_in-out                   0
+vol_percent_19700102                -0.05          vol_percent                   0
+vol_percent_19791231                 0.02          vol_percent                   0
+vol_percent_19800101                 0.02          vol_percent                   0
+vol_recharg_19700102               6004.8          vol_recharg                   0
+vol_recharg_19791231          1.26898e+07          vol_recharg                   0
+vol_recharg_19800101          1.26932e+07          vol_recharg                   0
+vol_storage_19700102                    0          vol_storage                   0
+vol_storage_19791231           5.7607e+06          vol_storage                   0
+vol_storage_19800101           5.7607e+06          vol_storage                   0
+vol_stream__19700102             -3242.62          vol_stream_                   0
+vol_stream__19791231          -7.0466e+06          vol_stream_                   0
+vol_stream__19800101          -7.0472e+06          vol_stream_                   0
+vol_total_19700102               -2.99658            vol_total                   0
+vol_total_19791231                   4774            vol_total                   0
+vol_total_19800101                   4774            vol_total                   0
+vol_wells_19700102               -1905.12            vol_wells                   0
+vol_wells_19791231           -8.69402e+06            vol_wells                   0
+vol_wells_19800101            -8.6964e+06            vol_wells                   0
+
+
+
+Prior information
+pcc_100   + 1 * LOG(HK04) - 1 * LOG(HK18) = 0   0.192195   REGUL_CC
+pcc_101   + 1 * LOG(HK04) - 1 * LOG(HK19) = 0   0.167152   REGUL_CC
+pcc_102   + 1 * LOG(HK04) - 1 * LOG(HK20) = 0   0.135335   REGUL_CC
+pcc_103   + 1 * LOG(HK04) - 1 * LOG(HK21) = 0   0.135335   REGUL_CC
+pcc_104   + 1 * LOG(HK04) - 1 * LOG(HK22) = 0   0.13008   REGUL_CC
+pcc_105   + 1 * LOG(HK04) - 1 * LOG(HK23) = 0   0.116012   REGUL_CC
+pcc_106   + 1 * LOG(HK05) - 1 * LOG(HK06) = 0   0.67032   REGUL_CC
+pcc_107   + 1 * LOG(HK05) - 1 * LOG(HK07) = 0   0.449329   REGUL_CC
+pcc_108   + 1 * LOG(HK05) - 1 * LOG(HK08) = 0   0.567971   REGUL_CC
+pcc_109   + 1 * LOG(HK05) - 1 * LOG(HK09) = 0   0.567971   REGUL_CC
+pcc_110   + 1 * LOG(HK05) - 1 * LOG(HK10) = 0   0.408842   REGUL_CC
+pcc_111   + 1 * LOG(HK05) - 1 * LOG(HK11) = 0   0.408842   REGUL_CC
+pcc_112   + 1 * LOG(HK05) - 1 * LOG(HK12) = 0   0.408842   REGUL_CC
+pcc_113   + 1 * LOG(HK05) - 1 * LOG(HK13) = 0   0.322591   REGUL_CC
+pcc_114   + 1 * LOG(HK05) - 1 * LOG(HK14) = 0   0.282264   REGUL_CC
+pcc_115   + 1 * LOG(HK05) - 1 * LOG(HK15) = 0   0.282264   REGUL_CC
+pcc_116   + 1 * LOG(HK05) - 1 * LOG(HK16) = 0   0.236402   REGUL_CC
+pcc_117   + 1 * LOG(HK05) - 1 * LOG(HK17) = 0   0.192195   REGUL_CC
+pcc_118   + 1 * LOG(HK05) - 1 * LOG(HK18) = 0   0.201897   REGUL_CC
+pcc_119   + 1 * LOG(HK05) - 1 * LOG(HK19) = 0   0.192195   REGUL_CC
+pcc_120   + 1 * LOG(HK05) - 1 * LOG(HK20) = 0   0.167152   REGUL_CC
+pcc_121   + 1 * LOG(HK05) - 1 * LOG(HK21) = 0   0.13008   REGUL_CC
+pcc_122   + 1 * LOG(HK05) - 1 * LOG(HK22) = 0   0.135335   REGUL_CC
+pcc_123   + 1 * LOG(HK05) - 1 * LOG(HK23) = 0   0.13008   REGUL_CC
+pcc_124   + 1 * LOG(HK05) - 1 * LOG(HK24) = 0   0.116012   REGUL_CC
+pcc_125   + 1 * LOG(HK06) - 1 * LOG(HK07) = 0   0.67032   REGUL_CC
+pcc_126   + 1 * LOG(HK06) - 1 * LOG(HK08) = 0   0.408842   REGUL_CC
+pcc_127   + 1 * LOG(HK06) - 1 * LOG(HK09) = 0   0.67032   REGUL_CC
+pcc_128   + 1 * LOG(HK06) - 1 * LOG(HK10) = 0   0.567971   REGUL_CC
+pcc_129   + 1 * LOG(HK06) - 1 * LOG(HK11) = 0   0.322591   REGUL_CC
+pcc_130   + 1 * LOG(HK06) - 1 * LOG(HK12) = 0   0.449329   REGUL_CC
+pcc_131   + 1 * LOG(HK06) - 1 * LOG(HK13) = 0   0.408842   REGUL_CC
+pcc_132   + 1 * LOG(HK06) - 1 * LOG(HK14) = 0   0.236402   REGUL_CC
+pcc_133   + 1 * LOG(HK06) - 1 * LOG(HK15) = 0   0.301194   REGUL_CC
+pcc_134   + 1 * LOG(HK06) - 1 * LOG(HK16) = 0   0.282264   REGUL_CC
+pcc_135   + 1 * LOG(HK06) - 1 * LOG(HK17) = 0   0.167152   REGUL_CC
+pcc_136   + 1 * LOG(HK06) - 1 * LOG(HK18) = 0   0.192195   REGUL_CC
+pcc_137   + 1 * LOG(HK06) - 1 * LOG(HK19) = 0   0.201897   REGUL_CC
+pcc_138   + 1 * LOG(HK06) - 1 * LOG(HK20) = 0   0.192195   REGUL_CC
+pcc_139   + 1 * LOG(HK06) - 1 * LOG(HK21) = 0   0.116012   REGUL_CC
+pcc_140   + 1 * LOG(HK06) - 1 * LOG(HK22) = 0   0.13008   REGUL_CC
+pcc_141   + 1 * LOG(HK06) - 1 * LOG(HK23) = 0   0.135335   REGUL_CC
+pcc_142   + 1 * LOG(HK06) - 1 * LOG(HK24) = 0   0.13008   REGUL_CC
+pcc_143   + 1 * LOG(HK07) - 1 * LOG(HK08) = 0   0.282264   REGUL_CC
+pcc_144   + 1 * LOG(HK07) - 1 * LOG(HK09) = 0   0.567971   REGUL_CC
+pcc_145   + 1 * LOG(HK07) - 1 * LOG(HK10) = 0   0.67032   REGUL_CC
+pcc_146   + 1 * LOG(HK07) - 1 * LOG(HK11) = 0   0.236402   REGUL_CC
+pcc_147   + 1 * LOG(HK07) - 1 * LOG(HK12) = 0   0.408842   REGUL_CC
+pcc_148   + 1 * LOG(HK07) - 1 * LOG(HK13) = 0   0.449329   REGUL_CC
+pcc_149   + 1 * LOG(HK07) - 1 * LOG(HK14) = 0   0.183222   REGUL_CC
+pcc_15   + 1 * LOG(HK00) - 1 * LOG(HK01) = 0   0.67032   REGUL_CC
+pcc_150   + 1 * LOG(HK07) - 1 * LOG(HK15) = 0   0.282264   REGUL_CC
+pcc_151   + 1 * LOG(HK07) - 1 * LOG(HK16) = 0   0.301194   REGUL_CC
+pcc_152   + 1 * LOG(HK07) - 1 * LOG(HK17) = 0   0.135335   REGUL_CC
+pcc_153   + 1 * LOG(HK07) - 1 * LOG(HK18) = 0   0.167152   REGUL_CC
+pcc_154   + 1 * LOG(HK07) - 1 * LOG(HK19) = 0   0.192195   REGUL_CC
+pcc_155   + 1 * LOG(HK07) - 1 * LOG(HK20) = 0   0.201897   REGUL_CC
+pcc_156   + 1 * LOG(HK07) - 1 * LOG(HK22) = 0   0.116012   REGUL_CC
+pcc_157   + 1 * LOG(HK07) - 1 * LOG(HK23) = 0   0.13008   REGUL_CC
+pcc_158   + 1 * LOG(HK07) - 1 * LOG(HK24) = 0   0.135335   REGUL_CC
+pcc_159   + 1 * LOG(HK08) - 1 * LOG(HK09) = 0   0.449329   REGUL_CC
+pcc_16   + 1 * LOG(HK00) - 1 * LOG(HK02) = 0   0.449329   REGUL_CC
+pcc_160   + 1 * LOG(HK08) - 1 * LOG(HK10) = 0   0.301194   REGUL_CC
+pcc_161   + 1 * LOG(HK08) - 1 * LOG(HK11) = 0   0.67032   REGUL_CC
+pcc_162   + 1 * LOG(HK08) - 1 * LOG(HK12) = 0   0.408842   REGUL_CC
+pcc_163   + 1 * LOG(HK08) - 1 * LOG(HK13) = 0   0.282264   REGUL_CC
+pcc_164   + 1 * LOG(HK08) - 1 * LOG(HK14) = 0   0.449329   REGUL_CC
+pcc_165   + 1 * LOG(HK08) - 1 * LOG(HK15) = 0   0.322591   REGUL_CC
+pcc_166   + 1 * LOG(HK08) - 1 * LOG(HK16) = 0   0.236402   REGUL_CC
+pcc_167   + 1 * LOG(HK08) - 1 * LOG(HK17) = 0   0.301194   REGUL_CC
+pcc_168   + 1 * LOG(HK08) - 1 * LOG(HK18) = 0   0.282264   REGUL_CC
+pcc_169   + 1 * LOG(HK08) - 1 * LOG(HK19) = 0   0.236402   REGUL_CC
+pcc_17   + 1 * LOG(HK00) - 1 * LOG(HK03) = 0   0.301194   REGUL_CC
+pcc_170   + 1 * LOG(HK08) - 1 * LOG(HK20) = 0   0.183222   REGUL_CC
+pcc_171   + 1 * LOG(HK08) - 1 * LOG(HK21) = 0   0.201897   REGUL_CC
+pcc_172   + 1 * LOG(HK08) - 1 * LOG(HK22) = 0   0.192195   REGUL_CC
+pcc_173   + 1 * LOG(HK08) - 1 * LOG(HK23) = 0   0.167152   REGUL_CC
+pcc_174   + 1 * LOG(HK08) - 1 * LOG(HK24) = 0   0.135335   REGUL_CC
+pcc_175   + 1 * LOG(HK08) - 1 * LOG(HK25) = 0   0.135335   REGUL_CC
+pcc_176   + 1 * LOG(HK08) - 1 * LOG(HK26) = 0   0.13008   REGUL_CC
+pcc_177   + 1 * LOG(HK08) - 1 * LOG(HK27) = 0   0.116012   REGUL_CC
+pcc_178   + 1 * LOG(HK09) - 1 * LOG(HK10) = 0   0.67032   REGUL_CC
+pcc_179   + 1 * LOG(HK09) - 1 * LOG(HK11) = 0   0.408842   REGUL_CC
+pcc_18   + 1 * LOG(HK00) - 1 * LOG(HK04) = 0   0.67032   REGUL_CC
+pcc_180   + 1 * LOG(HK09) - 1 * LOG(HK12) = 0   0.67032   REGUL_CC
+pcc_181   + 1 * LOG(HK09) - 1 * LOG(HK13) = 0   0.567971   REGUL_CC
+pcc_182   + 1 * LOG(HK09) - 1 * LOG(HK14) = 0   0.322591   REGUL_CC
+pcc_183   + 1 * LOG(HK09) - 1 * LOG(HK15) = 0   0.449329   REGUL_CC
+pcc_184   + 1 * LOG(HK09) - 1 * LOG(HK16) = 0   0.408842   REGUL_CC
+pcc_185   + 1 * LOG(HK09) - 1 * LOG(HK17) = 0   0.236402   REGUL_CC
+pcc_186   + 1 * LOG(HK09) - 1 * LOG(HK18) = 0   0.282264   REGUL_CC
+pcc_187   + 1 * LOG(HK09) - 1 * LOG(HK19) = 0   0.301194   REGUL_CC
+pcc_188   + 1 * LOG(HK09) - 1 * LOG(HK20) = 0   0.282264   REGUL_CC
+pcc_189   + 1 * LOG(HK09) - 1 * LOG(HK21) = 0   0.167152   REGUL_CC
+pcc_19   + 1 * LOG(HK00) - 1 * LOG(HK05) = 0   0.567971   REGUL_CC
+pcc_190   + 1 * LOG(HK09) - 1 * LOG(HK22) = 0   0.192195   REGUL_CC
+pcc_191   + 1 * LOG(HK09) - 1 * LOG(HK23) = 0   0.201897   REGUL_CC
+pcc_192   + 1 * LOG(HK09) - 1 * LOG(HK24) = 0   0.192195   REGUL_CC
+pcc_193   + 1 * LOG(HK09) - 1 * LOG(HK25) = 0   0.116012   REGUL_CC
+pcc_194   + 1 * LOG(HK09) - 1 * LOG(HK26) = 0   0.13008   REGUL_CC
+pcc_195   + 1 * LOG(HK09) - 1 * LOG(HK27) = 0   0.135335   REGUL_CC
+pcc_196   + 1 * LOG(HK09) - 1 * LOG(HK28) = 0   0.13008   REGUL_CC
+pcc_197   + 1 * LOG(HK10) - 1 * LOG(HK11) = 0   0.282264   REGUL_CC
+pcc_198   + 1 * LOG(HK10) - 1 * LOG(HK12) = 0   0.567971   REGUL_CC
+pcc_199   + 1 * LOG(HK10) - 1 * LOG(HK13) = 0   0.67032   REGUL_CC
+pcc_20   + 1 * LOG(HK00) - 1 * LOG(HK06) = 0   0.408842   REGUL_CC
+pcc_200   + 1 * LOG(HK10) - 1 * LOG(HK14) = 0   0.236402   REGUL_CC
+pcc_201   + 1 * LOG(HK10) - 1 * LOG(HK15) = 0   0.408842   REGUL_CC
+pcc_202   + 1 * LOG(HK10) - 1 * LOG(HK16) = 0   0.449329   REGUL_CC
+pcc_203   + 1 * LOG(HK10) - 1 * LOG(HK17) = 0   0.183222   REGUL_CC
+pcc_204   + 1 * LOG(HK10) - 1 * LOG(HK18) = 0   0.236402   REGUL_CC
+pcc_205   + 1 * LOG(HK10) - 1 * LOG(HK19) = 0   0.282264   REGUL_CC
+pcc_206   + 1 * LOG(HK10) - 1 * LOG(HK20) = 0   0.301194   REGUL_CC
+pcc_207   + 1 * LOG(HK10) - 1 * LOG(HK21) = 0   0.135335   REGUL_CC
+pcc_208   + 1 * LOG(HK10) - 1 * LOG(HK22) = 0   0.167152   REGUL_CC
+pcc_209   + 1 * LOG(HK10) - 1 * LOG(HK23) = 0   0.192195   REGUL_CC
+pcc_21   + 1 * LOG(HK00) - 1 * LOG(HK07) = 0   0.282264   REGUL_CC
+pcc_210   + 1 * LOG(HK10) - 1 * LOG(HK24) = 0   0.201897   REGUL_CC
+pcc_211   + 1 * LOG(HK10) - 1 * LOG(HK26) = 0   0.116012   REGUL_CC
+pcc_212   + 1 * LOG(HK10) - 1 * LOG(HK27) = 0   0.13008   REGUL_CC
+pcc_213   + 1 * LOG(HK10) - 1 * LOG(HK28) = 0   0.135335   REGUL_CC
+pcc_214   + 1 * LOG(HK11) - 1 * LOG(HK12) = 0   0.449329   REGUL_CC
+pcc_215   + 1 * LOG(HK11) - 1 * LOG(HK13) = 0   0.301194   REGUL_CC
+pcc_216   + 1 * LOG(HK11) - 1 * LOG(HK14) = 0   0.67032   REGUL_CC
+pcc_217   + 1 * LOG(HK11) - 1 * LOG(HK15) = 0   0.408842   REGUL_CC
+pcc_218   + 1 * LOG(HK11) - 1 * LOG(HK16) = 0   0.282264   REGUL_CC
+pcc_219   + 1 * LOG(HK11) - 1 * LOG(HK17) = 0   0.449329   REGUL_CC
+pcc_22   + 1 * LOG(HK00) - 1 * LOG(HK08) = 0   0.449329   REGUL_CC
+pcc_220   + 1 * LOG(HK11) - 1 * LOG(HK18) = 0   0.408842   REGUL_CC
+pcc_221   + 1 * LOG(HK11) - 1 * LOG(HK19) = 0   0.322591   REGUL_CC
+pcc_222   + 1 * LOG(HK11) - 1 * LOG(HK20) = 0   0.236402   REGUL_CC
+pcc_223   + 1 * LOG(HK11) - 1 * LOG(HK21) = 0   0.301194   REGUL_CC
+pcc_224   + 1 * LOG(HK11) - 1 * LOG(HK22) = 0   0.282264   REGUL_CC
+pcc_225   + 1 * LOG(HK11) - 1 * LOG(HK23) = 0   0.236402   REGUL_CC
+pcc_226   + 1 * LOG(HK11) - 1 * LOG(HK24) = 0   0.183222   REGUL_CC
+pcc_227   + 1 * LOG(HK11) - 1 * LOG(HK25) = 0   0.201897   REGUL_CC
+pcc_228   + 1 * LOG(HK11) - 1 * LOG(HK26) = 0   0.192195   REGUL_CC
+pcc_229   + 1 * LOG(HK11) - 1 * LOG(HK27) = 0   0.167152   REGUL_CC
+pcc_23   + 1 * LOG(HK00) - 1 * LOG(HK09) = 0   0.322591   REGUL_CC
+pcc_230   + 1 * LOG(HK11) - 1 * LOG(HK28) = 0   0.135335   REGUL_CC
+pcc_231   + 1 * LOG(HK11) - 1 * LOG(HK29) = 0   0.13008   REGUL_CC
+pcc_232   + 1 * LOG(HK11) - 1 * LOG(HK30) = 0   0.116012   REGUL_CC
+pcc_233   + 1 * LOG(HK12) - 1 * LOG(HK13) = 0   0.67032   REGUL_CC
+pcc_234   + 1 * LOG(HK12) - 1 * LOG(HK14) = 0   0.408842   REGUL_CC
+pcc_235   + 1 * LOG(HK12) - 1 * LOG(HK15) = 0   0.67032   REGUL_CC
+pcc_236   + 1 * LOG(HK12) - 1 * LOG(HK16) = 0   0.567971   REGUL_CC
+pcc_237   + 1 * LOG(HK12) - 1 * LOG(HK17) = 0   0.322591   REGUL_CC
+pcc_238   + 1 * LOG(HK12) - 1 * LOG(HK18) = 0   0.408842   REGUL_CC
+pcc_239   + 1 * LOG(HK12) - 1 * LOG(HK19) = 0   0.449329   REGUL_CC
+pcc_24   + 1 * LOG(HK00) - 1 * LOG(HK10) = 0   0.236402   REGUL_CC
+pcc_240   + 1 * LOG(HK12) - 1 * LOG(HK20) = 0   0.408842   REGUL_CC
+pcc_241   + 1 * LOG(HK12) - 1 * LOG(HK21) = 0   0.236402   REGUL_CC
+pcc_242   + 1 * LOG(HK12) - 1 * LOG(HK22) = 0   0.282264   REGUL_CC
+pcc_243   + 1 * LOG(HK12) - 1 * LOG(HK23) = 0   0.301194   REGUL_CC
+pcc_244   + 1 * LOG(HK12) - 1 * LOG(HK24) = 0   0.282264   REGUL_CC
+pcc_245   + 1 * LOG(HK12) - 1 * LOG(HK25) = 0   0.167152   REGUL_CC
+pcc_246   + 1 * LOG(HK12) - 1 * LOG(HK26) = 0   0.192195   REGUL_CC
+pcc_247   + 1 * LOG(HK12) - 1 * LOG(HK27) = 0   0.201897   REGUL_CC
+pcc_248   + 1 * LOG(HK12) - 1 * LOG(HK28) = 0   0.192195   REGUL_CC
+pcc_249   + 1 * LOG(HK12) - 1 * LOG(HK29) = 0   0.13008   REGUL_CC
+pcc_25   + 1 * LOG(HK00) - 1 * LOG(HK11) = 0   0.301194   REGUL_CC
+pcc_250   + 1 * LOG(HK12) - 1 * LOG(HK30) = 0   0.135335   REGUL_CC
+pcc_251   + 1 * LOG(HK12) - 1 * LOG(HK31) = 0   0.13008   REGUL_CC
+pcc_252   + 1 * LOG(HK13) - 1 * LOG(HK14) = 0   0.282264   REGUL_CC
+pcc_253   + 1 * LOG(HK13) - 1 * LOG(HK15) = 0   0.567971   REGUL_CC
+pcc_254   + 1 * LOG(HK13) - 1 * LOG(HK16) = 0   0.67032   REGUL_CC
+pcc_255   + 1 * LOG(HK13) - 1 * LOG(HK17) = 0   0.236402   REGUL_CC
+pcc_256   + 1 * LOG(HK13) - 1 * LOG(HK18) = 0   0.322591   REGUL_CC
+pcc_257   + 1 * LOG(HK13) - 1 * LOG(HK19) = 0   0.408842   REGUL_CC
+pcc_258   + 1 * LOG(HK13) - 1 * LOG(HK20) = 0   0.449329   REGUL_CC
+pcc_259   + 1 * LOG(HK13) - 1 * LOG(HK21) = 0   0.183222   REGUL_CC
+pcc_26   + 1 * LOG(HK00) - 1 * LOG(HK12) = 0   0.236402   REGUL_CC
+pcc_260   + 1 * LOG(HK13) - 1 * LOG(HK22) = 0   0.236402   REGUL_CC
+pcc_261   + 1 * LOG(HK13) - 1 * LOG(HK23) = 0   0.282264   REGUL_CC
+pcc_262   + 1 * LOG(HK13) - 1 * LOG(HK24) = 0   0.301194   REGUL_CC
+pcc_263   + 1 * LOG(HK13) - 1 * LOG(HK25) = 0   0.135335   REGUL_CC
+pcc_264   + 1 * LOG(HK13) - 1 * LOG(HK26) = 0   0.167152   REGUL_CC
+pcc_265   + 1 * LOG(HK13) - 1 * LOG(HK27) = 0   0.192195   REGUL_CC
+pcc_266   + 1 * LOG(HK13) - 1 * LOG(HK28) = 0   0.201897   REGUL_CC
+pcc_267   + 1 * LOG(HK13) - 1 * LOG(HK29) = 0   0.116012   REGUL_CC
+pcc_268   + 1 * LOG(HK13) - 1 * LOG(HK30) = 0   0.13008   REGUL_CC
+pcc_269   + 1 * LOG(HK13) - 1 * LOG(HK31) = 0   0.135335   REGUL_CC
+pcc_27   + 1 * LOG(HK00) - 1 * LOG(HK13) = 0   0.183222   REGUL_CC
+pcc_270   + 1 * LOG(HK14) - 1 * LOG(HK15) = 0   0.449329   REGUL_CC
+pcc_271   + 1 * LOG(HK14) - 1 * LOG(HK16) = 0   0.301194   REGUL_CC
+pcc_272   + 1 * LOG(HK14) - 1 * LOG(HK17) = 0   0.67032   REGUL_CC
+pcc_273   + 1 * LOG(HK14) - 1 * LOG(HK18) = 0   0.567971   REGUL_CC
+pcc_274   + 1 * LOG(HK14) - 1 * LOG(HK19) = 0   0.408842   REGUL_CC
+pcc_275   + 1 * LOG(HK14) - 1 * LOG(HK20) = 0   0.282264   REGUL_CC
+pcc_276   + 1 * LOG(HK14) - 1 * LOG(HK21) = 0   0.449329   REGUL_CC
+pcc_277   + 1 * LOG(HK14) - 1 * LOG(HK22) = 0   0.408842   REGUL_CC
+pcc_278   + 1 * LOG(HK14) - 1 * LOG(HK23) = 0   0.322591   REGUL_CC
+pcc_279   + 1 * LOG(HK14) - 1 * LOG(HK24) = 0   0.236402   REGUL_CC
+pcc_28   + 1 * LOG(HK00) - 1 * LOG(HK14) = 0   0.201897   REGUL_CC
+pcc_280   + 1 * LOG(HK14) - 1 * LOG(HK25) = 0   0.301194   REGUL_CC
+pcc_281   + 1 * LOG(HK14) - 1 * LOG(HK26) = 0   0.282264   REGUL_CC
+pcc_282   + 1 * LOG(HK14) - 1 * LOG(HK27) = 0   0.236402   REGUL_CC
+pcc_283   + 1 * LOG(HK14) - 1 * LOG(HK28) = 0   0.183222   REGUL_CC
+pcc_284   + 1 * LOG(HK14) - 1 * LOG(HK29) = 0   0.192195   REGUL_CC
+pcc_285   + 1 * LOG(HK14) - 1 * LOG(HK30) = 0   0.167152   REGUL_CC
+pcc_286   + 1 * LOG(HK14) - 1 * LOG(HK31) = 0   0.135335   REGUL_CC
+pcc_287   + 1 * LOG(HK15) - 1 * LOG(HK16) = 0   0.67032   REGUL_CC
+pcc_288   + 1 * LOG(HK15) - 1 * LOG(HK17) = 0   0.408842   REGUL_CC
+pcc_289   + 1 * LOG(HK15) - 1 * LOG(HK18) = 0   0.567971   REGUL_CC
+pcc_29   + 1 * LOG(HK00) - 1 * LOG(HK15) = 0   0.167152   REGUL_CC
+pcc_290   + 1 * LOG(HK15) - 1 * LOG(HK19) = 0   0.67032   REGUL_CC
+pcc_291   + 1 * LOG(HK15) - 1 * LOG(HK20) = 0   0.567971   REGUL_CC
+pcc_292   + 1 * LOG(HK15) - 1 * LOG(HK21) = 0   0.322591   REGUL_CC
+pcc_293   + 1 * LOG(HK15) - 1 * LOG(HK22) = 0   0.408842   REGUL_CC
+pcc_294   + 1 * LOG(HK15) - 1 * LOG(HK23) = 0   0.449329   REGUL_CC
+pcc_295   + 1 * LOG(HK15) - 1 * LOG(HK24) = 0   0.408842   REGUL_CC
+pcc_296   + 1 * LOG(HK15) - 1 * LOG(HK25) = 0   0.236402   REGUL_CC
+pcc_297   + 1 * LOG(HK15) - 1 * LOG(HK26) = 0   0.282264   REGUL_CC
+pcc_298   + 1 * LOG(HK15) - 1 * LOG(HK27) = 0   0.301194   REGUL_CC
+pcc_299   + 1 * LOG(HK15) - 1 * LOG(HK28) = 0   0.282264   REGUL_CC
+pcc_30   + 1 * LOG(HK00) - 1 * LOG(HK16) = 0   0.135335   REGUL_CC
+pcc_300   + 1 * LOG(HK15) - 1 * LOG(HK29) = 0   0.192195   REGUL_CC
+pcc_301   + 1 * LOG(HK15) - 1 * LOG(HK30) = 0   0.201897   REGUL_CC
+pcc_302   + 1 * LOG(HK15) - 1 * LOG(HK31) = 0   0.192195   REGUL_CC
+pcc_303   + 1 * LOG(HK16) - 1 * LOG(HK17) = 0   0.282264   REGUL_CC
+pcc_304   + 1 * LOG(HK16) - 1 * LOG(HK18) = 0   0.408842   REGUL_CC
+pcc_305   + 1 * LOG(HK16) - 1 * LOG(HK19) = 0   0.567971   REGUL_CC
+pcc_306   + 1 * LOG(HK16) - 1 * LOG(HK20) = 0   0.67032   REGUL_CC
+pcc_307   + 1 * LOG(HK16) - 1 * LOG(HK21) = 0   0.236402   REGUL_CC
+pcc_308   + 1 * LOG(HK16) - 1 * LOG(HK22) = 0   0.322591   REGUL_CC
+pcc_309   + 1 * LOG(HK16) - 1 * LOG(HK23) = 0   0.408842   REGUL_CC
+pcc_31   + 1 * LOG(HK00) - 1 * LOG(HK17) = 0   0.135335   REGUL_CC
+pcc_310   + 1 * LOG(HK16) - 1 * LOG(HK24) = 0   0.449329   REGUL_CC
+pcc_311   + 1 * LOG(HK16) - 1 * LOG(HK25) = 0   0.183222   REGUL_CC
+pcc_312   + 1 * LOG(HK16) - 1 * LOG(HK26) = 0   0.236402   REGUL_CC
+pcc_313   + 1 * LOG(HK16) - 1 * LOG(HK27) = 0   0.282264   REGUL_CC
+pcc_314   + 1 * LOG(HK16) - 1 * LOG(HK28) = 0   0.301194   REGUL_CC
+pcc_315   + 1 * LOG(HK16) - 1 * LOG(HK29) = 0   0.167152   REGUL_CC
+pcc_316   + 1 * LOG(HK16) - 1 * LOG(HK30) = 0   0.192195   REGUL_CC
+pcc_317   + 1 * LOG(HK16) - 1 * LOG(HK31) = 0   0.201897   REGUL_CC
+pcc_318   + 1 * LOG(HK17) - 1 * LOG(HK18) = 0   0.67032   REGUL_CC
+pcc_319   + 1 * LOG(HK17) - 1 * LOG(HK19) = 0   0.449329   REGUL_CC
+pcc_32   + 1 * LOG(HK00) - 1 * LOG(HK18) = 0   0.13008   REGUL_CC
+pcc_320   + 1 * LOG(HK17) - 1 * LOG(HK20) = 0   0.301194   REGUL_CC
+pcc_321   + 1 * LOG(HK17) - 1 * LOG(HK21) = 0   0.67032   REGUL_CC
+pcc_322   + 1 * LOG(HK17) - 1 * LOG(HK22) = 0   0.567971   REGUL_CC
+pcc_323   + 1 * LOG(HK17) - 1 * LOG(HK23) = 0   0.408842   REGUL_CC
+pcc_324   + 1 * LOG(HK17) - 1 * LOG(HK24) = 0   0.282264   REGUL_CC
+pcc_325   + 1 * LOG(HK17) - 1 * LOG(HK25) = 0   0.449329   REGUL_CC
+pcc_326   + 1 * LOG(HK17) - 1 * LOG(HK26) = 0   0.408842   REGUL_CC
+pcc_327   + 1 * LOG(HK17) - 1 * LOG(HK27) = 0   0.322591   REGUL_CC
+pcc_328   + 1 * LOG(HK17) - 1 * LOG(HK28) = 0   0.236402   REGUL_CC
+pcc_329   + 1 * LOG(HK17) - 1 * LOG(HK29) = 0   0.282264   REGUL_CC
+pcc_33   + 1 * LOG(HK00) - 1 * LOG(HK19) = 0   0.116012   REGUL_CC
+pcc_330   + 1 * LOG(HK17) - 1 * LOG(HK30) = 0   0.236402   REGUL_CC
+pcc_331   + 1 * LOG(HK17) - 1 * LOG(HK31) = 0   0.183222   REGUL_CC
+pcc_332   + 1 * LOG(HK18) - 1 * LOG(HK19) = 0   0.67032   REGUL_CC
+pcc_333   + 1 * LOG(HK18) - 1 * LOG(HK20) = 0   0.449329   REGUL_CC
+pcc_334   + 1 * LOG(HK18) - 1 * LOG(HK21) = 0   0.567971   REGUL_CC
+pcc_335   + 1 * LOG(HK18) - 1 * LOG(HK22) = 0   0.67032   REGUL_CC
+pcc_336   + 1 * LOG(HK18) - 1 * LOG(HK23) = 0   0.567971   REGUL_CC
+pcc_337   + 1 * LOG(HK18) - 1 * LOG(HK24) = 0   0.408842   REGUL_CC
+pcc_338   + 1 * LOG(HK18) - 1 * LOG(HK25) = 0   0.408842   REGUL_CC
+pcc_339   + 1 * LOG(HK18) - 1 * LOG(HK26) = 0   0.449329   REGUL_CC
+pcc_34   + 1 * LOG(HK01) - 1 * LOG(HK02) = 0   0.67032   REGUL_CC
+pcc_340   + 1 * LOG(HK18) - 1 * LOG(HK27) = 0   0.408842   REGUL_CC
+pcc_341   + 1 * LOG(HK18) - 1 * LOG(HK28) = 0   0.322591   REGUL_CC
+pcc_342   + 1 * LOG(HK18) - 1 * LOG(HK29) = 0   0.301194   REGUL_CC
+pcc_343   + 1 * LOG(HK18) - 1 * LOG(HK30) = 0   0.282264   REGUL_CC
+pcc_344   + 1 * LOG(HK18) - 1 * LOG(HK31) = 0   0.236402   REGUL_CC
+pcc_345   + 1 * LOG(HK19) - 1 * LOG(HK20) = 0   0.67032   REGUL_CC
+pcc_346   + 1 * LOG(HK19) - 1 * LOG(HK21) = 0   0.408842   REGUL_CC
+pcc_347   + 1 * LOG(HK19) - 1 * LOG(HK22) = 0   0.567971   REGUL_CC
+pcc_348   + 1 * LOG(HK19) - 1 * LOG(HK23) = 0   0.67032   REGUL_CC
+pcc_349   + 1 * LOG(HK19) - 1 * LOG(HK24) = 0   0.567971   REGUL_CC
+pcc_35   + 1 * LOG(HK01) - 1 * LOG(HK03) = 0   0.449329   REGUL_CC
+pcc_350   + 1 * LOG(HK19) - 1 * LOG(HK25) = 0   0.322591   REGUL_CC
+pcc_351   + 1 * LOG(HK19) - 1 * LOG(HK26) = 0   0.408842   REGUL_CC
+pcc_352   + 1 * LOG(HK19) - 1 * LOG(HK27) = 0   0.449329   REGUL_CC
+pcc_353   + 1 * LOG(HK19) - 1 * LOG(HK28) = 0   0.408842   REGUL_CC
+pcc_354   + 1 * LOG(HK19) - 1 * LOG(HK29) = 0   0.282264   REGUL_CC
+pcc_355   + 1 * LOG(HK19) - 1 * LOG(HK30) = 0   0.301194   REGUL_CC
+pcc_356   + 1 * LOG(HK19) - 1 * LOG(HK31) = 0   0.282264   REGUL_CC
+pcc_357   + 1 * LOG(HK20) - 1 * LOG(HK21) = 0   0.282264   REGUL_CC
+pcc_358   + 1 * LOG(HK20) - 1 * LOG(HK22) = 0   0.408842   REGUL_CC
+pcc_359   + 1 * LOG(HK20) - 1 * LOG(HK23) = 0   0.567971   REGUL_CC
+pcc_36   + 1 * LOG(HK01) - 1 * LOG(HK04) = 0   0.567971   REGUL_CC
+pcc_360   + 1 * LOG(HK20) - 1 * LOG(HK24) = 0   0.67032   REGUL_CC
+pcc_361   + 1 * LOG(HK20) - 1 * LOG(HK25) = 0   0.236402   REGUL_CC
+pcc_362   + 1 * LOG(HK20) - 1 * LOG(HK26) = 0   0.322591   REGUL_CC
+pcc_363   + 1 * LOG(HK20) - 1 * LOG(HK27) = 0   0.408842   REGUL_CC
+pcc_364   + 1 * LOG(HK20) - 1 * LOG(HK28) = 0   0.449329   REGUL_CC
+pcc_365   + 1 * LOG(HK20) - 1 * LOG(HK29) = 0   0.236402   REGUL_CC
+pcc_366   + 1 * LOG(HK20) - 1 * LOG(HK30) = 0   0.282264   REGUL_CC
+pcc_367   + 1 * LOG(HK20) - 1 * LOG(HK31) = 0   0.301194   REGUL_CC
+pcc_368   + 1 * LOG(HK21) - 1 * LOG(HK22) = 0   0.67032   REGUL_CC
+pcc_369   + 1 * LOG(HK21) - 1 * LOG(HK23) = 0   0.449329   REGUL_CC
+pcc_37   + 1 * LOG(HK01) - 1 * LOG(HK05) = 0   0.67032   REGUL_CC
+pcc_370   + 1 * LOG(HK21) - 1 * LOG(HK24) = 0   0.301194   REGUL_CC
+pcc_371   + 1 * LOG(HK21) - 1 * LOG(HK25) = 0   0.67032   REGUL_CC
+pcc_372   + 1 * LOG(HK21) - 1 * LOG(HK26) = 0   0.567971   REGUL_CC
+pcc_373   + 1 * LOG(HK21) - 1 * LOG(HK27) = 0   0.408842   REGUL_CC
+pcc_374   + 1 * LOG(HK21) - 1 * LOG(HK28) = 0   0.282264   REGUL_CC
+pcc_375   + 1 * LOG(HK21) - 1 * LOG(HK29) = 0   0.408842   REGUL_CC
+pcc_376   + 1 * LOG(HK21) - 1 * LOG(HK30) = 0   0.322591   REGUL_CC
+pcc_377   + 1 * LOG(HK21) - 1 * LOG(HK31) = 0   0.236402   REGUL_CC
+pcc_378   + 1 * LOG(HK22) - 1 * LOG(HK23) = 0   0.67032   REGUL_CC
+pcc_379   + 1 * LOG(HK22) - 1 * LOG(HK24) = 0   0.449329   REGUL_CC
+pcc_38   + 1 * LOG(HK01) - 1 * LOG(HK06) = 0   0.567971   REGUL_CC
+pcc_380   + 1 * LOG(HK22) - 1 * LOG(HK25) = 0   0.567971   REGUL_CC
+pcc_381   + 1 * LOG(HK22) - 1 * LOG(HK26) = 0   0.67032   REGUL_CC
+pcc_382   + 1 * LOG(HK22) - 1 * LOG(HK27) = 0   0.567971   REGUL_CC
+pcc_383   + 1 * LOG(HK22) - 1 * LOG(HK28) = 0   0.408842   REGUL_CC
+pcc_384   + 1 * LOG(HK22) - 1 * LOG(HK29) = 0   0.449329   REGUL_CC
+pcc_385   + 1 * LOG(HK22) - 1 * LOG(HK30) = 0   0.408842   REGUL_CC
+pcc_386   + 1 * LOG(HK22) - 1 * LOG(HK31) = 0   0.322591   REGUL_CC
+pcc_387   + 1 * LOG(HK23) - 1 * LOG(HK24) = 0   0.67032   REGUL_CC
+pcc_388   + 1 * LOG(HK23) - 1 * LOG(HK25) = 0   0.408842   REGUL_CC
+pcc_389   + 1 * LOG(HK23) - 1 * LOG(HK26) = 0   0.567971   REGUL_CC
+pcc_39   + 1 * LOG(HK01) - 1 * LOG(HK07) = 0   0.408842   REGUL_CC
+pcc_390   + 1 * LOG(HK23) - 1 * LOG(HK27) = 0   0.67032   REGUL_CC
+pcc_391   + 1 * LOG(HK23) - 1 * LOG(HK28) = 0   0.567971   REGUL_CC
+pcc_392   + 1 * LOG(HK23) - 1 * LOG(HK29) = 0   0.408842   REGUL_CC
+pcc_393   + 1 * LOG(HK23) - 1 * LOG(HK30) = 0   0.449329   REGUL_CC
+pcc_394   + 1 * LOG(HK23) - 1 * LOG(HK31) = 0   0.408842   REGUL_CC
+pcc_395   + 1 * LOG(HK24) - 1 * LOG(HK25) = 0   0.282264   REGUL_CC
+pcc_396   + 1 * LOG(HK24) - 1 * LOG(HK26) = 0   0.408842   REGUL_CC
+pcc_397   + 1 * LOG(HK24) - 1 * LOG(HK27) = 0   0.567971   REGUL_CC
+pcc_398   + 1 * LOG(HK24) - 1 * LOG(HK28) = 0   0.67032   REGUL_CC
+pcc_399   + 1 * LOG(HK24) - 1 * LOG(HK29) = 0   0.322591   REGUL_CC
+pcc_40   + 1 * LOG(HK01) - 1 * LOG(HK08) = 0   0.408842   REGUL_CC
+pcc_400   + 1 * LOG(HK24) - 1 * LOG(HK30) = 0   0.408842   REGUL_CC
+pcc_401   + 1 * LOG(HK24) - 1 * LOG(HK31) = 0   0.449329   REGUL_CC
+pcc_402   + 1 * LOG(HK25) - 1 * LOG(HK26) = 0   0.67032   REGUL_CC
+pcc_403   + 1 * LOG(HK25) - 1 * LOG(HK27) = 0   0.449329   REGUL_CC
+pcc_404   + 1 * LOG(HK25) - 1 * LOG(HK28) = 0   0.301194   REGUL_CC
+pcc_405   + 1 * LOG(HK25) - 1 * LOG(HK29) = 0   0.567971   REGUL_CC
+pcc_406   + 1 * LOG(HK25) - 1 * LOG(HK30) = 0   0.408842   REGUL_CC
+pcc_407   + 1 * LOG(HK25) - 1 * LOG(HK31) = 0   0.282264   REGUL_CC
+pcc_408   + 1 * LOG(HK26) - 1 * LOG(HK27) = 0   0.67032   REGUL_CC
+pcc_409   + 1 * LOG(HK26) - 1 * LOG(HK28) = 0   0.449329   REGUL_CC
+pcc_41   + 1 * LOG(HK01) - 1 * LOG(HK09) = 0   0.408842   REGUL_CC
+pcc_410   + 1 * LOG(HK26) - 1 * LOG(HK29) = 0   0.67032   REGUL_CC
+pcc_411   + 1 * LOG(HK26) - 1 * LOG(HK30) = 0   0.567971   REGUL_CC
+pcc_412   + 1 * LOG(HK26) - 1 * LOG(HK31) = 0   0.408842   REGUL_CC
+pcc_413   + 1 * LOG(HK27) - 1 * LOG(HK28) = 0   0.67032   REGUL_CC
+pcc_414   + 1 * LOG(HK27) - 1 * LOG(HK29) = 0   0.567971   REGUL_CC
+pcc_415   + 1 * LOG(HK27) - 1 * LOG(HK30) = 0   0.67032   REGUL_CC
+pcc_416   + 1 * LOG(HK27) - 1 * LOG(HK31) = 0   0.567971   REGUL_CC
+pcc_417   + 1 * LOG(HK28) - 1 * LOG(HK29) = 0   0.408842   REGUL_CC
+pcc_418   + 1 * LOG(HK28) - 1 * LOG(HK30) = 0   0.567971   REGUL_CC
+pcc_419   + 1 * LOG(HK28) - 1 * LOG(HK31) = 0   0.67032   REGUL_CC
+pcc_42   + 1 * LOG(HK01) - 1 * LOG(HK10) = 0   0.322591   REGUL_CC
+pcc_420   + 1 * LOG(HK29) - 1 * LOG(HK30) = 0   0.67032   REGUL_CC
+pcc_421   + 1 * LOG(HK29) - 1 * LOG(HK31) = 0   0.449329   REGUL_CC
+pcc_422   + 1 * LOG(HK30) - 1 * LOG(HK31) = 0   0.67032   REGUL_CC
+pcc_43   + 1 * LOG(HK01) - 1 * LOG(HK11) = 0   0.282264   REGUL_CC
+pcc_44   + 1 * LOG(HK01) - 1 * LOG(HK12) = 0   0.282264   REGUL_CC
+pcc_45   + 1 * LOG(HK01) - 1 * LOG(HK13) = 0   0.236402   REGUL_CC
+pcc_46   + 1 * LOG(HK01) - 1 * LOG(HK14) = 0   0.192195   REGUL_CC
+pcc_47   + 1 * LOG(HK01) - 1 * LOG(HK15) = 0   0.192195   REGUL_CC
+pcc_48   + 1 * LOG(HK01) - 1 * LOG(HK16) = 0   0.167152   REGUL_CC
+pcc_49   + 1 * LOG(HK01) - 1 * LOG(HK17) = 0   0.13008   REGUL_CC
+pcc_50   + 1 * LOG(HK01) - 1 * LOG(HK18) = 0   0.135335   REGUL_CC
+pcc_51   + 1 * LOG(HK01) - 1 * LOG(HK19) = 0   0.13008   REGUL_CC
+pcc_52   + 1 * LOG(HK01) - 1 * LOG(HK20) = 0   0.116012   REGUL_CC
+pcc_53   + 1 * LOG(HK02) - 1 * LOG(HK03) = 0   0.67032   REGUL_CC
+pcc_54   + 1 * LOG(HK02) - 1 * LOG(HK04) = 0   0.408842   REGUL_CC
+pcc_55   + 1 * LOG(HK02) - 1 * LOG(HK05) = 0   0.567971   REGUL_CC
+pcc_56   + 1 * LOG(HK02) - 1 * LOG(HK06) = 0   0.67032   REGUL_CC
+pcc_57   + 1 * LOG(HK02) - 1 * LOG(HK07) = 0   0.567971   REGUL_CC
+pcc_58   + 1 * LOG(HK02) - 1 * LOG(HK08) = 0   0.322591   REGUL_CC
+pcc_59   + 1 * LOG(HK02) - 1 * LOG(HK09) = 0   0.449329   REGUL_CC
+pcc_60   + 1 * LOG(HK02) - 1 * LOG(HK10) = 0   0.408842   REGUL_CC
+pcc_61   + 1 * LOG(HK02) - 1 * LOG(HK11) = 0   0.236402   REGUL_CC
+pcc_62   + 1 * LOG(HK02) - 1 * LOG(HK12) = 0   0.301194   REGUL_CC
+pcc_63   + 1 * LOG(HK02) - 1 * LOG(HK13) = 0   0.282264   REGUL_CC
+pcc_64   + 1 * LOG(HK02) - 1 * LOG(HK14) = 0   0.167152   REGUL_CC
+pcc_65   + 1 * LOG(HK02) - 1 * LOG(HK15) = 0   0.201897   REGUL_CC
+pcc_66   + 1 * LOG(HK02) - 1 * LOG(HK16) = 0   0.192195   REGUL_CC
+pcc_67   + 1 * LOG(HK02) - 1 * LOG(HK17) = 0   0.116012   REGUL_CC
+pcc_68   + 1 * LOG(HK02) - 1 * LOG(HK18) = 0   0.13008   REGUL_CC
+pcc_69   + 1 * LOG(HK02) - 1 * LOG(HK19) = 0   0.135335   REGUL_CC
+pcc_70   + 1 * LOG(HK02) - 1 * LOG(HK20) = 0   0.13008   REGUL_CC
+pcc_71   + 1 * LOG(HK03) - 1 * LOG(HK04) = 0   0.282264   REGUL_CC
+pcc_72   + 1 * LOG(HK03) - 1 * LOG(HK05) = 0   0.408842   REGUL_CC
+pcc_73   + 1 * LOG(HK03) - 1 * LOG(HK06) = 0   0.567971   REGUL_CC
+pcc_74   + 1 * LOG(HK03) - 1 * LOG(HK07) = 0   0.67032   REGUL_CC
+pcc_75   + 1 * LOG(HK03) - 1 * LOG(HK08) = 0   0.236402   REGUL_CC
+pcc_76   + 1 * LOG(HK03) - 1 * LOG(HK09) = 0   0.408842   REGUL_CC
+pcc_77   + 1 * LOG(HK03) - 1 * LOG(HK10) = 0   0.449329   REGUL_CC
+pcc_78   + 1 * LOG(HK03) - 1 * LOG(HK11) = 0   0.183222   REGUL_CC
+pcc_79   + 1 * LOG(HK03) - 1 * LOG(HK12) = 0   0.282264   REGUL_CC
+pcc_80   + 1 * LOG(HK03) - 1 * LOG(HK13) = 0   0.301194   REGUL_CC
+pcc_81   + 1 * LOG(HK03) - 1 * LOG(HK14) = 0   0.135335   REGUL_CC
+pcc_82   + 1 * LOG(HK03) - 1 * LOG(HK15) = 0   0.192195   REGUL_CC
+pcc_83   + 1 * LOG(HK03) - 1 * LOG(HK16) = 0   0.201897   REGUL_CC
+pcc_84   + 1 * LOG(HK03) - 1 * LOG(HK18) = 0   0.116012   REGUL_CC
+pcc_85   + 1 * LOG(HK03) - 1 * LOG(HK19) = 0   0.13008   REGUL_CC
+pcc_86   + 1 * LOG(HK03) - 1 * LOG(HK20) = 0   0.135335   REGUL_CC
+pcc_87   + 1 * LOG(HK04) - 1 * LOG(HK05) = 0   0.67032   REGUL_CC
+pcc_88   + 1 * LOG(HK04) - 1 * LOG(HK06) = 0   0.449329   REGUL_CC
+pcc_89   + 1 * LOG(HK04) - 1 * LOG(HK07) = 0   0.301194   REGUL_CC
+pcc_90   + 1 * LOG(HK04) - 1 * LOG(HK08) = 0   0.67032   REGUL_CC
+pcc_91   + 1 * LOG(HK04) - 1 * LOG(HK09) = 0   0.408842   REGUL_CC
+pcc_92   + 1 * LOG(HK04) - 1 * LOG(HK10) = 0   0.282264   REGUL_CC
+pcc_93   + 1 * LOG(HK04) - 1 * LOG(HK11) = 0   0.449329   REGUL_CC
+pcc_94   + 1 * LOG(HK04) - 1 * LOG(HK12) = 0   0.322591   REGUL_CC
+pcc_95   + 1 * LOG(HK04) - 1 * LOG(HK13) = 0   0.236402   REGUL_CC
+pcc_96   + 1 * LOG(HK04) - 1 * LOG(HK14) = 0   0.301194   REGUL_CC
+pcc_97   + 1 * LOG(HK04) - 1 * LOG(HK15) = 0   0.236402   REGUL_CC
+pcc_98   + 1 * LOG(HK04) - 1 * LOG(HK16) = 0   0.183222   REGUL_CC
+pcc_99   + 1 * LOG(HK04) - 1 * LOG(HK17) = 0   0.201897   REGUL_CC
+rch_0   + 1 * LOG(RCH_0) = 0   1.66096   REGULRCH
+rch_1   + 1 * LOG(RCH_1) = 0   0.926628   REGULRCH
+w0_r09_c16   + 1 * LOG(W0_R09_C16) = 0   1.66096   REGULW0
+w0_r11_c13   + 1 * LOG(W0_R11_C13) = 0   1.66096   REGULW0
+w0_r20_c14   + 1 * LOG(W0_R20_C14) = 0   1.66096   REGULW0
+w0_r26_c10   + 1 * LOG(W0_R26_C10) = 0   1.66096   REGULW0
+w0_r29_c06   + 1 * LOG(W0_R29_C06) = 0   1.66096   REGULW0
+w0_r34_c12   + 1 * LOG(W0_R34_C12) = 0   1.66096   REGULW0
+w1_r09_c16   + 1 * LOG(W1_R09_C16) = 0   0.5   REGULW1
+w1_r11_c13   + 1 * LOG(W1_R11_C13) = 0   0.5   REGULW1
+w1_r20_c14   + 1 * LOG(W1_R20_C14) = 0   0.5   REGULW1
+w1_r26_c10   + 1 * LOG(W1_R26_C10) = 0   0.5   REGULW1
+w1_r29_c06   + 1 * LOG(W1_R29_C06) = 0   0.5   REGULW1
+w1_r34_c12   + 1 * LOG(W1_R34_C12) = 0   0.5   REGULW1
+
+
+
+PEST SVD Information
+    maxsing = 48
+    eigthresh = 1e-06
+
+
+Regularization information:
+    phimlim = 500
+    fracphim = 0.1
+    phimaccept = 550
+    wfinit = 1
+
+
+
+...loading prior parameter covariance matrix
+
+Model run failed.  No results were recorded.
+
