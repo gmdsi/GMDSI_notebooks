@@ -1,0 +1,32 @@
+pcf version=2
+* control data keyword
+pestmode                             regularization
+noptmax                                 6
+svdmode                                 1
+maxsing                                48
+eigthresh                           1e-06
+eigwrite                                1
+phimlim                             500.0
+phimaccept                          550.0
+fracphim                              0.1
+wfinit                                1.0
+n_iter_base                    -1
+lambda_scale_fac               1.0
+n_iter_super                   3
+lambdas                        0.1,1.0,10.0
+forecasts                      travel_time,fa_headwaters_0001,c001fr16c17_19791231,c001fr05c04_19791231
+upgrade_augment                false
+* parameter groups external
+test.pargrp_data.csv
+* parameter data external
+test.par_data.csv
+* observation data external
+test.obs_data.csv
+* model command line
+python forward_run.py
+* model input external
+test.tplfile_data.csv
+* model output external
+test.insfile_data.csv
+* prior information external
+test.pi_data.csv

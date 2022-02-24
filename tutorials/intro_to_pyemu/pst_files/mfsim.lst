@@ -232,33 +232,33 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       2978389.5       2978389.5                       *                                   
- Model                              1         21                                                             780.43264                            1_GWF-(3,40,16)
- Backtracking                       2                     0          0       254947.92       254947.92                       *                                   
- Model                              2         50                                                             481.36577                            1_GWF-(1,40,16)
- Backtracking                       3                     0          0       63151.347       63151.347                       *                                   
- Model                              3         50                                                             27.933856                            1_GWF-(1,40,16)
- Backtracking                       4                     0          0       15762.103       15762.103                       *                                   
- Model                              4         50                                                             4.2255594                            1_GWF-(3,40,15)
- Backtracking                       5                     0          0       2995.7951       2995.7951                       *                                   
- Model                              5         50                                                           -0.70627824                              1_GWF-(1,9,1)
- Backtracking                       6                     0          0       910.09163       910.09163                       *                                   
- Model                              6         50                                                           -0.12298255                             1_GWF-(1,9,13)
- Backtracking                       7                     0          0       239.65158       239.65158                       *                                   
- Model                              7         38                                                       -3.66903234E-02                             1_GWF-(1,29,6)
- Backtracking                       8                     0          0       102.05822       102.05822                       *                                   
- Model                              8         19                                                       -9.47428072E-03                             1_GWF-(1,29,6)
- Backtracking                       9                     0          0       24.960141       24.960141                       *                                   
- Model                              9          8                                                       -2.41489392E-03                             1_GWF-(1,29,6)
- Backtracking                      10                     0          0       6.6556426       6.6556426                       *                                   
- Model                             10         14                                                       -4.38979903E-03                             1_GWF-(1,29,6)
- Backtracking                      11                     0          1       12.543137       9.6230092                                                           
- Model                             11          4                                                       -5.80726032E-04       *                     1_GWF-(1,29,6)
+ Backtracking                       1                     0          0       2237762.4       2237762.4                       *                                   
+ Model                              1         21                                                             780.78155                            1_GWF-(3,40,16)
+ Backtracking                       2                     0          0       191317.15       191317.15                       *                                   
+ Model                              2         44                                                             480.25216                            1_GWF-(1,40,16)
+ Backtracking                       3                     0          0       47255.698       47255.698                       *                                   
+ Model                              3         50                                                             27.233299                            1_GWF-(1,40,16)
+ Backtracking                       4                     0          0       11559.335       11559.335                       *                                   
+ Model                              4         50                                                             4.2412938                            1_GWF-(3,39,16)
+ Backtracking                       5                     0          0       2192.3569       2192.3569                       *                                   
+ Model                              5         50                                                           -0.89542090                             1_GWF-(1,11,1)
+ Backtracking                       6                     0          0       852.76987       852.76987                       *                                   
+ Model                              6         50                                                           -0.12873008                             1_GWF-(1,31,7)
+ Backtracking                       7                     0          0       261.35939       261.35939                       *                                   
+ Model                              7         48                                                       -5.45876889E-02                             1_GWF-(1,31,7)
+ Backtracking                       8                     0          0       113.09818       113.09818                       *                                   
+ Model                              8         13                                                       -1.41000656E-02                             1_GWF-(1,31,7)
+ Backtracking                       9                     0          0       29.633791       29.633791                       *                                   
+ Model                              9         14                                                       -4.84681759E-03                             1_GWF-(1,31,7)
+ Backtracking                      10                     0          0       9.7597905       9.7597905                       *                                   
+ Model                             10          6                                                       -1.30415711E-03                             1_GWF-(1,31,7)
+ Backtracking                      11                     0          0       2.8606492       2.8606492                       *                                   
+ Model                             11          4                                                       -4.72911917E-04       *                     1_GWF-(1,31,7)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  11 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 1
- 354 TOTAL ITERATIONS
+ 350 TOTAL ITERATIONS
  
     Solving:  Stress period:     2    Time step:     1
  
@@ -274,17 +274,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       341.86560       341.86560                       *                                   
- Model                              1         33                                                            0.19750237                             1_GWF-(3,30,7)
- Backtracking                       2                     0          0       7.8633461       7.8633461                       *                                   
- Model                              2         15                                                        4.77034730E-03                            1_GWF-(1,38,13)
- Backtracking                       3                     0          0      0.38398141      0.38398141                       *                                   
- Model                              3          5                                                        6.24053222E-04       *                     1_GWF-(2,36,5)
+ Backtracking                       1                     0          0       280.20887       280.20887                       *                                   
+ Model                              1         29                                                            0.19661774                             1_GWF-(3,30,7)
+ Backtracking                       2                     0          0       6.6496403       6.6496403                       *                                   
+ Model                              2         16                                                        5.27221577E-03                             1_GWF-(3,15,3)
+ Backtracking                       3                     0          0      0.30633081      0.30633081                       *                                   
+ Model                              3          1                                                        8.30453749E-05       *                    1_GWF-(1,40,16)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 2
- 53 TOTAL ITERATIONS
+ 46 TOTAL ITERATIONS
  
     Solving:  Stress period:     3    Time step:     1
  
@@ -300,17 +300,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       100.59867       100.59867                       *                                   
- Model                              1         21                                                            0.12692184                             1_GWF-(1,26,1)
- Backtracking                       2                     0          0       5.6667357       5.6667357                       *                                   
- Model                              2         13                                                        3.03072915E-03                            1_GWF-(1,40,16)
- Backtracking                       3                     0          0      0.30400263      0.30400263                       *                                   
- Model                              3          1                                                        4.83342384E-05       *                    1_GWF-(1,31,16)
+ Backtracking                       1                     0          0       71.969304       71.969304                       *                                   
+ Model                              1         22                                                            0.11908319                             1_GWF-(1,26,1)
+ Backtracking                       2                     0          0       4.5679432       4.5679432                       *                                   
+ Model                              2         14                                                        2.89346182E-03                            1_GWF-(1,40,16)
+ Backtracking                       3                     0          0      0.18885460      0.18885460                       *                                   
+ Model                              3          1                                                        5.58811309E-05       *                    1_GWF-(1,39,16)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 3
- 35 TOTAL ITERATIONS
+ 37 TOTAL ITERATIONS
  
     Solving:  Stress period:     4    Time step:     1
  
@@ -326,17 +326,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       129.29452       129.29452                       *                                   
- Model                              1         26                                                            0.10689363                             1_GWF-(1,15,1)
- Backtracking                       2                     0          0       2.9506403       2.9506403                       *                                   
- Model                              2         12                                                        2.72966669E-03                            1_GWF-(1,37,16)
- Backtracking                       3                     0          0      0.33074739      0.33074739                       *                                   
- Model                              3          1                                                        6.05183249E-05       *                    1_GWF-(1,31,16)
+ Backtracking                       1                     0          0       102.87353       102.87353                       *                                   
+ Model                              1         20                                                        9.91106439E-02                             1_GWF-(1,16,1)
+ Backtracking                       2                     0          0       2.2157743       2.2157743                       *                                   
+ Model                              2         14                                                        2.12824614E-03                            1_GWF-(3,14,15)
+ Backtracking                       3                     0          0      0.19906319      0.19906319                       *                                   
+ Model                              3          1                                                        4.84236584E-05       *                    1_GWF-(1,30,16)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 4
- 39 TOTAL ITERATIONS
+ 35 TOTAL ITERATIONS
  
     Solving:  Stress period:     5    Time step:     1
  
@@ -352,17 +352,15 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       170.92045       170.92045                       *                                   
- Model                              1         27                                                       -4.75865615E-02                            1_GWF-(3,35,13)
- Backtracking                       2                     0          0       1.0389375       1.0389375                       *                                   
- Model                              2          9                                                       -1.03500494E-03                             1_GWF-(3,24,1)
- Backtracking                       3                     0          0      0.98587724      0.98587724                       *                                   
- Model                              3          2                                                       -8.25572734E-05       *                     1_GWF-(1,28,4)
+ Backtracking                       1                     0          0       140.94443       140.94443                       *                                   
+ Model                              1         27                                                       -5.08970252E-02                            1_GWF-(3,10,17)
+ Backtracking                       2                     0          0       1.0251022       1.0251022                       *                                   
+ Model                              2          3                                                       -5.05927118E-04       *                    1_GWF-(1,40,16)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
- 3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 5
- 38 TOTAL ITERATIONS
+ 2 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 5
+ 30 TOTAL ITERATIONS
  
     Solving:  Stress period:     6    Time step:     1
  
@@ -378,17 +376,19 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       187.00807       187.00807                       *                                   
- Model                              1         35                                                           -0.12450963                             1_GWF-(3,30,7)
- Backtracking                       2                     0          0       4.7069687       4.7069687                       *                                   
- Model                              2         16                                                       -3.66586482E-03                             1_GWF-(3,14,3)
- Backtracking                       3                     0          0      0.22080219      0.22080219                       *                                   
- Model                              3          1                                                       -3.92630413E-05       *                    1_GWF-(1,40,16)
+ Backtracking                       1                     0          0       152.94732       152.94732                       *                                   
+ Model                              1         33                                                           -0.12517150                             1_GWF-(3,30,7)
+ Backtracking                       2                     0          0       4.0384037       4.0384037                       *                                   
+ Model                              2          7                                                       -2.46461385E-03                            1_GWF-(1,40,16)
+ Backtracking                       3                     0          0      0.64450146      0.64450146                       *                                   
+ Model                              3          8                                                       -2.03972988E-03                            1_GWF-(2,35,20)
+ Backtracking                       4                     0          1       1.8916951       1.3341281                                                           
+ Model                              4          2                                                       -1.45785303E-04       *                    1_GWF-(2,14,20)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
- 3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 6
- 52 TOTAL ITERATIONS
+ 4 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 6
+ 50 TOTAL ITERATIONS
  
     Solving:  Stress period:     7    Time step:     1
  
@@ -404,17 +404,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       168.58885       168.58885                       *                                   
- Model                              1         40                                                           -0.16787696                             1_GWF-(1,30,7)
- Backtracking                       2                     0          0       7.4537420       7.4537420                       *                                   
- Model                              2         15                                                       -3.51833094E-03                            1_GWF-(1,35,16)
- Backtracking                       3                     0          0      0.39012579      0.39012579                       *                                   
- Model                              3          1                                                        9.15771621E-05       *                    1_GWF-(1,39,15)
+ Backtracking                       1                     0          0       132.88011       132.88011                       *                                   
+ Model                              1         29                                                           -0.16304690                             1_GWF-(1,30,7)
+ Backtracking                       2                     0          0       6.2745144       6.2745144                       *                                   
+ Model                              2         16                                                       -4.53085570E-03                            1_GWF-(1,38,16)
+ Backtracking                       3                     0          0      0.27538159      0.27538159                       *                                   
+ Model                              3          1                                                       -8.01040873E-05       *                    1_GWF-(1,40,16)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 7
- 56 TOTAL ITERATIONS
+ 46 TOTAL ITERATIONS
  
     Solving:  Stress period:     8    Time step:     1
  
@@ -430,19 +430,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       134.94507       134.94507                       *                                   
- Model                              1         34                                                           -0.17455622                             1_GWF-(1,30,7)
- Backtracking                       2                     0          0       8.6412676       8.6412676                       *                                   
- Model                              2         12                                                       -4.45237833E-03                            1_GWF-(1,40,16)
- Backtracking                       3                     0          0      0.61259924      0.61259924                       *                                   
- Model                              3          9                                                       -1.00394270E-03                            1_GWF-(2,30,20)
- Backtracking                       4                     4          0       1.4673685       1.4673685                       *                                   
- Model                              4          2                                                       -1.17227293E-04       *                     1_GWF-(1,36,9)
+ Backtracking                       1                     0          0       99.077709       99.077709                       *                                   
+ Model                              1         29                                                           -0.16619459                             1_GWF-(1,30,7)
+ Backtracking                       2                     0          0       7.6566517       7.6566517                       *                                   
+ Model                              2         16                                                       -5.14296309E-03                            1_GWF-(1,40,16)
+ Backtracking                       3                     0          0      0.32637931      0.32637931                       *                                   
+ Model                              3          1                                                       -9.33531759E-05       *                    1_GWF-(1,40,16)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
- 4 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 8
- 57 TOTAL ITERATIONS
+ 3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 8
+ 46 TOTAL ITERATIONS
  
     Solving:  Stress period:     9    Time step:     1
  
@@ -458,17 +456,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       108.12748       108.12748                       *                                   
- Model                              1         24                                                           -0.16876565                             1_GWF-(1,18,1)
- Backtracking                       2                     0          0       7.7059977       7.7059977                       *                                   
- Model                              2         12                                                       -3.79722848E-03                            1_GWF-(1,40,16)
- Backtracking                       3                     0          0      0.62139135      0.62139135                       *                                   
- Model                              3          6                                                       -9.32840545E-04       *                    1_GWF-(2,31,20)
+ Backtracking                       1                     0          0       75.963523       75.963523                       *                                   
+ Model                              1         22                                                           -0.15606244                             1_GWF-(1,18,1)
+ Backtracking                       2                     0          0       7.0433638       7.0433638                       *                                   
+ Model                              2         16                                                       -4.68786579E-03                            1_GWF-(1,39,16)
+ Backtracking                       3                     0          0      0.35185613      0.35185613                       *                                   
+ Model                              3          3                                                       -2.88409758E-04       *                    1_GWF-(1,40,16)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 9
- 42 TOTAL ITERATIONS
+ 41 TOTAL ITERATIONS
  
     Solving:  Stress period:    10    Time step:     1
  
@@ -484,19 +482,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       82.093980       82.093980                       *                                   
- Model                              1         31                                                           -0.12560842                             1_GWF-(1,15,1)
- Backtracking                       2                     0          0       4.1033001       4.1033001                       *                                   
- Model                              2          7                                                       -1.92428853E-03                            1_GWF-(1,40,16)
- Backtracking                       3                     0          0      0.85356848      0.85356848                       *                                   
- Model                              3          8                                                       -1.59466475E-03                            1_GWF-(2,33,20)
- Backtracking                       4                     0          0      0.33432798      0.33432798                       *                                   
- Model                              4          1                                                       -4.21899177E-05       *                     1_GWF-(3,24,6)
+ Backtracking                       1                     0          0       60.578027       60.578027                       *                                   
+ Model                              1         19                                                           -0.11750732                             1_GWF-(1,15,1)
+ Backtracking                       2                     0          0       4.0776282       4.0776282                       *                                   
+ Model                              2         14                                                       -3.78358827E-03                            1_GWF-(1,35,16)
+ Backtracking                       3                     0          0      0.39001593      0.39001593                       *                                   
+ Model                              3          1                                                       -9.85100017E-05       *                    1_GWF-(1,40,16)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
- 4 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 10
- 47 TOTAL ITERATIONS
+ 3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 10
+ 34 TOTAL ITERATIONS
  
     Solving:  Stress period:    11    Time step:     1
  
@@ -512,17 +508,15 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       131.83348       131.83348                       *                                   
- Model                              1         26                                                       -5.44831469E-02                             1_GWF-(1,14,1)
- Backtracking                       2                     0          0       1.0158710       1.0158710                       *                                   
- Model                              2          9                                                       -1.83973607E-03                             1_GWF-(3,11,3)
- Backtracking                       3                     1          1       1.5085430       1.1029846                                                           
- Model                              3          1                                                       -8.71644108E-05       *                     1_GWF-(1,4,16)
+ Backtracking                       1                     0          0       108.44856       108.44856                       *                                   
+ Model                              1         26                                                       -5.14820981E-02                             1_GWF-(1,14,1)
+ Backtracking                       2                     0          0       1.2202318       1.2202318                       *                                   
+ Model                              2          3                                                        6.24063185E-04       *                    1_GWF-(1,40,16)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
- 3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 11
- 36 TOTAL ITERATIONS
+ 2 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 11
+ 29 TOTAL ITERATIONS
  
     Solving:  Stress period:    12    Time step:     1
  
@@ -538,17 +532,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       184.33949       184.33949                       *                                   
- Model                              1         33                                                            0.11549401                             1_GWF-(3,30,7)
- Backtracking                       2                     0          0       5.7582038       5.7582038                       *                                   
- Model                              2         12                                                        3.39442111E-03                            1_GWF-(1,38,10)
- Backtracking                       3                     0          0      0.43641048      0.43641048                       *                                   
- Model                              3          4                                                        5.41743474E-04       *                     1_GWF-(1,31,9)
+ Backtracking                       1                     0          0       150.78625       150.78625                       *                                   
+ Model                              1         33                                                            0.11547789                             1_GWF-(3,30,7)
+ Backtracking                       2                     0          0       5.6248495       5.6248495                       *                                   
+ Model                              2         16                                                        4.20019016E-03                            1_GWF-(1,37,16)
+ Backtracking                       3                     0          0      0.27230419      0.27230419                       *                                   
+ Model                              3          1                                                        8.39016844E-05       *                    1_GWF-(1,40,16)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 12
- 49 TOTAL ITERATIONS
+ 50 TOTAL ITERATIONS
  
     Solving:  Stress period:    13    Time step:     1
  
@@ -564,17 +558,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       196.96329       196.96329                       *                                   
- Model                              1         42                                                            0.17585065                             1_GWF-(3,30,7)
- Backtracking                       2                     0          0       8.6453745       8.6453745                       *                                   
- Model                              2         18                                                        4.85914555E-03                            1_GWF-(1,40,16)
- Backtracking                       3                     0          0      0.31364041      0.31364041                       *                                   
- Model                              3          1                                                        7.12578932E-05       *                    1_GWF-(1,40,16)
+ Backtracking                       1                     0          0       157.76285       157.76285                       *                                   
+ Model                              1         31                                                            0.17191617                             1_GWF-(3,30,7)
+ Backtracking                       2                     0          0       7.6408591       7.6408591                       *                                   
+ Model                              2         16                                                        5.44057094E-03                            1_GWF-(1,39,16)
+ Backtracking                       3                     0          0      0.35640233      0.35640233                       *                                   
+ Model                              3          5                                                        5.65232462E-04       *                     1_GWF-(2,35,5)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 13
- 61 TOTAL ITERATIONS
+ 52 TOTAL ITERATIONS
  
     Solving:  Stress period:    14    Time step:     1
  
@@ -590,17 +584,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       163.02161       163.02161                       *                                   
- Model                              1         29                                                            0.18282556                             1_GWF-(1,30,7)
- Backtracking                       2                     0          0       8.4841523       8.4841523                       *                                   
- Model                              2         16                                                        4.78313726E-03                            1_GWF-(1,40,16)
- Backtracking                       3                     0          0      0.36106230      0.36106230                       *                                   
- Model                              3          5                                                        6.63907994E-04       *                     1_GWF-(2,35,4)
+ Backtracking                       1                     0          0       126.02419       126.02419                       *                                   
+ Model                              1         37                                                            0.17686048                             1_GWF-(1,30,7)
+ Backtracking                       2                     0          0       7.0865654       7.0865654                       *                                   
+ Model                              2         19                                                        5.08653653E-03                            1_GWF-(1,38,16)
+ Backtracking                       3                     0          0      0.25824678      0.25824678                       *                                   
+ Model                              3          1                                                        8.10322885E-05       *                    1_GWF-(1,40,16)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 14
- 50 TOTAL ITERATIONS
+ 57 TOTAL ITERATIONS
  
     Solving:  Stress period:    15    Time step:     1
  
@@ -616,17 +610,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       102.73246       102.73246                       *                                   
- Model                              1         21                                                            0.13807043                             1_GWF-(1,22,1)
- Backtracking                       2                     0          0       5.7306806       5.7306806                       *                                   
- Model                              2         14                                                        3.59784375E-03                            1_GWF-(1,40,16)
- Backtracking                       3                     0          0      0.28261070      0.28261070                       *                                   
- Model                              3          1                                                        5.61314331E-05       *                    1_GWF-(1,30,16)
+ Backtracking                       1                     0          0       73.729988       73.729988                       *                                   
+ Model                              1         23                                                            0.12899561                             1_GWF-(1,24,1)
+ Backtracking                       2                     0          0       4.6524701       4.6524701                       *                                   
+ Model                              2         10                                                        2.78850159E-03                            1_GWF-(1,40,16)
+ Backtracking                       3                     0          0      0.40465581      0.40465581                       *                                   
+ Model                              3          6                                                        9.38749917E-04       *                    1_GWF-(2,32,20)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 15
- 36 TOTAL ITERATIONS
+ 39 TOTAL ITERATIONS
  
     Solving:  Stress period:    16    Time step:     1
  
@@ -642,17 +636,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       90.220148       90.220148                       *                                   
- Model                              1         24                                                            0.10520753                             1_GWF-(1,16,1)
- Backtracking                       2                     0          0       2.7655435       2.7655435                       *                                   
- Model                              2         11                                                        2.94136094E-03                            1_GWF-(1,37,16)
- Backtracking                       3                     0          0      0.36589075      0.36589075                       *                                   
- Model                              3          1                                                        8.04799270E-05       *                    1_GWF-(1,32,16)
+ Backtracking                       1                     0          0       70.181436       70.181436                       *                                   
+ Model                              1         26                                                        9.86309814E-02                             1_GWF-(1,16,1)
+ Backtracking                       2                     0          0       2.0710536       2.0710536                       *                                   
+ Model                              2         10                                                        2.08233719E-03                            1_GWF-(1,37,16)
+ Backtracking                       3                     0          0      0.33879223      0.33879223                       *                                   
+ Model                              3          1                                                       -7.97673649E-05       *                    1_GWF-(1,39,17)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 16
- 36 TOTAL ITERATIONS
+ 37 TOTAL ITERATIONS
  
     Solving:  Stress period:    17    Time step:     1
  
@@ -668,17 +662,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       147.08275       147.08275                       *                                   
- Model                              1         27                                                       -5.17780083E-02                            1_GWF-(3,35,13)
- Backtracking                       2                     0          0       1.6001140       1.6001140                       *                                   
- Model                              2          9                                                       -2.13432325E-03                             1_GWF-(3,20,2)
- Backtracking                       3                     1          1       1.8718121       1.4049163                                                           
- Model                              3          2                                                       -1.25514195E-04       *                     1_GWF-(2,27,1)
+ Backtracking                       1                     0          0       121.23662       121.23662                       *                                   
+ Model                              1         29                                                       -5.18872398E-02                            1_GWF-(3,10,17)
+ Backtracking                       2                     0          0       1.3889180       1.3889180                       *                                   
+ Model                              2         12                                                       -2.07011610E-03                             1_GWF-(3,18,4)
+ Backtracking                       3                     0          0       1.3925453       1.3925453                       *                                   
+ Model                              3          2                                                       -1.28529988E-04       *                     1_GWF-(2,27,1)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 17
- 38 TOTAL ITERATIONS
+ 43 TOTAL ITERATIONS
  
     Solving:  Stress period:    18    Time step:     1
  
@@ -694,19 +688,19 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       191.40145       191.40145                       *                                   
- Model                              1         34                                                           -0.13446709                             1_GWF-(3,30,7)
- Backtracking                       2                     0          0       5.3000853       5.3000853                       *                                   
- Model                              2          7                                                       -2.37848668E-03                            1_GWF-(1,40,16)
- Backtracking                       3                     0          0      0.85113088      0.85113088                       *                                   
- Model                              3          9                                                       -1.86569650E-03                            1_GWF-(2,35,20)
- Backtracking                       4                     0          1       3.9416827       2.7621652                                                           
- Model                              4          2                                                       -2.91657346E-04       *                    1_GWF-(1,26,20)
+ Backtracking                       1                     0          0       155.86500       155.86500                       *                                   
+ Model                              1         33                                                           -0.13194693                             1_GWF-(3,30,7)
+ Backtracking                       2                     0          0       4.5200298       4.5200298                       *                                   
+ Model                              2          7                                                       -2.68669191E-03                            1_GWF-(1,40,16)
+ Backtracking                       3                     0          0      0.67147573      0.67147573                       *                                   
+ Model                              3          6                                                       -1.97841398E-03                            1_GWF-(2,35,20)
+ Backtracking                       4                     0          1       1.1147268      0.80531186                                                           
+ Model                              4          2                                                       -1.25509781E-04       *                    1_GWF-(1,19,11)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  4 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 18
- 52 TOTAL ITERATIONS
+ 48 TOTAL ITERATIONS
  
     Solving:  Stress period:    19    Time step:     1
  
@@ -722,17 +716,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       191.92192       191.92192                       *                                   
- Model                              1         28                                                           -0.17672296                             1_GWF-(3,30,7)
- Backtracking                       2                     0          0       7.8207435       7.8207435                       *                                   
- Model                              2         14                                                       -4.19312461E-03                            1_GWF-(1,40,16)
- Backtracking                       3                     0          0      0.46399998      0.46399998                       *                                   
- Model                              3          7                                                       -4.84962332E-04       *                     1_GWF-(2,22,7)
+ Backtracking                       1                     0          0       152.51214       152.51214                       *                                   
+ Model                              1         28                                                           -0.17129651                             1_GWF-(3,30,7)
+ Backtracking                       2                     0          0       6.7588459       6.7588459                       *                                   
+ Model                              2         14                                                       -4.74295627E-03                            1_GWF-(1,39,16)
+ Backtracking                       3                     0          0      0.47877807      0.47877807                       *                                   
+ Model                              3          9                                                       -8.48608658E-04       *                     1_GWF-(2,36,5)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 19
- 49 TOTAL ITERATIONS
+ 51 TOTAL ITERATIONS
  
     Solving:  Stress period:    20    Time step:     1
  
@@ -748,17 +742,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       148.82852       148.82852                       *                                   
- Model                              1         29                                                           -0.17527724                             1_GWF-(1,30,7)
- Backtracking                       2                     0          0       8.9825671       8.9825671                       *                                   
- Model                              2         14                                                        5.07284541E-03                             1_GWF-(1,38,6)
- Backtracking                       3                     0          0      0.64472772      0.64472772                       *                                   
- Model                              3          3                                                        6.29935318E-04       *                     1_GWF-(1,38,6)
+ Backtracking                       1                     0          0       113.18611       113.18611                       *                                   
+ Model                              1         33                                                           -0.16871857                             1_GWF-(1,30,7)
+ Backtracking                       2                     0          0       7.7993139       7.7993139                       *                                   
+ Model                              2         16                                                       -5.51516713E-03                            1_GWF-(1,39,16)
+ Backtracking                       3                     0          0      0.36254747      0.36254747                       *                                   
+ Model                              3          7                                                       -6.50400644E-04       *                     1_GWF-(2,22,7)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 20
- 46 TOTAL ITERATIONS
+ 56 TOTAL ITERATIONS
  
     Solving:  Stress period:    21    Time step:     1
  
@@ -774,17 +768,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       90.411804       90.411804                       *                                   
- Model                              1         28                                                           -0.14287291                             1_GWF-(1,19,1)
- Backtracking                       2                     0          0       6.6536706       6.6536706                       *                                   
- Model                              2         12                                                       -3.18543506E-03                            1_GWF-(1,40,16)
- Backtracking                       3                     0          0      0.56632284      0.56632284                       *                                   
- Model                              3          7                                                       -6.36396237E-04       *                    1_GWF-(2,30,20)
+ Backtracking                       1                     0          0       63.964274       63.964274                       *                                   
+ Model                              1         19                                                           -0.13004487                             1_GWF-(1,20,1)
+ Backtracking                       2                     0          0       6.4531940       6.4531940                       *                                   
+ Model                              2         15                                                       -3.99790918E-03                            1_GWF-(1,40,16)
+ Backtracking                       3                     0          0      0.40967741      0.40967741                       *                                   
+ Model                              3          1                                                       -9.76762758E-05       *                    1_GWF-(1,40,16)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 21
- 47 TOTAL ITERATIONS
+ 35 TOTAL ITERATIONS
  
     Solving:  Stress period:    22    Time step:     1
  
@@ -800,17 +794,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       101.09586       101.09586                       *                                   
- Model                              1         22                                                       -8.23150622E-02                             1_GWF-(1,15,1)
- Backtracking                       2                     0          0       2.3901971       2.3901971                       *                                   
- Model                              2         11                                                       -3.02578893E-03                            1_GWF-(3,35,19)
- Backtracking                       3                     0          0       2.3972054       2.3972054                       *                                   
- Model                              3          3                                                       -3.47289498E-04       *                    1_GWF-(3,35,13)
+ Backtracking                       1                     0          0       81.251562       81.251562                       *                                   
+ Model                              1         28                                                       -7.84380973E-02                             1_GWF-(1,15,1)
+ Backtracking                       2                     0          0       1.8329429       1.8329429                       *                                   
+ Model                              2         10                                                       -1.80494447E-03                            1_GWF-(1,36,16)
+ Backtracking                       3                     0          0      0.81640052      0.81640052                       *                                   
+ Model                              3          6                                                       -3.01335808E-04       *                     1_GWF-(1,18,9)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 22
- 36 TOTAL ITERATIONS
+ 44 TOTAL ITERATIONS
  
     Solving:  Stress period:    23    Time step:     1
  
@@ -826,17 +820,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       161.38436       161.38436                       *                                   
- Model                              1         32                                                        7.30578128E-02                            1_GWF-(3,27,11)
- Backtracking                       2                     0          0       3.3127239       3.3127239                       *                                   
- Model                              2          6                                                        1.45469568E-03                            1_GWF-(1,40,16)
- Backtracking                       3                     0          0      0.68497924      0.68497924                       *                                   
- Model                              3          1                                                        7.92110356E-05       *                    1_GWF-(1,37,19)
+ Backtracking                       1                     0          0       132.88125       132.88125                       *                                   
+ Model                              1         29                                                        7.42961885E-02                            1_GWF-(3,27,11)
+ Backtracking                       2                     0          0       3.6143177       3.6143177                       *                                   
+ Model                              2         16                                                        2.98099653E-03                             1_GWF-(3,15,2)
+ Backtracking                       3                     0          0       1.4350577       1.4350577                       *                                   
+ Model                              3          4                                                        2.38941138E-04       *                      1_GWF-(1,3,1)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 23
- 39 TOTAL ITERATIONS
+ 49 TOTAL ITERATIONS
  
     Solving:  Stress period:    24    Time step:     1
  
@@ -852,17 +846,17 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       196.25646       196.25646                       *                                   
- Model                              1         33                                                            0.14783101                             1_GWF-(3,30,7)
- Backtracking                       2                     0          0       7.5768408       7.5768408                       *                                   
- Model                              2         14                                                        4.80040808E-03                            1_GWF-(1,38,11)
- Backtracking                       3                     0          0      0.37468185      0.37468185                       *                                   
- Model                              3          5                                                        6.18554131E-04       *                     1_GWF-(2,30,8)
+ Backtracking                       1                     0          0       159.06164       159.06164                       *                                   
+ Model                              1         28                                                            0.14517240                             1_GWF-(3,30,7)
+ Backtracking                       2                     0          0       6.7856596       6.7856596                       *                                   
+ Model                              2         16                                                        5.07496368E-03                            1_GWF-(1,38,16)
+ Backtracking                       3                     0          0      0.34191065      0.34191065                       *                                   
+ Model                              3          1                                                        9.25284121E-05       *                    1_GWF-(1,39,16)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 24
- 52 TOTAL ITERATIONS
+ 45 TOTAL ITERATIONS
  
     Solving:  Stress period:    25    Time step:     1
  
@@ -878,23 +872,23 @@ PROCESSING MODEL CONNECTIONS
                                 OUTER      INNER  BACKTRACK  BACKTRACK        INCOMING        OUTGOING                    STEP   MAXIMUM CHANGE MODEL-(CELLID) OR
  OUTER ITERATION STEP       ITERATION  ITERATION       FLAG ITERATIONS        RESIDUAL        RESIDUAL  MAXIMUM CHANGE SUCCESS             MODEL-PACKAGE-(NUMBER)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
- Backtracking                       1                     0          0       185.42973       185.42973                       *                                   
- Model                              1         29                                                            0.18532839                             1_GWF-(1,30,7)
- Backtracking                       2                     0          0       8.7261306       8.7261306                       *                                   
- Model                              2         13                                                        4.77198928E-03                            1_GWF-(1,40,16)
- Backtracking                       3                     0          0      0.51428039      0.51428039                       *                                   
- Model                              3          5                                                        8.34123779E-04       *                     1_GWF-(1,22,7)
+ Backtracking                       1                     0          0       146.07728       146.07728                       *                                   
+ Model                              1         36                                                            0.18025391                             1_GWF-(1,30,7)
+ Backtracking                       2                     0          0       7.5814388       7.5814388                       *                                   
+ Model                              2         16                                                        5.39553394E-03                            1_GWF-(1,39,16)
+ Backtracking                       3                     0          0      0.31109453      0.31109453                       *                                   
+ Model                              3          1                                                        9.70200113E-05       *                    1_GWF-(1,40,16)
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
  3 CALLS TO NUMERICAL SOLUTION IN TIME STEP 1 STRESS PERIOD 25
- 47 TOTAL ITERATIONS
+ 53 TOTAL ITERATIONS
 
 
  Solution SLN_1 summary
  ----------------------------------------------------------------------
- Total formulate time:  .4687500000000000E-01 seconds
- Total solution time:   .2343750000000000 seconds
+ Total formulate time:  .1562500000000000E-01 seconds
+ Total solution time:   .1406250000000000 seconds
 
 
  MEMORY MANAGER TOTAL STORAGE BY DATA TYPE, IN MEGABYTES
@@ -912,6 +906,6 @@ PROCESSING MODEL CONNECTIONS
 
 
  
- Run end date and time (yyyy/mm/dd hh:mm:ss): 2022/02/23 15:58:01
- Elapsed run time:  0.449 Seconds
+ Run end date and time (yyyy/mm/dd hh:mm:ss): 2022/02/21 14:50:57
+ Elapsed run time:  0.711 Seconds
  Normal termination of simulation.
