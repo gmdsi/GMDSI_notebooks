@@ -40,14 +40,16 @@ for cdir, cpath, cf in os.walk('.'):
             print('removing {}'.format(cdir))
             shutil.rmtree(cdir)
 
-# make sure there is a truth model 
+# make sure there is a truth model; if not make one
 truth_d = os.path.join('..','models','freyberg_mf6_truth')
-dir_cleancopy(org_d=os.path.join('..','models','freyberg_mf6'), 
-              new_d=truth_d)
-pyemu.os_utils.run('mf6', cwd=truth_d)
-# rename model output csv because of silly design decisions
-for f in [f for f in os.listdir(truth_d) if f.endswith('.csv')]:
-    os.rename(os.path.join(truth_d, f), os.path.join(truth_d, f.split('.')[0]+'.meas.csv'))
+if not os.path.exists(truth_d):
+    dir_cleancopy(org_d=os.path.join('..','models','freyberg_mf6'), 
+                new_d=truth_d)
+    pyemu.os_utils.run('mf6', cwd=truth_d)
+    # rename model output csv because of silly design decisions
+    for f in [f for f in os.listdir(truth_d) if f.endswith('.csv')]:
+        os.rename(os.path.join(truth_d, f), os.path.join(truth_d, f.split('.')[0]+'.meas.csv'))
+
 
 
 # run the intro_to_regression
@@ -57,7 +59,7 @@ run_notebook('intro_to_regression.ipynb', 'intro_to_regression')
 run_notebook('intro_to_pyemu.ipynb', 'intro_to_pyemu')
 
 # run the sequence of Freyberg model notebooks
-rebuild_truth=False
+rebuild_truth=True
 
 # run the freyberg model
 run_notebook('freyberg_intro_model.ipynb', 'freyberg_intro_to_model')
@@ -72,6 +74,8 @@ if rebuild_truth==True:
     # Need to re-run the pest setup notebook again to ensure that the correct Obs are used.
     # Alternative is to accept some manual input here and just make sure the "truth" is setup correctly beforehand?
     #...or just update the obs data...meh...this way burns a bit more silicone, but keeps things organized
+
+     
     run_notebook('freyberg_make_truth.ipynb', 'z_herebedragons')
 
     ### Run PEST setup again with correct obs values for consistency...

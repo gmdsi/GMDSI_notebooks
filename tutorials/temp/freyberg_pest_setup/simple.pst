@@ -1,0 +1,48 @@
+pcf
+* control data
+             restart          estimation
+         1        20         1         0         3         0
+         1         1              single               point         1         0         0          noobsreref
+   2.000000E+01  -3.000000E+00   3.000000E-01   1.000000E-02        -7       999          lamforgive        noderforgive
+   1.000000E+01   1.000000E+01   1.000000E-03         0         0
+   1.000000E-01         1   1.100000E+00               noaui          nosenreuse        noboundscale
+         0   1.000000E-02         3         3   1.000000E-02         3   0.000000E+00         1  -1.000000E+00
+         0         0         0         0             jcosave          verboserec          jcosaveitn          reisaveitn          parsaveitn        noparsaverun
+* singular value decomposition
+1
+1    1.000000E-06
+1 1 1
+* parameter groups
+pargp                   relative              1.0000000000E-02       0.0  switch                2.0000000000E+00       parabolic             1.0000000000E-05      5.0000000000E-01       smaller
+* parameter data
+hk1                    log                    factor                1.0000000000E+00      1.1000000000E-10      1.1000000000E+10       pargp                 1.0000000000E+00      0.0000000000E+00      1
+* observation groups
+fore                 
+cal                  
+cal_use              
+* observation data
+h01_1                 1.0000000000E+00      0.0000000000E+00       cal                  
+h01_2                 1.2000000000E+00      0.0000000000E+00       cal                  
+h01_3                 1.4000000000E+00      0.0000000000E+00       cal                  
+h01_4                 1.6000000000E+00      1.0000000000E+00       cal_use              
+h01_5                 1.8000000000E+00      0.0000000000E+00       cal                  
+h01_6                 2.0000000000E+00      1.0000000000E+00       cal_use              
+h01_7                 2.2000000000E+00      0.0000000000E+00       cal                  
+h01_8                 2.4000000000E+00      0.0000000000E+00       cal                  
+h01_9                 2.6000000000E+00      0.0000000000E+00       cal                  
+h01_10                2.7990000000E+00      0.0000000000E+00       cal                  
+h02_1                 1.0000000000E+00      0.0000000000E+00       fore                 
+h02_2                 1.4000000000E+00      0.0000000000E+00       fore                 
+h02_3                 1.8000000000E+00      0.0000000000E+00       fore                 
+h02_4                 2.2000000000E+00      0.0000000000E+00       fore                 
+h02_5                 2.6000000000E+00      0.0000000000E+00       fore                 
+h02_6                 3.0000000000E+00      0.0000000000E+00       fore                 
+h02_7                 3.4000000000E+00      0.0000000000E+00       fore                 
+h02_8                 3.8000000000E+00      0.0000000000E+00       fore                 
+h02_9                 4.2000000000E+00      0.0000000000E+00       fore                 
+h02_10                4.5980000000E+00      0.0000000000E+00       fore
+* model command line
+python runmodel.py
+* model input/output
+simple.lpf.tpl hk_Layer_1.ref
+10par_xsec.hds.ins 10par_xsec.hds

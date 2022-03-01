@@ -1,0 +1,44 @@
+pcf
+* control data
+             restart          estimation
+         1        20         1         0         1         0
+         1         1              single               point         1         0         0            
+   2.000000E+01  -3.000000E+00   3.000000E-01   1.000000E-02        -7       999          lamforgive        noderforgive
+   1.000000E+01   1.000000E+01   1.000000E-03         0         0
+   1.000000E-01         1   1.100000E+00               noaui          nosenreuse        noboundscale
+         0   1.000000E-02         3         3   1.000000E-02         3   0.000000E+00         1  -1.000000E+00
+         0         0         0         0             jcosave          verboserec          jcosaveitn          reisaveitn          parsaveitn        noparsaverun
+* parameter groups
+                pargp              relative    1.000000E-02  0                switch    2.000000E+00             parabolic    1.000000E-05    5.000000E-01               smaller
+* parameter data
+                  hk1                   log                factor    0.1    1.100000E-10    1.100000E+10                 pargp    1.000000E+00    0.000000E+00          1
+* observation groups
+              obgnme
+* observation data
+                h01_1    1.000000E+00    0.000000E+00                obgnme
+                h01_2    1.200000E+00    0.000000E+00                obgnme
+                h01_3    1.400000E+00    0.000000E+00                obgnme
+                h01_4    2.100000E+00    1.000000E+00                obgnme
+                h01_5    1.800000E+00    0.000000E+00                obgnme
+                h01_6    2.500000E+00    1.000000E+00                obgnme
+                h01_7    2.200000E+00    0.000000E+00                obgnme
+                h01_8    2.400000E+00    0.000000E+00                obgnme
+                h01_9    2.600000E+00    0.000000E+00                obgnme
+               h01_10    2.799000E+00    0.000000E+00                obgnme
+                h02_1    1.000000E+00    0.000000E+00                obgnme
+                h02_2    1.400000E+00    0.000000E+00                obgnme
+                h02_3    1.800000E+00    0.000000E+00                obgnme
+                h02_4    2.200000E+00    0.000000E+00                obgnme
+                h02_5    2.600000E+00    0.000000E+00                obgnme
+                h02_6    3.000000E+00    0.000000E+00                obgnme
+                h02_7    3.400000E+00    0.000000E+00                obgnme
+                h02_8    3.800000E+00    0.000000E+00                obgnme
+                h02_9    4.200000E+00    0.000000E+00                obgnme
+               h02_10    4.598000E+00    0.000000E+00                obgnme
+* model command line
+mf2005 10par_xsec.nam
+* model input/output
+hk_Layer_1.ref.tpl hk_Layer_1.ref
+10par_xsec.hds.ins 10par_xsec.hds
+++ LAMBDAS(0.1,1,10,100,1000)
+++forecasts(h02_8)
