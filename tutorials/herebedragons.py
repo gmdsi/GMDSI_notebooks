@@ -102,10 +102,17 @@ def prep_notebooks(rebuild_truth=True):
     # run the freyberg model
     run_notebook('freyberg_intro_model.ipynb', 'freyberg_intro_to_model')
 
+    # trial and error
+    run_notebook('freyberg_trial_and_error.ipynb', 'freyberg_trial_and_error')
+
+    ##...
+
+
+
     # run the base pest setup and make a backup
-    run_notebook('freyberg_setup_pest_interface.ipynb', 'freyberg_pest_setup')
-    dir_cleancopy(org_d=os.path.join('freyberg_pest_setup', 'freyberg6_template'), 
-                new_d=os.path.join('..','models','freyberg_pest_setup'))
+    run_notebook('freyberg_pstfrom_pest_setup.ipynb', 'freyberg_pstfrom_pest_setup')
+    dir_cleancopy(org_d=os.path.join('freyberg_pstfrom_pest_setup', 'freyberg6_template'), 
+                new_d=os.path.join('..','models','freyberg_pstfrom_pest_setup'))
 
     if rebuild_truth==True:
         ### Generate the truth model; chicken and egg situation going on here.
@@ -116,9 +123,9 @@ def prep_notebooks(rebuild_truth=True):
 
         ### Run PEST setup again with correct obs values for consistency...
         # run the base pest setup and make a backup
-        run_notebook('freyberg_setup_pest_interface.ipynb', 'freyberg_pest_setup')
-        dir_cleancopy(org_d=os.path.join('freyberg_pest_setup', 'freyberg6_template'), 
-                    new_d=os.path.join('..','models','freyberg_pest_setup'))
+        run_notebook('freyberg_pstfrom_pest_setup.ipynb', 'freyberg_pstfrom_pest_setup')
+        dir_cleancopy(org_d=os.path.join('freyberg_pstfrom_pest_setup', 'freyberg6_template'), 
+                    new_d=os.path.join('..','models','freyberg_pstfrom_pest_setup'))
     
     return print('Notebook folders ready.')
 

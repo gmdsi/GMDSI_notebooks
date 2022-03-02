@@ -1,0 +1,311 @@
+2022-03-02 16:15:27.927408 starting: opening PstFrom.log for logging
+2022-03-02 16:15:27.927408 starting PstFrom process
+2022-03-02 16:15:27.928373 starting: setting up dirs
+2022-03-02 16:15:27.928373 starting: removing existing new_d 'freyberg6_template'
+2022-03-02 16:15:28.250841 finished: removing existing new_d 'freyberg6_template' took: 0:00:00.322468
+2022-03-02 16:15:28.250841 starting: copying original_d 'freyberg_mf6' to new_d 'freyberg6_template'
+2022-03-02 16:15:31.572660 finished: copying original_d 'freyberg_mf6' to new_d 'freyberg6_template' took: 0:00:03.321819
+2022-03-02 16:15:31.573658 finished: setting up dirs took: 0:00:03.645285
+2022-03-02 16:15:31.672425 starting: adding observations from output file heads.csv
+2022-03-02 16:15:31.672425 starting: adding observations from tabular output file '['heads.csv']'
+2022-03-02 16:15:31.673656 starting: reading list-style file: freyberg6_template\heads.csv
+2022-03-02 16:15:31.674650 finished: reading list-style file: freyberg6_template\heads.csv took: 0:00:00.000994
+2022-03-02 16:15:31.675646 starting: building insfile for tabular output file heads.csv
+2022-03-02 16:15:31.681631 finished: building insfile for tabular output file heads.csv took: 0:00:00.005985
+2022-03-02 16:15:31.681631 starting: adding observation from instruction file 'freyberg6_template\heads.csv.ins'
+2022-03-02 16:15:31.693600 finished: adding observation from instruction file 'freyberg6_template\heads.csv.ins' took: 0:00:00.011969
+2022-03-02 16:15:31.694597 finished: adding observations from tabular output file '['heads.csv']' took: 0:00:00.022172
+2022-03-02 16:15:31.792352 starting: adding observations from output file sfr.csv
+2022-03-02 16:15:31.793337 starting: adding observations from tabular output file '['sfr.csv']'
+2022-03-02 16:15:31.793337 starting: reading list-style file: freyberg6_template\sfr.csv
+2022-03-02 16:15:31.795330 finished: reading list-style file: freyberg6_template\sfr.csv took: 0:00:00.001993
+2022-03-02 16:15:31.795330 starting: building insfile for tabular output file sfr.csv
+2022-03-02 16:15:31.800349 finished: building insfile for tabular output file sfr.csv took: 0:00:00.005019
+2022-03-02 16:15:31.800349 starting: adding observation from instruction file 'freyberg6_template\sfr.csv.ins'
+2022-03-02 16:15:31.807346 finished: adding observation from instruction file 'freyberg6_template\sfr.csv.ins' took: 0:00:00.006997
+2022-03-02 16:15:31.808298 finished: adding observations from tabular output file '['sfr.csv']' took: 0:00:00.014961
+2022-03-02 16:15:32.046555 starting: adding constant type d style parameters for file(s) ['freyberg6.npf_k_layer1.txt']
+2022-03-02 16:15:32.047562 starting: loading array freyberg6_template\freyberg6.npf_k_layer1.txt
+2022-03-02 16:15:32.048559 finished: loading array freyberg6_template\freyberg6.npf_k_layer1.txt took: 0:00:00.000997
+2022-03-02 16:15:32.048559 loaded array 'freyberg_mf6\freyberg6.npf_k_layer1.txt' of shape (40, 20)
+2022-03-02 16:15:32.049543 starting: writing array-style template file 'freyberg6_template\freyberg6.npf_k_layer1.txt.tpl'
+2022-03-02 16:15:32.049543 starting: writing template file freyberg6_template\freyberg6.npf_k_layer1.txt.tpl for ['hk_inst:0']
+2022-03-02 16:15:32.057492 finished: writing template file freyberg6_template\freyberg6.npf_k_layer1.txt.tpl for ['hk_inst:0'] took: 0:00:00.007949
+2022-03-02 16:15:32.058004 starting: writing array-based template file 'freyberg6_template\freyberg6.npf_k_layer1.txt.tpl'
+2022-03-02 16:15:32.058004 saving zone array freyberg6_template\freyberg6.npf_k_layer1.txt.zone for tpl file freyberg6_template\freyberg6.npf_k_layer1.txt.tpl
+2022-03-02 16:15:32.063019 finished: adding constant type d style parameters for file(s) ['freyberg6.npf_k_layer1.txt'] took: 0:00:00.016464
+2022-03-02 16:15:32.063019 starting: adding constant type d style parameters for file(s) ['freyberg6.npf_k_layer2.txt']
+2022-03-02 16:15:32.063019 starting: loading array freyberg6_template\freyberg6.npf_k_layer2.txt
+2022-03-02 16:15:32.064017 finished: loading array freyberg6_template\freyberg6.npf_k_layer2.txt took: 0:00:00.000998
+2022-03-02 16:15:32.064017 loaded array 'freyberg_mf6\freyberg6.npf_k_layer2.txt' of shape (40, 20)
+2022-03-02 16:15:32.066006 starting: writing array-style template file 'freyberg6_template\freyberg6.npf_k_layer2.txt.tpl'
+2022-03-02 16:15:32.066006 starting: writing template file freyberg6_template\freyberg6.npf_k_layer2.txt.tpl for ['hk_inst:1']
+2022-03-02 16:15:32.072958 finished: writing template file freyberg6_template\freyberg6.npf_k_layer2.txt.tpl for ['hk_inst:1'] took: 0:00:00.006952
+2022-03-02 16:15:32.072958 starting: writing array-based template file 'freyberg6_template\freyberg6.npf_k_layer2.txt.tpl'
+2022-03-02 16:15:32.072958 saving zone array freyberg6_template\freyberg6.npf_k_layer2.txt.zone for tpl file freyberg6_template\freyberg6.npf_k_layer2.txt.tpl
+2022-03-02 16:15:32.077985 finished: adding constant type d style parameters for file(s) ['freyberg6.npf_k_layer2.txt'] took: 0:00:00.014966
+2022-03-02 16:15:32.078983 starting: adding constant type d style parameters for file(s) ['freyberg6.npf_k_layer3.txt']
+2022-03-02 16:15:32.078983 starting: loading array freyberg6_template\freyberg6.npf_k_layer3.txt
+2022-03-02 16:15:32.079969 finished: loading array freyberg6_template\freyberg6.npf_k_layer3.txt took: 0:00:00.000986
+2022-03-02 16:15:32.079969 loaded array 'freyberg_mf6\freyberg6.npf_k_layer3.txt' of shape (40, 20)
+2022-03-02 16:15:32.080976 starting: writing array-style template file 'freyberg6_template\freyberg6.npf_k_layer3.txt.tpl'
+2022-03-02 16:15:32.080976 starting: writing template file freyberg6_template\freyberg6.npf_k_layer3.txt.tpl for ['hk_inst:2']
+2022-03-02 16:15:32.086923 finished: writing template file freyberg6_template\freyberg6.npf_k_layer3.txt.tpl for ['hk_inst:2'] took: 0:00:00.005947
+2022-03-02 16:15:32.086923 starting: writing array-based template file 'freyberg6_template\freyberg6.npf_k_layer3.txt.tpl'
+2022-03-02 16:15:32.086923 saving zone array freyberg6_template\freyberg6.npf_k_layer3.txt.zone for tpl file freyberg6_template\freyberg6.npf_k_layer3.txt.tpl
+2022-03-02 16:15:32.092934 finished: adding constant type d style parameters for file(s) ['freyberg6.npf_k_layer3.txt'] took: 0:00:00.013951
+2022-03-02 16:15:32.174238 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_1.txt']
+2022-03-02 16:15:32.175271 WARNING: 0) Inconsistency between geostruct transform and partrans.
+2022-03-02 16:15:32.175271 WARNING: 1) Setting geostruct transform to {transform}
+2022-03-02 16:15:32.175271 WARNING: -) Better to pass an appropriately transformed geostruct
+2022-03-02 16:15:32.175271 starting: loading array freyberg6_template\freyberg6.rch_recharge_1.txt
+2022-03-02 16:15:32.176230 finished: loading array freyberg6_template\freyberg6.rch_recharge_1.txt took: 0:00:00.000959
+2022-03-02 16:15:32.176230 loaded array 'freyberg_mf6\freyberg6.rch_recharge_1.txt' of shape (40, 20)
+2022-03-02 16:15:32.178229 starting: writing array-style template file 'freyberg6_template\rch1_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.178229 starting: writing template file freyberg6_template\rch1_inst0_constant.csv.tpl for ['rch1_inst:0']
+2022-03-02 16:15:32.184208 finished: writing template file freyberg6_template\rch1_inst0_constant.csv.tpl for ['rch1_inst:0'] took: 0:00:00.005979
+2022-03-02 16:15:32.184208 starting: writing array-based template file 'freyberg6_template\rch1_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.185206 saving zone array freyberg6_template\rch1_inst0_constant.csv.zone for tpl file freyberg6_template\rch1_inst0_constant.csv.tpl
+2022-03-02 16:15:32.195179 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_1.txt'] took: 0:00:00.020941
+2022-03-02 16:15:32.195179 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_10.txt']
+2022-03-02 16:15:32.195179 starting: loading array freyberg6_template\freyberg6.rch_recharge_10.txt
+2022-03-02 16:15:32.196176 finished: loading array freyberg6_template\freyberg6.rch_recharge_10.txt took: 0:00:00.000997
+2022-03-02 16:15:32.197174 loaded array 'freyberg_mf6\freyberg6.rch_recharge_10.txt' of shape (40, 20)
+2022-03-02 16:15:32.199168 starting: writing array-style template file 'freyberg6_template\rch10_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.199168 starting: writing template file freyberg6_template\rch10_inst0_constant.csv.tpl for ['rch10_inst:0']
+2022-03-02 16:15:32.206150 finished: writing template file freyberg6_template\rch10_inst0_constant.csv.tpl for ['rch10_inst:0'] took: 0:00:00.006982
+2022-03-02 16:15:32.206150 starting: writing array-based template file 'freyberg6_template\rch10_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.206150 saving zone array freyberg6_template\rch10_inst0_constant.csv.zone for tpl file freyberg6_template\rch10_inst0_constant.csv.tpl
+2022-03-02 16:15:32.216123 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_10.txt'] took: 0:00:00.020944
+2022-03-02 16:15:32.217120 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_11.txt']
+2022-03-02 16:15:32.217120 starting: loading array freyberg6_template\freyberg6.rch_recharge_11.txt
+2022-03-02 16:15:32.218118 finished: loading array freyberg6_template\freyberg6.rch_recharge_11.txt took: 0:00:00.000998
+2022-03-02 16:15:32.219125 loaded array 'freyberg_mf6\freyberg6.rch_recharge_11.txt' of shape (40, 20)
+2022-03-02 16:15:32.221110 starting: writing array-style template file 'freyberg6_template\rch11_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.221110 starting: writing template file freyberg6_template\rch11_inst0_constant.csv.tpl for ['rch11_inst:0']
+2022-03-02 16:15:32.228096 finished: writing template file freyberg6_template\rch11_inst0_constant.csv.tpl for ['rch11_inst:0'] took: 0:00:00.006986
+2022-03-02 16:15:32.228096 starting: writing array-based template file 'freyberg6_template\rch11_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.229094 saving zone array freyberg6_template\rch11_inst0_constant.csv.zone for tpl file freyberg6_template\rch11_inst0_constant.csv.tpl
+2022-03-02 16:15:32.240066 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_11.txt'] took: 0:00:00.022946
+2022-03-02 16:15:32.240066 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_12.txt']
+2022-03-02 16:15:32.240066 starting: loading array freyberg6_template\freyberg6.rch_recharge_12.txt
+2022-03-02 16:15:32.241062 finished: loading array freyberg6_template\freyberg6.rch_recharge_12.txt took: 0:00:00.000996
+2022-03-02 16:15:32.242080 loaded array 'freyberg_mf6\freyberg6.rch_recharge_12.txt' of shape (40, 20)
+2022-03-02 16:15:32.243057 starting: writing array-style template file 'freyberg6_template\rch12_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.243057 starting: writing template file freyberg6_template\rch12_inst0_constant.csv.tpl for ['rch12_inst:0']
+2022-03-02 16:15:32.250066 finished: writing template file freyberg6_template\rch12_inst0_constant.csv.tpl for ['rch12_inst:0'] took: 0:00:00.007009
+2022-03-02 16:15:32.250066 starting: writing array-based template file 'freyberg6_template\rch12_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.251063 saving zone array freyberg6_template\rch12_inst0_constant.csv.zone for tpl file freyberg6_template\rch12_inst0_constant.csv.tpl
+2022-03-02 16:15:32.261036 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_12.txt'] took: 0:00:00.020970
+2022-03-02 16:15:32.261036 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_13.txt']
+2022-03-02 16:15:32.261036 starting: loading array freyberg6_template\freyberg6.rch_recharge_13.txt
+2022-03-02 16:15:32.262039 finished: loading array freyberg6_template\freyberg6.rch_recharge_13.txt took: 0:00:00.001003
+2022-03-02 16:15:32.262039 loaded array 'freyberg_mf6\freyberg6.rch_recharge_13.txt' of shape (40, 20)
+2022-03-02 16:15:32.264029 starting: writing array-style template file 'freyberg6_template\rch13_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.264029 starting: writing template file freyberg6_template\rch13_inst0_constant.csv.tpl for ['rch13_inst:0']
+2022-03-02 16:15:32.269990 finished: writing template file freyberg6_template\rch13_inst0_constant.csv.tpl for ['rch13_inst:0'] took: 0:00:00.005961
+2022-03-02 16:15:32.269990 starting: writing array-based template file 'freyberg6_template\rch13_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.270981 saving zone array freyberg6_template\rch13_inst0_constant.csv.zone for tpl file freyberg6_template\rch13_inst0_constant.csv.tpl
+2022-03-02 16:15:32.280954 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_13.txt'] took: 0:00:00.019918
+2022-03-02 16:15:32.280954 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_14.txt']
+2022-03-02 16:15:32.280954 starting: loading array freyberg6_template\freyberg6.rch_recharge_14.txt
+2022-03-02 16:15:32.281952 finished: loading array freyberg6_template\freyberg6.rch_recharge_14.txt took: 0:00:00.000998
+2022-03-02 16:15:32.281952 loaded array 'freyberg_mf6\freyberg6.rch_recharge_14.txt' of shape (40, 20)
+2022-03-02 16:15:32.283945 starting: writing array-style template file 'freyberg6_template\rch14_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.283945 starting: writing template file freyberg6_template\rch14_inst0_constant.csv.tpl for ['rch14_inst:0']
+2022-03-02 16:15:32.290196 finished: writing template file freyberg6_template\rch14_inst0_constant.csv.tpl for ['rch14_inst:0'] took: 0:00:00.006251
+2022-03-02 16:15:32.290196 starting: writing array-based template file 'freyberg6_template\rch14_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.291196 saving zone array freyberg6_template\rch14_inst0_constant.csv.zone for tpl file freyberg6_template\rch14_inst0_constant.csv.tpl
+2022-03-02 16:15:32.300390 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_14.txt'] took: 0:00:00.019436
+2022-03-02 16:15:32.300390 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_15.txt']
+2022-03-02 16:15:32.300390 starting: loading array freyberg6_template\freyberg6.rch_recharge_15.txt
+2022-03-02 16:15:32.301383 finished: loading array freyberg6_template\freyberg6.rch_recharge_15.txt took: 0:00:00.000993
+2022-03-02 16:15:32.301383 loaded array 'freyberg_mf6\freyberg6.rch_recharge_15.txt' of shape (40, 20)
+2022-03-02 16:15:32.303350 starting: writing array-style template file 'freyberg6_template\rch15_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.303350 starting: writing template file freyberg6_template\rch15_inst0_constant.csv.tpl for ['rch15_inst:0']
+2022-03-02 16:15:32.309364 finished: writing template file freyberg6_template\rch15_inst0_constant.csv.tpl for ['rch15_inst:0'] took: 0:00:00.006014
+2022-03-02 16:15:32.309364 starting: writing array-based template file 'freyberg6_template\rch15_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.309364 saving zone array freyberg6_template\rch15_inst0_constant.csv.zone for tpl file freyberg6_template\rch15_inst0_constant.csv.tpl
+2022-03-02 16:15:32.319369 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_15.txt'] took: 0:00:00.018979
+2022-03-02 16:15:32.319369 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_16.txt']
+2022-03-02 16:15:32.319369 starting: loading array freyberg6_template\freyberg6.rch_recharge_16.txt
+2022-03-02 16:15:32.320368 finished: loading array freyberg6_template\freyberg6.rch_recharge_16.txt took: 0:00:00.000999
+2022-03-02 16:15:32.320368 loaded array 'freyberg_mf6\freyberg6.rch_recharge_16.txt' of shape (40, 20)
+2022-03-02 16:15:32.322394 starting: writing array-style template file 'freyberg6_template\rch16_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.322394 starting: writing template file freyberg6_template\rch16_inst0_constant.csv.tpl for ['rch16_inst:0']
+2022-03-02 16:15:32.328375 finished: writing template file freyberg6_template\rch16_inst0_constant.csv.tpl for ['rch16_inst:0'] took: 0:00:00.005981
+2022-03-02 16:15:32.328375 starting: writing array-based template file 'freyberg6_template\rch16_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.328375 saving zone array freyberg6_template\rch16_inst0_constant.csv.zone for tpl file freyberg6_template\rch16_inst0_constant.csv.tpl
+2022-03-02 16:15:32.338319 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_16.txt'] took: 0:00:00.018950
+2022-03-02 16:15:32.338319 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_17.txt']
+2022-03-02 16:15:32.338319 starting: loading array freyberg6_template\freyberg6.rch_recharge_17.txt
+2022-03-02 16:15:32.339348 finished: loading array freyberg6_template\freyberg6.rch_recharge_17.txt took: 0:00:00.001029
+2022-03-02 16:15:32.339348 loaded array 'freyberg_mf6\freyberg6.rch_recharge_17.txt' of shape (40, 20)
+2022-03-02 16:15:32.341342 starting: writing array-style template file 'freyberg6_template\rch17_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.341342 starting: writing template file freyberg6_template\rch17_inst0_constant.csv.tpl for ['rch17_inst:0']
+2022-03-02 16:15:32.347327 finished: writing template file freyberg6_template\rch17_inst0_constant.csv.tpl for ['rch17_inst:0'] took: 0:00:00.005985
+2022-03-02 16:15:32.347327 starting: writing array-based template file 'freyberg6_template\rch17_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.347327 saving zone array freyberg6_template\rch17_inst0_constant.csv.zone for tpl file freyberg6_template\rch17_inst0_constant.csv.tpl
+2022-03-02 16:15:32.357268 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_17.txt'] took: 0:00:00.018949
+2022-03-02 16:15:32.357268 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_18.txt']
+2022-03-02 16:15:32.358300 starting: loading array freyberg6_template\freyberg6.rch_recharge_18.txt
+2022-03-02 16:15:32.359296 finished: loading array freyberg6_template\freyberg6.rch_recharge_18.txt took: 0:00:00.000996
+2022-03-02 16:15:32.359296 loaded array 'freyberg_mf6\freyberg6.rch_recharge_18.txt' of shape (40, 20)
+2022-03-02 16:15:32.360290 starting: writing array-style template file 'freyberg6_template\rch18_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.360290 starting: writing template file freyberg6_template\rch18_inst0_constant.csv.tpl for ['rch18_inst:0']
+2022-03-02 16:15:32.366244 finished: writing template file freyberg6_template\rch18_inst0_constant.csv.tpl for ['rch18_inst:0'] took: 0:00:00.005954
+2022-03-02 16:15:32.366244 starting: writing array-based template file 'freyberg6_template\rch18_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.367241 saving zone array freyberg6_template\rch18_inst0_constant.csv.zone for tpl file freyberg6_template\rch18_inst0_constant.csv.tpl
+2022-03-02 16:15:32.377214 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_18.txt'] took: 0:00:00.019946
+2022-03-02 16:15:32.377214 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_19.txt']
+2022-03-02 16:15:32.377214 starting: loading array freyberg6_template\freyberg6.rch_recharge_19.txt
+2022-03-02 16:15:32.378251 finished: loading array freyberg6_template\freyberg6.rch_recharge_19.txt took: 0:00:00.001037
+2022-03-02 16:15:32.378251 loaded array 'freyberg_mf6\freyberg6.rch_recharge_19.txt' of shape (40, 20)
+2022-03-02 16:15:32.380236 starting: writing array-style template file 'freyberg6_template\rch19_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.380236 starting: writing template file freyberg6_template\rch19_inst0_constant.csv.tpl for ['rch19_inst:0']
+2022-03-02 16:15:32.386190 finished: writing template file freyberg6_template\rch19_inst0_constant.csv.tpl for ['rch19_inst:0'] took: 0:00:00.005954
+2022-03-02 16:15:32.386190 starting: writing array-based template file 'freyberg6_template\rch19_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.387204 saving zone array freyberg6_template\rch19_inst0_constant.csv.zone for tpl file freyberg6_template\rch19_inst0_constant.csv.tpl
+2022-03-02 16:15:32.398158 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_19.txt'] took: 0:00:00.020944
+2022-03-02 16:15:32.399156 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_2.txt']
+2022-03-02 16:15:32.399156 starting: loading array freyberg6_template\freyberg6.rch_recharge_2.txt
+2022-03-02 16:15:32.400192 finished: loading array freyberg6_template\freyberg6.rch_recharge_2.txt took: 0:00:00.001036
+2022-03-02 16:15:32.400192 loaded array 'freyberg_mf6\freyberg6.rch_recharge_2.txt' of shape (40, 20)
+2022-03-02 16:15:32.401179 starting: writing array-style template file 'freyberg6_template\rch2_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.402199 starting: writing template file freyberg6_template\rch2_inst0_constant.csv.tpl for ['rch2_inst:0']
+2022-03-02 16:15:32.410127 finished: writing template file freyberg6_template\rch2_inst0_constant.csv.tpl for ['rch2_inst:0'] took: 0:00:00.007928
+2022-03-02 16:15:32.410127 starting: writing array-based template file 'freyberg6_template\rch2_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.411158 saving zone array freyberg6_template\rch2_inst0_constant.csv.zone for tpl file freyberg6_template\rch2_inst0_constant.csv.tpl
+2022-03-02 16:15:32.421097 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_2.txt'] took: 0:00:00.021941
+2022-03-02 16:15:32.423147 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_20.txt']
+2022-03-02 16:15:32.423147 starting: loading array freyberg6_template\freyberg6.rch_recharge_20.txt
+2022-03-02 16:15:32.425110 finished: loading array freyberg6_template\freyberg6.rch_recharge_20.txt took: 0:00:00.001963
+2022-03-02 16:15:32.425110 loaded array 'freyberg_mf6\freyberg6.rch_recharge_20.txt' of shape (40, 20)
+2022-03-02 16:15:32.427112 starting: writing array-style template file 'freyberg6_template\rch20_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.427112 starting: writing template file freyberg6_template\rch20_inst0_constant.csv.tpl for ['rch20_inst:0']
+2022-03-02 16:15:32.433094 finished: writing template file freyberg6_template\rch20_inst0_constant.csv.tpl for ['rch20_inst:0'] took: 0:00:00.005982
+2022-03-02 16:15:32.433094 starting: writing array-based template file 'freyberg6_template\rch20_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.434091 saving zone array freyberg6_template\rch20_inst0_constant.csv.zone for tpl file freyberg6_template\rch20_inst0_constant.csv.tpl
+2022-03-02 16:15:32.444035 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_20.txt'] took: 0:00:00.020888
+2022-03-02 16:15:32.445032 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_21.txt']
+2022-03-02 16:15:32.445032 starting: loading array freyberg6_template\freyberg6.rch_recharge_21.txt
+2022-03-02 16:15:32.446059 finished: loading array freyberg6_template\freyberg6.rch_recharge_21.txt took: 0:00:00.001027
+2022-03-02 16:15:32.446059 loaded array 'freyberg_mf6\freyberg6.rch_recharge_21.txt' of shape (40, 20)
+2022-03-02 16:15:32.448054 starting: writing array-style template file 'freyberg6_template\rch21_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.448054 starting: writing template file freyberg6_template\rch21_inst0_constant.csv.tpl for ['rch21_inst:0']
+2022-03-02 16:15:32.453011 finished: writing template file freyberg6_template\rch21_inst0_constant.csv.tpl for ['rch21_inst:0'] took: 0:00:00.004957
+2022-03-02 16:15:32.453011 starting: writing array-based template file 'freyberg6_template\rch21_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.454009 saving zone array freyberg6_template\rch21_inst0_constant.csv.zone for tpl file freyberg6_template\rch21_inst0_constant.csv.tpl
+2022-03-02 16:15:32.464979 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_21.txt'] took: 0:00:00.019947
+2022-03-02 16:15:32.465977 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_22.txt']
+2022-03-02 16:15:32.465977 starting: loading array freyberg6_template\freyberg6.rch_recharge_22.txt
+2022-03-02 16:15:32.467005 finished: loading array freyberg6_template\freyberg6.rch_recharge_22.txt took: 0:00:00.001028
+2022-03-02 16:15:32.467005 loaded array 'freyberg_mf6\freyberg6.rch_recharge_22.txt' of shape (40, 20)
+2022-03-02 16:15:32.468000 starting: writing array-style template file 'freyberg6_template\rch22_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.468000 starting: writing template file freyberg6_template\rch22_inst0_constant.csv.tpl for ['rch22_inst:0']
+2022-03-02 16:15:32.474953 finished: writing template file freyberg6_template\rch22_inst0_constant.csv.tpl for ['rch22_inst:0'] took: 0:00:00.006953
+2022-03-02 16:15:32.474953 starting: writing array-based template file 'freyberg6_template\rch22_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.475950 saving zone array freyberg6_template\rch22_inst0_constant.csv.zone for tpl file freyberg6_template\rch22_inst0_constant.csv.tpl
+2022-03-02 16:15:32.485922 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_22.txt'] took: 0:00:00.019945
+2022-03-02 16:15:32.485922 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_23.txt']
+2022-03-02 16:15:32.485922 starting: loading array freyberg6_template\freyberg6.rch_recharge_23.txt
+2022-03-02 16:15:32.486921 finished: loading array freyberg6_template\freyberg6.rch_recharge_23.txt took: 0:00:00.000999
+2022-03-02 16:15:32.486921 loaded array 'freyberg_mf6\freyberg6.rch_recharge_23.txt' of shape (40, 20)
+2022-03-02 16:15:32.488947 starting: writing array-style template file 'freyberg6_template\rch23_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.489945 starting: writing template file freyberg6_template\rch23_inst0_constant.csv.tpl for ['rch23_inst:0']
+2022-03-02 16:15:32.495925 finished: writing template file freyberg6_template\rch23_inst0_constant.csv.tpl for ['rch23_inst:0'] took: 0:00:00.005980
+2022-03-02 16:15:32.495925 starting: writing array-based template file 'freyberg6_template\rch23_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.496923 saving zone array freyberg6_template\rch23_inst0_constant.csv.zone for tpl file freyberg6_template\rch23_inst0_constant.csv.tpl
+2022-03-02 16:15:32.506902 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_23.txt'] took: 0:00:00.020980
+2022-03-02 16:15:32.506902 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_24.txt']
+2022-03-02 16:15:32.506902 starting: loading array freyberg6_template\freyberg6.rch_recharge_24.txt
+2022-03-02 16:15:32.507894 finished: loading array freyberg6_template\freyberg6.rch_recharge_24.txt took: 0:00:00.000992
+2022-03-02 16:15:32.507894 loaded array 'freyberg_mf6\freyberg6.rch_recharge_24.txt' of shape (40, 20)
+2022-03-02 16:15:32.509888 starting: writing array-style template file 'freyberg6_template\rch24_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.509888 starting: writing template file freyberg6_template\rch24_inst0_constant.csv.tpl for ['rch24_inst:0']
+2022-03-02 16:15:32.515842 finished: writing template file freyberg6_template\rch24_inst0_constant.csv.tpl for ['rch24_inst:0'] took: 0:00:00.005954
+2022-03-02 16:15:32.515842 starting: writing array-based template file 'freyberg6_template\rch24_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.515842 saving zone array freyberg6_template\rch24_inst0_constant.csv.zone for tpl file freyberg6_template\rch24_inst0_constant.csv.tpl
+2022-03-02 16:15:32.527810 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_24.txt'] took: 0:00:00.020908
+2022-03-02 16:15:32.527810 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_25.txt']
+2022-03-02 16:15:32.527810 starting: loading array freyberg6_template\freyberg6.rch_recharge_25.txt
+2022-03-02 16:15:32.528808 finished: loading array freyberg6_template\freyberg6.rch_recharge_25.txt took: 0:00:00.000998
+2022-03-02 16:15:32.528808 loaded array 'freyberg_mf6\freyberg6.rch_recharge_25.txt' of shape (40, 20)
+2022-03-02 16:15:32.530834 starting: writing array-style template file 'freyberg6_template\rch25_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.530834 starting: writing template file freyberg6_template\rch25_inst0_constant.csv.tpl for ['rch25_inst:0']
+2022-03-02 16:15:32.535789 finished: writing template file freyberg6_template\rch25_inst0_constant.csv.tpl for ['rch25_inst:0'] took: 0:00:00.004955
+2022-03-02 16:15:32.535789 starting: writing array-based template file 'freyberg6_template\rch25_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.536787 saving zone array freyberg6_template\rch25_inst0_constant.csv.zone for tpl file freyberg6_template\rch25_inst0_constant.csv.tpl
+2022-03-02 16:15:32.546792 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_25.txt'] took: 0:00:00.018982
+2022-03-02 16:15:32.547789 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_3.txt']
+2022-03-02 16:15:32.547789 starting: loading array freyberg6_template\freyberg6.rch_recharge_3.txt
+2022-03-02 16:15:32.548816 finished: loading array freyberg6_template\freyberg6.rch_recharge_3.txt took: 0:00:00.001027
+2022-03-02 16:15:32.548816 loaded array 'freyberg_mf6\freyberg6.rch_recharge_3.txt' of shape (40, 20)
+2022-03-02 16:15:32.550812 starting: writing array-style template file 'freyberg6_template\rch3_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.550812 starting: writing template file freyberg6_template\rch3_inst0_constant.csv.tpl for ['rch3_inst:0']
+2022-03-02 16:15:32.556765 finished: writing template file freyberg6_template\rch3_inst0_constant.csv.tpl for ['rch3_inst:0'] took: 0:00:00.005953
+2022-03-02 16:15:32.556765 starting: writing array-based template file 'freyberg6_template\rch3_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.557792 saving zone array freyberg6_template\rch3_inst0_constant.csv.zone for tpl file freyberg6_template\rch3_inst0_constant.csv.tpl
+2022-03-02 16:15:32.567735 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_3.txt'] took: 0:00:00.019946
+2022-03-02 16:15:32.567735 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_4.txt']
+2022-03-02 16:15:32.567735 starting: loading array freyberg6_template\freyberg6.rch_recharge_4.txt
+2022-03-02 16:15:32.568734 finished: loading array freyberg6_template\freyberg6.rch_recharge_4.txt took: 0:00:00.000999
+2022-03-02 16:15:32.568734 loaded array 'freyberg_mf6\freyberg6.rch_recharge_4.txt' of shape (40, 20)
+2022-03-02 16:15:32.570728 starting: writing array-style template file 'freyberg6_template\rch4_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.570728 starting: writing template file freyberg6_template\rch4_inst0_constant.csv.tpl for ['rch4_inst:0']
+2022-03-02 16:15:32.576711 finished: writing template file freyberg6_template\rch4_inst0_constant.csv.tpl for ['rch4_inst:0'] took: 0:00:00.005983
+2022-03-02 16:15:32.576711 starting: writing array-based template file 'freyberg6_template\rch4_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.577740 saving zone array freyberg6_template\rch4_inst0_constant.csv.zone for tpl file freyberg6_template\rch4_inst0_constant.csv.tpl
+2022-03-02 16:15:32.587682 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_4.txt'] took: 0:00:00.019947
+2022-03-02 16:15:32.588680 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_5.txt']
+2022-03-02 16:15:32.588680 starting: loading array freyberg6_template\freyberg6.rch_recharge_5.txt
+2022-03-02 16:15:32.589713 finished: loading array freyberg6_template\freyberg6.rch_recharge_5.txt took: 0:00:00.001033
+2022-03-02 16:15:32.589713 loaded array 'freyberg_mf6\freyberg6.rch_recharge_5.txt' of shape (40, 20)
+2022-03-02 16:15:32.591702 starting: writing array-style template file 'freyberg6_template\rch5_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.591702 starting: writing template file freyberg6_template\rch5_inst0_constant.csv.tpl for ['rch5_inst:0']
+2022-03-02 16:15:32.596687 finished: writing template file freyberg6_template\rch5_inst0_constant.csv.tpl for ['rch5_inst:0'] took: 0:00:00.004985
+2022-03-02 16:15:32.596687 starting: writing array-based template file 'freyberg6_template\rch5_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.597691 saving zone array freyberg6_template\rch5_inst0_constant.csv.zone for tpl file freyberg6_template\rch5_inst0_constant.csv.tpl
+2022-03-02 16:15:32.608626 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_5.txt'] took: 0:00:00.019946
+2022-03-02 16:15:32.608626 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_6.txt']
+2022-03-02 16:15:32.608626 starting: loading array freyberg6_template\freyberg6.rch_recharge_6.txt
+2022-03-02 16:15:32.609656 finished: loading array freyberg6_template\freyberg6.rch_recharge_6.txt took: 0:00:00.001030
+2022-03-02 16:15:32.609656 loaded array 'freyberg_mf6\freyberg6.rch_recharge_6.txt' of shape (40, 20)
+2022-03-02 16:15:32.611647 starting: writing array-style template file 'freyberg6_template\rch6_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.611647 starting: writing template file freyberg6_template\rch6_inst0_constant.csv.tpl for ['rch6_inst:0']
+2022-03-02 16:15:32.616605 finished: writing template file freyberg6_template\rch6_inst0_constant.csv.tpl for ['rch6_inst:0'] took: 0:00:00.004958
+2022-03-02 16:15:32.617602 starting: writing array-based template file 'freyberg6_template\rch6_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.617602 saving zone array freyberg6_template\rch6_inst0_constant.csv.zone for tpl file freyberg6_template\rch6_inst0_constant.csv.tpl
+2022-03-02 16:15:32.628572 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_6.txt'] took: 0:00:00.019946
+2022-03-02 16:15:32.628572 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_7.txt']
+2022-03-02 16:15:32.629599 starting: loading array freyberg6_template\freyberg6.rch_recharge_7.txt
+2022-03-02 16:15:32.629599 finished: loading array freyberg6_template\freyberg6.rch_recharge_7.txt took: 0:00:00
+2022-03-02 16:15:32.630596 loaded array 'freyberg_mf6\freyberg6.rch_recharge_7.txt' of shape (40, 20)
+2022-03-02 16:15:32.631594 starting: writing array-style template file 'freyberg6_template\rch7_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.631594 starting: writing template file freyberg6_template\rch7_inst0_constant.csv.tpl for ['rch7_inst:0']
+2022-03-02 16:15:32.637579 finished: writing template file freyberg6_template\rch7_inst0_constant.csv.tpl for ['rch7_inst:0'] took: 0:00:00.005985
+2022-03-02 16:15:32.638583 starting: writing array-based template file 'freyberg6_template\rch7_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.638583 saving zone array freyberg6_template\rch7_inst0_constant.csv.zone for tpl file freyberg6_template\rch7_inst0_constant.csv.tpl
+2022-03-02 16:15:32.649516 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_7.txt'] took: 0:00:00.020944
+2022-03-02 16:15:32.649516 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_8.txt']
+2022-03-02 16:15:32.649516 starting: loading array freyberg6_template\freyberg6.rch_recharge_8.txt
+2022-03-02 16:15:32.650543 finished: loading array freyberg6_template\freyberg6.rch_recharge_8.txt took: 0:00:00.001027
+2022-03-02 16:15:32.650543 loaded array 'freyberg_mf6\freyberg6.rch_recharge_8.txt' of shape (40, 20)
+2022-03-02 16:15:32.652538 starting: writing array-style template file 'freyberg6_template\rch8_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.652538 starting: writing template file freyberg6_template\rch8_inst0_constant.csv.tpl for ['rch8_inst:0']
+2022-03-02 16:15:32.658492 finished: writing template file freyberg6_template\rch8_inst0_constant.csv.tpl for ['rch8_inst:0'] took: 0:00:00.005954
+2022-03-02 16:15:32.658492 starting: writing array-based template file 'freyberg6_template\rch8_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.659520 saving zone array freyberg6_template\rch8_inst0_constant.csv.zone for tpl file freyberg6_template\rch8_inst0_constant.csv.tpl
+2022-03-02 16:15:32.669462 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_8.txt'] took: 0:00:00.019946
+2022-03-02 16:15:32.669462 starting: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_9.txt']
+2022-03-02 16:15:32.669462 starting: loading array freyberg6_template\freyberg6.rch_recharge_9.txt
+2022-03-02 16:15:32.670461 finished: loading array freyberg6_template\freyberg6.rch_recharge_9.txt took: 0:00:00.000999
+2022-03-02 16:15:32.670461 loaded array 'freyberg_mf6\freyberg6.rch_recharge_9.txt' of shape (40, 20)
+2022-03-02 16:15:32.672487 starting: writing array-style template file 'freyberg6_template\rch9_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.672487 starting: writing template file freyberg6_template\rch9_inst0_constant.csv.tpl for ['rch9_inst:0']
+2022-03-02 16:15:32.677441 finished: writing template file freyberg6_template\rch9_inst0_constant.csv.tpl for ['rch9_inst:0'] took: 0:00:00.004954
+2022-03-02 16:15:32.677441 starting: writing array-based template file 'freyberg6_template\rch9_inst0_constant.csv.tpl'
+2022-03-02 16:15:32.678439 saving zone array freyberg6_template\rch9_inst0_constant.csv.zone for tpl file freyberg6_template\rch9_inst0_constant.csv.tpl
+2022-03-02 16:15:32.687415 finished: adding constant type m style parameters for file(s) ['freyberg6.rch_recharge_9.txt'] took: 0:00:00.017953
+2022-03-02 16:15:32.905829 forward_run line:pyemu.os_utils.run(r'mf6')
+
