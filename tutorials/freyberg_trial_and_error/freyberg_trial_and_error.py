@@ -135,3 +135,6 @@ def plot_simvsmeas(sim_ws,sfrplot=True):
 
     fig.tight_layout()
     return
+
+if __name__ == "__main__":
+    print('This is not the command you are looking for...')
