@@ -192,7 +192,7 @@ def prep_pest(tmp_d):
     pst.model_command = 'mf6'
     pst.control_data.noptmax=0
 
-    pst.pestpp_options['forecasts'] = ['headwater:732.0','tailwater:732.0',
+    pst.pestpp_options['forecasts'] = ['headwater:732.0','tailwater:732.0', 'gage_1:732.0',
                                     'trgw_2_9_1:732.0','trgw_0_9_1:732.0']
 
     pstfile = os.path.join(tmp_d,'freyberg.pst')
@@ -297,9 +297,10 @@ def prep_notebooks(rebuild_truth=True):
     # trial and error
     run_notebook('freyberg_trial_and_error.ipynb', 'freyberg_trial_and_error')
 
-    ##...
-
-
+    # k only calib; takes a few minutes
+    run_notebook('freyberg_k.ipynb', 'freyberg_k')
+    dir_cleancopy(org_d=os.path.join('freyberg_k', 'freyberg_k'), 
+                new_d=os.path.join('..','models','freyberg_k'))
 
     # run the base pest setup and make a backup
     run_notebook('freyberg_pstfrom_pest_setup.ipynb', 'freyberg_pstfrom_pest_setup')
