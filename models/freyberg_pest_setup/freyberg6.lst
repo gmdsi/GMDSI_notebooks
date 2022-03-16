@@ -478,9 +478,9 @@ The PRINT_INPUT option has been specified.
 
     BINARY GRID INFORMATION WILL BE WRITTEN TO:
       UNIT NUMBER: 1050
-      FILE NAME: C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\models\freyberg_pest_setup\freyberg6.dis.grb
+      FILE NAME: D:\Workspace\hugm0001\github\GMDSI_notebooks\models\freyberg_pest_setup\freyberg6.dis.grb
 
- OPENED C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\models\freyberg_pest_setup\freyberg6.dis.grb
+ OPENED D:\Workspace\hugm0001\github\GMDSI_notebooks\models\freyberg_pest_setup\freyberg6.dis.grb
  FILE TYPE:DATA(BINARY)   UNIT 1050   STATUS:REPLACE             
  FORMAT:UNFORMATTED            ACCESS:STREAM              
  ACTION:READWRITE           

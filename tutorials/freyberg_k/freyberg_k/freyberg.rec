@@ -9,9 +9,9 @@ binary compiled on Jan 27 2022 at 09:03:57
 
 using control file: "freyberg.pst"
 
-in directory: "C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_k\freyberg_k"
-on host: "DESKTOP-E0R2JQ8"
-started at 03/15/22 15:46:19
+in directory: "D:\Workspace\hugm0001\github\GMDSI_notebooks\tutorials\freyberg_k\freyberg_k"
+on host: "3R3V7B3"
+started at 03/16/22 17:20:06
 
 Note: 3 unused lines in pest control file:
   -->  line number 6: '2.000000E+01  -3.000000E+00   3.000000E-01   1.000000E-02        -7' 
@@ -2657,6 +2657,6 @@ Note : the above forecast uncertainty summary was written to file 'freyberg.pred
 
 
 pestpp-glm analysis complete...
-started at 03/15/22 15:46:19
-finished at 03/15/22 15:48:22
-took 2.05000 minutes
+started at 03/16/22 17:20:06
+finished at 03/16/22 17:22:13
+took 2.11667 minutes
