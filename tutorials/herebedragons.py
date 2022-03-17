@@ -328,6 +328,13 @@ def prep_notebooks(rebuild_truth=True):
         dir_cleancopy(org_d=os.path.join('freyberg_pstfrom_pest_setup', 'freyberg6_template'), 
                     new_d=os.path.join('..','models','freyberg_pstfrom_pest_setup'),
                     delete_orgdir=True) # reduce occupied disk space
+        
+        # zip the prior cov; it is >100mb. prior_cov.jcb is in gitignore
+        import zipfile
+        with zipfile.ZipFile(os.path.join('..','models','prior_cov.zip'), 'w', compression=zipfile.ZIP_DEFLATED) as zipf:
+            zipf.write(os.path.join('..','models','freyberg_pstfrom_pest_setup','prior_cov.jcb'), 
+            arcname='prior_cov.jcb')
+            zipf.close()
     
     return print('Notebook folders ready.')
 

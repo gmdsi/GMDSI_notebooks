@@ -1,10 +1,10 @@
-2022-03-17 12:39:06.636171 starting: opening Default_Loggger.log for logging
-2022-03-17 12:39:06.636171 starting: plot res_1to1
-2022-03-17 12:39:06.637167 starting: plotting 1to1 for flux
-2022-03-17 12:39:06.638164 using control file obsvals to calculate residuals
-2022-03-17 12:39:06.639162 no non-zero obs for group 'flux'
-2022-03-17 12:39:06.639162 finished: plotting 1to1 for flux took: 0:00:00.001995
-2022-03-17 12:39:06.640159 starting: plotting 1to1 for hds
-2022-03-17 12:39:06.641157 using control file obsvals to calculate residuals
-2022-03-17 12:39:06.750863 finished: plotting 1to1 for hds took: 0:00:00.110704
-2022-03-17 12:39:06.794746 finished: plot res_1to1 took: 0:00:00.158575
+2022-03-17 13:19:49.222713 starting: opening Default_Loggger.log for logging
+2022-03-17 13:19:49.223250 starting: plot res_1to1
+2022-03-17 13:19:49.224217 starting: plotting 1to1 for flux
+2022-03-17 13:19:49.225213 using control file obsvals to calculate residuals
+2022-03-17 13:19:49.226211 no non-zero obs for group 'flux'
+2022-03-17 13:19:49.226211 finished: plotting 1to1 for flux took: 0:00:00.001994
+2022-03-17 13:19:49.226211 starting: plotting 1to1 for hds
+2022-03-17 13:19:49.227208 using control file obsvals to calculate residuals
+2022-03-17 13:19:49.341901 finished: plotting 1to1 for hds took: 0:00:00.115690
+2022-03-17 13:19:49.387779 finished: plot res_1to1 took: 0:00:00.164529

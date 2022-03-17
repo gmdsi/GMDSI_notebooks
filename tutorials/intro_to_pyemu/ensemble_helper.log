@@ -1,21 +1,21 @@
-2022-03-17 12:37:16.949547 starting: opening ensemble_helper.log for logging
-2022-03-17 12:37:16.949547 starting: pyemu.plot_utils.ensemble_helper()
-2022-03-17 12:37:16.949547 plotting 8 histograms
-2022-03-17 12:37:16.950580 saving pdf to None
-2022-03-17 12:37:16.950580 starting: plotting reals for hk00
-2022-03-17 12:37:17.066275 hk00 min:-0.30103, max:1.69897
-2022-03-17 12:37:17.085216 starting: plotting reals for hk01
-2022-03-17 12:37:17.095190 hk01 min:-0.30103, max:1.69897
-2022-03-17 12:37:17.111148 starting: plotting reals for hk02
-2022-03-17 12:37:17.122119 hk02 min:-0.30103, max:1.69897
-2022-03-17 12:37:17.139073 starting: plotting reals for hk03
-2022-03-17 12:37:17.149047 hk03 min:-0.30103, max:1.69897
-2022-03-17 12:37:17.166005 starting: plotting reals for hk04
-2022-03-17 12:37:17.176974 hk04 min:-0.30103, max:1.69897
-2022-03-17 12:37:17.192897 starting: plotting reals for hk05
-2022-03-17 12:37:17.203902 hk05 min:-0.30103, max:1.69897
-2022-03-17 12:37:17.220854 starting: plotting reals for hk06
-2022-03-17 12:37:17.230828 hk06 min:-0.30103, max:1.69897
-2022-03-17 12:37:17.247799 starting: plotting reals for hk07
-2022-03-17 12:37:17.258756 hk07 min:-0.30103, max:1.69897
-2022-03-17 12:37:17.372485 finished: pyemu.plot_utils.ensemble_helper() took: 0:00:00.422938
+2022-03-17 13:18:00.324887 starting: opening ensemble_helper.log for logging
+2022-03-17 13:18:00.324887 starting: pyemu.plot_utils.ensemble_helper()
+2022-03-17 13:18:00.325885 plotting 8 histograms
+2022-03-17 13:18:00.326882 saving pdf to None
+2022-03-17 13:18:00.326882 starting: plotting reals for hk00
+2022-03-17 13:18:00.443538 hk00 min:-0.30103, max:1.69897
+2022-03-17 13:18:00.461490 starting: plotting reals for hk01
+2022-03-17 13:18:00.474455 hk01 min:-0.30103, max:1.69897
+2022-03-17 13:18:00.492407 starting: plotting reals for hk02
+2022-03-17 13:18:00.504375 hk02 min:-0.30103, max:1.69897
+2022-03-17 13:18:00.521330 starting: plotting reals for hk03
+2022-03-17 13:18:00.533298 hk03 min:-0.30103, max:1.69897
+2022-03-17 13:18:00.550420 starting: plotting reals for hk04
+2022-03-17 13:18:00.562388 hk04 min:-0.30103, max:1.69897
+2022-03-17 13:18:00.580345 starting: plotting reals for hk05
+2022-03-17 13:18:00.592313 hk05 min:-0.30103, max:1.69897
+2022-03-17 13:18:00.609272 starting: plotting reals for hk06
+2022-03-17 13:18:00.622237 hk06 min:-0.30103, max:1.69897
+2022-03-17 13:18:00.639192 starting: plotting reals for hk07
+2022-03-17 13:18:00.651160 hk07 min:-0.30103, max:1.69897
+2022-03-17 13:18:00.770840 finished: pyemu.plot_utils.ensemble_helper() took: 0:00:00.445953
