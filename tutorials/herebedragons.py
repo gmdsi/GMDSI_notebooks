@@ -26,13 +26,17 @@ def run_notebook(notebook_filename, path):
     print(f'notebook complete:{notebook_filename}')
     return
 
-def dir_cleancopy(org_d, new_d):
+def dir_cleancopy(org_d, new_d, delete_orgdir=False):
     # remove existing folder
     if os.path.exists(new_d):
         shutil.rmtree(new_d)
     # copy the original model folder across
     shutil.copytree(org_d, new_d)
     print(f'Files copied from:{org_d}\nFiles copied to:{new_d}')
+
+    if delete_orgdir==True:
+        shutil.rmtree(org_d)
+        print(f'Hope you did that on purpose. {org_d} has been deleted.')
     return
 
 
@@ -266,6 +270,7 @@ def plot_freyberg(tmp_d):
 ####
 def prep_notebooks(rebuild_truth=True):
     """Runs notebooks, prepares model folders, etc."""
+
     # removes all the .ipynb checkpoint folders
     for cdir, cpath, cf in os.walk('.'):
         if os.path.basename(cdir).startswith('.ipynb'):
@@ -300,14 +305,17 @@ def prep_notebooks(rebuild_truth=True):
     # k only calib; takes a few minutes
     run_notebook('freyberg_k.ipynb', 'freyberg_k')
     dir_cleancopy(org_d=os.path.join('freyberg_k', 'freyberg_k'), 
-                new_d=os.path.join('..','models','freyberg_k'))
+                new_d=os.path.join('..','models','freyberg_k'), 
+                delete_orgdir=True) # reduce occupied disk space
 
     # run the base pest setup and make a backup
     run_notebook('freyberg_pstfrom_pest_setup.ipynb', 'freyberg_pstfrom_pest_setup')
     dir_cleancopy(org_d=os.path.join('freyberg_pstfrom_pest_setup', 'freyberg6_template'), 
-                new_d=os.path.join('..','models','freyberg_pstfrom_pest_setup'))
+                new_d=os.path.join('..','models','freyberg_pstfrom_pest_setup'),
+                delete_orgdir=True) # reduce occupied disk space
 
     if rebuild_truth==True:
+        print('Rebuilding truth.')
         ### Generate the truth model; chicken and egg situation going on here.
         # Need to re-run the pest setup notebook again to ensure that the correct Obs are used.
         # Alternative is to accept some manual input here and just make sure the "truth" is setup correctly beforehand?
@@ -318,7 +326,8 @@ def prep_notebooks(rebuild_truth=True):
         # run the base pest setup and make a backup
         run_notebook('freyberg_pstfrom_pest_setup.ipynb', 'freyberg_pstfrom_pest_setup')
         dir_cleancopy(org_d=os.path.join('freyberg_pstfrom_pest_setup', 'freyberg6_template'), 
-                    new_d=os.path.join('..','models','freyberg_pstfrom_pest_setup'))
+                    new_d=os.path.join('..','models','freyberg_pstfrom_pest_setup'),
+                    delete_orgdir=True) # reduce occupied disk space
     
     return print('Notebook folders ready.')
 

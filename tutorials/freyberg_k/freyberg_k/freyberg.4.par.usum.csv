@@ -1,4 +1,0 @@
-name,prior_mean,prior_stdev,prior_lower_bound,prior_upper_bound,post_mean,post_stdev,post_lower_bound,post_upper_bound
-hk1,0.69897,0.75,-0.80103,2.19897,1.68455,0.309649,1.06526,2.30385
-hk2,0.69897,0.75,-0.80103,2.19897,1.18686,0.293267,0.600327,1.7734
-hk3,0.69897,0.75,-0.80103,2.19897,1.14383,0.0980595,0.947713,1.33995
