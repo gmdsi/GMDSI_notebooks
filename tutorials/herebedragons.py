@@ -336,6 +336,15 @@ def prep_notebooks(rebuild_truth=True):
             arcname='prior_cov.jcb')
             zipf.close()
     
+
+    # run the reqeighting notebook and make a backup
+    run_notebook('freyberg_obs_and_weights.ipynb', 'freyberg_obs_and_weights')
+    dir_cleancopy(org_d=os.path.join('freyberg_obs_and_weights', 'freyberg6_template'), 
+                new_d=os.path.join('..','models','freyberg_obs_and_weights'),
+                delete_orgdir=True) # reduce occupied disk space
+
+
+
     return print('Notebook folders ready.')
 
 

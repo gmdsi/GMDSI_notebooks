@@ -11,7 +11,7 @@ using control file: "freyberg.pst"
 
 in directory: "C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_k\freyberg_k"
 on host: "DESKTOP-E0R2JQ8"
-started at 03/17/22 13:18:20
+started at 03/18/22 15:07:35
 
 Note: 3 unused lines in pest control file:
   -->  line number 6: '2.000000E+01  -3.000000E+00   3.000000E-01   1.000000E-02        -7' 
@@ -2450,6 +2450,6 @@ Note : the above forecast uncertainty summary was written to file 'freyberg.pred
 
 
 pestpp-glm analysis complete...
-started at 03/17/22 13:18:20
-finished at 03/17/22 13:19:48
+started at 03/18/22 15:07:35
+finished at 03/18/22 15:09:03
 took 1.46667 minutes
