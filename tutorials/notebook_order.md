@@ -2,7 +2,7 @@
 # Reading Order
 
 ## Part 1 - Introduction to Theory, Concepts and PEST mechanics (based on the GW1876 repo)
-  **Intro to's *(to do: place these within the sequence of tutorials, however they should also be standalone)
+  **Intro to's *(within the sequence of tutorials, however they should also be standalone)
   - intro to regression
   - intro to bayes
   - intro to pyemu
@@ -48,11 +48,13 @@
  - high-dim pstfrom pest interface setup
  - obs weighting strategies
  - prior MC
+ 
  **Path 1
  - GLM **TO DO
  - FOSM **TO DO
  - GLM continued; FOSM informed  **TO DO
  - dataworth **TO DO
+ 
  **Path 2
  - IES basic to advanced **TO DO
  - IES localization strategies **TO DO
