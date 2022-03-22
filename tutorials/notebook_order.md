@@ -49,14 +49,14 @@
  - obs weighting strategies
  - prior MC
  **Path 1
- - GLM
- - FOSM
- - GLM continued; FOSM informed 
- - dataworth
+ - GLM **TO DO
+ - FOSM **TO DO
+ - GLM continued; FOSM informed  **TO DO
+ - dataworth **TO DO
  **Path 2
- - IES basic to advanced
- - IES localization strategies
- - FOSM-based posterior MC
+ - IES basic to advanced **TO DO
+ - IES localization strategies **TO DO
+ - FOSM-based posterior MC **TO DO
 
 **OPT? 
 **MOU? 
