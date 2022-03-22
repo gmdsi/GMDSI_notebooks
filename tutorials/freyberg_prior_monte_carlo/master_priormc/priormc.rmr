@@ -1,0 +1,628 @@
+
+PANTHER master listening on socket:0.0.0.0:4004 (IPv4)
+running model 200 times
+03/21/22 15:52:23->waiting for agents to appear
+
+03/21/22 15:52:23->new connection from: lmlicenses.wip4.adobe.com:57848
+03/21/22 15:52:23->initializing new agent connection from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0:lmlicenses.wip4.adobe.com:57848, number of agents: 1
+03/21/22 15:52:24->new connection from: lmlicenses.wip4.adobe.com:55924
+03/21/22 15:52:24->initializing new agent connection from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1:lmlicenses.wip4.adobe.com:55924, number of agents: 2
+03/21/22 15:52:24->new agent ready: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0:lmlicenses.wip4.adobe.com:57848
+03/21/22 15:52:24->Sending run 0 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:0, concurrent runs:1)
+03/21/22 15:52:25->new agent ready: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1:lmlicenses.wip4.adobe.com:55924
+03/21/22 15:52:25->Sending run 1 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:1, concurrent runs:1)
+03/21/22 15:52:30->new connection from: lmlicenses.wip4.adobe.com:55926
+03/21/22 15:52:30->initializing new agent connection from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2:lmlicenses.wip4.adobe.com:55926, number of agents: 3
+03/21/22 15:52:31->new agent ready: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2:lmlicenses.wip4.adobe.com:55926
+03/21/22 15:52:31->Sending run 2 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:2, concurrent runs:1)
+03/21/22 15:52:39->new connection from: lmlicenses.wip4.adobe.com:55934
+03/21/22 15:52:39->initializing new agent connection from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3:lmlicenses.wip4.adobe.com:55934, number of agents: 4
+03/21/22 15:52:41->new agent ready: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3:lmlicenses.wip4.adobe.com:55934
+03/21/22 15:52:41->Sending run 3 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:3, concurrent runs:1)
+03/21/22 15:52:41->run 1 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.2771 min, avg run time:0.2771 min, group id:2, run id: 1 concurrent:1)
+03/21/22 15:52:41->run 1 processed
+03/21/22 15:52:41->run 0 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.2841 min, avg run time:0.2806 min, group id:2, run id: 0 concurrent:1)
+03/21/22 15:52:41->run 0 processed
+03/21/22 15:52:41->Sending run 4 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:4, concurrent runs:1)
+03/21/22 15:52:41->Sending run 5 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:5, concurrent runs:1)
+03/21/22 15:52:45->run 2 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.2268 min, avg run time:0.262667 min, group id:2, run id: 2 concurrent:1)
+03/21/22 15:52:45->run 2 processed
+03/21/22 15:52:45->Sending run 6 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:6, concurrent runs:1)
+03/21/22 15:52:53->run 4 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.236417 min, avg run time:0.249106 min, group id:2, run id: 4 concurrent:1)
+03/21/22 15:52:53->run 4 processed
+03/21/22 15:52:53->Sending run 7 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:7, concurrent runs:1)
+03/21/22 15:52:53->run 5 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.240683 min, avg run time:0.234633 min, group id:2, run id: 5 concurrent:1)
+03/21/22 15:52:53->run 5 processed
+03/21/22 15:52:53->Sending run 8 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:8, concurrent runs:1)
+03/21/22 15:52:53->run 3 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.2083 min, avg run time:0.22805 min, group id:2, run id: 3 concurrent:1)
+03/21/22 15:52:53->run 3 processed
+03/21/22 15:52:53->Sending run 9 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:9, concurrent runs:1)
+03/21/22 15:52:56->run 6 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.203967 min, avg run time:0.222342 min, group id:2, run id: 6 concurrent:1)
+03/21/22 15:52:56->run 6 processed
+03/21/22 15:52:56->Sending run 10 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:10, concurrent runs:1)
+03/21/22 15:53:06->run 8 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.2268 min, avg run time:0.218871 min, group id:2, run id: 8 concurrent:1)
+03/21/22 15:53:06->run 8 processed
+03/21/22 15:53:06->Sending run 11 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:11, concurrent runs:1)
+03/21/22 15:53:06->run 7 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.22635 min, avg run time:0.216354 min, group id:2, run id: 7 concurrent:1)
+03/21/22 15:53:06->run 7 processed
+03/21/22 15:53:06->run 9 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.2109 min, avg run time:0.217004 min, group id:2, run id: 9 concurrent:1)
+03/21/22 15:53:06->run 9 processed
+03/21/22 15:53:06->Sending run 12 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:12, concurrent runs:1)
+03/21/22 15:53:06->Sending run 13 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:13, concurrent runs:1)
+03/21/22 15:53:08->run 10 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.2001 min, avg run time:0.216037 min, group id:2, run id: 10 concurrent:1)
+03/21/22 15:53:08->run 10 processed
+03/21/22 15:53:08->Sending run 14 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:14, concurrent runs:1)
+03/21/22 15:53:18->run 12 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.21105 min, avg run time:0.212212 min, group id:2, run id: 12 concurrent:1)
+03/21/22 15:53:18->run 12 processed
+03/21/22 15:53:18->run 13 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.203483 min, avg run time:0.210358 min, group id:2, run id: 13 concurrent:1)
+03/21/22 15:53:18->run 13 processed
+03/21/22 15:53:18->Sending run 15 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:15, concurrent runs:1)
+03/21/22 15:53:18->Sending run 16 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:16, concurrent runs:1)
+03/21/22 15:53:19->run 11 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.219083 min, avg run time:0.208429 min, group id:2, run id: 11 concurrent:1)
+03/21/22 15:53:19->run 11 processed
+03/21/22 15:53:19->Sending run 17 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:17, concurrent runs:1)
+03/21/22 15:53:19->run 14 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.198033 min, avg run time:0.207913 min, group id:2, run id: 14 concurrent:1)
+03/21/22 15:53:19->run 14 processed
+03/21/22 15:53:19->Sending run 18 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:18, concurrent runs:1)
+03/21/22 15:53:29->run 15 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.201033 min, avg run time:0.205408 min, group id:2, run id: 15 concurrent:1)
+03/21/22 15:53:29->run 15 processed
+03/21/22 15:53:29->run 16 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.1974 min, avg run time:0.203887 min, group id:2, run id: 16 concurrent:1)
+03/21/22 15:53:29->run 16 processed
+03/21/22 15:53:29->Sending run 19 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:19, concurrent runs:1)
+03/21/22 15:53:29->Sending run 20 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:20, concurrent runs:1)
+03/21/22 15:53:30->run 17 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.206783 min, avg run time:0.200813 min, group id:2, run id: 17 concurrent:1)
+03/21/22 15:53:30->run 17 processed
+03/21/22 15:53:30->Sending run 21 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:21, concurrent runs:1)
+03/21/22 15:53:31->run 18 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.1963 min, avg run time:0.200379 min, group id:2, run id: 18 concurrent:1)
+03/21/22 15:53:31->run 18 processed
+03/21/22 15:53:31->Sending run 22 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:22, concurrent runs:1)
+03/21/22 15:53:42->run 19 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.203583 min, avg run time:0.201017 min, group id:2, run id: 19 concurrent:1)
+03/21/22 15:53:42->run 19 processed
+03/21/22 15:53:42->run 20 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.201933 min, avg run time:0.20215 min, group id:2, run id: 20 concurrent:1)
+03/21/22 15:53:42->run 20 processed
+03/21/22 15:53:42->Sending run 23 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:23, concurrent runs:1)
+03/21/22 15:53:42->Sending run 24 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:24, concurrent runs:1)
+03/21/22 15:53:43->run 21 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.208183 min, avg run time:0.2025 min, group id:2, run id: 21 concurrent:1)
+03/21/22 15:53:43->run 21 processed
+03/21/22 15:53:43->run 22 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.198083 min, avg run time:0.202946 min, group id:2, run id: 22 concurrent:1)
+03/21/22 15:53:43->run 22 processed
+03/21/22 15:53:43->Sending run 25 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:25, concurrent runs:1)
+03/21/22 15:53:43->Sending run 26 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:26, concurrent runs:1)
+03/21/22 15:53:54->run 23 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.206467 min, avg run time:0.203667 min, group id:2, run id: 23 concurrent:1)
+03/21/22 15:53:54->run 23 processed
+03/21/22 15:53:54->run 24 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.205717 min, avg run time:0.204613 min, group id:2, run id: 24 concurrent:1)
+03/21/22 15:53:55->run 24 processed
+03/21/22 15:53:55->Sending run 27 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:27, concurrent runs:1)
+03/21/22 15:53:55->Sending run 28 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:28, concurrent runs:1)
+03/21/22 15:53:55->run 25 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.201983 min, avg run time:0.203063 min, group id:2, run id: 25 concurrent:1)
+03/21/22 15:53:55->run 25 processed
+03/21/22 15:53:55->run 26 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.197083 min, avg run time:0.202812 min, group id:2, run id: 26 concurrent:1)
+03/21/22 15:53:55->run 26 processed
+03/21/22 15:53:55->Sending run 29 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:29, concurrent runs:1)
+03/21/22 15:53:55->Sending run 30 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:30, concurrent runs:1)
+03/21/22 15:54:07->run 28 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.2101 min, avg run time:0.203908 min, group id:2, run id: 28 concurrent:1)
+03/21/22 15:54:07->run 28 processed
+03/21/22 15:54:07->run 27 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.2107 min, avg run time:0.204967 min, group id:2, run id: 27 concurrent:1)
+03/21/22 15:54:07->run 27 processed
+03/21/22 15:54:07->Sending run 31 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:31, concurrent runs:1)
+03/21/22 15:54:07->Sending run 32 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:32, concurrent runs:1)
+03/21/22 15:54:08->run 29 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.208867 min, avg run time:0.206687 min, group id:2, run id: 29 concurrent:1)
+03/21/22 15:54:08->run 29 processed
+03/21/22 15:54:08->run 30 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.20665 min, avg run time:0.209079 min, group id:2, run id: 30 concurrent:1)
+03/21/22 15:54:08->run 30 processed
+03/21/22 15:54:08->Sending run 33 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:33, concurrent runs:1)
+03/21/22 15:54:08->Sending run 34 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:34, concurrent runs:1)
+03/21/22 15:54:20->run 31 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.211467 min, avg run time:0.209421 min, group id:2, run id: 31 concurrent:1)
+03/21/22 15:54:20->run 31 processed
+03/21/22 15:54:20->Sending run 35 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:35, concurrent runs:1)
+03/21/22 15:54:20->run 32 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.2125 min, avg run time:0.209871 min, group id:2, run id: 32 concurrent:1)
+03/21/22 15:54:20->run 32 processed
+03/21/22 15:54:20->Sending run 36 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:36, concurrent runs:1)
+03/21/22 15:54:21->run 33 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.210633 min, avg run time:0.210313 min, group id:2, run id: 33 concurrent:1)
+03/21/22 15:54:21->run 33 processed
+03/21/22 15:54:21->Sending run 37 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:37, concurrent runs:1)
+03/21/22 15:54:21->run 34 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.21225 min, avg run time:0.211713 min, group id:2, run id: 34 concurrent:1)
+03/21/22 15:54:21->run 34 processed
+03/21/22 15:54:21->Sending run 38 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:38, concurrent runs:1)
+03/21/22 15:54:33->run 36 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.214367 min, avg run time:0.212179 min, group id:2, run id: 36 concurrent:1)
+03/21/22 15:54:33->run 36 processed
+03/21/22 15:54:33->Sending run 39 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:39, concurrent runs:1)
+03/21/22 15:54:33->run 37 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.21175 min, avg run time:0.212458 min, group id:2, run id: 37 concurrent:1)
+03/21/22 15:54:34->run 37 processed
+03/21/22 15:54:34->Sending run 40 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:40, concurrent runs:1)
+03/21/22 15:54:34->run 35 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.2181 min, avg run time:0.214117 min, group id:2, run id: 35 concurrent:1)
+03/21/22 15:54:34->run 35 processed
+03/21/22 15:54:34->Sending run 41 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:41, concurrent runs:1)
+03/21/22 15:54:34->run 38 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.212583 min, avg run time:0.2142 min, group id:2, run id: 38 concurrent:1)
+03/21/22 15:54:34->run 38 processed
+03/21/22 15:54:34->Sending run 42 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:42, concurrent runs:1)
+03/21/22 15:54:46->run 39 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.21625 min, avg run time:0.214671 min, group id:2, run id: 39 concurrent:1)
+03/21/22 15:54:46->run 39 processed
+03/21/22 15:54:46->Sending run 43 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:43, concurrent runs:1)
+03/21/22 15:54:47->run 40 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.216533 min, avg run time:0.215867 min, group id:2, run id: 40 concurrent:1)
+03/21/22 15:54:47->run 40 processed
+03/21/22 15:54:47->Sending run 44 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:44, concurrent runs:1)
+03/21/22 15:54:47->run 41 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.219783 min, avg run time:0.216287 min, group id:2, run id: 41 concurrent:1)
+03/21/22 15:54:47->run 41 processed
+03/21/22 15:54:47->Sending run 45 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:45, concurrent runs:1)
+03/21/22 15:54:47->run 42 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.216983 min, avg run time:0.217387 min, group id:2, run id: 42 concurrent:1)
+03/21/22 15:54:47->run 42 processed
+03/21/22 15:54:47->Sending run 46 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:46, concurrent runs:1)
+03/21/22 15:54:59->run 43 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.213733 min, avg run time:0.216758 min, group id:2, run id: 43 concurrent:1)
+03/21/22 15:54:59->run 43 processed
+03/21/22 15:54:59->Sending run 47 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:47, concurrent runs:1)
+03/21/22 15:55:00->run 44 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.21635 min, avg run time:0.216713 min, group id:2, run id: 44 concurrent:1)
+03/21/22 15:55:00->run 44 processed
+03/21/22 15:55:00->Sending run 48 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:48, concurrent runs:1)
+03/21/22 15:55:01->run 45 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.222133 min, avg run time:0.2173 min, group id:2, run id: 45 concurrent:1)
+03/21/22 15:55:01->run 45 processed
+03/21/22 15:55:01->Sending run 49 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:49, concurrent runs:1)
+03/21/22 15:55:01->run 46 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.220867 min, avg run time:0.218271 min, group id:2, run id: 46 concurrent:1)
+03/21/22 15:55:01->run 46 processed
+03/21/22 15:55:01->Sending run 50 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:50, concurrent runs:1)
+03/21/22 15:55:12->run 47 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.216717 min, avg run time:0.219017 min, group id:2, run id: 47 concurrent:1)
+03/21/22 15:55:12->run 47 processed
+03/21/22 15:55:12->Sending run 51 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:51, concurrent runs:1)
+03/21/22 15:55:12->run 48 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.213 min, avg run time:0.218179 min, group id:2, run id: 48 concurrent:1)
+03/21/22 15:55:12->run 48 processed
+03/21/22 15:55:12->Sending run 52 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:52, concurrent runs:1)
+03/21/22 15:55:13->run 49 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.218333 min, avg run time:0.217229 min, group id:2, run id: 49 concurrent:1)
+03/21/22 15:55:13->run 49 processed
+03/21/22 15:55:13->Sending run 53 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:53, concurrent runs:1)
+03/21/22 15:55:14->run 50 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.217783 min, avg run time:0.216458 min, group id:2, run id: 50 concurrent:1)
+03/21/22 15:55:14->run 50 processed
+03/21/22 15:55:14->Sending run 54 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:54, concurrent runs:1)
+03/21/22 15:55:25->run 51 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.212367 min, avg run time:0.215371 min, group id:2, run id: 51 concurrent:1)
+03/21/22 15:55:25->run 51 processed
+03/21/22 15:55:25->Sending run 55 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:55, concurrent runs:1)
+03/21/22 15:55:26->run 52 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.218883 min, avg run time:0.216842 min, group id:2, run id: 52 concurrent:1)
+03/21/22 15:55:26->run 52 processed
+03/21/22 15:55:26->Sending run 56 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:56, concurrent runs:1)
+03/21/22 15:55:26->run 53 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.217333 min, avg run time:0.216592 min, group id:2, run id: 53 concurrent:1)
+03/21/22 15:55:27->run 53 processed
+03/21/22 15:55:27->run 54 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.216183 min, avg run time:0.216192 min, group id:2, run id: 54 concurrent:1)
+03/21/22 15:55:27->run 54 processed
+03/21/22 15:55:27->Sending run 57 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:57, concurrent runs:1)
+03/21/22 15:55:27->Sending run 58 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:58, concurrent runs:1)
+03/21/22 15:55:38->run 55 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.215967 min, avg run time:0.217092 min, group id:2, run id: 55 concurrent:1)
+03/21/22 15:55:38->run 55 processed
+03/21/22 15:55:38->Sending run 59 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:59, concurrent runs:1)
+03/21/22 15:55:39->run 56 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.216733 min, avg run time:0.216554 min, group id:2, run id: 56 concurrent:1)
+03/21/22 15:55:39->run 56 processed
+03/21/22 15:55:39->Sending run 60 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:60, concurrent runs:1)
+03/21/22 15:55:40->run 57 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.2182 min, avg run time:0.216771 min, group id:2, run id: 57 concurrent:1)
+03/21/22 15:55:40->run 57 processed
+03/21/22 15:55:40->Sending run 61 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:61, concurrent runs:1)
+03/21/22 15:55:40->run 58 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.220383 min, avg run time:0.217821 min, group id:2, run id: 58 concurrent:1)
+03/21/22 15:55:40->run 58 processed
+03/21/22 15:55:40->Sending run 62 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:62, concurrent runs:1)
+03/21/22 15:55:51->run 59 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.218633 min, avg run time:0.218488 min, group id:2, run id: 59 concurrent:1)
+03/21/22 15:55:51->run 59 processed
+03/21/22 15:55:51->Sending run 63 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:63, concurrent runs:1)
+03/21/22 15:55:53->run 60 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.222317 min, avg run time:0.219883 min, group id:2, run id: 60 concurrent:1)
+03/21/22 15:55:53->run 60 processed
+03/21/22 15:55:53->Sending run 64 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:64, concurrent runs:1)
+03/21/22 15:55:53->run 61 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.2206 min, avg run time:0.220483 min, group id:2, run id: 61 concurrent:1)
+03/21/22 15:55:53->run 61 processed
+03/21/22 15:55:53->Sending run 65 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:65, concurrent runs:1)
+03/21/22 15:55:53->run 62 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.220417 min, avg run time:0.220492 min, group id:2, run id: 62 concurrent:1)
+03/21/22 15:55:53->run 62 processed
+03/21/22 15:55:53->Sending run 66 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:66, concurrent runs:1)
+03/21/22 15:56:04->run 63 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.211583 min, avg run time:0.218729 min, group id:2, run id: 63 concurrent:1)
+03/21/22 15:56:04->run 63 processed
+03/21/22 15:56:04->Sending run 67 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:67, concurrent runs:1)
+03/21/22 15:56:05->run 65 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.210067 min, avg run time:0.216096 min, group id:2, run id: 65 concurrent:1)
+03/21/22 15:56:05->run 65 processed
+03/21/22 15:56:05->Sending run 68 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:68, concurrent runs:1)
+03/21/22 15:56:05->run 64 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.216783 min, avg run time:0.214713 min, group id:2, run id: 64 concurrent:1)
+03/21/22 15:56:05->run 64 processed
+03/21/22 15:56:05->Sending run 69 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:69, concurrent runs:1)
+03/21/22 15:56:05->run 66 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.209967 min, avg run time:0.2121 min, group id:2, run id: 66 concurrent:1)
+03/21/22 15:56:05->run 66 processed
+03/21/22 15:56:05->Sending run 70 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:70, concurrent runs:1)
+03/21/22 15:56:17->run 67 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.218283 min, avg run time:0.213775 min, group id:2, run id: 67 concurrent:1)
+03/21/22 15:56:17->run 67 processed
+03/21/22 15:56:17->Sending run 71 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:71, concurrent runs:1)
+03/21/22 15:56:18->run 69 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.216667 min, avg run time:0.213746 min, group id:2, run id: 69 concurrent:1)
+03/21/22 15:56:18->run 69 processed
+03/21/22 15:56:18->Sending run 72 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:72, concurrent runs:1)
+03/21/22 15:56:18->run 68 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.214883 min, avg run time:0.21495 min, group id:2, run id: 68 concurrent:1)
+03/21/22 15:56:18->run 68 processed
+03/21/22 15:56:18->Sending run 73 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:73, concurrent runs:1)
+03/21/22 15:56:18->run 70 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.213283 min, avg run time:0.215779 min, group id:2, run id: 70 concurrent:1)
+03/21/22 15:56:18->run 70 processed
+03/21/22 15:56:18->Sending run 74 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:74, concurrent runs:1)
+03/21/22 15:56:30->run 71 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.218917 min, avg run time:0.215938 min, group id:2, run id: 71 concurrent:1)
+03/21/22 15:56:30->run 71 processed
+03/21/22 15:56:30->Sending run 75 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:75, concurrent runs:1)
+03/21/22 15:56:31->run 73 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.2156 min, avg run time:0.216117 min, group id:2, run id: 73 concurrent:1)
+03/21/22 15:56:31->run 73 processed
+03/21/22 15:56:31->Sending run 76 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:76, concurrent runs:1)
+03/21/22 15:56:31->run 72 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.217267 min, avg run time:0.216267 min, group id:2, run id: 72 concurrent:1)
+03/21/22 15:56:31->run 72 processed
+03/21/22 15:56:31->Sending run 77 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:77, concurrent runs:1)
+03/21/22 15:56:32->run 74 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.2159 min, avg run time:0.216921 min, group id:2, run id: 74 concurrent:1)
+03/21/22 15:56:32->run 74 processed
+03/21/22 15:56:32->Sending run 78 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:78, concurrent runs:1)
+03/21/22 15:56:44->run 75 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.220117 min, avg run time:0.217221 min, group id:2, run id: 75 concurrent:1)
+03/21/22 15:56:44->run 75 processed
+03/21/22 15:56:44->Sending run 79 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:79, concurrent runs:1)
+03/21/22 15:56:44->run 76 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.214867 min, avg run time:0.217037 min, group id:2, run id: 76 concurrent:1)
+03/21/22 15:56:44->run 76 processed
+03/21/22 15:56:44->Sending run 80 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:80, concurrent runs:1)
+03/21/22 15:56:44->run 77 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.215983 min, avg run time:0.216717 min, group id:2, run id: 77 concurrent:1)
+03/21/22 15:56:44->run 77 processed
+03/21/22 15:56:44->Sending run 81 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:81, concurrent runs:1)
+03/21/22 15:56:45->run 78 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.2152 min, avg run time:0.216542 min, group id:2, run id: 78 concurrent:1)
+03/21/22 15:56:45->run 78 processed
+03/21/22 15:56:45->Sending run 82 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:82, concurrent runs:1)
+03/21/22 15:56:56->run 79 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.213317 min, avg run time:0.214842 min, group id:2, run id: 79 concurrent:1)
+03/21/22 15:56:56->run 79 processed
+03/21/22 15:56:56->Sending run 83 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:83, concurrent runs:1)
+03/21/22 15:56:57->run 80 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.21475 min, avg run time:0.214813 min, group id:2, run id: 80 concurrent:1)
+03/21/22 15:56:57->run 80 processed
+03/21/22 15:56:57->Sending run 84 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:84, concurrent runs:1)
+03/21/22 15:56:57->run 81 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.215317 min, avg run time:0.214646 min, group id:2, run id: 81 concurrent:1)
+03/21/22 15:56:57->run 81 processed
+03/21/22 15:56:57->Sending run 85 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:85, concurrent runs:1)
+03/21/22 15:56:57->run 82 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.214183 min, avg run time:0.214392 min, group id:2, run id: 82 concurrent:1)
+03/21/22 15:56:57->run 82 processed
+03/21/22 15:56:57->Sending run 86 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:86, concurrent runs:1)
+03/21/22 15:57:09->run 83 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.216467 min, avg run time:0.215179 min, group id:2, run id: 83 concurrent:1)
+03/21/22 15:57:09->run 83 processed
+03/21/22 15:57:09->Sending run 87 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:87, concurrent runs:1)
+03/21/22 15:57:10->run 84 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.215483 min, avg run time:0.215362 min, group id:2, run id: 84 concurrent:1)
+03/21/22 15:57:10->run 84 processed
+03/21/22 15:57:10->Sending run 88 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:88, concurrent runs:1)
+03/21/22 15:57:10->run 85 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.215783 min, avg run time:0.215479 min, group id:2, run id: 85 concurrent:1)
+03/21/22 15:57:10->run 85 processed
+03/21/22 15:57:10->Sending run 89 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:89, concurrent runs:1)
+03/21/22 15:57:11->run 86 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.217683 min, avg run time:0.216354 min, group id:2, run id: 86 concurrent:1)
+03/21/22 15:57:11->run 86 processed
+03/21/22 15:57:11->Sending run 90 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:90, concurrent runs:1)
+03/21/22 15:57:22->run 87 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.21805 min, avg run time:0.21675 min, group id:2, run id: 87 concurrent:1)
+03/21/22 15:57:23->run 87 processed
+03/21/22 15:57:23->Sending run 91 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:91, concurrent runs:1)
+03/21/22 15:57:23->run 88 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.214117 min, avg run time:0.216408 min, group id:2, run id: 88 concurrent:1)
+03/21/22 15:57:23->run 88 processed
+03/21/22 15:57:23->Sending run 92 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:92, concurrent runs:1)
+03/21/22 15:57:23->run 89 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.217717 min, avg run time:0.216892 min, group id:2, run id: 89 concurrent:1)
+03/21/22 15:57:23->run 89 processed
+03/21/22 15:57:23->Sending run 93 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:93, concurrent runs:1)
+03/21/22 15:57:24->run 90 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.2162 min, avg run time:0.216521 min, group id:2, run id: 90 concurrent:1)
+03/21/22 15:57:24->run 90 processed
+03/21/22 15:57:24->Sending run 94 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:94, concurrent runs:1)
+03/21/22 15:57:35->run 91 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.211317 min, avg run time:0.214838 min, group id:2, run id: 91 concurrent:1)
+03/21/22 15:57:35->run 91 processed
+03/21/22 15:57:35->Sending run 95 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:95, concurrent runs:1)
+03/21/22 15:57:35->run 93 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.206983 min, avg run time:0.212154 min, group id:2, run id: 93 concurrent:1)
+03/21/22 15:57:35->run 93 processed
+03/21/22 15:57:35->Sending run 96 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:96, concurrent runs:1)
+03/21/22 15:57:35->run 94 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.2063 min, avg run time:0.209679 min, group id:2, run id: 94 concurrent:1)
+03/21/22 15:57:35->run 94 processed
+03/21/22 15:57:35->Sending run 97 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:97, concurrent runs:1)
+03/21/22 15:57:36->run 92 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.2119 min, avg run time:0.209125 min, group id:2, run id: 92 concurrent:1)
+03/21/22 15:57:36->run 92 processed
+03/21/22 15:57:36->Sending run 98 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:98, concurrent runs:1)
+03/21/22 15:57:48->run 96 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.211617 min, avg run time:0.210283 min, group id:2, run id: 96 concurrent:1)
+03/21/22 15:57:48->run 96 processed
+03/21/22 15:57:48->Sending run 99 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:99, concurrent runs:1)
+03/21/22 15:57:48->run 95 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.217983 min, avg run time:0.21195 min, group id:2, run id: 95 concurrent:1)
+03/21/22 15:57:48->run 95 processed
+03/21/22 15:57:48->Sending run 100 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:100, concurrent runs:1)
+03/21/22 15:57:48->run 97 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.211367 min, avg run time:0.213217 min, group id:2, run id: 97 concurrent:1)
+03/21/22 15:57:48->run 97 processed
+03/21/22 15:57:48->Sending run 101 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:101, concurrent runs:1)
+03/21/22 15:57:48->run 98 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.213183 min, avg run time:0.213537 min, group id:2, run id: 98 concurrent:1)
+03/21/22 15:57:48->run 98 processed
+03/21/22 15:57:48->Sending run 102 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:102, concurrent runs:1)
+03/21/22 15:58:01->run 100 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.216333 min, avg run time:0.213125 min, group id:2, run id: 100 concurrent:1)
+03/21/22 15:58:01->run 100 processed
+03/21/22 15:58:01->Sending run 103 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:103, concurrent runs:1)
+03/21/22 15:58:01->run 99 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.21485 min, avg run time:0.213933 min, group id:2, run id: 99 concurrent:1)
+03/21/22 15:58:01->run 99 processed
+03/21/22 15:58:01->run 101 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.213117 min, avg run time:0.214371 min, group id:2, run id: 101 concurrent:1)
+03/21/22 15:58:01->run 101 processed
+03/21/22 15:58:01->Sending run 104 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:104, concurrent runs:1)
+03/21/22 15:58:01->Sending run 105 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:105, concurrent runs:1)
+03/21/22 15:58:01->run 102 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.214017 min, avg run time:0.214579 min, group id:2, run id: 102 concurrent:1)
+03/21/22 15:58:01->run 102 processed
+03/21/22 15:58:01->Sending run 106 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:106, concurrent runs:1)
+03/21/22 15:58:14->run 103 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.215533 min, avg run time:0.214379 min, group id:2, run id: 103 concurrent:1)
+03/21/22 15:58:14->run 103 processed
+03/21/22 15:58:14->Sending run 107 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:107, concurrent runs:1)
+03/21/22 15:58:14->run 105 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.213833 min, avg run time:0.214558 min, group id:2, run id: 105 concurrent:1)
+03/21/22 15:58:14->run 105 processed
+03/21/22 15:58:14->Sending run 108 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:108, concurrent runs:1)
+03/21/22 15:58:14->run 104 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.21555 min, avg run time:0.214733 min, group id:2, run id: 104 concurrent:1)
+03/21/22 15:58:14->run 104 processed
+03/21/22 15:58:14->Sending run 109 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:109, concurrent runs:1)
+03/21/22 15:58:15->run 106 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.216933 min, avg run time:0.215462 min, group id:2, run id: 106 concurrent:1)
+03/21/22 15:58:15->run 106 processed
+03/21/22 15:58:15->Sending run 110 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:110, concurrent runs:1)
+03/21/22 15:58:27->run 107 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.213433 min, avg run time:0.214937 min, group id:2, run id: 107 concurrent:1)
+03/21/22 15:58:27->run 107 processed
+03/21/22 15:58:27->Sending run 111 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:111, concurrent runs:1)
+03/21/22 15:58:27->run 108 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.213433 min, avg run time:0.214837 min, group id:2, run id: 108 concurrent:1)
+03/21/22 15:58:27->run 108 processed
+03/21/22 15:58:27->Sending run 112 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:112, concurrent runs:1)
+03/21/22 15:58:27->run 109 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.214117 min, avg run time:0.214479 min, group id:2, run id: 109 concurrent:1)
+03/21/22 15:58:27->run 109 processed
+03/21/22 15:58:27->Sending run 113 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:113, concurrent runs:1)
+03/21/22 15:58:27->run 110 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.214817 min, avg run time:0.21395 min, group id:2, run id: 110 concurrent:1)
+03/21/22 15:58:27->run 110 processed
+03/21/22 15:58:27->Sending run 114 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:114, concurrent runs:1)
+03/21/22 15:58:40->run 111 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.2125 min, avg run time:0.213717 min, group id:2, run id: 111 concurrent:1)
+03/21/22 15:58:40->run 111 processed
+03/21/22 15:58:40->Sending run 115 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:115, concurrent runs:1)
+03/21/22 15:58:40->run 112 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.213083 min, avg run time:0.213629 min, group id:2, run id: 112 concurrent:1)
+03/21/22 15:58:40->run 112 processed
+03/21/22 15:58:40->Sending run 116 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:116, concurrent runs:1)
+03/21/22 15:58:40->run 113 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.214383 min, avg run time:0.213696 min, group id:2, run id: 113 concurrent:1)
+03/21/22 15:58:40->run 113 processed
+03/21/22 15:58:40->Sending run 117 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:117, concurrent runs:1)
+03/21/22 15:58:40->run 114 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.212983 min, avg run time:0.213237 min, group id:2, run id: 114 concurrent:1)
+03/21/22 15:58:40->run 114 processed
+03/21/22 15:58:40->Sending run 118 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:118, concurrent runs:1)
+03/21/22 15:58:53->run 116 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.217067 min, avg run time:0.214233 min, group id:2, run id: 116 concurrent:1)
+03/21/22 15:58:53->run 116 processed
+03/21/22 15:58:53->Sending run 119 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:119, concurrent runs:1)
+03/21/22 15:58:54->run 118 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.217817 min, avg run time:0.215442 min, group id:2, run id: 118 concurrent:1)
+03/21/22 15:58:54->run 118 processed
+03/21/22 15:58:54->run 115 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.222817 min, avg run time:0.218021 min, group id:2, run id: 115 concurrent:1)
+03/21/22 15:58:54->run 115 processed
+03/21/22 15:58:54->Sending run 120 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:120, concurrent runs:1)
+03/21/22 15:58:54->Sending run 121 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:121, concurrent runs:1)
+03/21/22 15:58:54->run 117 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.227217 min, avg run time:0.221229 min, group id:2, run id: 117 concurrent:1)
+03/21/22 15:58:55->run 117 processed
+03/21/22 15:58:55->Sending run 122 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:122, concurrent runs:1)
+03/21/22 15:59:06->run 119 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.2126 min, avg run time:0.220113 min, group id:2, run id: 119 concurrent:1)
+03/21/22 15:59:06->run 119 processed
+03/21/22 15:59:06->Sending run 123 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:123, concurrent runs:1)
+03/21/22 15:59:06->run 120 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.214367 min, avg run time:0.21925 min, group id:2, run id: 120 concurrent:1)
+03/21/22 15:59:06->run 120 processed
+03/21/22 15:59:06->run 121 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.217017 min, avg run time:0.2178 min, group id:2, run id: 121 concurrent:1)
+03/21/22 15:59:06->run 121 processed
+03/21/22 15:59:06->Sending run 124 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:124, concurrent runs:1)
+03/21/22 15:59:06->Sending run 125 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:125, concurrent runs:1)
+03/21/22 15:59:07->run 122 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.219233 min, avg run time:0.215804 min, group id:2, run id: 122 concurrent:1)
+03/21/22 15:59:07->run 122 processed
+03/21/22 15:59:07->Sending run 126 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:126, concurrent runs:1)
+03/21/22 15:59:19->run 123 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.217967 min, avg run time:0.217146 min, group id:2, run id: 123 concurrent:1)
+03/21/22 15:59:19->run 123 processed
+03/21/22 15:59:19->Sending run 127 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:127, concurrent runs:1)
+03/21/22 15:59:19->run 124 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.2143 min, avg run time:0.217129 min, group id:2, run id: 124 concurrent:1)
+03/21/22 15:59:19->run 124 processed
+03/21/22 15:59:19->run 125 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.215783 min, avg run time:0.216821 min, group id:2, run id: 125 concurrent:1)
+03/21/22 15:59:19->run 125 processed
+03/21/22 15:59:19->Sending run 128 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:128, concurrent runs:1)
+03/21/22 15:59:19->Sending run 129 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:129, concurrent runs:1)
+03/21/22 15:59:20->run 126 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.216117 min, avg run time:0.216042 min, group id:2, run id: 126 concurrent:1)
+03/21/22 15:59:20->run 126 processed
+03/21/22 15:59:20->Sending run 130 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:130, concurrent runs:1)
+03/21/22 15:59:32->run 128 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.213467 min, avg run time:0.215833 min, group id:2, run id: 128 concurrent:1)
+03/21/22 15:59:32->run 128 processed
+03/21/22 15:59:32->Sending run 131 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:131, concurrent runs:1)
+03/21/22 15:59:32->run 127 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.21625 min, avg run time:0.215404 min, group id:2, run id: 127 concurrent:1)
+03/21/22 15:59:32->run 127 processed
+03/21/22 15:59:32->Sending run 132 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:132, concurrent runs:1)
+03/21/22 15:59:32->run 129 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.217667 min, avg run time:0.215875 min, group id:2, run id: 129 concurrent:1)
+03/21/22 15:59:32->run 129 processed
+03/21/22 15:59:32->Sending run 133 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:133, concurrent runs:1)
+03/21/22 15:59:33->run 130 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.216183 min, avg run time:0.215892 min, group id:2, run id: 130 concurrent:1)
+03/21/22 15:59:33->run 130 processed
+03/21/22 15:59:33->Sending run 134 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:134, concurrent runs:1)
+03/21/22 15:59:46->run 131 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.223267 min, avg run time:0.218342 min, group id:2, run id: 131 concurrent:1)
+03/21/22 15:59:46->run 131 processed
+03/21/22 15:59:46->Sending run 135 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:135, concurrent runs:1)
+03/21/22 15:59:46->run 132 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.2255 min, avg run time:0.220654 min, group id:2, run id: 132 concurrent:1)
+03/21/22 15:59:46->run 132 processed
+03/21/22 15:59:46->Sending run 136 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:136, concurrent runs:1)
+03/21/22 15:59:46->run 133 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.226217 min, avg run time:0.222792 min, group id:2, run id: 133 concurrent:1)
+03/21/22 15:59:47->run 133 processed
+03/21/22 15:59:47->Sending run 137 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:137, concurrent runs:1)
+03/21/22 15:59:47->run 134 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.227183 min, avg run time:0.225542 min, group id:2, run id: 134 concurrent:1)
+03/21/22 15:59:47->run 134 processed
+03/21/22 15:59:47->Sending run 138 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:138, concurrent runs:1)
+03/21/22 15:59:59->run 136 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.221017 min, avg run time:0.224421 min, group id:2, run id: 136 concurrent:1)
+03/21/22 15:59:59->run 136 processed
+03/21/22 15:59:59->Sending run 139 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:139, concurrent runs:1)
+03/21/22 16:00:00->run 137 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.222067 min, avg run time:0.223383 min, group id:2, run id: 137 concurrent:1)
+03/21/22 16:00:00->run 137 processed
+03/21/22 16:00:00->Sending run 140 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:140, concurrent runs:1)
+03/21/22 16:00:00->run 135 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.22735 min, avg run time:0.224404 min, group id:2, run id: 135 concurrent:1)
+03/21/22 16:00:00->run 135 processed
+03/21/22 16:00:00->Sending run 141 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:141, concurrent runs:1)
+03/21/22 16:00:00->run 138 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.22 min, avg run time:0.222608 min, group id:2, run id: 138 concurrent:1)
+03/21/22 16:00:00->run 138 processed
+03/21/22 16:00:00->Sending run 142 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:142, concurrent runs:1)
+03/21/22 16:00:12->run 139 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.213617 min, avg run time:0.220758 min, group id:2, run id: 139 concurrent:1)
+03/21/22 16:00:12->run 139 processed
+03/21/22 16:00:12->Sending run 143 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:143, concurrent runs:1)
+03/21/22 16:00:12->run 140 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.21745 min, avg run time:0.219604 min, group id:2, run id: 140 concurrent:1)
+03/21/22 16:00:12->run 140 processed
+03/21/22 16:00:12->Sending run 144 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:144, concurrent runs:1)
+03/21/22 16:00:13->run 141 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.220833 min, avg run time:0.217975 min, group id:2, run id: 141 concurrent:1)
+03/21/22 16:00:13->run 141 processed
+03/21/22 16:00:13->Sending run 145 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:145, concurrent runs:1)
+03/21/22 16:00:13->run 142 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.217233 min, avg run time:0.217283 min, group id:2, run id: 142 concurrent:1)
+03/21/22 16:00:13->run 142 processed
+03/21/22 16:00:13->Sending run 146 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:146, concurrent runs:1)
+03/21/22 16:00:25->run 143 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.216633 min, avg run time:0.218037 min, group id:2, run id: 143 concurrent:1)
+03/21/22 16:00:25->run 143 processed
+03/21/22 16:00:25->Sending run 147 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:147, concurrent runs:1)
+03/21/22 16:00:25->run 144 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.21605 min, avg run time:0.217688 min, group id:2, run id: 144 concurrent:1)
+03/21/22 16:00:25->run 144 processed
+03/21/22 16:00:25->Sending run 148 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:148, concurrent runs:1)
+03/21/22 16:00:26->run 145 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.217583 min, avg run time:0.216875 min, group id:2, run id: 145 concurrent:1)
+03/21/22 16:00:26->run 145 processed
+03/21/22 16:00:26->Sending run 149 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:149, concurrent runs:1)
+03/21/22 16:00:26->run 146 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.216733 min, avg run time:0.21675 min, group id:2, run id: 146 concurrent:1)
+03/21/22 16:00:26->run 146 processed
+03/21/22 16:00:26->Sending run 150 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:150, concurrent runs:1)
+03/21/22 16:00:38->run 147 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.219083 min, avg run time:0.217362 min, group id:2, run id: 147 concurrent:1)
+03/21/22 16:00:38->run 147 processed
+03/21/22 16:00:38->Sending run 151 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:151, concurrent runs:1)
+03/21/22 16:00:38->run 148 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.21445 min, avg run time:0.216963 min, group id:2, run id: 148 concurrent:1)
+03/21/22 16:00:38->run 148 processed
+03/21/22 16:00:38->Sending run 152 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:152, concurrent runs:1)
+03/21/22 16:00:39->run 149 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.216083 min, avg run time:0.216587 min, group id:2, run id: 149 concurrent:1)
+03/21/22 16:00:39->run 149 processed
+03/21/22 16:00:39->Sending run 153 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:153, concurrent runs:1)
+03/21/22 16:00:39->run 150 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.218233 min, avg run time:0.216962 min, group id:2, run id: 150 concurrent:1)
+03/21/22 16:00:39->run 150 processed
+03/21/22 16:00:39->Sending run 154 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:154, concurrent runs:1)
+03/21/22 16:00:53->run 151 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.230267 min, avg run time:0.219758 min, group id:2, run id: 151 concurrent:1)
+03/21/22 16:00:53->run 151 processed
+03/21/22 16:00:53->Sending run 155 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:155, concurrent runs:1)
+03/21/22 16:00:53->run 152 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.228817 min, avg run time:0.22335 min, group id:2, run id: 152 concurrent:1)
+03/21/22 16:00:53->run 152 processed
+03/21/22 16:00:53->Sending run 156 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:156, concurrent runs:1)
+03/21/22 16:00:53->run 154 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.22485 min, avg run time:0.225004 min, group id:2, run id: 154 concurrent:1)
+03/21/22 16:00:53->run 154 processed
+03/21/22 16:00:53->Sending run 157 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:157, concurrent runs:1)
+03/21/22 16:00:54->run 153 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.2322 min, avg run time:0.229033 min, group id:2, run id: 153 concurrent:1)
+03/21/22 16:00:54->run 153 processed
+03/21/22 16:00:54->Sending run 158 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:158, concurrent runs:1)
+03/21/22 16:01:05->run 155 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.2216 min, avg run time:0.226867 min, group id:2, run id: 155 concurrent:1)
+03/21/22 16:01:05->run 155 processed
+03/21/22 16:01:05->Sending run 159 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:159, concurrent runs:1)
+03/21/22 16:01:06->run 156 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.222683 min, avg run time:0.225333 min, group id:2, run id: 156 concurrent:1)
+03/21/22 16:01:06->run 156 processed
+03/21/22 16:01:06->Sending run 160 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:160, concurrent runs:1)
+03/21/22 16:01:06->run 157 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.221433 min, avg run time:0.224479 min, group id:2, run id: 157 concurrent:1)
+03/21/22 16:01:06->run 157 processed
+03/21/22 16:01:06->Sending run 161 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:161, concurrent runs:1)
+03/21/22 16:01:07->run 158 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.224133 min, avg run time:0.222463 min, group id:2, run id: 158 concurrent:1)
+03/21/22 16:01:07->run 158 processed
+03/21/22 16:01:07->Sending run 162 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:162, concurrent runs:1)
+03/21/22 16:01:18->run 159 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.213033 min, avg run time:0.220321 min, group id:2, run id: 159 concurrent:1)
+03/21/22 16:01:18->run 159 processed
+03/21/22 16:01:18->Sending run 163 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:163, concurrent runs:1)
+03/21/22 16:01:18->run 160 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.2161 min, avg run time:0.218675 min, group id:2, run id: 160 concurrent:1)
+03/21/22 16:01:18->run 160 processed
+03/21/22 16:01:18->Sending run 164 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:164, concurrent runs:1)
+03/21/22 16:01:19->run 161 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.217983 min, avg run time:0.217812 min, group id:2, run id: 161 concurrent:1)
+03/21/22 16:01:19->run 161 processed
+03/21/22 16:01:19->Sending run 165 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:165, concurrent runs:1)
+03/21/22 16:01:19->run 162 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.2194 min, avg run time:0.216629 min, group id:2, run id: 162 concurrent:1)
+03/21/22 16:01:20->run 162 processed
+03/21/22 16:01:20->Sending run 166 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:166, concurrent runs:1)
+03/21/22 16:01:31->run 164 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.212083 min, avg run time:0.215625 min, group id:2, run id: 164 concurrent:1)
+03/21/22 16:01:31->run 164 processed
+03/21/22 16:01:31->Sending run 167 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:167, concurrent runs:1)
+03/21/22 16:01:31->run 163 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.217967 min, avg run time:0.216858 min, group id:2, run id: 163 concurrent:1)
+03/21/22 16:01:31->run 163 processed
+03/21/22 16:01:31->Sending run 168 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:168, concurrent runs:1)
+03/21/22 16:01:32->run 166 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.209717 min, avg run time:0.214438 min, group id:2, run id: 166 concurrent:1)
+03/21/22 16:01:32->run 166 processed
+03/21/22 16:01:32->Sending run 169 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:169, concurrent runs:1)
+03/21/22 16:01:33->run 165 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.2196 min, avg run time:0.214842 min, group id:2, run id: 165 concurrent:1)
+03/21/22 16:01:33->run 165 processed
+03/21/22 16:01:33->Sending run 170 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:170, concurrent runs:1)
+03/21/22 16:01:43->run 167 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.210933 min, avg run time:0.214554 min, group id:2, run id: 167 concurrent:1)
+03/21/22 16:01:43->run 167 processed
+03/21/22 16:01:44->Sending run 171 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:171, concurrent runs:1)
+03/21/22 16:01:44->run 168 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.21375 min, avg run time:0.2135 min, group id:2, run id: 168 concurrent:1)
+03/21/22 16:01:44->run 168 processed
+03/21/22 16:01:44->Sending run 172 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:172, concurrent runs:1)
+03/21/22 16:01:44->run 169 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.210467 min, avg run time:0.213688 min, group id:2, run id: 169 concurrent:1)
+03/21/22 16:01:44->run 169 processed
+03/21/22 16:01:44->Sending run 173 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:173, concurrent runs:1)
+03/21/22 16:01:44->run 170 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.207 min, avg run time:0.210538 min, group id:2, run id: 170 concurrent:1)
+03/21/22 16:01:44->run 170 processed
+03/21/22 16:01:44->Sending run 174 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:174, concurrent runs:1)
+03/21/22 16:01:56->run 171 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.211983 min, avg run time:0.2108 min, group id:2, run id: 171 concurrent:1)
+03/21/22 16:01:56->run 171 processed
+03/21/22 16:01:56->Sending run 175 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:175, concurrent runs:1)
+03/21/22 16:01:56->run 172 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.2134 min, avg run time:0.210712 min, group id:2, run id: 172 concurrent:1)
+03/21/22 16:01:56->run 172 processed
+03/21/22 16:01:56->Sending run 176 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:176, concurrent runs:1)
+03/21/22 16:01:57->run 174 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.210883 min, avg run time:0.211683 min, group id:2, run id: 174 concurrent:1)
+03/21/22 16:01:57->run 174 processed
+03/21/22 16:01:57->run 173 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.21355 min, avg run time:0.212454 min, group id:2, run id: 173 concurrent:1)
+03/21/22 16:01:57->run 173 processed
+03/21/22 16:01:57->Sending run 177 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:177, concurrent runs:1)
+03/21/22 16:01:57->Sending run 178 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:178, concurrent runs:1)
+03/21/22 16:02:09->run 176 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.212317 min, avg run time:0.212183 min, group id:2, run id: 176 concurrent:1)
+03/21/22 16:02:09->run 176 processed
+03/21/22 16:02:09->Sending run 179 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:179, concurrent runs:1)
+03/21/22 16:02:10->run 175 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.21745 min, avg run time:0.21355 min, group id:2, run id: 175 concurrent:1)
+03/21/22 16:02:10->run 175 processed
+03/21/22 16:02:10->Sending run 180 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:180, concurrent runs:1)
+03/21/22 16:02:10->run 178 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.213083 min, avg run time:0.213433 min, group id:2, run id: 178 concurrent:1)
+03/21/22 16:02:10->run 178 processed
+03/21/22 16:02:10->Sending run 181 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:181, concurrent runs:1)
+03/21/22 16:02:10->run 177 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.212483 min, avg run time:0.213833 min, group id:2, run id: 177 concurrent:1)
+03/21/22 16:02:10->run 177 processed
+03/21/22 16:02:10->Sending run 182 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:182, concurrent runs:1)
+03/21/22 16:02:22->run 179 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.216117 min, avg run time:0.214783 min, group id:2, run id: 179 concurrent:1)
+03/21/22 16:02:22->run 179 processed
+03/21/22 16:02:22->Sending run 183 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:183, concurrent runs:1)
+03/21/22 16:02:23->run 180 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.216033 min, avg run time:0.214429 min, group id:2, run id: 180 concurrent:1)
+03/21/22 16:02:23->run 180 processed
+03/21/22 16:02:23->Sending run 184 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:184, concurrent runs:1)
+03/21/22 16:02:23->run 181 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.21455 min, avg run time:0.214796 min, group id:2, run id: 181 concurrent:1)
+03/21/22 16:02:23->run 181 processed
+03/21/22 16:02:23->Sending run 185 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:185, concurrent runs:1)
+03/21/22 16:02:23->run 182 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.2161 min, avg run time:0.2157 min, group id:2, run id: 182 concurrent:1)
+03/21/22 16:02:23->run 182 processed
+03/21/22 16:02:23->Sending run 186 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:186, concurrent runs:1)
+03/21/22 16:02:35->run 183 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.212 min, avg run time:0.214671 min, group id:2, run id: 183 concurrent:1)
+03/21/22 16:02:35->run 183 processed
+03/21/22 16:02:35->Sending run 187 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:187, concurrent runs:1)
+03/21/22 16:02:35->run 184 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.212683 min, avg run time:0.213833 min, group id:2, run id: 184 concurrent:1)
+03/21/22 16:02:35->run 184 processed
+03/21/22 16:02:35->Sending run 188 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:188, concurrent runs:1)
+03/21/22 16:02:36->run 185 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.212883 min, avg run time:0.213417 min, group id:2, run id: 185 concurrent:1)
+03/21/22 16:02:36->run 185 processed
+03/21/22 16:02:36->Sending run 189 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:189, concurrent runs:1)
+03/21/22 16:02:36->run 186 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.213583 min, avg run time:0.212787 min, group id:2, run id: 186 concurrent:1)
+03/21/22 16:02:36->run 186 processed
+03/21/22 16:02:36->Sending run 190 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:190, concurrent runs:1)
+03/21/22 16:02:47->run 187 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.208267 min, avg run time:0.211854 min, group id:2, run id: 187 concurrent:1)
+03/21/22 16:02:47->run 187 processed
+03/21/22 16:02:47->Sending run 191 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:191, concurrent runs:1)
+03/21/22 16:02:48->run 189 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.205283 min, avg run time:0.209954 min, group id:2, run id: 189 concurrent:1)
+03/21/22 16:02:48->run 189 processed
+03/21/22 16:02:48->Sending run 192 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:192, concurrent runs:1)
+03/21/22 16:02:48->run 188 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.210283 min, avg run time:0.209354 min, group id:2, run id: 188 concurrent:1)
+03/21/22 16:02:48->run 188 processed
+03/21/22 16:02:48->Sending run 193 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:193, concurrent runs:1)
+03/21/22 16:02:48->run 190 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.2073 min, avg run time:0.207783 min, group id:2, run id: 190 concurrent:1)
+03/21/22 16:02:48->run 190 processed
+03/21/22 16:02:48->Sending run 194 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:194, concurrent runs:1)
+03/21/22 16:03:00->run 191 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.208167 min, avg run time:0.207758 min, group id:2, run id: 191 concurrent:1)
+03/21/22 16:03:00->run 191 processed
+03/21/22 16:03:00->run 193 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.205167 min, avg run time:0.206479 min, group id:2, run id: 193 concurrent:1)
+03/21/22 16:03:00->run 193 processed
+03/21/22 16:03:00->Sending run 195 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (group id:2, run id:195, concurrent runs:1)
+03/21/22 16:03:00->Sending run 196 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:196, concurrent runs:1)
+03/21/22 16:03:00->run 194 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.202583 min, avg run time:0.2053 min, group id:2, run id: 194 concurrent:1)
+03/21/22 16:03:00->run 194 processed
+03/21/22 16:03:00->Sending run 197 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (group id:2, run id:197, concurrent runs:1)
+03/21/22 16:03:01->run 192 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.20995 min, avg run time:0.206467 min, group id:2, run id: 192 concurrent:1)
+03/21/22 16:03:01->run 192 processed
+03/21/22 16:03:01->Sending run 198 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (group id:2, run id:198, concurrent runs:1)
+03/21/22 16:03:12->run 196 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.208033 min, avg run time:0.207183 min, group id:2, run id: 196 concurrent:1)
+03/21/22 16:03:12->run 196 processed
+03/21/22 16:03:12->Sending run 199 to: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (group id:2, run id:199, concurrent runs:1)
+03/21/22 16:03:13->run 195 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_2  (run time:0.212067 min, avg run time:0.208158 min, group id:2, run id: 195 concurrent:1)
+03/21/22 16:03:13->run 195 processed
+03/21/22 16:03:13->run 197 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_0  (run time:0.20775 min, avg run time:0.20945 min, group id:2, run id: 197 concurrent:1)
+03/21/22 16:03:13->run 197 processed
+03/21/22 16:03:13->run 198 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_3  (run time:0.211383 min, avg run time:0.209808 min, group id:2, run id: 198 concurrent:1)
+03/21/22 16:03:13->run 198 processed
+03/21/22 16:03:22->run 199 received from: lmlicenses.wip4.adobe.com$C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\freyberg_prior_monte_carlo\worker_1  (run time:0.1803 min, avg run time:0.202875 min, group id:2, run id: 199 concurrent:1)
+03/21/22 16:03:22->run 199 processed
+
+---------------------
+   200 runs complete :  0 runs failed
+   0.203 avg run time (min) : 11 run mgr time (min)
+   4 agents connected
+
+
+
+03/21/22 16:03:25->Started idle ping thread.
+03/21/22 16:03:25->Panther idle ping thread resumed.
+03/21/22 16:03:29->Stopped idle ping thread, as Panther manager is shutting down.

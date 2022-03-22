@@ -1,0 +1,4 @@
+time,elapsed_seconds,message
+15:52:13,7.1e-05,PEST++ performance logger started
+15:52:13,0.0089393,starting to process control file
+15:52:14,0.849995,finished processing control file

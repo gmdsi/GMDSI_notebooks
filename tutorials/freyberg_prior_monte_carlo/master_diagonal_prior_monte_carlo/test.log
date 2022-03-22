@@ -1,0 +1,15 @@
+time,elapsed_seconds,message
+16:04:21,0.0003684,PEST++ performance logger started
+16:04:21,0.0016412,starting to process control file
+16:04:22,0.922904,finished processing control file
+16:04:22,0.296766,starting basic model IO error checking
+16:04:23,0.310531,finished basic model IO error checking
+16:04:23,0.0855243,initializing
+16:04:23,0.0120498,'noptmax'=0, running control file parameter values and quitting
+16:04:23,0.0493951,saving control file parameter ensemble to  test.base.par.csv
+16:04:23,0.0318193,running control file parameter values
+16:04:23,0.0003438,queuing 1 runs
+16:04:23,0.0958866,making runs
+16:04:42,19.3938,processing runs
+16:04:43,0.0660788,saving results from control file parameter value run to  test.base.obs.csv
+16:04:43,0.0143738,control file parameter phi report:

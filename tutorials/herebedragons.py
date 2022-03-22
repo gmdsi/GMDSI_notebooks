@@ -12,6 +12,7 @@ import platform
 import pandas as pd 
 import numpy as np
 import matplotlib.pyplot as plt
+import zipfile
 
 def run_notebook(notebook_filename, path):
     notebook_filename = os.path.join(path,notebook_filename)
@@ -37,6 +38,11 @@ def dir_cleancopy(org_d, new_d, delete_orgdir=False):
     if delete_orgdir==True:
         shutil.rmtree(org_d)
         print(f'Hope you did that on purpose. {org_d} has been deleted.')
+    return
+
+def unzip(path_to_zip_file,directory_to_extract_to):
+    with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
+        zip_ref.extractall(directory_to_extract_to)
     return
 
 
