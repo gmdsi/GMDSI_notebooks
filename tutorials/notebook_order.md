@@ -50,8 +50,8 @@
  - prior MC
  
  **Path 1
- - GLM **TO DO
- - FOSM **TO DO
+ - GLM - base jacobian and why
+ - FOSM & data worth **TO DO
  - GLM continued; FOSM informed  **TO DO
  - dataworth **TO DO
  
