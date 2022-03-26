@@ -12,7 +12,7 @@ n_iter_super                   3
 glm_num_reals                  50
 parcov                         glm_prior.cov
 base_jacobian                  freyberg_reuse.jcb
-glm_normal_form                diag
+glm_normal_form                prior
 max_n_super                    80
 overdue_giveup_fac             5.0
 max_run_fail                   3
