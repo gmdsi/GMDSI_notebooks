@@ -22,6 +22,9 @@ hbd.unzip(os.path.join('..','..','models','prior_cov.zip'), os.path.join(t_d))
 
 pst = pyemu.Pst(os.path.join(t_d, 'freyberg_pp.pst'))
 
+par = pst.parameter_data
+par.loc['pname:ghbhead_cn_inst:0_ptype:cn_usecol:3_pstyle:a', ['offset', 'parval1', 'parlbnd', 'parubnd']] = -10, 10, 8, 12
+
 
 cov = pyemu.Cov.from_binary(os.path.join(t_d,"prior_cov.jcb"))
 cov = cov.get(pst.adj_par_names)
@@ -32,12 +35,12 @@ pst.control_data.noptmax = 6
 print(pst.pestpp_options)
 pst.pestpp_options = {"forecasts":pst.pestpp_options["forecasts"]}
 pst.pestpp_options["n_iter_base"] = -1
-pst.pestpp_options["n_iter_super"] = 3#pst.control_data.noptmax
+pst.pestpp_options["n_iter_super"] = 1#3#pst.control_data.noptmax
 pst.pestpp_options["glm_num_reals"] = 50
 pst.pestpp_options["parcov"] = "glm_prior.cov"
 pst.pestpp_options["base_jacobian"] = "freyberg_reuse.jcb"
 pst.pestpp_options["glm_normal_form"] = "prior"
-#pst.pestpp_options["max_n_super"] = 80
+pst.pestpp_options["max_n_super"] = 80
 pst.pestpp_options["overdue_giveup_fac"] = 5.0
 pst.pestpp_options["max_run_fail"] = 3
 #pst.svd_data.maxsing = 30

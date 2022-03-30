@@ -881,8 +881,8 @@ PROCESSING MODEL CONNECTIONS
 
  Solution SLN_1 summary
  ----------------------------------------------------------------------
- Total formulate time:  .3125000000000000E-01 seconds
- Total solution time:   .1406250000000000 seconds
+ Total formulate time:  .4687500000000000E-01 seconds
+ Total solution time:   .1562500000000000 seconds
 
 
  MEMORY MANAGER TOTAL STORAGE BY DATA TYPE, IN MEGABYTES
@@ -900,6 +900,6 @@ PROCESSING MODEL CONNECTIONS
 
 
  
- Run end date and time (yyyy/mm/dd hh:mm:ss): 2022/03/18 15:11:13
- Elapsed run time:  0.858 Seconds
+ Run end date and time (yyyy/mm/dd hh:mm:ss): 2022/03/26 14:12:02
+ Elapsed run time:  1.049 Seconds
  Normal termination of simulation.
