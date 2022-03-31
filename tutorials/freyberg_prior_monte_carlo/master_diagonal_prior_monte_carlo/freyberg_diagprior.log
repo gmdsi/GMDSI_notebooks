@@ -49,3 +49,18 @@ time,elapsed_seconds,message
 14:37:41,2.9e-05,running initial ensemble of size 200
 14:37:41,4.24e-05,queuing 200 runs
 14:37:45,4.34719,making runs
+15:18:23,2437.31,processing runs
+15:18:26,3.64641,saved initial obs ensemble to freyberg_diagprior.0.obs.csv
+15:18:27,0.593455,calc pre-drop phi
+15:18:27,0.0169838,pre-drop initial phi summary
+15:18:27,0.455909,checking for prior-data conflict...
+15:18:27,0.0083297,WARNING: 2 non-zero weighted observations are in conflict with the prior simulated ensemble.
+
+15:18:27,0.0002761,  WARNING: Prior-data conflict detected.  Continuing with IES parameter
+           adjustment will likely result in parameter and forecast bias.
+           Consider using 'ies_drop_conflicts' as a quick fix.
+15:18:27,0.0488277,updated observation data information written to file  freyberg_diagprior.adjusted.obs_data.csv
+15:18:27,0.0072652,calc initial phi
+15:18:27,0.0391838,initial phi summary
+15:18:28,0.0520747,current lambda: 100
+15:18:28,5.18e-05,initialization complete

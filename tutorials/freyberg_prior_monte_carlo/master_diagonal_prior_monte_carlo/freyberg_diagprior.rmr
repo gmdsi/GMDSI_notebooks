@@ -316,3 +316,313 @@ running model 200 times
 03/31/22 14:58:05->run 97 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.8962 min, avg run time:0.856962 min, group id:2, run id: 97 concurrent:1)
 03/31/22 14:58:05->run 97 processed
 03/31/22 14:58:05->Sending run 102 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:102, concurrent runs:1)
+03/31/22 14:58:33->run 99 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.952967 min, avg run time:0.891713 min, group id:2, run id: 99 concurrent:1)
+03/31/22 14:58:33->run 99 processed
+03/31/22 14:58:33->Sending run 103 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:103, concurrent runs:1)
+03/31/22 14:58:36->run 100 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.960733 min, avg run time:0.922971 min, group id:2, run id: 100 concurrent:1)
+03/31/22 14:58:36->run 100 processed
+03/31/22 14:58:36->Sending run 104 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:104, concurrent runs:1)
+03/31/22 14:59:00->run 102 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.901867 min, avg run time:0.924388 min, group id:2, run id: 102 concurrent:1)
+03/31/22 14:59:00->run 102 processed
+03/31/22 14:59:00->Sending run 105 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:105, concurrent runs:1)
+03/31/22 14:59:00->run 101 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.912983 min, avg run time:0.932137 min, group id:2, run id: 101 concurrent:1)
+03/31/22 14:59:00->run 101 processed
+03/31/22 14:59:00->Sending run 106 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:106, concurrent runs:1)
+03/31/22 14:59:21->run 103 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.87935 min, avg run time:0.913733 min, group id:2, run id: 103 concurrent:1)
+03/31/22 14:59:21->run 103 processed
+03/31/22 14:59:21->Sending run 107 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:107, concurrent runs:1)
+03/31/22 14:59:24->run 104 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.883833 min, avg run time:0.894508 min, group id:2, run id: 104 concurrent:1)
+03/31/22 14:59:24->run 104 processed
+03/31/22 14:59:24->Sending run 108 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:108, concurrent runs:1)
+03/31/22 14:59:54->run 105 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.898317 min, avg run time:0.893621 min, group id:2, run id: 105 concurrent:1)
+03/31/22 14:59:54->run 105 processed
+03/31/22 14:59:54->Sending run 109 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:109, concurrent runs:1)
+03/31/22 14:59:55->run 106 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.912433 min, avg run time:0.893483 min, group id:2, run id: 106 concurrent:1)
+03/31/22 14:59:55->run 106 processed
+03/31/22 14:59:55->Sending run 110 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:110, concurrent runs:1)
+03/31/22 15:00:20->run 107 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.9321 min, avg run time:0.906671 min, group id:2, run id: 107 concurrent:1)
+03/31/22 15:00:20->run 107 processed
+03/31/22 15:00:20->Sending run 111 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:111, concurrent runs:1)
+03/31/22 15:00:24->run 108 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.93905 min, avg run time:0.920475 min, group id:2, run id: 108 concurrent:1)
+03/31/22 15:00:24->run 108 processed
+03/31/22 15:00:24->Sending run 112 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:112, concurrent runs:1)
+03/31/22 15:00:46->run 109 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.881283 min, avg run time:0.916217 min, group id:2, run id: 109 concurrent:1)
+03/31/22 15:00:46->run 109 processed
+03/31/22 15:00:46->Sending run 113 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:113, concurrent runs:1)
+03/31/22 15:00:47->run 110 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.892517 min, avg run time:0.911238 min, group id:2, run id: 110 concurrent:1)
+03/31/22 15:00:47->run 110 processed
+03/31/22 15:00:47->Sending run 114 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:114, concurrent runs:1)
+03/31/22 15:01:05->run 111 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.840383 min, avg run time:0.888308 min, group id:2, run id: 111 concurrent:1)
+03/31/22 15:01:05->run 111 processed
+03/31/22 15:01:05->Sending run 115 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:115, concurrent runs:1)
+03/31/22 15:01:13->run 112 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.875267 min, avg run time:0.872363 min, group id:2, run id: 112 concurrent:1)
+03/31/22 15:01:13->run 112 processed
+03/31/22 15:01:13->Sending run 116 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:116, concurrent runs:1)
+03/31/22 15:01:31->run 113 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.816117 min, avg run time:0.856071 min, group id:2, run id: 113 concurrent:1)
+03/31/22 15:01:31->run 113 processed
+03/31/22 15:01:31->Sending run 117 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:117, concurrent runs:1)
+03/31/22 15:01:31->run 114 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.81025 min, avg run time:0.835504 min, group id:2, run id: 114 concurrent:1)
+03/31/22 15:01:31->run 114 processed
+03/31/22 15:01:31->Sending run 118 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:118, concurrent runs:1)
+03/31/22 15:01:48->run 115 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.78065 min, avg run time:0.820571 min, group id:2, run id: 115 concurrent:1)
+03/31/22 15:01:48->run 115 processed
+03/31/22 15:01:48->Sending run 119 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:119, concurrent runs:1)
+03/31/22 15:01:57->run 116 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.806383 min, avg run time:0.80335 min, group id:2, run id: 116 concurrent:1)
+03/31/22 15:01:57->run 116 processed
+03/31/22 15:01:57->Sending run 120 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:120, concurrent runs:1)
+03/31/22 15:02:18->run 117 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.804667 min, avg run time:0.800488 min, group id:2, run id: 117 concurrent:1)
+03/31/22 15:02:18->run 117 processed
+03/31/22 15:02:18->Sending run 121 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:121, concurrent runs:1)
+03/31/22 15:02:19->run 118 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.802633 min, avg run time:0.798583 min, group id:2, run id: 118 concurrent:1)
+03/31/22 15:02:19->run 118 processed
+03/31/22 15:02:19->Sending run 122 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:122, concurrent runs:1)
+03/31/22 15:02:31->run 119 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.747317 min, avg run time:0.79025 min, group id:2, run id: 119 concurrent:1)
+03/31/22 15:02:31->run 119 processed
+03/31/22 15:02:31->Sending run 123 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:123, concurrent runs:1)
+03/31/22 15:02:40->run 120 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.759467 min, avg run time:0.778521 min, group id:2, run id: 120 concurrent:1)
+03/31/22 15:02:40->run 120 processed
+03/31/22 15:02:40->Sending run 124 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:124, concurrent runs:1)
+03/31/22 15:02:59->run 121 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.742817 min, avg run time:0.763058 min, group id:2, run id: 121 concurrent:1)
+03/31/22 15:02:59->run 121 processed
+03/31/22 15:02:59->Sending run 125 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:125, concurrent runs:1)
+03/31/22 15:03:02->run 122 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.7592 min, avg run time:0.7522 min, group id:2, run id: 122 concurrent:1)
+03/31/22 15:03:02->run 122 processed
+03/31/22 15:03:02->Sending run 126 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:126, concurrent runs:1)
+03/31/22 15:03:17->run 123 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.7523 min, avg run time:0.753446 min, group id:2, run id: 123 concurrent:1)
+03/31/22 15:03:17->run 123 processed
+03/31/22 15:03:17->Sending run 127 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:127, concurrent runs:1)
+03/31/22 15:03:26->run 124 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.761483 min, avg run time:0.75395 min, group id:2, run id: 124 concurrent:1)
+03/31/22 15:03:26->run 124 processed
+03/31/22 15:03:26->Sending run 128 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:128, concurrent runs:1)
+03/31/22 15:03:44->run 125 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.7488 min, avg run time:0.755446 min, group id:2, run id: 125 concurrent:1)
+03/31/22 15:03:45->run 125 processed
+03/31/22 15:03:45->Sending run 129 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:129, concurrent runs:1)
+03/31/22 15:03:45->run 126 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.737283 min, avg run time:0.749967 min, group id:2, run id: 126 concurrent:1)
+03/31/22 15:03:45->run 126 processed
+03/31/22 15:03:45->Sending run 130 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:130, concurrent runs:1)
+03/31/22 15:04:00->run 127 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.733333 min, avg run time:0.745225 min, group id:2, run id: 127 concurrent:1)
+03/31/22 15:04:00->run 127 processed
+03/31/22 15:04:00->Sending run 131 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:131, concurrent runs:1)
+03/31/22 15:04:13->run 128 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.7724 min, avg run time:0.747954 min, group id:2, run id: 128 concurrent:1)
+03/31/22 15:04:13->run 128 processed
+03/31/22 15:04:13->Sending run 132 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:132, concurrent runs:1)
+03/31/22 15:04:29->run 129 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.7483 min, avg run time:0.747829 min, group id:2, run id: 129 concurrent:1)
+03/31/22 15:04:29->run 129 processed
+03/31/22 15:04:29->Sending run 133 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:133, concurrent runs:1)
+03/31/22 15:04:30->run 130 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.744283 min, avg run time:0.749579 min, group id:2, run id: 130 concurrent:1)
+03/31/22 15:04:30->run 130 processed
+03/31/22 15:04:30->Sending run 134 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:134, concurrent runs:1)
+03/31/22 15:04:42->run 131 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.721333 min, avg run time:0.746579 min, group id:2, run id: 131 concurrent:1)
+03/31/22 15:04:42->run 131 processed
+03/31/22 15:04:42->Sending run 135 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:135, concurrent runs:1)
+03/31/22 15:04:54->run 132 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.7293 min, avg run time:0.735804 min, group id:2, run id: 132 concurrent:1)
+03/31/22 15:04:54->run 132 processed
+03/31/22 15:04:54->Sending run 136 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:136, concurrent runs:1)
+03/31/22 15:05:12->run 133 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.73125 min, avg run time:0.731542 min, group id:2, run id: 133 concurrent:1)
+03/31/22 15:05:12->run 133 processed
+03/31/22 15:05:12->Sending run 137 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:137, concurrent runs:1)
+03/31/22 15:05:13->run 134 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.727867 min, avg run time:0.727437 min, group id:2, run id: 134 concurrent:1)
+03/31/22 15:05:13->run 134 processed
+03/31/22 15:05:13->Sending run 138 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:138, concurrent runs:1)
+03/31/22 15:05:26->run 135 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.724883 min, avg run time:0.728325 min, group id:2, run id: 135 concurrent:1)
+03/31/22 15:05:26->run 135 processed
+03/31/22 15:05:26->Sending run 139 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:139, concurrent runs:1)
+03/31/22 15:05:38->run 136 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.732933 min, avg run time:0.729233 min, group id:2, run id: 136 concurrent:1)
+03/31/22 15:05:38->run 136 processed
+03/31/22 15:05:38->Sending run 140 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:140, concurrent runs:1)
+03/31/22 15:05:58->run 137 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.745667 min, avg run time:0.732838 min, group id:2, run id: 137 concurrent:1)
+03/31/22 15:05:58->run 137 processed
+03/31/22 15:05:58->run 138 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.742283 min, avg run time:0.736442 min, group id:2, run id: 138 concurrent:1)
+03/31/22 15:05:58->run 138 processed
+03/31/22 15:05:58->Sending run 141 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:141, concurrent runs:1)
+03/31/22 15:05:58->Sending run 142 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:142, concurrent runs:1)
+03/31/22 15:06:11->run 139 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.736883 min, avg run time:0.739442 min, group id:2, run id: 139 concurrent:1)
+03/31/22 15:06:11->run 139 processed
+03/31/22 15:06:11->Sending run 143 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:143, concurrent runs:1)
+03/31/22 15:06:23->run 140 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.73705 min, avg run time:0.740471 min, group id:2, run id: 140 concurrent:1)
+03/31/22 15:06:23->run 140 processed
+03/31/22 15:06:23->Sending run 144 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:144, concurrent runs:1)
+03/31/22 15:06:42->run 141 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.741067 min, avg run time:0.739321 min, group id:2, run id: 141 concurrent:1)
+03/31/22 15:06:42->run 141 processed
+03/31/22 15:06:42->Sending run 145 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:145, concurrent runs:1)
+03/31/22 15:06:43->run 142 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.74845 min, avg run time:0.740862 min, group id:2, run id: 142 concurrent:1)
+03/31/22 15:06:43->run 142 processed
+03/31/22 15:06:43->Sending run 146 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:146, concurrent runs:1)
+03/31/22 15:06:56->run 143 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.742333 min, avg run time:0.742225 min, group id:2, run id: 143 concurrent:1)
+03/31/22 15:06:56->run 143 processed
+03/31/22 15:06:56->Sending run 147 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:147, concurrent runs:1)
+03/31/22 15:07:09->run 144 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.750717 min, avg run time:0.745642 min, group id:2, run id: 144 concurrent:1)
+03/31/22 15:07:09->run 144 processed
+03/31/22 15:07:09->Sending run 148 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:148, concurrent runs:1)
+03/31/22 15:07:45->run 145 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.89555 min, avg run time:0.784262 min, group id:2, run id: 145 concurrent:1)
+03/31/22 15:07:45->run 145 processed
+03/31/22 15:07:45->Sending run 149 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:149, concurrent runs:1)
+03/31/22 15:07:46->run 146 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.896067 min, avg run time:0.821167 min, group id:2, run id: 146 concurrent:1)
+03/31/22 15:07:46->run 146 processed
+03/31/22 15:07:46->Sending run 150 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:150, concurrent runs:1)
+03/31/22 15:07:58->run 147 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.88465 min, avg run time:0.856746 min, group id:2, run id: 147 concurrent:1)
+03/31/22 15:07:58->run 147 processed
+03/31/22 15:07:58->Sending run 151 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:151, concurrent runs:1)
+03/31/22 15:08:00->run 148 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.801733 min, avg run time:0.8695 min, group id:2, run id: 148 concurrent:1)
+03/31/22 15:08:00->run 148 processed
+03/31/22 15:08:00->Sending run 152 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:152, concurrent runs:1)
+03/31/22 15:08:31->run 149 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.82725 min, avg run time:0.852425 min, group id:2, run id: 149 concurrent:1)
+03/31/22 15:08:31->run 149 processed
+03/31/22 15:08:31->Sending run 153 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:153, concurrent runs:1)
+03/31/22 15:08:32->run 150 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.83485 min, avg run time:0.837121 min, group id:2, run id: 150 concurrent:1)
+03/31/22 15:08:33->run 150 processed
+03/31/22 15:08:33->Sending run 154 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:154, concurrent runs:1)
+03/31/22 15:08:46->run 151 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.84585 min, avg run time:0.827421 min, group id:2, run id: 151 concurrent:1)
+03/31/22 15:08:46->run 151 processed
+03/31/22 15:08:46->Sending run 155 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:155, concurrent runs:1)
+03/31/22 15:08:48->run 152 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.8044 min, avg run time:0.828088 min, group id:2, run id: 152 concurrent:1)
+03/31/22 15:08:48->run 152 processed
+03/31/22 15:08:48->Sending run 156 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:156, concurrent runs:1)
+03/31/22 15:09:18->run 153 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.805233 min, avg run time:0.822583 min, group id:2, run id: 153 concurrent:1)
+03/31/22 15:09:18->run 153 processed
+03/31/22 15:09:18->Sending run 157 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:157, concurrent runs:1)
+03/31/22 15:09:18->run 154 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.798983 min, avg run time:0.813617 min, group id:2, run id: 154 concurrent:1)
+03/31/22 15:09:18->run 154 processed
+03/31/22 15:09:18->Sending run 158 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:158, concurrent runs:1)
+03/31/22 15:09:34->run 155 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.818883 min, avg run time:0.806875 min, group id:2, run id: 155 concurrent:1)
+03/31/22 15:09:34->run 155 processed
+03/31/22 15:09:34->Sending run 159 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:159, concurrent runs:1)
+03/31/22 15:09:34->run 156 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.782933 min, avg run time:0.801508 min, group id:2, run id: 156 concurrent:1)
+03/31/22 15:09:34->run 156 processed
+03/31/22 15:09:34->Sending run 160 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:160, concurrent runs:1)
+03/31/22 15:10:01->run 158 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.754267 min, avg run time:0.790329 min, group id:2, run id: 158 concurrent:1)
+03/31/22 15:10:01->run 158 processed
+03/31/22 15:10:01->Sending run 161 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:161, concurrent runs:1)
+03/31/22 15:10:01->run 157 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.76455 min, avg run time:0.780158 min, group id:2, run id: 157 concurrent:1)
+03/31/22 15:10:01->run 157 processed
+03/31/22 15:10:01->Sending run 162 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:162, concurrent runs:1)
+03/31/22 15:10:16->run 159 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.766117 min, avg run time:0.766967 min, group id:2, run id: 159 concurrent:1)
+03/31/22 15:10:17->run 159 processed
+03/31/22 15:10:17->Sending run 163 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:163, concurrent runs:1)
+03/31/22 15:10:18->run 160 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.7584 min, avg run time:0.760833 min, group id:2, run id: 160 concurrent:1)
+03/31/22 15:10:18->run 160 processed
+03/31/22 15:10:18->Sending run 164 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:164, concurrent runs:1)
+03/31/22 15:10:48->run 162 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.766333 min, avg run time:0.761279 min, group id:2, run id: 162 concurrent:1)
+03/31/22 15:10:48->run 162 processed
+03/31/22 15:10:48->Sending run 165 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:165, concurrent runs:1)
+03/31/22 15:10:48->run 161 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.769333 min, avg run time:0.765046 min, group id:2, run id: 161 concurrent:1)
+03/31/22 15:10:48->run 161 processed
+03/31/22 15:10:48->Sending run 166 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:166, concurrent runs:1)
+03/31/22 15:11:05->run 163 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.78355 min, avg run time:0.769404 min, group id:2, run id: 163 concurrent:1)
+03/31/22 15:11:05->run 163 processed
+03/31/22 15:11:05->Sending run 167 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:167, concurrent runs:1)
+03/31/22 15:11:05->run 164 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.769117 min, avg run time:0.772083 min, group id:2, run id: 164 concurrent:1)
+03/31/22 15:11:05->run 164 processed
+03/31/22 15:11:05->Sending run 168 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:168, concurrent runs:1)
+03/31/22 15:11:32->run 165 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.7548 min, avg run time:0.7692 min, group id:2, run id: 165 concurrent:1)
+03/31/22 15:11:32->run 165 processed
+03/31/22 15:11:32->Sending run 169 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:169, concurrent runs:1)
+03/31/22 15:11:34->run 166 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.765433 min, avg run time:0.768225 min, group id:2, run id: 166 concurrent:1)
+03/31/22 15:11:34->run 166 processed
+03/31/22 15:11:34->Sending run 170 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:170, concurrent runs:1)
+03/31/22 15:11:56->run 168 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.8092 min, avg run time:0.778246 min, group id:2, run id: 168 concurrent:1)
+03/31/22 15:11:56->run 168 processed
+03/31/22 15:11:56->Sending run 171 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:171, concurrent runs:1)
+03/31/22 15:11:57->run 167 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.825283 min, avg run time:0.788679 min, group id:2, run id: 167 concurrent:1)
+03/31/22 15:11:57->run 167 processed
+03/31/22 15:11:57->Sending run 172 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:172, concurrent runs:1)
+03/31/22 15:12:23->run 169 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.8027 min, avg run time:0.800654 min, group id:2, run id: 169 concurrent:1)
+03/31/22 15:12:23->run 169 processed
+03/31/22 15:12:23->Sending run 173 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:173, concurrent runs:1)
+03/31/22 15:12:27->run 170 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.827067 min, avg run time:0.816063 min, group id:2, run id: 170 concurrent:1)
+03/31/22 15:12:27->run 170 processed
+03/31/22 15:12:27->Sending run 174 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:174, concurrent runs:1)
+03/31/22 15:12:51->run 171 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.861083 min, avg run time:0.829033 min, group id:2, run id: 171 concurrent:1)
+03/31/22 15:12:51->run 171 processed
+03/31/22 15:12:51->Sending run 175 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:175, concurrent runs:1)
+03/31/22 15:12:53->run 172 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.883883 min, avg run time:0.843683 min, group id:2, run id: 172 concurrent:1)
+03/31/22 15:12:53->run 172 processed
+03/31/22 15:12:53->Sending run 176 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:176, concurrent runs:1)
+03/31/22 15:13:18->run 173 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.8603 min, avg run time:0.858083 min, group id:2, run id: 173 concurrent:1)
+03/31/22 15:13:18->run 173 processed
+03/31/22 15:13:18->Sending run 177 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:177, concurrent runs:1)
+03/31/22 15:13:27->run 174 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.914983 min, avg run time:0.880062 min, group id:2, run id: 174 concurrent:1)
+03/31/22 15:13:27->run 174 processed
+03/31/22 15:13:27->Sending run 178 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:178, concurrent runs:1)
+03/31/22 15:13:48->run 175 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.904233 min, avg run time:0.89085 min, group id:2, run id: 175 concurrent:1)
+03/31/22 15:13:48->run 175 processed
+03/31/22 15:13:48->Sending run 179 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:179, concurrent runs:1)
+03/31/22 15:13:49->run 176 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.902867 min, avg run time:0.895596 min, group id:2, run id: 176 concurrent:1)
+03/31/22 15:13:49->run 176 processed
+03/31/22 15:13:49->Sending run 180 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:180, concurrent runs:1)
+03/31/22 15:14:06->run 177 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.830817 min, avg run time:0.888225 min, group id:2, run id: 177 concurrent:1)
+03/31/22 15:14:07->run 177 processed
+03/31/22 15:14:07->Sending run 181 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:181, concurrent runs:1)
+03/31/22 15:14:19->run 178 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.884867 min, avg run time:0.880696 min, group id:2, run id: 178 concurrent:1)
+03/31/22 15:14:19->run 178 processed
+03/31/22 15:14:19->Sending run 182 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:182, concurrent runs:1)
+03/31/22 15:14:38->run 179 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.870983 min, avg run time:0.872383 min, group id:2, run id: 179 concurrent:1)
+03/31/22 15:14:38->run 179 processed
+03/31/22 15:14:38->Sending run 183 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:183, concurrent runs:1)
+03/31/22 15:14:38->run 180 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.86385 min, avg run time:0.862629 min, group id:2, run id: 180 concurrent:1)
+03/31/22 15:14:38->run 180 processed
+03/31/22 15:14:38->Sending run 184 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:184, concurrent runs:1)
+03/31/22 15:14:52->run 181 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.792883 min, avg run time:0.853146 min, group id:2, run id: 181 concurrent:1)
+03/31/22 15:14:52->run 181 processed
+03/31/22 15:14:52->Sending run 185 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:185, concurrent runs:1)
+03/31/22 15:15:04->run 182 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.82085 min, avg run time:0.837142 min, group id:2, run id: 182 concurrent:1)
+03/31/22 15:15:04->run 182 processed
+03/31/22 15:15:04->Sending run 186 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:186, concurrent runs:1)
+03/31/22 15:15:27->run 184 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.837667 min, avg run time:0.830596 min, group id:2, run id: 184 concurrent:1)
+03/31/22 15:15:27->run 184 processed
+03/31/22 15:15:27->Sending run 187 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:187, concurrent runs:1)
+03/31/22 15:15:27->run 183 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.845633 min, avg run time:0.824258 min, group id:2, run id: 183 concurrent:1)
+03/31/22 15:15:27->run 183 processed
+03/31/22 15:15:27->Sending run 188 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:188, concurrent runs:1)
+03/31/22 15:15:45->run 185 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.83585 min, avg run time:0.835 min, group id:2, run id: 185 concurrent:1)
+03/31/22 15:15:45->run 185 processed
+03/31/22 15:15:45->Sending run 189 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:189, concurrent runs:1)
+03/31/22 15:15:52->run 186 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.8124 min, avg run time:0.832888 min, group id:2, run id: 186 concurrent:1)
+03/31/22 15:15:52->run 186 processed
+03/31/22 15:15:52->Sending run 190 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:190, concurrent runs:1)
+03/31/22 15:16:14->run 187 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.81125 min, avg run time:0.826283 min, group id:2, run id: 187 concurrent:1)
+03/31/22 15:16:14->run 187 processed
+03/31/22 15:16:14->Sending run 191 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:191, concurrent runs:1)
+03/31/22 15:16:14->run 188 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.813517 min, avg run time:0.818254 min, group id:2, run id: 188 concurrent:1)
+03/31/22 15:16:14->run 188 processed
+03/31/22 15:16:14->Sending run 192 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:192, concurrent runs:1)
+03/31/22 15:16:32->run 189 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.814133 min, avg run time:0.812825 min, group id:2, run id: 189 concurrent:1)
+03/31/22 15:16:32->run 189 processed
+03/31/22 15:16:32->Sending run 193 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:193, concurrent runs:1)
+03/31/22 15:16:41->run 190 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.809283 min, avg run time:0.812046 min, group id:2, run id: 190 concurrent:1)
+03/31/22 15:16:41->run 190 processed
+03/31/22 15:16:41->Sending run 194 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:194, concurrent runs:1)
+03/31/22 15:17:03->run 191 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.8156 min, avg run time:0.813133 min, group id:2, run id: 191 concurrent:1)
+03/31/22 15:17:03->run 191 processed
+03/31/22 15:17:03->Sending run 195 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:195, concurrent runs:1)
+03/31/22 15:17:04->run 192 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.821283 min, avg run time:0.815075 min, group id:2, run id: 192 concurrent:1)
+03/31/22 15:17:04->run 192 processed
+03/31/22 15:17:04->Sending run 196 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (group id:2, run id:196, concurrent runs:1)
+03/31/22 15:17:22->run 193 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.82225 min, avg run time:0.817104 min, group id:2, run id: 193 concurrent:1)
+03/31/22 15:17:22->run 193 processed
+03/31/22 15:17:22->Sending run 197 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (group id:2, run id:197, concurrent runs:1)
+03/31/22 15:17:31->run 194 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.824567 min, avg run time:0.820925 min, group id:2, run id: 194 concurrent:1)
+03/31/22 15:17:31->run 194 processed
+03/31/22 15:17:31->Sending run 198 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (group id:2, run id:198, concurrent runs:1)
+03/31/22 15:17:52->run 195 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.81185 min, avg run time:0.819988 min, group id:2, run id: 195 concurrent:1)
+03/31/22 15:17:52->run 195 processed
+03/31/22 15:17:52->Sending run 199 to: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (group id:2, run id:199, concurrent runs:1)
+03/31/22 15:17:52->run 196 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_3  (run time:0.811567 min, avg run time:0.817558 min, group id:2, run id: 196 concurrent:1)
+03/31/22 15:17:52->run 196 processed
+03/31/22 15:18:06->run 197 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_1  (run time:0.7779 min, avg run time:0.806471 min, group id:2, run id: 197 concurrent:1)
+03/31/22 15:18:06->run 197 processed
+03/31/22 15:18:14->run 198 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_0  (run time:0.768217 min, avg run time:0.792383 min, group id:2, run id: 198 concurrent:1)
+03/31/22 15:18:14->run 198 processed
+03/31/22 15:18:20->run 199 received from: lmlicenses.wip4.adobe.com$c:\Users\rui2h\Documents\GitHub\GMDSI_notebooks\tutorials\worker_2  (run time:0.637217 min, avg run time:0.748725 min, group id:2, run id: 199 concurrent:1)
+03/31/22 15:18:20->run 199 processed
+
+---------------------
+   200 runs complete :  0 runs failed
+   0.749 avg run time (min) : 40.6 run mgr time (min)
+   4 agents connected
+
+
+
+03/31/22 15:18:23->Started idle ping thread.
+03/31/22 15:18:23->Panther idle ping thread resumed.
+03/31/22 15:18:28->Stopped idle ping thread, as Panther manager is shutting down.
