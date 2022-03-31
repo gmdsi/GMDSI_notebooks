@@ -40,16 +40,6 @@ HK2,2
 HK3,3
 
 group id: -1
-HK1,1
-HK2,2
-HK3,3
-
-group id: -1
-HK1,1
-HK2,2
-HK3,3
-
-group id: -1
 HK1,1,2
 HK2,3,4
 HK3,5,6

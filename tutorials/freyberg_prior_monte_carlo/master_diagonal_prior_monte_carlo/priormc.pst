@@ -6,8 +6,7 @@ svdmode                                 1
 maxsing                          10000000
 eigthresh                           1e-06
 eigwrite                                1
-forecasts                      oname:sfr_otype:lst_usecol:gage_1_time:732.0,oname:sfr_otype:lst_usecol:headwater_time:732.0,oname:sfr_otype:lst_usecol:tailwater_time:732.0,oname:hds_otype:lst_usecol:trgw_0_9_1_time:732.0,oname:hds_otype:lst_usecol:trgw_2_9_1_time:732.0
-ies_parameter_ensemble         prior_pe.jcb
+forecasts                      oname:sfr_otype:lst_usecol:tailwater_time:367.0,oname:sfr_otype:lst_usecol:headwater_time:640.0,oname:hds_otype:lst_usecol:trgw_0_9_1_time:640.0
 sweep_parameter_csv_file       prior_pe.jcb
 * parameter groups external
 priormc.pargp_data.csv

@@ -2,7 +2,7 @@ import os
 import pyemu
 
 t_d = os.path.join('freyberg6_template')
-num_workers = 4
+num_workers = 5
 m_d = os.path.join('master_priormc')
 pyemu.os_utils.start_workers(t_d, # the folder which contains the "template" PEST dataset
                             'pestpp-swp', #the PEST software version we want to run

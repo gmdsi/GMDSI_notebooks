@@ -56,12 +56,12 @@ def make_truth(truth_d):
     os.mkdir(truth_d)
 
     # pest setup template folder
-    t_d = os.path.join('..', 'models', 'freyberg_pest_setup')
+    t_d = os.path.join('..', 'models', 'freyberg_pstfrom_pest_setup')
     pst = pyemu.Pst(os.path.join(t_d, 'freyberg_mf6.pst'))
 
-    # choose realisation; this one gives extreme-ish headwater predictions
-    real=61
-    pst.parrep(parfile=os.path.join(t_d, 'prior.jcb'), real_name=real, binary_ens_file=True)
+    # choose realisation; this one gives headwater forecast > 95%
+    real=69
+    pst.parrep(parfile=os.path.join(t_d, 'prior_pe.jcb'), real_name=real, binary_ens_file=True)
     pst.write_input_files(pst_path=t_d)
 
     # run forward run so that parameter input files are updated; 
@@ -202,8 +202,7 @@ def prep_pest(tmp_d):
     pst.model_command = 'mf6'
     pst.control_data.noptmax=0
 
-    pst.pestpp_options['forecasts'] = ['headwater:732.0','tailwater:732.0', 'gage_1:732.0',
-                                    'trgw_2_9_1:732.0','trgw_0_9_1:732.0']
+    pst.pestpp_options['forecasts'] = ['headwater:640.0','tailwater:367.0', 'trgw_0_9_1:640.0']
 
     pstfile = os.path.join(tmp_d,'freyberg.pst')
     pst.write(pstfile)
