@@ -13,7 +13,7 @@ t_d = os.path.join('freyberg6_template')
 
 # use the convenience function to get the pre-preprepared PEST dataset;
 # this continues off from the "freyberg glm 1" tutorial 
-hbd.dir_cleancopy(org_d=os.path.join('freyberg_glm_1_uncw'), 
+hbd.dir_cleancopy(org_d=os.path.join('master_glm_1_uncw'), 
                 new_d=t_d)
 
 # get and unzip the prior covariance JCB file, prepared in "freyberg pstfrom" tutorial
