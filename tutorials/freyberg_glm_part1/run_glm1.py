@@ -27,12 +27,17 @@ par = pst.parameter_data
 gr_pars = par.loc[par.pargp.apply(lambda x: "gr" in x),"parnme"]
 par.loc[gr_pars,"partrans"] = "fixed"
 
-rch_pp_future = [i for i in pst.adj_par_groups if i.startswith('rch') and int(i.split('_')[-2]) > 12]
-par.loc[par['pargp'].isin(rch_pp_future),"partrans"] = "fixed"
+rch_pp = [i for i in pst.adj_par_groups if i.startswith('rch') and i.endswith('_pp') ]
+par.loc[par['pargp'].isin(rch_pp),"partrans"] = "fixed"
+pst.npar_adj
 
-fi_grps = ["sto_ss_layer3_pp",'sto_ss_layer2_pp',"sto_sy_layer1_pp", 'npf_k33_layer1_pp','npf_k33_layer3_pp']
+fi_grps = [ #'sto_ss_layer3_pp',
+            'sto_ss_layer2_pp',
+            #'sto_sy_layer1_pp', 
+            'npf_k33_layer1_pp',
+            'npf_k33_layer3_pp',
+            ]
 par.loc[par.pargp.apply(lambda x: x in fi_grps),"partrans"] = "fixed"
-
 
 case = "freyberg_pp"
 pst.control_data.noptmax = -1
