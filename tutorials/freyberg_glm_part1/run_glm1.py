@@ -24,7 +24,7 @@ pst = pyemu.Pst(os.path.join(t_d, 'freyberg_wv.pst'))
 # fix pars
 par = pst.parameter_data
 # say goodbye to grid-scale pars
-gr_pars = par.loc[par.pargp.apply(lambda x: "gr" in x),"parnme"]
+gr_pars = par.loc[par.pargp.apply(lambda x: "gr" in x and "sfr" not in x),"parnme"]
 par.loc[gr_pars,"partrans"] = "fixed"
 
 rch_pp = [i for i in pst.adj_par_groups if i.startswith('rch') and i.endswith('_pp') ]
