@@ -1,4 +1,0 @@
-name,prior_mean,prior_stdev,prior_lower_bound,prior_upper_bound,post_mean,post_stdev,post_lower_bound,post_upper_bound
-headwater:640.0,-409.617,93.1068,-595.831,-223.404,-211.636,56.9859,-325.608,-97.6644
-tailwater:367.0,-448.255,126.407,-701.07,-195.441,-428.52,2.46612,-433.453,-423.588
-trgw_0_9_1:640.0,37.5459,1.08392,35.378,39.7137,34.6294,0.0269064,34.5756,34.6832

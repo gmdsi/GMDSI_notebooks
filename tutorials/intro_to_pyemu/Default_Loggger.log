@@ -1,17 +1,17 @@
-2022-03-31 14:16:46.009528 starting: opening Default_Loggger.log for logging
-2022-03-31 14:16:46.009528 starting: plot ensemble change
-2022-03-31 14:16:46.065372 starting: plotting change for hk
-2022-03-31 14:16:46.196022 finished: plotting change for hk took: 0:00:00.130650
-2022-03-31 14:16:46.196022 starting: plotting change for porosity
-2022-03-31 14:16:46.223952 finished: plotting change for porosity took: 0:00:00.027930
-2022-03-31 14:16:46.223952 starting: plotting change for rch
-2022-03-31 14:16:46.259855 finished: plotting change for rch took: 0:00:00.035903
-2022-03-31 14:16:46.259855 starting: plotting change for sfr
-2022-03-31 14:16:46.337612 finished: plotting change for sfr took: 0:00:00.077757
-2022-03-31 14:16:46.337612 starting: plotting change for w0
-2022-03-31 14:16:46.592828 finished: plotting change for w0 took: 0:00:00.255216
-2022-03-31 14:16:46.592828 starting: plotting change for w1
-2022-03-31 14:16:46.618759 finished: plotting change for w1 took: 0:00:00.025931
-2022-03-31 14:16:46.618759 starting: plotting change for all
-2022-03-31 14:16:46.645689 finished: plotting change for all took: 0:00:00.026930
-2022-03-31 14:16:46.740436 finished: plot ensemble change took: 0:00:00.730908
+2022-04-08 15:57:21.788463 starting: opening Default_Loggger.log for logging
+2022-04-08 15:57:21.788463 starting: plot ensemble change
+2022-04-08 15:57:21.973968 starting: plotting change for hk
+2022-04-08 15:57:22.460666 finished: plotting change for hk took: 0:00:00.486698
+2022-04-08 15:57:22.460666 starting: plotting change for porosity
+2022-04-08 15:57:22.558406 finished: plotting change for porosity took: 0:00:00.097740
+2022-04-08 15:57:22.558406 starting: plotting change for rch
+2022-04-08 15:57:22.673098 finished: plotting change for rch took: 0:00:00.114692
+2022-04-08 15:57:22.673098 starting: plotting change for sfr
+2022-04-08 15:57:22.912458 finished: plotting change for sfr took: 0:00:00.239360
+2022-04-08 15:57:22.912458 starting: plotting change for w0
+2022-04-08 15:57:23.938348 finished: plotting change for w0 took: 0:00:01.025890
+2022-04-08 15:57:23.938348 starting: plotting change for w1
+2022-04-08 15:57:24.041072 finished: plotting change for w1 took: 0:00:00.102724
+2022-04-08 15:57:24.042069 starting: plotting change for all
+2022-04-08 15:57:24.145682 finished: plotting change for all took: 0:00:00.103613
+2022-04-08 15:57:24.514695 finished: plot ensemble change took: 0:00:02.726232
