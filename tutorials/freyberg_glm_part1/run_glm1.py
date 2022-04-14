@@ -19,7 +19,7 @@ hbd.dir_cleancopy(org_d=os.path.join('..','..', 'models','freyberg_obs_and_weigh
 hbd.unzip(os.path.join('..','..','models','prior_cov.zip'), os.path.join(t_d))
 
 
-pst = pyemu.Pst(os.path.join(t_d, 'freyberg_wv.pst'))
+pst = pyemu.Pst(os.path.join(t_d, 'freyberg_mf6.pst'))
 
 # fix pars
 par = pst.parameter_data

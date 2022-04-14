@@ -1,12 +1,21 @@
 pcf version=2
 * control data keyword
 pestmode                                 estimation
-noptmax                                -1
+noptmax                                 3
 svdmode                                 1
 maxsing                          10000000
 eigthresh                           1e-06
 eigwrite                                1
-forecasts                      oname:sfr_otype:lst_usecol:tailwater_time:367.0,oname:sfr_otype:lst_usecol:headwater_time:640.0,oname:hds_otype:lst_usecol:trgw_0_9_1_time:640.0
+forecasts                      oname:sfr_otype:lst_usecol:tailwater_time:367.0,oname:sfr_otype:lst_usecol:headwater_time:640.0,oname:hds_otype:lst_usecol:trgw_0_9_1_time:640.0,part_time,part_status
+n_iter_base                    -1
+n_iter_super                   3
+max_n_super                    60
+glm_num_reals                  50
+parcov                         glm_prior.cov
+base_jacobian                  freyberg_reuse.jcb
+glm_normal_form                prior
+overdue_giveup_fac             5.0
+max_run_fail                   3
 * parameter groups external
 freyberg_pp.pargp_data.csv
 * parameter data external
