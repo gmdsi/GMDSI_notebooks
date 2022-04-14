@@ -3,43 +3,43 @@
 
 NUMERIC PARAMETER SENSITIVITIES FOR OPTIMISATION ITERATION NO. 1   ----->
   Parameter name   Group        Current Value        PEST_CSS_wo_reg
-   hk1             hk           5.00000000000        3.05715610453       
-   hk2             hk           5.00000000000        4.12066645435       
-   hk3             hk           5.00000000000        14.4639952396       
+   hk1             hk           5.00000000000        2.30011747439       
+   hk2             hk           5.00000000000        0.539370342094      
+   hk3             hk           5.00000000000        17.9689319456       
 
 
 NUMERIC PARAMETER SENSITIVITIES FOR OPTIMISATION ITERATION NO. 2   ----->
   Parameter name   Group        Current Value        PEST_CSS_wo_reg
-   hk1             hk           6.10939203229        1.78992595800       
-   hk2             hk           4.65022235118        0.373294541891      
-   hk3             hk           10.8366903242        9.02972344040       
+   hk1             hk           10.3157598143        1.81289726877       
+   hk2             hk           24.9133175262        1.57168779737       
+   hk3             hk           9.00357711295        4.96606411970       
 
 
 NUMERIC PARAMETER SENSITIVITIES FOR OPTIMISATION ITERATION NO. 3   ----->
   Parameter name   Group        Current Value        PEST_CSS_wo_reg
-   hk1             hk           6.78851017963        5.51723850163       
-   hk2             hk           4.65385278509        4.51765097226       
-   hk3             hk           16.1421692169        7.38070060633       
+   hk1             hk           25.1055278781        7.75903374592       
+   hk2             hk           29.9759236938        0.793601202896      
+   hk3             hk           26.9510725612        4.62407164211       
 
 
 NUMERIC PARAMETER SENSITIVITIES FOR OPTIMISATION ITERATION NO. 4   ----->
   Parameter name   Group        Current Value        PEST_CSS_wo_reg
-   hk1             hk           50.0000000000        1.22006027086       
-   hk2             hk           4.43053847778        0.230433806568      
-   hk3             hk           15.9450007999        2.66728402868       
+   hk1             hk           20.1778509633        0.669753030339      
+   hk2             hk           29.0123645735        3.21133298236       
+   hk3             hk           35.0950214327        3.06049246915       
 
 
 NUMERIC PARAMETER SENSITIVITIES FOR OPTIMISATION ITERATION NO. 5   ----->
   Parameter name   Group        Current Value        PEST_CSS_wo_reg
-   hk1             hk           50.0000000000        1.12897546427       
-   hk2             hk           4.16730167764        0.409435861432      
-   hk3             hk           15.2089277277        4.51933757005       
+   hk1             hk           19.4890325189        0.608370091886      
+   hk2             hk           40.5895629797        0.460180989487      
+   hk3             hk           36.8678744946        2.52880456548       
 
 
 NUMERIC PARAMETER SENSITIVITIES FOR OPTIMISATION ITERATION NO. 6   ----->
   Parameter name   Group        Current Value        PEST_CSS_wo_reg
-   hk1             hk           50.0000000000        1.43777960918       
-   hk2             hk           4.28956271599        0.487950588400      
-   hk3             hk           15.5628379335        4.18704949940       
+   hk1             hk           14.7531064322        1.15598381082       
+   hk2             hk           38.2363972194        1.00673074937       
+   hk3             hk           27.9090415389        2.36814201495       
 
 

@@ -56,12 +56,12 @@ def make_truth(truth_d):
     os.mkdir(truth_d)
 
     # pest setup template folder
-    t_d = os.path.join('..', 'models', 'freyberg_pest_setup')
+    t_d = os.path.join('..', 'models', 'freyberg_pstfrom_pest_setup')
     pst = pyemu.Pst(os.path.join(t_d, 'freyberg_mf6.pst'))
 
-    # choose realisation; this one gives extreme-ish headwater predictions
-    real=61
-    pst.parrep(parfile=os.path.join(t_d, 'prior.jcb'), real_name=real, binary_ens_file=True)
+    # choose realisation; this one gives headwater forecast > 95%
+    real=187
+    pst.parrep(parfile=os.path.join(t_d, 'prior_pe.jcb'), real_name=real, binary_ens_file=True)
     pst.write_input_files(pst_path=t_d)
 
     # run forward run so that parameter input files are updated; 
@@ -74,12 +74,24 @@ def make_truth(truth_d):
     sim.set_all_data_external(check_data=True)
     sim.write_simulation()
 
-    # run mf6 so that model output files are avilable
+    # run mf6 so that model output files are available
     pyemu.os_utils.run('mf6', cwd=truth_d)
 
     # rename model output files because of silly design decisions a while back
     for f in ['heads.csv', 'sfr.csv']:
         os.rename(os.path.join(truth_d, f), os.path.join(truth_d, f.split('.')[0]+'.meas.csv'))
+   
+    # copy modpath7 model files
+    files = [f for f in os.listdir(t_d) if f.startswith('freyberg_mp') or f.startswith('pm.pg1')]
+    for f in files:
+        shutil.copy2(os.path.join(t_d, f),os.path.join(truth_d,f))
+
+    # run mp7
+    pyemu.os_utils.run("mp7 freyberg_mp.mpsim", cwd=truth_d)
+
+    #rename output file
+    f='freyberg_mp.mpend'
+    os.rename(os.path.join(truth_d, f), os.path.join(truth_d, f+'.meas'))
     
     return (print('Truth is updated.'))
 
@@ -202,8 +214,7 @@ def prep_pest(tmp_d):
     pst.model_command = 'mf6'
     pst.control_data.noptmax=0
 
-    pst.pestpp_options['forecasts'] = ['headwater:732.0','tailwater:732.0', 'gage_1:732.0',
-                                    'trgw_2_9_1:732.0','trgw_0_9_1:732.0']
+    pst.pestpp_options['forecasts'] = ['headwater:640.0','tailwater:367.0', 'trgw_0_9_1:640.0']
 
     pstfile = os.path.join(tmp_d,'freyberg.pst')
     pst.write(pstfile)
@@ -294,29 +305,34 @@ def prep_notebooks(rebuild_truth=True):
         for f in [f for f in os.listdir(truth_d) if f.endswith('.csv')]:
             os.rename(os.path.join(truth_d, f), os.path.join(truth_d, f.split('.')[0]+'.meas.csv'))
 
+        f='freyberg_mp.mpend'
+        os.rename(os.path.join(truth_d, f), os.path.join(truth_d, f+'.meas'))
 
-    # run the intro_to_regression
-    run_notebook('intro_to_regression.ipynb', 'intro_to_regression')
+    redo_part1=False
+    if redo_part1==True:
+        # run the intro_to_regression
+        run_notebook('intro_to_regression.ipynb', 'intro_to_regression')
 
-    # run the intro_to_pyemu
-    run_notebook('intro_to_pyemu.ipynb', 'intro_to_pyemu')
+        # run the intro_to_pyemu
+        run_notebook('intro_to_pyemu.ipynb', 'intro_to_pyemu')
 
-    # run the sequence of Freyberg model notebooks
-    # run the freyberg model
-    run_notebook('freyberg_intro_model.ipynb', 'freyberg_intro_to_model')
+        # run the sequence of Freyberg model notebooks
+        # run the freyberg model
+        run_notebook('freyberg_intro_model.ipynb', 'part1_intro_to_model')
 
-    # trial and error
-    run_notebook('freyberg_trial_and_error.ipynb', 'freyberg_trial_and_error')
+        # trial and error
+        run_notebook('freyberg_trial_and_error.ipynb', 'part1_trial_and_error')
 
-    # k only calib; takes a few minutes
-    run_notebook('freyberg_k.ipynb', 'freyberg_k')
-    dir_cleancopy(org_d=os.path.join('freyberg_k', 'freyberg_k'), 
-                new_d=os.path.join('..','models','freyberg_k'), 
-                delete_orgdir=True) # reduce occupied disk space
+        # k only calib; takes a few minutes
+        run_notebook('freyberg_k.ipynb', 'part1_k')
+        dir_cleancopy(org_d=os.path.join('part1_k', 'freyberg_k'), 
+                    new_d=os.path.join('..','models','freyberg_k'), 
+                    delete_orgdir=True) # reduce occupied disk space
 
+    ## Part 2
     # run the base pest setup and make a backup
-    run_notebook('freyberg_pstfrom_pest_setup.ipynb', 'freyberg_pstfrom_pest_setup')
-    dir_cleancopy(org_d=os.path.join('freyberg_pstfrom_pest_setup', 'freyberg6_template'), 
+    run_notebook('freyberg_pstfrom_pest_setup.ipynb', 'part2_pstfrom_pest_setup')
+    dir_cleancopy(org_d=os.path.join('part2_pstfrom_pest_setup', 'freyberg6_template'), 
                 new_d=os.path.join('..','models','freyberg_pstfrom_pest_setup'),
                 delete_orgdir=True) # reduce occupied disk space
 
@@ -330,8 +346,8 @@ def prep_notebooks(rebuild_truth=True):
 
         ### Run PEST setup again with correct obs values for consistency...
         # run the base pest setup and make a backup
-        run_notebook('freyberg_pstfrom_pest_setup.ipynb', 'freyberg_pstfrom_pest_setup')
-        dir_cleancopy(org_d=os.path.join('freyberg_pstfrom_pest_setup', 'freyberg6_template'), 
+        run_notebook('freyberg_pstfrom_pest_setup.ipynb', 'part2_pstfrom_pest_setup')
+        dir_cleancopy(org_d=os.path.join('part2_pstfrom_pest_setup', 'freyberg6_template'), 
                     new_d=os.path.join('..','models','freyberg_pstfrom_pest_setup'),
                     delete_orgdir=True) # reduce occupied disk space
         
@@ -344,8 +360,8 @@ def prep_notebooks(rebuild_truth=True):
     
 
     # run the reqeighting notebook and make a backup
-    run_notebook('freyberg_obs_and_weights.ipynb', 'freyberg_obs_and_weights')
-    dir_cleancopy(org_d=os.path.join('freyberg_obs_and_weights', 'freyberg6_template'), 
+    run_notebook('freyberg_obs_and_weights.ipynb', 'part2_obs_and_weights')
+    dir_cleancopy(org_d=os.path.join('part2_obs_and_weights', 'freyberg6_template'), 
                 new_d=os.path.join('..','models','freyberg_obs_and_weights'),
                 delete_orgdir=True) # reduce occupied disk space
 

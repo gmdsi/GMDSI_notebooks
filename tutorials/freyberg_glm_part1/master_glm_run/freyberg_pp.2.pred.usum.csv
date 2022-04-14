@@ -1,6 +1,0 @@
-name,prior_mean,prior_stdev,prior_lower_bound,prior_upper_bound,post_mean,post_stdev,post_lower_bound,post_upper_bound
-oname:hds_otype:lst_usecol:trgw_0_9_1_time:732.0,34.8069,0.837843,33.1312,36.4826,35.3123,0.046684,35.2189,35.4056
-oname:hds_otype:lst_usecol:trgw_2_9_1_time:732.0,34.8016,0.837433,33.1268,36.4765,35.3084,0.0466291,35.2151,35.4017
-oname:sfr_otype:lst_usecol:gage_1_time:732.0,1361.85,361.049,639.753,2083.95,1032.56,25.4793,981.602,1083.52
-oname:sfr_otype:lst_usecol:headwater_time:732.0,-697.587,171.61,-1040.81,-354.366,-680.516,11.6197,-703.756,-657.277
-oname:sfr_otype:lst_usecol:tailwater_time:732.0,-528.34,260.136,-1048.61,-8.06892,-180.517,19.0435,-218.604,-142.43
