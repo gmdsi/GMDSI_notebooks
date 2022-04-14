@@ -14,6 +14,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 import zipfile
 
+if "linux" in platform.platform().lower():
+    bin_path = os.path.join("..","..", "bin_new", "linux")
+elif "darwin" in platform.platform().lower() or "macos" in platform.platform().lower():
+    bin_path = os.path.join("..","..", "bin_new", "mac")
+else:
+    bin_path = os.path.join("..","..", "bin_new", "win")
+
+def prep_bins(dest_path):
+    files = os.listdir(bin_path)
+    for f in files:
+        if os.path.exists(os.path.join(dest_path,f)):
+            os.remove(os.path.join(dest_path,f))
+        shutil.copy2(os.path.join(bin_path,f),os.path.join(dest_path,f))
+
 def run_notebook(notebook_filename, path):
     notebook_filename = os.path.join(path,notebook_filename)
     with open(notebook_filename, encoding="utf8") as f:
@@ -38,6 +52,7 @@ def dir_cleancopy(org_d, new_d, delete_orgdir=False):
     if delete_orgdir==True:
         shutil.rmtree(org_d)
         print(f'Hope you did that on purpose. {org_d} has been deleted.')
+    prep_bins(new_d)
     return
 
 def unzip(path_to_zip_file,directory_to_extract_to):
@@ -133,25 +148,27 @@ def prep_pest(tmp_d):
     """Prepares the PEST setup for part 1 of the tutorials.
         Used by the freyberg_pest_setup notebook."""
     # get the necessary executables; OS agnostic
-    bin_dir = os.path.join('..','..','bin')
-    if "window" in platform.platform().lower():
-        exe_files = [f for f in os.listdir(bin_dir) if f.endswith('exe')]
-    else:
-        exe_files = [f for f in os.listdir(bin_dir) if not f.endswith('exe')]
+    #bin_dir = os.path.join('..','..','bin')
+    #if "window" in platform.platform().lower():
+    #    exe_files = [f for f in os.listdir(bin_dir) if f.endswith('exe')]
+    #else:
+    #    exe_files = [f for f in os.listdir(bin_dir) if not f.endswith('exe')]
     # remove existing folder if it already exists
     if os.path.exists(tmp_d):
         shutil.rmtree(tmp_d)
     # make the folder
-    os.mkdir(tmp_d)
+    #os.mkdir(tmp_d)
     # copy executables across
-    for exe_file in exe_files:
-        shutil.copy2(os.path.join(bin_dir, exe_file),os.path.join(tmp_d,exe_file))
-    
-    # folder containing original model files
+    #for exe_file in exe_files:
+    #    shutil.copy2(os.path.join(bin_dir, exe_file),os.path.join(tmp_d,exe_file))
     org_d = os.path.join('..', '..', 'models', 'freyberg_mf6')
+    shutil.copytree(org_d,tmp_d)
+    prep_bins(tmp_d)
+    # folder containing original model files
+    
     # copy files across to the temp folder
-    for f in os.listdir(org_d):
-        shutil.copy2(os.path.join(org_d,f), os.path.join(tmp_d,f))
+    #for f in os.listdir(org_d):
+    #    shutil.copy2(os.path.join(org_d,f), os.path.join(tmp_d,f))
 
     # geat meas values
     for csv in ['heads.meas.csv', 'sfr.meas.csv']:
