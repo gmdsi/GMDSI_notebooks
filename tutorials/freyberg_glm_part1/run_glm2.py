@@ -27,20 +27,22 @@ cov = cov.get(pst.adj_par_names)
 cov.to_ascii(os.path.join(t_d,"glm_prior.cov"))
 
 
-pst.control_data.noptmax = 4
+pst.control_data.noptmax = 3
+#pst.control_data.relparmax=30
+#pst.control_data.facparmax=30
 print(pst.pestpp_options)
 #pst.pestpp_options = {"forecasts":pst.pestpp_options["forecasts"]}
 #pst.pestpp_options['uncertainty'] = False
 pst.pestpp_options["n_iter_base"] = -1
 pst.pestpp_options["n_iter_super"] = pst.control_data.noptmax
+pst.pestpp_options["max_n_super"] = 60
 pst.pestpp_options["glm_num_reals"] = 50
 pst.pestpp_options["parcov"] = "glm_prior.cov"
 pst.pestpp_options["base_jacobian"] = "freyberg_reuse.jcb"
 pst.pestpp_options["glm_normal_form"] = "prior"
-pst.pestpp_options["max_n_super"] = 30
 pst.pestpp_options["overdue_giveup_fac"] = 5.0
 pst.pestpp_options["max_run_fail"] = 3
-#pst.svd_data.maxsing = 30
+#pst.svd_data.maxsing = 50
 
 case = 'freyberg_pp'
 

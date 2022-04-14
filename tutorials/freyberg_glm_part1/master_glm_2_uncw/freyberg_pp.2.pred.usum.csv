@@ -1,4 +1,0 @@
-name,prior_mean,prior_stdev,prior_lower_bound,prior_upper_bound,post_mean,post_stdev,post_lower_bound,post_upper_bound
-oname:hds_otype:lst_usecol:trgw_0_9_1_time:640.0,34.6294,4.77311,25.0831,44.1756,34.7579,0.110827,34.5363,34.9796
-oname:sfr_otype:lst_usecol:headwater_time:640.0,-211.3,1027.15,-2265.59,1842.99,-283.6,70.7993,-425.199,-142.001
-oname:sfr_otype:lst_usecol:tailwater_time:367.0,-426.47,1841.43,-4109.32,3256.38,-195.15,37.0509,-269.252,-121.048

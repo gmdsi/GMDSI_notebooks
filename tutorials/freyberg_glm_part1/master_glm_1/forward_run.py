@@ -58,6 +58,8 @@ def main():
     pyemu.helpers.apply_list_and_array_pars(arr_par_file='mult2model_info.csv',chunk_len=50)
     pyemu.os_utils.run(r'mf6')
 
+    pyemu.os_utils.run(r'mp7 freyberg_mp.mpsim')
+
     process_secondary_obs(ws='.')
 
 if __name__ == '__main__':

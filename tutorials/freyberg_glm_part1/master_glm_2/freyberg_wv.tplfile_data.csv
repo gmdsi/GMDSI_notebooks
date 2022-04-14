@@ -26,6 +26,15 @@ sto_ss_layer3_cn_inst0_constant.csv.tpl,mult\sto_ss_layer3_cn_inst0_constant.csv
 sto_sy_layer1_gr_inst0_grid.csv.tpl,mult\sto_sy_layer1_gr_inst0_grid.csv
 sto_sy_layer1_pp_inst0pp.dat.tpl,sto_sy_layer1_pp_inst0pp.dat
 sto_sy_layer1_cn_inst0_constant.csv.tpl,mult\sto_sy_layer1_cn_inst0_constant.csv
+ne_layer1_gr_inst0_grid.csv.tpl,mult\ne_layer1_gr_inst0_grid.csv
+ne_layer1_pp_inst0pp.dat.tpl,ne_layer1_pp_inst0pp.dat
+ne_layer1_cn_inst0_constant.csv.tpl,mult\ne_layer1_cn_inst0_constant.csv
+ne_layer2_gr_inst0_grid.csv.tpl,mult\ne_layer2_gr_inst0_grid.csv
+ne_layer2_pp_inst0pp.dat.tpl,ne_layer2_pp_inst0pp.dat
+ne_layer2_cn_inst0_constant.csv.tpl,mult\ne_layer2_cn_inst0_constant.csv
+ne_layer3_gr_inst0_grid.csv.tpl,mult\ne_layer3_gr_inst0_grid.csv
+ne_layer3_pp_inst0pp.dat.tpl,ne_layer3_pp_inst0pp.dat
+ne_layer3_cn_inst0_constant.csv.tpl,mult\ne_layer3_cn_inst0_constant.csv
 rch_recharge_1_gr_inst0_grid.csv.tpl,mult\rch_recharge_1_gr_inst0_grid.csv
 rch_recharge_1_pp_inst0pp.dat.tpl,rch_recharge_1_pp_inst0pp.dat
 rch_recharge_1_tcn_inst0_constant.csv.tpl,mult\rch_recharge_1_tcn_inst0_constant.csv
