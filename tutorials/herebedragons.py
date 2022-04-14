@@ -318,21 +318,21 @@ def prep_notebooks(rebuild_truth=True):
 
         # run the sequence of Freyberg model notebooks
         # run the freyberg model
-        run_notebook('freyberg_intro_model.ipynb', 'freyberg_intro_to_model')
+        run_notebook('freyberg_intro_model.ipynb', 'part1_intro_to_model')
 
         # trial and error
-        run_notebook('freyberg_trial_and_error.ipynb', 'freyberg_trial_and_error')
+        run_notebook('freyberg_trial_and_error.ipynb', 'part1_trial_and_error')
 
         # k only calib; takes a few minutes
-        run_notebook('freyberg_k.ipynb', 'freyberg_k')
-        dir_cleancopy(org_d=os.path.join('freyberg_k', 'freyberg_k'), 
+        run_notebook('freyberg_k.ipynb', 'part1_k')
+        dir_cleancopy(org_d=os.path.join('part1_k', 'freyberg_k'), 
                     new_d=os.path.join('..','models','freyberg_k'), 
                     delete_orgdir=True) # reduce occupied disk space
 
     ## Part 2
     # run the base pest setup and make a backup
-    run_notebook('freyberg_pstfrom_pest_setup.ipynb', 'freyberg_pstfrom_pest_setup')
-    dir_cleancopy(org_d=os.path.join('freyberg_pstfrom_pest_setup', 'freyberg6_template'), 
+    run_notebook('freyberg_pstfrom_pest_setup.ipynb', 'part2_pstfrom_pest_setup')
+    dir_cleancopy(org_d=os.path.join('part2_pstfrom_pest_setup', 'freyberg6_template'), 
                 new_d=os.path.join('..','models','freyberg_pstfrom_pest_setup'),
                 delete_orgdir=True) # reduce occupied disk space
 
@@ -346,8 +346,8 @@ def prep_notebooks(rebuild_truth=True):
 
         ### Run PEST setup again with correct obs values for consistency...
         # run the base pest setup and make a backup
-        run_notebook('freyberg_pstfrom_pest_setup.ipynb', 'freyberg_pstfrom_pest_setup')
-        dir_cleancopy(org_d=os.path.join('freyberg_pstfrom_pest_setup', 'freyberg6_template'), 
+        run_notebook('freyberg_pstfrom_pest_setup.ipynb', 'part2_pstfrom_pest_setup')
+        dir_cleancopy(org_d=os.path.join('part2_pstfrom_pest_setup', 'freyberg6_template'), 
                     new_d=os.path.join('..','models','freyberg_pstfrom_pest_setup'),
                     delete_orgdir=True) # reduce occupied disk space
         
@@ -360,8 +360,8 @@ def prep_notebooks(rebuild_truth=True):
     
 
     # run the reqeighting notebook and make a backup
-    run_notebook('freyberg_obs_and_weights.ipynb', 'freyberg_obs_and_weights')
-    dir_cleancopy(org_d=os.path.join('freyberg_obs_and_weights', 'freyberg6_template'), 
+    run_notebook('freyberg_obs_and_weights.ipynb', 'part2_obs_and_weights')
+    dir_cleancopy(org_d=os.path.join('part2_obs_and_weights', 'freyberg6_template'), 
                 new_d=os.path.join('..','models','freyberg_obs_and_weights'),
                 delete_orgdir=True) # reduce occupied disk space
 
