@@ -1,10 +1,15 @@
 import os
+import sys
 import flopy
 import shutil
 import matplotlib.pyplot as plt
 import platform
 import numpy as np
 import pandas as pd
+import pyemu
+
+sys.path.append("..")
+import herebedragons as hbd
 
 def rmse(predictions, targets):
     return np.sqrt(((predictions - targets) ** 2).mean())
@@ -38,11 +43,12 @@ def get_model():
     #shutil.copytree(org_ws, sim_ws)
 
     # get the necessary executables; OS agnostic
-    bin_dir = os.path.join('..','..','bin')
-    exe_file='mf6'
-    if "window" in platform.platform().lower():
-        exe_file = exe_file+'.exe'
-    shutil.copy2(os.path.join(bin_dir, exe_file), os.path.join(sim_ws,exe_file))
+    #bin_dir = os.path.join('..','..','bin')
+    #exe_file='mf6'
+    #if "window" in platform.platform().lower():
+    #    exe_file = exe_file+'.exe'
+    #shutil.copy2(os.path.join(bin_dir, exe_file), os.path.join(sim_ws,exe_file))
+    hbd.prep_bins(sim_ws)
 
     # get measured data
     truth_dir = os.path.join('..', '..', 'models', 'freyberg_mf6_truth')
@@ -83,7 +89,8 @@ def update_par(k1=3,k2=0.3,k3=30, rch_factor=1, sfrplot=True):
 
     # run the model
     sim.write_simulation()
-    sim.run_simulation()
+    #sim.run_simulation()
+    pyemu.os_utils.run("mf6",cwd=sim_ws)
 
     # plot results
     plot_simvsmeas(sim_ws,sfrplot)
