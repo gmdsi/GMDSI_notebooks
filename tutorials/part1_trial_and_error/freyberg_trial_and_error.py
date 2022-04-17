@@ -53,7 +53,7 @@ def get_model():
     # get measured data
     truth_dir = os.path.join('..', '..', 'models', 'freyberg_mf6_truth')
     for f in ['heads.meas.csv', 'sfr.meas.csv']:
-        shutil.copy2(os.path.join(truth_dir, f), os.path.join(sim_ws,f))
+        shutil.copy2(os.path.join(truth_dir, f.replace(".meas","")), os.path.join(sim_ws,f))
 
     return print(f'model files are in: {sim_ws}')
 

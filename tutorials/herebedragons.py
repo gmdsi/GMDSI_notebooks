@@ -171,7 +171,7 @@ def prep_pest(tmp_d):
     #    shutil.copy2(os.path.join(org_d,f), os.path.join(tmp_d,f))
 
     # geat meas values
-    for csv in ['heads.meas.csv', 'sfr.meas.csv']:
+    for csv in ['heads.csv', 'sfr.csv']:
         df = pd.read_csv(os.path.join('..', '..', 'models', 'freyberg_mf6_truth',csv),
                         index_col=0)
         df.to_csv(os.path.join(tmp_d,csv.replace('.meas','')))
@@ -215,6 +215,7 @@ def prep_pest(tmp_d):
     # build a control file
     pst = pyemu.Pst.from_io_files(tpl_files,in_files,
                                             ins_files,out_files, pst_path='.')
+    pst.try_parse_name_metadata()
     #tidy up
     par=pst.parameter_data
     par.loc[par['parnme'].str.startswith('hk'), ['parlbnd','parval1','parubnd', 'pargp']] = 0.05, 5, 50, 'hk'
@@ -222,16 +223,17 @@ def prep_pest(tmp_d):
     par.loc['rch1', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.5, 1, 2, 'fixed', 'rch'
     obs=pst.observation_data
     obs['weight'] = 0
+    obs.loc[:,"time"] = obs.obsnme.apply(lambda x: float(x.split(':')[1]))
     obs.loc[obs['obsnme'].str.startswith('gage'), 'obgnme'] = 'flux'
     obs.loc[obs['obsnme'].str.startswith('headwater'), 'obgnme'] = 'flux'
     obs.loc[obs['obsnme'].str.startswith('tailwater'), 'obgnme'] = 'flux'
     obs.loc[obs['obsnme'].str.startswith('trgw'), 'obgnme'] = 'hds'
-    obs.loc[(obs['obgnme']=='hds') & (obs['1'].astype('float') <=367), 'weight'] = 1/0.1
+    obs.loc[obs.apply(lambda x: x.obgnme=="hds" and x.time > 3652.5 and x.time <=4018.5,axis=1), 'weight'] = 1/0.1
 
     pst.model_command = 'mf6'
     pst.control_data.noptmax=0
 
-    pst.pestpp_options['forecasts'] = ['headwater:640.0','tailwater:367.0', 'trgw_0_9_1:640.0']
+    pst.pestpp_options['forecasts'] = ['headwater:4383.5','tailwater:4383.5', 'trgw-0-9-1:4383.5']
 
     pstfile = os.path.join(tmp_d,'freyberg.pst')
     pst.write(pstfile)
@@ -249,7 +251,7 @@ def plot_freyberg(tmp_d):
     gwf = sim.get_model()
 
     cols = pd.read_csv(os.path.join(tmp_d, 'heads.csv')).columns[1:].tolist()
-    obsxy = pd.DataFrame([i.replace('TRGW_','').split('_') for i in cols], columns=['layer','row','col'])
+    obsxy = pd.DataFrame([i.replace('TRGW-','').split('-') for i in cols], columns=['layer','row','col'])
     obsxy['x'] = [gwf.modelgrid.xycenters[0][int(i)+1] for i in obsxy['col'].values]
     obsxy['y'] = [gwf.modelgrid.xycenters[1][int(i)+1] for i in obsxy['row'].values]
 
@@ -388,4 +390,6 @@ def prep_notebooks(rebuild_truth=True):
 
 
 if __name__ == "__main__":
-    prep_notebooks(rebuild_truth=True)
+    #prep_notebooks(rebuild_truth=True)
+    prep_pest(os.path.join("pest_files"))
+
