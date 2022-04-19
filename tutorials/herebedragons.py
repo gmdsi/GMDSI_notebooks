@@ -378,7 +378,7 @@ def prep_notebooks(rebuild_truth=True):
             zipf.close()
     
 
-    # run the reqeighting notebook and make a backup
+    # run the obs&weights notebook and make a backup
     run_notebook('freyberg_obs_and_weights.ipynb', 'part2_obs_and_weights')
     dir_cleancopy(org_d=os.path.join('part2_obs_and_weights', 'freyberg6_template'), 
                 new_d=os.path.join('..','models','freyberg_obs_and_weights'),
