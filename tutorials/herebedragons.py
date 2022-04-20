@@ -19,7 +19,7 @@ if "linux" in platform.platform().lower():
 elif "darwin" in platform.platform().lower() or "macos" in platform.platform().lower():
     bin_path = os.path.join("..","..", "bin_new", "mac")
 else:
-    bin_path = os.path.join("..","..", "bin_new", "win")
+    bin_path = os.path.join("..", "..", "bin_new", "win")
 
 def prep_bins(dest_path):
     files = os.listdir(bin_path)
@@ -92,10 +92,6 @@ def make_truth(truth_d):
     # run mf6 so that model output files are available
     pyemu.os_utils.run('mf6', cwd=truth_d)
 
-    # rename model output files because of silly design decisions a while back
-    for f in ['heads.csv', 'sfr.csv']:
-        os.rename(os.path.join(truth_d, f), os.path.join(truth_d, f.split('.')[0]+'.meas.csv'))
-   
     # copy modpath7 model files
     files = [f for f in os.listdir(t_d) if f.startswith('freyberg_mp') or f.startswith('pm.pg1')]
     for f in files:
@@ -104,9 +100,50 @@ def make_truth(truth_d):
     # run mp7
     pyemu.os_utils.run("mp7 freyberg_mp.mpsim", cwd=truth_d)
 
-    #rename output file
-    f='freyberg_mp.mpend'
-    os.rename(os.path.join(truth_d, f), os.path.join(truth_d, f+'.meas'))
+
+    ## rename model output files because of silly design decisions a while back
+    #for f in ['heads.csv', 'sfr.csv']:
+    #    os.rename(os.path.join(truth_d, f), os.path.join(truth_d, f.split('.')[0]+'.meas.csv'))
+   
+    ##rename output file
+    #f='freyberg_mp.mpend'
+    #os.rename(os.path.join(truth_d, f), os.path.join(truth_d, f+'.meas'))
+    def make_obsdata(obs_df, obs_data, obs_sites=[], noise_scale=None):
+        for site in obs_df.columns:
+            if noise_scale==None:
+                noise_scale=abs(0.2*obs_df[site].mean())
+            y_true = obs_df[site].values
+            times_true = obs_df.index.values
+            if site in obs_sites:
+                x = np.linspace(obs_df.index[0], obs_df.index[-1], 500)
+                y = np.random.normal(np.interp(x, times_true, y_true), scale=noise_scale)
+            else:
+                x = times_true
+                y = y_true
+            arr = np.array([x.shape[0]*[site],x,y])
+            obs_data = pd.concat([obs_data, pd.DataFrame(arr.T)], axis=0, ignore_index=True)
+        obs_data.iloc[:,1:] = obs_data.iloc[:,1:].astype('float')
+        
+        return obs_data
+
+        
+    meas_sfr = pd.read_csv(os.path.join(truth_d,"sfr.csv"),
+                        index_col=0)
+    meas_hds = pd.read_csv(os.path.join(truth_d,"heads.csv"),
+                        index_col=0)
+
+    obs_sites = ['GAGE-1','TRGW-0-26-6','TRGW-2-26-6','TRGW-0-3-8','TRGW-2-3-8']
+
+    obs_data = pd.DataFrame()
+    obs_data = make_obsdata(meas_sfr, obs_data, obs_sites, noise_scale=None)
+    obs_data = make_obsdata(meas_hds, obs_data, obs_sites, noise_scale=0.1)
+    obs_data.columns=['site', 'time', 'value']
+    obs_data.set_index('site', inplace=True)
+
+    # add particle time obs
+    mp_obs = pd.read_csv(os.path.join(truth_d, 'freyberg_mp.mpend'), skiprows=6, header=None, usecols=[3,5], delim_whitespace=True)
+    obs_data.loc['part_time', ['time', 'value']] = '', mp_obs.iloc[:,-1].values[0]
+    obs_data.to_csv(os.path.join(truth_d, 'obs_data.csv'))
     
     return (print('Truth is updated.'))
 
@@ -390,6 +427,7 @@ def prep_notebooks(rebuild_truth=True):
 
 
 if __name__ == "__main__":
+    make_truth(os.path.join('..','models','freyberg_mf6_truth'))
     #prep_notebooks(rebuild_truth=True)
-    prep_pest(os.path.join("pest_files"))
+    #prep_pest(os.path.join("pest_files"))
 
