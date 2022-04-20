@@ -52,7 +52,7 @@ def dir_cleancopy(org_d, new_d, delete_orgdir=False):
     if delete_orgdir==True:
         shutil.rmtree(org_d)
         print(f'Hope you did that on purpose. {org_d} has been deleted.')
-    prep_bins(new_d)
+    #prep_bins(new_d)
     return
 
 def unzip(path_to_zip_file,directory_to_extract_to):
@@ -427,7 +427,7 @@ def prep_notebooks(rebuild_truth=True):
 
 
 if __name__ == "__main__":
-    make_truth(os.path.join('..','models','freyberg_mf6_truth'))
-    #prep_notebooks(rebuild_truth=True)
+    #make_truth(os.path.join('..','models','freyberg_mf6_truth'))
+    prep_notebooks(rebuild_truth=True)
     #prep_pest(os.path.join("pest_files"))
 
