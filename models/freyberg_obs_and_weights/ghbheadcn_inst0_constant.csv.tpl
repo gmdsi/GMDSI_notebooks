@@ -1,0 +1,32 @@
+ptf ~
+,sidx,idx_strs,pargp3,parval1_3,3
+0,"(1, 39, 11)",idx0:1_idx1:39_idx2:11,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+1,"(2, 39, 14)",idx0:2_idx1:39_idx2:14,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+2,"(0, 39, 11)",idx0:0_idx1:39_idx2:11,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+3,"(0, 39, 6)",idx0:0_idx1:39_idx2:6,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+4,"(1, 39, 14)",idx0:1_idx1:39_idx2:14,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+5,"(0, 39, 12)",idx0:0_idx1:39_idx2:12,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+6,"(1, 39, 13)",idx0:1_idx1:39_idx2:13,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+7,"(1, 39, 6)",idx0:1_idx1:39_idx2:6,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+8,"(2, 39, 7)",idx0:2_idx1:39_idx2:7,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+9,"(1, 39, 8)",idx0:1_idx1:39_idx2:8,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+10,"(1, 39, 5)",idx0:1_idx1:39_idx2:5,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+11,"(2, 39, 8)",idx0:2_idx1:39_idx2:8,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+12,"(0, 39, 9)",idx0:0_idx1:39_idx2:9,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+13,"(1, 39, 7)",idx0:1_idx1:39_idx2:7,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+14,"(2, 39, 9)",idx0:2_idx1:39_idx2:9,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+15,"(0, 39, 10)",idx0:0_idx1:39_idx2:10,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+16,"(1, 39, 10)",idx0:1_idx1:39_idx2:10,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+17,"(2, 39, 10)",idx0:2_idx1:39_idx2:10,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+18,"(0, 39, 7)",idx0:0_idx1:39_idx2:7,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+19,"(1, 39, 9)",idx0:1_idx1:39_idx2:9,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+20,"(2, 39, 11)",idx0:2_idx1:39_idx2:11,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+21,"(0, 39, 8)",idx0:0_idx1:39_idx2:8,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+22,"(2, 39, 5)",idx0:2_idx1:39_idx2:5,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+23,"(2, 39, 12)",idx0:2_idx1:39_idx2:12,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+24,"(0, 39, 13)",idx0:0_idx1:39_idx2:13,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+25,"(1, 39, 12)",idx0:1_idx1:39_idx2:12,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+26,"(2, 39, 6)",idx0:2_idx1:39_idx2:6,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+27,"(2, 39, 13)",idx0:2_idx1:39_idx2:13,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+28,"(0, 39, 14)",idx0:0_idx1:39_idx2:14,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
+29,"(0, 39, 5)",idx0:0_idx1:39_idx2:5,ghbheadcn,0.0,~  pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a  ~
