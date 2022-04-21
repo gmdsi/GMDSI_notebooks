@@ -33,7 +33,7 @@ if clear:
 os.chdir(cwd)
 
 os.chdir("part2_da")
-os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=180000 --allow-errors --inplace freyberg_da_run.ipynb")
+os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800000 --allow-errors --inplace freyberg_da_run.ipynb")
 os.system("jupyter nbconvert --to pdf freyberg_da_run.ipynb")
 if clear:
     os.system("jupyter nbconvert --ClearOutputPreprocessor.enabled=True --allow-errors --inplace freyberg_da_run.ipynb")
