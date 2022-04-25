@@ -1,0 +1,34 @@
+BEGIN options
+  DIGITS  10
+  PRINT_INPUT
+END options
+
+BEGIN continuous  FILEOUT  heads.csv
+  arrobs_head_k:2_i:2_j:15    HEAD  3 9 48
+  arrobs_head_k:2_i:2_j:9     HEAD  3 9 30
+  arrobs_head_k:2_i:3_j:8     HEAD  3 12 27
+  arrobs_head_k:2_i:9_j:1     HEAD  3 30 6
+  arrobs_head_k:2_i:13_j:10   HEAD  3 42 33
+  arrobs_head_k:2_i:15_j:16   HEAD  3 48 51
+  arrobs_head_k:2_i:21_j:10   HEAD  3 66 33
+  arrobs_head_k:2_i:22_j:15   HEAD  3 69 48
+  arrobs_head_k:2_i:24_j:4    HEAD  3 75 15
+  arrobs_head_k:2_i:26_j:6    HEAD  3 81 21
+  arrobs_head_k:2_i:29_j:15   HEAD  3 90 48
+  arrobs_head_k:2_i:33_j:7     HEAD  3 102 24
+  arrobs_head_k:2_i:34_j:10    HEAD  3 105 33
+  arrobs_head_k:0_i:2_j:15    HEAD  1 9 48
+  arrobs_head_k:0_i:2_j:9     HEAD  1 9 30
+  arrobs_head_k:0_i:3_j:8     HEAD  1 12 27
+  arrobs_head_k:0_i:9_j:1     HEAD  1 30 6
+  arrobs_head_k:0_i:13_j:10   HEAD  1 42 33
+  arrobs_head_k:0_i:15_j:16   HEAD  1 48 51
+  arrobs_head_k:0_i:21_j:10   HEAD  1 66 33
+  arrobs_head_k:0_i:22_j:15   HEAD  1 69 48
+  arrobs_head_k:0_i:24_j:4    HEAD  1 75 15
+  arrobs_head_k:0_i:26_j:6    HEAD  1 81 21
+  arrobs_head_k:0_i:29_j:15   HEAD  1 90 48
+  arrobs_head_k:0_i:33_j:7     HEAD  1 102 24
+  arrobs_head_k:0_i:34_j:10    HEAD  1 105 33
+END continuous  FILEOUT  heads.csv
+
