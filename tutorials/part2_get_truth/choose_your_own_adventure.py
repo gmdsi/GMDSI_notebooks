@@ -474,6 +474,8 @@ def setup_pst():
     print(fobs)
     pst.pestpp_options['forecasts'] = forecasts
     pst.control_data.noptmax = 0
+    pst.pestpp_options["ies_parameter_ensemble"] = "prior_pe.jcb"
+    pst.pestpp_options["save_binary"] = True
     pst.write(os.path.join(template_ws, 'freyberg_mf6.pst'))
     pyemu.os_utils.run('pestpp-glm freyberg_mf6.pst', cwd=template_ws)
 
@@ -490,5 +492,15 @@ def setup_pst():
     pyemu.os_utils.run("pestpp-glm test.pst",cwd=template_ws)
 
 
+def run_prior_mc(t_d):
+    pst = pyemu.Pst(os.path.join(t_d,"freyberg_mf6.pst"))
+    pst.control_data.noptmax = -1
+    pst.pestpp_options["ies_num_reals"] = 20
+    pst.write(os.path.join(t_d,"freyberg_mf6.pst"))
+
+    pyemu.os_utils.start_workers(t_d,"pestpp-ies","freyberg_mf6.pst",num_workers=5,worker_root=".",master_dir="master_pmc")
+
+
 if __name__ == "__main__":
     setup_pst()
+    run_prior_mc("freyberg6_template")
