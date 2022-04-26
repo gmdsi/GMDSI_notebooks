@@ -22,15 +22,14 @@ if clear:
     os.system("jupyter nbconvert --ClearOutputPreprocessor.enabled=True --ClearMetadataPreprocessor.enabled=True --allow-errors --inplace freyberg_obs_and_weights.ipynb")
 os.chdir(cwd)
 
-os.chdir("part2_glm_1")
+os.chdir("part2_glm")
+# glm1
 os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=180000 --allow-errors --inplace freyberg_glm_1.ipynb")
 if pdf:
     os.system("jupyter nbconvert --to pdf freyberg_glm_1.ipynb")
 if clear:
     os.system("jupyter nbconvert --ClearOutputPreprocessor.enabled=True --ClearMetadataPreprocessor.enabled=True --allow-errors --inplace freyberg_glm_1.ipynb")
-os.chdir(cwd)
-
-os.chdir("part2_glm_2")
+# glm2
 os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=180000 --allow-errors --inplace freyberg_glm_2.ipynb")
 if pdf:
     os.system("jupyter nbconvert --to pdf freyberg_glm_2.ipynb")
