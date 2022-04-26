@@ -1,52 +1,55 @@
-#name: nbs continuous integration
-#
-#on: 
-#  #schedule:
-#  #  - cron: '0 8 * * *' # run at 8 AM UTC (12 am PST)
-#  push:
-#  #pull_request:    
-#    branches:    
-#      - dev
-#
-#jobs:
-#  run:
-#    runs-on: ${{ matrix.os }}
-#    timeout-minutes: 120
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        os: [ubuntu-latest, windows-latest , macos-latest] 
-#        python-version: [3.9] # [3.7, 3.8, 3.7, 3.6]
-#        run-type: [std]
-#        test-path: [
-#              "nb_tests.py", 
-#            ]
-#
-#   steps:
-#      - uses: actions/checkout@v2
-#      - uses: conda-incubator/setup-miniconda@v2
-#        with:
-#          activate-environment: gmdsitut
-#          environment-file: environment.yml
-#          python-version: 3.9
-#          auto-activate-base: false
-#      - shell: bash -l {0}
-#        run: |
-#          conda info
-#          conda list
-#      - name: run test nbs
-#        shell: bash -l {0}
-#        run: |
-#            python -m ./tests/nb_tests.py
+
 
 name: Tests
 
-on: [push, pull_request]
+on: 
+  #schedule:
+  #  - cron: '0 8 * * *' # run at 8 AM UTC (12 am PST)
+  push:  
+    branches:    
+      - dev
+
+#jobs:
+#  run:
+#    runs-on: [ubuntu-latest, windows-latest , macos-latest] 
+#    strategy:
+#      matrix:
+#        python-version: [3.9]
+#    name: py ${{ matrix.python-version }} Test on ${{ matrix.os }}
+#
+#  steps:
+#    - uses: actions/checkout@v2
+#    - uses: conda-incubator/setup-miniconda@v2
+#      with:
+#        activate-environment: gmdsitut
+#        environment-file: environment.yml
+#        python-version: 3.9
+#        auto-activate-base: false
+#    - shell: bash -l {0}
+#      run: |
+#        conda info
+#        conda list
+#    - name: run test nbs
+#      shell: bash -l {0}
+#      run: |
+#          python -m ./tests/nb_tests.py
 
 jobs:
-  run:
-    runs-on: [ 'ubuntu-latest', 'windows-latest' ]
+  build:
     strategy:
       matrix:
-        php-versions: ['7.3', '7.4', '8.0', '8.1']
-    name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.os }}
+        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        python-version: [3.9]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Miniconda
+        uses: goanpeca/setup-miniconda@v1
+        with:
+          auto-update-conda: true
+          auto-activate-base: false
+          miniconda-version: 'latest'
+          python-version: ${{ matrix.python-version }}
+          environment-file: environment.yml
+          activate-environment: gmdsitut
