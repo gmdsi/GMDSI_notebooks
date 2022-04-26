@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>intro_to_regression</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>freyberg_pest_setup</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 
 
@@ -13971,376 +13971,48 @@ a.anchor-link {
 
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Introduction-to-Regression">Introduction to Regression<a class="anchor-link" href="#Introduction-to-Regression">&#182;</a></h1><p>This tutorial proves an overview of linear regression. It illustrates fitting a polynomial to noisy data, including the role of SSE (reponse curve), degrees of freedom, the gradient of that surface (Jacobian) and overfitting.</p>
-<p>We use a very simple model (a polynomial function) to illustrate these core concepts and the maths underpinning them. When the models get more complicated, we will need more powerfull tools (i.e. PEST/PEST++). However, many of the underlying concepts will be similar.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scipy.optimize</span> <span class="k">as</span> <span class="nn">spo</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">regression_helper</span> <span class="k">as</span> <span class="nn">rh</span>
-<span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">widgets</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="1.-First-cook-up-some-data">1. First cook up some data<a class="anchor-link" href="#1.-First-cook-up-some-data">&#182;</a></h3><p>In the tutorial folder there is a file named <code>regression_helper.py</code> that we have imported as <code>rh</code>. It contains functions used throught this notebook. You do not need to know the details of those functions, merely to follow the ideas discussed herein.</p>
-<p>We are going to generate some data using the function <code>rh.data_cooker()</code>. This function sets a range of x-values, then makes a "true" set of y-values using a second degree polynomial (e.g. <code>best_degree=2</code>).</p>
-<p>The general form of the polynomial is:</p>
-<p>$y=ax^2 + bx + c$</p>
-<p>We set $c=0$ for our purposes so that we have two free parameters: $a$ and $b$. Values of $y$ are observations. The function also adds noise to the "true" observations.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">xplot</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">poly_func</span><span class="p">,</span> <span class="n">polypars</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">data_cooker</span><span class="p">()</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Let's plot this data. The <code>rh.plot_truth()</code> function conveniently does this for us.</p>
-<p>The blue line is the "true" model. Think of this as reality.</p>
-<p>Orange dots are observations of reality. They represent what we can measure. For example, in a groundwater context, these would be things such as water levels and contaminant concentrations. Measurements do not all coincide with the blue line because of "noise". Noise can be caused by errors when taking or processing a measurement.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">rh</span><span class="o">.</span><span class="n">plot_truth</span><span class="p">(</span><span class="n">xplot</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y_data</span><span class="p">,</span> <span class="n">poly_func</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="2.-Build-a-Model">2. Build a Model<a class="anchor-link" href="#2.-Build-a-Model">&#182;</a></h3><p>We are going to construct a model with which we hope to explain the "measured" data. The intention is to use this model to subsequently make a prediction.</p>
-<p>Our model is a 2nd degree polynomial function (i.e. it has three variables). In this scenario we actualy know the number of unkown parameters that exist in "reality". Thus, in principle, it is possible to build a perfect model.</p>
-<p>We will use the Numpy <code>poly1d()</code> class to generate a polynomial function as our model. We specified the coeficient $c$ as being equal to zero. Coeficients $a$ and $b$ are unkown. In the example below, we specify a "first-guess" for $a$ and $b$ as -1 and 0.5, respectively.</p>
-<p>We can then use the <code>rh.plot_truth()</code> function to display our model with measured data and the truth.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-<span class="n">b</span> <span class="o">=</span> <span class="mf">0.5</span>
-<span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span> 
-
-<span class="n">rh</span><span class="o">.</span><span class="n">plot_truth</span><span class="p">(</span><span class="n">xplot</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y_data</span><span class="p">,</span> <span class="n">poly_func</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="3.-Measure-Model-to-Measurement-Fit">3. Measure Model-to-Measurement Fit<a class="anchor-link" href="#3.-Measure-Model-to-Measurement-Fit">&#182;</a></h3><p>History-matching (and calibration) are essentialy a search for parameters which allow a model to "better" fit a set of measurement data. This is acomplished through minimizing a so called "objective function" (often displayed as Phi, $\Phi$). The objective function can be defined in many ways. Perhaps the most common is the “<strong>sum of squared weighted differences (or residuals)</strong>” between model outputs and field measurements:</p>
-<p>$\Phi=\sum_{i=1}^{NPAR}\left[w_{hi}(y_{i}-m\left(x_{i}\right)\right)]^{2}$</p>
-<p>where:</p>
-<ul>
-<li>$y_i$ is the $i^{th}$ observation.</li>
-<li>$m\left(x_i\right)$ is the modeled equivalent to the $i^{th}$ observation.</li>
-<li>$w_{hi}$ is the weight assigned to the observation.</li>
-</ul>
-<p><strong>Residuals</strong>, $(y_{i}-m\left(x_{i}\right))$, are the difference between measured observations and the corresponding model outputs. For example, the difference between heads collected at a well and the simulated value of head at the corresponding location in a model. Or, in our current case, the difference between the orange dots and the black line at the same location along the x-axis.</p>
-<p>Residuals for our polynomial model are calculated and displayed below:</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="c1"># residuals = measured values - modelled values</span>
-<span class="k">def</span> <span class="nf">errfun</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">):</span>
-    <span class="n">residuals</span> <span class="o">=</span> <span class="n">y_data</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">([</span><span class="o">*</span><span class="n">pars</span><span class="p">,</span> <span class="mi">0</span><span class="p">])(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">residuals</span>
-
-<span class="c1"># run the function with values of a,b defined earlier</span>
-<span class="n">residuals</span> <span class="o">=</span> <span class="n">errfun</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">],</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">)</span>
-
-<span class="c1"># plot residuals on the x-axis</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">residuals</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;residual&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><strong>Weights</strong>, $w_{hi}$, are applied to this residual to increase or decrease the contribution of individual observations to the total objective function. Ideally weights are assigned to give greater relevance to observations that have less noise, or are less uncertain. In practice, weighting strategies usually need to be more nuanced and will often reflect a quantitative measure of a modellers judgment as to which observations are most relevant to inform parameter that affect the prediction of interest. For the purposes of this tutorial, we will assume uniform weights and these will play no further role herein.</p>
-<p>So! Residuals are calculated, multiplied by a weight to adjust their relative contributions, then squared to make all residuals positive. Finally all residuals are summed to determine the value of the <strong>objective function</strong> ($\Phi$). Below we implement the equation described previously as a function.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">calc_sse</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">):</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">([</span><span class="n">pars</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pars</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">])</span> 
-    <span class="c1"># the sum of squared residuals (not weighted)</span>
-    <span class="n">sse</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="n">y_data</span> <span class="o">-</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">sse</span>
-
-<span class="n">phi_0</span> <span class="o">=</span> <span class="n">calc_sse</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">],</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Phi =&#39;</span><span class="p">,</span><span class="n">phi_0</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><strong>History-Matching</strong> is achieved by minimizing the value of this objective function. <strong>Calibration</strong> is achieved by finding the <em>unique</em> solution which minimizes the objective function.</p>
-
-</div>
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="4.-The-Response-Surface">4. The Response Surface<a class="anchor-link" href="#4.-The-Response-Surface">&#182;</a></h3><p>Now, we can use $\Phi$ to evaluate the <strong>response surface</strong>. In other words, "how $\Phi$ changes with changes in parameter values".</p>
-<p>The function <code>rh.plot_sse()</code> calculates and plots $\Phi$ for a range of values of the two parameters ($a$ and $b$). Inspecting the plots below allow us to idenitfy the values of $a$ and $b$ where $\Phi$ is smallest.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">plot_sse</span><span class="p">(</span><span class="n">polypars</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Or, since <code>python</code> is slick, we can make a contour plot. From this plot we can see that $a$ and $b$ are not independent. The value of $b$ that provides the "best fit" depends on what value of $a$ is considered, and vice versa.</p>
-<p>However, there is a "best fit". That is the point on this (two-dimensional) surface at which $\Phi$ is smallest. (Finding that point is the goal of calibration.) This is easy to visualize for a two-dimensional problem. As we move into higher dimensions, things get a bit more challenging. However, the concepts are similar.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">SSE_AB</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">contour_sse</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="5.-Fit-a-Polynomial-Function">5. Fit a Polynomial Function<a class="anchor-link" href="#5.-Fit-a-Polynomial-Function">&#182;</a></h3><p>Now we will fit our polynomial model to minimize the misfit between measured and modelled values. Recall that we are assuming a polynomial of the same degree as was used to generate the data (e.g. 2 unkown parameters).</p>
-<p>We will use the least squares method, as implemented in <code>scipy.optimize</code> package, to minimize the <code>errfun()</code> function that we wrote earlier. (Recall that <code>errfun()</code> calculates the residuals between modelled and "measured" values for our polynomial function.)</p>
-<p>Essentialy, the optimizer will iteratively adjust the value of each parameter ($a$ and $b$) in turn. By comparing the effect of parameter changes on the change in objective function ($\Phi$), it calculates the slope of the objective function surface. From this it determines the direction in parameter space to take in order to head towards the minimum value of the objective function. It does this untill it reaches some user defined criteria to stop (usualy when improvements in $\Phi$ become small).</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="c1"># fit the polynomial using scipy.optimize.least_squares()</span>
-<span class="n">sol</span> <span class="o">=</span> <span class="n">spo</span><span class="o">.</span><span class="n">least_squares</span><span class="p">(</span><span class="n">errfun</span><span class="p">,[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y_data</span><span class="p">))</span>
-<span class="n">y_fit_pars_best</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">sol</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-
-<span class="c1"># the best fit parameters for our polynomial</span>
-<span class="n">y_fit_pars_best</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>As we can see, $\Phi$ is reduced:</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="c1"># calculate Phi with calibrated model</span>
-<span class="n">phi_calib</span> <span class="o">=</span> <span class="n">calc_sse</span><span class="p">(</span><span class="n">y_fit_pars_best</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">)</span>
-
-<span class="c1"># reduction in Phi</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Initial Phi: </span><span class="si">{</span><span class="n">phi_0</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Minimum Phi: </span><span class="si">{</span><span class="n">phi_calib</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;% of initial Phi: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">phi_calib</span><span class="o">/</span><span class="n">phi_0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> %&#39;</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>And if we plot modelled values with the best fit parameters:</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="c1"># construct the model with best fit parameteres</span>
-<span class="n">calib_model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">y_fit_pars_best</span><span class="p">)</span> 
-
-<span class="c1"># plot </span>
-<span class="n">rh</span><span class="o">.</span><span class="n">plot_truth</span><span class="p">(</span><span class="n">xplot</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y_data</span><span class="p">,</span> <span class="n">poly_func</span><span class="p">,</span> <span class="n">calib_model</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>So how well did we do? Let's compare the "true" values of $a$ and $b$ with the "best fit" values.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;True parameters are:              a=</span><span class="si">{0:.4f}</span><span class="s1">, b=</span><span class="si">{1:.4f}</span><span class="s1">, c=</span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">polypars</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The best-estimate parameters are: a=</span><span class="si">{0:.4f}</span><span class="s1">, b=</span><span class="si">{1:.4f}</span><span class="s1">, c=</span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">y_fit_pars_best</span><span class="p">))</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="6.-The-Jacobian-(or-Sensitivity)-Matrix">6. The Jacobian (or Sensitivity) Matrix<a class="anchor-link" href="#6.-The-Jacobian-(or-Sensitivity)-Matrix">&#182;</a></h3><p>The Jacobian matrix, sometimes referred to as a sensitivity matrix, contains the gradients of parameter changes in regard to changes in values of observations. It is a matrix of dimensions ($m * n$), in which $m$ is the number of adjustable parameters and $n$ is the number of observations.</p>
-<p>For each parameter-observation combination, we can see how much the observation value changes due to a small change in the parameter. If $y$ are the observations and $x$ are the parameters, the equation for the $i^th$ observation with respect to the $j^th$ parameter is:</p>
-<h3 id="$%5Cfrac%7B%5Cpartial-y_i%7D%7B%5Cpartial-x_j%7D$">$\frac{\partial y_i}{\partial x_j}$<a class="anchor-link" href="#$%5Cfrac%7B%5Cpartial-y_i%7D%7B%5Cpartial-x_j%7D$">&#182;</a></h3><p>This can be approximated by finite differences as :</p>
-<h3 id="$%5Cfrac%7B%5Cpartial-y_i%7D%7B%5Cpartial-x_j%7D-%5Capprox-%5Cfrac%7By%5Cleft(x+%5CDelta-x-%5Cright)-y%5Cleft(x%5Cright)%7D%7B%5CDelta-x%7D$">$\frac{\partial y_i}{\partial x_j} \approx \frac{y\left(x+\Delta x \right)-y\left(x\right)}{\Delta x}$<a class="anchor-link" href="#$%5Cfrac%7B%5Cpartial-y_i%7D%7B%5Cpartial-x_j%7D-%5Capprox-%5Cfrac%7By%5Cleft(x+%5CDelta-x-%5Cright)-y%5Cleft(x%5Cright)%7D%7B%5CDelta-x%7D$">&#182;</a></h3><p>These provide information on how "sensitive" observations are to parameter changes. They can provide lots of usefull information, such as which parameters are more relevant for improving the fit with measured data or, perhaps more importantly, which parameters affect a simulated prediction.</p>
-<p><code>scipy.optimize.least_squares</code> provides a method to access a modified Jacobian matrix at the solution. Instead of changes for individual observations, here we can see how the "cost function" changes with changes in parameter values. Use the <code>rh.plot_jacobian()</code> function to display a graph of the cost function versus changes in parameter value.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">rh</span><span class="o">.</span><span class="n">plot_jacobian</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="7.-Make-a-Prediction">7. Make a Prediction<a class="anchor-link" href="#7.-Make-a-Prediction">&#182;</a></h3><p>Now let us use our model to make a prediction. Because we also know the "truth" we can compare our model prediction to the true value. The function <code>rh.plot_prediction()</code> plots the "truth", the data and the model simulated values. Values of the "sum of squared error" (SSE) for the calibration data and the prediction are also shown.</p>
-<p>As you can see, even though the model has the same degrees as the truth (i.e. the same numbers of parameters) and in principle is able to perfectly match "truth", the prediction has error. This error is introduced by trying to fit the model to observations that include "noise".</p>
-<p>(<em>Try restarting the notebook and running it again. As the random seed changes each time, you should see different values of SSE prediction. Try this a few times. Do you think you can predict how much error to expect?</em>)</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">rh</span><span class="o">.</span><span class="n">plot_prediction</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">poly_func</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">y_fit_pars_best</span><span class="p">))</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="8.-Over/Underfitting">8. Over/Underfitting<a class="anchor-link" href="#8.-Over/Underfitting">&#182;</a></h3><p>So far we have considered a scenario in which our model has the same (perfect) number of parameters as the "truth". Let's see what happens if we use less or more parameters (in our case, degrees of freedom in the polynomial function).</p>
-<p>The widget below allows you to interactively change the number of parameters in the model (see the sliding bar in the top left labeled <code>cdegree</code>).</p>
-<p>Both plots show the same thing. The only difference is that the scale on the y-axis of the plot on the right-hand side is static, so that you can always see a "close-up" of the measured data. The blue line shows the "truth. The black line shows the model "simulated" values. Orange dots are measured data. The true and simulated values of a prediction are shown with a green circle and red X, respectively.</p>
-<p>Model values are updated whenever you shift the slider. (In the background a new model is "calibrated" and the new values are displayed.) Above the plot two values are shown:</p>
+<h1 id="A-Whirlwind-Introduction-to-PEST(++)">A Whirlwind Introduction to PEST(++)<a class="anchor-link" href="#A-Whirlwind-Introduction-to-PEST(++)">&#182;</a></h1><p>In this notebook we introduce the automated parameter estimation tools PEST and PEST++. This introduction is far from comprehensive. Our goal here is to provide you the basics to understand the "plumbing" of how PEST interacts with a "model".</p>
+<p>Recall that, for all its sophistication, automated parameter estimation software does the same things as a modeler does during manual trial-and-error.  It (1) assigns best guess parameter values, (2) runs the model, (3) compares model outputs to measured values, (4) if model-to-measurment fit is inadequate, it adjusts parameter values and repeats the process. Once model-to-meareument fit ceases to improve, it stops. As is implied by the name, all of these steps must be automated. All of the decision criteria must also be quantified and are recorded, making the process transparent and reproducible.</p>
+<p>Here is a flow chart of manual trial-and-error history matching from <em>Applied Groundwater Modeling (2nd edition)</em> by Anderson et al. (2015):</p>
+<p><img src="figs\Fig9.1_manual_t&e.png" style="float: center"></p>
+<p>Compare this to the full overdetermined parameter estimation flow chart:</p>
+<p><img src="figs\Fig9.9_full_overdetermined_PE_flowchart.png" style="float: center"></p>
+<p>To be more specific, in the blue box in Figure 9.9 above there are certain steps that occur before and after each forward model run that PEST does.  They exactly equate to what a manual trial-and-error calibration does, but PEST does it for you! Here are the steps that happen:</p>
+<p><img src="figs\Fig9.8_PE_flowchart.png" style="float: center"></p>
+<h3 id="1.-The-PEST-Input-Dataset">1. The PEST Input Dataset<a class="anchor-link" href="#1.-The-PEST-Input-Dataset">&#182;</a></h3><p>PEST and PEST++ are called "universal" inverse codes because they can be bolted on the outside of any model.  Well, that is, any model they can talk to and run, which means the model needs to meet these two criteria:</p>
 <ol>
-<li>the absolute error between the true and simulated prediction;</li>
-<li>everyone's favourite satistic of "good-fit", the coefficient of determination $R^2$</li>
+<li>The model input and output are ASCII text files or can be converted to text files.</li>
+<li>The model can be run at the command line without user intervention (also known as "batch mode").</li>
 </ol>
-<p>Play around with the slider.</p>
-<p>As you increase the number of parameters, you should note that $R^2$ improves (increases). But what happens to the prediction error? What do you think, is $R^2$ a good measure of a model's ability to make a good prediction? What if we use less parameters? Does that make for a better prediction?</p>
+<p>In this exercise we will get under the hood and see how PEST communicates with the model. To do all of this we need to build a PEST input dataset, which is comprised of three file types:</p>
+<ul>
+<li>template files,</li>
+<li>instruction files, and a</li>
+<li>PEST control file.</li>
+</ul>
+<p>Whenever PEST runs a model, it must first write parameter values to model input files. PEST requires
+template files in order to know how to write model input files in ways that the model expects. By
+convention, template files are provided with an extension of “.tpl”. A unique template file is required for each model input file that contains parameters which PEST must adjust.</p>
+<p>After running the model, PEST must read observations from model output files. PEST requires instruction files in order to know where to find observation values in the output files. By convention, instruction files are provided with an extension ".ins". A single instruction file is required for each model output file which PEST must read.</p>
+<p>For any particular PEST run there is only one PEST control file. As is implied by the name, the information in this file "controls" PEST behaviour. This file contains information on how PEST decides to update parameters, whether the fit is "good enough", where model input and output files are located, how to run the model and so on. The control file is divided into sections. Each section has a specifc format and layout in which variables can be included. Many of these variables can be assigned with default values and will only require adjustment in specifc cases. We will discuss the more pertinent (or common) ones as we progress through the various tutorials. The PEST and PEST++ user manuals provide further detail. Users are encouraged to take the time to read these documents.</p>
+<p>Most groundwater modelling graphical user interfaces (GUIs) support construction of PEST input
+datasets of varying complexity. In many cases, PEST setup achieved in this way is fit for purpose.
+However, no GUI is able to cater for every conceivable history-matching context. Hence there are
+many contexts in which a user may need to construct their own PEST input dataset. Doing so in a programatic environment makes this process automatable, replicable and much less painfull. <code>pyEMU</code> provides a <code>python</code> based interface that facilitates PEST-based workflows.  In this tutorial we will start by construting some of the PEST dataset "manually" so that you become familiar with what goes on in the background. Then, we will begin to introduce the use of <code>pyEMU</code>. Other tutorials provide general overview to <code>pyEMU</code> (see the "intro to pyemu" notebook) and demonstrate how to build a high-dimensional PEST interface from scratch (see the "freyberg pstfrom pest setup" notebook). But we are getting ahead of ourselves - we will get to those notebooks further along in the course.</p>
+<h3 id="1.2.-Additional-Resources">1.2. Additional Resources<a class="anchor-link" href="#1.2.-Additional-Resources">&#182;</a></h3><p>Providing details on all of the functionality and intricacies of PEST and PEST++ in a single tutorial is not feasible. Here we introduce you to the basics. The following are usefull resources for further reading:</p>
+<ul>
+<li>GMDSI tutorials on using PEST(++) in a non-programatic workflow: <a href="https://gmdsi.org/education/tutorials/">https://gmdsi.org/education/tutorials/</a> </li>
+<li>The PEST manual: <a href="https://pesthomepage.org/documentation">https://pesthomepage.org/documentation</a></li>
+<li>The PEST book: <a href="https://pesthomepage.org/pest-book">https://pesthomepage.org/pest-book</a></li>
+<li>PEST tutorials: <a href="https://pesthomepage.org/tutorials">https://pesthomepage.org/tutorials</a></li>
+<li>The PEST++ user manual: <a href="https://github.com/usgs/pestpp/tree/master/documentation">https://github.com/usgs/pestpp/tree/master/documentation</a></li>
+</ul>
+<h3 id="1.3.-Tutorial-Objectives">1.3. Tutorial Objectives<a class="anchor-link" href="#1.3.-Tutorial-Objectives">&#182;</a></h3><ol>
+<li>During this tutorial we'll spend time on "the plumbing" that allows PEST to manipulate model input and output files (shown in the 1st and 3rd box in Figure 9.8).  </li>
+<li>And - we'll run PEST++!</li>
+<li>And we'll see how to include forecasts in our PEST runs</li>
+</ol>
+<h3 id="1.4.-Admin">1.4. Admin<a class="anchor-link" href="#1.4.-Admin">&#182;</a></h3><p>We have provided some pre-cooked PEST dataset files, wrpaped around the modeified Freyberg model. The functions in the next cell import required dependencies and prepare a folder for you. This folder contains the model files and a preliminary PEST setup. Run the cells, then inspect the new folder named "pest_files" which has been created in your tutorial directory. (Just press shift-enter to run the cells).</p>
 
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
@@ -14349,7 +14021,37 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">rh</span><span class="o">.</span><span class="n">plot_widget</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y_data</span><span class="p">,</span> <span class="n">y_fit_pars_best</span><span class="p">,</span> <span class="n">poly_func</span><span class="p">)</span>
+<div class=" highlight hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span> 
+<span class="kn">import</span> <span class="nn">pyemu</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span><span class="p">;</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+<span class="c1"># import pre-prepared convenience functions</span>
+<span class="kn">import</span> <span class="nn">herebedragons</span> <span class="k">as</span> <span class="nn">hbd</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="c1"># the pest files folder</span>
+<span class="n">tmp_d</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;pest_files&#39;</span><span class="p">)</span>
+
+<span class="c1"># run our convenience functions to prepare the PEST and model folder</span>
+<span class="n">hbd</span><span class="o">.</span><span class="n">prep_pest</span><span class="p">(</span><span class="n">tmp_d</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14360,11 +14062,11 @@ a.anchor-link {
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>So as you can see, increasing parameters to improve the fit does not mean that the prediction is better. But reducing them does not necessarily help either.</p>
-<p>The two plots below illustrate this. Both plots illustrate how model error changes with the number of adjustable parameters. The blue line plots error in regard to historical data. The red line plots error in regard to the prediction.</p>
-<p>"<strong>Data error</strong> decreases with increasing number of parameters. However, <strong>prediction error</strong> increases after the ideal number of parameters is surpassed. This is deemed <strong>overfitting</strong>. More parameters mean the model has more flexibility to fit the measured data. But the measured data has noise! Effectively, after a certain point, we are just improving the fit by making our model very good at simulating "noise".</p>
-<p><strong>Prediction error</strong> is minimized when we have the "correct" number of parameters (in this case, two). Using less parameters results in a worse fit with measured data, as well as greater prediction error. This is deemed <strong>underfitting</strong>. In this case the model does not have sufficient freedom to replicate true behaviour.</p>
-<p>Using too-few parameters in a model "hard wires" in the model's inability to represent system behaviour. Using too many does not. In practice, when simulating groundwater systems, our models will never have more parameters than exist in reality. Thus, we will always be below the "true" optimal number of parameters. Overfitting in this case becomes a matter of having more adjustable parameters than measured data. During subsequent tutorials we will explore how to handle this in practice.</p>
+<h3 id="1.5.-Reminder---the-modified-Freyberg-model">1.5. Reminder - the modified-Freyberg model<a class="anchor-link" href="#1.5.-Reminder---the-modified-Freyberg-model">&#182;</a></h3><p>Just a quick reminder of what the model looks like and what we are doing.</p>
+<p>It is a 3D model, with three layers. A river runs north-south, represented with the SFR package (green cells in the figure). On the southern border there is a GHB (cyan cells). No-flow cells are shown in black. Pumping wells are placed in the bottom layer (red cells).</p>
+<p>Time-series of measured heads are available at the locations marked with black X's. River flux is also measured at three locations (headwater, tailwater and gage; not displayed).</p>
+<p>The simulation starts with a steady state stress period, followed by twelve transient stress periods. These represent the historic period, for which measured data are available.</p>
+<p>A subsequent twelve transient stress periods representing a period in the future. Modelling is undertaken to assess selected forecasts during the simulated period.</p>
 
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
@@ -14373,21 +14075,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">rh</span><span class="o">.</span><span class="n">plot_error_tradeoff</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">poly_func</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">rh</span><span class="o">.</span><span class="n">plot_error_tradeoff_fine</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">poly_func</span><span class="p">)</span>
+<div class=" highlight hl-python"><pre><span></span><span class="n">hbd</span><span class="o">.</span><span class="n">plot_freyberg</span><span class="p">(</span><span class="n">tmp_d</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14398,10 +14086,265 @@ a.anchor-link {
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="9.-Final-Remarks">9. Final Remarks<a class="anchor-link" href="#9.-Final-Remarks">&#182;</a></h3><p>This notebook has been a very brief introduction to regression. This is intended as a primer, introducing a few fundamental concepts and terminology that play a role in environmental decision-support modelling. Subsequent tutorials will delve into further details as these apply to modelling of groundwater systems.</p>
-<p>Perhaps one of the main take aways should be <strong>just because a model has a good fit with measurement data, does not make it a good predictor!</strong></p>
+<p>In the previous tutorial on manual trial-and-error, we "manually" changed parameter values to get a good fit with measured data. We want PEST to this for us instead. To do so, we need to provide PEST with conduits that change a model input file and that extract model outputs after the model has been run.</p>
+<p><strong>In this tutorial you do not <em>have</em> to get your hands dirty. However, we recomend you do. We provide all the necessary files to advance through the tutorial without any user-input. However, getting to grips with how files are constructed and the inner-workings of PEST is often insightfull. Throught the notebook we will provide instructions to read and edit files manualy (yes, yes...we know...we will get back to good old python in due course). This will require the use of a text editor software. Generic text editors (e.g notepad on Windows) are sufficent, but you will benefit from more versatile software such as Notepad++, UltraEdit, etc. There are many free options available online.</strong></p>
+<h3 id="2.-Template-Files">2. Template Files<a class="anchor-link" href="#2.-Template-Files">&#182;</a></h3><p>Template files are used to create model input. Template files simply replace parameter numerical values with a code variable, named in the PEST Control File.</p>
+<p>There needs to be one template file <strong>for each model</strong> input file that has parameters that we want PEST to estimate. PEST will read in each template file,  use it as a template to substitute its updated parameter value, then write one model input file for each template file it read.</p>
+<p>In the PEST control file we specify each template file <strong>and</strong> the associated model model input file we want PEST to create after it has updated estimates for the parameters on separate lines. So, say we had a MODFLOW input file named 'my_aquifer.lpf' for which we made a template file 'my_aquifer_lpf.tpl'. In the "model input/output" section of the PEST control file there will be a line containing this:</p>
+<blockquote><p><code>my_aquifer_lpf.tpl               my_aquifer.lpf</code></p>
+</blockquote>
+<p>Navigate to the tutorial folder (e.g. in a file manager application, such as Windows Explorer). There should be a new folder there named <code>pest_files</code>. In that folder, you will find a PEST control file named <code>freyberg.pst</code>. Open it in a text editor and find the template (tpl) files listed in the <code>*   model input/output</code> section. Open one of these template files in a text editor and take a look.</p>
+<p>You should see four lines, each with a file name pair. They should look something like this:</p>
+<blockquote>
+<pre><code>freyberg6.npf_k_layer1.tpl freyberg6.npf_k_layer1.txt
+freyberg6.npf_k_layer2.tpl freyberg6.npf_k_layer2.txt
+freyberg6.npf_k_layer3.tpl freyberg6.npf_k_layer3.txt
+freyberg6.rch.tpl freyberg6.rch.txt</code></pre>
+</blockquote>
+<p>The first file name in each row is a template file. The second is the corresponding model input file. Open up the two files named in the first row in your text editor software and compare them.</p>
+<h3 id="2.1.-Rules-for-constructing-TPL-Files">2.1. Rules for constructing TPL Files<a class="anchor-link" href="#2.1.-Rules-for-constructing-TPL-Files">&#182;</a></h3><ol>
+<li><p>The first line of the TPL file must identify that it is a template file by listing "<code>ptf ~</code>" where "<code>~</code>" is a "parameter delimiter" that tells PEST where a parameter sits in the file. We used a tilde here, but it can be any symbol. <strong>However</strong>, whatever delimiter symbol is listed in the first line must be used consistently throughout that template file.</p>
+</li>
+<li><p>The template file looks exactly like the original model input file <strong>BUT</strong> parameters are substituted for the  model input(s) that we want PEST to estimate.  Parameters are identified by surrounding the parameter name listed in the PEST control (.pst) file with the delimiter.  For the "<code>~</code>" delimiter that we used above, and a horizontal K parameter named "<code>hk1</code>" listed as a parameter in a PEST .pst file, the template file would have "<code>~   hk1 ~</code>" <strong>wherever that Kh value</strong> was listed in the original model input file.</p>
+<ul>
+<li>Note that the parameter name can be anywhere between the parameter delimiters</li>
+<li>PEST will fill the space up to and including the parameter delimiters with a value, so make them as wide as possible for maximum precision</li>
+</ul>
+</li>
+</ol>
+<p><strong>So!</strong></p>
+<p>"<code>~    hk1    ~</code>" will be replaced by the value for <code>hk1</code> specified by PEST. If that value is 3.14, PEST will write "<code>3.14000000000</code>" in its place.</p>
+<blockquote><p><strong>Note</strong>: 
+The PEST manual explains more detail about how you can control the writing of model input (e.g. scientific notation, double precision, etc.); see <a href="http://www.pesthomepage.org/Downloads.php">http://www.pesthomepage.org/Downloads.php</a> to get the most recent version of the manual.</p>
+</blockquote>
 
 </div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="2.2.-Checking-a-template-file-with-the-TEMPCHEK-utility">2.2. Checking a template file with the <code>TEMPCHEK</code> utility<a class="anchor-link" href="#2.2.-Checking-a-template-file-with-the-TEMPCHEK-utility">&#182;</a></h3><p>Let's check to see if this template file is correct using TEMPCHEK.</p>
+<p>TEMPCHEK is a handy PEST utility that allows us to error check our template files without having to do a full PEST run. You can see exactly what files and what order TEMPCHECK is expecting them by simply typing 'TEMPCHEK" at the command line (tempchek for Windows and ./tempchek for Mac).</p>
+<p>Open up a command line in the <code>pest_files</code> folder and run TEMPCHEK. You'll see:</p>
+<blockquote>
+<pre><code>TEMPCHEK Version 14.01. Watermark Numerical Computing.
+
+TEMPCHEK is run using the command:
+
+  tempchek tempfile [modfile [parfile]]
+
+where
+
+  "tempfile" is a PEST template file,
+  "modfile" is an [optional] model input file to be written by TEMPCHEK, and
+  "parfile" is an [optional] parameter value file.</code></pre>
+</blockquote>
+<p>Run <code>TEMPCHEK</code> <strong>on the template file listed in  <code>freyberg.pst</code></strong> and open the associated output file listed.  Although you could have seen this on a quick look at the template file, the TEMPCHEK output file is useful when you have many parameters. It will also notify you of any problems with the template file.</p>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="2.3.-Make-your-own-TPL-file">2.3. Make your own TPL file<a class="anchor-link" href="#2.3.-Make-your-own-TPL-file">&#182;</a></h3><p>Test your understanding. Construct your own template file and check it with TEMPCHEK.</p>
+<p>The easiest way to make a template file? Modify an existing input file. You can do for any moel input file. Suggest using <code>freyberg6.npf_k_layer1.txt</code> so you can compare to the provided template file.</p>
+<ol>
+<li>Open the input file in a text editor</li>
+<li>Make a copy of the input file with a new name and with .tpl extension (ex.: <code>test.tpl</code>; normaly we use the same file name as the input file, and just change the extension. Just make sure not to use the same name as we did.)</li>
+<li>Add a new line at the top of your tpl file to tell PEST that it is a template file and what the delimiter is</li>
+<li>Do a search and replace, subsituting the variable "hk1" surrounded by the delimiter you chose where appropriate</li>
+<li>Save the file and run TEMPCHEK </li>
+</ol>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="3.-Instruction-files">3. Instruction files<a class="anchor-link" href="#3.-Instruction-files">&#182;</a></h3><p>Similar to the template files, the names of instruction files and which model output files they should work on are listed after all the template files in the "* model input/output" section of the PEST control file.  As you might expect with the wide range of model output file variation, creating instruction files is slightly more complicated than creating template files. There is basically an internal scripting language for reading text files of model output, extracting the output of interest, and providing it directly to PEST.</p>
+<p>Open the PEST control file <code>freyberg.pst</code> in a text editor and find the Instruction (ins) file listed in the <code>model input/output</code> section. You should see something like:</p>
+<blockquote>
+<pre><code>heads.csv.ins heads.csv
+sfr.csv.ins sfr.csv</code></pre>
+</blockquote>
+<p>Open one of these instruction file and model output file pairs in a text editor and inspect them. As you can see, the model output files are CSVs. With the exception of the first column, the values in each row and column of the CSV are observations.</p>
+<h3 id="3.1.-Rules-for-constructing-INS-Files">3.1. Rules for constructing INS Files<a class="anchor-link" href="#3.1.-Rules-for-constructing-INS-Files">&#182;</a></h3><ul>
+<li>The first line on an .ins file must be "<code>pif ~</code>" where "<code>~</code>" is a "marker delimiter"--a symbol that can be used to identify text to search for.  It is expected on this first line but it's not always used.</li>
+<li>The scripting options are extensive but particular. Some options on how to navigate to the numerical data you want to read are:<ol>
+<li>Using a line advance.  PEST starts at the very top the model output file, and you have to move down 1 line to get to the first line that you see in the model output. You can tell PEST to move down the file <em><code>n</code></em> lines using the <code>l</code> character (=lowercase letter l) with a number.  So "<code>l1</code>" moves down one line, "<code>l3</code>" moves down 3 lines.  </li>
+<li>Using the marker delimiter, the INS file can search through a file until it finds a "primary marker". For example:<br>
+"<code>~VOLUMETRIC BUDGET FOR ENTIRE MODEL~</code>" can be used to search for budgets in a LST file<br>
+This is particularly well suited for output files (like a LST file) that have unpredictable lengths.  Note though that PEST will always start at the top of the file and go down, never up and never wrapping once it reaches the end.  This can be a problem when the order of some observations with respect to other observations is not consistent (e.g., some MODPATH output).  When searching for mutiple observations that may vary in order in an output file, it is easiest to have multiple instruction files open the same model output file multiple times so you are always starting at the top of the file (PEST does not mind). </li>
+<li>Next, you can search for a "secondary marker" within a line using the marker delimiter again. This navigates from the left of the line until the secondary marker is found.</li>
+<li>Once on the line you can specify which columns on a line to extract.  So a line in an instruction file that says <code>~101  138~ (depth_T2-90)46:58</code> means that PEST will look for <code>101  138</code> in the model output file (with the exact number of spaces between the two numbers) then extract column <code>46:58</code> to determine the model output that equates to the target observation <code>depth_T2-90</code> that is listed in the PEST control file.   </li>
+<li>Finally, you can read in whitespace-delimited numerical data using "<code>!</code>" around the observation name:<br>
+for example, if the output file is:  <blockquote>
+<pre><code>Output file from run 5
+Run date: 1/1/2012
+Run time: 24.3 hours
+Converged in 350 iterations
+Head Observations:
+H1=33.345 H2=45.34
+...</code></pre>
+<p>The instruction file would be like</p>
+
+<pre><code>pif ~
+ ~Head Observations~
+ l1 ~H1=~ !h1val! ~H2=~ !h2val!</code></pre>
+</blockquote>
+</li>
+</ol>
+</li>
+</ul>
+<p>These are only a few of the most commonly used options but more options, and more detail on these, are available in the PEST manual.</p>
+<h3 id="3.2.-Checking-a-template-file-with-the-INSCHEK-utility">3.2. Checking a template file with the <code>INSCHEK</code> utility<a class="anchor-link" href="#3.2.-Checking-a-template-file-with-the-INSCHEK-utility">&#182;</a></h3><p>Let's check an instruction file using <code>INSCHEK</code>, a handy utility that allows us to check our instruction files without having to do a full PEST run. You can see what INSCHEK is looking for by simply typing 'INSCHEK" at the command line.  You'll see:</p>
+<blockquote>
+<pre><code>INSCHEK Version 14.01. Watermark Numerical Computing.
+
+INSCHEK is run using the command:
+
+    INSCHEK insfile [modfile]
+
+where
+
+    "insfile" is a PEST instruction file, and
+    "modfile" is an [optional] model output file to be read by INSCHEK.</code></pre>
+</blockquote>
+<p>When succesful, <code>INSCHEK</code> writes an output file with the extension <code>.obs</code>, listing observation names that it found in the instruction file. If a model output file name was also specified, <code>INSCHEK</code> also writes the observation values it found in that file. This enables a quick check to verify that files have been setup correctly.</p>
+<p>Check the instruction files listed in <code>freyberg.pst</code> by running INSCHEK: 
+1) without the optional model output file/ look at output; and 
+2) with the optional model output file/look at output.</p>
+<p>(Note:  yes the author of PEST John Doherty knows how to spell! He could have made it INSCHECK but chose to be consistent across all his checking programs and for some, like TEMPCHEK above, proper spelling would not fit in the 8.3 filename format required at the time.  The good news is you only have one to remember - just think CHEK.)</p>
+<h3 id="3.3.-Make-your-own-INS-file">3.3. Make your own INS file<a class="anchor-link" href="#3.3.-Make-your-own-INS-file">&#182;</a></h3><p>Test your understanding. Try building your own instruction file. As for TPL files, it is sometimes easiest to start by using a model output as a template.</p>
+<p>Remember to alsways check the validity of the INS file using <code>INSCHEK</code>.</p>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="4.-The-Control-File">4. The Control File<a class="anchor-link" href="#4.-The-Control-File">&#182;</a></h3><p>So, the previous sections introduced the basics of how to construct TPL and INS files. This will come in handy when you need to build your own customized PEST input datasets.</p>
+<p>The last piece is the control file, which you have already seen (the file named <code>freyberg.pst</code>). We will not build this file from scratch here. In practice you rarely will. Most GUIs construct a template for you. <code>pyEMU</code> does the same. Both the PEST and PEST++ user manuals provide detailed descriptions of the control file and its various sections. We recommend reading them.</p>
+<p>Very briefly:</p>
+<p>The control file is divided into sections. Each section of the PEST control file must begin with a single line of text comprising the header to that section. This line must begin with a “*” character followed by a space.  The most commons sections which users are likely to access are:</p>
+<blockquote><p><code>* control data</code> - problem dimensions, mode of PEST operation, termination criteria, change limits and other control data</p>
+<p><code>* parameter group</code> - variables which govern the way in which finite-difference derivatives are calculated</p>
+<p><code>* parameter data</code> - parameter initial values, transformation status, bounds,
+groups, scales and offsets</p>
+<p><code>* observation groups</code> - lists observation groups, and provides names of files holding observation covariance matrices</p>
+<p><code>* observation data</code> - provides measured values of observations, weights and groups to which observations belong</p>
+<p><code>* model command line</code> - provides one or a number of commands used by PEST to run the model in the command line</p>
+<p><code>* model input/output</code> - as we have seen above, lists template and corresponding model input files as well as instruction and corresponding model output files</p>
+</blockquote>
+<p>Take a moment to explore the <code>freyberg.pst</code> control file. You will find all the parameters listed in the various TPL files referenced in the <code>* parameter data</code> section. You should also find all the observations listed in the INS files listed in the <code>* observation data</code> section.</p>
+<p>The <code>* model command line</code> section provides the command that PEST uses to run the model. Usually this would be a command to run a batch file or script. Here we have simply used the command to run MODFLOW6. You can see for yourself if it works by opening a command line in the "pest_files" folder, typing <code>mf6</code> and pressing <code>&lt;enter&gt;</code>. (This should run the model once.)</p>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="4.1.-Check-the-control-file-with-PESTCHEK">4.1. Check the control file with PESTCHEK<a class="anchor-link" href="#4.1.-Check-the-control-file-with-PESTCHEK">&#182;</a></h3><p>Just like TEMPCHEK and INSCHEK, we also have a handy utility that we run on our PEST setup before pulling the trigger.</p>
+<blockquote><p><strong>note</strong>: always check your PEST setup with PESTCHEK! Certainly do so before complaining to the developers that something isn't working properly.</p>
+</blockquote>
+<p>Just like TEMPCHEK and INSCHEK, you can see what PESTCHEK is looking for by simply typing <code>pestchek</code> (Windows) or <code>./pestchek</code> (Mac) at the command line.  If you did that you would see that we have to put this on the command line to check our PEST setup: <strong><code>pestchek freyberg_un.pst</code></strong> (if Windows) or <strong>./pestchek freyberg_un.pst</strong> (if Mac)</p>
+<p>If errors are indicated, PEST won't run so we have to correct them. Warnings, on the other hand, highlight potentially good information about what you have specified in the control file but they don't require a change to run. However, the warnings may guide your eyes to things you are not intending so always read them too.</p>
+<p>You should see something like:</p>
+<blockquote>
+<pre><code>Warnings -----&gt;
+NUMLAM is supplied as negative. This will be reset to positive. If Parallel
+ PEST or BEOPEST is used PARLAM will automatically be set to -9999.
+NOPTMAX provided as zero. No optimisation iterations will be carried out;
+ objective function and residuals will be recorded for initial parameter
+ estimates only.
+All parameters belonging to parameter group "rch" are either fixed or tied.
+MAXSING in the singular value decomposition section is greater than the
+ number of adjustable parameters.</code></pre>
+</blockquote>
+<p>If no errors are highlighted, let's go ahead and run PEST!</p>
+<h3 id="4.2.-Run-PEST-from-Command-Line">4.2. Run PEST from Command Line<a class="anchor-link" href="#4.2.-Run-PEST-from-Command-Line">&#182;</a></h3><p>From the command line run <strong><code>pestpp-glm freyberg.pst</code></strong> (Windows) or <strong><code>./pestpp-glm freyberg.pst</code></strong> (Mac).</p>
+<p>PEST++ should commence, run the model once and then stop (should take a ouple of seconds at most). You should see something like the following in your terminal:</p>
+<blockquote>
+<pre><code>-----------------------------------------
+    ---   OPTIMIZATION COMPLETE   ---
+ Reason for terminating PEST++ simulation: NOPTMAX criterion met
+ Summary of termination criteria:
+ NOPTMAX = 0 ;  NOPT at termination = 0
+ NPHINORED = 3 ;  NPHINORED at termination = 0
+ NRELPAR = 3; RELPARSTP = 0.01 ;  NRELPAR at termination = 0
+ PHIREDSTP = 0.01; NPHISTP = 3
+ NPHISTP lowest PHI's:
+
+FINAL OPTIMISATION RESULTS
+
+ Final phi                                           Total : 16916.9
+ Contribution to phi from observation group         "flux" : 0
+ Contribution to phi from observation group          "hds" : 16916.9</code></pre>
+</blockquote>
+<p>If you check the "pest_files" folder, you should see several new files. Open the one named "freyberg.rec". This is the PEST record file. It records lots of usefull information about the PEST run.</p>
+<p>If you scroll down to the end of the file you should see a line that says:</p>
+<blockquote><p><code>Number of forward model runs performed during optimization: 1</code></p>
+</blockquote>
+<p>As mentioned in the PESTCHEK warning, the control file we gave you has <code>NOPTMAX=0</code>, which means the model only is run once, and then PEST++ processes all the output and reports the objective function phi. So, not too exciting with only one run.  However, we <strong>always</strong> run with <code>NOPTMAX=0</code> first to "test the plumbing" of the template and instruction files, and to see if we like the contribution of observation groups to the total objective function. If we don't like the objective function distribution we can reweight, then re-run PEST++ with <code>NOPTMAX=0</code> again. (We will demonstrate this in a subsequent tutorial.)</p>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="4.3.-Finally---let's-get-a-best-fit-for-this-problem!">4.3. Finally - let's get a best fit for this problem!<a class="anchor-link" href="#4.3.-Finally---let's-get-a-best-fit-for-this-problem!">&#182;</a></h3><p>Now <strong>change <code>NOPTMAX</code> to a value = 20</strong> (<code>NOPTMAX</code> is the first number listed in the 9th line of the PEST control file).  You can see its location below, taken from Appendix 1 from SIR 2010-5169 we will be handing out:</p>
+<p><img src="figs\2010-5169_Appendix1_PST_file.png" style="float: center"></p>
+<p>The full listing of the PEST control file and a description of each variable is in Appendix 1. <strong><em>However, most of these you never will need to touch - the defaults are fine!</em></strong>  NOPTMAX, however, is one that you will routinely touch.</p>
+<p>Now run PESTCHEK again - note that the NOPTMAX=0 warning is now gone.</p>
+<p><strong>If no errors, run PEST++ again.</strong></p>
+<p>This will run parameter estimation on the model and will max out at 20 parameter upgrades. (This time it should take a couple of minutes.) You may have figured out by now, but NOPTMAX stands for <strong>N</strong>umber of <strong>OPT</strong>imization iterations <strong>MAX</strong>imum --cryptic variable names were the price one had to pay when computer RAM was exceedingly small!</p>
+<p>Check the <code>freyberg.rec</code> file again. What has changed? Try searching for "Final phi". How does it compare to the initial Phi (which we obtained earlier by running the modell only once)? It should be a lot smaller.</p>
+<blockquote>
+<pre><code>Final composite objective function 
+ Final phi                                           Total : 51.7655
+ Contribution to phi from observation group         "flux" : 0.000000
+ Contribution to phi from observation group          "hds" : 51.7655
+
+Number of forward model runs performed during optimization: 117</code></pre>
+</blockquote>
+<p>What about the best-fit parameters? There should be a file named <code>freyberg.par</code>. Open it in a text editor. These are the best parameter values which PEST has managed obtain. Note that all parameters in that were in the control data <code>* parameter data</code> section are listed here. However, only the "hk" parameter values have changed because all the others were specified as "fixed". How do these values compare to what you achieved through manual trial-and-error calibration?</p>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="5.-Moving-into-the-21st-Century---thinking-about-forecast-uncertainty">5. Moving into the 21st Century - thinking about forecast uncertainty<a class="anchor-link" href="#5.-Moving-into-the-21st-Century---thinking-about-forecast-uncertainty">&#182;</a></h3><p>Recall that in your freyberg_trial_and_error tutorial we were looking at the fit between the model and historical data, but also at a "forecast" of river flow. This forecast was in fact the observation named "headwater:732.0" (the simulated headwater during the last model stress-period).</p>
+<p>If there is <strong><em>one thing</em></strong> we want you to take away from this class it is this:</p>
+<p><strong>For most models there is a forecast/prediction that someone needs. Rather than waiting until the end of the project, the forecast should be entered into your thinking and workflow <strong>right at the beginning</strong>.</strong></p>
+<p>Open up <code>freberg.pst</code> in a text editor and look in the observation section. Find entry for the "headwater:732.0" observation. Note that the observation <strong>weight</strong> is zero. So, although we have included this "observatio" in the dataset, it does not in fact contribute to the objective function (it does not affect calibration). This is a nifty trick - it means we can put in forecasts <strong>and</strong> hypothetical observations even if we don't have measured values for them! More on this coming up so stay tuned!</p>
+<p>But wait a minute - how does PEST know we have a forecast and not a calibration data point? PEST++ made this very easy - simply add the forecasts as observations and list them in a ++forecasts section in the PEST control <code>.pst</code> file.  Find the <code>++forecasts</code> command. The <code>++</code> at the beginning means this input will <strong><em>only be seen by PEST++</em></strong>; if you use PEST it will be ignored.</p>
+<p>Let's open <code>freyberg.rec</code> in a text editor and look at the forecast uncertainty output reported at end of the .rec file.  Look also at the uncertainty reported for the "hk" conductivity parameters. (How exactly was that uncertainty calculated?  Ah, we'll get to that a little later)</p>
+<p>To recap:  you just added a forecast and got an estimate of the uncertainty by simply adding one line to the PEST++ control file!</p>
+<p><strong>Note:</strong> other PEST++ specific input options can be found at <a href="https://github.com/usgs/pestpp/documentation/pestpp_users_manual.md">https://github.com/usgs/pestpp/documentation/pestpp_users_manual.md</a>.  During this course we will touch on the most commonly used ones.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
 </div>
 </body>
 

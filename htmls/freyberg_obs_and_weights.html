@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>intro_to_regression</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>freyberg_obs_and_weights</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 
 
@@ -13971,116 +13971,40 @@ a.anchor-link {
 
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Introduction-to-Regression">Introduction to Regression<a class="anchor-link" href="#Introduction-to-Regression">&#182;</a></h1><p>This tutorial proves an overview of linear regression. It illustrates fitting a polynomial to noisy data, including the role of SSE (reponse curve), degrees of freedom, the gradient of that surface (Jacobian) and overfitting.</p>
-<p>We use a very simple model (a polynomial function) to illustrate these core concepts and the maths underpinning them. When the models get more complicated, we will need more powerfull tools (i.e. PEST/PEST++). However, many of the underlying concepts will be similar.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scipy.optimize</span> <span class="k">as</span> <span class="nn">spo</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">regression_helper</span> <span class="k">as</span> <span class="nn">rh</span>
-<span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">widgets</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="1.-First-cook-up-some-data">1. First cook up some data<a class="anchor-link" href="#1.-First-cook-up-some-data">&#182;</a></h3><p>In the tutorial folder there is a file named <code>regression_helper.py</code> that we have imported as <code>rh</code>. It contains functions used throught this notebook. You do not need to know the details of those functions, merely to follow the ideas discussed herein.</p>
-<p>We are going to generate some data using the function <code>rh.data_cooker()</code>. This function sets a range of x-values, then makes a "true" set of y-values using a second degree polynomial (e.g. <code>best_degree=2</code>).</p>
-<p>The general form of the polynomial is:</p>
-<p>$y=ax^2 + bx + c$</p>
-<p>We set $c=0$ for our purposes so that we have two free parameters: $a$ and $b$. Values of $y$ are observations. The function also adds noise to the "true" observations.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">xplot</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">poly_func</span><span class="p">,</span> <span class="n">polypars</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">data_cooker</span><span class="p">()</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Let's plot this data. The <code>rh.plot_truth()</code> function conveniently does this for us.</p>
-<p>The blue line is the "true" model. Think of this as reality.</p>
-<p>Orange dots are observations of reality. They represent what we can measure. For example, in a groundwater context, these would be things such as water levels and contaminant concentrations. Measurements do not all coincide with the blue line because of "noise". Noise can be caused by errors when taking or processing a measurement.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">rh</span><span class="o">.</span><span class="n">plot_truth</span><span class="p">(</span><span class="n">xplot</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y_data</span><span class="p">,</span> <span class="n">poly_func</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="2.-Build-a-Model">2. Build a Model<a class="anchor-link" href="#2.-Build-a-Model">&#182;</a></h3><p>We are going to construct a model with which we hope to explain the "measured" data. The intention is to use this model to subsequently make a prediction.</p>
-<p>Our model is a 2nd degree polynomial function (i.e. it has three variables). In this scenario we actualy know the number of unkown parameters that exist in "reality". Thus, in principle, it is possible to build a perfect model.</p>
-<p>We will use the Numpy <code>poly1d()</code> class to generate a polynomial function as our model. We specified the coeficient $c$ as being equal to zero. Coeficients $a$ and $b$ are unkown. In the example below, we specify a "first-guess" for $a$ and $b$ as -1 and 0.5, respectively.</p>
-<p>We can then use the <code>rh.plot_truth()</code> function to display our model with measured data and the truth.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-<span class="n">b</span> <span class="o">=</span> <span class="mf">0.5</span>
-<span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span> 
-
-<span class="n">rh</span><span class="o">.</span><span class="n">plot_truth</span><span class="p">(</span><span class="n">xplot</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y_data</span><span class="p">,</span> <span class="n">poly_func</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="3.-Measure-Model-to-Measurement-Fit">3. Measure Model-to-Measurement Fit<a class="anchor-link" href="#3.-Measure-Model-to-Measurement-Fit">&#182;</a></h3><p>History-matching (and calibration) are essentialy a search for parameters which allow a model to "better" fit a set of measurement data. This is acomplished through minimizing a so called "objective function" (often displayed as Phi, $\Phi$). The objective function can be defined in many ways. Perhaps the most common is the “<strong>sum of squared weighted differences (or residuals)</strong>” between model outputs and field measurements:</p>
-<p>$\Phi=\sum_{i=1}^{NPAR}\left[w_{hi}(y_{i}-m\left(x_{i}\right)\right)]^{2}$</p>
-<p>where:</p>
-<ul>
-<li>$y_i$ is the $i^{th}$ observation.</li>
-<li>$m\left(x_i\right)$ is the modeled equivalent to the $i^{th}$ observation.</li>
-<li>$w_{hi}$ is the weight assigned to the observation.</li>
+<h1 id="Formulating-the-Objective-Function-and-The-Dark-Art-of-Weighting">Formulating the Objective Function and The Dark Art of Weighting<a class="anchor-link" href="#Formulating-the-Objective-Function-and-The-Dark-Art-of-Weighting">&#182;</a></h1><p>The objective function expresses model-to-measurement misfit for use in the solution of an inverse problem through the <em>weighted squared difference between measured and simulated observations</em>. There is no formula for a universally "best approach" to formulate an objective function. However, the universal underlying principle is to ensure that as much information as possible is transferred to the parameters of a model, in as "safe" a way as possible (Doherty, 2015).</p>
+<p>What do we mean by "safe"? We mean that, in attempting to fit model outputs to measured observations, we should minimize the potential for model structural error to induce model parameters to take on values that compensate for model imperfections. When estimated parameters take on compensating roles, the potential for error in predictions may actually increase, rather than decrease, during the process of calibration (White et al. 2014). And we don't want that!</p>
+<p><strong>Observation Types</strong></p>
+<p>In most history matching contexts a “multicomponent” objective function is recommended. Each component of this objective function is calculated on the basis of different groups of observations or of the same group of observations processed in different ways. In a nut-shell, this means as many (useful!) types of observation as are available should be included in the parameter-estimation process. This does not <strong>just</strong> mean different "measurement types"! It also means teasing out components <em>within</em> a given measurement type. These "secondary" components often contain information that is otherwise lost or overshadowed.</p>
+<p><strong>Grouping</strong></p>
+<p>Using a multicomponent approach can extract as much information from an observation dataset as possible and transfer this information to estimated parameters. When constructing a PEST dataset, it is often usefull (and convenient) to group observations by type. This makes it easier to customize objective function design and track the flow of infromation from data to parameters (and subsequently to predictions). Ideally, each observation grouping should illuminate and constrain the parameter estimation related to a separate aspect of the system beiong modelled (Doherty and Hunt, 2010). For example, absolute values of heads may inform parameters that control horizontal flow patterns, whilst vertical diferences between heads in different aquifers may inform parameters that control vertical flow patterns.</p>
+<p><strong>Weighting</strong></p>
+<p>A user must decide how to weight observations before estimating parameters with PEST. In some cases, it is prudent to strictly weight observations based on the inverse of the standard deviation of measurement noise. Observations with higher credibility should, without a doubt, be given more weight than those with lower credibility. However, in many history-matching contexts, model defects are just as important as noise in inducing model-to-measurement misfit as field measurements. Some types of model outputs are more affected by model imperfections than others. Notably, the effects of imperfections on model output differences (whether spatial or temporal) are frequently less than their effects on raw model outputs.</p>
+<p>As a result, including measurement differences and corresponding model output differences in a calibration dataset can often improve a history-matching process. It can also be improved by dividing components of a measurement dataset into groups based on type and location, assigning these measurements to different observation groups, and ensuring that the contributions made by each of these groups to the original objective function are roughly the same. In the parameter estimation process, the information content of each of these groups is thus given equal weight. In other cases, accommodating the "structural" nature of model-to-measurement misfit is preferable (i.e. the model is inherently better at fitting some measurements than others).</p>
+<p>The PEST Book (Doherty, 2015) and the USGS published report "A Guide to Using PEST for Groundwater-Model Calibration" (Doherty et al 2010) go into detail on formulating an objective function and discuss common issues with certain data-types.</p>
+<p><strong>References and Recommended Reading:</strong></p>
+<blockquote><ul>
+<li>Doherty, J., (2015). Calibration and Uncertainty Analysis for Complex Environmental Models. Watermark Numerical Computing, Brisbane, Australia. ISBN: 978-0-9943786-0-6.</li>
+<li><div class="csl-entry">White, J. T., Doherty, J. E., &#38; Hughes, J. D. (2014). Quantifying the predictive consequences of model error with linear subspace analysis. <i>Water Resources Research</i>, <i>50</i>(2), 1152–1173. https://doi.org/10.1002/2013WR014767</div></li>
+<li><div class="csl-entry">Doherty, J., &#38; Hunt, R. (2010). <i>Approaches to Highly Parameterized Inversion: A Guide to Using PEST for Groundwater-Model Calibration: U.S. Geological Survey Scientific Investigations Report 2010–5169</i>. https://doi.org/https://doi.org/10.3133/sir20105169</div></li>
 </ul>
-<p><strong>Residuals</strong>, $(y_{i}-m\left(x_{i}\right))$, are the difference between measured observations and the corresponding model outputs. For example, the difference between heads collected at a well and the simulated value of head at the corresponding location in a model. Or, in our current case, the difference between the orange dots and the black line at the same location along the x-axis.</p>
-<p>Residuals for our polynomial model are calculated and displayed below:</p>
+</blockquote>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Recap:-the-modified-Freyberg-PEST-dataset">Recap: the modified-Freyberg PEST dataset<a class="anchor-link" href="#Recap:-the-modified-Freyberg-PEST-dataset">&#182;</a></h3><p>The modified Freyberg model is introduced in another tutorial notebook (see "freyberg intro to model"). The current notebook picks up following the "psfrom pest setup" notebook, in which a high-dimensional PEST dataset was constructed using <code>pyemu.PstFrom</code>. You may also wish to go through the "intro to pyemu" notebook beforehand.</p>
+<p>We will now address assigning observation target values from "measured" data and observation weighting prior to history matching.</p>
+<p>Recall from the "pstfrom pest setup" notebook that we included several observation types in the history matching dataset, namely:</p>
+<ul>
+<li>head time-series</li>
+<li>river gage time-series</li>
+<li>temporal differences between both heads and gage time-series</li>
+<li>vertical head differences</li>
+</ul>
+<p>We also included many observations of model outputs for which we do not have measured data. We kept these to make it easier to keep track of model outputs (this becomes a necessity when working with ensembles). We also included observations of "forecasts", i.e. model outputs of managment interest.</p>
+<p>The next couple of cells load necessary dependencies and call a convenience function to prepare the PEST dataset folder for you. This is the same dataset that was constructed during the "pstfrom pest setup" tutorial.</p>
+<p>Simply press <code>shift+enter</code> to run the cells.</p>
 
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
@@ -14089,291 +14013,19 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="c1"># residuals = measured values - modelled values</span>
-<span class="k">def</span> <span class="nf">errfun</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">):</span>
-    <span class="n">residuals</span> <span class="o">=</span> <span class="n">y_data</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">([</span><span class="o">*</span><span class="n">pars</span><span class="p">,</span> <span class="mi">0</span><span class="p">])(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">residuals</span>
-
-<span class="c1"># run the function with values of a,b defined earlier</span>
-<span class="n">residuals</span> <span class="o">=</span> <span class="n">errfun</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">],</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">)</span>
-
-<span class="c1"># plot residuals on the x-axis</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">residuals</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;residual&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><strong>Weights</strong>, $w_{hi}$, are applied to this residual to increase or decrease the contribution of individual observations to the total objective function. Ideally weights are assigned to give greater relevance to observations that have less noise, or are less uncertain. In practice, weighting strategies usually need to be more nuanced and will often reflect a quantitative measure of a modellers judgment as to which observations are most relevant to inform parameter that affect the prediction of interest. For the purposes of this tutorial, we will assume uniform weights and these will play no further role herein.</p>
-<p>So! Residuals are calculated, multiplied by a weight to adjust their relative contributions, then squared to make all residuals positive. Finally all residuals are summed to determine the value of the <strong>objective function</strong> ($\Phi$). Below we implement the equation described previously as a function.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">calc_sse</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">):</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">([</span><span class="n">pars</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pars</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">])</span> 
-    <span class="c1"># the sum of squared residuals (not weighted)</span>
-    <span class="n">sse</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="n">y_data</span> <span class="o">-</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">sse</span>
-
-<span class="n">phi_0</span> <span class="o">=</span> <span class="n">calc_sse</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">],</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Phi =&#39;</span><span class="p">,</span><span class="n">phi_0</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><strong>History-Matching</strong> is achieved by minimizing the value of this objective function. <strong>Calibration</strong> is achieved by finding the <em>unique</em> solution which minimizes the objective function.</p>
-
-</div>
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="4.-The-Response-Surface">4. The Response Surface<a class="anchor-link" href="#4.-The-Response-Surface">&#182;</a></h3><p>Now, we can use $\Phi$ to evaluate the <strong>response surface</strong>. In other words, "how $\Phi$ changes with changes in parameter values".</p>
-<p>The function <code>rh.plot_sse()</code> calculates and plots $\Phi$ for a range of values of the two parameters ($a$ and $b$). Inspecting the plots below allow us to idenitfy the values of $a$ and $b$ where $\Phi$ is smallest.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">plot_sse</span><span class="p">(</span><span class="n">polypars</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Or, since <code>python</code> is slick, we can make a contour plot. From this plot we can see that $a$ and $b$ are not independent. The value of $b$ that provides the "best fit" depends on what value of $a$ is considered, and vice versa.</p>
-<p>However, there is a "best fit". That is the point on this (two-dimensional) surface at which $\Phi$ is smallest. (Finding that point is the goal of calibration.) This is easy to visualize for a two-dimensional problem. As we move into higher dimensions, things get a bit more challenging. However, the concepts are similar.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">SSE_AB</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">contour_sse</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="5.-Fit-a-Polynomial-Function">5. Fit a Polynomial Function<a class="anchor-link" href="#5.-Fit-a-Polynomial-Function">&#182;</a></h3><p>Now we will fit our polynomial model to minimize the misfit between measured and modelled values. Recall that we are assuming a polynomial of the same degree as was used to generate the data (e.g. 2 unkown parameters).</p>
-<p>We will use the least squares method, as implemented in <code>scipy.optimize</code> package, to minimize the <code>errfun()</code> function that we wrote earlier. (Recall that <code>errfun()</code> calculates the residuals between modelled and "measured" values for our polynomial function.)</p>
-<p>Essentialy, the optimizer will iteratively adjust the value of each parameter ($a$ and $b$) in turn. By comparing the effect of parameter changes on the change in objective function ($\Phi$), it calculates the slope of the objective function surface. From this it determines the direction in parameter space to take in order to head towards the minimum value of the objective function. It does this untill it reaches some user defined criteria to stop (usualy when improvements in $\Phi$ become small).</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="c1"># fit the polynomial using scipy.optimize.least_squares()</span>
-<span class="n">sol</span> <span class="o">=</span> <span class="n">spo</span><span class="o">.</span><span class="n">least_squares</span><span class="p">(</span><span class="n">errfun</span><span class="p">,[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y_data</span><span class="p">))</span>
-<span class="n">y_fit_pars_best</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">sol</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-
-<span class="c1"># the best fit parameters for our polynomial</span>
-<span class="n">y_fit_pars_best</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>As we can see, $\Phi$ is reduced:</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="c1"># calculate Phi with calibrated model</span>
-<span class="n">phi_calib</span> <span class="o">=</span> <span class="n">calc_sse</span><span class="p">(</span><span class="n">y_fit_pars_best</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">)</span>
-
-<span class="c1"># reduction in Phi</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Initial Phi: </span><span class="si">{</span><span class="n">phi_0</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Minimum Phi: </span><span class="si">{</span><span class="n">phi_calib</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;% of initial Phi: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">phi_calib</span><span class="o">/</span><span class="n">phi_0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> %&#39;</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>And if we plot modelled values with the best fit parameters:</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="c1"># construct the model with best fit parameteres</span>
-<span class="n">calib_model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">y_fit_pars_best</span><span class="p">)</span> 
-
-<span class="c1"># plot </span>
-<span class="n">rh</span><span class="o">.</span><span class="n">plot_truth</span><span class="p">(</span><span class="n">xplot</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y_data</span><span class="p">,</span> <span class="n">poly_func</span><span class="p">,</span> <span class="n">calib_model</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>So how well did we do? Let's compare the "true" values of $a$ and $b$ with the "best fit" values.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;True parameters are:              a=</span><span class="si">{0:.4f}</span><span class="s1">, b=</span><span class="si">{1:.4f}</span><span class="s1">, c=</span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">polypars</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The best-estimate parameters are: a=</span><span class="si">{0:.4f}</span><span class="s1">, b=</span><span class="si">{1:.4f}</span><span class="s1">, c=</span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">y_fit_pars_best</span><span class="p">))</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="6.-The-Jacobian-(or-Sensitivity)-Matrix">6. The Jacobian (or Sensitivity) Matrix<a class="anchor-link" href="#6.-The-Jacobian-(or-Sensitivity)-Matrix">&#182;</a></h3><p>The Jacobian matrix, sometimes referred to as a sensitivity matrix, contains the gradients of parameter changes in regard to changes in values of observations. It is a matrix of dimensions ($m * n$), in which $m$ is the number of adjustable parameters and $n$ is the number of observations.</p>
-<p>For each parameter-observation combination, we can see how much the observation value changes due to a small change in the parameter. If $y$ are the observations and $x$ are the parameters, the equation for the $i^th$ observation with respect to the $j^th$ parameter is:</p>
-<h3 id="$%5Cfrac%7B%5Cpartial-y_i%7D%7B%5Cpartial-x_j%7D$">$\frac{\partial y_i}{\partial x_j}$<a class="anchor-link" href="#$%5Cfrac%7B%5Cpartial-y_i%7D%7B%5Cpartial-x_j%7D$">&#182;</a></h3><p>This can be approximated by finite differences as :</p>
-<h3 id="$%5Cfrac%7B%5Cpartial-y_i%7D%7B%5Cpartial-x_j%7D-%5Capprox-%5Cfrac%7By%5Cleft(x+%5CDelta-x-%5Cright)-y%5Cleft(x%5Cright)%7D%7B%5CDelta-x%7D$">$\frac{\partial y_i}{\partial x_j} \approx \frac{y\left(x+\Delta x \right)-y\left(x\right)}{\Delta x}$<a class="anchor-link" href="#$%5Cfrac%7B%5Cpartial-y_i%7D%7B%5Cpartial-x_j%7D-%5Capprox-%5Cfrac%7By%5Cleft(x+%5CDelta-x-%5Cright)-y%5Cleft(x%5Cright)%7D%7B%5CDelta-x%7D$">&#182;</a></h3><p>These provide information on how "sensitive" observations are to parameter changes. They can provide lots of usefull information, such as which parameters are more relevant for improving the fit with measured data or, perhaps more importantly, which parameters affect a simulated prediction.</p>
-<p><code>scipy.optimize.least_squares</code> provides a method to access a modified Jacobian matrix at the solution. Instead of changes for individual observations, here we can see how the "cost function" changes with changes in parameter values. Use the <code>rh.plot_jacobian()</code> function to display a graph of the cost function versus changes in parameter value.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">rh</span><span class="o">.</span><span class="n">plot_jacobian</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="7.-Make-a-Prediction">7. Make a Prediction<a class="anchor-link" href="#7.-Make-a-Prediction">&#182;</a></h3><p>Now let us use our model to make a prediction. Because we also know the "truth" we can compare our model prediction to the true value. The function <code>rh.plot_prediction()</code> plots the "truth", the data and the model simulated values. Values of the "sum of squared error" (SSE) for the calibration data and the prediction are also shown.</p>
-<p>As you can see, even though the model has the same degrees as the truth (i.e. the same numbers of parameters) and in principle is able to perfectly match "truth", the prediction has error. This error is introduced by trying to fit the model to observations that include "noise".</p>
-<p>(<em>Try restarting the notebook and running it again. As the random seed changes each time, you should see different values of SSE prediction. Try this a few times. Do you think you can predict how much error to expect?</em>)</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">rh</span><span class="o">.</span><span class="n">plot_prediction</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">poly_func</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">y_fit_pars_best</span><span class="p">))</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="8.-Over/Underfitting">8. Over/Underfitting<a class="anchor-link" href="#8.-Over/Underfitting">&#182;</a></h3><p>So far we have considered a scenario in which our model has the same (perfect) number of parameters as the "truth". Let's see what happens if we use less or more parameters (in our case, degrees of freedom in the polynomial function).</p>
-<p>The widget below allows you to interactively change the number of parameters in the model (see the sliding bar in the top left labeled <code>cdegree</code>).</p>
-<p>Both plots show the same thing. The only difference is that the scale on the y-axis of the plot on the right-hand side is static, so that you can always see a "close-up" of the measured data. The blue line shows the "truth. The black line shows the model "simulated" values. Orange dots are measured data. The true and simulated values of a prediction are shown with a green circle and red X, respectively.</p>
-<p>Model values are updated whenever you shift the slider. (In the background a new model is "calibrated" and the new values are displayed.) Above the plot two values are shown:</p>
-<ol>
-<li>the absolute error between the true and simulated prediction;</li>
-<li>everyone's favourite satistic of "good-fit", the coefficient of determination $R^2$</li>
-</ol>
-<p>Play around with the slider.</p>
-<p>As you increase the number of parameters, you should note that $R^2$ improves (increases). But what happens to the prediction error? What do you think, is $R^2$ a good measure of a model's ability to make a good prediction? What if we use less parameters? Does that make for a better prediction?</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">rh</span><span class="o">.</span><span class="n">plot_widget</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y_data</span><span class="p">,</span> <span class="n">y_fit_pars_best</span><span class="p">,</span> <span class="n">poly_func</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>So as you can see, increasing parameters to improve the fit does not mean that the prediction is better. But reducing them does not necessarily help either.</p>
-<p>The two plots below illustrate this. Both plots illustrate how model error changes with the number of adjustable parameters. The blue line plots error in regard to historical data. The red line plots error in regard to the prediction.</p>
-<p>"<strong>Data error</strong> decreases with increasing number of parameters. However, <strong>prediction error</strong> increases after the ideal number of parameters is surpassed. This is deemed <strong>overfitting</strong>. More parameters mean the model has more flexibility to fit the measured data. But the measured data has noise! Effectively, after a certain point, we are just improving the fit by making our model very good at simulating "noise".</p>
-<p><strong>Prediction error</strong> is minimized when we have the "correct" number of parameters (in this case, two). Using less parameters results in a worse fit with measured data, as well as greater prediction error. This is deemed <strong>underfitting</strong>. In this case the model does not have sufficient freedom to replicate true behaviour.</p>
-<p>Using too-few parameters in a model "hard wires" in the model's inability to represent system behaviour. Using too many does not. In practice, when simulating groundwater systems, our models will never have more parameters than exist in reality. Thus, we will always be below the "true" optimal number of parameters. Overfitting in this case becomes a matter of having more adjustable parameters than measured data. During subsequent tutorials we will explore how to handle this in practice.</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">rh</span><span class="o">.</span><span class="n">plot_error_tradeoff</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">poly_func</span><span class="p">)</span>
+<div class=" highlight hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span> 
+<span class="kn">import</span> <span class="nn">pyemu</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+<span class="c1"># import pre-prepared convenience functions</span>
+<span class="kn">import</span> <span class="nn">herebedragons</span> <span class="k">as</span> <span class="nn">hbd</span>
 </pre></div>
 
      </div>
@@ -14387,7 +14039,33 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-python"><pre><span></span><span class="n">rh</span><span class="o">.</span><span class="n">plot_error_tradeoff_fine</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">poly_func</span><span class="p">)</span>
+<div class=" highlight hl-python"><pre><span></span><span class="c1"># specify the temporary working folder</span>
+<span class="n">t_d</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;freyberg6_template&#39;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="c1"># use the conveninece function to get the pre-preprepared PEST dataset;</span>
+<span class="c1"># this is the same dataset consutrcted in the &quot;pstfrom&quot; tutorial</span>
+
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">t_d</span><span class="p">):</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">t_d</span><span class="p">)</span>
+<span class="n">org_t_d</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span><span class="s2">&quot;part2_pstfrom_pest_setup&quot;</span><span class="p">,</span><span class="n">t_d</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">org_t_d</span><span class="p">):</span>
+    <span class="n">hbd</span><span class="o">.</span><span class="n">dir_cleancopy</span><span class="p">(</span><span class="n">org_d</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;models&#39;</span><span class="p">,</span><span class="s1">&#39;freyberg_pstfrom_pest_setup&#39;</span><span class="p">),</span>
+                    <span class="n">new_d</span><span class="o">=</span><span class="n">t_d</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;using files at &quot;</span><span class="p">,</span><span class="n">org_t_d</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">org_t_d</span><span class="p">,</span><span class="n">t_d</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14398,10 +14076,1386 @@ a.anchor-link {
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="9.-Final-Remarks">9. Final Remarks<a class="anchor-link" href="#9.-Final-Remarks">&#182;</a></h3><p>This notebook has been a very brief introduction to regression. This is intended as a primer, introducing a few fundamental concepts and terminology that play a role in environmental decision-support modelling. Subsequent tutorials will delve into further details as these apply to modelling of groundwater systems.</p>
-<p>Perhaps one of the main take aways should be <strong>just because a model has a good fit with measurement data, does not make it a good predictor!</strong></p>
+<p>Let's load in the <code>Pst</code> control file we constructed during the "pstfrom" tutorial:</p>
 
 </div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">pst_file</span> <span class="o">=</span> <span class="s2">&quot;freyberg_mf6.pst&quot;</span>
+
+<span class="n">pst</span> <span class="o">=</span> <span class="n">pyemu</span><span class="o">.</span><span class="n">Pst</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t_d</span><span class="p">,</span> <span class="n">pst_file</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>When we constructed the PEST dataset (in the "pstfrom" tutorial) we simply identified what model outputs we wanted PEST to "observe". In doing so, <code>pyemu.PstFrom</code> assigned observation target values that it found in the existing model output files. (Which conveniently allowed us to test whether out PEST setup was working correctly). All observation weights were assigned a default value of 1.0.</p>
+<p>As a reminder:</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">obs</span> <span class="o">=</span> <span class="n">pst</span><span class="o">.</span><span class="n">observation_data</span>
+<span class="n">obs</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>As mentioned above, we need to do several things:</p>
+<ul>
+<li>replace observation target values (the <code>obsval</code> column) with corresponding vallues from "measured data";</li>
+<li>assign meaningfull weights to history matching target observations (the <code>weight</code> column);</li>
+<li>assign zero weight to observations that should not affect history matching.</li>
+</ul>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Let's start off with the basics. First set all weights to zero. We will then go through and assign meaningfull weights only to relevant target observations.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="c1">#check for nonzero weights</span>
+<span class="n">obs</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="c1"># assign all weight zero</span>
+<span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># check for non zero weights</span>
+<span class="n">obs</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Measured-Data">Measured Data<a class="anchor-link" href="#Measured-Data">&#182;</a></h3><p>In most data assimilation contexts you will have some relevant measured data (e.g. water levels, river flow rates, etc.) which correspond to simulated model outputs. These will probably not coincide exactly with your model outputs. Are the wells at the same coordinate as the center of the model cell? Do measurement times line up nicely with model output times? Doubt it. And if they do, are single measurements that match model output times biased? And so on...</p>
+<p>A modeller needs to ensure that the observation values assigned in the PEST control file are aligned with simulated model outputs. This will usually require some case-specific pre-processing. Here we are going to demonstrate <strong>an example</strong> - but remember, every case is different!</p>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>First, let's access or dataset of "measured" observations.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">obs_csv</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;models&#39;</span><span class="p">,</span> <span class="s1">&#39;freyberg_mf6_truth&#39;</span><span class="p">,</span><span class="s2">&quot;obs_data.csv&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">obs_csv</span><span class="p">)</span>
+<span class="n">obs_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">obs_csv</span><span class="p">)</span>
+<span class="n">obs_data</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;site&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#import numpy as np</span>
+<span class="n">obs_data</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mf">1e30</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">obs_data</span><span class="o">.</span><span class="n">tail</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="c1"># read the measured  values</span>
+<span class="n">meas_sfr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;models&#39;</span><span class="p">,</span> <span class="s1">&#39;freyberg_mf6_truth&#39;</span><span class="p">,</span><span class="s2">&quot;sfr.csv&quot;</span><span class="p">),</span>
+                    <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+
+<span class="n">meas_sfr</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">obs_sfr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t_d</span><span class="p">,</span><span class="s2">&quot;sfr.csv&quot;</span><span class="p">),</span>
+                    <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                    
+<span class="n">obs_sfr</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="c1">#just pick the nearest to the sp end</span>
+<span class="n">model_times</span> <span class="o">=</span> <span class="n">obs_sfr</span><span class="o">.</span><span class="n">index</span>
+<span class="n">obs_sites</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;GAGE-1&#39;</span><span class="p">,</span><span class="s1">&#39;TRGW-0-26-6&#39;</span><span class="p">,</span><span class="s1">&#39;TRGW-2-26-6&#39;</span><span class="p">,</span><span class="s1">&#39;TRGW-0-3-8&#39;</span><span class="p">,</span><span class="s1">&#39;TRGW-2-3-8&#39;</span><span class="p">]</span><span class="c1">#list(set(obs_data.index.values)) #</span>
+
+<span class="n">es_obs_data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">obs_sites</span><span class="p">:</span>
+    <span class="n">site_obs_data</span> <span class="o">=</span> <span class="n">obs_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">site</span><span class="p">,:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">site_obs_data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="n">site_obs_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;site&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">site_obs_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">site_obs_data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">site_obs_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s2">&quot;site&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">site_obs_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">site_obs_data</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">site_obs_data</span><span class="o">.</span><span class="n">time</span>
+        <span class="n">site_obs_data</span> <span class="o">=</span> <span class="n">site_obs_data</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">model_times</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">site_obs_data</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">site_obs_data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;broke&quot;</span><span class="p">,</span><span class="n">site</span><span class="p">)</span>
+    <span class="n">es_obs_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">site_obs_data</span><span class="p">)</span>
+<span class="n">es_obs_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">es_obs_data</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">es_obs_data</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">obs_sites</span><span class="p">:</span>
+    <span class="c1">#print(site)</span>
+    <span class="n">site_obs_data</span> <span class="o">=</span> <span class="n">obs_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">site</span><span class="p">,:]</span>
+    <span class="n">es_site_obs_data</span> <span class="o">=</span> <span class="n">es_obs_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">es_obs_data</span><span class="o">.</span><span class="n">site</span><span class="o">==</span><span class="n">site</span><span class="p">,:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">es_site_obs_data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1">#print(site,site_obs_data.shape)</span>
+    <span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">site_obs_data</span><span class="o">.</span><span class="n">time</span><span class="p">,</span><span class="n">site_obs_data</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="s2">&quot;b-&quot;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="c1">#ax.plot(es_site_obs_data.datetime,es_site_obs_data.value,&#39;r-&#39;,lw=2)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">es_site_obs_data</span><span class="o">.</span><span class="n">time</span><span class="p">,</span><span class="n">es_site_obs_data</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="s1">&#39;r-&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Let's now ....</p>
+<p>....</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">ess_obs_data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">obs_sites</span><span class="p">:</span>
+    <span class="c1">#print(site)</span>
+    <span class="n">site_obs_data</span> <span class="o">=</span> <span class="n">obs_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">site</span><span class="p">,:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">site_obs_data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="n">site_obs_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;site&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">site_obs_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">site_obs_data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">site_obs_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s2">&quot;site&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">site_obs_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">site_obs_data</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">site_obs_data</span><span class="o">.</span><span class="n">time</span>
+        <span class="n">sm</span> <span class="o">=</span> <span class="n">site_obs_data</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span><span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">min_periods</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">sm_site_obs_data</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">model_times</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
+    <span class="c1">#ess_obs_data.append(pd.DataFrame9sm_site_obs_data)</span>
+    <span class="n">ess_obs_data</span><span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="n">sm_site_obs_data</span>
+    
+    <span class="n">es_site_obs_data</span> <span class="o">=</span> <span class="n">es_obs_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">es_obs_data</span><span class="o">.</span><span class="n">site</span><span class="o">==</span><span class="n">site</span><span class="p">,:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">es_site_obs_data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">site_obs_data</span><span class="o">.</span><span class="n">time</span><span class="p">,</span><span class="n">site_obs_data</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="s2">&quot;b-&quot;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">es_site_obs_data</span><span class="o">.</span><span class="n">time</span><span class="p">,</span><span class="n">es_site_obs_data</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="s1">&#39;r-&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sm_site_obs_data</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="n">sm_site_obs_data</span><span class="o">.</span><span class="n">values</span><span class="p">,</span><span class="s1">&#39;g-&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">ess_obs_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">ess_obs_data</span><span class="p">)</span>
+<span class="n">ess_obs_data</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Update-Target-Observation-Values-in-the-Control-File">Update Target Observation Values in the Control File<a class="anchor-link" href="#Update-Target-Observation-Values-in-the-Control-File">&#182;</a></h3><p>Right then - so, these are our smoothed-sampled observation values:</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">ess_obs_data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Now we are confronted with the task of getting these processed measured observation values into the <code>Pst</code> control file. Once again, how you do this will end up being somewhat case-specific and will depend on how your obsveration names were constructed. For example, in our case we can use the following function (we made it a function because we are going to repeat it a few times):</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">update_pst_obsvals</span><span class="p">(</span><span class="n">obs_names</span><span class="p">,</span> <span class="n">obs_data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;obs_names: list of selected obs names</span>
+<span class="sd">       obs_data: dataframe with obs values to use in pst&quot;&quot;&quot;</span>
+
+    <span class="c1">## ensure only values for the history matching period</span>
+    <span class="c1">#obs_data = obs_data.loc[obs_data.index.values&gt;obs.time.astype(float).values[0]]</span>
+    <span class="c1">#obs_data = obs_data.loc[obs_data.index.values&lt;obs.time.astype(float).values[12]]</span>
+
+    <span class="c1"># for checking</span>
+    <span class="c1">#org_nnzobs = pst.nnz_obs</span>
+    <span class="c1"># get list of times for obs name sufixes</span>
+    <span class="n">time_str</span> <span class="o">=</span> <span class="n">obs_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;time:</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+    <span class="c1"># empyt list to keep track of misssing observation names</span>
+    <span class="n">missing</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">obs_data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1"># get obs list sufix for each column of data</span>
+        <span class="n">obs_sufix</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">time_str</span>
+        <span class="k">for</span> <span class="n">string</span><span class="p">,</span> <span class="n">oval</span><span class="p">,</span> <span class="n">time</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">obs_sufix</span><span class="p">,</span><span class="n">obs_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">obs_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+                
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">string</span> <span class="ow">in</span> <span class="n">obsnme</span> <span class="k">for</span> <span class="n">obsnme</span> <span class="ow">in</span> <span class="n">obs_names</span><span class="p">):</span>
+                    <span class="n">missing</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+                <span class="c1"># if not, then update the pst.observation_data</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># get a list of obsnames</span>
+                    <span class="n">obsnme</span> <span class="o">=</span> <span class="p">[</span><span class="n">ks</span> <span class="k">for</span> <span class="n">ks</span> <span class="ow">in</span> <span class="n">obs_names</span> <span class="k">if</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">ks</span><span class="p">]</span> 
+                    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">obsnme</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span><span class="n">string</span>
+                    <span class="n">obsnme</span> <span class="o">=</span> <span class="n">obsnme</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="c1"># assign the obsvals</span>
+                    <span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">obsnme</span><span class="p">,</span><span class="s2">&quot;obsval&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">oval</span>
+                    <span class="c1"># assign a generic weight</span>
+                    <span class="k">if</span> <span class="n">time</span> <span class="o">&gt;</span> <span class="mf">3652.5</span> <span class="ow">and</span> <span class="n">time</span> <span class="o">&lt;=</span><span class="mf">4018.5</span><span class="p">:</span>
+                        <span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">obsnme</span><span class="p">,</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="c1"># checks</span>
+    <span class="c1">#if (pst.nnz_obs-org_nnzobs)!=0:</span>
+    <span class="c1">#    assert (pst.nnz_obs-org_nnzobs)==obs_data.count().sum()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;All good.&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of nonzero obs:&#39;</span> <span class="p">,</span><span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs</span><span class="p">)</span>  
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The following obs are missing:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">missing</span><span class="p">)</span>
+
+    <span class="k">return</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_groups</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="c1"># subselection of observaton names; this is because several groups share the same obs name sufix</span>
+<span class="n">obs_names</span> <span class="o">=</span> <span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">obs</span><span class="o">.</span><span class="n">oname</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;hds&#39;</span><span class="p">,</span> <span class="s1">&#39;sfr&#39;</span><span class="p">]),</span> <span class="s1">&#39;obsnme&#39;</span><span class="p">]</span>
+
+<span class="c1"># run the function</span>
+<span class="n">update_pst_obsvals</span><span class="p">(</span><span class="n">obs_names</span><span class="p">,</span> <span class="n">ess_obs_data</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_groups</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">pst</span><span class="o">.</span><span class="n">observation_data</span><span class="o">.</span><span class="n">oname</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>So that has sorted out the absolute observation groups. But remember the 'sfrtd', 'hdstd', 'hdsvd' observation groups? Yeah thats right, we also added in a bunch of other "secondary observations" (the time difference between obsevrations and vertical differences between heads measured at the same location) as well as postprocessing functions to get them from model outputs. We need to get target values for these observations into our control file as well!</p>
+<p>Let's start by calculating the secondary values from the absolute measured values. In our case, the easiest is to populate the model output files with measured values and then call our postprocessing function.</p>
+<p>Let's first read in the SFR model output file, just so we can see what is happening:</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">obs_sfr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t_d</span><span class="p">,</span><span class="s2">&quot;sfr.csv&quot;</span><span class="p">),</span>
+                    <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">obs_sfr</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Now update the model output csv files with the smooth-sampled measured values:</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">update_obs_csv</span><span class="p">(</span><span class="n">obs_csv</span><span class="p">):</span>
+    <span class="n">obsdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">obs_csv</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">check</span> <span class="o">=</span> <span class="n">obsdf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="c1"># update values in reelvant cols</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">ess_obs_data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">obsdf</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">obsdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">ess_obs_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="n">col</span><span class="p">]</span>
+    <span class="c1"># keep only measured data columns; helps for vdiff and tdiff obs later on</span>
+    <span class="c1">#obsdf = obsdf.loc[:,[col for col in ess_obs_data.columns if col in obsdf.columns]]</span>
+    <span class="c1"># rewrite the model output file</span>
+    <span class="n">obsdf</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">obs_csv</span><span class="p">)</span>
+    <span class="c1"># check </span>
+    <span class="n">obsdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">obs_csv</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">obsdf</span><span class="o">.</span><span class="n">index</span><span class="o">==</span><span class="n">check</span><span class="o">.</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">obsdf</span>
+
+<span class="c1"># update the SFR obs csv</span>
+<span class="n">obs_srf</span> <span class="o">=</span> <span class="n">update_obs_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t_d</span><span class="p">,</span><span class="s2">&quot;sfr.csv&quot;</span><span class="p">))</span>
+<span class="c1"># update the heads obs csv</span>
+<span class="n">obs_hds</span> <span class="o">=</span> <span class="n">update_obs_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t_d</span><span class="p">,</span><span class="s2">&quot;heads.csv&quot;</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>OK...now we can run the postprocessing function to update the "tdiff" and "vdiff" model output csv's. Copy across the <code>helpers.py</code> we used during the <code>PstFrom</code> tutorial. Then import it and run the <code>process_secondary_obs()</code> function.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span><span class="s1">&#39;part2_pstfrom_pest_setup&#39;</span><span class="p">,</span> <span class="s1">&#39;helpers.py&#39;</span><span class="p">),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;helpers.py&#39;</span><span class="p">))</span>
+
+<span class="kn">import</span> <span class="nn">helpers</span>
+<span class="n">helpers</span><span class="o">.</span><span class="n">process_secondary_obs</span><span class="p">(</span><span class="n">ws</span><span class="o">=</span><span class="n">t_d</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="c1"># the oname column in the pst.observation_data provides a usefull way to select observations in this case</span>
+<span class="n">obs</span><span class="o">.</span><span class="n">oname</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">org_nnzobs</span> <span class="o">=</span> <span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs</span>
+    <span class="c1">#if (pst.nnz_obs-org_nnzobs)!=0:</span>
+    <span class="c1">#    assert (pst.nnz_obs-org_nnzobs)==obs_data.count().sum()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of nonzero obs:&#39;</span><span class="p">,</span> <span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs</span><span class="p">)</span>
+
+<span class="n">diff_obsdict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sfrtd&#39;</span><span class="p">:</span> <span class="s2">&quot;sfr.tdiff.csv&quot;</span><span class="p">,</span> 
+                <span class="s1">&#39;hdstd&#39;</span><span class="p">:</span> <span class="s2">&quot;heads.tdiff.csv&quot;</span><span class="p">,</span>
+                <span class="s1">&#39;hdsvd&#39;</span><span class="p">:</span> <span class="s2">&quot;heads.vdiff.csv&quot;</span>
+                <span class="p">}</span>
+
+<span class="k">for</span> <span class="n">keys</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">diff_obsdict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="c1"># get subselct of obs names</span>
+    <span class="n">obs_names</span> <span class="o">=</span> <span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">obs</span><span class="o">.</span><span class="n">oname</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="n">keys</span><span class="p">]),</span> <span class="s1">&#39;obsnme&#39;</span><span class="p">]</span>
+    <span class="c1"># get df</span>
+    <span class="n">obs_csv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t_d</span><span class="p">,</span><span class="n">value</span><span class="p">),</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># specify cols to use; make use of info recorded in pst.observation_data to only select cols with measured data</span>
+    <span class="n">usecols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">((</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">upper</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_names</span><span class="p">,</span><span class="s1">&#39;usecol&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())))</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">obs_csv</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+    <span class="n">obs_csv</span> <span class="o">=</span> <span class="n">obs_csv</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">usecols</span><span class="p">]</span>
+    <span class="c1"># for checking</span>
+    <span class="n">org_nnz_obs_names</span> <span class="o">=</span> <span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_names</span>
+    <span class="c1"># run the function</span>
+    <span class="n">update_pst_obsvals</span><span class="p">(</span><span class="n">obs_names</span><span class="p">,</span>
+                        <span class="n">obs_csv</span><span class="p">)</span>
+    <span class="c1"># verify num of new nnz obs</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">org_nnz_obs_names</span><span class="p">))</span><span class="o">==</span><span class="mi">12</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">usecols</span><span class="p">),</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_names</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">org_nnz_obs_names</span><span class="p">]</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_groups</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="Observation-Weights">Observation Weights<a class="anchor-link" href="#Observation-Weights">&#182;</a></h2><p>We are going to start off by taking a look at our current objective function value and the relative contributions from the various observation groups. Recall that this is the objective function value with <strong>initial parameter values</strong> and the default observations weights.</p>
+<p>First off, we need to get PEST to run the model once so that the objective function can be calculated. Let's do that now. Start by reading the control file and checking that NOPTMAX is set to zero:</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="c1"># check noptmax</span>
+<span class="n">pst</span><span class="o">.</span><span class="n">control_data</span><span class="o">.</span><span class="n">noptmax</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>You got a zero? Alrighty then! Let's write the uprated control file and run PEST again and see what that has done to our Phi:</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">pst</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t_d</span><span class="p">,</span><span class="n">pst_file</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">pyemu</span><span class="o">.</span><span class="n">os_utils</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;pestpp-ies.exe </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pst_file</span><span class="p">),</span><span class="n">cwd</span><span class="o">=</span><span class="n">t_d</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Now we need to reload the <code>Pst</code> control file so that the residuals are updated:</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">pst</span> <span class="o">=</span> <span class="n">pyemu</span><span class="o">.</span><span class="n">Pst</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t_d</span><span class="p">,</span> <span class="n">pst_file</span><span class="p">))</span>
+<span class="n">pst</span><span class="o">.</span><span class="n">phi</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Jeepers - that's large! Before we race off and start running PEST to lower it we should compare simualted and measured values and take a look at the components of Phi.</p>
+<p>Let's start with taking a closer look. The <code>pst.phi_components</code> attribute returns a dictionary of the observation group names and their contribution to the overal value of Phi.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">pst</span><span class="o">.</span><span class="n">phi_components</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Unfortunately, in this case we have too many observation groups to easily display (we assigned each individual time series to its own observation group; this is a default setting in <code>pyemu.PstFrom</code>).</p>
+<p>So let's use <code>Pandas</code> to make help us sumamrize this information (note: <code>pyemu.plot_utils.res_phi_pie()</code> does the same thing, but it looks a bit ugly because of the large number of observation groups). To make it easier, we are going to just look at the nonzero observation groups:</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">nnz_phi_components</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">pst</span><span class="o">.</span><span class="n">phi_components</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_groups</span><span class="p">}</span>
+<span class="n">nnz_phi_components</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>And while we are at it, plot these in a pie chart.</p>
+<p>If you wish, try displaying this with <code>pyemu.plot_utils.res_phi_pie()</code> instead. Because of the large number of columns it's not going to be pretty, but it gets the job done.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">phicomp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">nnz_phi_components</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">phicomp</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">phicomp</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">);</span>
+<span class="c1">#pyemu.plot_utils.res_phi_pie(pst,);</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Well that is certainly not ideal - phi is dominated by the SFR observation groups. Why? Because the observation values of these are much larger than those of the other observation groups...and we assigned the same weight to all of them...</p>
+<p>Let's try error-based weighting combined with common sense (e.g. subjectivity) instead. For each observation type we will assign a weight equal to the inverse of error. Conceptualy, this error reflects our estimate of measurement noise. In practice, it reflects both measurment noise and model error.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">nz_obs</span> <span class="o">=</span> <span class="n">pst</span><span class="o">.</span><span class="n">observation_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_names</span><span class="p">,:]</span>
+<span class="n">nz_obs</span><span class="o">.</span><span class="n">oname</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">obs</span> <span class="o">=</span> <span class="n">pst</span><span class="o">.</span><span class="n">observation_data</span>
+<span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nz_obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">nz_obs</span><span class="o">.</span><span class="n">oname</span><span class="o">==</span><span class="s1">&#39;hds&#39;</span><span class="p">),</span> <span class="s1">&#39;obsnme&#39;</span><span class="p">],</span> <span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mf">0.1</span>
+<span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nz_obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">nz_obs</span><span class="o">.</span><span class="n">oname</span><span class="o">==</span><span class="s1">&#39;hdstd&#39;</span><span class="p">),</span> <span class="s1">&#39;obsnme&#39;</span><span class="p">],</span> <span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mf">0.05</span>
+<span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nz_obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">nz_obs</span><span class="o">.</span><span class="n">oname</span><span class="o">==</span><span class="s1">&#39;hdsvd&#39;</span><span class="p">),</span> <span class="s1">&#39;obsnme&#39;</span><span class="p">],</span> <span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mf">0.025</span>
+<span class="c1"># fanciness alert: heteroskedasticity; error will be proportional to the obsveration value for SFR obs</span>
+<span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nz_obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">nz_obs</span><span class="o">.</span><span class="n">oname</span><span class="o">==</span><span class="s1">&#39;sfr&#39;</span><span class="p">),</span> <span class="s1">&#39;obsnme&#39;</span><span class="p">],</span> <span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">nz_obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">nz_obs</span><span class="o">.</span><span class="n">oname</span><span class="o">==</span><span class="s1">&#39;sfr&#39;</span><span class="p">),</span> <span class="s1">&#39;obsval&#39;</span><span class="p">])</span>
+<span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nz_obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">nz_obs</span><span class="o">.</span><span class="n">oname</span><span class="o">==</span><span class="s1">&#39;sfrtd&#39;</span><span class="p">),</span> <span class="s1">&#39;obsnme&#39;</span><span class="p">],</span> <span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span> <span class="n">nz_obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">nz_obs</span><span class="o">.</span><span class="n">oname</span><span class="o">==</span><span class="s1">&#39;sfrtd&#39;</span><span class="p">),</span> <span class="s1">&#39;obsval&#39;</span><span class="p">])</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Let's take a look at how that has affected the contributions to Phi:</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">phicomp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span><span class="n">k</span><span class="p">:</span><span class="n">pst</span><span class="o">.</span><span class="n">phi_components</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_groups</span><span class="p">})</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">phicomp</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">phicomp</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">);</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Better! Now weights reflect the quality of the data. They are also (coincidently) relatively balanced - so no group is likely to entirely dominate or be overshadowed during parameter estimation.</p>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>The next cell adds in a column to the <code>pst.observation_data</code> for checking purposes in subsequent tutorials. Pretend you didn't see it :)</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">pst</span><span class="o">.</span><span class="n">observation_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_names</span><span class="p">,</span><span class="s1">&#39;observed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Don't forget to re-write the .pst file!</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">pst</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t_d</span><span class="p">,</span><span class="n">pst_file</span><span class="p">),</span><span class="n">version</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Understanding-Observation-Weights-and-Measurement-Noise">Understanding Observation Weights and Measurement Noise<a class="anchor-link" href="#Understanding-Observation-Weights-and-Measurement-Noise">&#182;</a></h3><p>Let's visualize what these weights actually imply.</p>
+<p>We are going to generate an ensemble of observation values. These values will be sampled from a Gaussian distribution, in which the observation value in the <code>Pst</code> control file is the mean and the observation weights reflect the inverse of standard deviation. (See the "intro to pyemu" tutorial for an introduction to  <code>pyemu.ObservationEnsemble</code>)</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">oe</span> <span class="o">=</span> <span class="n">pyemu</span><span class="o">.</span><span class="n">ObservationEnsemble</span><span class="o">.</span><span class="n">from_gaussian_draw</span><span class="p">(</span><span class="n">pst</span><span class="o">=</span><span class="n">pst</span><span class="p">,</span> 
+                                                <span class="n">num_reals</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>The function in the next cell does a bunch of funky things in order to plot observation time series (convenient that we stored all the necessary information in observation names, hey?).</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">plot_obs_ts</span><span class="p">(</span><span class="n">pst</span><span class="p">,</span> <span class="n">oe</span><span class="p">,</span> <span class="n">obsgrps</span><span class="o">=</span><span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_groups</span><span class="p">):</span>
+    <span class="c1"># get times and &quot;measured values&quot;</span>
+    <span class="n">nz_obs</span> <span class="o">=</span> <span class="n">pst</span><span class="o">.</span><span class="n">observation_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_names</span><span class="p">,:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">nz_obs</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nz_obs</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">nz_obs</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;obgnme&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># to plot crrent model outputs</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">pst</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">res</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pst</span><span class="o">.</span><span class="n">observation_data</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;group&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">nz_group</span> <span class="ow">in</span> <span class="n">obsgrps</span><span class="p">:</span>
+        <span class="n">nz_obs_group</span> <span class="o">=</span> <span class="n">nz_obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nz_obs</span><span class="o">.</span><span class="n">obgnme</span><span class="o">==</span><span class="n">nz_group</span><span class="p">,:]</span>
+        <span class="n">nz_obs_meas</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">res</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">nz_group</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+        
+        <span class="p">[</span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nz_obs_group</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">oe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">nz_obs_group</span><span class="o">.</span><span class="n">obsnme</span><span class="p">]</span> <span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">oe</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nz_obs_group</span><span class="o">.</span><span class="n">time</span><span class="p">,</span><span class="n">nz_obs_group</span><span class="o">.</span><span class="n">obsval</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nz_obs_meas</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">nz_obs_meas</span><span class="o">.</span><span class="n">modelled</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">nz_group</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Let's visualize the time series of observations for the SFR measurment types. Run the next cell.</p>
+<p>The blue line is the time series of "field measured" values (in the control file). The red lines are time series from the observation ensemble.The dashed black line is the model output with initial parameter values. What we are saying with these weights is that any of these red lines could also have been "measured". Due to the noise (e.g. uncertainty) in our measurements, the true value can fall any where in that range.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">ts_obs</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_groups</span> <span class="k">if</span> <span class="s1">&#39;sfr&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">]</span>
+<span class="n">plot_obs_ts</span><span class="p">(</span><span class="n">pst</span><span class="p">,</span> <span class="n">oe</span><span class="p">,</span> <span class="n">ts_obs</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="An-Aside:-A-Convenience-of-Error-Based-Weigthing">An Aside: A Convenience of Error-Based Weigthing<a class="anchor-link" href="#An-Aside:-A-Convenience-of-Error-Based-Weigthing">&#182;</a></h3><p>A convenience of weighting with the inverse of the measurement uncertainty is that it is easy to know what the ideal Phi should be: it should be equal to the number of non-zero weighted observations. This of course assumes that all model-to-measurment misfit is due to <em>measurement</em> uncertainty. In practice, model error usualy plays a larger role, as we will see in other tutorials.</p>
+<p>Just to demonstrate what we mean, let's quickly do some math. Imagine that we have:</p>
+<ul>
+<li>2 observations</li>
+<li>both have measured values of 1</li>
+<li>with measurement standard deviation (e.g. uncertainty) of 0.25</li>
+<li>therefore, they are assigned a weight of 1/0.25 = 4</li>
+</ul>
+<p>So, all that we know is that the true measured values are most likely to be somewhere between 0.75 and 1.25. Therefore, the best that a modelled value should be expected to achieve is 1 +/- 0.25.</p>
+<p>Let's say we obtain modelled values for each of observation:</p>
+<ul>
+<li>1.25</li>
+<li><p>0.75</p>
+<p>Let's calculate Phi for such a case:</p>
+</li>
+</ul>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">weight</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mf">0.25</span>
+<span class="c1"># res = (weight * (meas - sim)) ^ 2</span>
+<span class="n">res1</span> <span class="o">=</span> <span class="p">(</span><span class="n">weight</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">1.25</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">res2</span> <span class="o">=</span> <span class="p">(</span><span class="n">weight</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">0.75</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
+<span class="c1"># sum the squared weighted residuals</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="n">res1</span> <span class="o">+</span> <span class="n">res2</span>
+<span class="n">phi</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>And there you have it, the value of Phi is equal to the number of observations. Getting a better fit than that means we are just "fitting noise".</p>
+<h3 id="Back-to-Freyberg.">Back to Freyberg.<a class="anchor-link" href="#Back-to-Freyberg.">&#182;</a></h3><p>So, how many non-zero observations do we have in the dataset? Recall this number is recorded in the control file and easily accessible through the <code>Pst.nnz_obs</code> attribute. So our current Phi (see <code>pst.phi</code>) is  a bit higher than that. Hopefully history matching will help us bring it down.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Target phi:&#39;</span><span class="p">,</span><span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Current phi:&#39;</span><span class="p">,</span> <span class="n">pst</span><span class="o">.</span><span class="n">phi</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Right, so we have or observation weights sorted out. Let's just make a quick check of how model outputs and measured values compare by looking at a 1to1 plot for each observation group:</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">figs</span> <span class="o">=</span> <span class="n">pst</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;1to1&quot;</span><span class="p">);</span>
+<span class="n">pst</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_names</span><span class="p">,:]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Autocorrelated-Transient-Noise">Autocorrelated Transient Noise<a class="anchor-link" href="#Autocorrelated-Transient-Noise">&#182;</a></h3><p>(Sounds like a pretty cool name for a rock n'roll band...)</p>
+<p>Lastly, not so common, let's also generate our observation covariance matrix. Often this step is omitted, in particular if the observation weights in the <code>* observation data</code> section reflect observation uncertainty. Here we will implement it expressly so as to demonstrate how to add autocorrelated transient noise! When is the last time you saw that in the wild?</p>
+<p>First let us start by generating a covariance matrix, using the weights recorded in the <code>pst.observation_data</code> section. This is accomplished with <code>pyemu.Cov.from_observation_data()</code>. This will generate a covariance matrix for <strong>all</strong> observations in the control file, even the zero-weighted ones.</p>
+<p>However, we are only interested in keep the non-zero weighted observations. We can use <code>pyemu</code> convenient Matrix manipulation functions to <code>.get()</code> the covariance matrix rows/columns that we are interested in.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">obs</span> <span class="o">=</span> <span class="n">pst</span><span class="o">.</span><span class="n">observation_data</span>
+
+<span class="c1"># generate cov matrix for all obs using weights in the control file</span>
+<span class="n">obs_cov</span> <span class="o">=</span> <span class="n">pyemu</span><span class="o">.</span><span class="n">Cov</span><span class="o">.</span><span class="n">from_observation_data</span><span class="p">(</span><span class="n">pst</span><span class="p">,</span> <span class="p">)</span>
+
+<span class="c1"># reduce cov down to only include non-zero obsverations</span>
+<span class="n">obs_cov</span> <span class="o">=</span> <span class="n">obs_cov</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">row_names</span><span class="o">=</span><span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_names</span><span class="p">,</span> <span class="n">col_names</span><span class="o">=</span><span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_names</span><span class="p">,</span> <span class="p">)</span>
+
+<span class="c1"># side note: </span>
+<span class="c1"># we are saving the diagonal (e.g no correlation) obsevration uncertainty cov matrix</span>
+<span class="c1"># to an external file for use in a later tutorial</span>
+<span class="n">obs_cov</span><span class="o">.</span><span class="n">to_coo</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t_d</span><span class="p">,</span><span class="s2">&quot;obs_cov_diag.jcb&quot;</span><span class="p">))</span>
+
+<span class="c1"># make it a dataframe to make life easier</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">obs_cov</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">()</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>So this returned a diagonal covariance matrix (e.g. only values in the diagonal are non-zero). This implies that there is no covariance between observation noise.</p>
+<p>You can plot the matrix, but due to the scale it wont look particularily interesting:</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Hmm...you can kinda see something there (thats the sfr flow obs...large variance). Let's instead just look at a small part, focusing on observations that make up a single time series.</p>
+<p>So as you can see below, the matrix diagonal reflects individual obsevation uncertianties, whilst all the off-diagonals are zero (e.g. no correlation).</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">obs_select</span> <span class="o">=</span> <span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">obs</span><span class="o">.</span><span class="n">obgnme</span><span class="o">==</span><span class="s1">&#39;oname:hds_otype:lst_usecol:trgw-0-26-6&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">weight</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">obs_select</span><span class="o">.</span><span class="n">obsnme</span><span class="p">,</span><span class="n">obs_select</span><span class="o">.</span><span class="n">obsnme</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>But recall that most of the observations are time-series. Here we are saying "how wrong the measurement is today, has nothing to do with how wrong it was yesterday". Is that reasonable? For some noise (e.g. white noise), yes, surely. But perhaps not for all noise. So how can we express that "if my measurement was wrong yesterday, then it is <em>likely</em> to be wrong in the same way today"? Through covariance, that's how. We can use the same priciples that we employed to specfy parameter spatial/temporal covariance earlier on.</p>
+<p>We will now demonstrate for the single time series we looked at above.</p>
+<p>First, construct a geostatistical structure and variogram. Here we are using a range of 90 days; for an exponential variogram <code>a</code> is range/3. From these, construct a generic covariance matrix for generic parameters with "coordinates" corresponding to the observation times.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">v</span> <span class="o">=</span> <span class="n">pyemu</span><span class="o">.</span><span class="n">geostats</span><span class="o">.</span><span class="n">ExpVario</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">contribution</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">obs_select</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">values</span> <span class="c1">#np.arange(float(obs.time.values[:11].max()))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;obs_</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span> <span class="k">for</span> <span class="n">xx</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+<span class="n">cov</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">covariance_matrix</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Then, scale the values in the generic covariance matrix to reflect the observation uncertainties and take a peek.</p>
+<p>And there you have it, off-diagonal elements are no longer zero and show greater correlation between uncertainties of observation which happen closer together (it looks a bit wonky because parameter names are not ordered acording to time).</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">x_group</span> <span class="o">=</span> <span class="n">cov</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">obs_select</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">w</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">x_group</span> <span class="o">*=</span> <span class="n">v</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">obs_select</span><span class="o">.</span><span class="n">obsnme</span><span class="p">,</span><span class="n">obs_select</span><span class="o">.</span><span class="n">obsnme</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_group</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">obs_select</span><span class="o">.</span><span class="n">obsnme</span><span class="p">,</span><span class="n">obs_select</span><span class="o">.</span><span class="n">obsnme</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">();</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Now implement to that to loop over all the non-zero time series observation groups:</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="k">for</span> <span class="n">obgnme</span> <span class="ow">in</span> <span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_groups</span><span class="p">:</span>
+    <span class="n">obs_select</span> <span class="o">=</span> <span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">obs</span><span class="o">.</span><span class="n">obgnme</span><span class="o">==</span><span class="n">obgnme</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">weight</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)]</span>
+
+    <span class="n">v</span> <span class="o">=</span> <span class="n">pyemu</span><span class="o">.</span><span class="n">geostats</span><span class="o">.</span><span class="n">ExpVario</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">contribution</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">obs_select</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">values</span> <span class="c1">#np.arange(float(obs.time.values[:11].max()))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;obs_</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span> <span class="k">for</span> <span class="n">xx</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+    <span class="n">cov</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">covariance_matrix</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">)</span>
+
+
+    <span class="n">x_group</span> <span class="o">=</span> <span class="n">cov</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">obs_select</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">w</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">x_group</span> <span class="o">*=</span> <span class="n">v</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">obs_select</span><span class="o">.</span><span class="n">obsnme</span><span class="p">,</span><span class="n">obs_select</span><span class="o">.</span><span class="n">obsnme</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_group</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>And then re-construct a <code>Cov</code> object and record it to an external file:</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">obs_cov_tv</span> <span class="o">=</span> <span class="n">pyemu</span><span class="o">.</span><span class="n">Cov</span><span class="o">.</span><span class="n">from_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">obs_cov_tv</span><span class="o">.</span><span class="n">to_coo</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t_d</span><span class="p">,</span><span class="s2">&quot;obs_cov.jcb&quot;</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>If you made it this far, good on you! Let's finish with some eye candy!</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">obs_cov_tv</span><span class="o">.</span><span class="n">to_pearson</span><span class="p">()</span><span class="o">.</span><span class="n">x</span>
+<span class="n">x</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">&lt;</span><span class="mf">0.00001</span><span class="p">]</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>beautiful!</p>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Last thing here, let's just see what this actualy implies for our observation ensembles. As before, let's generate an ensemble of observations, but this time we pass the <code>obs_cov_tv</code> covarince matrix:</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">oe_tv</span> <span class="o">=</span> <span class="n">pyemu</span><span class="o">.</span><span class="n">ObservationEnsemble</span><span class="o">.</span><span class="n">from_gaussian_draw</span><span class="p">(</span><span class="n">pst</span><span class="o">=</span><span class="n">pst</span><span class="p">,</span> 
+                                                <span class="n">num_reals</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                                                <span class="n">cov</span><span class="o">=</span><span class="n">obs_cov_tv</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Let's plot the same ensemble of obs timeseries with non-correlated noise we saw earlier, just to make it easy to compare.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Non correlated observation noise:&#39;</span><span class="p">)</span>
+<span class="n">plot_obs_ts</span><span class="p">(</span><span class="n">pst</span><span class="p">,</span> <span class="n">oe</span><span class="p">,</span> <span class="n">ts_obs</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>And now the ensemble of obs timeseries with autocorrelated noise. Note how thse are smoother and less of a jumble of spaghetti.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Autocorrelated observation noise:&#39;</span><span class="p">)</span>
+<span class="n">ts_obs</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_groups</span> <span class="k">if</span> <span class="s1">&#39;sfr&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">]</span>
+<span class="n">plot_obs_ts</span><span class="p">(</span><span class="n">pst</span><span class="p">,</span> <span class="n">oe_tv</span><span class="p">,</span> <span class="n">ts_obs</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="A-Final-Aside:-Weighting-for-Visibility">A Final Aside: Weighting for Visibility<a class="anchor-link" href="#A-Final-Aside:-Weighting-for-Visibility">&#182;</a></h3><p>(The following is an aside and does not apply for subsequent tutorials.)</p>
+<p>As discussed above, a practical means of accommodating this situation is to weight all observation groups
+such that they contribute an equal amount to the starting measurement objective function. In this
+manner, no single group dominates the objective function, or is dominated by others; the information
+contained in each group is therefore equally “visible” to PEST.</p>
+<p>The <code>Pst.adjust_weights()</code> method provides a mechanism to fine tune observation weights according to their contribution to the objective function. (<em>Side note: the PWTADJ1 utility from the PEST-suite automates this same process of "weighting for visibility".</em>)</p>
+<p>We start by creating a dictionary of non-zero weighted observation group names and their respective contributions to the objective function. For example, we will specify that we want each group to contribute a value of 100 to the objective function. (Why 100? No particular reason. Could just as easily be 1000. Or 578. Doesn't really matter. 100 is a nice round number though.)</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="c1"># create a dictionary of group names and weights</span>
+<span class="n">balanced_groups</span> <span class="o">=</span> <span class="p">{</span><span class="n">grp</span><span class="p">:</span><span class="mi">100</span> <span class="k">for</span> <span class="n">grp</span> <span class="ow">in</span> <span class="n">pst</span><span class="o">.</span><span class="n">nnz_obs_groups</span><span class="p">}</span>
+<span class="n">balanced_groups</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>We can now use the <code>pst.adjust_weights()</code> method to adjust the observation weights in the <code>pst</code> control file object. (<em>Remember! This all only happens in memory. It does not get written to the PEST control file yet!</em>)</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="c1"># make all non-zero weighted groups have a contribution of 100.0</span>
+<span class="n">pst</span><span class="o">.</span><span class="n">adjust_weights</span><span class="p">(</span><span class="n">obsgrp_dict</span><span class="o">=</span><span class="n">balanced_groups</span><span class="p">,)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>If we now plot the phi components again, voila! We have a nice even distribution of phi from each observation group.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="n">phicomp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pst</span><span class="o">.</span><span class="n">phi_components</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">phicomp</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">phicomp</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">);</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Some <strong>caution</strong> is required here. Observation weights and how these pertain to history-matching <em>versus</em> how they pertain to generating an observation ensemble for use with <code>pestpp-ies</code> or FOSM is a frequent source of confusion.</p>
+<ul>
+<li>when <strong>history-matching</strong>, observation weights listed in the control file determine their contribution to the objective function, and therefore to the parameter estiamtion process. Here, observation weights may be assigned to reflect observation uncertainty, the balance required for equal "visibility", or other modeller-defined (and perhaps subjective...) measures of observation worth.  </li>
+<li>when undertaking <strong>uncertainty analysis</strong>, weights should reflect idealy the inverse of obseravtion error (or the standard deviation of measurement noise). Keep this in mind when using <code>pestpp-glm</code> or <code>pestpp-ies</code>. If the observations in the control file do not have error-based weighting then (1) care is required if using <code>pestpp-glm</code> for FOSM and (2) make sure to provide an adequately prepared observation ensemble to <code>pestpp-ies</code>.</li>
+</ul>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Made it this far? Congratulations! Have a cookie :)</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
 </div>
 </body>
 
