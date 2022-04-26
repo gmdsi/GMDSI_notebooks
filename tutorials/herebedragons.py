@@ -14,6 +14,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 import zipfile
 
+
+def prep_deps(template_ws, dep_dir=None):
+    dep_dir=os.path.join('..','..','dependencies')
+    for i in os.scandir(dep_dir):
+        org_d = i.path
+        new_d = os.path.join(template_ws, os.path.basename(org_d))
+        shutil.copytree(org_d, new_d)
+    return
+
+
 if "linux" in platform.platform().lower():
     bin_path = os.path.join("..","..", "bin_new", "linux")
 elif "darwin" in platform.platform().lower() or "macos" in platform.platform().lower():

@@ -1,0 +1,32 @@
+ptf ~
+,sidx,idx_strs,xy,x,y,pargp3,parval1_3,3
+0,"(1, 39, 8)",idx0:1_idx1:39_idx2:8,"(2125.0, 125.0)",2125.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:8  ~
+1,"(2, 39, 13)",idx0:2_idx1:39_idx2:13,"(3375.0, 125.0)",3375.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:13  ~
+2,"(1, 39, 11)",idx0:1_idx1:39_idx2:11,"(2875.0, 125.0)",2875.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:11  ~
+3,"(1, 39, 14)",idx0:1_idx1:39_idx2:14,"(3625.0, 125.0)",3625.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:14  ~
+4,"(0, 39, 9)",idx0:0_idx1:39_idx2:9,"(2375.0, 125.0)",2375.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:9  ~
+5,"(2, 39, 5)",idx0:2_idx1:39_idx2:5,"(1375.0, 125.0)",1375.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:5  ~
+6,"(0, 39, 6)",idx0:0_idx1:39_idx2:6,"(1625.0, 125.0)",1625.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:6  ~
+7,"(0, 39, 12)",idx0:0_idx1:39_idx2:12,"(3125.0, 125.0)",3125.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:12  ~
+8,"(2, 39, 11)",idx0:2_idx1:39_idx2:11,"(2875.0, 125.0)",2875.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:11  ~
+9,"(2, 39, 8)",idx0:2_idx1:39_idx2:8,"(2125.0, 125.0)",2125.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:8  ~
+10,"(2, 39, 14)",idx0:2_idx1:39_idx2:14,"(3625.0, 125.0)",3625.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:14  ~
+11,"(1, 39, 6)",idx0:1_idx1:39_idx2:6,"(1625.0, 125.0)",1625.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:6  ~
+12,"(1, 39, 9)",idx0:1_idx1:39_idx2:9,"(2375.0, 125.0)",2375.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:9  ~
+13,"(1, 39, 12)",idx0:1_idx1:39_idx2:12,"(3125.0, 125.0)",3125.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:12  ~
+14,"(0, 39, 7)",idx0:0_idx1:39_idx2:7,"(1875.0, 125.0)",1875.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:7  ~
+15,"(2, 39, 9)",idx0:2_idx1:39_idx2:9,"(2375.0, 125.0)",2375.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:9  ~
+16,"(0, 39, 10)",idx0:0_idx1:39_idx2:10,"(2625.0, 125.0)",2625.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:10  ~
+17,"(2, 39, 6)",idx0:2_idx1:39_idx2:6,"(1625.0, 125.0)",1625.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:6  ~
+18,"(2, 39, 12)",idx0:2_idx1:39_idx2:12,"(3125.0, 125.0)",3125.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:12  ~
+19,"(0, 39, 13)",idx0:0_idx1:39_idx2:13,"(3375.0, 125.0)",3375.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:13  ~
+20,"(1, 39, 10)",idx0:1_idx1:39_idx2:10,"(2625.0, 125.0)",2625.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:10  ~
+21,"(1, 39, 7)",idx0:1_idx1:39_idx2:7,"(1875.0, 125.0)",1875.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:7  ~
+22,"(1, 39, 13)",idx0:1_idx1:39_idx2:13,"(3375.0, 125.0)",3375.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:13  ~
+23,"(0, 39, 5)",idx0:0_idx1:39_idx2:5,"(1375.0, 125.0)",1375.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:5  ~
+24,"(2, 39, 10)",idx0:2_idx1:39_idx2:10,"(2625.0, 125.0)",2625.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:10  ~
+25,"(2, 39, 7)",idx0:2_idx1:39_idx2:7,"(1875.0, 125.0)",1875.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:7  ~
+26,"(0, 39, 8)",idx0:0_idx1:39_idx2:8,"(2125.0, 125.0)",2125.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:8  ~
+27,"(0, 39, 14)",idx0:0_idx1:39_idx2:14,"(3625.0, 125.0)",3625.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:14  ~
+28,"(1, 39, 5)",idx0:1_idx1:39_idx2:5,"(1375.0, 125.0)",1375.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:5  ~
+29,"(0, 39, 11)",idx0:0_idx1:39_idx2:11,"(2875.0, 125.0)",2875.0,125.0,ghbheadgr,0.0,~  pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:11  ~
