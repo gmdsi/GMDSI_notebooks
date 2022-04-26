@@ -1,0 +1,2934 @@
+BEGIN Options
+  PRINT_INPUT
+  PRINT_FLOWS
+  SAVE_FLOWS
+END Options
+
+BEGIN Dimensions
+  MAXBOUND  6
+END Dimensions
+
+BEGIN PERIOD  1
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_1.txt'
+END PERIOD  1
+
+BEGIN PERIOD  2
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_2.txt'
+END PERIOD  2
+
+BEGIN PERIOD  3
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_3.txt'
+END PERIOD  3
+
+BEGIN PERIOD  4
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_4.txt'
+END PERIOD  4
+
+BEGIN PERIOD  5
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_5.txt'
+END PERIOD  5
+
+BEGIN PERIOD  6
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_6.txt'
+END PERIOD  6
+
+BEGIN PERIOD  7
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_7.txt'
+END PERIOD  7
+
+BEGIN PERIOD  8
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_8.txt'
+END PERIOD  8
+
+BEGIN PERIOD  9
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_9.txt'
+END PERIOD  9
+
+BEGIN PERIOD  10
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_10.txt'
+END PERIOD  10
+
+BEGIN PERIOD  11
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_11.txt'
+END PERIOD  11
+
+BEGIN PERIOD  12
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_12.txt'
+END PERIOD  12
+
+BEGIN PERIOD  13
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_13.txt'
+END PERIOD  13
+
+BEGIN PERIOD  14
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_14.txt'
+END PERIOD  14
+
+BEGIN PERIOD  15
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_15.txt'
+END PERIOD  15
+
+BEGIN PERIOD  16
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_16.txt'
+END PERIOD  16
+
+BEGIN PERIOD  17
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_17.txt'
+END PERIOD  17
+
+BEGIN PERIOD  18
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_18.txt'
+END PERIOD  18
+
+BEGIN PERIOD  19
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_19.txt'
+END PERIOD  19
+
+BEGIN PERIOD  20
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_20.txt'
+END PERIOD  20
+
+BEGIN PERIOD  21
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_21.txt'
+END PERIOD  21
+
+BEGIN PERIOD  22
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_22.txt'
+END PERIOD  22
+
+BEGIN PERIOD  23
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_23.txt'
+END PERIOD  23
+
+BEGIN PERIOD  24
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_24.txt'
+END PERIOD  24
+
+BEGIN PERIOD  25
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_25.txt'
+END PERIOD  25
+
+BEGIN PERIOD  26
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_26.txt'
+END PERIOD  26
+
+BEGIN PERIOD  27
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_27.txt'
+END PERIOD  27
+
+BEGIN PERIOD  28
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_28.txt'
+END PERIOD  28
+
+BEGIN PERIOD  29
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_29.txt'
+END PERIOD  29
+
+BEGIN PERIOD  30
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_30.txt'
+END PERIOD  30
+
+BEGIN PERIOD  31
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_31.txt'
+END PERIOD  31
+
+BEGIN PERIOD  32
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_32.txt'
+END PERIOD  32
+
+BEGIN PERIOD  33
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_33.txt'
+END PERIOD  33
+
+BEGIN PERIOD  34
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_34.txt'
+END PERIOD  34
+
+BEGIN PERIOD  35
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_35.txt'
+END PERIOD  35
+
+BEGIN PERIOD  36
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_36.txt'
+END PERIOD  36
+
+BEGIN PERIOD  37
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_37.txt'
+END PERIOD  37
+
+BEGIN PERIOD  38
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_38.txt'
+END PERIOD  38
+
+BEGIN PERIOD  39
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_39.txt'
+END PERIOD  39
+
+BEGIN PERIOD  40
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_40.txt'
+END PERIOD  40
+
+BEGIN PERIOD  41
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_41.txt'
+END PERIOD  41
+
+BEGIN PERIOD  42
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_42.txt'
+END PERIOD  42
+
+BEGIN PERIOD  43
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_43.txt'
+END PERIOD  43
+
+BEGIN PERIOD  44
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_44.txt'
+END PERIOD  44
+
+BEGIN PERIOD  45
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_45.txt'
+END PERIOD  45
+
+BEGIN PERIOD  46
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_46.txt'
+END PERIOD  46
+
+BEGIN PERIOD  47
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_47.txt'
+END PERIOD  47
+
+BEGIN PERIOD  48
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_48.txt'
+END PERIOD  48
+
+BEGIN PERIOD  49
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_49.txt'
+END PERIOD  49
+
+BEGIN PERIOD  50
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_50.txt'
+END PERIOD  50
+
+BEGIN PERIOD  51
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_51.txt'
+END PERIOD  51
+
+BEGIN PERIOD  52
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_52.txt'
+END PERIOD  52
+
+BEGIN PERIOD  53
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_53.txt'
+END PERIOD  53
+
+BEGIN PERIOD  54
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_54.txt'
+END PERIOD  54
+
+BEGIN PERIOD  55
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_55.txt'
+END PERIOD  55
+
+BEGIN PERIOD  56
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_56.txt'
+END PERIOD  56
+
+BEGIN PERIOD  57
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_57.txt'
+END PERIOD  57
+
+BEGIN PERIOD  58
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_58.txt'
+END PERIOD  58
+
+BEGIN PERIOD  59
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_59.txt'
+END PERIOD  59
+
+BEGIN PERIOD  60
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_60.txt'
+END PERIOD  60
+
+BEGIN PERIOD  61
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_61.txt'
+END PERIOD  61
+
+BEGIN PERIOD  62
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_62.txt'
+END PERIOD  62
+
+BEGIN PERIOD  63
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_63.txt'
+END PERIOD  63
+
+BEGIN PERIOD  64
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_64.txt'
+END PERIOD  64
+
+BEGIN PERIOD  65
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_65.txt'
+END PERIOD  65
+
+BEGIN PERIOD  66
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_66.txt'
+END PERIOD  66
+
+BEGIN PERIOD  67
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_67.txt'
+END PERIOD  67
+
+BEGIN PERIOD  68
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_68.txt'
+END PERIOD  68
+
+BEGIN PERIOD  69
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_69.txt'
+END PERIOD  69
+
+BEGIN PERIOD  70
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_70.txt'
+END PERIOD  70
+
+BEGIN PERIOD  71
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_71.txt'
+END PERIOD  71
+
+BEGIN PERIOD  72
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_72.txt'
+END PERIOD  72
+
+BEGIN PERIOD  73
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_73.txt'
+END PERIOD  73
+
+BEGIN PERIOD  74
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_74.txt'
+END PERIOD  74
+
+BEGIN PERIOD  75
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_75.txt'
+END PERIOD  75
+
+BEGIN PERIOD  76
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_76.txt'
+END PERIOD  76
+
+BEGIN PERIOD  77
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_77.txt'
+END PERIOD  77
+
+BEGIN PERIOD  78
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_78.txt'
+END PERIOD  78
+
+BEGIN PERIOD  79
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_79.txt'
+END PERIOD  79
+
+BEGIN PERIOD  80
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_80.txt'
+END PERIOD  80
+
+BEGIN PERIOD  81
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_81.txt'
+END PERIOD  81
+
+BEGIN PERIOD  82
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_82.txt'
+END PERIOD  82
+
+BEGIN PERIOD  83
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_83.txt'
+END PERIOD  83
+
+BEGIN PERIOD  84
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_84.txt'
+END PERIOD  84
+
+BEGIN PERIOD  85
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_85.txt'
+END PERIOD  85
+
+BEGIN PERIOD  86
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_86.txt'
+END PERIOD  86
+
+BEGIN PERIOD  87
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_87.txt'
+END PERIOD  87
+
+BEGIN PERIOD  88
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_88.txt'
+END PERIOD  88
+
+BEGIN PERIOD  89
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_89.txt'
+END PERIOD  89
+
+BEGIN PERIOD  90
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_90.txt'
+END PERIOD  90
+
+BEGIN PERIOD  91
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_91.txt'
+END PERIOD  91
+
+BEGIN PERIOD  92
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_92.txt'
+END PERIOD  92
+
+BEGIN PERIOD  93
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_93.txt'
+END PERIOD  93
+
+BEGIN PERIOD  94
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_94.txt'
+END PERIOD  94
+
+BEGIN PERIOD  95
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_95.txt'
+END PERIOD  95
+
+BEGIN PERIOD  96
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_96.txt'
+END PERIOD  96
+
+BEGIN PERIOD  97
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_97.txt'
+END PERIOD  97
+
+BEGIN PERIOD  98
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_98.txt'
+END PERIOD  98
+
+BEGIN PERIOD  99
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_99.txt'
+END PERIOD  99
+
+BEGIN PERIOD  100
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_100.txt'
+END PERIOD  100
+
+BEGIN PERIOD  101
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_101.txt'
+END PERIOD  101
+
+BEGIN PERIOD  102
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_102.txt'
+END PERIOD  102
+
+BEGIN PERIOD  103
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_103.txt'
+END PERIOD  103
+
+BEGIN PERIOD  104
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_104.txt'
+END PERIOD  104
+
+BEGIN PERIOD  105
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_105.txt'
+END PERIOD  105
+
+BEGIN PERIOD  106
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_106.txt'
+END PERIOD  106
+
+BEGIN PERIOD  107
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_107.txt'
+END PERIOD  107
+
+BEGIN PERIOD  108
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_108.txt'
+END PERIOD  108
+
+BEGIN PERIOD  109
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_109.txt'
+END PERIOD  109
+
+BEGIN PERIOD  110
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_110.txt'
+END PERIOD  110
+
+BEGIN PERIOD  111
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_111.txt'
+END PERIOD  111
+
+BEGIN PERIOD  112
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_112.txt'
+END PERIOD  112
+
+BEGIN PERIOD  113
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_113.txt'
+END PERIOD  113
+
+BEGIN PERIOD  114
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_114.txt'
+END PERIOD  114
+
+BEGIN PERIOD  115
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_115.txt'
+END PERIOD  115
+
+BEGIN PERIOD  116
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_116.txt'
+END PERIOD  116
+
+BEGIN PERIOD  117
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_117.txt'
+END PERIOD  117
+
+BEGIN PERIOD  118
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_118.txt'
+END PERIOD  118
+
+BEGIN PERIOD  119
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_119.txt'
+END PERIOD  119
+
+BEGIN PERIOD  120
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_120.txt'
+END PERIOD  120
+
+BEGIN PERIOD  121
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_121.txt'
+END PERIOD  121
+
+BEGIN PERIOD  122
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_122.txt'
+END PERIOD  122
+
+BEGIN PERIOD  123
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_123.txt'
+END PERIOD  123
+
+BEGIN PERIOD  124
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_124.txt'
+END PERIOD  124
+
+BEGIN PERIOD  125
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_125.txt'
+END PERIOD  125
+
+BEGIN PERIOD  126
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_126.txt'
+END PERIOD  126
+
+BEGIN PERIOD  127
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_127.txt'
+END PERIOD  127
+
+BEGIN PERIOD  128
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_128.txt'
+END PERIOD  128
+
+BEGIN PERIOD  129
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_129.txt'
+END PERIOD  129
+
+BEGIN PERIOD  130
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_130.txt'
+END PERIOD  130
+
+BEGIN PERIOD  131
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_131.txt'
+END PERIOD  131
+
+BEGIN PERIOD  132
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_132.txt'
+END PERIOD  132
+
+BEGIN PERIOD  133
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_133.txt'
+END PERIOD  133
+
+BEGIN PERIOD  134
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_134.txt'
+END PERIOD  134
+
+BEGIN PERIOD  135
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_135.txt'
+END PERIOD  135
+
+BEGIN PERIOD  136
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_136.txt'
+END PERIOD  136
+
+BEGIN PERIOD  137
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_137.txt'
+END PERIOD  137
+
+BEGIN PERIOD  138
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_138.txt'
+END PERIOD  138
+
+BEGIN PERIOD  139
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_139.txt'
+END PERIOD  139
+
+BEGIN PERIOD  140
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_140.txt'
+END PERIOD  140
+
+BEGIN PERIOD  141
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_141.txt'
+END PERIOD  141
+
+BEGIN PERIOD  142
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_142.txt'
+END PERIOD  142
+
+BEGIN PERIOD  143
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_143.txt'
+END PERIOD  143
+
+BEGIN PERIOD  144
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_144.txt'
+END PERIOD  144
+
+BEGIN PERIOD  145
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_145.txt'
+END PERIOD  145
+
+BEGIN PERIOD  146
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_146.txt'
+END PERIOD  146
+
+BEGIN PERIOD  147
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_147.txt'
+END PERIOD  147
+
+BEGIN PERIOD  148
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_148.txt'
+END PERIOD  148
+
+BEGIN PERIOD  149
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_149.txt'
+END PERIOD  149
+
+BEGIN PERIOD  150
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_150.txt'
+END PERIOD  150
+
+BEGIN PERIOD  151
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_151.txt'
+END PERIOD  151
+
+BEGIN PERIOD  152
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_152.txt'
+END PERIOD  152
+
+BEGIN PERIOD  153
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_153.txt'
+END PERIOD  153
+
+BEGIN PERIOD  154
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_154.txt'
+END PERIOD  154
+
+BEGIN PERIOD  155
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_155.txt'
+END PERIOD  155
+
+BEGIN PERIOD  156
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_156.txt'
+END PERIOD  156
+
+BEGIN PERIOD  157
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_157.txt'
+END PERIOD  157
+
+BEGIN PERIOD  158
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_158.txt'
+END PERIOD  158
+
+BEGIN PERIOD  159
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_159.txt'
+END PERIOD  159
+
+BEGIN PERIOD  160
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_160.txt'
+END PERIOD  160
+
+BEGIN PERIOD  161
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_161.txt'
+END PERIOD  161
+
+BEGIN PERIOD  162
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_162.txt'
+END PERIOD  162
+
+BEGIN PERIOD  163
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_163.txt'
+END PERIOD  163
+
+BEGIN PERIOD  164
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_164.txt'
+END PERIOD  164
+
+BEGIN PERIOD  165
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_165.txt'
+END PERIOD  165
+
+BEGIN PERIOD  166
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_166.txt'
+END PERIOD  166
+
+BEGIN PERIOD  167
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_167.txt'
+END PERIOD  167
+
+BEGIN PERIOD  168
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_168.txt'
+END PERIOD  168
+
+BEGIN PERIOD  169
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_169.txt'
+END PERIOD  169
+
+BEGIN PERIOD  170
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_170.txt'
+END PERIOD  170
+
+BEGIN PERIOD  171
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_171.txt'
+END PERIOD  171
+
+BEGIN PERIOD  172
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_172.txt'
+END PERIOD  172
+
+BEGIN PERIOD  173
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_173.txt'
+END PERIOD  173
+
+BEGIN PERIOD  174
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_174.txt'
+END PERIOD  174
+
+BEGIN PERIOD  175
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_175.txt'
+END PERIOD  175
+
+BEGIN PERIOD  176
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_176.txt'
+END PERIOD  176
+
+BEGIN PERIOD  177
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_177.txt'
+END PERIOD  177
+
+BEGIN PERIOD  178
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_178.txt'
+END PERIOD  178
+
+BEGIN PERIOD  179
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_179.txt'
+END PERIOD  179
+
+BEGIN PERIOD  180
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_180.txt'
+END PERIOD  180
+
+BEGIN PERIOD  181
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_181.txt'
+END PERIOD  181
+
+BEGIN PERIOD  182
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_182.txt'
+END PERIOD  182
+
+BEGIN PERIOD  183
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_183.txt'
+END PERIOD  183
+
+BEGIN PERIOD  184
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_184.txt'
+END PERIOD  184
+
+BEGIN PERIOD  185
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_185.txt'
+END PERIOD  185
+
+BEGIN PERIOD  186
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_186.txt'
+END PERIOD  186
+
+BEGIN PERIOD  187
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_187.txt'
+END PERIOD  187
+
+BEGIN PERIOD  188
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_188.txt'
+END PERIOD  188
+
+BEGIN PERIOD  189
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_189.txt'
+END PERIOD  189
+
+BEGIN PERIOD  190
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_190.txt'
+END PERIOD  190
+
+BEGIN PERIOD  191
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_191.txt'
+END PERIOD  191
+
+BEGIN PERIOD  192
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_192.txt'
+END PERIOD  192
+
+BEGIN PERIOD  193
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_193.txt'
+END PERIOD  193
+
+BEGIN PERIOD  194
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_194.txt'
+END PERIOD  194
+
+BEGIN PERIOD  195
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_195.txt'
+END PERIOD  195
+
+BEGIN PERIOD  196
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_196.txt'
+END PERIOD  196
+
+BEGIN PERIOD  197
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_197.txt'
+END PERIOD  197
+
+BEGIN PERIOD  198
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_198.txt'
+END PERIOD  198
+
+BEGIN PERIOD  199
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_199.txt'
+END PERIOD  199
+
+BEGIN PERIOD  200
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_200.txt'
+END PERIOD  200
+
+BEGIN PERIOD  201
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_201.txt'
+END PERIOD  201
+
+BEGIN PERIOD  202
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_202.txt'
+END PERIOD  202
+
+BEGIN PERIOD  203
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_203.txt'
+END PERIOD  203
+
+BEGIN PERIOD  204
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_204.txt'
+END PERIOD  204
+
+BEGIN PERIOD  205
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_205.txt'
+END PERIOD  205
+
+BEGIN PERIOD  206
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_206.txt'
+END PERIOD  206
+
+BEGIN PERIOD  207
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_207.txt'
+END PERIOD  207
+
+BEGIN PERIOD  208
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_208.txt'
+END PERIOD  208
+
+BEGIN PERIOD  209
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_209.txt'
+END PERIOD  209
+
+BEGIN PERIOD  210
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_210.txt'
+END PERIOD  210
+
+BEGIN PERIOD  211
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_211.txt'
+END PERIOD  211
+
+BEGIN PERIOD  212
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_212.txt'
+END PERIOD  212
+
+BEGIN PERIOD  213
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_213.txt'
+END PERIOD  213
+
+BEGIN PERIOD  214
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_214.txt'
+END PERIOD  214
+
+BEGIN PERIOD  215
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_215.txt'
+END PERIOD  215
+
+BEGIN PERIOD  216
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_216.txt'
+END PERIOD  216
+
+BEGIN PERIOD  217
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_217.txt'
+END PERIOD  217
+
+BEGIN PERIOD  218
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_218.txt'
+END PERIOD  218
+
+BEGIN PERIOD  219
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_219.txt'
+END PERIOD  219
+
+BEGIN PERIOD  220
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_220.txt'
+END PERIOD  220
+
+BEGIN PERIOD  221
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_221.txt'
+END PERIOD  221
+
+BEGIN PERIOD  222
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_222.txt'
+END PERIOD  222
+
+BEGIN PERIOD  223
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_223.txt'
+END PERIOD  223
+
+BEGIN PERIOD  224
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_224.txt'
+END PERIOD  224
+
+BEGIN PERIOD  225
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_225.txt'
+END PERIOD  225
+
+BEGIN PERIOD  226
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_226.txt'
+END PERIOD  226
+
+BEGIN PERIOD  227
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_227.txt'
+END PERIOD  227
+
+BEGIN PERIOD  228
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_228.txt'
+END PERIOD  228
+
+BEGIN PERIOD  229
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_229.txt'
+END PERIOD  229
+
+BEGIN PERIOD  230
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_230.txt'
+END PERIOD  230
+
+BEGIN PERIOD  231
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_231.txt'
+END PERIOD  231
+
+BEGIN PERIOD  232
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_232.txt'
+END PERIOD  232
+
+BEGIN PERIOD  233
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_233.txt'
+END PERIOD  233
+
+BEGIN PERIOD  234
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_234.txt'
+END PERIOD  234
+
+BEGIN PERIOD  235
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_235.txt'
+END PERIOD  235
+
+BEGIN PERIOD  236
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_236.txt'
+END PERIOD  236
+
+BEGIN PERIOD  237
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_237.txt'
+END PERIOD  237
+
+BEGIN PERIOD  238
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_238.txt'
+END PERIOD  238
+
+BEGIN PERIOD  239
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_239.txt'
+END PERIOD  239
+
+BEGIN PERIOD  240
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_240.txt'
+END PERIOD  240
+
+BEGIN PERIOD  241
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_241.txt'
+END PERIOD  241
+
+BEGIN PERIOD  242
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_242.txt'
+END PERIOD  242
+
+BEGIN PERIOD  243
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_243.txt'
+END PERIOD  243
+
+BEGIN PERIOD  244
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_244.txt'
+END PERIOD  244
+
+BEGIN PERIOD  245
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_245.txt'
+END PERIOD  245
+
+BEGIN PERIOD  246
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_246.txt'
+END PERIOD  246
+
+BEGIN PERIOD  247
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_247.txt'
+END PERIOD  247
+
+BEGIN PERIOD  248
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_248.txt'
+END PERIOD  248
+
+BEGIN PERIOD  249
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_249.txt'
+END PERIOD  249
+
+BEGIN PERIOD  250
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_250.txt'
+END PERIOD  250
+
+BEGIN PERIOD  251
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_251.txt'
+END PERIOD  251
+
+BEGIN PERIOD  252
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_252.txt'
+END PERIOD  252
+
+BEGIN PERIOD  253
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_253.txt'
+END PERIOD  253
+
+BEGIN PERIOD  254
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_254.txt'
+END PERIOD  254
+
+BEGIN PERIOD  255
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_255.txt'
+END PERIOD  255
+
+BEGIN PERIOD  256
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_256.txt'
+END PERIOD  256
+
+BEGIN PERIOD  257
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_257.txt'
+END PERIOD  257
+
+BEGIN PERIOD  258
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_258.txt'
+END PERIOD  258
+
+BEGIN PERIOD  259
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_259.txt'
+END PERIOD  259
+
+BEGIN PERIOD  260
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_260.txt'
+END PERIOD  260
+
+BEGIN PERIOD  261
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_261.txt'
+END PERIOD  261
+
+BEGIN PERIOD  262
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_262.txt'
+END PERIOD  262
+
+BEGIN PERIOD  263
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_263.txt'
+END PERIOD  263
+
+BEGIN PERIOD  264
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_264.txt'
+END PERIOD  264
+
+BEGIN PERIOD  265
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_265.txt'
+END PERIOD  265
+
+BEGIN PERIOD  266
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_266.txt'
+END PERIOD  266
+
+BEGIN PERIOD  267
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_267.txt'
+END PERIOD  267
+
+BEGIN PERIOD  268
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_268.txt'
+END PERIOD  268
+
+BEGIN PERIOD  269
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_269.txt'
+END PERIOD  269
+
+BEGIN PERIOD  270
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_270.txt'
+END PERIOD  270
+
+BEGIN PERIOD  271
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_271.txt'
+END PERIOD  271
+
+BEGIN PERIOD  272
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_272.txt'
+END PERIOD  272
+
+BEGIN PERIOD  273
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_273.txt'
+END PERIOD  273
+
+BEGIN PERIOD  274
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_274.txt'
+END PERIOD  274
+
+BEGIN PERIOD  275
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_275.txt'
+END PERIOD  275
+
+BEGIN PERIOD  276
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_276.txt'
+END PERIOD  276
+
+BEGIN PERIOD  277
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_277.txt'
+END PERIOD  277
+
+BEGIN PERIOD  278
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_278.txt'
+END PERIOD  278
+
+BEGIN PERIOD  279
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_279.txt'
+END PERIOD  279
+
+BEGIN PERIOD  280
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_280.txt'
+END PERIOD  280
+
+BEGIN PERIOD  281
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_281.txt'
+END PERIOD  281
+
+BEGIN PERIOD  282
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_282.txt'
+END PERIOD  282
+
+BEGIN PERIOD  283
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_283.txt'
+END PERIOD  283
+
+BEGIN PERIOD  284
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_284.txt'
+END PERIOD  284
+
+BEGIN PERIOD  285
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_285.txt'
+END PERIOD  285
+
+BEGIN PERIOD  286
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_286.txt'
+END PERIOD  286
+
+BEGIN PERIOD  287
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_287.txt'
+END PERIOD  287
+
+BEGIN PERIOD  288
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_288.txt'
+END PERIOD  288
+
+BEGIN PERIOD  289
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_289.txt'
+END PERIOD  289
+
+BEGIN PERIOD  290
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_290.txt'
+END PERIOD  290
+
+BEGIN PERIOD  291
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_291.txt'
+END PERIOD  291
+
+BEGIN PERIOD  292
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_292.txt'
+END PERIOD  292
+
+BEGIN PERIOD  293
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_293.txt'
+END PERIOD  293
+
+BEGIN PERIOD  294
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_294.txt'
+END PERIOD  294
+
+BEGIN PERIOD  295
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_295.txt'
+END PERIOD  295
+
+BEGIN PERIOD  296
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_296.txt'
+END PERIOD  296
+
+BEGIN PERIOD  297
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_297.txt'
+END PERIOD  297
+
+BEGIN PERIOD  298
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_298.txt'
+END PERIOD  298
+
+BEGIN PERIOD  299
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_299.txt'
+END PERIOD  299
+
+BEGIN PERIOD  300
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_300.txt'
+END PERIOD  300
+
+BEGIN PERIOD  301
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_301.txt'
+END PERIOD  301
+
+BEGIN PERIOD  302
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_302.txt'
+END PERIOD  302
+
+BEGIN PERIOD  303
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_303.txt'
+END PERIOD  303
+
+BEGIN PERIOD  304
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_304.txt'
+END PERIOD  304
+
+BEGIN PERIOD  305
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_305.txt'
+END PERIOD  305
+
+BEGIN PERIOD  306
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_306.txt'
+END PERIOD  306
+
+BEGIN PERIOD  307
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_307.txt'
+END PERIOD  307
+
+BEGIN PERIOD  308
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_308.txt'
+END PERIOD  308
+
+BEGIN PERIOD  309
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_309.txt'
+END PERIOD  309
+
+BEGIN PERIOD  310
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_310.txt'
+END PERIOD  310
+
+BEGIN PERIOD  311
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_311.txt'
+END PERIOD  311
+
+BEGIN PERIOD  312
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_312.txt'
+END PERIOD  312
+
+BEGIN PERIOD  313
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_313.txt'
+END PERIOD  313
+
+BEGIN PERIOD  314
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_314.txt'
+END PERIOD  314
+
+BEGIN PERIOD  315
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_315.txt'
+END PERIOD  315
+
+BEGIN PERIOD  316
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_316.txt'
+END PERIOD  316
+
+BEGIN PERIOD  317
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_317.txt'
+END PERIOD  317
+
+BEGIN PERIOD  318
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_318.txt'
+END PERIOD  318
+
+BEGIN PERIOD  319
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_319.txt'
+END PERIOD  319
+
+BEGIN PERIOD  320
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_320.txt'
+END PERIOD  320
+
+BEGIN PERIOD  321
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_321.txt'
+END PERIOD  321
+
+BEGIN PERIOD  322
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_322.txt'
+END PERIOD  322
+
+BEGIN PERIOD  323
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_323.txt'
+END PERIOD  323
+
+BEGIN PERIOD  324
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_324.txt'
+END PERIOD  324
+
+BEGIN PERIOD  325
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_325.txt'
+END PERIOD  325
+
+BEGIN PERIOD  326
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_326.txt'
+END PERIOD  326
+
+BEGIN PERIOD  327
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_327.txt'
+END PERIOD  327
+
+BEGIN PERIOD  328
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_328.txt'
+END PERIOD  328
+
+BEGIN PERIOD  329
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_329.txt'
+END PERIOD  329
+
+BEGIN PERIOD  330
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_330.txt'
+END PERIOD  330
+
+BEGIN PERIOD  331
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_331.txt'
+END PERIOD  331
+
+BEGIN PERIOD  332
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_332.txt'
+END PERIOD  332
+
+BEGIN PERIOD  333
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_333.txt'
+END PERIOD  333
+
+BEGIN PERIOD  334
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_334.txt'
+END PERIOD  334
+
+BEGIN PERIOD  335
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_335.txt'
+END PERIOD  335
+
+BEGIN PERIOD  336
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_336.txt'
+END PERIOD  336
+
+BEGIN PERIOD  337
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_337.txt'
+END PERIOD  337
+
+BEGIN PERIOD  338
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_338.txt'
+END PERIOD  338
+
+BEGIN PERIOD  339
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_339.txt'
+END PERIOD  339
+
+BEGIN PERIOD  340
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_340.txt'
+END PERIOD  340
+
+BEGIN PERIOD  341
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_341.txt'
+END PERIOD  341
+
+BEGIN PERIOD  342
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_342.txt'
+END PERIOD  342
+
+BEGIN PERIOD  343
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_343.txt'
+END PERIOD  343
+
+BEGIN PERIOD  344
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_344.txt'
+END PERIOD  344
+
+BEGIN PERIOD  345
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_345.txt'
+END PERIOD  345
+
+BEGIN PERIOD  346
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_346.txt'
+END PERIOD  346
+
+BEGIN PERIOD  347
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_347.txt'
+END PERIOD  347
+
+BEGIN PERIOD  348
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_348.txt'
+END PERIOD  348
+
+BEGIN PERIOD  349
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_349.txt'
+END PERIOD  349
+
+BEGIN PERIOD  350
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_350.txt'
+END PERIOD  350
+
+BEGIN PERIOD  351
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_351.txt'
+END PERIOD  351
+
+BEGIN PERIOD  352
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_352.txt'
+END PERIOD  352
+
+BEGIN PERIOD  353
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_353.txt'
+END PERIOD  353
+
+BEGIN PERIOD  354
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_354.txt'
+END PERIOD  354
+
+BEGIN PERIOD  355
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_355.txt'
+END PERIOD  355
+
+BEGIN PERIOD  356
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_356.txt'
+END PERIOD  356
+
+BEGIN PERIOD  357
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_357.txt'
+END PERIOD  357
+
+BEGIN PERIOD  358
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_358.txt'
+END PERIOD  358
+
+BEGIN PERIOD  359
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_359.txt'
+END PERIOD  359
+
+BEGIN PERIOD  360
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_360.txt'
+END PERIOD  360
+
+BEGIN PERIOD  361
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_361.txt'
+END PERIOD  361
+
+BEGIN PERIOD  362
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_362.txt'
+END PERIOD  362
+
+BEGIN PERIOD  363
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_363.txt'
+END PERIOD  363
+
+BEGIN PERIOD  364
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_364.txt'
+END PERIOD  364
+
+BEGIN PERIOD  365
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_365.txt'
+END PERIOD  365
+
+BEGIN PERIOD  366
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_366.txt'
+END PERIOD  366
+
+BEGIN PERIOD  367
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_367.txt'
+END PERIOD  367
+
+BEGIN PERIOD  368
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_368.txt'
+END PERIOD  368
+
+BEGIN PERIOD  369
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_369.txt'
+END PERIOD  369
+
+BEGIN PERIOD  370
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_370.txt'
+END PERIOD  370
+
+BEGIN PERIOD  371
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_371.txt'
+END PERIOD  371
+
+BEGIN PERIOD  372
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_372.txt'
+END PERIOD  372
+
+BEGIN PERIOD  373
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_373.txt'
+END PERIOD  373
+
+BEGIN PERIOD  374
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_374.txt'
+END PERIOD  374
+
+BEGIN PERIOD  375
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_375.txt'
+END PERIOD  375
+
+BEGIN PERIOD  376
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_376.txt'
+END PERIOD  376
+
+BEGIN PERIOD  377
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_377.txt'
+END PERIOD  377
+
+BEGIN PERIOD  378
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_378.txt'
+END PERIOD  378
+
+BEGIN PERIOD  379
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_379.txt'
+END PERIOD  379
+
+BEGIN PERIOD  380
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_380.txt'
+END PERIOD  380
+
+BEGIN PERIOD  381
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_381.txt'
+END PERIOD  381
+
+BEGIN PERIOD  382
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_382.txt'
+END PERIOD  382
+
+BEGIN PERIOD  383
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_383.txt'
+END PERIOD  383
+
+BEGIN PERIOD  384
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_384.txt'
+END PERIOD  384
+
+BEGIN PERIOD  385
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_385.txt'
+END PERIOD  385
+
+BEGIN PERIOD  386
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_386.txt'
+END PERIOD  386
+
+BEGIN PERIOD  387
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_387.txt'
+END PERIOD  387
+
+BEGIN PERIOD  388
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_388.txt'
+END PERIOD  388
+
+BEGIN PERIOD  389
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_389.txt'
+END PERIOD  389
+
+BEGIN PERIOD  390
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_390.txt'
+END PERIOD  390
+
+BEGIN PERIOD  391
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_391.txt'
+END PERIOD  391
+
+BEGIN PERIOD  392
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_392.txt'
+END PERIOD  392
+
+BEGIN PERIOD  393
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_393.txt'
+END PERIOD  393
+
+BEGIN PERIOD  394
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_394.txt'
+END PERIOD  394
+
+BEGIN PERIOD  395
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_395.txt'
+END PERIOD  395
+
+BEGIN PERIOD  396
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_396.txt'
+END PERIOD  396
+
+BEGIN PERIOD  397
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_397.txt'
+END PERIOD  397
+
+BEGIN PERIOD  398
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_398.txt'
+END PERIOD  398
+
+BEGIN PERIOD  399
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_399.txt'
+END PERIOD  399
+
+BEGIN PERIOD  400
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_400.txt'
+END PERIOD  400
+
+BEGIN PERIOD  401
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_401.txt'
+END PERIOD  401
+
+BEGIN PERIOD  402
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_402.txt'
+END PERIOD  402
+
+BEGIN PERIOD  403
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_403.txt'
+END PERIOD  403
+
+BEGIN PERIOD  404
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_404.txt'
+END PERIOD  404
+
+BEGIN PERIOD  405
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_405.txt'
+END PERIOD  405
+
+BEGIN PERIOD  406
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_406.txt'
+END PERIOD  406
+
+BEGIN PERIOD  407
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_407.txt'
+END PERIOD  407
+
+BEGIN PERIOD  408
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_408.txt'
+END PERIOD  408
+
+BEGIN PERIOD  409
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_409.txt'
+END PERIOD  409
+
+BEGIN PERIOD  410
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_410.txt'
+END PERIOD  410
+
+BEGIN PERIOD  411
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_411.txt'
+END PERIOD  411
+
+BEGIN PERIOD  412
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_412.txt'
+END PERIOD  412
+
+BEGIN PERIOD  413
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_413.txt'
+END PERIOD  413
+
+BEGIN PERIOD  414
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_414.txt'
+END PERIOD  414
+
+BEGIN PERIOD  415
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_415.txt'
+END PERIOD  415
+
+BEGIN PERIOD  416
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_416.txt'
+END PERIOD  416
+
+BEGIN PERIOD  417
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_417.txt'
+END PERIOD  417
+
+BEGIN PERIOD  418
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_418.txt'
+END PERIOD  418
+
+BEGIN PERIOD  419
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_419.txt'
+END PERIOD  419
+
+BEGIN PERIOD  420
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_420.txt'
+END PERIOD  420
+
+BEGIN PERIOD  421
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_421.txt'
+END PERIOD  421
+
+BEGIN PERIOD  422
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_422.txt'
+END PERIOD  422
+
+BEGIN PERIOD  423
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_423.txt'
+END PERIOD  423
+
+BEGIN PERIOD  424
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_424.txt'
+END PERIOD  424
+
+BEGIN PERIOD  425
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_425.txt'
+END PERIOD  425
+
+BEGIN PERIOD  426
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_426.txt'
+END PERIOD  426
+
+BEGIN PERIOD  427
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_427.txt'
+END PERIOD  427
+
+BEGIN PERIOD  428
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_428.txt'
+END PERIOD  428
+
+BEGIN PERIOD  429
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_429.txt'
+END PERIOD  429
+
+BEGIN PERIOD  430
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_430.txt'
+END PERIOD  430
+
+BEGIN PERIOD  431
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_431.txt'
+END PERIOD  431
+
+BEGIN PERIOD  432
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_432.txt'
+END PERIOD  432
+
+BEGIN PERIOD  433
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_433.txt'
+END PERIOD  433
+
+BEGIN PERIOD  434
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_434.txt'
+END PERIOD  434
+
+BEGIN PERIOD  435
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_435.txt'
+END PERIOD  435
+
+BEGIN PERIOD  436
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_436.txt'
+END PERIOD  436
+
+BEGIN PERIOD  437
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_437.txt'
+END PERIOD  437
+
+BEGIN PERIOD  438
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_438.txt'
+END PERIOD  438
+
+BEGIN PERIOD  439
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_439.txt'
+END PERIOD  439
+
+BEGIN PERIOD  440
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_440.txt'
+END PERIOD  440
+
+BEGIN PERIOD  441
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_441.txt'
+END PERIOD  441
+
+BEGIN PERIOD  442
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_442.txt'
+END PERIOD  442
+
+BEGIN PERIOD  443
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_443.txt'
+END PERIOD  443
+
+BEGIN PERIOD  444
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_444.txt'
+END PERIOD  444
+
+BEGIN PERIOD  445
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_445.txt'
+END PERIOD  445
+
+BEGIN PERIOD  446
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_446.txt'
+END PERIOD  446
+
+BEGIN PERIOD  447
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_447.txt'
+END PERIOD  447
+
+BEGIN PERIOD  448
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_448.txt'
+END PERIOD  448
+
+BEGIN PERIOD  449
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_449.txt'
+END PERIOD  449
+
+BEGIN PERIOD  450
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_450.txt'
+END PERIOD  450
+
+BEGIN PERIOD  451
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_451.txt'
+END PERIOD  451
+
+BEGIN PERIOD  452
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_452.txt'
+END PERIOD  452
+
+BEGIN PERIOD  453
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_453.txt'
+END PERIOD  453
+
+BEGIN PERIOD  454
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_454.txt'
+END PERIOD  454
+
+BEGIN PERIOD  455
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_455.txt'
+END PERIOD  455
+
+BEGIN PERIOD  456
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_456.txt'
+END PERIOD  456
+
+BEGIN PERIOD  457
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_457.txt'
+END PERIOD  457
+
+BEGIN PERIOD  458
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_458.txt'
+END PERIOD  458
+
+BEGIN PERIOD  459
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_459.txt'
+END PERIOD  459
+
+BEGIN PERIOD  460
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_460.txt'
+END PERIOD  460
+
+BEGIN PERIOD  461
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_461.txt'
+END PERIOD  461
+
+BEGIN PERIOD  462
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_462.txt'
+END PERIOD  462
+
+BEGIN PERIOD  463
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_463.txt'
+END PERIOD  463
+
+BEGIN PERIOD  464
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_464.txt'
+END PERIOD  464
+
+BEGIN PERIOD  465
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_465.txt'
+END PERIOD  465
+
+BEGIN PERIOD  466
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_466.txt'
+END PERIOD  466
+
+BEGIN PERIOD  467
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_467.txt'
+END PERIOD  467
+
+BEGIN PERIOD  468
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_468.txt'
+END PERIOD  468
+
+BEGIN PERIOD  469
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_469.txt'
+END PERIOD  469
+
+BEGIN PERIOD  470
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_470.txt'
+END PERIOD  470
+
+BEGIN PERIOD  471
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_471.txt'
+END PERIOD  471
+
+BEGIN PERIOD  472
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_472.txt'
+END PERIOD  472
+
+BEGIN PERIOD  473
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_473.txt'
+END PERIOD  473
+
+BEGIN PERIOD  474
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_474.txt'
+END PERIOD  474
+
+BEGIN PERIOD  475
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_475.txt'
+END PERIOD  475
+
+BEGIN PERIOD  476
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_476.txt'
+END PERIOD  476
+
+BEGIN PERIOD  477
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_477.txt'
+END PERIOD  477
+
+BEGIN PERIOD  478
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_478.txt'
+END PERIOD  478
+
+BEGIN PERIOD  479
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_479.txt'
+END PERIOD  479
+
+BEGIN PERIOD  480
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_480.txt'
+END PERIOD  480
+
+BEGIN PERIOD  481
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_481.txt'
+END PERIOD  481
+
+BEGIN PERIOD  482
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_482.txt'
+END PERIOD  482
+
+BEGIN PERIOD  483
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_483.txt'
+END PERIOD  483
+
+BEGIN PERIOD  484
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_484.txt'
+END PERIOD  484
+
+BEGIN PERIOD  485
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_485.txt'
+END PERIOD  485
+
+BEGIN PERIOD  486
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_486.txt'
+END PERIOD  486
+
+BEGIN PERIOD  487
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_487.txt'
+END PERIOD  487
+
+BEGIN PERIOD  488
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_488.txt'
+END PERIOD  488
+
+BEGIN PERIOD  489
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_489.txt'
+END PERIOD  489
+
+BEGIN PERIOD  490
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_490.txt'
+END PERIOD  490
+
+BEGIN PERIOD  491
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_491.txt'
+END PERIOD  491
+
+BEGIN PERIOD  492
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_492.txt'
+END PERIOD  492
+
+BEGIN PERIOD  493
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_493.txt'
+END PERIOD  493
+
+BEGIN PERIOD  494
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_494.txt'
+END PERIOD  494
+
+BEGIN PERIOD  495
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_495.txt'
+END PERIOD  495
+
+BEGIN PERIOD  496
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_496.txt'
+END PERIOD  496
+
+BEGIN PERIOD  497
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_497.txt'
+END PERIOD  497
+
+BEGIN PERIOD  498
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_498.txt'
+END PERIOD  498
+
+BEGIN PERIOD  499
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_499.txt'
+END PERIOD  499
+
+BEGIN PERIOD  500
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_500.txt'
+END PERIOD  500
+
+BEGIN PERIOD  501
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_501.txt'
+END PERIOD  501
+
+BEGIN PERIOD  502
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_502.txt'
+END PERIOD  502
+
+BEGIN PERIOD  503
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_503.txt'
+END PERIOD  503
+
+BEGIN PERIOD  504
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_504.txt'
+END PERIOD  504
+
+BEGIN PERIOD  505
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_505.txt'
+END PERIOD  505
+
+BEGIN PERIOD  506
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_506.txt'
+END PERIOD  506
+
+BEGIN PERIOD  507
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_507.txt'
+END PERIOD  507
+
+BEGIN PERIOD  508
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_508.txt'
+END PERIOD  508
+
+BEGIN PERIOD  509
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_509.txt'
+END PERIOD  509
+
+BEGIN PERIOD  510
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_510.txt'
+END PERIOD  510
+
+BEGIN PERIOD  511
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_511.txt'
+END PERIOD  511
+
+BEGIN PERIOD  512
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_512.txt'
+END PERIOD  512
+
+BEGIN PERIOD  513
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_513.txt'
+END PERIOD  513
+
+BEGIN PERIOD  514
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_514.txt'
+END PERIOD  514
+
+BEGIN PERIOD  515
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_515.txt'
+END PERIOD  515
+
+BEGIN PERIOD  516
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_516.txt'
+END PERIOD  516
+
+BEGIN PERIOD  517
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_517.txt'
+END PERIOD  517
+
+BEGIN PERIOD  518
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_518.txt'
+END PERIOD  518
+
+BEGIN PERIOD  519
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_519.txt'
+END PERIOD  519
+
+BEGIN PERIOD  520
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_520.txt'
+END PERIOD  520
+
+BEGIN PERIOD  521
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_521.txt'
+END PERIOD  521
+
+BEGIN PERIOD  522
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_522.txt'
+END PERIOD  522
+
+BEGIN PERIOD  523
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_523.txt'
+END PERIOD  523
+
+BEGIN PERIOD  524
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_524.txt'
+END PERIOD  524
+
+BEGIN PERIOD  525
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_525.txt'
+END PERIOD  525
+
+BEGIN PERIOD  526
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_526.txt'
+END PERIOD  526
+
+BEGIN PERIOD  527
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_527.txt'
+END PERIOD  527
+
+BEGIN PERIOD  528
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_528.txt'
+END PERIOD  528
+
+BEGIN PERIOD  529
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_529.txt'
+END PERIOD  529
+
+BEGIN PERIOD  530
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_530.txt'
+END PERIOD  530
+
+BEGIN PERIOD  531
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_531.txt'
+END PERIOD  531
+
+BEGIN PERIOD  532
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_532.txt'
+END PERIOD  532
+
+BEGIN PERIOD  533
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_533.txt'
+END PERIOD  533
+
+BEGIN PERIOD  534
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_534.txt'
+END PERIOD  534
+
+BEGIN PERIOD  535
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_535.txt'
+END PERIOD  535
+
+BEGIN PERIOD  536
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_536.txt'
+END PERIOD  536
+
+BEGIN PERIOD  537
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_537.txt'
+END PERIOD  537
+
+BEGIN PERIOD  538
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_538.txt'
+END PERIOD  538
+
+BEGIN PERIOD  539
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_539.txt'
+END PERIOD  539
+
+BEGIN PERIOD  540
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_540.txt'
+END PERIOD  540
+
+BEGIN PERIOD  541
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_541.txt'
+END PERIOD  541
+
+BEGIN PERIOD  542
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_542.txt'
+END PERIOD  542
+
+BEGIN PERIOD  543
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_543.txt'
+END PERIOD  543
+
+BEGIN PERIOD  544
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_544.txt'
+END PERIOD  544
+
+BEGIN PERIOD  545
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_545.txt'
+END PERIOD  545
+
+BEGIN PERIOD  546
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_546.txt'
+END PERIOD  546
+
+BEGIN PERIOD  547
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_547.txt'
+END PERIOD  547
+
+BEGIN PERIOD  548
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_548.txt'
+END PERIOD  548
+
+BEGIN PERIOD  549
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_549.txt'
+END PERIOD  549
+
+BEGIN PERIOD  550
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_550.txt'
+END PERIOD  550
+
+BEGIN PERIOD  551
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_551.txt'
+END PERIOD  551
+
+BEGIN PERIOD  552
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_552.txt'
+END PERIOD  552
+
+BEGIN PERIOD  553
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_553.txt'
+END PERIOD  553
+
+BEGIN PERIOD  554
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_554.txt'
+END PERIOD  554
+
+BEGIN PERIOD  555
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_555.txt'
+END PERIOD  555
+
+BEGIN PERIOD  556
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_556.txt'
+END PERIOD  556
+
+BEGIN PERIOD  557
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_557.txt'
+END PERIOD  557
+
+BEGIN PERIOD  558
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_558.txt'
+END PERIOD  558
+
+BEGIN PERIOD  559
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_559.txt'
+END PERIOD  559
+
+BEGIN PERIOD  560
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_560.txt'
+END PERIOD  560
+
+BEGIN PERIOD  561
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_561.txt'
+END PERIOD  561
+
+BEGIN PERIOD  562
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_562.txt'
+END PERIOD  562
+
+BEGIN PERIOD  563
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_563.txt'
+END PERIOD  563
+
+BEGIN PERIOD  564
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_564.txt'
+END PERIOD  564
+
+BEGIN PERIOD  565
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_565.txt'
+END PERIOD  565
+
+BEGIN PERIOD  566
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_566.txt'
+END PERIOD  566
+
+BEGIN PERIOD  567
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_567.txt'
+END PERIOD  567
+
+BEGIN PERIOD  568
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_568.txt'
+END PERIOD  568
+
+BEGIN PERIOD  569
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_569.txt'
+END PERIOD  569
+
+BEGIN PERIOD  570
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_570.txt'
+END PERIOD  570
+
+BEGIN PERIOD  571
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_571.txt'
+END PERIOD  571
+
+BEGIN PERIOD  572
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_572.txt'
+END PERIOD  572
+
+BEGIN PERIOD  573
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_573.txt'
+END PERIOD  573
+
+BEGIN PERIOD  574
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_574.txt'
+END PERIOD  574
+
+BEGIN PERIOD  575
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_575.txt'
+END PERIOD  575
+
+BEGIN PERIOD  576
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_576.txt'
+END PERIOD  576
+
+BEGIN PERIOD  577
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_577.txt'
+END PERIOD  577
+
+BEGIN PERIOD  578
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_578.txt'
+END PERIOD  578
+
+BEGIN PERIOD  579
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_579.txt'
+END PERIOD  579
+
+BEGIN PERIOD  580
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_580.txt'
+END PERIOD  580
+
+BEGIN PERIOD  581
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_581.txt'
+END PERIOD  581
+
+BEGIN PERIOD  582
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_582.txt'
+END PERIOD  582
+
+BEGIN PERIOD  583
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_583.txt'
+END PERIOD  583
+
+BEGIN PERIOD  584
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_584.txt'
+END PERIOD  584
+
+BEGIN PERIOD  585
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_585.txt'
+END PERIOD  585
+
+BEGIN PERIOD  586
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_586.txt'
+END PERIOD  586
+
+BEGIN PERIOD  587
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_587.txt'
+END PERIOD  587
+
+BEGIN PERIOD  588
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_588.txt'
+END PERIOD  588
+
+BEGIN PERIOD  589
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_589.txt'
+END PERIOD  589
+
+BEGIN PERIOD  590
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_590.txt'
+END PERIOD  590
+
+BEGIN PERIOD  591
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_591.txt'
+END PERIOD  591
+
+BEGIN PERIOD  592
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_592.txt'
+END PERIOD  592
+
+BEGIN PERIOD  593
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_593.txt'
+END PERIOD  593
+
+BEGIN PERIOD  594
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_594.txt'
+END PERIOD  594
+
+BEGIN PERIOD  595
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_595.txt'
+END PERIOD  595
+
+BEGIN PERIOD  596
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_596.txt'
+END PERIOD  596
+
+BEGIN PERIOD  597
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_597.txt'
+END PERIOD  597
+
+BEGIN PERIOD  598
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_598.txt'
+END PERIOD  598
+
+BEGIN PERIOD  599
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_599.txt'
+END PERIOD  599
+
+BEGIN PERIOD  600
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_600.txt'
+END PERIOD  600
+
+BEGIN PERIOD  601
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_601.txt'
+END PERIOD  601
+
+BEGIN PERIOD  602
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_602.txt'
+END PERIOD  602
+
+BEGIN PERIOD  603
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_603.txt'
+END PERIOD  603
+
+BEGIN PERIOD  604
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_604.txt'
+END PERIOD  604
+
+BEGIN PERIOD  605
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_605.txt'
+END PERIOD  605
+
+BEGIN PERIOD  606
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_606.txt'
+END PERIOD  606
+
+BEGIN PERIOD  607
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_607.txt'
+END PERIOD  607
+
+BEGIN PERIOD  608
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_608.txt'
+END PERIOD  608
+
+BEGIN PERIOD  609
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_609.txt'
+END PERIOD  609
+
+BEGIN PERIOD  610
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_610.txt'
+END PERIOD  610
+
+BEGIN PERIOD  611
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_611.txt'
+END PERIOD  611
+
+BEGIN PERIOD  612
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_612.txt'
+END PERIOD  612
+
+BEGIN PERIOD  613
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_613.txt'
+END PERIOD  613
+
+BEGIN PERIOD  614
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_614.txt'
+END PERIOD  614
+
+BEGIN PERIOD  615
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_615.txt'
+END PERIOD  615
+
+BEGIN PERIOD  616
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_616.txt'
+END PERIOD  616
+
+BEGIN PERIOD  617
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_617.txt'
+END PERIOD  617
+
+BEGIN PERIOD  618
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_618.txt'
+END PERIOD  618
+
+BEGIN PERIOD  619
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_619.txt'
+END PERIOD  619
+
+BEGIN PERIOD  620
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_620.txt'
+END PERIOD  620
+
+BEGIN PERIOD  621
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_621.txt'
+END PERIOD  621
+
+BEGIN PERIOD  622
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_622.txt'
+END PERIOD  622
+
+BEGIN PERIOD  623
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_623.txt'
+END PERIOD  623
+
+BEGIN PERIOD  624
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_624.txt'
+END PERIOD  624
+
+BEGIN PERIOD  625
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_625.txt'
+END PERIOD  625
+
+BEGIN PERIOD  626
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_626.txt'
+END PERIOD  626
+
+BEGIN PERIOD  627
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_627.txt'
+END PERIOD  627
+
+BEGIN PERIOD  628
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_628.txt'
+END PERIOD  628
+
+BEGIN PERIOD  629
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_629.txt'
+END PERIOD  629
+
+BEGIN PERIOD  630
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_630.txt'
+END PERIOD  630
+
+BEGIN PERIOD  631
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_631.txt'
+END PERIOD  631
+
+BEGIN PERIOD  632
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_632.txt'
+END PERIOD  632
+
+BEGIN PERIOD  633
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_633.txt'
+END PERIOD  633
+
+BEGIN PERIOD  634
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_634.txt'
+END PERIOD  634
+
+BEGIN PERIOD  635
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_635.txt'
+END PERIOD  635
+
+BEGIN PERIOD  636
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_636.txt'
+END PERIOD  636
+
+BEGIN PERIOD  637
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_637.txt'
+END PERIOD  637
+
+BEGIN PERIOD  638
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_638.txt'
+END PERIOD  638
+
+BEGIN PERIOD  639
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_639.txt'
+END PERIOD  639
+
+BEGIN PERIOD  640
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_640.txt'
+END PERIOD  640
+
+BEGIN PERIOD  641
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_641.txt'
+END PERIOD  641
+
+BEGIN PERIOD  642
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_642.txt'
+END PERIOD  642
+
+BEGIN PERIOD  643
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_643.txt'
+END PERIOD  643
+
+BEGIN PERIOD  644
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_644.txt'
+END PERIOD  644
+
+BEGIN PERIOD  645
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_645.txt'
+END PERIOD  645
+
+BEGIN PERIOD  646
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_646.txt'
+END PERIOD  646
+
+BEGIN PERIOD  647
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_647.txt'
+END PERIOD  647
+
+BEGIN PERIOD  648
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_648.txt'
+END PERIOD  648
+
+BEGIN PERIOD  649
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_649.txt'
+END PERIOD  649
+
+BEGIN PERIOD  650
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_650.txt'
+END PERIOD  650
+
+BEGIN PERIOD  651
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_651.txt'
+END PERIOD  651
+
+BEGIN PERIOD  652
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_652.txt'
+END PERIOD  652
+
+BEGIN PERIOD  653
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_653.txt'
+END PERIOD  653
+
+BEGIN PERIOD  654
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_654.txt'
+END PERIOD  654
+
+BEGIN PERIOD  655
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_655.txt'
+END PERIOD  655
+
+BEGIN PERIOD  656
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_656.txt'
+END PERIOD  656
+
+BEGIN PERIOD  657
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_657.txt'
+END PERIOD  657
+
+BEGIN PERIOD  658
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_658.txt'
+END PERIOD  658
+
+BEGIN PERIOD  659
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_659.txt'
+END PERIOD  659
+
+BEGIN PERIOD  660
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_660.txt'
+END PERIOD  660
+
+BEGIN PERIOD  661
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_661.txt'
+END PERIOD  661
+
+BEGIN PERIOD  662
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_662.txt'
+END PERIOD  662
+
+BEGIN PERIOD  663
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_663.txt'
+END PERIOD  663
+
+BEGIN PERIOD  664
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_664.txt'
+END PERIOD  664
+
+BEGIN PERIOD  665
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_665.txt'
+END PERIOD  665
+
+BEGIN PERIOD  666
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_666.txt'
+END PERIOD  666
+
+BEGIN PERIOD  667
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_667.txt'
+END PERIOD  667
+
+BEGIN PERIOD  668
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_668.txt'
+END PERIOD  668
+
+BEGIN PERIOD  669
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_669.txt'
+END PERIOD  669
+
+BEGIN PERIOD  670
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_670.txt'
+END PERIOD  670
+
+BEGIN PERIOD  671
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_671.txt'
+END PERIOD  671
+
+BEGIN PERIOD  672
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_672.txt'
+END PERIOD  672
+
+BEGIN PERIOD  673
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_673.txt'
+END PERIOD  673
+
+BEGIN PERIOD  674
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_674.txt'
+END PERIOD  674
+
+BEGIN PERIOD  675
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_675.txt'
+END PERIOD  675
+
+BEGIN PERIOD  676
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_676.txt'
+END PERIOD  676
+
+BEGIN PERIOD  677
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_677.txt'
+END PERIOD  677
+
+BEGIN PERIOD  678
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_678.txt'
+END PERIOD  678
+
+BEGIN PERIOD  679
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_679.txt'
+END PERIOD  679
+
+BEGIN PERIOD  680
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_680.txt'
+END PERIOD  680
+
+BEGIN PERIOD  681
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_681.txt'
+END PERIOD  681
+
+BEGIN PERIOD  682
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_682.txt'
+END PERIOD  682
+
+BEGIN PERIOD  683
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_683.txt'
+END PERIOD  683
+
+BEGIN PERIOD  684
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_684.txt'
+END PERIOD  684
+
+BEGIN PERIOD  685
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_685.txt'
+END PERIOD  685
+
+BEGIN PERIOD  686
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_686.txt'
+END PERIOD  686
+
+BEGIN PERIOD  687
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_687.txt'
+END PERIOD  687
+
+BEGIN PERIOD  688
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_688.txt'
+END PERIOD  688
+
+BEGIN PERIOD  689
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_689.txt'
+END PERIOD  689
+
+BEGIN PERIOD  690
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_690.txt'
+END PERIOD  690
+
+BEGIN PERIOD  691
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_691.txt'
+END PERIOD  691
+
+BEGIN PERIOD  692
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_692.txt'
+END PERIOD  692
+
+BEGIN PERIOD  693
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_693.txt'
+END PERIOD  693
+
+BEGIN PERIOD  694
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_694.txt'
+END PERIOD  694
+
+BEGIN PERIOD  695
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_695.txt'
+END PERIOD  695
+
+BEGIN PERIOD  696
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_696.txt'
+END PERIOD  696
+
+BEGIN PERIOD  697
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_697.txt'
+END PERIOD  697
+
+BEGIN PERIOD  698
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_698.txt'
+END PERIOD  698
+
+BEGIN PERIOD  699
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_699.txt'
+END PERIOD  699
+
+BEGIN PERIOD  700
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_700.txt'
+END PERIOD  700
+
+BEGIN PERIOD  701
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_701.txt'
+END PERIOD  701
+
+BEGIN PERIOD  702
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_702.txt'
+END PERIOD  702
+
+BEGIN PERIOD  703
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_703.txt'
+END PERIOD  703
+
+BEGIN PERIOD  704
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_704.txt'
+END PERIOD  704
+
+BEGIN PERIOD  705
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_705.txt'
+END PERIOD  705
+
+BEGIN PERIOD  706
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_706.txt'
+END PERIOD  706
+
+BEGIN PERIOD  707
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_707.txt'
+END PERIOD  707
+
+BEGIN PERIOD  708
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_708.txt'
+END PERIOD  708
+
+BEGIN PERIOD  709
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_709.txt'
+END PERIOD  709
+
+BEGIN PERIOD  710
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_710.txt'
+END PERIOD  710
+
+BEGIN PERIOD  711
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_711.txt'
+END PERIOD  711
+
+BEGIN PERIOD  712
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_712.txt'
+END PERIOD  712
+
+BEGIN PERIOD  713
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_713.txt'
+END PERIOD  713
+
+BEGIN PERIOD  714
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_714.txt'
+END PERIOD  714
+
+BEGIN PERIOD  715
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_715.txt'
+END PERIOD  715
+
+BEGIN PERIOD  716
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_716.txt'
+END PERIOD  716
+
+BEGIN PERIOD  717
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_717.txt'
+END PERIOD  717
+
+BEGIN PERIOD  718
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_718.txt'
+END PERIOD  718
+
+BEGIN PERIOD  719
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_719.txt'
+END PERIOD  719
+
+BEGIN PERIOD  720
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_720.txt'
+END PERIOD  720
+
+BEGIN PERIOD  721
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_721.txt'
+END PERIOD  721
+
+BEGIN PERIOD  722
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_722.txt'
+END PERIOD  722
+
+BEGIN PERIOD  723
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_723.txt'
+END PERIOD  723
+
+BEGIN PERIOD  724
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_724.txt'
+END PERIOD  724
+
+BEGIN PERIOD  725
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_725.txt'
+END PERIOD  725
+
+BEGIN PERIOD  726
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_726.txt'
+END PERIOD  726
+
+BEGIN PERIOD  727
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_727.txt'
+END PERIOD  727
+
+BEGIN PERIOD  728
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_728.txt'
+END PERIOD  728
+
+BEGIN PERIOD  729
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_729.txt'
+END PERIOD  729
+
+BEGIN PERIOD  730
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_730.txt'
+END PERIOD  730
+
+BEGIN PERIOD  731
+    OPEN/CLOSE  'freyberg6.wel_stress_period_data_731.txt'
+END PERIOD  731
+
