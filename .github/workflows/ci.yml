@@ -9,7 +9,7 @@ on:
       - dev
 
 jobs:
-  nbCI:
+  run:
     name: tests
     runs-on: ${{ matrix.os }}
     timeout-minutes: 120
