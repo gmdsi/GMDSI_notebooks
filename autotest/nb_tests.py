@@ -1,6 +1,9 @@
 import os
 cwd = os.getcwd()
-tutdir=os.path.join("..","tutorials")
+print(cwd)
+tutdir=os.path.join(cwd, "..","tutorials")
+if os.path.basename(os.path.normpath(cwd))!='autotest':
+    tutdir=os.path.join(cwd, ".","tutorials")
 
 def run_nb(nb_file, nb_dir):
     assert nb_dir
