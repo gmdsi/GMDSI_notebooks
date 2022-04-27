@@ -89,9 +89,7 @@ jobs:
           find bin -maxdepth 1 -type f -exec cp {} $HOME/.local/bin/. \;
           # cp -r bin ../bin
           cd ..
-          
-          # delete file sin dir so they dont get copied
-          rm -r bin_new/$d/*
+
 
 
       # run .py that calls nb's
