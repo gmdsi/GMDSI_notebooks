@@ -15,10 +15,10 @@ def run_nb(nb_file, nb_dir):
     print('ran: ', nb_file)
     return
 
-nb_dir=os.path.join(tutdir,'part2_pstfrom_pest_setup')
+nb_dir=os.path.join(tutdir,'part2_1_pstfrom_pest_setup')
 nb_file="freyberg_pstfrom_pest_setup.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir=os.path.join(tutdir,'part2_obs_and_weights')
+nb_dir=os.path.join(tutdir,'part2_2_obs_and_weights')
 nb_file="freyberg_obs_and_weights.ipynb"
 run_nb(nb_file, nb_dir)
