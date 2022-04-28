@@ -17,8 +17,8 @@ import zipfile
 
 def prep_deps(template_ws, dep_dir=None):
     dep_dir=os.path.join('..','..','dependencies')
-    for i in os.scandir(dep_dir):
-        org_d = i.path
+    for org_d in [os.path.join(dep_dir,"flopy"),os.path.join(dep_dir,"pyemu")]:
+        #org_d = i.path
         new_d = os.path.join(template_ws, os.path.basename(org_d))
         shutil.copytree(org_d, new_d)
     return
