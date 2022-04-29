@@ -11,8 +11,10 @@ import flopy
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt;
+import psutil
 sys.path.append("..")
 import herebedragons as hbd
+
 
 def setup_pst():
 
@@ -498,9 +500,10 @@ def run_prior_mc(t_d):
     pst = pyemu.Pst(os.path.join(t_d,"freyberg_mf6.pst"))
     pst.control_data.noptmax = -1
     pst.pestpp_options["ies_num_reals"] = 20
+    pst.pestpp_options["overdue_giveup_fac"] = 5
     pst.write(os.path.join(t_d,"freyberg_mf6.pst"))
-
-    pyemu.os_utils.start_workers(t_d,"pestpp-ies","freyberg_mf6.pst",num_workers=5,worker_root=".",master_dir="master_pmc")
+    num_workers = psutil.cpu_count(logical=False)
+    pyemu.os_utils.start_workers(t_d,"pestpp-ies","freyberg_mf6.pst",num_workers=num_workers,worker_root=".",master_dir="master_pmc")
 
 
 def pick_truth(m_d,t_d):
