@@ -500,9 +500,9 @@ def run_prior_mc(t_d):
     pst = pyemu.Pst(os.path.join(t_d,"freyberg_mf6.pst"))
     pst.control_data.noptmax = -1
     pst.pestpp_options["ies_num_reals"] = 20
-    pst.pestpp_options["overdue_giveup_fac"] = 5
+    #pst.pestpp_options["overdue_giveup_fac"] = 5
     pst.write(os.path.join(t_d,"freyberg_mf6.pst"))
-    num_workers = psutil.cpu_count(logical=False)
+    num_workers = 5 #psutil.cpu_count(logical=False)
     pyemu.os_utils.start_workers(t_d,"pestpp-ies","freyberg_mf6.pst",num_workers=num_workers,worker_root=".",master_dir="master_pmc")
 
 
@@ -548,7 +548,7 @@ def prep_obs_data(truth_d):
     mp_obs = pd.read_csv(os.path.join(truth_d, 'freyberg_mp.mpend'), skiprows=6, header=None, usecols=[3,5], delim_whitespace=True)
     
     # prep calib obs
-    obs_sites = ['GAGE_1','TRGW-0-26-6','TRGW-2-26-6','TRGW-0-3-8','TRGW-2-3-8']
+    obs_sites = ['GAGE-1','TRGW-0-26-6','TRGW-2-26-6','TRGW-0-3-8','TRGW-2-3-8']
     truth_data = pd.DataFrame()
     truth_data = pd.concat([truth_data, pd.melt(hds_df, id_vars=['time'], var_name='site')])
     truth_data = pd.concat([truth_data, pd.melt(sfr_df, id_vars=['time'], var_name='site')])
@@ -559,7 +559,7 @@ def prep_obs_data(truth_d):
     obs_data = truth_data.loc[obs_sites]
     # add a wee bit of extra random noise
     for i in obs_sites:
-        if i=='GAGE_1':
+        if i=='GAGE-1':
             scale = abs(0.1*truth_data.loc[i, 'value'].mean())
             obs_data.loc[i, 'value'] = np.random.normal(truth_data.loc[i, 'value'], scale=scale)
         else:
