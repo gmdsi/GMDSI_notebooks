@@ -35,7 +35,7 @@ def extract_hds_arrays_and_list_dfs():
     for it,t in enumerate(hds.get_times()):
         d = hds.get_data(totim=t)
         for k,dlay in enumerate(d):
-            np.savetxt("hdslay{0}.txt".format(k+1,it+1),d[k,:,:],fmt="%15.6E")
+            np.savetxt("hdslay{0}_t{1}.txt".format(k+1,it+1),d[k,:,:],fmt="%15.6E")
             
     lst = flopy.utils.Mf6ListBudget("freyberg6.lst")
     inc,cum = lst.get_dataframes(diff=True,start_datetime=None)
