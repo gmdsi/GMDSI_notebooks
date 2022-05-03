@@ -1,62 +1,51 @@
-
 import os
 cwd = os.getcwd()
 
 clear = False
 pdf = False
+html = True
 
-os.chdir("part2_1_pstfrom_pest_setup")
-os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800 --allow-errors --inplace freyberg_pstfrom_pest_setup.ipynb")
-if pdf:
-    os.system("jupyter nbconvert --to pdf freyberg_pstfrom_pest_setup.ipynb")
-if clear:
-    os.system("jupyter nbconvert --ClearOutputPreprocessor.enabled=True --ClearMetadataPreprocessor.enabled=True --allow-errors --inplace freyberg_pstfrom_pest_setup.ipynb")
 
-os.chdir(cwd)
+def run_nb(nb_file, nb_dir): 
+    os.chdir(nb_dir)
+    os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800 --allow-errors --inplace {0}".format(nb_file))
+    if html:
+        os.system("jupyter nbconvert --to html {0}".format(nb_file))
+    if pdf:
+        os.system("jupyter nbconvert --to pdf {0}".format(nb_file))
+    if clear:
+        os.system("jupyter nbconvert --ClearOutputPreprocessor.enabled=True --ClearMetadataPreprocessor.enabled=True --allow-errors --inplace {0}".format(nb_file))
+    os.chdir(cwd)
+    return
 
-os.chdir("part2_2_obs_and_weights")
-os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800 --allow-errors --inplace freyberg_obs_and_weights.ipynb")
-if pdf:
-    os.system("jupyter nbconvert --to pdf freyberg_obs_and_weights.ipynb")
-if clear:
-    os.system("jupyter nbconvert --ClearOutputPreprocessor.enabled=True --ClearMetadataPreprocessor.enabled=True --allow-errors --inplace freyberg_obs_and_weights.ipynb")
-os.chdir(cwd)
+nb_dir = "part2_1_pstfrom_pest_setup"
+nb_file = "freyberg_pstfrom_pest_setup.ipynb"
+run_nb(nb_file, nb_dir)
 
-os.chdir("part2_4_glm")
-# glm1
-os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=180000 --allow-errors --inplace freyberg_glm_1.ipynb")
-if pdf:
-    os.system("jupyter nbconvert --to pdf freyberg_glm_1.ipynb")
-if clear:
-    os.system("jupyter nbconvert --ClearOutputPreprocessor.enabled=True --ClearMetadataPreprocessor.enabled=True --allow-errors --inplace freyberg_glm_1.ipynb")
-# glm2
-os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=180000 --allow-errors --inplace freyberg_glm_2.ipynb")
-if pdf:
-    os.system("jupyter nbconvert --to pdf freyberg_glm_2.ipynb")
-if clear:
-    os.system("jupyter nbconvert --ClearOutputPreprocessor.enabled=True --ClearMetadataPreprocessor.enabled=True --allow-errors --inplace freyberg_glm_2.ipynb")
-os.chdir(cwd)
+nb_dir = "part2_2_obs_and_weights"
+nb_file = "freyberg_obs_and_weights.ipynb"
+run_nb(nb_file, nb_dir)
 
-os.chdir("part2_6_ies")
-os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800 --allow-errors --inplace freyberg_ies.ipynb")
-if pdf:
-    os.system("jupyter nbconvert --to pdf freyberg_ies.ipynb")
-if clear:
-    os.system("jupyter nbconvert --ClearOutputPreprocessor.enabled=True --ClearMetadataPreprocessor.enabled=True --allow-errors --inplace freyberg_ies.ipynb")
-os.chdir(cwd)
+nb_dir = "part2_4_glm"
+nb_file = "freyberg_glm_1.ipynb"
+run_nb(nb_file, nb_dir)
 
-os.chdir("part2_da")
-os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800 --allow-errors --inplace freyberg_da_prep.ipynb")
-if pdf:
-    os.system("jupyter nbconvert --to pdf freyberg_da_prep.ipynb")
-if clear:
-    os.system("jupyter nbconvert --ClearOutputPreprocessor.enabled=True --ClearMetadataPreprocessor.enabled=True --allow-errors --inplace freyberg_da_prep.ipynb")
-os.chdir(cwd)
+nb_dir = "part2_5_fosm_and_dataworth"
+nb_file = "freyberg_fosm_and_dataworth.ipynb"
+run_nb(nb_file, nb_dir)
 
-os.chdir("part2_da")
-os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800000 --allow-errors --inplace freyberg_da_run.ipynb")
-if pdf:
-    os.system("jupyter nbconvert --to pdf freyberg_da_run.ipynb")
-if clear:
-    os.system("jupyter nbconvert --ClearOutputPreprocessor.enabled=True --ClearMetadataPreprocessor.enabled=True --allow-errors --inplace freyberg_da_run.ipynb")
-os.chdir(cwd)
+nb_dir = "part2_4_glm"
+nb_file = "freyberg_glm_2.ipynb"
+run_nb(nb_file, nb_dir)
+
+nb_dir = "part2_6_ies"
+nb_file = "freyberg_ies.ipynb"
+run_nb(nb_file, nb_dir)
+
+nb_dir = "part2_da"
+nb_file = "freyberg_da_prep.ipynb"
+run_nb(nb_file, nb_dir)
+
+nb_dir = "part2_da"
+nb_file = "freyberg_da_run.ipynb"
+run_nb(nb_file, nb_dir)
