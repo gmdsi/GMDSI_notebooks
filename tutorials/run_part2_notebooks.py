@@ -1,4 +1,8 @@
 import os
+import shutil
+
+html_dir = os.path.join("..", "htmls")
+
 cwd = os.getcwd()
 
 clear = False
@@ -11,6 +15,9 @@ def run_nb(nb_file, nb_dir):
     os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800 --allow-errors --inplace {0}".format(nb_file))
     if html:
         os.system("jupyter nbconvert --to html {0}".format(nb_file))
+        html_file = nb_file.replace('.ipynb', '.html')
+        shutil.move(os.path.join(nb_dir, html_file), os.path.join(html_dir, html_file))
+        print('preped htmlfile: ', os.path.join(html_dir, html_file))
     if pdf:
         os.system("jupyter nbconvert --to pdf {0}".format(nb_file))
     if clear:
