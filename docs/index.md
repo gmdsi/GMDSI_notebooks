@@ -6,6 +6,10 @@ __Please be aware that these notebooks are under development and subject to chan
 
 ## The Notebooks so far:
 
+### Introductions to Selected Topics
+1. [Introduction to Regression](https://gmdsi.github.io/GMDSI_notebooks/intro_to_regression)
+2. ...
+
 ### Introduction to Theory, Concepts and PEST Mechanics
 1. [Introduction to the Freyberg Model](https://gmdsi.github.io/GMDSI_notebooks/freyberg_intro_model)
 2. [Trial-and-Error or How Not to Calibrate a Model](https://gmdsi.github.io/GMDSI_notebooks/freyberg_trial_and_error)
@@ -24,3 +28,4 @@ __Please be aware that these notebooks are under development and subject to chan
 8. [Prior Monte Carlo](https://gmdsi.github.io/GMDSI_notebooks/freyberg_prior_monte_carlo)
 9. [IES Part1 - Introducing the Iterative Ensemble Smoother](https://gmdsi.github.io/GMDSI_notebooks/freyberg_ies)
 10.  ...
+
