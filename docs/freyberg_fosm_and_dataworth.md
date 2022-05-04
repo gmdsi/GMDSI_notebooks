@@ -78,6 +78,10 @@ print('adjustable parameters:',pst.npar_adj,'\nnonzero observations:', pst.nnz_o
 #pst.write_par_summary_table(filename="none")
 ```
 
+    adjustable parameters: 391 
+    nonzero observations: 144
+    
+
 ### Getting ready for FOSM
 
 We need three ingredients for FOSM:
@@ -112,6 +116,19 @@ x[x<1e-7] = np.nan
 c = plt.imshow(x)
 plt.colorbar()
 ```
+
+
+
+
+    <matplotlib.colorbar.Colorbar at 0x230cbfe80d0>
+
+
+
+
+    
+![png](freyberg_fosm_and_dataworth_files/freyberg_fosm_and_dataworth_12_1.png)
+    
+
 
 The second ingredient we need is the jacobian matrix. In a previous tutorial, we ran `PEST++GLM` with the `fresyberg_pp.pst` control file to calculate the jacobian for intial parameter values and then stop (by setting `NOPTMAX` to -1). It is stored in the binary file named `freyberg_pp.jcb`.
 
@@ -151,6 +168,13 @@ sc = pyemu.Schur(pst=pst, # the pest control file
 sc
 ```
 
+
+
+
+    <pyemu.sc.Schur at 0x230ca3521f0>
+
+
+
 So that was easy...but maybe not the standard use case.  In many modeling analyses, there will be a separate scenario model - it is this model that will yield the forecast sensitivity vector(s) needed to map parameter uncertainty to _forecast_ uncertainty.  That is, you will need to run the scenario model once for each adjustble parameter to fill a separate jacobian -  jacobian that has the same columns as the obervation jacobian, but has rows that are the forecasts.  
 
 In these cases you would have:
@@ -182,6 +206,13 @@ forecast_jco.shape, jco.shape
 ```
 
 
+
+
+    ((4, 391), (62223, 391))
+
+
+
+
 ```python
 sc = pyemu.Schur(pst=pst, # the pest control file
                 jco=jco, # the jacobian matrix
@@ -208,6 +239,13 @@ The posterior parameter covariance is stored as a `pyemu.Cov` object in the `sc.
 sc.posterior_parameter
 ```
 
+
+
+
+    <pyemu.mat.mat_handler.Cov at 0x230c8697940>
+
+
+
 The diagonal of this matrix contains the posterior __variance__ for each parameter. The off-diagonals the parameter covariances. 
 
 
@@ -215,6 +253,57 @@ The diagonal of this matrix contains the posterior __variance__ for each paramet
 # display a slice of the cov matrix
 sc.posterior_parameter.to_dataframe().sort_index().sort_index(axis=1).iloc[0:3,0:3] 
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pname:ghbcondcn_inst:0_ptype:cn_usecol:4_pstyle:m</th>
+      <th>pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a</th>
+      <th>pname:nelayer1cn_inst:0_ptype:cn_pstyle:m</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>pname:ghbcondcn_inst:0_ptype:cn_usecol:4_pstyle:m</th>
+      <td>0.091726</td>
+      <td>0.032107</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a</th>
+      <td>0.032107</td>
+      <td>0.071032</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>pname:nelayer1cn_inst:0_ptype:cn_pstyle:m</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.054284</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 Let's make a little work of art - a plot of the posterior cov matrix. As expected, we see posterior variance along the diagonal and off-diagonals are symmetric:
 
@@ -226,6 +315,19 @@ c = plt.imshow(x)
 plt.colorbar(c)
 ```
 
+
+
+
+    <matplotlib.colorbar.Colorbar at 0x230c9835a30>
+
+
+
+
+    
+![png](freyberg_fosm_and_dataworth_files/freyberg_fosm_and_dataworth_31_1.png)
+    
+
+
 But...is calibration worth pursuing or not? Let's explore what the notional calibration is expected to do for parameter uncertainty. We accomplish this by comparing prior and posterior parameter uncertainty. Using `.get_parameter_summary()` makes this easy:
 
 
@@ -233,6 +335,69 @@ But...is calibration worth pursuing or not? Let's explore what the notional cali
 par_sum = sc.get_parameter_summary().sort_values("percent_reduction",ascending=False)
 par_sum.head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>prior_var</th>
+      <th>post_var</th>
+      <th>percent_reduction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>pname:sfrcondcn_inst:0_ptype:cn_usecol:9_pstyle:m</th>
+      <td>0.111111</td>
+      <td>0.017596</td>
+      <td>84.163465</td>
+    </tr>
+    <tr>
+      <th>pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a</th>
+      <td>0.444444</td>
+      <td>0.071032</td>
+      <td>84.017711</td>
+    </tr>
+    <tr>
+      <th>pname:stosylayer1cn_inst:0_ptype:cn_pstyle:m</th>
+      <td>0.054284</td>
+      <td>0.009918</td>
+      <td>81.729614</td>
+    </tr>
+    <tr>
+      <th>pname:npfklayer3cn_inst:0_ptype:cn_pstyle:m</th>
+      <td>0.054284</td>
+      <td>0.010766</td>
+      <td>80.166856</td>
+    </tr>
+    <tr>
+      <th>pname:npfk33layer2pp_inst:0_ptype:pp_pstyle:m_i:27_j:7_zone:1.0</th>
+      <td>0.054284</td>
+      <td>0.017430</td>
+      <td>67.890973</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 As the name suggests, the `percent_reduction` column in `par_sum` shows the  percentage decrease in uncertainty expected through calibration for each parameter.
 
@@ -245,6 +410,19 @@ par_sum.iloc[0:10,:]['percent_reduction'].plot(kind='bar')
 plt.title('Percent Reduction')
 ```
 
+
+
+
+    Text(0.5, 1.0, 'Percent Reduction')
+
+
+
+
+    
+![png](freyberg_fosm_and_dataworth_files/freyberg_fosm_and_dataworth_35_1.png)
+    
+
+
 Alternatively we can compare the prior and posterior variances for the best ten:
 
 
@@ -254,6 +432,12 @@ Alternatively we can compare the prior and posterior variances for the best ten:
 par_sum.iloc[0:10,:][['prior_var','post_var']].plot(kind='bar');
 ```
 
+
+    
+![png](freyberg_fosm_and_dataworth_files/freyberg_fosm_and_dataworth_37_0.png)
+    
+
+
 From the two plots above we can see that calibrating the model with available data definetly reduces uncertainty of some parameters. Some parameters are informed by observation data...however calibration does not afffect all parameters equally. 
 
 Let's look at the other end of the spectrum - parameters for which there was little uncertainty reduction. Inspect the end of the parameter summary dataframe:
@@ -262,6 +446,69 @@ Let's look at the other end of the spectrum - parameters for which there was lit
 ```python
 par_sum.iloc[-5:,:]
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>prior_var</th>
+      <th>post_var</th>
+      <th>percent_reduction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>pname:nelayer1pp_inst:0_ptype:pp_pstyle:m_i:32_j:2_zone:1.0</th>
+      <td>0.054284</td>
+      <td>0.054284</td>
+      <td>-4.440892e-14</td>
+    </tr>
+    <tr>
+      <th>pname:nelayer3pp_inst:0_ptype:pp_pstyle:m_i:27_j:2_zone:1.0</th>
+      <td>0.054284</td>
+      <td>0.054284</td>
+      <td>-4.440892e-14</td>
+    </tr>
+    <tr>
+      <th>pname:nelayer2pp_inst:0_ptype:pp_pstyle:m_i:27_j:12_zone:1.0</th>
+      <td>0.054284</td>
+      <td>0.054284</td>
+      <td>-4.440892e-14</td>
+    </tr>
+    <tr>
+      <th>pname:nelayer1pp_inst:0_ptype:pp_pstyle:m_i:32_j:7_zone:1.0</th>
+      <td>0.054284</td>
+      <td>0.054284</td>
+      <td>-6.661338e-14</td>
+    </tr>
+    <tr>
+      <th>pname:nelayer2pp_inst:0_ptype:pp_pstyle:m_i:32_j:7_zone:1.0</th>
+      <td>0.054284</td>
+      <td>0.054284</td>
+      <td>-6.661338e-14</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 Hmm - looks like there are some parameters which are not informed by calibration. Not surprising. For example, we are adjusting porosity values, but have no calibration observations which are affected by porosity...
 
@@ -275,6 +522,20 @@ uninf_par_names = par_sum.loc[par_sum['percent_reduction']<1].index.values
 # get corresponding par group names
 pst.parameter_data.loc[uninf_par_names, 'pargp'].unique()
 ```
+
+
+
+
+    array(['welcst', 'npfklayer1pp', 'sfrgr', 'npfklayer2pp', 'npfklayer2cn',
+           'stosslayer3pp', 'stosslayer3cn', 'stosslayer2cn', 'nelayer1pp',
+           'nelayer2pp', 'nelayer3pp', 'rch_recharge_17tcn', 'nelayer1cn',
+           'rch_recharge_18tcn', 'rch_recharge_21tcn', 'rch_recharge_15tcn',
+           'rch_recharge_20tcn', 'rch_recharge_19tcn', 'nelayer3cn',
+           'rch_recharge_14tcn', 'rch_recharge_16tcn', 'rch_recharge_22tcn',
+           'rch_recharge_25tcn', 'rch_recharge_24tcn', 'nelayer2cn',
+           'rch_recharge_23tcn'], dtype=object)
+
+
 
 So, not too surprising to see porosity parameters groups, as well as parameters for recharge during the prediction period. Others, such as storage and permeability parameter groups, indicate that available observation data is not informative for the entire model domain.
 
@@ -290,6 +551,18 @@ pargp = 'npfklayer3pp'
 ```python
 hk_pars.j.unique()
 ```
+
+
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    Input In [22], in <cell line: 1>()
+    ----> 1 hk_pars.j.unique()
+    
+
+    NameError: name 'hk_pars' is not defined
+
 
 
 ```python
@@ -333,6 +606,12 @@ mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=2)
 mm.plot_bc('wel');
 ```
 
+
+    
+![png](freyberg_fosm_and_dataworth_files/freyberg_fosm_and_dataworth_48_0.png)
+    
+
+
 As expected, much of the uncertainty reduction for hydraulic conductivity is located around head observation wells (red crosses) and the SFR boundary - both of which we have observation data for. More importantly, we can see that uncertainty in the west is not reduced much. So our existing data does not provide much information on these areas. Parameter uncertainty here (and that of any forecasts that are affected by these parameters) will only be constrained by our expert knowledge (i.e. the prior parameter distribution).
 
 ## Forecast Uncertainty
@@ -347,6 +626,16 @@ forecasts = sc.pst.forecast_names
 forecasts
 ```
 
+
+
+
+    ['oname:sfr_otype:lst_usecol:tailwater_time:4383.5',
+     'oname:sfr_otype:lst_usecol:headwater_time:4383.5',
+     'oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5',
+     'part_time']
+
+
+
 As before, `pyemu` has already done much of the heavy-lifting. We can get a summary of the forecast prior and posterior variances with `.get_forecast_summary()`:
 
 
@@ -354,6 +643,63 @@ As before, `pyemu` has already done much of the heavy-lifting. We can get a summ
 df = sc.get_forecast_summary()
 df
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>prior_var</th>
+      <th>post_var</th>
+      <th>percent_reduction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
+      <td>1.682931e+05</td>
+      <td>3.486873e+04</td>
+      <td>79.280952</td>
+    </tr>
+    <tr>
+      <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
+      <td>8.115779e+04</td>
+      <td>2.949567e+04</td>
+      <td>63.656388</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <td>2.501544e-01</td>
+      <td>4.136653e-02</td>
+      <td>83.463605</td>
+    </tr>
+    <tr>
+      <th>part_time</th>
+      <td>9.365116e+10</td>
+      <td>2.797127e+10</td>
+      <td>70.132493</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 And we can make a cheeky little plot of that. As you can see, unsurprisingly some forecasts benefit more from calibration than others. So, depending on the foreacst of interest, calibration may or may not be worthwhile...
 
@@ -366,6 +712,19 @@ ax = df.percent_reduction.plot(kind='bar',ax=ax,grid=True)
 ax.set_ylabel("percent uncertainy\nreduction from calibration")
 ax.set_xlabel("forecast")
 ```
+
+
+
+
+    Text(0.5, 0, 'forecast')
+
+
+
+
+    
+![png](freyberg_fosm_and_dataworth_files/freyberg_fosm_and_dataworth_56_1.png)
+    
+
 
 ## Parameter contribution to forecast uncertainty
 
@@ -381,6 +740,75 @@ par_contrib = sc.get_par_group_contribution()
 par_contrib.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
+      <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <th>part_time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>base</th>
+      <td>34868.731096</td>
+      <td>29495.671996</td>
+      <td>0.041367</td>
+      <td>2.797127e+10</td>
+    </tr>
+    <tr>
+      <th>ghbcondcn</th>
+      <td>34798.367362</td>
+      <td>28798.190274</td>
+      <td>0.040633</td>
+      <td>2.795509e+10</td>
+    </tr>
+    <tr>
+      <th>ghbheadcn</th>
+      <td>26779.690125</td>
+      <td>28943.151311</td>
+      <td>0.037463</td>
+      <td>2.289806e+10</td>
+    </tr>
+    <tr>
+      <th>nelayer1cn</th>
+      <td>34868.731096</td>
+      <td>29495.671996</td>
+      <td>0.041367</td>
+      <td>2.796774e+10</td>
+    </tr>
+    <tr>
+      <th>nelayer1pp</th>
+      <td>34868.731096</td>
+      <td>29495.671996</td>
+      <td>0.041367</td>
+      <td>2.796898e+10</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 We can see the relatve contribution by normalizing to the base case (e.g. in which no parameters/groups are perfectly known):
 
 
@@ -389,6 +817,75 @@ base = par_contrib.loc["base",:]
 par_contrib = 100.0 * (base - par_contrib) / base
 par_contrib.sort_index().head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
+      <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <th>part_time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>base</th>
+      <td>0.000000e+00</td>
+      <td>0.000000e+00</td>
+      <td>0.000000e+00</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>ghbcondcn</th>
+      <td>2.017961e-01</td>
+      <td>2.364692e+00</td>
+      <td>1.774204e+00</td>
+      <td>0.057828</td>
+    </tr>
+    <tr>
+      <th>ghbheadcn</th>
+      <td>2.319855e+01</td>
+      <td>1.873226e+00</td>
+      <td>9.437373e+00</td>
+      <td>18.137210</td>
+    </tr>
+    <tr>
+      <th>nelayer1cn</th>
+      <td>2.086671e-14</td>
+      <td>1.233394e-13</td>
+      <td>5.032253e-13</td>
+      <td>0.012614</td>
+    </tr>
+    <tr>
+      <th>nelayer1pp</th>
+      <td>-4.903677e-12</td>
+      <td>6.043631e-12</td>
+      <td>7.867088e-12</td>
+      <td>0.008192</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 Now it is a simple matter to plot these up for each forecast. Remember! Parameter contributions to uncertainty are forecast specific. The plots below display the top ten parameter groups that contribute to each forecast's uncertainty. Note that different forecasts are affected by different parameters. 
 
@@ -408,6 +905,12 @@ for forecast in par_contrib.columns:
 plt.tight_layout()
 plt.show()
 ```
+
+
+    
+![png](freyberg_fosm_and_dataworth_files/freyberg_fosm_and_dataworth_63_0.png)
+    
+
 
 Understanding the links between parameters and forecast uncertainties can be usefull - in particular to gain insight into the system dynamics. But we are still missing a step to understand what _observation_ data affects the forecast. It is often more straightforward to quantify how observation information imapcts forecast uncertianty so that we can explore the worth of observation data directly.
 
@@ -435,6 +938,75 @@ df_worth = sc.get_removed_obs_importance()
 df_worth.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
+      <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <th>part_time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>base</th>
+      <td>34868.731096</td>
+      <td>29495.671996</td>
+      <td>0.041367</td>
+      <td>2.797127e+10</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5</th>
+      <td>34892.732750</td>
+      <td>29495.869575</td>
+      <td>0.041378</td>
+      <td>2.798428e+10</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5</th>
+      <td>34873.427751</td>
+      <td>29498.075928</td>
+      <td>0.041367</td>
+      <td>2.798012e+10</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5</th>
+      <td>34870.385273</td>
+      <td>29505.835985</td>
+      <td>0.041384</td>
+      <td>2.799281e+10</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5</th>
+      <td>34868.782318</td>
+      <td>29499.243596</td>
+      <td>0.041380</td>
+      <td>2.800409e+10</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 It may be more usefull to look at groupings of observations. For example, in our case we are dealing with time series of measurments at different locations. It may be more usefull to assess the worth of the entire time series of data, and not just each individual measurement. 
 
 We can assess groupings of observations by passsing a dictionary with non-zero observation name lists as values. Let's first create such a dictionary. In our case, the time series of observations from each site is in a distinct observation group. So we can simply group observations by observation group name:
@@ -456,6 +1028,75 @@ dw_rm = sc.get_removed_obs_importance(nn_obs_dict)
 dw_rm.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
+      <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <th>part_time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>base</th>
+      <td>34868.731096</td>
+      <td>29495.671996</td>
+      <td>0.041367</td>
+      <td>2.797127e+10</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6</th>
+      <td>35271.210050</td>
+      <td>29585.795853</td>
+      <td>0.041576</td>
+      <td>2.833641e+10</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-3-8</th>
+      <td>35228.422937</td>
+      <td>29578.997298</td>
+      <td>0.041914</td>
+      <td>2.801271e+10</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-2-26-6</th>
+      <td>35350.320084</td>
+      <td>29617.080494</td>
+      <td>0.041602</td>
+      <td>2.833857e+10</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-2-3-8</th>
+      <td>35160.970744</td>
+      <td>29572.947078</td>
+      <td>0.042030</td>
+      <td>2.801013e+10</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 The `base` row contains the results of the Schur's complement calculation using all observations (so the forecast unceratainty assuming all observation data is used for calibration). Subsequently, there  is a row for each non-zero obsevration group. Each row lists forecast uncertainties calculated assuming that the observation group was __not__ used for history matching. 
 
 We can normalize the importance of each row to the base case (i.e. the lowest uncertainty, or maximum uncertainty reduction), provinding a easy to interpret metric of importance. We can then quickly identify which observation/observation grouping are important for reducing forecast uncertainty:
@@ -467,6 +1108,75 @@ base = dw_rm.loc["base",:]
 dw_rm = 100 * (dw_rm  - base) / base
 dw_rm.head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
+      <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <th>part_time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>base</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6</th>
+      <td>1.154269</td>
+      <td>0.305549</td>
+      <td>0.505325</td>
+      <td>1.305414</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-3-8</th>
+      <td>1.031560</td>
+      <td>0.282500</td>
+      <td>1.322795</td>
+      <td>0.148170</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-2-26-6</th>
+      <td>1.381149</td>
+      <td>0.411615</td>
+      <td>0.569418</td>
+      <td>1.313126</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-2-3-8</th>
+      <td>0.838114</td>
+      <td>0.261988</td>
+      <td>1.604974</td>
+      <td>0.138937</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 Let's plot the ten most important observations for each forecast. 
 
@@ -486,6 +1196,12 @@ for forecast in dw_rm.columns:
 plt.tight_layout()
 plt.show()
 ```
+
+
+    
+![png](freyberg_fosm_and_dataworth_files/freyberg_fosm_and_dataworth_76_0.png)
+    
+
 
 We also have the option of calculating the worth of obsverations by taking a "base" condition of zero observations (i.e. no measurment information at all) and calculating the reduction in uncertainty by __adding__ observations to the dataset.
 
@@ -512,6 +1228,12 @@ for forecast in dw_ad.columns:
 plt.tight_layout()
 plt.show()
 ```
+
+
+    
+![png](freyberg_fosm_and_dataworth_files/freyberg_fosm_and_dataworth_78_0.png)
+    
+
 
 ## Data worth - the value of potential new observations
 
@@ -567,6 +1289,13 @@ new_obs_weight = 1/1 # 1/stdv_meas_noise
 new_obs_weight
 ```
 
+
+
+
+    1.0
+
+
+
 Right then - here we go! This can take a while:
 
 
@@ -579,12 +1308,84 @@ df_worth_new= sc.get_added_obs_importance(base_obslist=sc.pst.nnz_obs_names,
 print("took:",datetime.now() - start)
 ```
 
+    took: 0:02:01.299440
+    
+
 As before, `get_added_obs_importance()` returns a dataframe with a column for each forecast, and a row for each potential new observation:
 
 
 ```python
 df_worth_new.head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
+      <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <th>part_time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>base</th>
+      <td>34868.731096</td>
+      <td>29495.671996</td>
+      <td>0.041367</td>
+      <td>2.797127e+10</td>
+    </tr>
+    <tr>
+      <th>i:0_j:0</th>
+      <td>31616.873307</td>
+      <td>27012.519581</td>
+      <td>0.032604</td>
+      <td>2.770490e+10</td>
+    </tr>
+    <tr>
+      <th>i:0_j:1</th>
+      <td>31642.238803</td>
+      <td>27045.886076</td>
+      <td>0.032755</td>
+      <td>2.771248e+10</td>
+    </tr>
+    <tr>
+      <th>i:0_j:10</th>
+      <td>32885.705673</td>
+      <td>28322.293899</td>
+      <td>0.038133</td>
+      <td>2.792142e+10</td>
+    </tr>
+    <tr>
+      <th>i:0_j:11</th>
+      <td>33110.784228</td>
+      <td>28506.175447</td>
+      <td>0.038719</td>
+      <td>2.794002e+10</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 It can be usefull to display this information on a map. Let's process this output and do some `flopy` trickery to display it on the model grid.
 
@@ -615,6 +1416,93 @@ Now we have a dataframe of "percentage variance reduction" for each potential ne
 df_worth_new_plot, df_worth_new_imax = worth_plot_prep(df_worth_new)
 df_worth_new_plot.head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
+      <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <th>part_time</th>
+      <th>names</th>
+      <th>i</th>
+      <th>j</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>i:0_j:0</th>
+      <td>9.326000</td>
+      <td>8.418701</td>
+      <td>21.181688</td>
+      <td>0.952294</td>
+      <td>i:0_j:0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>i:0_j:1</th>
+      <td>9.253254</td>
+      <td>8.305578</td>
+      <td>20.817885</td>
+      <td>0.925183</td>
+      <td>i:0_j:1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>i:0_j:10</th>
+      <td>5.687117</td>
+      <td>3.978137</td>
+      <td>7.817884</td>
+      <td>0.178193</td>
+      <td>i:0_j:10</td>
+      <td>0</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>i:0_j:11</th>
+      <td>5.041614</td>
+      <td>3.354718</td>
+      <td>6.399683</td>
+      <td>0.111697</td>
+      <td>i:0_j:11</td>
+      <td>0</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>i:0_j:12</th>
+      <td>4.439534</td>
+      <td>2.735081</td>
+      <td>5.130863</td>
+      <td>0.065742</td>
+      <td>i:0_j:12</td>
+      <td>0</td>
+      <td>12</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 And now a longer funtion to display this information on the model grid:
 
@@ -684,6 +1572,30 @@ for forecast_name in forecasts:
     plot_added_importance(df_worth_new_plot, forecast_name)
 ```
 
+
+    
+![png](freyberg_fosm_and_dataworth_files/freyberg_fosm_and_dataworth_94_0.png)
+    
+
+
+
+    
+![png](freyberg_fosm_and_dataworth_files/freyberg_fosm_and_dataworth_94_1.png)
+    
+
+
+
+    
+![png](freyberg_fosm_and_dataworth_files/freyberg_fosm_and_dataworth_94_2.png)
+    
+
+
+
+    
+![png](freyberg_fosm_and_dataworth_files/freyberg_fosm_and_dataworth_94_3.png)
+    
+
+
 ### The "next" best observation
 
 Imagine we now go out and drill a monitoring well at the best location. Where should we drill a second monitoring well? The next best location? According to the plots above, the next best location may be right next to our new well. Does that make sense?
@@ -705,6 +1617,13 @@ forecast_name
 ```
 
 
+
+
+    'part_time'
+
+
+
+
 ```python
 start = datetime.now()
 next_most_df = sc.next_most_important_added_obs(forecast=forecast_name,
@@ -715,10 +1634,82 @@ next_most_df = sc.next_most_important_added_obs(forecast=forecast_name,
 print("took:",datetime.now() - start)
 ```
 
+    took: 0:10:41.596724
+    
+
 
 ```python
 next_most_df
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>best_obs</th>
+      <th>part_time_variance</th>
+      <th>unc_reduce_iter_base</th>
+      <th>unc_reduce_initial_base</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>i:39_j:5</th>
+      <td>i:39_j:5</td>
+      <td>2.675863e+10</td>
+      <td>4.335292</td>
+      <td>4.335292</td>
+    </tr>
+    <tr>
+      <th>i:39_j:6</th>
+      <td>i:39_j:6</td>
+      <td>2.612113e+10</td>
+      <td>2.382396</td>
+      <td>6.614404</td>
+    </tr>
+    <tr>
+      <th>i:15_j:0</th>
+      <td>i:15_j:0</td>
+      <td>2.566425e+10</td>
+      <td>1.749108</td>
+      <td>8.247819</td>
+    </tr>
+    <tr>
+      <th>i:39_j:7</th>
+      <td>i:39_j:7</td>
+      <td>2.531351e+10</td>
+      <td>1.366641</td>
+      <td>9.501742</td>
+    </tr>
+    <tr>
+      <th>i:38_j:5</th>
+      <td>i:38_j:5</td>
+      <td>2.507805e+10</td>
+      <td>0.930189</td>
+      <td>10.343546</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 And now let's plot that up again using our function. This time we will also display the location of the best 5 new observation wells (labeled red circles). These are labeled according to the order of their data worth.
 
@@ -728,6 +1719,12 @@ fig = plot_added_importance(df_worth_new_plot,
                             forecast_name,
                             newlox = next_most_df.best_obs.tolist())
 ```
+
+
+    
+![png](freyberg_fosm_and_dataworth_files/freyberg_fosm_and_dataworth_101_0.png)
+    
+
 
 And there we have it - a usefull tool to guide data collection with the aim of reducing forecast uncertainty. It is important to recall that a major assumption underpinning these analyses is that the model is able to fit observations to a level comensurate with measurment noise. This is a pretty big assumption which is revisted in the "freyberg_glm_2" tutorial. 
 

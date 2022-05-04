@@ -83,6 +83,168 @@ Array files contain a data type (usually floating points). List files will have 
 os.listdir(tmp_d)
 ```
 
+
+
+
+    ['flopy',
+     'freyberg6.dis',
+     'freyberg6.dis.grb',
+     'freyberg6.dis_botm_layer1.txt',
+     'freyberg6.dis_botm_layer2.txt',
+     'freyberg6.dis_botm_layer3.txt',
+     'freyberg6.dis_delc.txt',
+     'freyberg6.dis_delr.txt',
+     'freyberg6.dis_idomain_layer1.txt',
+     'freyberg6.dis_idomain_layer2.txt',
+     'freyberg6.dis_idomain_layer3.txt',
+     'freyberg6.dis_top.txt',
+     'freyberg6.ghb',
+     'freyberg6.ghb_stress_period_data_1.txt',
+     'freyberg6.ic',
+     'freyberg6.ic_strt_layer1.txt',
+     'freyberg6.ic_strt_layer2.txt',
+     'freyberg6.ic_strt_layer3.txt',
+     'freyberg6.ims',
+     'freyberg6.lst',
+     'freyberg6.nam',
+     'freyberg6.npf',
+     'freyberg6.npf_icelltype_layer1.txt',
+     'freyberg6.npf_icelltype_layer2.txt',
+     'freyberg6.npf_icelltype_layer3.txt',
+     'freyberg6.npf_k33_layer1.txt',
+     'freyberg6.npf_k33_layer2.txt',
+     'freyberg6.npf_k33_layer3.txt',
+     'freyberg6.npf_k_layer1.txt',
+     'freyberg6.npf_k_layer2.txt',
+     'freyberg6.npf_k_layer3.txt',
+     'freyberg6.oc',
+     'freyberg6.rch',
+     'freyberg6.rch_recharge_1.txt',
+     'freyberg6.rch_recharge_10.txt',
+     'freyberg6.rch_recharge_11.txt',
+     'freyberg6.rch_recharge_12.txt',
+     'freyberg6.rch_recharge_13.txt',
+     'freyberg6.rch_recharge_14.txt',
+     'freyberg6.rch_recharge_15.txt',
+     'freyberg6.rch_recharge_16.txt',
+     'freyberg6.rch_recharge_17.txt',
+     'freyberg6.rch_recharge_18.txt',
+     'freyberg6.rch_recharge_19.txt',
+     'freyberg6.rch_recharge_2.txt',
+     'freyberg6.rch_recharge_20.txt',
+     'freyberg6.rch_recharge_21.txt',
+     'freyberg6.rch_recharge_22.txt',
+     'freyberg6.rch_recharge_23.txt',
+     'freyberg6.rch_recharge_24.txt',
+     'freyberg6.rch_recharge_25.txt',
+     'freyberg6.rch_recharge_3.txt',
+     'freyberg6.rch_recharge_4.txt',
+     'freyberg6.rch_recharge_5.txt',
+     'freyberg6.rch_recharge_6.txt',
+     'freyberg6.rch_recharge_7.txt',
+     'freyberg6.rch_recharge_8.txt',
+     'freyberg6.rch_recharge_9.txt',
+     'freyberg6.sfr',
+     'freyberg6.sfr_connectiondata.txt',
+     'freyberg6.sfr_packagedata.txt',
+     'freyberg6.sfr_perioddata_1.txt',
+     'freyberg6.sfr_perioddata_10.txt',
+     'freyberg6.sfr_perioddata_11.txt',
+     'freyberg6.sfr_perioddata_12.txt',
+     'freyberg6.sfr_perioddata_13.txt',
+     'freyberg6.sfr_perioddata_14.txt',
+     'freyberg6.sfr_perioddata_15.txt',
+     'freyberg6.sfr_perioddata_16.txt',
+     'freyberg6.sfr_perioddata_17.txt',
+     'freyberg6.sfr_perioddata_18.txt',
+     'freyberg6.sfr_perioddata_19.txt',
+     'freyberg6.sfr_perioddata_2.txt',
+     'freyberg6.sfr_perioddata_20.txt',
+     'freyberg6.sfr_perioddata_21.txt',
+     'freyberg6.sfr_perioddata_22.txt',
+     'freyberg6.sfr_perioddata_23.txt',
+     'freyberg6.sfr_perioddata_24.txt',
+     'freyberg6.sfr_perioddata_25.txt',
+     'freyberg6.sfr_perioddata_3.txt',
+     'freyberg6.sfr_perioddata_4.txt',
+     'freyberg6.sfr_perioddata_5.txt',
+     'freyberg6.sfr_perioddata_6.txt',
+     'freyberg6.sfr_perioddata_7.txt',
+     'freyberg6.sfr_perioddata_8.txt',
+     'freyberg6.sfr_perioddata_9.txt',
+     'freyberg6.sto',
+     'freyberg6.sto_iconvert_layer1.txt',
+     'freyberg6.sto_iconvert_layer2.txt',
+     'freyberg6.sto_iconvert_layer3.txt',
+     'freyberg6.sto_ss_layer1.txt',
+     'freyberg6.sto_ss_layer2.txt',
+     'freyberg6.sto_ss_layer3.txt',
+     'freyberg6.sto_sy_layer1.txt',
+     'freyberg6.sto_sy_layer2.txt',
+     'freyberg6.sto_sy_layer3.txt',
+     'freyberg6.tdis',
+     'freyberg6.wel',
+     'freyberg6.wel_stress_period_data_1.txt',
+     'freyberg6.wel_stress_period_data_10.txt',
+     'freyberg6.wel_stress_period_data_11.txt',
+     'freyberg6.wel_stress_period_data_12.txt',
+     'freyberg6.wel_stress_period_data_13.txt',
+     'freyberg6.wel_stress_period_data_14.txt',
+     'freyberg6.wel_stress_period_data_15.txt',
+     'freyberg6.wel_stress_period_data_16.txt',
+     'freyberg6.wel_stress_period_data_17.txt',
+     'freyberg6.wel_stress_period_data_18.txt',
+     'freyberg6.wel_stress_period_data_19.txt',
+     'freyberg6.wel_stress_period_data_2.txt',
+     'freyberg6.wel_stress_period_data_20.txt',
+     'freyberg6.wel_stress_period_data_21.txt',
+     'freyberg6.wel_stress_period_data_22.txt',
+     'freyberg6.wel_stress_period_data_23.txt',
+     'freyberg6.wel_stress_period_data_24.txt',
+     'freyberg6.wel_stress_period_data_25.txt',
+     'freyberg6.wel_stress_period_data_3.txt',
+     'freyberg6.wel_stress_period_data_4.txt',
+     'freyberg6.wel_stress_period_data_5.txt',
+     'freyberg6.wel_stress_period_data_6.txt',
+     'freyberg6.wel_stress_period_data_7.txt',
+     'freyberg6.wel_stress_period_data_8.txt',
+     'freyberg6.wel_stress_period_data_9.txt',
+     'freyberg6_freyberg.cbc',
+     'freyberg6_freyberg.hds',
+     'freyberg_mp.mpbas',
+     'freyberg_mp.mpend',
+     'freyberg_mp.mplst',
+     'freyberg_mp.mpnam',
+     'freyberg_mp.mpsim',
+     'freyberg_mp.ne_layer1.txt',
+     'freyberg_mp.ne_layer2.txt',
+     'freyberg_mp.ne_layer3.txt',
+     'head.obs',
+     'heads.csv',
+     'inschek.exe',
+     'mf5to6.exe',
+     'mf6.exe',
+     'mfsim.lst',
+     'mfsim.nam',
+     'mp7.exe',
+     'pestchek.exe',
+     'pestpp-da.exe',
+     'pestpp-glm.exe',
+     'pestpp-ies.exe',
+     'pestpp-mou.exe',
+     'pestpp-opt.exe',
+     'pestpp-sen.exe',
+     'pestpp-sqp.exe',
+     'pestpp-swp.exe',
+     'pm.pg1.sloc',
+     'pyemu',
+     'sfr.csv',
+     'sfr.obs',
+     'tempchek.exe',
+     'zbud6.exe']
+
+
+
 Now we need just a tiny bit of info about the spatial discretization of the model - this is needed to work out separation distances between parameters to build a geostatistical prior covariance matrix later.
 
 Here we will load the flopy sim and model instance just to help us define some quantities later - flopy is ***not required*** to use the `PstFrom` class. ***Neither is MODFLOW***. However, at the time of writting, support for `SpatialReference` to spatially locate parameters is limited to structured grid models.
@@ -102,6 +264,23 @@ pyemu.os_utils.run("mf6",cwd=tmp_d)
 pyemu.os_utils.run(r'mp7 freyberg_mp.mpsim', cwd=tmp_d)
 ```
 
+    loading simulation...
+      loading simulation name file...
+      loading tdis package...
+      loading model gwf6...
+        loading package dis...
+        loading package ic...
+        loading package npf...
+        loading package sto...
+        loading package oc...
+        loading package wel...
+        loading package rch...
+        loading package ghb...
+        loading package sfr...
+        loading package obs...
+      loading ims package freyberg6...
+    
+
 ### 2. Spatial Reference
 Now we can instantiate a `SpatialReference`. This will later be passed to `PstFrom` to assist with spatially locating parameters (e.g. pilot points and/or cell-by-cell parameters).  You can also use the flopy `modelgrid` class instance that is attached to the simulation, but `SpatialReference` is cleaner and faster for structured grids...
 
@@ -112,6 +291,16 @@ sr = pyemu.helpers.SpatialReference.from_namfile(
         delr=gwf.dis.delr.array, delc=gwf.dis.delc.array)
 sr
 ```
+
+       could not remove start_datetime
+    
+
+
+
+
+    xul:0; yul:10000; rotation:0; proj4_str:None; units:meters; lenuni:2; length_multiplier:1.0
+
+
 
 ### 3. Instantiate PstFrom
 
@@ -146,6 +335,171 @@ pf = pyemu.utils.PstFrom(original_d=tmp_d, # where the model is stored
 os.listdir(template_ws)
 ```
 
+
+
+
+    ['flopy',
+     'freyberg6.dis',
+     'freyberg6.dis.grb',
+     'freyberg6.dis_botm_layer1.txt',
+     'freyberg6.dis_botm_layer2.txt',
+     'freyberg6.dis_botm_layer3.txt',
+     'freyberg6.dis_delc.txt',
+     'freyberg6.dis_delr.txt',
+     'freyberg6.dis_idomain_layer1.txt',
+     'freyberg6.dis_idomain_layer2.txt',
+     'freyberg6.dis_idomain_layer3.txt',
+     'freyberg6.dis_top.txt',
+     'freyberg6.ghb',
+     'freyberg6.ghb_stress_period_data_1.txt',
+     'freyberg6.ic',
+     'freyberg6.ic_strt_layer1.txt',
+     'freyberg6.ic_strt_layer2.txt',
+     'freyberg6.ic_strt_layer3.txt',
+     'freyberg6.ims',
+     'freyberg6.lst',
+     'freyberg6.nam',
+     'freyberg6.npf',
+     'freyberg6.npf_icelltype_layer1.txt',
+     'freyberg6.npf_icelltype_layer2.txt',
+     'freyberg6.npf_icelltype_layer3.txt',
+     'freyberg6.npf_k33_layer1.txt',
+     'freyberg6.npf_k33_layer2.txt',
+     'freyberg6.npf_k33_layer3.txt',
+     'freyberg6.npf_k_layer1.txt',
+     'freyberg6.npf_k_layer2.txt',
+     'freyberg6.npf_k_layer3.txt',
+     'freyberg6.oc',
+     'freyberg6.rch',
+     'freyberg6.rch_recharge_1.txt',
+     'freyberg6.rch_recharge_10.txt',
+     'freyberg6.rch_recharge_11.txt',
+     'freyberg6.rch_recharge_12.txt',
+     'freyberg6.rch_recharge_13.txt',
+     'freyberg6.rch_recharge_14.txt',
+     'freyberg6.rch_recharge_15.txt',
+     'freyberg6.rch_recharge_16.txt',
+     'freyberg6.rch_recharge_17.txt',
+     'freyberg6.rch_recharge_18.txt',
+     'freyberg6.rch_recharge_19.txt',
+     'freyberg6.rch_recharge_2.txt',
+     'freyberg6.rch_recharge_20.txt',
+     'freyberg6.rch_recharge_21.txt',
+     'freyberg6.rch_recharge_22.txt',
+     'freyberg6.rch_recharge_23.txt',
+     'freyberg6.rch_recharge_24.txt',
+     'freyberg6.rch_recharge_25.txt',
+     'freyberg6.rch_recharge_3.txt',
+     'freyberg6.rch_recharge_4.txt',
+     'freyberg6.rch_recharge_5.txt',
+     'freyberg6.rch_recharge_6.txt',
+     'freyberg6.rch_recharge_7.txt',
+     'freyberg6.rch_recharge_8.txt',
+     'freyberg6.rch_recharge_9.txt',
+     'freyberg6.sfr',
+     'freyberg6.sfr_connectiondata.txt',
+     'freyberg6.sfr_packagedata.txt',
+     'freyberg6.sfr_perioddata_1.txt',
+     'freyberg6.sfr_perioddata_10.txt',
+     'freyberg6.sfr_perioddata_11.txt',
+     'freyberg6.sfr_perioddata_12.txt',
+     'freyberg6.sfr_perioddata_13.txt',
+     'freyberg6.sfr_perioddata_14.txt',
+     'freyberg6.sfr_perioddata_15.txt',
+     'freyberg6.sfr_perioddata_16.txt',
+     'freyberg6.sfr_perioddata_17.txt',
+     'freyberg6.sfr_perioddata_18.txt',
+     'freyberg6.sfr_perioddata_19.txt',
+     'freyberg6.sfr_perioddata_2.txt',
+     'freyberg6.sfr_perioddata_20.txt',
+     'freyberg6.sfr_perioddata_21.txt',
+     'freyberg6.sfr_perioddata_22.txt',
+     'freyberg6.sfr_perioddata_23.txt',
+     'freyberg6.sfr_perioddata_24.txt',
+     'freyberg6.sfr_perioddata_25.txt',
+     'freyberg6.sfr_perioddata_3.txt',
+     'freyberg6.sfr_perioddata_4.txt',
+     'freyberg6.sfr_perioddata_5.txt',
+     'freyberg6.sfr_perioddata_6.txt',
+     'freyberg6.sfr_perioddata_7.txt',
+     'freyberg6.sfr_perioddata_8.txt',
+     'freyberg6.sfr_perioddata_9.txt',
+     'freyberg6.sto',
+     'freyberg6.sto_iconvert_layer1.txt',
+     'freyberg6.sto_iconvert_layer2.txt',
+     'freyberg6.sto_iconvert_layer3.txt',
+     'freyberg6.sto_ss_layer1.txt',
+     'freyberg6.sto_ss_layer2.txt',
+     'freyberg6.sto_ss_layer3.txt',
+     'freyberg6.sto_sy_layer1.txt',
+     'freyberg6.sto_sy_layer2.txt',
+     'freyberg6.sto_sy_layer3.txt',
+     'freyberg6.tdis',
+     'freyberg6.wel',
+     'freyberg6.wel_stress_period_data_1.txt',
+     'freyberg6.wel_stress_period_data_10.txt',
+     'freyberg6.wel_stress_period_data_11.txt',
+     'freyberg6.wel_stress_period_data_12.txt',
+     'freyberg6.wel_stress_period_data_13.txt',
+     'freyberg6.wel_stress_period_data_14.txt',
+     'freyberg6.wel_stress_period_data_15.txt',
+     'freyberg6.wel_stress_period_data_16.txt',
+     'freyberg6.wel_stress_period_data_17.txt',
+     'freyberg6.wel_stress_period_data_18.txt',
+     'freyberg6.wel_stress_period_data_19.txt',
+     'freyberg6.wel_stress_period_data_2.txt',
+     'freyberg6.wel_stress_period_data_20.txt',
+     'freyberg6.wel_stress_period_data_21.txt',
+     'freyberg6.wel_stress_period_data_22.txt',
+     'freyberg6.wel_stress_period_data_23.txt',
+     'freyberg6.wel_stress_period_data_24.txt',
+     'freyberg6.wel_stress_period_data_25.txt',
+     'freyberg6.wel_stress_period_data_3.txt',
+     'freyberg6.wel_stress_period_data_4.txt',
+     'freyberg6.wel_stress_period_data_5.txt',
+     'freyberg6.wel_stress_period_data_6.txt',
+     'freyberg6.wel_stress_period_data_7.txt',
+     'freyberg6.wel_stress_period_data_8.txt',
+     'freyberg6.wel_stress_period_data_9.txt',
+     'freyberg6_freyberg.cbc',
+     'freyberg6_freyberg.hds',
+     'freyberg_mp.mpbas',
+     'freyberg_mp.mpend',
+     'freyberg_mp.mplst',
+     'freyberg_mp.mpnam',
+     'freyberg_mp.mpsim',
+     'freyberg_mp.ne_layer1.txt',
+     'freyberg_mp.ne_layer2.txt',
+     'freyberg_mp.ne_layer3.txt',
+     'head.obs',
+     'heads.csv',
+     'inschek.exe',
+     'mf5to6.exe',
+     'mf6.exe',
+     'mfsim.lst',
+     'mfsim.nam',
+     'mp7.exe',
+     'mpath7.log',
+     'mult',
+     'org',
+     'pestchek.exe',
+     'pestpp-da.exe',
+     'pestpp-glm.exe',
+     'pestpp-ies.exe',
+     'pestpp-mou.exe',
+     'pestpp-opt.exe',
+     'pestpp-sen.exe',
+     'pestpp-sqp.exe',
+     'pestpp-swp.exe',
+     'pm.pg1.sloc',
+     'pyemu',
+     'sfr.csv',
+     'sfr.obs',
+     'tempchek.exe',
+     'zbud6.exe']
+
+
+
 So we see that when `PstFrom` is instantiated, it starts by copying the `original_d` to the `new_d`.  sweet as!
 
 ### 4. Observations
@@ -166,6 +520,10 @@ for i in gwf.obs:
     print(i.output.obs_names)
 ```
 
+    ['sfr.csv']
+    ['heads.csv']
+    
+
 Let's start with the 'heads.csv' file. First load it as a DataFrame to take a look:
 
 
@@ -173,6 +531,202 @@ Let's start with the 'heads.csv' file. First load it as a DataFrame to take a lo
 df = pd.read_csv(os.path.join(template_ws,"heads.csv"),index_col=0)
 df.head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>TRGW-2-2-15</th>
+      <th>TRGW-2-2-9</th>
+      <th>TRGW-2-3-8</th>
+      <th>TRGW-2-9-1</th>
+      <th>TRGW-2-13-10</th>
+      <th>TRGW-2-15-16</th>
+      <th>TRGW-2-21-10</th>
+      <th>TRGW-2-22-15</th>
+      <th>TRGW-2-24-4</th>
+      <th>TRGW-2-26-6</th>
+      <th>...</th>
+      <th>TRGW-0-9-1</th>
+      <th>TRGW-0-13-10</th>
+      <th>TRGW-0-15-16</th>
+      <th>TRGW-0-21-10</th>
+      <th>TRGW-0-22-15</th>
+      <th>TRGW-0-24-4</th>
+      <th>TRGW-0-26-6</th>
+      <th>TRGW-0-29-15</th>
+      <th>TRGW-0-33-7</th>
+      <th>TRGW-0-34-10</th>
+    </tr>
+    <tr>
+      <th>time</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3652.5</th>
+      <td>34.399753</td>
+      <td>34.692968</td>
+      <td>34.730206</td>
+      <td>35.065796</td>
+      <td>34.320937</td>
+      <td>34.180708</td>
+      <td>34.200684</td>
+      <td>34.065937</td>
+      <td>34.406587</td>
+      <td>34.245567</td>
+      <td>...</td>
+      <td>35.073084</td>
+      <td>34.326872</td>
+      <td>34.186027</td>
+      <td>34.206589</td>
+      <td>34.025500</td>
+      <td>34.412947</td>
+      <td>34.251605</td>
+      <td>33.937893</td>
+      <td>34.031870</td>
+      <td>33.924572</td>
+    </tr>
+    <tr>
+      <th>3683.5</th>
+      <td>34.474597</td>
+      <td>34.773873</td>
+      <td>34.811043</td>
+      <td>35.130920</td>
+      <td>34.435795</td>
+      <td>34.284363</td>
+      <td>34.320775</td>
+      <td>34.171539</td>
+      <td>34.517134</td>
+      <td>34.376046</td>
+      <td>...</td>
+      <td>35.137941</td>
+      <td>34.440950</td>
+      <td>34.289268</td>
+      <td>34.325758</td>
+      <td>34.116346</td>
+      <td>34.522520</td>
+      <td>34.380738</td>
+      <td>34.017081</td>
+      <td>34.142435</td>
+      <td>34.035987</td>
+    </tr>
+    <tr>
+      <th>3712.5</th>
+      <td>34.540686</td>
+      <td>34.856926</td>
+      <td>34.895437</td>
+      <td>35.214427</td>
+      <td>34.528656</td>
+      <td>34.363909</td>
+      <td>34.418080</td>
+      <td>34.248171</td>
+      <td>34.622236</td>
+      <td>34.480890</td>
+      <td>...</td>
+      <td>35.221267</td>
+      <td>34.534811</td>
+      <td>34.369785</td>
+      <td>34.424073</td>
+      <td>34.183016</td>
+      <td>34.628106</td>
+      <td>34.486650</td>
+      <td>34.079395</td>
+      <td>34.230419</td>
+      <td>34.112732</td>
+    </tr>
+    <tr>
+      <th>3743.5</th>
+      <td>34.578877</td>
+      <td>34.913862</td>
+      <td>34.954331</td>
+      <td>35.285693</td>
+      <td>34.575597</td>
+      <td>34.400771</td>
+      <td>34.466995</td>
+      <td>34.282155</td>
+      <td>34.687775</td>
+      <td>34.535632</td>
+      <td>...</td>
+      <td>35.292600</td>
+      <td>34.582875</td>
+      <td>34.407581</td>
+      <td>34.474190</td>
+      <td>34.212731</td>
+      <td>34.694595</td>
+      <td>34.542664</td>
+      <td>34.108744</td>
+      <td>34.273212</td>
+      <td>34.143653</td>
+    </tr>
+    <tr>
+      <th>3773.5</th>
+      <td>34.570039</td>
+      <td>34.914817</td>
+      <td>34.956630</td>
+      <td>35.304308</td>
+      <td>34.553737</td>
+      <td>34.377572</td>
+      <td>34.444166</td>
+      <td>34.257522</td>
+      <td>34.680793</td>
+      <td>34.513612</td>
+      <td>...</td>
+      <td>35.311425</td>
+      <td>34.561764</td>
+      <td>34.384903</td>
+      <td>34.452207</td>
+      <td>34.191712</td>
+      <td>34.688486</td>
+      <td>34.521646</td>
+      <td>34.091720</td>
+      <td>34.250685</td>
+      <td>34.114481</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 26 columns</p>
+</div>
+
+
 
 As you can see, there are many columns, one for each observation site. Conveniently, * *cough* * they are named according to the cell layer, row and column. Note that at every site, there is an observation in both the top and bottom layer (0_ and 2_). We will make use of this later to create "secondary observations" of head differences between layers...but let's not get distracted.
 
@@ -215,12 +769,88 @@ We can see that the `.add_observations()` method returned a dataframe with lots 
 hds_df.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>obsnme</th>
+      <th>obsval</th>
+      <th>weight</th>
+      <th>obgnme</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</td>
+      <td>34.326872</td>
+      <td>1.0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</td>
+      <td>34.440950</td>
+      <td>1.0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</td>
+      <td>34.534811</td>
+      <td>1.0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</td>
+      <td>34.582875</td>
+      <td>1.0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</td>
+      <td>34.561764</td>
+      <td>1.0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 At this point, no PEST *control file* has been created, we have simply prepared to add these observations to the control file later. Everything is still only stored in memory. However, a PEST *instruction* file has been created in the template folder (`template_ws`):
 
 
 ```python
 [f for f in os.listdir(template_ws) if f.endswith(".ins")]
 ```
+
+
+
+
+    ['heads.csv.ins']
+
+
 
 Blimey, wasn't that easy? Automatically monitoring thousands of model output quantities as observations into a PEST dataset becomes a breeze!
 
@@ -231,6 +861,75 @@ Let's quickly do the same thing for the SFR observations.
 df = pd.read_csv(os.path.join(template_ws, "sfr.csv"), index_col=0)
 df.head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>HEADWATER</th>
+      <th>TAILWATER</th>
+      <th>GAGE-1</th>
+    </tr>
+    <tr>
+      <th>time</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3652.5</th>
+      <td>-751.175944</td>
+      <td>-530.017751</td>
+      <td>1362.956403</td>
+    </tr>
+    <tr>
+      <th>3683.5</th>
+      <td>-953.833450</td>
+      <td>-674.975248</td>
+      <td>1761.276157</td>
+    </tr>
+    <tr>
+      <th>3712.5</th>
+      <td>-1111.264769</td>
+      <td>-799.212978</td>
+      <td>2049.386246</td>
+    </tr>
+    <tr>
+      <th>3743.5</th>
+      <td>-1180.723380</td>
+      <td>-853.985397</td>
+      <td>2163.434411</td>
+    </tr>
+    <tr>
+      <th>3773.5</th>
+      <td>-1140.609765</td>
+      <td>-823.268420</td>
+      <td>2068.666541</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 
 ```python
@@ -282,6 +981,19 @@ grid_gs.plot()
 ```
 
 
+
+
+    <AxesSubplot:xlabel='distance', ylabel='$\\gamma$'>
+
+
+
+
+    
+![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_32_1.png)
+    
+
+
+
 ```python
 # exponential variogram for time varying parameters
 v_time = pyemu.geostats.ExpVario(contribution=1.0, #sill
@@ -307,6 +1019,9 @@ files = [f for f in os.listdir(template_ws) if tag in f.lower() and f.endswith("
 print(files)
 ```
 
+    ['freyberg6.npf_k_layer1.txt', 'freyberg6.npf_k_layer2.txt', 'freyberg6.npf_k_layer3.txt']
+    
+
 Let's setup multiple spatial scales of parameters for Kh. To do this we will use three of the parameter "types" described above. The coarse scale will be a `constant` single value for each array. The medium scale will `pilot points`. The finest scale will use parameters as the `grid` scale (a unique parameter for each model cell!)
 
 Each scale of parameters will work with the others as multipliers with the existing Kh arrays. (This all happens at runtime as part of the "model run" script.) Think of the scales as dials that PEST(++) can turn to improve the fit. The "coarse" scale is one big dial that alows PEST to move everything at once - that is, change the mean of the entire Kh array. The "medium" dials are few (but not too many) that allow PEST to adjust broad areas, but not making eveything move. The "fine" scales are lots of small dials that allow PEST(++) to have very detailed control, tweaking parameter values within very small areas. 
@@ -331,6 +1046,19 @@ plt.imshow(ib)
 ```
 
 
+
+
+    <matplotlib.image.AxesImage at 0x1fe403c95b0>
+
+
+
+
+    
+![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_37_1.png)
+    
+
+
+
 ```python
 f = 'freyberg6.npf_k_layer1.txt'
 
@@ -353,12 +1081,166 @@ As when adding observations,  `pf.add_parameters()` returns a dataframe. Take a 
 df_gr.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>parnme</th>
+      <th>parval1</th>
+      <th>i</th>
+      <th>j</th>
+      <th>x</th>
+      <th>y</th>
+      <th>pargp</th>
+      <th>tpl_filename</th>
+      <th>input_filename</th>
+      <th>partype</th>
+      <th>partrans</th>
+      <th>parubnd</th>
+      <th>parlbnd</th>
+      <th>parchglim</th>
+      <th>dercom</th>
+      <th>scale</th>
+      <th>offset</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:0_x:125.00_y:9875.00_zone:1</th>
+      <td>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:0_x:125.00_y:9875.00_zone:1</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>125.0</td>
+      <td>9875.0</td>
+      <td>npfklayer1gr</td>
+      <td>freyberg6_template\npfklayer1gr_inst0_grid.csv.tpl</td>
+      <td>freyberg6_template\mult\npfklayer1gr_inst0_grid.csv</td>
+      <td>grid</td>
+      <td>log</td>
+      <td>5.0</td>
+      <td>0.2</td>
+      <td>factor</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:1_x:375.00_y:9875.00_zone:1</th>
+      <td>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:1_x:375.00_y:9875.00_zone:1</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>375.0</td>
+      <td>9875.0</td>
+      <td>npfklayer1gr</td>
+      <td>freyberg6_template\npfklayer1gr_inst0_grid.csv.tpl</td>
+      <td>freyberg6_template\mult\npfklayer1gr_inst0_grid.csv</td>
+      <td>grid</td>
+      <td>log</td>
+      <td>5.0</td>
+      <td>0.2</td>
+      <td>factor</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:2_x:625.00_y:9875.00_zone:1</th>
+      <td>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:2_x:625.00_y:9875.00_zone:1</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>625.0</td>
+      <td>9875.0</td>
+      <td>npfklayer1gr</td>
+      <td>freyberg6_template\npfklayer1gr_inst0_grid.csv.tpl</td>
+      <td>freyberg6_template\mult\npfklayer1gr_inst0_grid.csv</td>
+      <td>grid</td>
+      <td>log</td>
+      <td>5.0</td>
+      <td>0.2</td>
+      <td>factor</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:3_x:875.00_y:9875.00_zone:1</th>
+      <td>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:3_x:875.00_y:9875.00_zone:1</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>875.0</td>
+      <td>9875.0</td>
+      <td>npfklayer1gr</td>
+      <td>freyberg6_template\npfklayer1gr_inst0_grid.csv.tpl</td>
+      <td>freyberg6_template\mult\npfklayer1gr_inst0_grid.csv</td>
+      <td>grid</td>
+      <td>log</td>
+      <td>5.0</td>
+      <td>0.2</td>
+      <td>factor</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:4_x:1125.00_y:9875.00_zone:1</th>
+      <td>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:4_x:1125.00_y:9875.00_zone:1</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>1125.0</td>
+      <td>9875.0</td>
+      <td>npfklayer1gr</td>
+      <td>freyberg6_template\npfklayer1gr_inst0_grid.csv.tpl</td>
+      <td>freyberg6_template\mult\npfklayer1gr_inst0_grid.csv</td>
+      <td>grid</td>
+      <td>log</td>
+      <td>5.0</td>
+      <td>0.2</td>
+      <td>factor</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 This `add_parameters()` call also wrote a template file that PEST(++) will use to populate the multiplier array at runtime:
 
 
 ```python
 [f for f in os.listdir(template_ws) if f.endswith(".tpl")]
 ```
+
+
+
+
+    ['npfklayer1gr_inst0_grid.csv.tpl']
+
+
 
 Remember!  no pest control file has been made yet. `PstFrom` is simply preparing to make a control file later...
 
@@ -387,6 +1269,20 @@ df_pp = pf.add_parameters(f,
                     pp_space=5) # `PstFrom` will generate a unifrom grid of pilot points in every 4th row and column
 ```
 
+    starting interp point loop for 706 points
+    starting 0
+    starting 1
+    starting 2
+    starting 3
+    starting 4
+    starting 5
+    starting 6
+    starting 7
+    starting 8
+    starting 9
+    took 3.485458 seconds
+    
+
 
 ```python
 fig,ax = plt.subplots(1,1,figsize=(4,6))
@@ -394,6 +1290,19 @@ ax.set_aspect("equal")
 ax.pcolormesh(sr.xcentergrid, sr.ycentergrid,ib)
 ax.scatter(df_pp.x,df_pp.y)
 ```
+
+
+
+
+    <matplotlib.collections.PathCollection at 0x1fe406e84c0>
+
+
+
+
+    
+![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_46_1.png)
+    
+
 
 Lastly, add the constant (coarse) parameter multiplier. This is a single multiplier value applied to all values in the array. 
 
@@ -416,6 +1325,15 @@ Now we see three template files have been created:
 ```python
 [f for f in os.listdir(template_ws) if f.endswith(".tpl")]
 ```
+
+
+
+
+    ['npfklayer1cn_inst0_constant.csv.tpl',
+     'npfklayer1gr_inst0_grid.csv.tpl',
+     'npfklayer1pp_inst0pp.dat.tpl']
+
+
 
 Feel free to navigate to the `template_ws` and inspect these files.
 
@@ -469,6 +1387,15 @@ A reminder of which files are listed in `files`:
 files
 ```
 
+
+
+
+    ['freyberg6.npf_k_layer1.txt',
+     'freyberg6.npf_k_layer2.txt',
+     'freyberg6.npf_k_layer3.txt']
+
+
+
 Now let's apply our function to the last two:
 
 
@@ -483,6 +1410,21 @@ Let's see what .tpl files have been added:
 ```python
 [f for f in os.listdir(template_ws) if f.endswith(".tpl")]
 ```
+
+
+
+
+    ['npfklayer1cn_inst0_constant.csv.tpl',
+     'npfklayer1gr_inst0_grid.csv.tpl',
+     'npfklayer1pp_inst0pp.dat.tpl',
+     'npfklayer2cn_inst0_constant.csv.tpl',
+     'npfklayer2gr_inst0_grid.csv.tpl',
+     'npfklayer2pp_inst0pp.dat.tpl',
+     'npfklayer3cn_inst0_constant.csv.tpl',
+     'npfklayer3gr_inst0_grid.csv.tpl',
+     'npfklayer3pp_inst0pp.dat.tpl']
+
+
 
 Well...hot damn, wasn't that easy? Let's speed through the other array parameter files.
 
@@ -521,6 +1463,48 @@ for f in files:
 [f for f in os.listdir(template_ws) if f.endswith(".tpl")]
 ```
 
+
+
+
+    ['nelayer1cn_inst0_constant.csv.tpl',
+     'nelayer1gr_inst0_grid.csv.tpl',
+     'nelayer1pp_inst0pp.dat.tpl',
+     'nelayer2cn_inst0_constant.csv.tpl',
+     'nelayer2gr_inst0_grid.csv.tpl',
+     'nelayer2pp_inst0pp.dat.tpl',
+     'nelayer3cn_inst0_constant.csv.tpl',
+     'nelayer3gr_inst0_grid.csv.tpl',
+     'nelayer3pp_inst0pp.dat.tpl',
+     'npfk33layer1cn_inst0_constant.csv.tpl',
+     'npfk33layer1gr_inst0_grid.csv.tpl',
+     'npfk33layer1pp_inst0pp.dat.tpl',
+     'npfk33layer2cn_inst0_constant.csv.tpl',
+     'npfk33layer2gr_inst0_grid.csv.tpl',
+     'npfk33layer2pp_inst0pp.dat.tpl',
+     'npfk33layer3cn_inst0_constant.csv.tpl',
+     'npfk33layer3gr_inst0_grid.csv.tpl',
+     'npfk33layer3pp_inst0pp.dat.tpl',
+     'npfklayer1cn_inst0_constant.csv.tpl',
+     'npfklayer1gr_inst0_grid.csv.tpl',
+     'npfklayer1pp_inst0pp.dat.tpl',
+     'npfklayer2cn_inst0_constant.csv.tpl',
+     'npfklayer2gr_inst0_grid.csv.tpl',
+     'npfklayer2pp_inst0pp.dat.tpl',
+     'npfklayer3cn_inst0_constant.csv.tpl',
+     'npfklayer3gr_inst0_grid.csv.tpl',
+     'npfklayer3pp_inst0pp.dat.tpl',
+     'stosslayer2cn_inst0_constant.csv.tpl',
+     'stosslayer2gr_inst0_grid.csv.tpl',
+     'stosslayer2pp_inst0pp.dat.tpl',
+     'stosslayer3cn_inst0_constant.csv.tpl',
+     'stosslayer3gr_inst0_grid.csv.tpl',
+     'stosslayer3pp_inst0pp.dat.tpl',
+     'stosylayer1cn_inst0_constant.csv.tpl',
+     'stosylayer1gr_inst0_grid.csv.tpl',
+     'stosylayer1pp_inst0pp.dat.tpl']
+
+
+
 Boom!  We just conquered property parameterization in a big way!
 
 #### 5.3.2. Spatial and Temporal Correlation
@@ -542,6 +1526,26 @@ dts = pd.to_datetime(start_datetime) + pd.to_timedelta(np.cumsum(sim.tdis.period
 
 dts
 ```
+
+
+
+
+    DatetimeIndex(['2017-12-31 12:00:00', '2018-01-31 12:00:00',
+                   '2018-03-01 12:00:00', '2018-04-01 12:00:00',
+                   '2018-05-01 12:00:00', '2018-06-01 12:00:00',
+                   '2018-07-01 12:00:00', '2018-08-01 12:00:00',
+                   '2018-09-01 12:00:00', '2018-10-01 12:00:00',
+                   '2018-11-01 12:00:00', '2018-12-01 12:00:00',
+                   '2019-01-01 12:00:00', '2019-02-01 12:00:00',
+                   '2019-03-01 12:00:00', '2019-04-01 12:00:00',
+                   '2019-05-01 12:00:00', '2019-06-01 12:00:00',
+                   '2019-07-01 12:00:00', '2019-08-01 12:00:00',
+                   '2019-09-01 12:00:00', '2019-10-01 12:00:00',
+                   '2019-11-01 12:00:00', '2019-12-01 12:00:00',
+                   '2020-01-01 12:00:00'],
+                  dtype='datetime64[ns]', freq=None)
+
+
 
 If you use the same parameter group name (`pargp`) and same geostruct, `PstFrom` will treat parameters setup across different calls to `add_parameters()` as correlated - ***WARNING*** do not try to express spatial and temporal correlation together - as discussed above, #badtimes.  In this case, we want to express temporal correlation in the recharge multiplier parameters that are "constant" type in space so that there is one recharge multiplier parameter for each stress period that shares a parameter group name across different calls to `add_parameters`. So, we use the same parameter group names for each stress period data file, and specify the `datetime` and `geostruct` arguments.
 
@@ -567,6 +1571,9 @@ add_mult_pars(files, lb=0.2, ub=5.0, ulb=2e-5, uub=2e-4, add_coarse=False)
     
     
 ```
+
+    ['freyberg6.rch_recharge_1.txt', 'freyberg6.rch_recharge_2.txt', 'freyberg6.rch_recharge_3.txt', 'freyberg6.rch_recharge_4.txt', 'freyberg6.rch_recharge_5.txt', 'freyberg6.rch_recharge_6.txt', 'freyberg6.rch_recharge_7.txt', 'freyberg6.rch_recharge_8.txt', 'freyberg6.rch_recharge_9.txt', 'freyberg6.rch_recharge_10.txt', 'freyberg6.rch_recharge_11.txt', 'freyberg6.rch_recharge_12.txt', 'freyberg6.rch_recharge_13.txt', 'freyberg6.rch_recharge_14.txt', 'freyberg6.rch_recharge_15.txt', 'freyberg6.rch_recharge_16.txt', 'freyberg6.rch_recharge_17.txt', 'freyberg6.rch_recharge_18.txt', 'freyberg6.rch_recharge_19.txt', 'freyberg6.rch_recharge_20.txt', 'freyberg6.rch_recharge_21.txt', 'freyberg6.rch_recharge_22.txt', 'freyberg6.rch_recharge_23.txt', 'freyberg6.rch_recharge_24.txt', 'freyberg6.rch_recharge_25.txt']
+    
 
 Then, we will asign an additional `constant` multiplier parameter for each recharge stress-period file (so, a single multiplier for all recharge paramaters for each stress period). We will specify temporal correlation for these `constant` multipliers. These will all have the same parameter group name, as discussed above. 
 
@@ -604,6 +1611,9 @@ tag = "ghb_stress_period_data"
 files = [f for f in os.listdir(template_ws) if tag in f.lower() and f.endswith(".txt")]
 print(files)
 ```
+
+    ['freyberg6.ghb_stress_period_data_1.txt']
+    
 
 Since these boundaries are likely to be very influential, we want to include a robust representation of their uncertainty - both head and conductance and at multiple scales.  
 
@@ -757,6 +1767,70 @@ pf.add_parameters(f,
                 ult_lbound=0.01, ult_ubound=10) #absolute limits
 ```
 
+    ['freyberg6.sfr_packagedata.txt']
+    
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>parnme</th>
+      <th>pargp</th>
+      <th>covgp</th>
+      <th>tpl_filename</th>
+      <th>input_filename</th>
+      <th>parval1</th>
+      <th>partype</th>
+      <th>partrans</th>
+      <th>parubnd</th>
+      <th>parlbnd</th>
+      <th>parchglim</th>
+      <th>dercom</th>
+      <th>scale</th>
+      <th>offset</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>pname:sfrcondcn_inst:0_ptype:cn_usecol:9_pstyle:m</th>
+      <td>pname:sfrcondcn_inst:0_ptype:cn_usecol:9_pstyle:m</td>
+      <td>sfrcondcn</td>
+      <td>sfrcondcn</td>
+      <td>freyberg6_template\sfrcondcn_inst0_constant.csv.tpl</td>
+      <td>freyberg6_template\mult\sfrcondcn_inst0_constant.csv</td>
+      <td>1.0</td>
+      <td>constant</td>
+      <td>log</td>
+      <td>10.0</td>
+      <td>0.1</td>
+      <td>factor</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 
 ```python
 # SFR inflow
@@ -781,10 +1855,163 @@ for f in files:
                         geostruct=temporal_gs)
 ```
 
+    ['freyberg6.sfr_perioddata_1.txt', 'freyberg6.sfr_perioddata_2.txt', 'freyberg6.sfr_perioddata_3.txt', 'freyberg6.sfr_perioddata_4.txt', 'freyberg6.sfr_perioddata_5.txt', 'freyberg6.sfr_perioddata_6.txt', 'freyberg6.sfr_perioddata_7.txt', 'freyberg6.sfr_perioddata_8.txt', 'freyberg6.sfr_perioddata_9.txt', 'freyberg6.sfr_perioddata_10.txt', 'freyberg6.sfr_perioddata_11.txt', 'freyberg6.sfr_perioddata_12.txt', 'freyberg6.sfr_perioddata_13.txt', 'freyberg6.sfr_perioddata_14.txt', 'freyberg6.sfr_perioddata_15.txt', 'freyberg6.sfr_perioddata_16.txt', 'freyberg6.sfr_perioddata_17.txt', 'freyberg6.sfr_perioddata_18.txt', 'freyberg6.sfr_perioddata_19.txt', 'freyberg6.sfr_perioddata_20.txt', 'freyberg6.sfr_perioddata_21.txt', 'freyberg6.sfr_perioddata_22.txt', 'freyberg6.sfr_perioddata_23.txt', 'freyberg6.sfr_perioddata_24.txt', 'freyberg6.sfr_perioddata_25.txt']
+    
+
 
 ```python
 [f for f in os.listdir(template_ws) if f.endswith(".tpl")]
 ```
+
+
+
+
+    ['ghbcondcn_inst0_constant.csv.tpl',
+     'ghbcondgr_inst0_grid.csv.tpl',
+     'ghbheadcn_inst0_constant.csv.tpl',
+     'ghbheadgr_inst0_grid.csv.tpl',
+     'nelayer1cn_inst0_constant.csv.tpl',
+     'nelayer1gr_inst0_grid.csv.tpl',
+     'nelayer1pp_inst0pp.dat.tpl',
+     'nelayer2cn_inst0_constant.csv.tpl',
+     'nelayer2gr_inst0_grid.csv.tpl',
+     'nelayer2pp_inst0pp.dat.tpl',
+     'nelayer3cn_inst0_constant.csv.tpl',
+     'nelayer3gr_inst0_grid.csv.tpl',
+     'nelayer3pp_inst0pp.dat.tpl',
+     'npfk33layer1cn_inst0_constant.csv.tpl',
+     'npfk33layer1gr_inst0_grid.csv.tpl',
+     'npfk33layer1pp_inst0pp.dat.tpl',
+     'npfk33layer2cn_inst0_constant.csv.tpl',
+     'npfk33layer2gr_inst0_grid.csv.tpl',
+     'npfk33layer2pp_inst0pp.dat.tpl',
+     'npfk33layer3cn_inst0_constant.csv.tpl',
+     'npfk33layer3gr_inst0_grid.csv.tpl',
+     'npfk33layer3pp_inst0pp.dat.tpl',
+     'npfklayer1cn_inst0_constant.csv.tpl',
+     'npfklayer1gr_inst0_grid.csv.tpl',
+     'npfklayer1pp_inst0pp.dat.tpl',
+     'npfklayer2cn_inst0_constant.csv.tpl',
+     'npfklayer2gr_inst0_grid.csv.tpl',
+     'npfklayer2pp_inst0pp.dat.tpl',
+     'npfklayer3cn_inst0_constant.csv.tpl',
+     'npfklayer3gr_inst0_grid.csv.tpl',
+     'npfklayer3pp_inst0pp.dat.tpl',
+     'rch_recharge_10tcn_inst0_constant.csv.tpl',
+     'rch_recharge_11tcn_inst0_constant.csv.tpl',
+     'rch_recharge_12tcn_inst0_constant.csv.tpl',
+     'rch_recharge_13tcn_inst0_constant.csv.tpl',
+     'rch_recharge_14tcn_inst0_constant.csv.tpl',
+     'rch_recharge_15tcn_inst0_constant.csv.tpl',
+     'rch_recharge_16tcn_inst0_constant.csv.tpl',
+     'rch_recharge_17tcn_inst0_constant.csv.tpl',
+     'rch_recharge_18tcn_inst0_constant.csv.tpl',
+     'rch_recharge_19tcn_inst0_constant.csv.tpl',
+     'rch_recharge_1gr_inst0_grid.csv.tpl',
+     'rch_recharge_1pp_inst0pp.dat.tpl',
+     'rch_recharge_1tcn_inst0_constant.csv.tpl',
+     'rch_recharge_20tcn_inst0_constant.csv.tpl',
+     'rch_recharge_21tcn_inst0_constant.csv.tpl',
+     'rch_recharge_22tcn_inst0_constant.csv.tpl',
+     'rch_recharge_23tcn_inst0_constant.csv.tpl',
+     'rch_recharge_24tcn_inst0_constant.csv.tpl',
+     'rch_recharge_25tcn_inst0_constant.csv.tpl',
+     'rch_recharge_2tcn_inst0_constant.csv.tpl',
+     'rch_recharge_3tcn_inst0_constant.csv.tpl',
+     'rch_recharge_4tcn_inst0_constant.csv.tpl',
+     'rch_recharge_5tcn_inst0_constant.csv.tpl',
+     'rch_recharge_6tcn_inst0_constant.csv.tpl',
+     'rch_recharge_7tcn_inst0_constant.csv.tpl',
+     'rch_recharge_8tcn_inst0_constant.csv.tpl',
+     'rch_recharge_9tcn_inst0_constant.csv.tpl',
+     'sfrcondcn_inst0_constant.csv.tpl',
+     'sfrcondgr_inst0_grid.csv.tpl',
+     'sfrgr_inst0_grid.csv.tpl',
+     'sfrgr_inst10_grid.csv.tpl',
+     'sfrgr_inst11_grid.csv.tpl',
+     'sfrgr_inst12_grid.csv.tpl',
+     'sfrgr_inst13_grid.csv.tpl',
+     'sfrgr_inst14_grid.csv.tpl',
+     'sfrgr_inst15_grid.csv.tpl',
+     'sfrgr_inst16_grid.csv.tpl',
+     'sfrgr_inst17_grid.csv.tpl',
+     'sfrgr_inst18_grid.csv.tpl',
+     'sfrgr_inst19_grid.csv.tpl',
+     'sfrgr_inst1_grid.csv.tpl',
+     'sfrgr_inst20_grid.csv.tpl',
+     'sfrgr_inst21_grid.csv.tpl',
+     'sfrgr_inst22_grid.csv.tpl',
+     'sfrgr_inst23_grid.csv.tpl',
+     'sfrgr_inst24_grid.csv.tpl',
+     'sfrgr_inst2_grid.csv.tpl',
+     'sfrgr_inst3_grid.csv.tpl',
+     'sfrgr_inst4_grid.csv.tpl',
+     'sfrgr_inst5_grid.csv.tpl',
+     'sfrgr_inst6_grid.csv.tpl',
+     'sfrgr_inst7_grid.csv.tpl',
+     'sfrgr_inst8_grid.csv.tpl',
+     'sfrgr_inst9_grid.csv.tpl',
+     'stosslayer2cn_inst0_constant.csv.tpl',
+     'stosslayer2gr_inst0_grid.csv.tpl',
+     'stosslayer2pp_inst0pp.dat.tpl',
+     'stosslayer3cn_inst0_constant.csv.tpl',
+     'stosslayer3gr_inst0_grid.csv.tpl',
+     'stosslayer3pp_inst0pp.dat.tpl',
+     'stosylayer1cn_inst0_constant.csv.tpl',
+     'stosylayer1gr_inst0_grid.csv.tpl',
+     'stosylayer1pp_inst0pp.dat.tpl',
+     'welcst_inst0_constant.csv.tpl',
+     'welcst_inst10_constant.csv.tpl',
+     'welcst_inst11_constant.csv.tpl',
+     'welcst_inst12_constant.csv.tpl',
+     'welcst_inst13_constant.csv.tpl',
+     'welcst_inst14_constant.csv.tpl',
+     'welcst_inst15_constant.csv.tpl',
+     'welcst_inst16_constant.csv.tpl',
+     'welcst_inst17_constant.csv.tpl',
+     'welcst_inst18_constant.csv.tpl',
+     'welcst_inst19_constant.csv.tpl',
+     'welcst_inst1_constant.csv.tpl',
+     'welcst_inst20_constant.csv.tpl',
+     'welcst_inst21_constant.csv.tpl',
+     'welcst_inst22_constant.csv.tpl',
+     'welcst_inst23_constant.csv.tpl',
+     'welcst_inst24_constant.csv.tpl',
+     'welcst_inst2_constant.csv.tpl',
+     'welcst_inst3_constant.csv.tpl',
+     'welcst_inst4_constant.csv.tpl',
+     'welcst_inst5_constant.csv.tpl',
+     'welcst_inst6_constant.csv.tpl',
+     'welcst_inst7_constant.csv.tpl',
+     'welcst_inst8_constant.csv.tpl',
+     'welcst_inst9_constant.csv.tpl',
+     'welgrd_inst0_grid.csv.tpl',
+     'welgrd_inst10_grid.csv.tpl',
+     'welgrd_inst11_grid.csv.tpl',
+     'welgrd_inst12_grid.csv.tpl',
+     'welgrd_inst13_grid.csv.tpl',
+     'welgrd_inst14_grid.csv.tpl',
+     'welgrd_inst15_grid.csv.tpl',
+     'welgrd_inst16_grid.csv.tpl',
+     'welgrd_inst17_grid.csv.tpl',
+     'welgrd_inst18_grid.csv.tpl',
+     'welgrd_inst19_grid.csv.tpl',
+     'welgrd_inst1_grid.csv.tpl',
+     'welgrd_inst20_grid.csv.tpl',
+     'welgrd_inst21_grid.csv.tpl',
+     'welgrd_inst22_grid.csv.tpl',
+     'welgrd_inst23_grid.csv.tpl',
+     'welgrd_inst24_grid.csv.tpl',
+     'welgrd_inst2_grid.csv.tpl',
+     'welgrd_inst3_grid.csv.tpl',
+     'welgrd_inst4_grid.csv.tpl',
+     'welgrd_inst5_grid.csv.tpl',
+     'welgrd_inst6_grid.csv.tpl',
+     'welgrd_inst7_grid.csv.tpl',
+     'welgrd_inst8_grid.csv.tpl',
+     'welgrd_inst9_grid.csv.tpl']
+
+
 
 Damn!  we just parameterized many recognized sources of model input uncertainty at several spatial and temporal scales.  And we expressed spatial and temporal correlation in those parameters.  One last set of parameters that we will need later for sequential data assimilation - initial conditions:
 
@@ -793,6 +2020,15 @@ Damn!  we just parameterized many recognized sources of model input uncertainty 
 files = [f for f in os.listdir(template_ws) if "ic_strt" in f and f.endswith(".txt")]
 files
 ```
+
+
+
+
+    ['freyberg6.ic_strt_layer1.txt',
+     'freyberg6.ic_strt_layer2.txt',
+     'freyberg6.ic_strt_layer3.txt']
+
+
 
 
 ```python
@@ -805,6 +2041,11 @@ for f in files:
 
 
 ```
+
+    (706, 17)
+    (706, 17)
+    (706, 17)
+    
 
 ### 6. The Forward Run Script
 
@@ -821,12 +2062,22 @@ How about we see that in action? Magic time! Let's create the PEST control file.
 pst = pf.build_pst()
 ```
 
+    noptmax:0, npar_adj:12013, nnz_obs:725
+    
+
 Boom! Done. (Well almost.) Check the folder. You should see a new .pst file and the `forward_run.py` file. By default, the .pst file is named after the original model folder name. 
 
 
 ```python
 [f for f in os.listdir(template_ws) if f.endswith(".py") or f.endswith(".pst") ]
 ```
+
+
+
+
+    ['forward_run.py', 'freyberg_mf6.pst']
+
+
 
 We will get to the `pst` object later on (see also the "intro to pyemu" tutorial notebook). For now, let's focus on the `forward_run.py` script. It is printed out below.
 
@@ -843,6 +2094,29 @@ This script does a bunch of things:
 _ = [print(line.rstrip()) for line in open(os.path.join(template_ws,"forward_run.py"))]
 ```
 
+    import os
+    import multiprocessing as mp
+    import numpy as np
+    import pandas as pd
+    import pyemu
+    def main():
+    
+        try:
+           os.remove(r'heads.csv')
+        except Exception as e:
+           print(r'error removing tmp file:heads.csv')
+        try:
+           os.remove(r'sfr.csv')
+        except Exception as e:
+           print(r'error removing tmp file:sfr.csv')
+        pyemu.helpers.apply_list_and_array_pars(arr_par_file='mult2model_info.csv',chunk_len=50)
+    
+    if __name__ == '__main__':
+        mp.freeze_support()
+        main()
+    
+    
+
 That's pretty amazing. But as we just saw, we still need to add commands to actualy run the model.
 
 `PstFrom` allows you to pass a list of system commands which will be executed in sequence. It also has methods for including Python functions that run before or after the system commands. These make pre-/post-processing a piece of cake. In fact, we have already started to add to it. Remember all of the multiplier and additive parameters we setup? These all require pre-processing steps to convert the PEST-generated multipliers into model input values. `PstFrom` will automatically add these functions to the `forward_run.py` script. Nifty, hey?
@@ -858,6 +2132,13 @@ Let's start by adding a command line instruction. These are stored as a list in 
 pf.mod_sys_cmds 
 ```
 
+
+
+
+    []
+
+
+
 To run a MODFLOW6 model from the command line, you can simply execute `mf6` in the model folder. So, we can add this command by appending it to the list. (Do this only once! Every time you append 'mf6' results in an additional call to MODFLOW6, meaning the model would be run multiple times.)
 
 `PstFrom` will add a line to `forward_run.py` w
@@ -868,6 +2149,13 @@ pf.mod_sys_cmds.append("mf6") #do this only once
 pf.mod_sys_cmds
 ```
 
+
+
+
+    ['mf6']
+
+
+
 We also need to run MODPATH7, so we need to add that to the list of system commands. In this case we also need to specify the modpath sim file:
 
 
@@ -875,6 +2163,13 @@ We also need to run MODPATH7, so we need to add that to the list of system comma
 pf.mod_sys_cmds.append("mp7 freyberg_mp.mpsim") #do this only once
 pf.mod_sys_cmds
 ```
+
+
+
+
+    ['mf6', 'mp7 freyberg_mp.mpsim']
+
+
 
 OK, now let's re-build the Pst control file and check out the changes ot the `forward_run.py` script.
 
@@ -886,6 +2181,34 @@ pst = pf.build_pst()
 
 _ = [print(line.rstrip()) for line in open(os.path.join(template_ws,"forward_run.py"))]
 ```
+
+    noptmax:0, npar_adj:12013, nnz_obs:725
+    import os
+    import multiprocessing as mp
+    import numpy as np
+    import pandas as pd
+    import pyemu
+    def main():
+    
+        try:
+           os.remove(r'heads.csv')
+        except Exception as e:
+           print(r'error removing tmp file:heads.csv')
+        try:
+           os.remove(r'sfr.csv')
+        except Exception as e:
+           print(r'error removing tmp file:sfr.csv')
+        pyemu.helpers.apply_list_and_array_pars(arr_par_file='mult2model_info.csv',chunk_len=50)
+        pyemu.os_utils.run(r'mf6')
+    
+        pyemu.os_utils.run(r'mp7 freyberg_mp.mpsim')
+    
+    
+    if __name__ == '__main__':
+        mp.freeze_support()
+        main()
+    
+    
 
 #### 6.3. Extra pre- and post-processing functions
 
@@ -913,6 +2236,87 @@ helpers.test_extract_hds_arrays(template_ws)
 files = [f for f in os.listdir(template_ws) if f.startswith("hdslay")]
 files
 ```
+
+
+
+
+    ['hdslay1_t1.txt',
+     'hdslay1_t10.txt',
+     'hdslay1_t11.txt',
+     'hdslay1_t12.txt',
+     'hdslay1_t13.txt',
+     'hdslay1_t14.txt',
+     'hdslay1_t15.txt',
+     'hdslay1_t16.txt',
+     'hdslay1_t17.txt',
+     'hdslay1_t18.txt',
+     'hdslay1_t19.txt',
+     'hdslay1_t2.txt',
+     'hdslay1_t20.txt',
+     'hdslay1_t21.txt',
+     'hdslay1_t22.txt',
+     'hdslay1_t23.txt',
+     'hdslay1_t24.txt',
+     'hdslay1_t25.txt',
+     'hdslay1_t3.txt',
+     'hdslay1_t4.txt',
+     'hdslay1_t5.txt',
+     'hdslay1_t6.txt',
+     'hdslay1_t7.txt',
+     'hdslay1_t8.txt',
+     'hdslay1_t9.txt',
+     'hdslay2_t1.txt',
+     'hdslay2_t10.txt',
+     'hdslay2_t11.txt',
+     'hdslay2_t12.txt',
+     'hdslay2_t13.txt',
+     'hdslay2_t14.txt',
+     'hdslay2_t15.txt',
+     'hdslay2_t16.txt',
+     'hdslay2_t17.txt',
+     'hdslay2_t18.txt',
+     'hdslay2_t19.txt',
+     'hdslay2_t2.txt',
+     'hdslay2_t20.txt',
+     'hdslay2_t21.txt',
+     'hdslay2_t22.txt',
+     'hdslay2_t23.txt',
+     'hdslay2_t24.txt',
+     'hdslay2_t25.txt',
+     'hdslay2_t3.txt',
+     'hdslay2_t4.txt',
+     'hdslay2_t5.txt',
+     'hdslay2_t6.txt',
+     'hdslay2_t7.txt',
+     'hdslay2_t8.txt',
+     'hdslay2_t9.txt',
+     'hdslay3_t1.txt',
+     'hdslay3_t10.txt',
+     'hdslay3_t11.txt',
+     'hdslay3_t12.txt',
+     'hdslay3_t13.txt',
+     'hdslay3_t14.txt',
+     'hdslay3_t15.txt',
+     'hdslay3_t16.txt',
+     'hdslay3_t17.txt',
+     'hdslay3_t18.txt',
+     'hdslay3_t19.txt',
+     'hdslay3_t2.txt',
+     'hdslay3_t20.txt',
+     'hdslay3_t21.txt',
+     'hdslay3_t22.txt',
+     'hdslay3_t23.txt',
+     'hdslay3_t24.txt',
+     'hdslay3_t25.txt',
+     'hdslay3_t3.txt',
+     'hdslay3_t4.txt',
+     'hdslay3_t5.txt',
+     'hdslay3_t6.txt',
+     'hdslay3_t7.txt',
+     'hdslay3_t8.txt',
+     'hdslay3_t9.txt']
+
+
 
 
 ```python
@@ -948,10 +2352,27 @@ Run the next cell, then inspect the template folder. You should see three new cs
 helpers.process_secondary_obs(ws=template_ws)
 ```
 
+    Secondary observation files processed.
+    
+
 
 ```python
 [f for f in os.listdir(template_ws) if f.endswith(".csv")]
 ```
+
+
+
+
+    ['cum.csv',
+     'heads.csv',
+     'heads.tdiff.csv',
+     'heads.vdiff.csv',
+     'inc.csv',
+     'mult2model_info.csv',
+     'sfr.csv',
+     'sfr.tdiff.csv']
+
+
 
 OK, so now let's add this function to the `forward_run.py` script.
 
@@ -998,10 +2419,414 @@ Remember to re-build the Pst control file:
 pst = pf.build_pst()
 ```
 
+    noptmax:0, npar_adj:12013, nnz_obs:62225
+    
+
 
 ```python
 _ = [print(line.rstrip()) for line in open(os.path.join(template_ws,"forward_run.py"))]
 ```
+
+    import os
+    import multiprocessing as mp
+    import numpy as np
+    import pandas as pd
+    import pyemu
+    
+    # function added thru PstFrom.add_py_function()
+    def extract_hds_arrays_and_list_dfs():
+        import flopy
+        hds = flopy.utils.HeadFile("freyberg6_freyberg.hds")
+        for it,t in enumerate(hds.get_times()):
+            d = hds.get_data(totim=t)
+            for k,dlay in enumerate(d):
+                np.savetxt("hdslay{0}_t{1}.txt".format(k+1,it+1),d[k,:,:],fmt="%15.6E")
+    
+        lst = flopy.utils.Mf6ListBudget("freyberg6.lst")
+        inc,cum = lst.get_dataframes(diff=True,start_datetime=None)
+        inc.columns = inc.columns.map(lambda x: x.lower().replace("_","-"))
+        cum.columns = cum.columns.map(lambda x: x.lower().replace("_", "-"))
+        inc.index.name = "totim"
+        cum.index.name = "totim"
+        inc.to_csv("inc.csv")
+        cum.to_csv("cum.csv")
+        return
+    
+    
+    
+    
+    # function added thru PstFrom.add_py_function()
+    def process_secondary_obs(ws='.'):
+        # load dependencies insde the function so that they get carried over to forward_run.py by PstFrom
+        import os
+        import pandas as pd
+    
+        def write_tdif_obs(orgf, newf, ws='.'):
+            df = pd.read_csv(os.path.join(ws,orgf), index_col='time')
+            df = df - df.iloc[0, :]
+            df.to_csv(os.path.join(ws,newf))
+            return
+    
+        # write the tdiff observation csv's
+        write_tdif_obs('heads.csv', 'heads.tdiff.csv', ws)
+        write_tdif_obs('sfr.csv', 'sfr.tdiff.csv', ws)
+    
+        #write the vdiff obs csv
+        # this is frought with the potential for bugs, but oh well...
+        df = pd.read_csv(os.path.join(ws,'heads.csv'), index_col='time')
+        df.sort_index(axis=1, inplace=True)
+        dh = df.loc[:, [i for i in df.columns if i.startswith('TRGW-0-')]]
+        dh = dh - df.loc[:, [i for i in df.columns if i.startswith('TRGW-2-')]].values
+        dh.to_csv(os.path.join(ws,'heads.vdiff.csv'))
+    
+        print('Secondary observation files processed.')
+        return
+    
+    
+    
+    def main():
+    
+        try:
+           os.remove(r'heads.csv')
+        except Exception as e:
+           print(r'error removing tmp file:heads.csv')
+        try:
+           os.remove(r'sfr.csv')
+        except Exception as e:
+           print(r'error removing tmp file:sfr.csv')
+        try:
+           os.remove(r'hdslay1_t1.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t1.txt')
+        try:
+           os.remove(r'hdslay1_t10.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t10.txt')
+        try:
+           os.remove(r'hdslay1_t11.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t11.txt')
+        try:
+           os.remove(r'hdslay1_t12.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t12.txt')
+        try:
+           os.remove(r'hdslay1_t13.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t13.txt')
+        try:
+           os.remove(r'hdslay1_t14.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t14.txt')
+        try:
+           os.remove(r'hdslay1_t15.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t15.txt')
+        try:
+           os.remove(r'hdslay1_t16.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t16.txt')
+        try:
+           os.remove(r'hdslay1_t17.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t17.txt')
+        try:
+           os.remove(r'hdslay1_t18.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t18.txt')
+        try:
+           os.remove(r'hdslay1_t19.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t19.txt')
+        try:
+           os.remove(r'hdslay1_t2.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t2.txt')
+        try:
+           os.remove(r'hdslay1_t20.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t20.txt')
+        try:
+           os.remove(r'hdslay1_t21.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t21.txt')
+        try:
+           os.remove(r'hdslay1_t22.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t22.txt')
+        try:
+           os.remove(r'hdslay1_t23.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t23.txt')
+        try:
+           os.remove(r'hdslay1_t24.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t24.txt')
+        try:
+           os.remove(r'hdslay1_t25.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t25.txt')
+        try:
+           os.remove(r'hdslay1_t3.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t3.txt')
+        try:
+           os.remove(r'hdslay1_t4.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t4.txt')
+        try:
+           os.remove(r'hdslay1_t5.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t5.txt')
+        try:
+           os.remove(r'hdslay1_t6.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t6.txt')
+        try:
+           os.remove(r'hdslay1_t7.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t7.txt')
+        try:
+           os.remove(r'hdslay1_t8.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t8.txt')
+        try:
+           os.remove(r'hdslay1_t9.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay1_t9.txt')
+        try:
+           os.remove(r'hdslay2_t1.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t1.txt')
+        try:
+           os.remove(r'hdslay2_t10.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t10.txt')
+        try:
+           os.remove(r'hdslay2_t11.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t11.txt')
+        try:
+           os.remove(r'hdslay2_t12.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t12.txt')
+        try:
+           os.remove(r'hdslay2_t13.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t13.txt')
+        try:
+           os.remove(r'hdslay2_t14.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t14.txt')
+        try:
+           os.remove(r'hdslay2_t15.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t15.txt')
+        try:
+           os.remove(r'hdslay2_t16.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t16.txt')
+        try:
+           os.remove(r'hdslay2_t17.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t17.txt')
+        try:
+           os.remove(r'hdslay2_t18.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t18.txt')
+        try:
+           os.remove(r'hdslay2_t19.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t19.txt')
+        try:
+           os.remove(r'hdslay2_t2.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t2.txt')
+        try:
+           os.remove(r'hdslay2_t20.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t20.txt')
+        try:
+           os.remove(r'hdslay2_t21.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t21.txt')
+        try:
+           os.remove(r'hdslay2_t22.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t22.txt')
+        try:
+           os.remove(r'hdslay2_t23.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t23.txt')
+        try:
+           os.remove(r'hdslay2_t24.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t24.txt')
+        try:
+           os.remove(r'hdslay2_t25.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t25.txt')
+        try:
+           os.remove(r'hdslay2_t3.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t3.txt')
+        try:
+           os.remove(r'hdslay2_t4.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t4.txt')
+        try:
+           os.remove(r'hdslay2_t5.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t5.txt')
+        try:
+           os.remove(r'hdslay2_t6.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t6.txt')
+        try:
+           os.remove(r'hdslay2_t7.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t7.txt')
+        try:
+           os.remove(r'hdslay2_t8.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t8.txt')
+        try:
+           os.remove(r'hdslay2_t9.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay2_t9.txt')
+        try:
+           os.remove(r'hdslay3_t1.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t1.txt')
+        try:
+           os.remove(r'hdslay3_t10.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t10.txt')
+        try:
+           os.remove(r'hdslay3_t11.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t11.txt')
+        try:
+           os.remove(r'hdslay3_t12.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t12.txt')
+        try:
+           os.remove(r'hdslay3_t13.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t13.txt')
+        try:
+           os.remove(r'hdslay3_t14.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t14.txt')
+        try:
+           os.remove(r'hdslay3_t15.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t15.txt')
+        try:
+           os.remove(r'hdslay3_t16.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t16.txt')
+        try:
+           os.remove(r'hdslay3_t17.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t17.txt')
+        try:
+           os.remove(r'hdslay3_t18.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t18.txt')
+        try:
+           os.remove(r'hdslay3_t19.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t19.txt')
+        try:
+           os.remove(r'hdslay3_t2.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t2.txt')
+        try:
+           os.remove(r'hdslay3_t20.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t20.txt')
+        try:
+           os.remove(r'hdslay3_t21.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t21.txt')
+        try:
+           os.remove(r'hdslay3_t22.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t22.txt')
+        try:
+           os.remove(r'hdslay3_t23.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t23.txt')
+        try:
+           os.remove(r'hdslay3_t24.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t24.txt')
+        try:
+           os.remove(r'hdslay3_t25.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t25.txt')
+        try:
+           os.remove(r'hdslay3_t3.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t3.txt')
+        try:
+           os.remove(r'hdslay3_t4.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t4.txt')
+        try:
+           os.remove(r'hdslay3_t5.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t5.txt')
+        try:
+           os.remove(r'hdslay3_t6.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t6.txt')
+        try:
+           os.remove(r'hdslay3_t7.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t7.txt')
+        try:
+           os.remove(r'hdslay3_t8.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t8.txt')
+        try:
+           os.remove(r'hdslay3_t9.txt')
+        except Exception as e:
+           print(r'error removing tmp file:hdslay3_t9.txt')
+        try:
+           os.remove(r'inc.csv')
+        except Exception as e:
+           print(r'error removing tmp file:inc.csv')
+        try:
+           os.remove(r'cum.csv')
+        except Exception as e:
+           print(r'error removing tmp file:cum.csv')
+        try:
+           os.remove(r'sfr.tdiff.csv')
+        except Exception as e:
+           print(r'error removing tmp file:sfr.tdiff.csv')
+        try:
+           os.remove(r'heads.tdiff.csv')
+        except Exception as e:
+           print(r'error removing tmp file:heads.tdiff.csv')
+        try:
+           os.remove(r'heads.vdiff.csv')
+        except Exception as e:
+           print(r'error removing tmp file:heads.vdiff.csv')
+        pyemu.helpers.apply_list_and_array_pars(arr_par_file='mult2model_info.csv',chunk_len=50)
+        pyemu.os_utils.run(r'mf6')
+    
+        pyemu.os_utils.run(r'mp7 freyberg_mp.mpsim')
+    
+        extract_hds_arrays_and_list_dfs()
+        process_secondary_obs(ws='.')
+    
+    if __name__ == '__main__':
+        mp.freeze_support()
+        main()
+    
+    
 
 Now we see that `extract_hds_array_and_list_dfs()` has been added to the forward run script and it is being called after MF6 runs. 
 
@@ -1010,6 +2835,202 @@ Now we see that `extract_hds_array_and_list_dfs()` has been added to the forward
 obs = pst.observation_data
 obs
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>obsnme</th>
+      <th>obsval</th>
+      <th>weight</th>
+      <th>obgnme</th>
+      <th>oname</th>
+      <th>otype</th>
+      <th>usecol</th>
+      <th>time</th>
+      <th>i</th>
+      <th>j</th>
+      <th>totim</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</td>
+      <td>34.326872</td>
+      <td>1.0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
+      <td>hds</td>
+      <td>lst</td>
+      <td>trgw-0-13-10</td>
+      <td>3652.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</td>
+      <td>34.440950</td>
+      <td>1.0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
+      <td>hds</td>
+      <td>lst</td>
+      <td>trgw-0-13-10</td>
+      <td>3683.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</td>
+      <td>34.534811</td>
+      <td>1.0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
+      <td>hds</td>
+      <td>lst</td>
+      <td>trgw-0-13-10</td>
+      <td>3712.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</td>
+      <td>34.582875</td>
+      <td>1.0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
+      <td>hds</td>
+      <td>lst</td>
+      <td>trgw-0-13-10</td>
+      <td>3743.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</td>
+      <td>34.561764</td>
+      <td>1.0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
+      <td>hds</td>
+      <td>lst</td>
+      <td>trgw-0-13-10</td>
+      <td>3773.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4261.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4261.5</td>
+      <td>0.006427</td>
+      <td>1.0</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hdsvd</td>
+      <td>lst</td>
+      <td>trgw-0-9-1</td>
+      <td>4261.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4291.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4291.5</td>
+      <td>0.006136</td>
+      <td>1.0</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hdsvd</td>
+      <td>lst</td>
+      <td>trgw-0-9-1</td>
+      <td>4291.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4322.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4322.5</td>
+      <td>0.005765</td>
+      <td>1.0</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hdsvd</td>
+      <td>lst</td>
+      <td>trgw-0-9-1</td>
+      <td>4322.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4352.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4352.5</td>
+      <td>0.005441</td>
+      <td>1.0</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hdsvd</td>
+      <td>lst</td>
+      <td>trgw-0-9-1</td>
+      <td>4352.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4383.5</td>
+      <td>0.005251</td>
+      <td>1.0</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hdsvd</td>
+      <td>lst</td>
+      <td>trgw-0-9-1</td>
+      <td>4383.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>62225 rows × 11 columns</p>
+</div>
+
+
 
 ### 7. After Building the Control File
 
@@ -1052,6 +3073,78 @@ obs.loc[obs.obsnme=='part_time', 'obgnme'] = 'part'
 obs.iloc[-2:]
 ```
 
+    2 obs added from instruction file freyberg6_template\.\freyberg_mp.mpend.ins
+    
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>obsnme</th>
+      <th>obsval</th>
+      <th>weight</th>
+      <th>obgnme</th>
+      <th>oname</th>
+      <th>otype</th>
+      <th>usecol</th>
+      <th>time</th>
+      <th>i</th>
+      <th>j</th>
+      <th>totim</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>part_status</th>
+      <td>part_status</td>
+      <td>3.0000</td>
+      <td>1.0</td>
+      <td>part</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>part_time</th>
+      <td>part_time</td>
+      <td>211849.2446</td>
+      <td>1.0</td>
+      <td>part</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 #### 7.2. Parameters with Zero as Intial Value
 
 Recall that we assigned additive parameters to the GHB heads. Our initial parameter values for these parameter types were set as 0 (zero). This creates a wee bit of trouble when calculating derivatives. There are a couple of ways we could get around it. One way is to add an "offset" to the parameter intial values and to the parmaeter bounds. Another is to use "absolute" increment types (INCTYP). See the PEST manual or PEST++ user guides for descriptions of increment types. 
@@ -1065,6 +3158,13 @@ We will assign INCTYP as 'absolute'. We will leave DERINC as 0.01 (the default).
 head_pargps = [i for i in pst.adj_par_groups if 'head' in i]
 head_pargps
 ```
+
+
+
+
+    ['ghbheadgr', 'ghbheadcn']
+
+
 
 
 ```python
@@ -1082,6 +3182,178 @@ par.loc[par_names].head()
 ```
 
 
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>parnme</th>
+      <th>partrans</th>
+      <th>parchglim</th>
+      <th>parval1</th>
+      <th>parlbnd</th>
+      <th>parubnd</th>
+      <th>pargp</th>
+      <th>scale</th>
+      <th>offset</th>
+      <th>dercom</th>
+      <th>...</th>
+      <th>pstyle</th>
+      <th>i</th>
+      <th>j</th>
+      <th>x</th>
+      <th>y</th>
+      <th>zone</th>
+      <th>usecol</th>
+      <th>idx0</th>
+      <th>idx1</th>
+      <th>idx2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:8</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:8</td>
+      <td>none</td>
+      <td>relative</td>
+      <td>0.0</td>
+      <td>-2.0</td>
+      <td>2.0</td>
+      <td>ghbheadgr</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>1</td>
+      <td>39</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:13</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:13</td>
+      <td>none</td>
+      <td>relative</td>
+      <td>0.0</td>
+      <td>-2.0</td>
+      <td>2.0</td>
+      <td>ghbheadgr</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>2</td>
+      <td>39</td>
+      <td>13</td>
+    </tr>
+    <tr>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:11</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:11</td>
+      <td>none</td>
+      <td>relative</td>
+      <td>0.0</td>
+      <td>-2.0</td>
+      <td>2.0</td>
+      <td>ghbheadgr</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>1</td>
+      <td>39</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:14</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:14</td>
+      <td>none</td>
+      <td>relative</td>
+      <td>0.0</td>
+      <td>-2.0</td>
+      <td>2.0</td>
+      <td>ghbheadgr</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>1</td>
+      <td>39</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:9</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:9</td>
+      <td>none</td>
+      <td>relative</td>
+      <td>0.0</td>
+      <td>-2.0</td>
+      <td>2.0</td>
+      <td>ghbheadgr</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>0</td>
+      <td>39</td>
+      <td>9</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 23 columns</p>
+</div>
+
+
+
+
 ```python
 offset = -10
 par.loc[par_names, 'offset'] = offset
@@ -1089,6 +3361,178 @@ par.loc[par_names, ['parval1', 'parlbnd', 'parubnd']] -= offset
 
 par.loc[par_names].head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>parnme</th>
+      <th>partrans</th>
+      <th>parchglim</th>
+      <th>parval1</th>
+      <th>parlbnd</th>
+      <th>parubnd</th>
+      <th>pargp</th>
+      <th>scale</th>
+      <th>offset</th>
+      <th>dercom</th>
+      <th>...</th>
+      <th>pstyle</th>
+      <th>i</th>
+      <th>j</th>
+      <th>x</th>
+      <th>y</th>
+      <th>zone</th>
+      <th>usecol</th>
+      <th>idx0</th>
+      <th>idx1</th>
+      <th>idx2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:8</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:8</td>
+      <td>none</td>
+      <td>relative</td>
+      <td>10.0</td>
+      <td>8.0</td>
+      <td>12.0</td>
+      <td>ghbheadgr</td>
+      <td>1.0</td>
+      <td>-10.0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>1</td>
+      <td>39</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:13</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:13</td>
+      <td>none</td>
+      <td>relative</td>
+      <td>10.0</td>
+      <td>8.0</td>
+      <td>12.0</td>
+      <td>ghbheadgr</td>
+      <td>1.0</td>
+      <td>-10.0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>2</td>
+      <td>39</td>
+      <td>13</td>
+    </tr>
+    <tr>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:11</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:11</td>
+      <td>none</td>
+      <td>relative</td>
+      <td>10.0</td>
+      <td>8.0</td>
+      <td>12.0</td>
+      <td>ghbheadgr</td>
+      <td>1.0</td>
+      <td>-10.0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>1</td>
+      <td>39</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:14</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:14</td>
+      <td>none</td>
+      <td>relative</td>
+      <td>10.0</td>
+      <td>8.0</td>
+      <td>12.0</td>
+      <td>ghbheadgr</td>
+      <td>1.0</td>
+      <td>-10.0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>1</td>
+      <td>39</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:9</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:9</td>
+      <td>none</td>
+      <td>relative</td>
+      <td>10.0</td>
+      <td>8.0</td>
+      <td>12.0</td>
+      <td>ghbheadgr</td>
+      <td>1.0</td>
+      <td>-10.0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>0</td>
+      <td>39</td>
+      <td>9</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 23 columns</p>
+</div>
+
+
 
 #### 7.4. Forecasts
 
@@ -1117,10 +3561,117 @@ forecasts
 ```
 
 
+
+
+    ['oname:sfr_otype:lst_usecol:tailwater_time:4383.5',
+     'oname:sfr_otype:lst_usecol:headwater_time:4383.5',
+     'oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5',
+     'part_time']
+
+
+
+
 ```python
 fobs = obs.loc[forecasts,:]
 fobs
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>obsnme</th>
+      <th>obsval</th>
+      <th>weight</th>
+      <th>obgnme</th>
+      <th>oname</th>
+      <th>otype</th>
+      <th>usecol</th>
+      <th>time</th>
+      <th>i</th>
+      <th>j</th>
+      <th>totim</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
+      <td>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</td>
+      <td>-519.184506</td>
+      <td>1.0</td>
+      <td>oname:sfr_otype:lst_usecol:tailwater</td>
+      <td>sfr</td>
+      <td>lst</td>
+      <td>tailwater</td>
+      <td>4383.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
+      <td>oname:sfr_otype:lst_usecol:headwater_time:4383.5</td>
+      <td>-694.299524</td>
+      <td>1.0</td>
+      <td>oname:sfr_otype:lst_usecol:headwater</td>
+      <td>sfr</td>
+      <td>lst</td>
+      <td>headwater</td>
+      <td>4383.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</td>
+      <td>34.809963</td>
+      <td>1.0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hds</td>
+      <td>lst</td>
+      <td>trgw-0-9-1</td>
+      <td>4383.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>part_time</th>
+      <td>part_time</td>
+      <td>211849.244600</td>
+      <td>1.0</td>
+      <td>part</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 We will just set this optional pest++ argument because it will trigger certain automatic behavior later in PESTPP-GLM
 
@@ -1138,6 +3689,9 @@ Make sure to re-**write** the PEST control file. But beware, if you re-**build**
 pst.write(os.path.join(template_ws, 'freyberg_mf6.pst'))
 ```
 
+    noptmax:0, npar_adj:12013, nnz_obs:62227
+    
+
 So that was pretty epic. We now have a (very) high-dimensional PEST interface that includes secondary observations, as well as forecasts, ready to roll. 
 
 If you inspect the folder, you will see PEST control file and all the necessary instruction and template files. Because we have >10k parameters, version 2 of the PEST control file was written by default. 
@@ -1148,6 +3702,13 @@ Shall we check that it works? Let's run PEST once (i.e. with NOPTMAX=0). Now, by
 ```python
 pst.control_data.noptmax
 ```
+
+
+
+
+    0
+
+
 
 OK, so when we run PEST it will call the model once and then stop. If the next cell is sucessfull, then eveything is working. Check the folder, you should see PEST output files. (We will go into these and how to process PEST outcomes in subsequent tutorials).
 
@@ -1168,6 +3729,14 @@ iobj = pd.read_csv(os.path.join(template_ws, 'freyberg_mf6.iobj'))
 # check value in phi column
 iobj.total_phi
 ```
+
+
+
+
+    0    0
+    Name: total_phi, dtype: int64
+
+
 
  Sweet! Zero. All is well.
 
@@ -1192,12 +3761,34 @@ if pf.pst.npar < 35000:  #if you have more than about 35K pars, the cov matrix b
         pass
 ```
 
+
+    
+![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_146_0.png)
+    
+
+
 snap!  That big block must be a grid-scale parameter group...
 
 
 ```python
 cov.row_names[:10]
 ```
+
+
+
+
+    ['pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:0_x:125.00_y:9875.00_zone:1',
+     'pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:1_x:375.00_y:9875.00_zone:1',
+     'pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:2_x:625.00_y:9875.00_zone:1',
+     'pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:3_x:875.00_y:9875.00_zone:1',
+     'pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:4_x:1125.00_y:9875.00_zone:1',
+     'pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:5_x:1375.00_y:9875.00_zone:1',
+     'pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:6_x:1625.00_y:9875.00_zone:1',
+     'pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:7_x:1875.00_y:9875.00_zone:1',
+     'pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:8_x:2125.00_y:9875.00_zone:1',
+     'pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:9_x:2375.00_y:9875.00_zone:1']
+
+
 
 And now generate a prior parameter ensemble. This step is relevant for using pestpp-ies in subsequent tutorials. Note: you do not have to call `build_prior()` before calling `draw()`!
 
@@ -1209,6 +3800,144 @@ pe.to_binary(os.path.join(template_ws,"prior_pe.jcb")) #writes the paramter ense
 assert pe.shape[1] == pst.npar
 ```
 
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    building diagonal cov
+    processing  name:struct1,nugget:0.0,structures:
+    name:var1,contribution:1.0,a:1000.0,anisotropy:1.0,bearing:0.0
+    
+    working on pargroups ['npfklayer1pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['npfklayer2pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['npfklayer3pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['npfk33layer1pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['npfk33layer2pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['npfk33layer3pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['stosslayer2pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['stosslayer3pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['stosylayer1pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['nelayer1pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['nelayer2pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['nelayer3pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rch_recharge_1pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['ghbcondgr']
+    build cov matrix
+    done
+    getting diag var cov 10
+    scaling full cov by diag var cov
+    working on pargroups ['ghbcondgr']
+    build cov matrix
+    done
+    getting diag var cov 10
+    scaling full cov by diag var cov
+    working on pargroups ['ghbcondgr']
+    build cov matrix
+    done
+    getting diag var cov 10
+    scaling full cov by diag var cov
+    working on pargroups ['sfrcondgr']
+    build cov matrix
+    done
+    getting diag var cov 40
+    scaling full cov by diag var cov
+    processing  name:struct1,nugget:0.0,structures:
+    name:var1,contribution:1.0,a:60.0,anisotropy:1.0,bearing:0.0
+    
+    working on pargroups ['welcst']
+    build cov matrix
+    done
+    getting diag var cov 25
+    scaling full cov by diag var cov
+    working on pargroups ['sfrgr']
+    build cov matrix
+    done
+    getting diag var cov 25
+    scaling full cov by diag var cov
+    processing  name:struct1,nugget:0.0,structures:
+    name:var1,contribution:1.0,a:1000.0,anisotropy:1.0,bearing:0.0
+    
+    working on pargroups ['ghbheadgr']
+    build cov matrix
+    done
+    getting diag var cov 10
+    scaling full cov by diag var cov
+    working on pargroups ['ghbheadgr']
+    build cov matrix
+    done
+    getting diag var cov 10
+    scaling full cov by diag var cov
+    working on pargroups ['ghbheadgr']
+    build cov matrix
+    done
+    getting diag var cov 10
+    scaling full cov by diag var cov
+    adding remaining parameters to diagonal
+    
+
 Let's now test-run one of these geostatistical realizations (always a good idea!).  We do this by replacing the `parval1` values in the control with a row from `pe`:
 
 
@@ -1218,11 +3947,22 @@ pst.parameter_data.parval1.values
 ```
 
 
+
+
+    array([ 0.72616096,  0.82076147,  1.08770186, ..., 35.34931542,
+           21.34739339, 47.62033692])
+
+
+
+
 ```python
 pst.control_data.noptmax = 0
 pst.write(os.path.join(template_ws,"test.pst"))
 pyemu.os_utils.run("pestpp-glm test.pst",cwd=template_ws)
 ```
+
+    noptmax:0, npar_adj:12013, nnz_obs:62227
+    
 
 If all went well, that's it! The PEST-interface is setup, tested and we have our prior preprared. We should be good to go!
 
@@ -1236,6 +3976,121 @@ df = pd.read_csv(os.path.join(template_ws,"mult2model_info.csv"))
 kh1_df = df.loc[df.model_file.str.contains("npf_k_layer1"),:]
 kh1_df
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Unnamed: 0</th>
+      <th>org_file</th>
+      <th>model_file</th>
+      <th>use_cols</th>
+      <th>index_cols</th>
+      <th>fmt</th>
+      <th>sep</th>
+      <th>head_rows</th>
+      <th>upper_bound</th>
+      <th>lower_bound</th>
+      <th>operator</th>
+      <th>mlt_file</th>
+      <th>zone_file</th>
+      <th>fac_file</th>
+      <th>pp_file</th>
+      <th>pp_fill_value</th>
+      <th>pp_lower_limit</th>
+      <th>pp_upper_limit</th>
+      <th>zero_based</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>org\freyberg6.npf_k_layer1.txt</td>
+      <td>freyberg6.npf_k_layer1.txt</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>free</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>100</td>
+      <td>0.01</td>
+      <td>m</td>
+      <td>mult\npfklayer1gr_inst0_grid.csv</td>
+      <td>npfklayer1gr_inst0_grid.csv.zone</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>org\freyberg6.npf_k_layer1.txt</td>
+      <td>freyberg6.npf_k_layer1.txt</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>free</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>100</td>
+      <td>0.01</td>
+      <td>m</td>
+      <td>mult\npfklayer1pp_inst0_pilotpoints.csv</td>
+      <td>npfklayer1pp_inst0pp.dat.zone</td>
+      <td>npfklayer1pp_inst0pp.fac</td>
+      <td>npfklayer1pp_inst0pp.dat</td>
+      <td>1.0</td>
+      <td>1.000000e-10</td>
+      <td>1.000000e+10</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>org\freyberg6.npf_k_layer1.txt</td>
+      <td>freyberg6.npf_k_layer1.txt</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>free</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>100</td>
+      <td>0.01</td>
+      <td>m</td>
+      <td>mult\npfklayer1cn_inst0_constant.csv</td>
+      <td>npfklayer1cn_inst0_constant.csv.zone</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 
 ```python
@@ -1258,3 +4113,9 @@ for i,ax in enumerate(axes.flatten()):
 plt.tight_layout()    
     
 ```
+
+
+    
+![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_157_0.png)
+    
+

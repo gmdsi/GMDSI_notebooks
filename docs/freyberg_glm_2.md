@@ -54,6 +54,13 @@ shutil.copytree(org_t_d,t_d)
 ```
 
 
+
+
+    'freyberg6_template'
+
+
+
+
 ```python
 pst_path = os.path.join(t_d, 'freyberg_pp.pst')
 
@@ -87,6 +94,10 @@ if not pst.observation_data.observed.sum()>0:
 ```python
 print(f'number of observations: {pst.nnz_obs} \nnumber of parameters: {pst.npar_adj}')
 ```
+
+    number of observations: 144 
+    number of parameters: 391
+    
 
 ### 2. Regularisation
 
@@ -190,6 +201,13 @@ shutil.copy2(os.path.join(t_d,"freyberg_pp.jcb"),
 ```
 
 
+
+
+    'freyberg6_template\\freyberg_reuse.jcb'
+
+
+
+
 ```python
 # specify file to use as the base jacobian
 pst.pestpp_options["base_jacobian"] = "freyberg_reuse.jcb"
@@ -238,6 +256,13 @@ At the end of each iteration PEST++GLM implements FOSM analysis, as long as the 
 pst.pestpp_options['parcov']
 ```
 
+
+
+
+    'glm_prior.cov'
+
+
+
 PEST++GLM calculates a posterior parameter covariance matrix at the end of each iteration. Each covariance matrix is recorded in an extenral file. PEST++GLM also provides summaries of prior and posterior parameter uncertainties (means, standard deviations and bounds) for each iteration.
 
 If any observations are listed as forecasts (in the `forecast()` variable), PEST++GLM will also undertake predicitve uncertainty analysis. By default, if no forecasts are provided, PEST++GLM will assume all zero-weighted observations are forecasts - so it is usually a good idea to specify forecasts explicitly (if you have many many zero-weighted obsevrations FOSM can cost some computation time). Recall that we specifed several observations as forecasts:
@@ -246,6 +271,13 @@ If any observations are listed as forecasts (in the `forecast()` variable), PEST
 ```python
 pst.pestpp_options['forecasts']
 ```
+
+
+
+
+    'oname:sfr_otype:lst_usecol:tailwater_time:4383.5,oname:sfr_otype:lst_usecol:headwater_time:4383.5,oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5,part_time'
+
+
 
 FOSM implemented by PEST++GLM assumes that the standard deviation of measurement noise associated with each observation is proportional current observation residual. This accounts for the model's ability to reproduce an obsevration. Effectively, it assumes that the residual is a measure of measurement noise + model error. Thus, observation weights used during FOSM are calcualted as the inverse of the residual. Note that this "residual weight" never increases weights beyond those which are specified in the control file! The assumption is that weighs in the control file represent the inverse of measurment noise standard deviation - and it would be illogical to decrease noise beyond this level. 
 
@@ -284,6 +316,9 @@ Re-write the control file with the updated pestpp options.
 case = 'freyberg_pp'
 pst.write(os.path.join(t_d,f"{case}.pst"))
 ```
+
+    noptmax:2, npar_adj:391, nnz_obs:144
+    
 
 Now, deploy PEST++GLM in parallel.
 
@@ -326,6 +361,154 @@ df_obj = pd.read_csv(os.path.join(m_d, "freyberg_pp.iobj"),index_col=0)
 df_obj.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model_runs_completed</th>
+      <th>total_phi</th>
+      <th>measurement_phi</th>
+      <th>regularization_phi</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-15-16</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-2-15</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-2-9</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-21-10</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-22-15</th>
+      <th>...</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-21-10</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-22-15</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-24-4</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-26-6</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-29-15</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-33-7</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-34-10</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</th>
+      <th>part</th>
+    </tr>
+    <tr>
+      <th>iteration</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>52972.40</td>
+      <td>52972.40</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>53.1682</td>
+      <td>0</td>
+      <td>84.1201</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>11</td>
+      <td>2788.88</td>
+      <td>2788.88</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>49.9102</td>
+      <td>0</td>
+      <td>90.3969</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>82</td>
+      <td>1471.36</td>
+      <td>1471.36</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>60.7820</td>
+      <td>0</td>
+      <td>103.6960</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 169 columns</p>
+</div>
+
+
+
 A quick and dirty plot to see the evolution of Phi per iteration. Ideally Phi should decrease for each sucessive iteration. If this plot bounces up and down it is often a sign of trouble. When using SVD-Assist, this often occurs if the inverse problem is highy nonlinear. In such cases it may be worth experimenting with fewer sucessive super parameter iterations and/or a greater number of super parameters. 
 
 
@@ -333,6 +516,20 @@ A quick and dirty plot to see the evolution of Phi per iteration. Ideally Phi sh
 # plot out the dataframe that was shown as a table above
 df_obj.loc[:,["total_phi","model_runs_completed"]].plot(subplots=True)
 ```
+
+
+
+
+    array([<AxesSubplot:xlabel='iteration'>, <AxesSubplot:xlabel='iteration'>],
+          dtype=object)
+
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_49_1.png)
+    
+
 
 ### 3.1. Residuals
 
@@ -361,6 +558,28 @@ What about the residuals? are they evenly distributed around zero? No? Oh dear. 
 pyemu.plot_utils.res_1to1(pst);
 ```
 
+
+    <Figure size 576x756 with 0 Axes>
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_53_1.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_53_2.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_53_3.png)
+    
+
+
 ### 3.2. Posterior Monte Carlo 
 
 Because we included FOSM-based Monte Carlo options in the control file, when PEST++GLM concluded the inversion, it subsequently simulated an ensemble of parameters sampled from the linearized posterior parameter probability distribution. Observations from these simulations are recorded in the file named `freyberg_pp.post.obsen.csv`.
@@ -374,12 +593,221 @@ oe = pyemu.ObservationEnsemble.from_dataframe(pst=pst,df=df)
 oe.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3804.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3834.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3865.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3896.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3926.5</th>
+      <th>...</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4169.5</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4199.5</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4230.5</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4261.5</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4291.5</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4322.5</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4352.5</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <th>part_status</th>
+      <th>part_time</th>
+    </tr>
+    <tr>
+      <th>real_name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>34.3441</td>
+      <td>34.3607</td>
+      <td>34.4999</td>
+      <td>34.5728</td>
+      <td>34.6227</td>
+      <td>34.6107</td>
+      <td>34.4763</td>
+      <td>34.3783</td>
+      <td>34.2537</td>
+      <td>34.2053</td>
+      <td>...</td>
+      <td>0.009733</td>
+      <td>0.008784</td>
+      <td>0.008053</td>
+      <td>0.007611</td>
+      <td>0.007598</td>
+      <td>0.007538</td>
+      <td>0.008807</td>
+      <td>0.009467</td>
+      <td>3</td>
+      <td>141522.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>34.1627</td>
+      <td>34.1880</td>
+      <td>34.2973</td>
+      <td>34.4186</td>
+      <td>34.5050</td>
+      <td>34.5477</td>
+      <td>34.4955</td>
+      <td>34.4343</td>
+      <td>34.3445</td>
+      <td>34.2884</td>
+      <td>...</td>
+      <td>0.011764</td>
+      <td>0.011965</td>
+      <td>0.012231</td>
+      <td>0.012417</td>
+      <td>0.012538</td>
+      <td>0.012470</td>
+      <td>0.012278</td>
+      <td>0.011982</td>
+      <td>2</td>
+      <td>171278.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>34.3790</td>
+      <td>34.4232</td>
+      <td>34.5060</td>
+      <td>34.6324</td>
+      <td>34.6872</td>
+      <td>34.6883</td>
+      <td>34.6002</td>
+      <td>34.5222</td>
+      <td>34.4149</td>
+      <td>34.3629</td>
+      <td>...</td>
+      <td>0.003744</td>
+      <td>0.003700</td>
+      <td>0.003726</td>
+      <td>0.003788</td>
+      <td>0.003845</td>
+      <td>0.003916</td>
+      <td>0.003905</td>
+      <td>0.003812</td>
+      <td>3</td>
+      <td>155979.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>34.3901</td>
+      <td>34.4035</td>
+      <td>34.4552</td>
+      <td>34.4988</td>
+      <td>34.5479</td>
+      <td>34.5655</td>
+      <td>34.5358</td>
+      <td>34.4940</td>
+      <td>34.4399</td>
+      <td>34.4009</td>
+      <td>...</td>
+      <td>0.014895</td>
+      <td>0.013946</td>
+      <td>0.012984</td>
+      <td>0.012477</td>
+      <td>0.012421</td>
+      <td>0.013529</td>
+      <td>0.013972</td>
+      <td>0.014061</td>
+      <td>5</td>
+      <td>308706.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>34.2157</td>
+      <td>34.2731</td>
+      <td>34.4195</td>
+      <td>34.5519</td>
+      <td>34.6451</td>
+      <td>34.6770</td>
+      <td>34.5978</td>
+      <td>34.5101</td>
+      <td>34.3882</td>
+      <td>34.3390</td>
+      <td>...</td>
+      <td>0.007507</td>
+      <td>0.007639</td>
+      <td>0.007760</td>
+      <td>0.007722</td>
+      <td>0.007665</td>
+      <td>0.007579</td>
+      <td>0.007431</td>
+      <td>0.007398</td>
+      <td>5</td>
+      <td>43204.3</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 62227 columns</p>
+</div>
+
+
+
 Let's plot a histogram of Phi achieved by this ensemble. Some have a good fit (low Phi). Others not so much. (The more linear the problem, the more likley that more will have a good fit.) So should we use all of them? Probably not.
 
 
 ```python
 oe.phi_vector.sort_values().hist()
 ```
+
+
+
+
+    <AxesSubplot:>
+
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_57_1.png)
+    
+
 
 Theoretically, as observations were weighted with the inverse of the standard deviation of measurement noise, we should accept a Phi equal to the number of nonzero observations. In practice, because of model error, we rarely reach the ideal value of Phi. For the purposes of this tutorial, we are going to arbitrarily take the 30 best realisations and use these as our "posterior ensemble".
 
@@ -414,6 +842,78 @@ for nz_group in pst.nnz_obs_groups:
 plt.show()
 ```
 
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_61_0.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_61_1.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_61_2.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_61_3.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_61_4.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_61_5.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_61_6.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_61_7.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_61_8.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_61_9.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_61_10.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_61_11.png)
+    
+
+
 ### 3.3. The Minimum Error Variance Parameter Field
 
 We have inspected the models' ability to replicate measured data. It is also a good idea to inspect how "sensible" are the obtained parameter values. A common easy check is to visualy inspect the spatial distirbution of hydrualic property parameters. One can often find unexpected insight from how parameter patterns emerge during calibration. 
@@ -424,6 +924,10 @@ First start by updating the control file with the calibrated parameter values us
 ```python
 pst.parrep(parfile=os.path.join(m_d, 'freyberg_pp.par'))
 ```
+
+    Updating parameter values from master_glm_2\freyberg_pp.par
+    parrep: updating noptmax to 0
+    
 
 Then write the parameter values to the model input files and run the model once:
 
@@ -449,6 +953,33 @@ gwf.npf.k.plot(colorbar=True)
 #gwf.sto.sy.plot()
 ```
 
+
+
+
+    [<AxesSubplot:title={'center':'k layer 1'}>,
+     <AxesSubplot:title={'center':'k layer 2'}>,
+     <AxesSubplot:title={'center':'k layer 3'}>]
+
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_67_1.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_67_2.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_67_3.png)
+    
+
+
 Looks a bit "blotchy", but not *too* bad...perhaps not particularily realistic, hey? In part, this is due to using the regularized Gauss Levenburg Marquardt option which tends to not look as "smooth" as using regularisation explicitly. 
 
 What is more concerning are the localized areas of extreme parameter values, which may indicate parameters taking on compensatory roles - the plots of residuals and ensembles above hint at this as well. 
@@ -460,6 +991,24 @@ Another quick check is to look for parameters which are at their bounds. This is
 # idealy, this should return an empty list
 pst.get_adj_pars_at_bounds()
 ```
+
+
+
+
+    (['pname:rch_recharge_12tcn_inst:0_ptype:cn_pstyle:m',
+      'pname:welcst_inst:3_ptype:cn_usecol:3_pstyle:m',
+      'pname:welcst_inst:4_ptype:cn_usecol:3_pstyle:m',
+      'pname:welcst_inst:9_ptype:cn_usecol:3_pstyle:m',
+      'pname:sfrgr_inst:2_ptype:gr_usecol:2_pstyle:m_idx0:0'],
+     ['pname:rch_recharge_4tcn_inst:0_ptype:cn_pstyle:m',
+      'pname:rch_recharge_5tcn_inst:0_ptype:cn_pstyle:m',
+      'pname:rch_recharge_6tcn_inst:0_ptype:cn_pstyle:m',
+      'pname:welcst_inst:0_ptype:cn_usecol:3_pstyle:m',
+      'pname:welcst_inst:6_ptype:cn_usecol:3_pstyle:m',
+      'pname:welcst_inst:10_ptype:cn_usecol:3_pstyle:m',
+      'pname:welcst_inst:11_ptype:cn_usecol:3_pstyle:m'])
+
+
 
 Ooo - that is pretty bad. Many parameters at their bounds. It does provide a possible explanation for the blotchiness in the spatial distribution of K - local values of K are taking on surrogate roles to compensate for parameters at their bounds. A clear sign of either a strucutral problem with the model or poor parameterisation. 
 
@@ -477,6 +1026,99 @@ f_df = pd.read_csv(os.path.join(m_d,"freyberg_pp.pred.usum.csv"),index_col=0)
 f_df.index = f_df.index.map(str.lower)
 f_df
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>prior_mean</th>
+      <th>prior_stdev</th>
+      <th>prior_lower_bound</th>
+      <th>prior_upper_bound</th>
+      <th>post_mean</th>
+      <th>post_stdev</th>
+      <th>post_lower_bound</th>
+      <th>post_upper_bound</th>
+    </tr>
+    <tr>
+      <th>name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <td>34.810</td>
+      <td>0.500154</td>
+      <td>33.8097</td>
+      <td>35.8103</td>
+      <td>35.075</td>
+      <td>0.223168</td>
+      <td>34.6286</td>
+      <td>35.5213</td>
+    </tr>
+    <tr>
+      <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
+      <td>-694.300</td>
+      <td>284.882000</td>
+      <td>-1264.0600</td>
+      <td>-124.5350</td>
+      <td>-770.388</td>
+      <td>186.329000</td>
+      <td>-1143.0500</td>
+      <td>-397.7310</td>
+    </tr>
+    <tr>
+      <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
+      <td>-519.185</td>
+      <td>410.235000</td>
+      <td>-1339.6600</td>
+      <td>301.2860</td>
+      <td>-713.669</td>
+      <td>203.051000</td>
+      <td>-1119.7700</td>
+      <td>-307.5660</td>
+    </tr>
+    <tr>
+      <th>part_time</th>
+      <td>211849.000</td>
+      <td>306025.000000</td>
+      <td>-400200.0000</td>
+      <td>823899.0000</td>
+      <td>181044.000</td>
+      <td>171650.000000</td>
+      <td>-162256.0000</td>
+      <td>524343.0000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 Now, let's make some plots of the forecast uncertainties obtained from FOSM (e.g. linear analysis) and from FOSM-based Monte Carlo (e.g. nonlinear analyis). This let's us investigate the validity of the assumed linear relation between parameters and forecasts (the forecast sensitivity vectors). If it holds up, then the FOSM posterior should cover the Monte Carlo posterior (note that we used very few realisations for Monte Carlo, so in our case this assumption is a bit shaky). 
 
@@ -508,6 +1150,30 @@ for forecast in fnames:
     ax.set_title(forecast)
     plt.show()
 ```
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_75_0.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_75_1.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_75_2.png)
+    
+
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_75_3.png)
+    
+
 
 So, good news and bad news. 
 

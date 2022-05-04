@@ -81,6 +81,9 @@ else:
     shutil.copytree(org_t_d,t_d)
 ```
 
+    using files at  ..\part2_1_pstfrom_pest_setup\freyberg6_template
+    
+
 Let's load in the `Pst` control file we constructed during the "pstfrom" tutorial:
 
 
@@ -100,6 +103,131 @@ obs = pst.observation_data
 obs.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>obsnme</th>
+      <th>obsval</th>
+      <th>weight</th>
+      <th>obgnme</th>
+      <th>oname</th>
+      <th>otype</th>
+      <th>usecol</th>
+      <th>time</th>
+      <th>i</th>
+      <th>j</th>
+      <th>totim</th>
+    </tr>
+    <tr>
+      <th>obsnme</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</td>
+      <td>34.326872</td>
+      <td>1.0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
+      <td>hds</td>
+      <td>lst</td>
+      <td>trgw-0-13-10</td>
+      <td>3652.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</td>
+      <td>34.440950</td>
+      <td>1.0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
+      <td>hds</td>
+      <td>lst</td>
+      <td>trgw-0-13-10</td>
+      <td>3683.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</td>
+      <td>34.534811</td>
+      <td>1.0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
+      <td>hds</td>
+      <td>lst</td>
+      <td>trgw-0-13-10</td>
+      <td>3712.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</td>
+      <td>34.582875</td>
+      <td>1.0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
+      <td>hds</td>
+      <td>lst</td>
+      <td>trgw-0-13-10</td>
+      <td>3743.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</td>
+      <td>34.561764</td>
+      <td>1.0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
+      <td>hds</td>
+      <td>lst</td>
+      <td>trgw-0-13-10</td>
+      <td>3773.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 As mentioned above, we need to do several things:
  - replace observation target values (the `obsval` column) with corresponding vallues from "measured data";
  - assign meaningfull weights to history matching target observations (the `weight` column);
@@ -114,6 +242,14 @@ obs.weight.value_counts()
 ```
 
 
+
+
+    1.0    62227
+    Name: weight, dtype: int64
+
+
+
+
 ```python
 # assign all weight zero
 obs.loc[:, 'weight'] = 0
@@ -121,6 +257,13 @@ obs.loc[:, 'weight'] = 0
 # check for non zero weights
 obs.weight.unique()
 ```
+
+
+
+
+    array([0], dtype=int64)
+
+
 
 ### Measured Data
 
@@ -140,12 +283,143 @@ obs_data.tail()
 ```
 
 
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>time</th>
+      <th>value</th>
+    </tr>
+    <tr>
+      <th>site</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>TRGW-2-3-8</th>
+      <td>4379.5</td>
+      <td>34.550304</td>
+    </tr>
+    <tr>
+      <th>TRGW-2-3-8</th>
+      <td>4380.5</td>
+      <td>34.609961</td>
+    </tr>
+    <tr>
+      <th>TRGW-2-3-8</th>
+      <td>4381.5</td>
+      <td>34.359216</td>
+    </tr>
+    <tr>
+      <th>TRGW-2-3-8</th>
+      <td>4382.5</td>
+      <td>34.759577</td>
+    </tr>
+    <tr>
+      <th>TRGW-2-3-8</th>
+      <td>4383.5</td>
+      <td>34.493991</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
 ```python
 obs_sfr = pd.read_csv(os.path.join(t_d,"sfr.csv"),
                     index_col=0)
                     
 obs_sfr.head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>HEADWATER</th>
+      <th>TAILWATER</th>
+      <th>GAGE-1</th>
+    </tr>
+    <tr>
+      <th>time</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3652.5</th>
+      <td>-513.534289</td>
+      <td>-429.168546</td>
+      <td>1011.596358</td>
+    </tr>
+    <tr>
+      <th>3683.5</th>
+      <td>-560.477298</td>
+      <td>-474.611844</td>
+      <td>1154.044731</td>
+    </tr>
+    <tr>
+      <th>3712.5</th>
+      <td>-598.575235</td>
+      <td>-517.938874</td>
+      <td>1274.294451</td>
+    </tr>
+    <tr>
+      <th>3743.5</th>
+      <td>-615.079164</td>
+      <td>-534.538216</td>
+      <td>1262.469077</td>
+    </tr>
+    <tr>
+      <th>3773.5</th>
+      <td>-614.793659</td>
+      <td>-544.581541</td>
+      <td>1257.172320</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 
 ```python
@@ -173,6 +447,13 @@ es_obs_data.shape
 ```
 
 
+
+
+    (125, 3)
+
+
+
+
 ```python
 for site in obs_sites:
     #print(site)
@@ -187,6 +468,36 @@ for site in obs_sites:
     ax.set_title(site)
 plt.show()
 ```
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_18_0.png)
+    
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_18_1.png)
+    
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_18_2.png)
+    
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_18_3.png)
+    
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_18_4.png)
+    
+
 
 Let's now ....
 
@@ -220,6 +531,43 @@ ess_obs_data = pd.DataFrame(ess_obs_data)
 ess_obs_data.shape
 ```
 
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_20_0.png)
+    
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_20_1.png)
+    
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_20_2.png)
+    
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_20_3.png)
+    
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_20_4.png)
+    
+
+
+
+
+
+    (25, 5)
+
+
+
 ### Update Target Observation Values in the Control File
 
 Right then - so, these are our smoothed-sampled observation values:
@@ -228,6 +576,89 @@ Right then - so, these are our smoothed-sampled observation values:
 ```python
 ess_obs_data.head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>GAGE-1</th>
+      <th>TRGW-0-26-6</th>
+      <th>TRGW-2-26-6</th>
+      <th>TRGW-0-3-8</th>
+      <th>TRGW-2-3-8</th>
+    </tr>
+    <tr>
+      <th>time</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3652.5</th>
+      <td>1998.425564</td>
+      <td>34.644013</td>
+      <td>34.565496</td>
+      <td>34.571747</td>
+      <td>34.579985</td>
+    </tr>
+    <tr>
+      <th>3683.5</th>
+      <td>1914.074438</td>
+      <td>34.554179</td>
+      <td>34.566638</td>
+      <td>34.580241</td>
+      <td>34.551542</td>
+    </tr>
+    <tr>
+      <th>3712.5</th>
+      <td>2047.803833</td>
+      <td>34.639517</td>
+      <td>34.636888</td>
+      <td>34.559523</td>
+      <td>34.534734</td>
+    </tr>
+    <tr>
+      <th>3743.5</th>
+      <td>2538.185281</td>
+      <td>34.797994</td>
+      <td>34.795909</td>
+      <td>34.614963</td>
+      <td>34.676304</td>
+    </tr>
+    <tr>
+      <th>3773.5</th>
+      <td>2840.455384</td>
+      <td>34.923169</td>
+      <td>34.928128</td>
+      <td>34.651341</td>
+      <td>34.667008</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 Now we are confronted with the task of getting these processed measured observation values into the `Pst` control file. Once again, how you do this will end up being somewhat case-specific and will depend on how your obsveration names were constructed. For example, in our case we can use the following function (we made it a function because we are going to repeat it a few times):
 
@@ -281,6 +712,13 @@ pst.nnz_obs_groups
 ```
 
 
+
+
+    []
+
+
+
+
 ```python
 # subselection of observaton names; this is because several groups share the same obs name sufix
 obs_names = obs.loc[obs.oname.isin(['hds', 'sfr']), 'obsnme']
@@ -289,15 +727,39 @@ obs_names = obs.loc[obs.oname.isin(['hds', 'sfr']), 'obsnme']
 update_pst_obsvals(obs_names, ess_obs_data)
 ```
 
+    All good.
+    Number of new nonzero obs: 60
+    Number of nonzero obs: 60
+    
+
 
 ```python
 pst.nnz_obs_groups
 ```
 
 
+
+
+    ['oname:hds_otype:lst_usecol:trgw-0-26-6',
+     'oname:hds_otype:lst_usecol:trgw-0-3-8',
+     'oname:hds_otype:lst_usecol:trgw-2-26-6',
+     'oname:hds_otype:lst_usecol:trgw-2-3-8',
+     'oname:sfr_otype:lst_usecol:gage-1']
+
+
+
+
 ```python
 pst.observation_data.oname.unique()
 ```
+
+
+
+
+    array(['hds', 'sfr', 'hdslay1', 'hdslay2', 'hdslay3', 'inc', 'cum',
+           'sfrtd', 'hdstd', 'hdsvd', nan], dtype=object)
+
+
 
 So that has sorted out the absolute observation groups. But remember the 'sfrtd', 'hdstd', 'hdsvd' observation groups? Yeah thats right, we also added in a bunch of other "secondary observations" (the time difference between obsevrations and vertical differences between heads measured at the same location) as well as postprocessing functions to get them from model outputs. We need to get target values for these observations into our control file as well!
 
@@ -312,6 +774,75 @@ obs_sfr = pd.read_csv(os.path.join(t_d,"sfr.csv"),
 
 obs_sfr.head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>HEADWATER</th>
+      <th>TAILWATER</th>
+      <th>GAGE-1</th>
+    </tr>
+    <tr>
+      <th>time</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3652.5</th>
+      <td>-513.534289</td>
+      <td>-429.168546</td>
+      <td>1011.596358</td>
+    </tr>
+    <tr>
+      <th>3683.5</th>
+      <td>-560.477298</td>
+      <td>-474.611844</td>
+      <td>1154.044731</td>
+    </tr>
+    <tr>
+      <th>3712.5</th>
+      <td>-598.575235</td>
+      <td>-517.938874</td>
+      <td>1274.294451</td>
+    </tr>
+    <tr>
+      <th>3743.5</th>
+      <td>-615.079164</td>
+      <td>-534.538216</td>
+      <td>1262.469077</td>
+    </tr>
+    <tr>
+      <th>3773.5</th>
+      <td>-614.793659</td>
+      <td>-544.581541</td>
+      <td>1257.172320</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 Now update the model output csv files with the smooth-sampled measured values:
 
@@ -350,11 +881,22 @@ import helpers
 helpers.process_secondary_obs(ws=t_d)
 ```
 
+    Secondary observation files processed.
+    
+
 
 ```python
 # the oname column in the pst.observation_data provides a usefull way to select observations in this case
 obs.oname.unique()
 ```
+
+
+
+
+    array(['hds', 'sfr', 'hdslay1', 'hdslay2', 'hdslay3', 'inc', 'cum',
+           'sfrtd', 'hdstd', 'hdsvd', nan], dtype=object)
+
+
 
 
 ```python
@@ -389,10 +931,40 @@ for keys, value in diff_obsdict.items():
     assert (pst.nnz_obs-len(org_nnz_obs_names))==12*len(usecols), [i for i in pst.nnz_obs_names if i not in org_nnz_obs_names]
 ```
 
+    Number of nonzero obs: 60
+    All good.
+    Number of new nonzero obs: 12
+    Number of nonzero obs: 72
+    All good.
+    Number of new nonzero obs: 48
+    Number of nonzero obs: 120
+    All good.
+    Number of new nonzero obs: 24
+    Number of nonzero obs: 144
+    
+
 
 ```python
 pst.nnz_obs_groups
 ```
+
+
+
+
+    ['oname:hds_otype:lst_usecol:trgw-0-26-6',
+     'oname:hds_otype:lst_usecol:trgw-0-3-8',
+     'oname:hds_otype:lst_usecol:trgw-2-26-6',
+     'oname:hds_otype:lst_usecol:trgw-2-3-8',
+     'oname:sfr_otype:lst_usecol:gage-1',
+     'oname:sfrtd_otype:lst_usecol:gage-1',
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6',
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8',
+     'oname:hdstd_otype:lst_usecol:trgw-2-26-6',
+     'oname:hdstd_otype:lst_usecol:trgw-2-3-8',
+     'oname:hdsvd_otype:lst_usecol:trgw-0-26-6',
+     'oname:hdsvd_otype:lst_usecol:trgw-0-3-8']
+
+
 
 The next cell does some sneaky things in the background to populate `obsvals` for forecast observations just so that we can keep track of the truth. In real-world applications you might assign values that reflect decision-criteria (such as limits at which "bad things" happen, for example) simply as a convenience. For the purposes of history matching, these values have no impact. They can play a role in specifying constraints when undertaking optimisation problems.  
 
@@ -416,12 +988,22 @@ First off, we need to get PEST to run the model once so that the objective funct
 pst.control_data.noptmax
 ```
 
+
+
+
+    0
+
+
+
 You got a zero? Alrighty then! Let's write the uprated control file and run PEST again and see what that has done to our Phi:
 
 
 ```python
 pst.write(os.path.join(t_d,pst_file))
 ```
+
+    noptmax:0, npar_adj:12013, nnz_obs:144
+    
 
 
 ```python
@@ -436,6 +1018,13 @@ pst = pyemu.Pst(os.path.join(t_d, pst_file))
 pst.phi
 ```
 
+
+
+
+    26308895.02141707
+
+
+
 Jeepers - that's large! Before we race off and start running PEST to lower it we should compare simualted and measured values and take a look at the components of Phi. 
 
 Let's start with taking a closer look. The `pst.phi_components` attribute returns a dictionary of the observation group names and their contribution to the overal value of Phi. 
@@ -444,6 +1033,177 @@ Let's start with taking a closer look. The `pst.phi_components` attribute return
 ```python
 pst.phi_components
 ```
+
+
+
+
+    {'cum': 0.0,
+     'hdslay1_t1': 0.0,
+     'hdslay1_t10': 0.0,
+     'hdslay1_t11': 0.0,
+     'hdslay1_t12': 0.0,
+     'hdslay1_t13': 0.0,
+     'hdslay1_t14': 0.0,
+     'hdslay1_t15': 0.0,
+     'hdslay1_t16': 0.0,
+     'hdslay1_t17': 0.0,
+     'hdslay1_t18': 0.0,
+     'hdslay1_t19': 0.0,
+     'hdslay1_t2': 0.0,
+     'hdslay1_t20': 0.0,
+     'hdslay1_t21': 0.0,
+     'hdslay1_t22': 0.0,
+     'hdslay1_t23': 0.0,
+     'hdslay1_t24': 0.0,
+     'hdslay1_t25': 0.0,
+     'hdslay1_t3': 0.0,
+     'hdslay1_t4': 0.0,
+     'hdslay1_t5': 0.0,
+     'hdslay1_t6': 0.0,
+     'hdslay1_t7': 0.0,
+     'hdslay1_t8': 0.0,
+     'hdslay1_t9': 0.0,
+     'hdslay2_t1': 0.0,
+     'hdslay2_t10': 0.0,
+     'hdslay2_t11': 0.0,
+     'hdslay2_t12': 0.0,
+     'hdslay2_t13': 0.0,
+     'hdslay2_t14': 0.0,
+     'hdslay2_t15': 0.0,
+     'hdslay2_t16': 0.0,
+     'hdslay2_t17': 0.0,
+     'hdslay2_t18': 0.0,
+     'hdslay2_t19': 0.0,
+     'hdslay2_t2': 0.0,
+     'hdslay2_t20': 0.0,
+     'hdslay2_t21': 0.0,
+     'hdslay2_t22': 0.0,
+     'hdslay2_t23': 0.0,
+     'hdslay2_t24': 0.0,
+     'hdslay2_t25': 0.0,
+     'hdslay2_t3': 0.0,
+     'hdslay2_t4': 0.0,
+     'hdslay2_t5': 0.0,
+     'hdslay2_t6': 0.0,
+     'hdslay2_t7': 0.0,
+     'hdslay2_t8': 0.0,
+     'hdslay2_t9': 0.0,
+     'hdslay3_t1': 0.0,
+     'hdslay3_t10': 0.0,
+     'hdslay3_t11': 0.0,
+     'hdslay3_t12': 0.0,
+     'hdslay3_t13': 0.0,
+     'hdslay3_t14': 0.0,
+     'hdslay3_t15': 0.0,
+     'hdslay3_t16': 0.0,
+     'hdslay3_t17': 0.0,
+     'hdslay3_t18': 0.0,
+     'hdslay3_t19': 0.0,
+     'hdslay3_t2': 0.0,
+     'hdslay3_t20': 0.0,
+     'hdslay3_t21': 0.0,
+     'hdslay3_t22': 0.0,
+     'hdslay3_t23': 0.0,
+     'hdslay3_t24': 0.0,
+     'hdslay3_t25': 0.0,
+     'hdslay3_t3': 0.0,
+     'hdslay3_t4': 0.0,
+     'hdslay3_t5': 0.0,
+     'hdslay3_t6': 0.0,
+     'hdslay3_t7': 0.0,
+     'hdslay3_t8': 0.0,
+     'hdslay3_t9': 0.0,
+     'inc': 0.0,
+     'oname:cum_otype:lst_usecol:in-out': 0.0,
+     'oname:cum_otype:lst_usecol:percent-discrepancy': 0.0,
+     'oname:cum_otype:lst_usecol:rcha': 0.0,
+     'oname:cum_otype:lst_usecol:sfr': 0.0,
+     'oname:cum_otype:lst_usecol:sto-ss': 0.0,
+     'oname:cum_otype:lst_usecol:sto-sy': 0.0,
+     'oname:cum_otype:lst_usecol:total': 0.0,
+     'oname:cum_otype:lst_usecol:wel': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-0-13-10': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-0-15-16': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-0-2-15': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-0-2-9': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-0-21-10': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-0-22-15': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-0-24-4': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-0-26-6': 4.898094521927968,
+     'oname:hds_otype:lst_usecol:trgw-0-29-15': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-0-3-8': 0.7050208004269597,
+     'oname:hds_otype:lst_usecol:trgw-0-33-7': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-0-34-10': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-0-9-1': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-2-13-10': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-2-15-16': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-2-2-15': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-2-2-9': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-2-21-10': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-2-22-15': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-2-24-4': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-2-26-6': 4.869191056599954,
+     'oname:hds_otype:lst_usecol:trgw-2-29-15': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-2-3-8': 0.68853927829098,
+     'oname:hds_otype:lst_usecol:trgw-2-33-7': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-2-34-10': 0.0,
+     'oname:hds_otype:lst_usecol:trgw-2-9-1': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-0-13-10': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-0-15-16': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-0-2-15': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-0-2-9': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-0-21-10': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-0-22-15': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-0-24-4': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6': 1.49327820280544,
+     'oname:hdstd_otype:lst_usecol:trgw-0-29-15': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8': 0.9759377312159214,
+     'oname:hdstd_otype:lst_usecol:trgw-0-33-7': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-0-34-10': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-0-9-1': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-2-13-10': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-2-15-16': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-2-2-15': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-2-2-9': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-2-21-10': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-2-22-15': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-2-24-4': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-2-26-6': 1.830192780906995,
+     'oname:hdstd_otype:lst_usecol:trgw-2-29-15': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-2-3-8': 0.9407597290573477,
+     'oname:hdstd_otype:lst_usecol:trgw-2-33-7': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-2-34-10': 0.0,
+     'oname:hdstd_otype:lst_usecol:trgw-2-9-1': 0.0,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-13-10': 0.0,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-15-16': 0.0,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-2-15': 0.0,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-2-9': 0.0,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-21-10': 0.0,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-22-15': 0.0,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-24-4': 0.0,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-26-6': 0.005316821370432254,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-29-15': 0.0,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-3-8': 0.008412014031608014,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-33-7': 0.0,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-34-10': 0.0,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-9-1': 0.0,
+     'oname:inc_otype:lst_usecol:in-out': 0.0,
+     'oname:inc_otype:lst_usecol:percent-discrepancy': 0.0,
+     'oname:inc_otype:lst_usecol:rcha': 0.0,
+     'oname:inc_otype:lst_usecol:sfr': 0.0,
+     'oname:inc_otype:lst_usecol:sto-ss': 0.0,
+     'oname:inc_otype:lst_usecol:sto-sy': 0.0,
+     'oname:inc_otype:lst_usecol:total': 0.0,
+     'oname:inc_otype:lst_usecol:wel': 0.0,
+     'oname:sfr_otype:lst_usecol:gage-1': 18508632.42733321,
+     'oname:sfr_otype:lst_usecol:headwater': 0.0,
+     'oname:sfr_otype:lst_usecol:tailwater': 0.0,
+     'oname:sfrtd_otype:lst_usecol:gage-1': 7800246.179340925,
+     'oname:sfrtd_otype:lst_usecol:headwater': 0.0,
+     'oname:sfrtd_otype:lst_usecol:tailwater': 0.0,
+     'part': 0.0}
+
+
 
 
 Unfortunately, in this case we have too many observation groups to easily display (we assigned each individual time series to its own observation group; this is a default setting in `pyemu.PstFrom`). 
@@ -456,6 +1216,24 @@ nnz_phi_components = {k:pst.phi_components[k] for k in pst.nnz_obs_groups}
 nnz_phi_components
 ```
 
+
+
+
+    {'oname:hds_otype:lst_usecol:trgw-0-26-6': 4.898094521927968,
+     'oname:hds_otype:lst_usecol:trgw-0-3-8': 0.7050208004269597,
+     'oname:hds_otype:lst_usecol:trgw-2-26-6': 4.869191056599954,
+     'oname:hds_otype:lst_usecol:trgw-2-3-8': 0.68853927829098,
+     'oname:sfr_otype:lst_usecol:gage-1': 18508632.42733321,
+     'oname:sfrtd_otype:lst_usecol:gage-1': 7800246.179340925,
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6': 1.49327820280544,
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8': 0.9759377312159214,
+     'oname:hdstd_otype:lst_usecol:trgw-2-26-6': 1.830192780906995,
+     'oname:hdstd_otype:lst_usecol:trgw-2-3-8': 0.9407597290573477,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-26-6': 0.005316821370432254,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-3-8': 0.008412014031608014}
+
+
+
 And while we are at it, plot these in a pie chart. 
 
 If you wish, try displaying this with `pyemu.plot_utils.res_phi_pie()` instead. Because of the large number of columns it's not going to be pretty, but it gets the job done.
@@ -467,6 +1245,12 @@ plt.pie(phicomp, labels=phicomp.index.values);
 #pyemu.plot_utils.res_phi_pie(pst,);
 ```
 
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_53_0.png)
+    
+
+
 Well that is certainly not ideal - phi is dominated by the SFR observation groups. Why? Because the observation values of these are much larger than those of the other observation groups...and we assigned the same weight to all of them...
 
 Let's try error-based weighting combined with common sense (e.g. subjectivity) instead. For each observation type we will assign a weight equal to the inverse of error. Conceptualy, this error reflects our estimate of measurement noise. In practice, it reflects both measurment noise and model error.
@@ -476,6 +1260,13 @@ Let's try error-based weighting combined with common sense (e.g. subjectivity) i
 nz_obs = pst.observation_data.loc[pst.nnz_obs_names,:]
 nz_obs.oname.unique()
 ```
+
+
+
+
+    array(['hds', 'sfr', 'sfrtd', 'hdstd', 'hdsvd'], dtype=object)
+
+
 
 
 ```python
@@ -497,6 +1288,12 @@ phicomp = pd.Series({k:pst.phi_components[k] for k in pst.nnz_obs_groups})
 plt.pie(phicomp, labels=phicomp.index.values);
 ```
 
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_58_0.png)
+    
+
+
 Better! Now weights reflect the quality of the data. Another aspect to consider is if obsveration group contributions to phi are balanced...do you think any of these observation groups will dominate phi (or be lost)? 
 
 The next cell adds in a column to the `pst.observation_data` for checking purposes in subsequent tutorials. Pretend you didn't see it :)
@@ -513,6 +1310,9 @@ Don't forget to re-write the .pst file!
 ```python
 pst.write(os.path.join(t_d,pst_file),version=2)
 ```
+
+    noptmax:0, npar_adj:12013, nnz_obs:144
+    
 
 ### Understanding Observation Weights and Measurement Noise
 
@@ -567,6 +1367,18 @@ ts_obs = [i for i in pst.nnz_obs_groups if 'sfr' in i]
 plot_obs_ts(pst, oe, ts_obs)
 ```
 
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_69_0.png)
+    
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_69_1.png)
+    
+
+
 ### An Aside: A Convenience of Error-Based Weigthing
 
 A convenience of weighting with the inverse of the measurement uncertainty is that it is easy to know what the ideal Phi should be: it should be equal to the number of non-zero weighted observations. This of course assumes that all model-to-measurment misfit is due to *measurement* uncertainty. In practice, model error usualy plays a larger role, as we will see in other tutorials. 
@@ -596,6 +1408,13 @@ phi = res1 + res2
 phi
 ```
 
+
+
+
+    2.0
+
+
+
 And there you have it, the value of Phi is equal to the number of observations. Getting a better fit than that means we are just "fitting noise".
 
 ### Back to Freyberg.
@@ -608,6 +1427,10 @@ print('Target phi:',pst.nnz_obs)
 print('Current phi:', pst.phi)
 ```
 
+    Target phi: 144
+    Current phi: 52972.35565617064
+    
+
 Right, so we have or observation weights sorted out. Let's just make a quick check of how model outputs and measured values compare by looking at a 1to1 plot for each observation group:
 
 
@@ -616,6 +1439,28 @@ figs = pst.plot(kind="1to1");
 pst.res.loc[pst.nnz_obs_names,:]
 plt.show()
 ```
+
+
+    <Figure size 576x756 with 0 Axes>
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_75_1.png)
+    
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_75_2.png)
+    
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_75_3.png)
+    
+
 
 ### Autocorrelated Transient Noise
 
@@ -648,6 +1493,178 @@ df = obs_cov.to_dataframe()
 df.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3804.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3834.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3865.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3896.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3926.5</th>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3957.5</th>
+      <th>...</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3743.5</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3773.5</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3804.5</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3834.5</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3865.5</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3896.5</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3926.5</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3957.5</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3987.5</th>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:4018.5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5</th>
+      <td>0.01</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5</th>
+      <td>0.00</td>
+      <td>0.01</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5</th>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.01</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5</th>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.01</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3804.5</th>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.01</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 144 columns</p>
+</div>
+
+
+
 So this returned a diagonal covariance matrix (e.g. only values in the diagonal are non-zero). This implies that there is no covariance between observation noise. 
 
 You can plot the matrix, but due to the scale it wont look particularily interesting:
@@ -657,6 +1674,19 @@ You can plot the matrix, but due to the scale it wont look particularily interes
 plt.imshow(df.values)
 plt.colorbar()
 ```
+
+
+
+
+    <matplotlib.colorbar.Colorbar at 0x2042ef9eb50>
+
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_79_1.png)
+    
+
 
 Hmm...you can kinda see something there (thats the sfr flow obs...large variance). Let's instead just look at a small part, focusing on observations that make up a single time series. 
 
@@ -669,6 +1699,19 @@ obs_select = obs.loc[(obs.obgnme=='oname:hds_otype:lst_usecol:trgw-0-26-6') & (o
 plt.imshow(df.loc[obs_select.obsnme,obs_select.obsnme].values)
 plt.colorbar()
 ```
+
+
+
+
+    <matplotlib.colorbar.Colorbar at 0x2042f344b80>
+
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_81_1.png)
+    
+
 
 But recall that most of the observations are time-series. Here we are saying "how wrong the measurement is today, has nothing to do with how wrong it was yesterday". Is that reasonable? For some noise (e.g. white noise), yes, surely. But perhaps not for all noise. So how can we express that "if my measurement was wrong yesterday, then it is *likely* to be wrong in the same way today"? Through covariance, that's how. We can use the same priciples that we employed to specfy parameter spatial/temporal covariance earlier on.
 
@@ -700,6 +1743,12 @@ df.loc[obs_select.obsnme,obs_select.obsnme] = x_group
 plt.imshow(df.loc[obs_select.obsnme,obs_select.obsnme].values);
 plt.colorbar();
 ```
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_85_0.png)
+    
+
 
 Now implement to that to loop over all the non-zero time series observation groups:
 
@@ -740,6 +1789,19 @@ x[np.abs(x)<0.00001]= np.nan
 plt.imshow(x)
 ```
 
+
+
+
+    <matplotlib.image.AxesImage at 0x20430890a90>
+
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_91_1.png)
+    
+
+
 beautiful!
 
 Last thing here, let's just see what this actualy implies for our observation ensembles. As before, let's generate an ensemble of observations, but this time we pass the `obs_cov_tv` covarince matrix:
@@ -751,6 +1813,20 @@ oe_tv = pyemu.ObservationEnsemble.from_gaussian_draw(pst=pst,
                                                 cov=obs_cov_tv) 
 ```
 
+    drawing from group oname:hds_otype:lst_usecol:trgw-0-26-6
+    drawing from group oname:hds_otype:lst_usecol:trgw-0-3-8
+    drawing from group oname:hds_otype:lst_usecol:trgw-2-26-6
+    drawing from group oname:hds_otype:lst_usecol:trgw-2-3-8
+    drawing from group oname:hdstd_otype:lst_usecol:trgw-0-26-6
+    drawing from group oname:hdstd_otype:lst_usecol:trgw-0-3-8
+    drawing from group oname:hdstd_otype:lst_usecol:trgw-2-26-6
+    drawing from group oname:hdstd_otype:lst_usecol:trgw-2-3-8
+    drawing from group oname:hdsvd_otype:lst_usecol:trgw-0-26-6
+    drawing from group oname:hdsvd_otype:lst_usecol:trgw-0-3-8
+    drawing from group oname:sfr_otype:lst_usecol:gage-1
+    drawing from group oname:sfrtd_otype:lst_usecol:gage-1
+    
+
 Let's plot the same ensemble of obs timeseries with non-correlated noise we saw earlier, just to make it easy to compare.
 
 
@@ -758,6 +1834,21 @@ Let's plot the same ensemble of obs timeseries with non-correlated noise we saw 
 print('Non correlated observation noise:')
 plot_obs_ts(pst, oe, ts_obs)
 ```
+
+    Non correlated observation noise:
+    
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_96_1.png)
+    
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_96_2.png)
+    
+
 
 And now the ensemble of obs timeseries with autocorrelated noise. Note how thse are smoother and less of a jumble of spaghetti.
 
@@ -767,6 +1858,21 @@ print('Autocorrelated observation noise:')
 ts_obs = [i for i in pst.nnz_obs_groups if 'sfr' in i]
 plot_obs_ts(pst, oe_tv, ts_obs)
 ```
+
+    Autocorrelated observation noise:
+    
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_98_1.png)
+    
+
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_98_2.png)
+    
+
 
 ### A Final Aside: Weighting for Visibility
 
@@ -788,6 +1894,24 @@ balanced_groups = {grp:100 for grp in pst.nnz_obs_groups}
 balanced_groups
 ```
 
+
+
+
+    {'oname:hds_otype:lst_usecol:trgw-0-26-6': 100,
+     'oname:hds_otype:lst_usecol:trgw-0-3-8': 100,
+     'oname:hds_otype:lst_usecol:trgw-2-26-6': 100,
+     'oname:hds_otype:lst_usecol:trgw-2-3-8': 100,
+     'oname:sfr_otype:lst_usecol:gage-1': 100,
+     'oname:sfrtd_otype:lst_usecol:gage-1': 100,
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6': 100,
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8': 100,
+     'oname:hdstd_otype:lst_usecol:trgw-2-26-6': 100,
+     'oname:hdstd_otype:lst_usecol:trgw-2-3-8': 100,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-26-6': 100,
+     'oname:hdsvd_otype:lst_usecol:trgw-0-3-8': 100}
+
+
+
 We can now use the `pst.adjust_weights()` method to adjust the observation weights in the `pst` control file object. (*Remember! This all only happens in memory. It does not get written to the PEST control file yet!*)
 
 
@@ -803,6 +1927,12 @@ If we now plot the phi components again, voila! We have a nice even distribution
 phicomp = pd.Series(pst.phi_components)
 plt.pie(phicomp, labels=phicomp.index.values);
 ```
+
+
+    
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_104_0.png)
+    
+
 
 Some **caution** is required here. Observation weights and how these pertain to history-matching *versus* how they pertain to generating an observation ensemble for use with `pestpp-ies` or FOSM is a frequent source of confusion.
 
