@@ -1,6 +1,6 @@
 # Welcome to the GMDSI Tutorial Notebooks
 
-You can access completed versions of these tutorials through the following links. If you wish to run the notebooks yourself, please head to the [GitHub repository](https://gmdsi.github.io/GMDSI_notebooks/) and follow the instructions to download and install the necessary dependencies. 
+You can access completed versions of these tutorials through the links below. If you wish to run the notebooks yourself, please head to the [GitHub repository](https://gmdsi.github.io/GMDSI_notebooks/) and follow the instructions to download and install the necessary dependencies. 
 
 __Please be aware that these notebooks are under development and subject to change. Make sure to check back regularily for updates and new content. If you come across problems or errors, please open a detailed issue in the GitHub repository to let us know.__
 
