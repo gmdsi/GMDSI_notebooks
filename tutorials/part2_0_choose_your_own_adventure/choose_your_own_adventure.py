@@ -134,7 +134,7 @@ def setup_pst():
                             pargp=base+"pp",
                             lower_bound=lb, upper_bound=ub,
                             ult_ubound=uub, ult_lbound=ulb,
-                            pp_space=4) # `PstFrom` will generate a unifrom grid of pilot points in every 4th row and column
+                            pp_space=5) # `PstFrom` will generate a unifrom grid of pilot points in every 4th row and column
         if add_coarse==True:
             # constant (coarse) scale parameters
             pf.add_parameters(f,
@@ -370,7 +370,7 @@ def setup_pst():
     import helpers
     helpers.test_extract_hds_arrays(template_ws)
 
-    files = [f for f in os.listdir(template_ws) if f.startswith("hdslay")]
+    files = [f for f in os.listdir(template_ws) if f.startswith("hdslay") and f.endswith("_t1.txt")]
     for f in files:
         pf.add_observations(f,prefix=f.split(".")[0],obsgp=f.split(".")[0])
 
@@ -483,7 +483,7 @@ def setup_pst():
     pst.write(os.path.join(template_ws, 'freyberg_mf6.pst'))
     pyemu.os_utils.run('pestpp-glm freyberg_mf6.pst', cwd=template_ws)
 
-    pe = pf.draw(num_reals=200, use_specsim=True) # draw parameters from the prior distribution
+    pe = pf.draw(num_reals=20, use_specsim=True) # draw parameters from the prior distribution
     pe.enforce() # enforces parameter bounds
     pe.to_binary(os.path.join(template_ws,"prior_pe.jcb")) #writes the paramter ensemble to binary file
     assert pe.shape[1] == pst.npar
