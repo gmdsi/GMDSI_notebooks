@@ -6,12 +6,21 @@ __Please be aware that these notebooks are under development and subject to chan
 
 ## The Notebooks so far:
 
+### Introduction to Theory, Concepts and PEST Mechanics
+1. [Introduction to the Freyberg Model](https://gmdsi.github.io/GMDSI_notebooks/freyberg_intro_model)
+2. [Trial-and-Error or How Not to Calibrate a Model](https://gmdsi.github.io/GMDSI_notebooks/freyberg_trial_and_error)
+3. [PEST Basics](https://gmdsi.github.io/GMDSI_notebooks/freyberg_pest_setup)
+4. [Automated Calibration with Coarse Parameterisation ](https://gmdsi.github.io/GMDSI_notebooks/freyberg_k)
+5.  ...
+
 ### Decision Support Modelling with pyEMU and PEST++
 1. [Overview of pyEMU](https://gmdsi.github.io/GMDSI_notebooks/intro_to_pyemu)
-2. [Construct a High-Dimensional PEST-Interface with pyEMU](https://gmdsi.github.io/GMDSI_notebooks/freyberg_pstfrom_pest_setup)
-3. [Observations, Weights and Noise](https://gmdsi.github.io/GMDSI_notebooks/freyberg_obs_and_weights)
-4. [GLM Part1 - Calculating a Jacobian Matrix](https://gmdsi.github.io/GMDSI_notebooks/freyberg_glm_1)
-5. [FOSM and Data Worth](https://gmdsi.github.io/GMDSI_notebooks/freyberg_fosm_and_dataworth)
-6. [GLM Part2 - Highly-Parameterized Regularized-Inversion](https://gmdsi.github.io/GMDSI_notebooks/freyberg_glm_2)
-7. [Prior Monte Carlo](https://gmdsi.github.io/GMDSI_notebooks/freyberg_prior_monte_carlo)
-8. [IES Part1 - Introducing the Iterative Ensemble Smoother](https://gmdsi.github.io/GMDSI_notebooks/freyberg_ies)
+2. [Introduction to the Freyberg Model](https://gmdsi.github.io/GMDSI_notebooks/freyberg_intro_model)
+3. [Construct a High-Dimensional PEST-Interface with pyEMU](https://gmdsi.github.io/GMDSI_notebooks/freyberg_pstfrom_pest_setup)
+4. [Observations, Weights and Noise](https://gmdsi.github.io/GMDSI_notebooks/freyberg_obs_and_weights)
+5. [GLM Part1 - Calculating a Jacobian Matrix](https://gmdsi.github.io/GMDSI_notebooks/freyberg_glm_1)
+6. [FOSM and Data Worth](https://gmdsi.github.io/GMDSI_notebooks/freyberg_fosm_and_dataworth)
+7. [GLM Part2 - Highly-Parameterized Regularized-Inversion](https://gmdsi.github.io/GMDSI_notebooks/freyberg_glm_2)
+8. [Prior Monte Carlo](https://gmdsi.github.io/GMDSI_notebooks/freyberg_prior_monte_carlo)
+9. [IES Part1 - Introducing the Iterative Ensemble Smoother](https://gmdsi.github.io/GMDSI_notebooks/freyberg_ies)
+10.  ...
