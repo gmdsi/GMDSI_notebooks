@@ -47,6 +47,13 @@ shutil.copytree(org_t_d,t_d)
 
 ```
 
+
+
+
+    'freyberg6_template'
+
+
+
 Load the PEST control file as a `Pst` object.
 
 
@@ -55,6 +62,15 @@ pst_path = os.path.join(t_d, 'freyberg_mf6.pst')
 pst = pyemu.Pst(pst_path)
 pst.observation_data.columns
 ```
+
+
+
+
+    Index(['obsnme', 'obsval', 'weight', 'obgnme', 'oname', 'otype', 'usecol',
+           'time', 'i', 'j', 'totim', 'observed'],
+          dtype='object')
+
+
 
 Check that we are at the right stage to run ies:
 
@@ -72,10 +88,24 @@ Load the prior parameter ensemble we generated previously:
 ```
 
 
+
+
+    ['obs_cov.jcb', 'obs_cov_diag.jcb', 'prior_cov.jcb', 'prior_pe.jcb']
+
+
+
+
 ```python
 pe = pyemu.ParameterEnsemble.from_binary(pst=pst,filename=os.path.join(t_d,"prior_pe.jcb"))
 pe.shape
 ```
+
+
+
+
+    (200, 12013)
+
+
 
 ### 3. Run PESTPP-IES in Parallel
 
@@ -97,6 +127,9 @@ pst.control_data.noptmax = 0
 pst.write(os.path.join(t_d, 'freyberg_mf6.pst'))
 ```
 
+    noptmax:0, npar_adj:12013, nnz_obs:144
+    
+
 Always good to do the 'ole `noptmax=0` test:
 
 
@@ -109,6 +142,19 @@ pyemu.os_utils.run("pestpp-ies freyberg_mf6.pst",cwd=t_d)
 pst = pyemu.Pst(os.path.join(t_d, 'freyberg_mf6.pst'))
 assert np.abs(pst.phi - 257.328) < 1.0e-1,pst.phi
 ```
+
+
+    ---------------------------------------------------------------------------
+
+    AssertionError                            Traceback (most recent call last)
+
+    Input In [10], in <cell line: 2>()
+          1 pst = pyemu.Pst(os.path.join(t_d, 'freyberg_mf6.pst'))
+    ----> 2 assert np.abs(pst.phi - 257.328) < 1.0e-1,pst.phi
+    
+
+    AssertionError: 52972.35565617062
+
 
 To speed up the process, you will want to distribute the workload across as many parallel agents as possible. Normally, you will want to use the same number of agents (or less) as you have available CPU cores. Most personal computers (i.e. desktops or laptops) these days have between 4 and 10 cores. Servers or HPCs may have many more cores than this. Another limitation to keep in mind is the read/write speed of your machines disk (e.g. your hard drive). PEST and the model software are going to be reading and writting lots of files. This often slows things down if agents are competing for the same resources to read/write to disk.
 
@@ -131,6 +177,9 @@ pst.control_data.noptmax = 3
 pst.write(os.path.join(t_d, 'freyberg_mf6.pst'))
 m_d = os.path.join('master_ies')
 ```
+
+    noptmax:3, npar_adj:12013, nnz_obs:144
+    
 
 The following cell deploys the PEST agents and manager and then starts the run using `pestpp-ies`. Run it by pressing `shift+enter`.
 
@@ -175,6 +224,12 @@ pt_oe.phi_vector.apply(np.log10).hist(ax=ax,fc="b",ec="none",alpha=0.5,density=F
 _ = ax.set_xlabel("$log_{10}\\phi$")
 ```
 
+
+    
+![png](freyberg_ies_files/freyberg_ies_27_0.png)
+    
+
+
 Finally, let's plot the obs vs sim timeseries - everyone's fav!
 
 
@@ -185,6 +240,17 @@ obs = obs.loc[obs.oname.apply(lambda x: x in ["hds","sfr"])]
 obs = obs.loc[obs.obgnme.apply(lambda x: x in pst.nnz_obs_groups),:]
 obs.obgnme.unique()
 ```
+
+
+
+
+    array(['oname:hds_otype:lst_usecol:trgw-0-26-6',
+           'oname:hds_otype:lst_usecol:trgw-0-3-8',
+           'oname:hds_otype:lst_usecol:trgw-2-26-6',
+           'oname:hds_otype:lst_usecol:trgw-2-3-8',
+           'oname:sfr_otype:lst_usecol:gage-1'], dtype=object)
+
+
 
 
 ```python
@@ -208,6 +274,12 @@ for ax,og in zip(axes,ogs):
     ax.set_title(og,loc="left")
 ```
 
+
+    
+![png](freyberg_ies_files/freyberg_ies_30_0.png)
+    
+
+
 How do we feel about these plots?  In general, its a really (really!) good fit...is that ok?  
 
 ### optional additional filtering
@@ -230,6 +302,16 @@ if pt_oe.shape[0] == 0:
     print("filtered out all posterior realization #sad")
 ```
 
+    reducing posterior ensemble from 50 to 0 realizations
+    filtered out all posterior realization #sad
+    
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_33_1.png)
+    
+
+
 ### 5. Forecasts
 
 As usual, we bring this story back to the forecasts - after all they are why we are modelling.
@@ -238,6 +320,16 @@ As usual, we bring this story back to the forecasts - after all they are why we 
 ```python
 pst.forecast_names
 ```
+
+
+
+
+    ['oname:sfr_otype:lst_usecol:tailwater_time:4383.5',
+     'oname:sfr_otype:lst_usecol:headwater_time:4383.5',
+     'oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5',
+     'part_time']
+
+
 
 
 ```python
@@ -250,6 +342,30 @@ for forecast in pst.forecast_names:
     fval = pst.observation_data.loc[forecast,"obsval"]
     ax.plot([fval,fval],ax.get_ylim(),"r-")
 ```
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_36_0.png)
+    
+
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_36_1.png)
+    
+
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_36_2.png)
+    
+
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_36_3.png)
+    
+
 
 Ruh roh!  The posterior isnt covering the correct values for several forecasts. But the prior does, so that implies there is somewhere between the prior and posterior we have now that is optimal with respect to the forecasts.  Luckily, we can just load up a previous iteration of ies results and use those!
 
@@ -268,6 +384,17 @@ pr_oe.phi_vector.apply(np.log10).hist(ax=ax,fc="0.5",ec="none",alpha=0.5,density
 pt_oe.phi_vector.apply(np.log10).hist(ax=ax,fc="b",ec="none",alpha=0.5,density=False)
 _ = ax.set_xlabel("$log_{10}\phi$")
 ```
+
+    <>:4: DeprecationWarning: invalid escape sequence \p
+    <>:4: DeprecationWarning: invalid escape sequence \p
+    C:\Users\hugm0001\AppData\Local\Temp\ipykernel_19836\4166649625.py:4: DeprecationWarning: invalid escape sequence \p
+    
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_39_1.png)
+    
+
 
 The posterior phi values are more similar to the prior....
 
@@ -295,6 +422,12 @@ for ax,og in zip(axes,ogs):
     ax.set_title(og,loc="left")
 ```
 
+
+    
+![png](freyberg_ies_files/freyberg_ies_41_0.png)
+    
+
+
 Now we see more variance in the simulated equivalents to the observations, meaning we arent fitting the historic observations as well...basically, we have only elimiated the extreme prior realizations - we can call this "light" conditioning or "underfitting"...
 
 Let's see what has happened to the forecasts:
@@ -310,6 +443,30 @@ for forecast in pst.forecast_names:
     fval = pst.observation_data.loc[forecast,"obsval"]
     ax.plot([fval,fval],ax.get_ylim(),"r-")
 ```
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_43_0.png)
+    
+
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_43_1.png)
+    
+
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_43_2.png)
+    
+
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_43_3.png)
+    
+
 
 Ok, now things are getting interesting - the posterior is covering the truth...success?
 
