@@ -1,39 +1,17 @@
-## Welcome to GitHub Pages
+# Welcome to the GMDSI Tutorial Notebooks
 
-You can use the [editor on GitHub](https://github.com/gmdsi/GMDSI_notebooks/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+You can access completed versions of these tutorials through the following links. If you wish to run the notebooks yourself, please head to the [GitHub repository](https://gmdsi.github.io/GMDSI_notebooks/) and follow the instructions to download and install the necessary dependencies. 
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+__Please be aware that these notebooks are under development and subject to change. Make sure to check back regularily for updates and new content. If you come across issues or errors, please open an issue in the GitHub repository to let us know.
 
-### Markdown
+## The Notebooks so far:
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/gmdsi/GMDSI_notebooks/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+### Decision Support Modelling with pyEMU and PEST++
+1. [Overview of pyEMU](https://gmdsi.github.io/GMDSI_notebooks/intro_to_pyemu)
+2. [Construct a High-Dimensional PEST-Interface with pyEMU](https://gmdsi.github.io/GMDSI_notebooks/freyberg_pstfrom_pest_setup)
+3. [Observations, Weights and Noise](https://gmdsi.github.io/GMDSI_notebooks/freyberg_obs_and_weights)
+4. [GLM Part1 - Calculating a Jacobian Matrix](https://gmdsi.github.io/GMDSI_notebooks/freyberg_glm_1)
+5. [FOSM and Data Worth](https://gmdsi.github.io/GMDSI_notebooks/freyberg_fosm_and_dataworth)
+6. [GLM Part2 - Highly-Parameterized Regularized-Inversion](https://gmdsi.github.io/GMDSI_notebooks/freyberg_glm_2)
+7. [Prior Monte Carlo](https://gmdsi.github.io/GMDSI_notebooks/freyberg_prior_monte_carlo)
+8. [IES Part1 - Introducing the Iterative Ensemble Smoother](https://gmdsi.github.io/GMDSI_notebooks/freyberg_ies)
