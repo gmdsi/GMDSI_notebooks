@@ -25,34 +25,27 @@ def run_nb(nb_file, nb_dir):
     os.chdir(cwd)
     return
 
-nb_dir = "part2_1_pstfrom_pest_setup"
-nb_file = "freyberg_pstfrom_pest_setup.ipynb"
+
+nb_dir = "intro_to_regression"
+nb_file = "intro_to_regression.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_2_obs_and_weights"
-nb_file = "freyberg_obs_and_weights.ipynb"
+nb_dir = "freyberg_intro_to_model"
+nb_file = "freyberg_intro_model.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_4_glm"
-nb_file = "freyberg_glm_1.ipynb"
+nb_dir = "intro_to_pyemu"
+nb_file = "intro_to_pyemu.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_5_fosm_and_dataworth"
-nb_file = "freyberg_fosm_and_dataworth.ipynb"
+nb_dir = "part1_pest_setup"
+nb_file = "freyberg_pest_setup.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_4_glm"
-nb_file = "freyberg_glm_2.ipynb"
+nb_dir = "part1_trial_and_error"
+nb_file = "freyberg_trial_and_error.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_6_ies"
-nb_file = "freyberg_ies.ipynb"
-run_nb(nb_file, nb_dir)
-
-nb_dir = "part2_da"
-nb_file = "freyberg_da_prep.ipynb"
-run_nb(nb_file, nb_dir)
-
-nb_dir = "part2_da"
-nb_file = "freyberg_da_run.ipynb"
+nb_dir = "part1_k"
+nb_file = "freyberg_k.ipynb"
 run_nb(nb_file, nb_dir)
