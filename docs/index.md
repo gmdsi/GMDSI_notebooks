@@ -7,7 +7,7 @@ __Please be aware that these notebooks are under development and subject to chan
 ## The Notebooks so far:
 
 ### Introductions to Selected Topics
-1. [Introduction to regression](https://gmdsi.github.io/GMDSI_notebooks/intro_to_regression)
+1. [Introduction to Regression](https://gmdsi.github.io/GMDSI_notebooks/intro_to_regression)
 2. ...
 
 ### Introduction to Theory, Concepts and PEST Mechanics
