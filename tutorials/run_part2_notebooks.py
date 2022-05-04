@@ -1,23 +1,23 @@
 import os
 import shutil
 
-html_dir = os.path.abspath(os.path.join("..", "htmls"))
+html_dir = os.path.abspath(os.path.join("..", "docs"))
 
 cwd = os.getcwd()
 
 clear = False
 pdf = False
-html = True
+markdown = True
 
 
 def run_nb(nb_file, nb_dir): 
     os.chdir(nb_dir)
     os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800 --allow-errors --inplace {0}".format(nb_file))
-    if html:
-        os.system("jupyter nbconvert --to html {0}".format(nb_file))
-        html_file = nb_file.replace('.ipynb', '.html')
-        shutil.move(html_file, os.path.join(html_dir, html_file))
-        print('preped htmlfile: ', os.path.join(html_dir, html_file))
+    if markdown:
+        os.system("jupyter nbconvert --to markdown {0}".format(nb_file))
+        md_file = nb_file.replace('.ipynb', '.md')
+        shutil.move(md_file, os.path.join(html_dir, md_file))
+        print('preped htmlfile: ', os.path.join(html_dir, md_file))
     if pdf:
         os.system("jupyter nbconvert --to pdf {0}".format(nb_file))
     if clear:
