@@ -36,3 +36,5 @@ whitelist:
   - jekyll-feed
   - jekyll-include-cache
 
+
+theme: jekyll-theme-cayman
