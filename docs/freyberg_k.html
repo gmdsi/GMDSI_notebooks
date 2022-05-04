@@ -14629,6 +14629,10 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># the pest files folder</span>
 <span class="n">tmp_d</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;freyberg_k&#39;</span><span class="p">)</span>
 
+<span class="c1"># get executables</span>
+<span class="n">hbd</span><span class="o">.</span><span class="n">prep_bins</span><span class="p">(</span><span class="n">tmp_d</span><span class="p">)</span>
+<span class="c1"># get dependency folders</span>
+<span class="n">hbd</span><span class="o">.</span><span class="n">prep_deps</span><span class="p">(</span><span class="n">tmp_d</span><span class="p">)</span>
 <span class="c1"># run our convenience functions to prepare the PEST and model folder</span>
 <span class="n">hbd</span><span class="o">.</span><span class="n">prep_pest</span><span class="p">(</span><span class="n">tmp_d</span><span class="p">)</span>
 </pre></div>
@@ -14669,10 +14673,10 @@ noptmax:0, npar_adj:3, nnz_obs:312
 <pre>
 <span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
 <span class="ansi-red-intense-fg ansi-bold">Exception</span>                                 Traceback (most recent call last)
-Input <span class="ansi-green-intense-fg ansi-bold">In [2]</span>, in <span class="ansi-cyan-fg">&lt;cell line: 5&gt;</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
-<span class="ansi-green-fg">      2</span> tmp_d <span style="color: rgb(98,98,98)">=</span> os<span style="color: rgb(98,98,98)">.</span>path<span style="color: rgb(98,98,98)">.</span>join(<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">freyberg_k</span><span style="color: rgb(175,0,0)">&#39;</span>)
-<span class="ansi-green-fg">      4</span> <span style="color: rgb(95,135,135)"># run our convenience functions to prepare the PEST and model folder</span>
-<span class="ansi-green-intense-fg ansi-bold">----&gt; 5</span> <span class="ansi-yellow-bg">hbd</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">prep_pest</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">tmp_d</span><span class="ansi-yellow-bg">)</span>
+Input <span class="ansi-green-intense-fg ansi-bold">In [2]</span>, in <span class="ansi-cyan-fg">&lt;cell line: 9&gt;</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
+<span class="ansi-green-fg">      7</span> hbd<span style="color: rgb(98,98,98)">.</span>prep_deps(tmp_d)
+<span class="ansi-green-fg">      8</span> <span style="color: rgb(95,135,135)"># run our convenience functions to prepare the PEST and model folder</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 9</span> <span class="ansi-yellow-bg">hbd</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">prep_pest</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">tmp_d</span><span class="ansi-yellow-bg">)</span>
 
 File <span class="ansi-green-intense-fg ansi-bold">D:\Workspace\hugm0001\github\GMDSI_notebooks\tutorials\part1_k\..\herebedragons.py:346</span>, in <span class="ansi-cyan-fg">prep_pest</span><span class="ansi-blue-intense-fg ansi-bold">(tmp_d)</span>
 <span class="ansi-green-fg">    343</span> pst<span style="color: rgb(98,98,98)">.</span>write(pstfile)
@@ -16260,11 +16264,23 @@ jp-needs-light-background
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>Dear oh dear....why are some forecasts not bracketed by the posterior distribution? This means that</p>
-<h3 id="uncertainty-analysis-has-failed!">uncertainty analysis has <strong>failed!</strong><a class="anchor-link" href="#uncertainty-analysis-has-failed!">&#182;</a></h3><p>In some cases the prior (the dashed grey line) encompasses the "truth" but the posterior (the blue shaded area) does not. Therefore calibration actualy made our forecasts less reliable. Why is that? How can improving a model's ability to represent the past make it <em>worse</em> at representing the future?</p>
+<p><strong>uncertainty analysis has failed!</strong></p>
+<p>In some cases the prior (the dashed grey line) encompasses the "truth" but the posterior (the blue shaded area) does not. Therefore calibration actualy made our forecasts less reliable. Why is that? How can improving a model's ability to represent the past make it <em>worse</em> at representing the future?</p>
 <p>In other cases, neither the prior nor the posterior encompass the truth. Does this mean our model is rubish? But hold on, the "truth" was created from this same model (with different parameters). How can it be that wrong?</p>
 <p>Find out in the next episode!</p>
 <blockquote><p>hint: <em>under parameterisation</em></p>
 </blockquote>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 
 </div>
 </div>
