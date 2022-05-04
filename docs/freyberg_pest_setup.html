@@ -14693,49 +14693,43 @@ many contexts in which a user may need to construct their own PEST input dataset
     <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 
 
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>ins file for heads.csv prepared.
+ins file for sfr.csv prepared.
+noptmax:0, npar_adj:3, nnz_obs:312
+</pre>
+</div>
+</div>
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
 <pre>
 <span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
-<span class="ansi-red-intense-fg ansi-bold">FileExistsError</span>                           Traceback (most recent call last)
-Input <span class="ansi-green-intense-fg ansi-bold">In [2]</span>, in <span class="ansi-cyan-fg">&lt;cell line: 7&gt;</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
-<span class="ansi-green-fg">      5</span> hbd<span style="color: rgb(98,98,98)">.</span>prep_bins(tmp_d)
-<span class="ansi-green-fg">      6</span> <span style="color: rgb(95,135,135)"># get dependency folders</span>
-<span class="ansi-green-intense-fg ansi-bold">----&gt; 7</span> <span class="ansi-yellow-bg">hbd</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">prep_deps</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">tmp_d</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-red-intense-fg ansi-bold">Exception</span>                                 Traceback (most recent call last)
+Input <span class="ansi-green-intense-fg ansi-bold">In [2]</span>, in <span class="ansi-cyan-fg">&lt;cell line: 9&gt;</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
+<span class="ansi-green-fg">      7</span> hbd<span style="color: rgb(98,98,98)">.</span>prep_deps(tmp_d)
 <span class="ansi-green-fg">      8</span> <span style="color: rgb(95,135,135)"># run our convenience functions to prepare the PEST and model folder</span>
-<span class="ansi-green-fg">      9</span> hbd<span style="color: rgb(98,98,98)">.</span>prep_pest(tmp_d)
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 9</span> <span class="ansi-yellow-bg">hbd</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">prep_pest</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">tmp_d</span><span class="ansi-yellow-bg">)</span>
 
-File <span class="ansi-green-intense-fg ansi-bold">D:\Workspace\hugm0001\github\GMDSI_notebooks\tutorials\part1_pest_setup\..\herebedragons.py:80</span>, in <span class="ansi-cyan-fg">prep_deps</span><span class="ansi-blue-intense-fg ansi-bold">(template_ws, dep_dir)</span>
-<span class="ansi-green-fg">     77</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> org_d <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> [os<span style="color: rgb(98,98,98)">.</span>path<span style="color: rgb(98,98,98)">.</span>join(dep_dir,<span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">flopy</span><span style="color: rgb(175,0,0)">&#34;</span>),os<span style="color: rgb(98,98,98)">.</span>path<span style="color: rgb(98,98,98)">.</span>join(dep_dir,<span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">pyemu</span><span style="color: rgb(175,0,0)">&#34;</span>)]:
-<span class="ansi-green-fg">     78</span>     <span style="color: rgb(95,135,135)">#org_d = i.path</span>
-<span class="ansi-green-fg">     79</span>     new_d <span style="color: rgb(98,98,98)">=</span> os<span style="color: rgb(98,98,98)">.</span>path<span style="color: rgb(98,98,98)">.</span>join(template_ws, os<span style="color: rgb(98,98,98)">.</span>path<span style="color: rgb(98,98,98)">.</span>basename(org_d))
-<span class="ansi-green-intense-fg ansi-bold">---&gt; 80</span>     <span class="ansi-yellow-bg">shutil</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">copytree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">org_d</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">new_d</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg">     81</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span>
+File <span class="ansi-green-intense-fg ansi-bold">D:\Workspace\hugm0001\github\GMDSI_notebooks\tutorials\part1_pest_setup\..\herebedragons.py:348</span>, in <span class="ansi-cyan-fg">prep_pest</span><span class="ansi-blue-intense-fg ansi-bold">(tmp_d)</span>
+<span class="ansi-green-fg">    345</span> pst<span style="color: rgb(98,98,98)">.</span>write(pstfile)
+<span class="ansi-green-fg">    347</span> clean_pst4pestchek(pstfile, par)
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 348</span> <span class="ansi-yellow-bg">pyemu</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">utils</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">run</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">f</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">pestchek </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,95,135)">{</span><span class="ansi-yellow-bg">os</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">path</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">basename</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">pstfile</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,95,135)">}</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">cwd</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">tmp_d</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    350</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">f</span><span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">written pest control file: </span><span class="ansi-bold" style="color: rgb(175,95,135)">{</span>pstfile<span class="ansi-bold" style="color: rgb(175,95,135)">}</span><span style="color: rgb(175,0,0)">&#39;</span>)
 
-File <span class="ansi-green-intense-fg ansi-bold">D:\Workspace\hugm0001\anaconda\lib\shutil.py:557</span>, in <span class="ansi-cyan-fg">copytree</span><span class="ansi-blue-intense-fg ansi-bold">(src, dst, symlinks, ignore, copy_function, ignore_dangling_symlinks, dirs_exist_ok)</span>
-<span class="ansi-green-fg">    555</span> <span class="ansi-bold" style="color: rgb(0,135,0)">with</span> os<span style="color: rgb(98,98,98)">.</span>scandir(src) <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> itr:
-<span class="ansi-green-fg">    556</span>     entries <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">list</span>(itr)
-<span class="ansi-green-intense-fg ansi-bold">--&gt; 557</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">_copytree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">entries</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">entries</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">src</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">src</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">dst</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">dst</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">symlinks</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">symlinks</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-fg">    558</span> <span class="ansi-yellow-bg">                 </span><span class="ansi-yellow-bg">ignore</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">ignore</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">copy_function</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">copy_function</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-fg">    559</span> <span class="ansi-yellow-bg">                 </span><span class="ansi-yellow-bg">ignore_dangling_symlinks</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">ignore_dangling_symlinks</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-fg">    560</span> <span class="ansi-yellow-bg">                 </span><span class="ansi-yellow-bg">dirs_exist_ok</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">dirs_exist_ok</span><span class="ansi-yellow-bg">)</span>
+File <span class="ansi-green-intense-fg ansi-bold">D:\github\pyemu\pyemu\utils\os_utils.py:126</span>, in <span class="ansi-cyan-fg">run</span><span class="ansi-blue-intense-fg ansi-bold">(cmd_str, cwd, verbose)</span>
+<span class="ansi-green-fg">    124</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">window</span><span style="color: rgb(175,0,0)">&#34;</span> <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> platform<span style="color: rgb(98,98,98)">.</span>platform()<span style="color: rgb(98,98,98)">.</span>lower():
+<span class="ansi-green-fg">    125</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> ret_val <span style="color: rgb(98,98,98)">!=</span> <span style="color: rgb(98,98,98)">0</span>:
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 126</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">Exception</span>(<span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">run() returned non-zero: </span><span class="ansi-bold" style="color: rgb(175,95,135)">{0}</span><span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(98,98,98)">.</span>format(ret_val))
+<span class="ansi-green-fg">    127</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
+<span class="ansi-green-fg">    128</span>     estat <span style="color: rgb(98,98,98)">=</span> os<span style="color: rgb(98,98,98)">.</span>WEXITSTATUS(ret_val)
 
-File <span class="ansi-green-intense-fg ansi-bold">D:\Workspace\hugm0001\anaconda\lib\shutil.py:458</span>, in <span class="ansi-cyan-fg">_copytree</span><span class="ansi-blue-intense-fg ansi-bold">(entries, src, dst, symlinks, ignore, copy_function, ignore_dangling_symlinks, dirs_exist_ok)</span>
-<span class="ansi-green-fg">    455</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-<span class="ansi-green-fg">    456</span>     ignored_names <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">set</span>()
-<span class="ansi-green-intense-fg ansi-bold">--&gt; 458</span> <span class="ansi-yellow-bg">os</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">makedirs</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">dst</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">exist_ok</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">dirs_exist_ok</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg">    459</span> errors <span style="color: rgb(98,98,98)">=</span> []
-<span class="ansi-green-fg">    460</span> use_srcentry <span style="color: rgb(98,98,98)">=</span> copy_function <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> copy2 <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> copy_function <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> copy
-
-File <span class="ansi-green-intense-fg ansi-bold">D:\Workspace\hugm0001\anaconda\lib\os.py:223</span>, in <span class="ansi-cyan-fg">makedirs</span><span class="ansi-blue-intense-fg ansi-bold">(name, mode, exist_ok)</span>
-<span class="ansi-green-fg">    221</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">return</span>
-<span class="ansi-green-fg">    222</span> <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
-<span class="ansi-green-intense-fg ansi-bold">--&gt; 223</span>     <span class="ansi-yellow-bg">mkdir</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">name</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">mode</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg">    224</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> <span class="ansi-bold" style="color: rgb(215,95,95)">OSError</span>:
-<span class="ansi-green-fg">    225</span>     <span style="color: rgb(95,135,135)"># Cannot rely on checking for EEXIST, since the operating system</span>
-<span class="ansi-green-fg">    226</span>     <span style="color: rgb(95,135,135)"># could give priority to other errors like EACCES or EROFS</span>
-<span class="ansi-green-fg">    227</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> exist_ok <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> path<span style="color: rgb(98,98,98)">.</span>isdir(name):
-
-<span class="ansi-red-intense-fg ansi-bold">FileExistsError</span>: [WinError 183] Cannot create a file when that file already exists: &#39;pest_files\\flopy&#39;</pre>
+<span class="ansi-red-intense-fg ansi-bold">Exception</span>: run() returned non-zero: 100</pre>
 </div>
 </div>
 
