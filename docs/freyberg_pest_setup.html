@@ -14669,6 +14669,11 @@ many contexts in which a user may need to construct their own PEST input dataset
 
 <span class="c1"># run our convenience functions to prepare the PEST and model folder</span>
 <span class="n">hbd</span><span class="o">.</span><span class="n">prep_pest</span><span class="p">(</span><span class="n">tmp_d</span><span class="p">)</span>
+
+<span class="c1"># get executables</span>
+<span class="n">hbd</span><span class="o">.</span><span class="n">prep_bins</span><span class="p">(</span><span class="n">tmp_d</span><span class="p">)</span>
+<span class="c1"># get dependency folders</span>
+<span class="n">hbd</span><span class="o">.</span><span class="n">prep_deps</span><span class="p">(</span><span class="n">tmp_d</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14711,6 +14716,8 @@ Input <span class="ansi-green-intense-fg ansi-bold">In [2]</span>, in <span clas
 <span class="ansi-green-fg">      2</span> tmp_d <span style="color: rgb(98,98,98)">=</span> os<span style="color: rgb(98,98,98)">.</span>path<span style="color: rgb(98,98,98)">.</span>join(<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">pest_files</span><span style="color: rgb(175,0,0)">&#39;</span>)
 <span class="ansi-green-fg">      4</span> <span style="color: rgb(95,135,135)"># run our convenience functions to prepare the PEST and model folder</span>
 <span class="ansi-green-intense-fg ansi-bold">----&gt; 5</span> <span class="ansi-yellow-bg">hbd</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">prep_pest</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">tmp_d</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">      7</span> <span style="color: rgb(95,135,135)"># get executables</span>
+<span class="ansi-green-fg">      8</span> hbd<span style="color: rgb(98,98,98)">.</span>prep_bins(tmp_d)
 
 File <span class="ansi-green-intense-fg ansi-bold">D:\Workspace\hugm0001\github\GMDSI_notebooks\tutorials\part1_pest_setup\..\herebedragons.py:346</span>, in <span class="ansi-cyan-fg">prep_pest</span><span class="ansi-blue-intense-fg ansi-bold">(tmp_d)</span>
 <span class="ansi-green-fg">    343</span> pst<span style="color: rgb(98,98,98)">.</span>write(pstfile)
