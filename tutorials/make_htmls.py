@@ -1,6 +1,6 @@
 import os
 import shutil
-html_dir = os.path.join("..", "htmls")
+html_dir = os.path.join("..", "docs")
 
 dirs = [d for d in os.listdir(".") if os.path.isdir(d)]
 for d in dirs:
