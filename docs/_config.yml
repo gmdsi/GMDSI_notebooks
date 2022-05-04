@@ -5,3 +5,5 @@ minimal_mistakes_skin: "contrast" # "air", "aqua", "contrast", "dark", "dirt", "
 
 plugins:
   - jekyll-include-cache
+
+theme: jekyll-theme-slate
