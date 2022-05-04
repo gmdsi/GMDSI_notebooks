@@ -103,6 +103,13 @@ gwf = sim.get_model()
 sim.run_simulation()
 ```
 
+
+
+
+    (True, [])
+
+
+
 #### 2.3. Model Domain, BCs and Properties
 
 The figure belows shows the model domain and boundary conditions. The model has 3 layers, 40 rows and 20 columns. Cell dimensions are 250m x 250m. There are inactive outcrop areas within the model domain (shown in black in the figure).
@@ -112,6 +119,9 @@ The figure belows shows the model domain and boundary conditions. The model has 
 dis = gwf.dis
 print(f'layers:{dis.nlay.get_data()} nrows:{dis.nrow.get_data()} columns:{dis.ncol.get_data()}')
 ```
+
+    layers:3 nrows:40 columns:20
+    
 
 There is a GHB along the southern boundary in all layers. All other external boundaries are no-flow. 
 
@@ -141,6 +151,12 @@ mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=2)
 mm.plot_bc('wel');
 ```
 
+
+    
+![png](freyberg_intro_model_files/freyberg_intro_model_10_0.png)
+    
+
+
 Take a quick look at everyone's favourite parameter, hydraulic conductivity (K). Values in the plot below show K in layer 1. If you check each layer (by changing the mflay value), you will see different initial values in each. 
 
 Layer 3 is the most permeable. Layer 2 has low permeabilities. Layer 1 is somewhere in between. 
@@ -149,6 +165,12 @@ Layer 3 is the most permeable. Layer 2 has low permeabilities. Layer 1 is somewh
 ```python
 gwf.npf.k.plot(colorbar=True, mflay=0);
 ```
+
+
+    
+![png](freyberg_intro_model_files/freyberg_intro_model_12_0.png)
+    
+
 
 Surface topography and the bottom elevation are not uniform (see plots below). The middle layer has a constant thickness of 2.5m, with a top and bottom elevation of 32.5m and 30m, respectively.
 
@@ -160,6 +182,18 @@ gwf.dis.top.plot(colorbar=True, masked_values=[-1049.99])
 # plot bottom of bottom layer
 gwf.dis.botm.plot(colorbar=True, mflay=2);
 ```
+
+
+    
+![png](freyberg_intro_model_files/freyberg_intro_model_14_0.png)
+    
+
+
+
+    
+![png](freyberg_intro_model_files/freyberg_intro_model_14_1.png)
+    
+
 
 #### 2.4 Model Timing
 
@@ -184,6 +218,10 @@ for i in gwf.obs:
     print(i.output.obs_names)
 ```
 
+    ['sfr.csv']
+    ['heads.csv']
+    
+
 
 ```python
 def obs2df(i):
@@ -202,12 +240,94 @@ sfr_obs = obs2df(gwf.obs[0])
 sfr_obs.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>totim</th>
+      <th>HEADWATER</th>
+      <th>TAILWATER</th>
+      <th>GAGE1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3652.5</td>
+      <td>-751.85</td>
+      <td>-531.46</td>
+      <td>1365.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3683.5</td>
+      <td>-952.74</td>
+      <td>-674.01</td>
+      <td>1759.3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3712.5</td>
+      <td>-1109.70</td>
+      <td>-798.24</td>
+      <td>2046.9</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3743.5</td>
+      <td>-1181.90</td>
+      <td>-854.51</td>
+      <td>2165.1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>3773.5</td>
+      <td>-1138.00</td>
+      <td>-821.46</td>
+      <td>2064.4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 Simulated values for surface-water flow at the terminal reach are recorded in the "GAGE_1" column:
 
 
 ```python
 sfr_obs.plot(x='totim', y='GAGE1')
 ```
+
+
+
+
+    <AxesSubplot:xlabel='totim'>
+
+
+
+
+    
+![png](freyberg_intro_model_files/freyberg_intro_model_22_1.png)
+    
+
 
 Simulated groundwater l are recorded in the "heads.csv" file. Several monitoring sites are simulated, however there is measured data for a only a few of these. 
 
@@ -225,12 +345,197 @@ hds_obs = obs2df(gwf.obs[1])
 hds_obs.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>totim</th>
+      <th>TRGW2215</th>
+      <th>TRGW229</th>
+      <th>TRGW238</th>
+      <th>TRGW291</th>
+      <th>TRGW21310</th>
+      <th>TRGW21516</th>
+      <th>TRGW22110</th>
+      <th>TRGW22215</th>
+      <th>TRGW2244</th>
+      <th>...</th>
+      <th>TRGW091</th>
+      <th>TRGW01310</th>
+      <th>TRGW01516</th>
+      <th>TRGW02110</th>
+      <th>TRGW02215</th>
+      <th>TRGW0244</th>
+      <th>TRGW0266</th>
+      <th>TRGW02915</th>
+      <th>TRGW0337</th>
+      <th>TRGW03410</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3652.5</td>
+      <td>34.399290</td>
+      <td>34.691525</td>
+      <td>34.728569</td>
+      <td>35.061060</td>
+      <td>34.320957</td>
+      <td>34.180851</td>
+      <td>34.200938</td>
+      <td>34.066219</td>
+      <td>34.405733</td>
+      <td>...</td>
+      <td>35.068338</td>
+      <td>34.326896</td>
+      <td>34.186174</td>
+      <td>34.206846</td>
+      <td>34.025747</td>
+      <td>34.412096</td>
+      <td>34.251506</td>
+      <td>33.937832</td>
+      <td>34.030710</td>
+      <td>33.923445</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3683.5</td>
+      <td>34.473764</td>
+      <td>34.772123</td>
+      <td>34.809126</td>
+      <td>35.126827</td>
+      <td>34.434959</td>
+      <td>34.283819</td>
+      <td>34.319984</td>
+      <td>34.171011</td>
+      <td>34.515566</td>
+      <td>...</td>
+      <td>35.133817</td>
+      <td>34.440124</td>
+      <td>34.288730</td>
+      <td>34.324980</td>
+      <td>34.115906</td>
+      <td>34.520964</td>
+      <td>34.379532</td>
+      <td>34.016423</td>
+      <td>34.141237</td>
+      <td>34.034923</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3712.5</td>
+      <td>34.539742</td>
+      <td>34.855185</td>
+      <td>34.893566</td>
+      <td>35.211003</td>
+      <td>34.527661</td>
+      <td>34.363167</td>
+      <td>34.417107</td>
+      <td>34.247456</td>
+      <td>34.620546</td>
+      <td>...</td>
+      <td>35.217810</td>
+      <td>34.533812</td>
+      <td>34.369042</td>
+      <td>34.423098</td>
+      <td>34.182401</td>
+      <td>34.626410</td>
+      <td>34.485296</td>
+      <td>34.078743</td>
+      <td>34.229400</td>
+      <td>34.111873</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3743.5</td>
+      <td>34.577505</td>
+      <td>34.912040</td>
+      <td>34.952401</td>
+      <td>35.282335</td>
+      <td>34.573685</td>
+      <td>34.398859</td>
+      <td>34.465330</td>
+      <td>34.280521</td>
+      <td>34.686225</td>
+      <td>...</td>
+      <td>35.289225</td>
+      <td>34.580980</td>
+      <td>34.405657</td>
+      <td>34.472538</td>
+      <td>34.211387</td>
+      <td>34.693043</td>
+      <td>34.541211</td>
+      <td>34.107372</td>
+      <td>34.271897</td>
+      <td>34.142187</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>3773.5</td>
+      <td>34.568882</td>
+      <td>34.913084</td>
+      <td>34.954807</td>
+      <td>35.301600</td>
+      <td>34.552253</td>
+      <td>34.376324</td>
+      <td>34.442806</td>
+      <td>34.256405</td>
+      <td>34.679251</td>
+      <td>...</td>
+      <td>35.308694</td>
+      <td>34.560270</td>
+      <td>34.383636</td>
+      <td>34.450839</td>
+      <td>34.190749</td>
+      <td>34.686945</td>
+      <td>34.520264</td>
+      <td>34.090823</td>
+      <td>34.249617</td>
+      <td>34.113480</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 27 columns</p>
+</div>
+
+
+
 Let's make a quick plot of time series of simulated groundwater levels from both layers at a single location:
 
 
 ```python
 hds_obs.plot(x='totim', y=['TRGW0266','TRGW2266'])
 ```
+
+
+
+
+    <AxesSubplot:xlabel='totim'>
+
+
+
+
+    
+![png](freyberg_intro_model_files/freyberg_intro_model_26_1.png)
+    
+
 
 Whilst we are at it, lets just make a plot of the spatial distribution of heads in the upper layer. (Heas in the other layers are very similar.)
 
@@ -240,6 +545,12 @@ hdobj = gwf.output.head()
 times = hdobj.get_times()
 hdobj.plot(mflay=0, colorbar=True, totim=times[-1], masked_values=[1e30]);
 ```
+
+
+    
+![png](freyberg_intro_model_files/freyberg_intro_model_28_0.png)
+    
+
 
 ### 4. Forecasts
 
