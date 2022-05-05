@@ -22,10 +22,10 @@ __Please be aware that these notebooks are under development and subject to chan
 2. [Introduction to the Freyberg Model](https://gmdsi.github.io/GMDSI_notebooks/freyberg_intro_model)
 3. [Construct a High-Dimensional PEST-Interface with pyEMU](https://gmdsi.github.io/GMDSI_notebooks/freyberg_pstfrom_pest_setup)
 4. [Observations, Weights and Noise](https://gmdsi.github.io/GMDSI_notebooks/freyberg_obs_and_weights)
-5. [GLM Part1 - Calculating a Jacobian Matrix](https://gmdsi.github.io/GMDSI_notebooks/freyberg_glm_1)
-6. [FOSM and Data Worth](https://gmdsi.github.io/GMDSI_notebooks/freyberg_fosm_and_dataworth)
-7. [GLM Part2 - Highly-Parameterized Regularized-Inversion](https://gmdsi.github.io/GMDSI_notebooks/freyberg_glm_2)
-8. [Prior Monte Carlo](https://gmdsi.github.io/GMDSI_notebooks/freyberg_prior_monte_carlo)
+5. [Prior Monte Carlo](https://gmdsi.github.io/GMDSI_notebooks/freyberg_prior_monte_carlo)
+6. [GLM Part1 - Calculating a Jacobian Matrix](https://gmdsi.github.io/GMDSI_notebooks/freyberg_glm_1)
+7. [FOSM and Data Worth](https://gmdsi.github.io/GMDSI_notebooks/freyberg_fosm_and_dataworth)
+8. [GLM Part2 - Highly-Parameterized Regularized-Inversion](https://gmdsi.github.io/GMDSI_notebooks/freyberg_glm_2)
 9. [IES Part1 - Introducing the Iterative Ensemble Smoother](https://gmdsi.github.io/GMDSI_notebooks/freyberg_ies)
 10.  ...
 
