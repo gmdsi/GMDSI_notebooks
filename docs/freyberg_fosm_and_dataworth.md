@@ -1210,7 +1210,6 @@ for forecast in dw_ad.columns:
     fore_df_ad.iloc[:20].plot(kind="bar",color="b", ax=ax)
     ax.set_title(forecast)
     ax.set_ylabel("percent variance decrease")
-#plt.tight_layout()
 plt.show()
 ```
 
