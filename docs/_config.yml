@@ -1,3 +1,5 @@
 remote-theme: CloudCannon/edition-jekyll-template #jekyll/minima
 title: Groundwater Modelling Decision-Support Notebooks
 description: ""
+
+theme: jekyll-theme-slate
