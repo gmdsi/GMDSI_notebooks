@@ -1,4 +1,4 @@
-# FOSM, data worth and related assessments
+# FOSM, Data Worth and Related Assessments
 
 Linear uncertainty analysis is also known as “first order second moment” (or FOSM) analysis. It provides approximate mathematical characterisation of prior predictive probability distributions, and of posterior parameter and predictive probability distributions. It has other uses as well. It can be used to demonstrate how the history-matching process bestows worth on data. It can also be deployed to track the flow of information from field measurements of system state to parameters, and ultimately from parameters to model predictions. It does all of these things by implementing Bayes equation under the following assumptions:
 
@@ -122,7 +122,7 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x20e7fb6f880>
+    <matplotlib.colorbar.Colorbar at 0x15a03fbfcd0>
 
 
 
@@ -173,7 +173,7 @@ sc
 
 
 
-    <pyemu.sc.Schur at 0x20e7827c7f0>
+    <pyemu.sc.Schur at 0x15a07246a00>
 
 
 
@@ -244,7 +244,7 @@ sc.posterior_parameter
 
 
 
-    <pyemu.mat.mat_handler.Cov at 0x20e5dcd4430>
+    <pyemu.mat.mat_handler.Cov at 0x15a07b62d90>
 
 
 
@@ -320,7 +320,7 @@ plt.colorbar(c)
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x20e7eaa3ee0>
+    <matplotlib.colorbar.Colorbar at 0x15a04337220>
 
 
 
@@ -887,7 +887,7 @@ for forecast in par_contrib.columns:
     fore_df.iloc[:10].plot(kind="bar",color="tab:blue", ax =ax)
     ax.set_title(forecast)
     ax.set_ylabel("percent variance reduction")
-plt.tight_layout()
+#plt.tight_layout()
 plt.show()
 ```
 
@@ -1175,10 +1175,10 @@ for forecast in dw_rm.columns:
     i+=1
     fore_df = dw_rm.loc[:,forecast].copy()
     fore_df.sort_values(inplace=True, ascending=False)
-    fore_df.iloc[:10].plot(kind="bar",color="b", ax=ax)
-    ax.set_title(forecast)
+    fore_df.iloc[:10].plot(kind="bar",color="tab:blue", ax=ax)
+    ax.set_title(forecast.split(':')[-2:])
     ax.set_ylabel("percent variance increase")
-plt.tight_layout()
+#plt.tight_layout()
 plt.show()
 ```
 
@@ -1207,9 +1207,10 @@ for forecast in dw_ad.columns:
     i+=1
     fore_df_ad = dw_ad.loc[:,forecast].copy()
     fore_df_ad.sort_values(inplace=True, ascending=False)
-    fore_df_ad.iloc[:20].plot(kind="bar",color="b", ax=ax)
-    ax.set_title(forecast)
+    fore_df_ad.iloc[:20].plot(kind="bar",color="tab:blue", ax=ax)
+    ax.set_title(forecast.split(':')[-2:])
     ax.set_ylabel("percent variance decrease")
+#plt.tight_layout()
 plt.show()
 ```
 
@@ -1261,9 +1262,7 @@ Now we repeat the analysis above with the new dictionary of potential new observ
 
 An __important__ detail here: the potential new observation weights. 
 
-Inherent to these analyses is the assumption that calibration will be able to achieve a fit with observation data that reflects measurement noise (and that the observation weight is equal to the inverse of the standard deviation of noise). 
-
-We need to provide `pyemu` with the weights for these potential new observations. Weights need to reflect expected measurement noise. We do so by passing the a value to `reset_zero_weight` when calling `get_added_obs_importance()`.
+Inherent to these analyses is the assumption that calibration will be able to achieve a fit with observation data that reflects measurement noise (and that the observation weight is equal to the inverse of the standard deviation of noise). We need to provide `pyemu` with the weights for these potential new observations. Weights need to reflect expected measurement noise. We do so by passing the a value to `reset_zero_weight` when calling `get_added_obs_importance()`.
 
 Let's assign the same weight to all new obsevrations:
 
@@ -1292,7 +1291,7 @@ df_worth_new= sc.get_added_obs_importance(base_obslist=sc.pst.nnz_obs_names,
 print("took:",datetime.now() - start)
 ```
 
-    took: 0:01:59.912469
+    took: 0:01:55.739765
     
 
 As before, `get_added_obs_importance()` returns a dataframe with a column for each forecast, and a row for each potential new observation:
