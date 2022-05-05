@@ -3,7 +3,7 @@ layout: default
 title: GMDSI Tutorial Notebooks
 nav_order: 1
 has_children: true
-permalink: /docs
+permalink: /
 ---
 
 ## Welcome to the GMDSI Tutorial Notebooks
