@@ -10,8 +10,8 @@ for d in dirs:
         os.system("jupyter nbconvert --to markdown {0}".format(nb_file))
         html_file = os.path.basename(nb_file).replace('.ipynb', '.md')
         shutil.move(os.path.join(d, html_file), os.path.join(html_dir, html_file))
-        figs_dir = os.path.join(d,html_file.replace(".md", "_files"))
-        if os.path.exists(figs_dir):
-            shutil.move(figs_dir, os.path.join(html_dir, figs_dir))
+        figs_dir = html_file.replace(".md", "_files")
+        if os.path.exists(os.path.join(d, figs_dir)):
+            shutil.move(os.path.join(d, figs_dir), os.path.join(html_dir, figs_dir))
         print('preped htmlfile: ', os.path.join(html_dir, html_file))
 
