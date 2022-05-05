@@ -14659,39 +14659,8 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <pre>ins file for heads.csv prepared.
 ins file for sfr.csv prepared.
 noptmax:0, npar_adj:3, nnz_obs:312
+written pest control file: freyberg_k\freyberg.pst
 </pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre>
-<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
-<span class="ansi-red-intense-fg ansi-bold">Exception</span>                                 Traceback (most recent call last)
-Input <span class="ansi-green-intense-fg ansi-bold">In [2]</span>, in <span class="ansi-cyan-fg">&lt;cell line: 9&gt;</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
-<span class="ansi-green-fg">      7</span> hbd<span style="color: rgb(98,98,98)">.</span>prep_deps(tmp_d)
-<span class="ansi-green-fg">      8</span> <span style="color: rgb(95,135,135)"># run our convenience functions to prepare the PEST and model folder</span>
-<span class="ansi-green-intense-fg ansi-bold">----&gt; 9</span> <span class="ansi-yellow-bg">hbd</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">prep_pest</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">tmp_d</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-intense-fg ansi-bold">D:\Workspace\hugm0001\github\GMDSI_notebooks\tutorials\part1_k\..\herebedragons.py:348</span>, in <span class="ansi-cyan-fg">prep_pest</span><span class="ansi-blue-intense-fg ansi-bold">(tmp_d)</span>
-<span class="ansi-green-fg">    345</span> pst<span style="color: rgb(98,98,98)">.</span>write(pstfile)
-<span class="ansi-green-fg">    347</span> clean_pst4pestchek(pstfile, par)
-<span class="ansi-green-intense-fg ansi-bold">--&gt; 348</span> <span class="ansi-yellow-bg">pyemu</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">utils</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">run</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">f</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">pestchek </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,95,135)">{</span><span class="ansi-yellow-bg">os</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">path</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">basename</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">pstfile</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,95,135)">}</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">cwd</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">tmp_d</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg">    350</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">f</span><span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">written pest control file: </span><span class="ansi-bold" style="color: rgb(175,95,135)">{</span>pstfile<span class="ansi-bold" style="color: rgb(175,95,135)">}</span><span style="color: rgb(175,0,0)">&#39;</span>)
-
-File <span class="ansi-green-intense-fg ansi-bold">D:\github\pyemu\pyemu\utils\os_utils.py:126</span>, in <span class="ansi-cyan-fg">run</span><span class="ansi-blue-intense-fg ansi-bold">(cmd_str, cwd, verbose)</span>
-<span class="ansi-green-fg">    124</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">window</span><span style="color: rgb(175,0,0)">&#34;</span> <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> platform<span style="color: rgb(98,98,98)">.</span>platform()<span style="color: rgb(98,98,98)">.</span>lower():
-<span class="ansi-green-fg">    125</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> ret_val <span style="color: rgb(98,98,98)">!=</span> <span style="color: rgb(98,98,98)">0</span>:
-<span class="ansi-green-intense-fg ansi-bold">--&gt; 126</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">Exception</span>(<span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">run() returned non-zero: </span><span class="ansi-bold" style="color: rgb(175,95,135)">{0}</span><span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(98,98,98)">.</span>format(ret_val))
-<span class="ansi-green-fg">    127</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-<span class="ansi-green-fg">    128</span>     estat <span style="color: rgb(98,98,98)">=</span> os<span style="color: rgb(98,98,98)">.</span>WEXITSTATUS(ret_val)
-
-<span class="ansi-red-intense-fg ansi-bold">Exception</span>: run() returned non-zero: 100</pre>
 </div>
 </div>
 
