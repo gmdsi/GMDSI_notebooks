@@ -1,6 +1,6 @@
 ---
 layout: default
-title: UI Components
+title: Decision Support Modelling with pyEMU and PEST++
 nav_order: 3
 has_children: true
 permalink: /docs/part1
