@@ -9,6 +9,7 @@ for d in dirs:
         print(nb_file)
         os.system("jupyter nbconvert --to markdown {0}".format(nb_file))
         html_file = os.path.basename(nb_file).replace('.ipynb', '.md')
+        os.remove(os.path.join(html_dir, html_file))
         shutil.move(os.path.join(d, html_file), os.path.join(html_dir, html_file))
         figs_dir = html_file.replace(".md", "_files")
         if os.path.exists(os.path.join(d, figs_dir)):
