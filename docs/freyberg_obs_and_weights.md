@@ -51,12 +51,13 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt;
 import matplotlib
-matplotlib.rcParams.update({'font.size': 8})
 
 import sys
 sys.path.append(os.path.join("..", "..", "dependencies"))
 import pyemu
 import flopy
+
+plt.rcParams.update({'font.size': 10})
 
 sys.path.append("..")
 import herebedragons as hbd
@@ -1345,7 +1346,7 @@ plt.tight_layout()
     
 
 
-Better! Now weights reflect the quality of the data. Another aspect to consider is if obsveration group contributions to phi are balanced...do you think any of these observation groups will dominate phi (or be lost)? 
+Better! Now weights reflect the quality of the data. Another aspect to consider is if obsveration group contributions to phi are relatively balanced...do you think any of these observation groups will dominate phi (or be lost)? 
 
 The next cell adds in a column to the `pst.observation_data` for checking purposes in subsequent tutorials. Pretend you didn't see it :)
 
@@ -1729,7 +1730,7 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x1ed64684e20>
+    <matplotlib.colorbar.Colorbar at 0x1d880683a90>
 
 
 
@@ -1754,7 +1755,7 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x1ed64a32250>
+    <matplotlib.colorbar.Colorbar at 0x1d880a17b50>
 
 
 
@@ -1837,19 +1838,12 @@ If you made it this far, good on you! Let's finish with some eye candy!
 ```python
 x = obs_cov_tv.to_pearson().x
 x[np.abs(x)<0.00001]= np.nan
-plt.imshow(x)
+plt.imshow(x);
 ```
 
 
-
-
-    <matplotlib.image.AxesImage at 0x1ed6502ab80>
-
-
-
-
     
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_93_1.png)
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_93_0.png)
     
 
 

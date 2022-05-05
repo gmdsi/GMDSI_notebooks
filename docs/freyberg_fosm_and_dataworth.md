@@ -44,7 +44,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt;
-plt.rcParams.update({'font.size': 8})
+
 
 import shutil 
 import scipy.stats as stats
@@ -54,6 +54,8 @@ import sys
 sys.path.append(os.path.join("..", "..", "dependencies"))
 import pyemu
 import flopy
+
+plt.rcParams.update({'font.size': 10})
 ```
 
 We are going to make use of the outcomes of the "freyberg_glm_1" tutorial, in which we ran `PEST++GLM` to calculate the Jacobian matrix prior to calibration. If you ran the notebook yourself, they should be recorded in the folder named "master_glm_1".
@@ -120,7 +122,7 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x223c6599070>
+    <matplotlib.colorbar.Colorbar at 0x20e7fb6f880>
 
 
 
@@ -171,7 +173,7 @@ sc
 
 
 
-    <pyemu.sc.Schur at 0x223c4502a60>
+    <pyemu.sc.Schur at 0x20e7827c7f0>
 
 
 
@@ -242,7 +244,7 @@ sc.posterior_parameter
 
 
 
-    <pyemu.mat.mat_handler.Cov at 0x223c454cc10>
+    <pyemu.mat.mat_handler.Cov at 0x20e5dcd4430>
 
 
 
@@ -318,7 +320,7 @@ plt.colorbar(c)
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x223c33ac0d0>
+    <matplotlib.colorbar.Colorbar at 0x20e7eaa3ee0>
 
 
 
@@ -1208,7 +1210,7 @@ for forecast in dw_ad.columns:
     fore_df_ad.iloc[:20].plot(kind="bar",color="b", ax=ax)
     ax.set_title(forecast)
     ax.set_ylabel("percent variance decrease")
-plt.tight_layout()
+#plt.tight_layout()
 plt.show()
 ```
 
@@ -1291,7 +1293,7 @@ df_worth_new= sc.get_added_obs_importance(base_obslist=sc.pst.nnz_obs_names,
 print("took:",datetime.now() - start)
 ```
 
-    took: 0:01:57.331567
+    took: 0:01:59.912469
     
 
 As before, `get_added_obs_importance()` returns a dataframe with a column for each forecast, and a row for each potential new observation:
@@ -1617,7 +1619,7 @@ next_most_df = sc.next_most_important_added_obs(forecast=forecast_name,
 print("took:",datetime.now() - start)
 ```
 
-    took: 0:09:56.886872
+    took: 0:09:41.669446
     
 
 
@@ -1709,6 +1711,4 @@ fig = plot_added_importance(df_worth_new_plot,
     
 
 
-And there we have it - a usefull tool to guide data collection with the aim of reducing forecast uncertainty. It is important to recall that a major assumption underpinning these analyses is that the model is able to fit observations to a level comensurate with measurment noise. This is a pretty big assumption which is revisted in the "freyberg_glm_2" tutorial. 
-
-
+And there we have it - a usefull tool to guide data collection with the aim of reducing forecast uncertainty. It is important to recall that a major assumption underpinning these analyses is that the model is able to fit observations to a level comensurate with measurment noise. This is a pretty big assumption! Not so easy, as we will see in the "freyberg_glm_2" tutorial.
