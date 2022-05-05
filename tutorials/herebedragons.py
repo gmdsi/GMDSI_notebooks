@@ -54,7 +54,7 @@ def prep_forecasts(pst):
             obs_sufix = col.lower()+"_"+time_str
         if type(obs_sufix)==str:
             obs_sufix=[obs_sufix]
-    
+
         for string, oval, time in zip(obs_sufix,obs_data.loc[:,col].values, obs_data.index.values):
                 if not any(string in obsnme for obsnme in obs_names):
                     missing.append(string)
@@ -65,11 +65,13 @@ def prep_forecasts(pst):
                     if type(obsnme) == str:
                         obsnme=[obsnme]
                     obsnme = obsnme[0]
+                    if obsnme=='part_time':
+                        oval = pred_data.loc['part_time', 'value']
                     # assign the obsvals
                     obs.loc[obsnme,"obsval"] = oval
                         ## assign a generic weight
                         #if time > 3652.5 and time <=4018.5:
-                        #    obs.loc[obsnme,"weight"] = 1.0     
+                        #    obs.loc[obsnme,"weight"] = 1.0      
     return 
 
 def prep_deps(template_ws, dep_dir=None):
@@ -77,6 +79,8 @@ def prep_deps(template_ws, dep_dir=None):
     for org_d in [os.path.join(dep_dir,"flopy"),os.path.join(dep_dir,"pyemu")]:
         #org_d = i.path
         new_d = os.path.join(template_ws, os.path.basename(org_d))
+        if os.path.exists(new_d):
+            shutil.rmtree(new_d)
         shutil.copytree(org_d, new_d)
     return
 
@@ -343,7 +347,7 @@ def prep_pest(tmp_d):
     pst.write(pstfile)
 
     clean_pst4pestchek(pstfile, par)
-    pyemu.utils.run(f'pestchek {os.path.basename(pstfile)}', cwd=tmp_d)
+    #pyemu.utils.run(f'pestchek {os.path.basename(pstfile)}', cwd=tmp_d)
 
     return print(f'written pest control file: {pstfile}')
 
