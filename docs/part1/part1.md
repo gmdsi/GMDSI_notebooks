@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Introduction to Theory, Concepts and PEST Mechanic
-nav_order: 2
+nav_order: 3
 has_children: true
 permalink: /docs/part1
 ---
