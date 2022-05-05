@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Decision Support Modelling with pyEMU and PEST++
-nav_order: 3
+title: Introduction to Theory, Concepts and PEST Mechanic
+nav_order: 2
 has_children: true
 permalink: /docs/part1
 ---
 
-# Decision Support Modelling with pyEMU and PEST++
+# Introduction to Theory, Concepts and PEST Mechanics
 
 {: .fs-6 .fw-300 }
