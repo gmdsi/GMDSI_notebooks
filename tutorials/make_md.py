@@ -12,6 +12,7 @@ for d in dirs:
         shutil.move(os.path.join(d, html_file), os.path.join(html_dir, html_file))
         figs_dir = html_file.replace(".md", "_files")
         if os.path.exists(os.path.join(d, figs_dir)):
+            shutil.rmtree(os.path.join(html_dir, figs_dir))
             shutil.move(os.path.join(d, figs_dir), os.path.join(html_dir, figs_dir))
         print('preped htmlfile: ', os.path.join(html_dir, html_file))
 
