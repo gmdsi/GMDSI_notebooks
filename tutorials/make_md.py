@@ -8,15 +8,15 @@ def add_header(md_file, parent, nav_order, title):
         if first_line != "---":
             lines = f.readlines()
             f.seek(0)
-            f.write(
-                    f"""
----
+            f.write(                   
+f"""---
 layout: default
 title: {title}
 parent: {parent}
 nav_order: {nav_order}
 ---
-                    """
+
+"""
                     )
             f.write(first_line)
             f.writelines(lines) 

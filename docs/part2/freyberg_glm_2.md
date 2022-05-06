@@ -1,11 +1,11 @@
-
 ---
 layout: default
 title: Highly-Parameterized Regularized Inversion
 parent: Decision Support Modelling with pyEMU and PEST++
 nav_order: 6
 ---
-                    # Highly Parameterized Inversion
+
+# Highly Parameterized Inversion
 
 The current tutorial continues where the "freyberg glm part1" notebook left off. The "freyberg intro to model" and "freyberg pstfrom pest setup" provide details on the model and PEST dataset. The "freyberg glm 1" notebooks introduced changes to the PEST setup that are relevant to the current tutorial. You do not need to know the details of all these noteboks to follow along with general points of the current tutorial - but it helps! 
 

@@ -1,11 +1,11 @@
-
 ---
 layout: default
 title: Manual Trial-and-Error
 parent: Introduction to Theory, Concepts and PEST Mechanic
 nav_order: 1
 ---
-                    # Manual Trial-and-Error
+
+# Manual Trial-and-Error
 
 In the current notebook we will explore some concepts through manual history-matching (or trial-and-error). Many of these concepts are explained in greater detail in *Applied Groundwater Modeling (2nd edition)* by Anderson et al. (2015). Here, we will "manually" adjust model parameter values, run the model, and then compare model outputs to measured values. This process is repeated until the modeller is satisfied with the fit between measured and simulated values.
 

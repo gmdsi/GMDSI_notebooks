@@ -1,11 +1,11 @@
-
 ---
 layout: default
 title: PEST Basics
 parent: Introduction to Theory, Concepts and PEST Mechanic
 nav_order: 2
 ---
-                    # A Whirlwind Introduction to PEST(++)
+
+# A Whirlwind Introduction to PEST(++)
 
 In this notebook we introduce the automated parameter estimation tools PEST and PEST++. This introduction is far from comprehensive. Our goal here is to provide you the basics to understand the "plumbing" of how PEST interacts with a "model".
 

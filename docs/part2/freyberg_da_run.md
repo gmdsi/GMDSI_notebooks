@@ -1,11 +1,11 @@
-
 ---
 layout: default
 title: Sequential Data Assimilation with PEST++DA
 parent: Decision Support Modelling with pyEMU and PEST++
 nav_order: 9
 ---
-                    # Run this beast!
+
+# Run this beast!
 
 
 ```python

@@ -1,11 +1,11 @@
-
 ---
 layout: default
 title: Intro to Regression
 parent: Introductions to Selected Topics
 nav_order: 2
 ---
-                    # Introduction to Regression
+
+# Introduction to Regression
 
 This tutorial proves an overview of linear regression. It illustrates fitting a polynomial to noisy data, including the role of SSE (reponse curve), degrees of freedom, the gradient of that surface (Jacobian) and overfitting.
 

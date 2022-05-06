@@ -1,11 +1,11 @@
-
 ---
 layout: default
 title: Prior Monte Carlo
 parent: Decision Support Modelling with pyEMU and PEST++
 nav_order: 3
 ---
-                    # Prior Monte Carlo
+
+# Prior Monte Carlo
 
 Prior-based (or "unconstrained") Monte Carlo is a usefull, but quite often underused, analysis. It is conceptually simple, does not require much in terms of algorithmic controls and forces the modeller to think about the prior parameter probability distribution - both the mean vector (i.e. the initial parameter values) and the prior parameter covariance matrix. 
 
