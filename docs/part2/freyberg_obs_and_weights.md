@@ -1,4 +1,11 @@
-# Formulating the Objective Function and The Dark Art of Weighting
+
+---
+layout: default
+title: Observation Values, Weights and Noise
+parent: Decision Support Modelling with pyEMU and PEST++
+nav_order: 2
+---
+                    # Formulating the Objective Function and The Dark Art of Weighting
 
 The objective function expresses model-to-measurement misfit for use in the solution of an inverse problem through the *weighted squared difference between measured and simulated observations*. There is no formula for a universally "best approach" to formulate an objective function. However, the universal underlying principle is to ensure that as much information as possible is transferred to the parameters of a model, in as "safe" a way as possible (Doherty, 2015). 
 

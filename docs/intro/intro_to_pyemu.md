@@ -1,4 +1,11 @@
-# Intro to pyEMU
+
+---
+layout: default
+title: Intro to pyEMU
+parent: Introductions to Selected Topics
+nav_order: 3
+---
+                    # Intro to pyEMU
 
 This notebook provides a quick run through some of the capabilities of `pyemu` for working with PEST(++). This run through is very "high level". We will not go into detail, merely show some of the core functionality as a primer for subsequent tutorials. We assume the reader has at least some understanding of PEST(++), common file structures and workflows.
 

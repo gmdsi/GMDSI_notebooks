@@ -1,4 +1,11 @@
-# Filling a Jacobian Matrix
+
+---
+layout: default
+title: Calculating a Jacobian Matrix
+parent: Decision Support Modelling with pyEMU and PEST++
+nav_order: 4
+---
+                    # Filling a Jacobian Matrix
 
 This notebook is an optional, but recommended, first step for a workflow that implements linear uncertainty analysis (i.e. FOSM), data worth analysis and highly-parameterized regularised inversion (i.e. calibration). It will be relatively short, but provides the foundation for subsequet tutorials. 
 

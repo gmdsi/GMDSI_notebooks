@@ -1,4 +1,11 @@
-# History Match Freyberg using K
+
+---
+layout: default
+title: Automated Calibration with PEST
+parent: Introduction to Theory, Concepts and PEST Mechanic
+nav_order: 3
+---
+                    # History Match Freyberg using K
 
 In this notebook we will start to ease our way into using PEST++ for history-matching and uncertainty analysis. We will start by revisting the Freyberg model and the PEST control file. Both of these are pre-prepared and provided for you. We will calibrate the model by adjusting a single hydraulic property (hydraulic conductivity) and then look at typical summary statstics and plots that describe our degree of fit. 
 

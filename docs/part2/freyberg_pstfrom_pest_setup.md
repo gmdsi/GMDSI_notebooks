@@ -1,4 +1,11 @@
-# Setup the PEST(++) interface around the modified Freyberg model
+
+---
+layout: default
+title: Constructing a High-Dimensional PEST Interface with pyEMU
+parent: Decision Support Modelling with pyEMU and PEST++
+nav_order: 1
+---
+                    # Setup the PEST(++) interface around the modified Freyberg model
 
 In this notebook, we will construct a complex model independent (non-intrusive) interface around an existing `MODFLOW6` model using `pyEMU`. We assume that the reader is at least partially familiar with PEST(++) file formats and working philosophy. 
 

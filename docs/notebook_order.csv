@@ -1,0 +1,17 @@
+title,file,nav_order,parent,folder
+Intro to Geostatistics,intro_to_geostatistics.md,4,Introductions to Selected Topics,intro
+Intro to pyEMU,intro_to_pyemu.md,3,Introductions to Selected Topics,intro
+Intro to Regression,intro_to_regression.md,2,Introductions to Selected Topics,intro
+Intro to Freyberg,freyberg_intro_model.md,1,Introductions to Selected Topics,intro
+Manual Trial-and-Error,freyberg_trial_and_error.md,1,"Introduction to Theory, Concepts and PEST Mechanic",part1
+PEST Basics,freyberg_pest_setup.md,2,"Introduction to Theory, Concepts and PEST Mechanic",part1
+Automated Calibration with PEST,freyberg_k.md,3,"Introduction to Theory, Concepts and PEST Mechanic",part1
+Constructing a High-Dimensional PEST Interface with pyEMU,freyberg_pstfrom_pest_setup.md,1,Decision Support Modelling with pyEMU and PEST++,part2
+"Observation Values, Weights and Noise",freyberg_obs_and_weights.md,2,Decision Support Modelling with pyEMU and PEST++,part2
+Prior Monte Carlo,freyberg_prior_monte_carlo.md,3,Decision Support Modelling with pyEMU and PEST++,part2
+Calculating a Jacobian Matrix,freyberg_glm_1.md,4,Decision Support Modelling with pyEMU and PEST++,part2
+FOSM and Data Worth,freyberg_fosm_and_dataworth.md,5,Decision Support Modelling with pyEMU and PEST++,part2
+Highly-Parameterized Regularized Inversion,freyberg_glm_2.md,6,Decision Support Modelling with pyEMU and PEST++,part2
+Ensemble Methods with PEST++IES,freyberg_ies.md,7,Decision Support Modelling with pyEMU and PEST++,part2
+A New Paradigm - Preparing for Sequential Data Assimilation,freyberg_da_prep.md,8,Decision Support Modelling with pyEMU and PEST++,part2
+Sequential Data Assimilation with PEST++DA,freyberg_da_run.md,9,Decision Support Modelling with pyEMU and PEST++,part2

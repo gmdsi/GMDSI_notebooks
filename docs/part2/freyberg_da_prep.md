@@ -1,4 +1,11 @@
-# Prepare for sequential data assimilation
+
+---
+layout: default
+title: A New Paradigm - Preparing for Sequential Data Assimilation
+parent: Decision Support Modelling with pyEMU and PEST++
+nav_order: 8
+---
+                    # Prepare for sequential data assimilation
 
 Sequential state-parameter estimation is a whole new beast for the PEST world.  Every other tool in PEST and PEST++ operate on the concept of "batch" estimation, where the model is run forward for the full simulation period and PEST(++) simply calls the model and reads the results.  In sequential estimation, PESTPP-DA takes control of the advancing of simulation time.  This opens up some powerful new analyses but requires us to heavily modify the PEST interface and model itself.  This horrible notebook does that...
 

@@ -1,4 +1,11 @@
-# Intro to the model
+
+---
+layout: default
+title: Intro to Freyberg
+parent: Introductions to Selected Topics
+nav_order: 1
+---
+                    # Intro to the model
 
 ### 1. Freyberg (1988) - "An Exercise in Ground-Water Model Calibration and Prediction" 
 

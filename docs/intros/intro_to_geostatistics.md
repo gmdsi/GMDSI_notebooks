@@ -1,3 +1,0 @@
- - why geostatitisc in gw modelling
- - other resources
- - 

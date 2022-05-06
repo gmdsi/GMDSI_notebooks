@@ -1,4 +1,11 @@
-# FOSM, Data Worth and Related Assessments
+
+---
+layout: default
+title: FOSM and Data Worth
+parent: Decision Support Modelling with pyEMU and PEST++
+nav_order: 5
+---
+                    # FOSM, Data Worth and Related Assessments
 
 Linear uncertainty analysis is also known as “first order second moment” (or FOSM) analysis. It provides approximate mathematical characterisation of prior predictive probability distributions, and of posterior parameter and predictive probability distributions. It has other uses as well. It can be used to demonstrate how the history-matching process bestows worth on data. It can also be deployed to track the flow of information from field measurements of system state to parameters, and ultimately from parameters to model predictions. It does all of these things by implementing Bayes equation under the following assumptions:
 
