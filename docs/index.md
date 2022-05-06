@@ -2,7 +2,7 @@
 layout: default
 title: GMDSI Tutorial Notebooks
 nav_order: 1
-has_children: true
+has_children: false
 permalink: /
 ---
 
@@ -12,8 +12,6 @@ GMDSI has committed itself to reducing the slope of the PEST(++) and pyEMU learn
 
 The notebooks are being prepared by Rui Hugman (GMDSI), Jeremy White (Intera) and Mike Fienen (USGS). They build upon previous work by the USGS and pyEMU development team. 
 
-You can access completed versions of these tutorials through the links below. If you wish to run the notebooks yourself, please head to the [GitHub repository](https://gmdsi.github.io/GMDSI_notebooks/) and follow the instructions to download and install the necessary dependencies. Note that you will need to run the notebooks in a specific order.
+You can access completed versions of these tutorials through the links in the side-panel on the left. If you wish to run the notebooks yourself, please head to the [GitHub repository](https://gmdsi.github.io/GMDSI_notebooks/) and follow the instructions to download files and install the necessary software. Note that you will need to run the notebooks in a specific order, as some notebooks rely on the existence of files created in other tutorials.
 
 __Please be aware that these notebooks are under development and subject to change. Make sure to check back regularily for updates and new content. If you come across problems or errors, please open a detailed issue in the GitHub repository to let us know.__
-
-{: .fs-6 .fw-300 }
