@@ -3,7 +3,7 @@ layout: default
 title: Intro to Regression
 parent: Introductions to Selected Topics
 nav_order: 2
-usemathjax: true
+math: mathjax3
 ---
 
 # Introduction to Regression
