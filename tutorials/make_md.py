@@ -14,6 +14,7 @@ layout: default
 title: {title}
 parent: {parent}
 nav_order: {nav_order}
+math: mathjax3
 ---
 
 """
