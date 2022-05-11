@@ -29,7 +29,7 @@ We are going to generate some data using the function `rh.data_cooker()`. This f
 
 The general form of the polynomial is: 
 
-$y=ax^2 + bx + c$
+$$y=ax^2 + bx + c$$
 
 We set $c=0$ for our purposes so that we have two free parameters: $a$ and $b$. Values of $y$ are observations. The function also adds noise to the "true" observations.
 
