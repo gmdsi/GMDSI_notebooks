@@ -1,6 +1,6 @@
 ---
 layout: default
-title: PEST++IES Localization
+title: PEST++IES - Localization
 parent: Decision Support Modelling with pyEMU and PEST++
 nav_order: 8
 math: mathjax3
@@ -1207,9 +1207,9 @@ pyemu.os_utils.start_workers(t_d, # the folder which contains the "template" PES
 
 ### Temporal Localization Outcomes
 
-By now you should be familiar with the next few plots. Let's blast through our plots of timeseries, forecast histograms and prameter distributions.
+By now you should be familiar with the next few plots. Let's blast through our plots of timeseries, forecast histograms and parameter distributions.
 
-Start with the parameter changes. Hwey whadya know! That looks a bit more reasonable, doesn't it? Porosity parameters no longer change from the prior to the posterior. Variance for temporal parameters has also changed. Excelent. At least we've removed _some_ potential for underestiating forecast uncertainty. Next check what this has done for history matching and, more importantly, the forecasts.
+Start with the parameter changes. Hey whadya know! That looks a bit more reasonable, doesn't it? Porosity parameters no longer change from the prior to the posterior. Variance for temporal parameters has also changed. Excelent. At least we've removed _some_ potential for underestiating forecast uncertainty. Next check what this has done for history matching and, more importantly, the forecasts.
 
 
 ```python

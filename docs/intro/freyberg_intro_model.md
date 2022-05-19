@@ -8,7 +8,7 @@ math: mathjax3
 
 # Intro to the model
 
-### 1. Freyberg (1988) - "An Exercise in Ground-Water Model Calibration and Prediction" 
+## Freyberg (1988) - "An Exercise in Ground-Water Model Calibration and Prediction" 
 
 
 > "*The goal of parameter identification is rarely the parameter estimates. Rather, the ultimate goal is nearly always a prediction .*"
@@ -25,9 +25,9 @@ The following series of tutorials make use of a synthetic model. This model is a
 
 The forecast of interest was the head if the river channel was lined (e.g. conductance reduced greatly).
 
-There are interesting insights in the paper, but perhaps the most interesting is illustrated by the figure below. **Just because a model is good at fitting measurement data, does not mean it is good at making a prediction!**
+There are interesting insights in the paper, but perhaps the most interesting is illustrated by the figure below: just because a model is good at fitting measurement data, does not mean it is good at making a prediction!
 
-<img src="cal_pred.png" style="float: center; width: 75%;  margin-bottom: 0.5em;">
+<img src=".\intro_to_freyberg_model_files\cal_pred.png" style="float: center; width: 75%;  margin-bottom: 0.5em;">
 
 
 You can read the original paper here:
@@ -39,21 +39,17 @@ And more recently, the same exercise was revisited in a contemporary context:
 > *Hunt, Randall J., Michael N. Fienen, and Jeremy T. White. 2019. “Revisiting ‘An Exercise in Groundwater Model Calibration and Prediction’ After 30 Years: Insights and New Directions.” Groundwater, July, gwat.12907. doi:10.1111/gwat.12907.* 
    
 
-### 2. Modified-Freyberg Model
+## The Modified-Freyberg Model
 
-For the current set of tutorials we will be using a variant of the Freyberg model. This is the same model described in the PEST++ documentation:
+Using a synthetic model allows us to know the "truth". It also allows us to design it to be fast-running. Both usefull characteristics for a tutorial model. For the current set of tutorials we will be using a variant of the Freyberg model. This is similar to the model described in the PEST++ documentation:
 > White, J.T., Hunt, R.J., Fienen, M.N., and Doherty, J.E., 2020, Approaches to Highly Parameterized > Inversion: PEST++ Version 5, a Software Suite for Parameter Estimation, Uncertainty Analysis, Management > Optimization and Sensitivity Analysis: U.S. Geological Survey Techniques and Methods 7C26, 52 p., https://> doi.org/10.3133/tm7C26.
 
-The moel setup use in the current tutorials is the same as documented in White et al. (2020). However, some of the parameterisation and selected observation data are different. We also include additional particle tracking simulated using MODPATH7. 
-
-Using a synthetic model allows us to know the "truth". It also allows us to design it to be fast-running. Both usefull characteristics for a tutorial model. 
+Some of the parameterisation and selected observation data are different. We also include additional particle tracking simulated using MODPATH7. 
 
 Let's get acquainted with it.
 
-
-
-#### 2.2 *Admin*
-First some admin. Load the dependencies and organize model folders. Let's copy the original model folder into a new working directory, just to ensure we don't mess up the base files. Simply run the next cells by pressing `shift+enter`.
+### Admin
+First some admin. You will see this in most of the tutorial notebooks. Load the dependencies and organize model folders. Let's copy the original model folder into a new working directory, just to ensure we don't mess up the base files. Simply run the next cells by pressing `shift+enter`.
 
 
 ```python
@@ -62,11 +58,9 @@ import shutil
 import platform
 import pandas as pd
 import matplotlib.pyplot as plt
-
 import sys
 sys.path.append(os.path.join("..", "..", "dependencies"))
 import flopy
-
 ```
 
 
@@ -118,7 +112,7 @@ sim.run_simulation()
 
 
 
-#### 2.3. Model Domain, BCs and Properties
+### Model Domain, BCs and Properties
 
 The figure belows shows the model domain and boundary conditions. The model has 3 layers, 40 rows and 20 columns. Cell dimensions are 250m x 250m. There are inactive outcrop areas within the model domain (shown in black in the figure).
 
@@ -171,12 +165,23 @@ Layer 3 is the most permeable. Layer 2 has low permeabilities. Layer 1 is somewh
 
 
 ```python
+for lay in range(gwf.dis.nlay.array):
+    print(f'K in layer {lay+1}:', "{:10.1f}".format(gwf.npf.k.get_data(lay).mean()))
+```
+
+    K in layer 1:        3.0
+    K in layer 2:        0.3
+    K in layer 3:       30.0
+    
+
+
+```python
 gwf.npf.k.plot(colorbar=True, mflay=0);
 ```
 
 
     
-![png](freyberg_intro_model_files/freyberg_intro_model_12_0.png)
+![png](freyberg_intro_model_files/freyberg_intro_model_13_0.png)
     
 
 
@@ -193,29 +198,121 @@ gwf.dis.botm.plot(colorbar=True, mflay=2);
 
 
     
-![png](freyberg_intro_model_files/freyberg_intro_model_14_0.png)
+![png](freyberg_intro_model_files/freyberg_intro_model_15_0.png)
     
 
 
 
     
-![png](freyberg_intro_model_files/freyberg_intro_model_14_1.png)
+![png](freyberg_intro_model_files/freyberg_intro_model_15_1.png)
     
 
 
-#### 2.4 Model Timing
+### Time Discretisation
 
 The model simulates 25 stress-periods: 1 steady-state, followed by 24 transient stress periods. 
 
 Conceptualy, the first 12 transient stress periods represent the "historical" conditions. Simulated outputs from this period (using the "true" parameter field) are used as "observations" for history matching. These represent field measurments in from our fictional site.
 
-The last 12 transient stress periods conceptualy represent the unmeasured, future condition. The period for whcih predictions are required. Selected model outputs simulated during this period form a set of "forecasts" or "predicitons" of management interest. 
+The last 12 transient stress periods conceptualy represent the unmeasured, future condition. The period for which predictions are required. Selected model outputs simulated during this period form a set of "forecasts" or "predicitons" of management interest. 
 
-### 3. Observation Data
+## Observation Data
 
 The following field data are available as "observations" for the purposes of history matching:
  - surface-water flow at the terminal reach (stress period 2 to 13);
  - groundwater levels at two sites (stress period 2 to 13); 
+
+"Measured" data was generated using the same model, but with higher spatial and temporal resolution (i.e. a finer grid and daily stress periods) and randomly generated parameters.
+
+
+```python
+obs_data = pd.read_csv(os.path.join('..','..','models','daily_freyberg_mf6_truth','obs_data.csv'))
+obs_data = obs_data.pivot(index='time', columns='site', values='value')
+obs_data.head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>site</th>
+      <th>GAGE-1</th>
+      <th>TRGW-0-26-6</th>
+      <th>TRGW-0-3-8</th>
+      <th>TRGW-2-26-6</th>
+      <th>TRGW-2-3-8</th>
+    </tr>
+    <tr>
+      <th>time</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3652.5</th>
+      <td>1713.876690</td>
+      <td>34.780818</td>
+      <td>34.621020</td>
+      <td>34.382895</td>
+      <td>34.612454</td>
+    </tr>
+    <tr>
+      <th>3653.5</th>
+      <td>2476.327373</td>
+      <td>34.588687</td>
+      <td>34.477117</td>
+      <td>34.627812</td>
+      <td>34.563783</td>
+    </tr>
+    <tr>
+      <th>3654.5</th>
+      <td>1505.541231</td>
+      <td>34.505069</td>
+      <td>34.554786</td>
+      <td>34.573804</td>
+      <td>34.420837</td>
+    </tr>
+    <tr>
+      <th>3655.5</th>
+      <td>2210.090691</td>
+      <td>34.770207</td>
+      <td>34.603493</td>
+      <td>34.510403</td>
+      <td>34.656066</td>
+    </tr>
+    <tr>
+      <th>3656.5</th>
+      <td>2207.018734</td>
+      <td>34.724382</td>
+      <td>34.623075</td>
+      <td>34.626356</td>
+      <td>34.584529</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 Model simulated counterparts to these observations are recorded in external CSV files. Let's take a look:
 
@@ -230,21 +327,11 @@ for i in gwf.obs:
     ['heads.csv']
     
 
-
-```python
-def obs2df(i):
-    """Loads an output csv. Returns data in DataFrame."""
-    obs_csv = i.output.obs_names[0]
-    obs = i.output.obs(f=obs_csv)
-    df = pd.DataFrame(obs.data)
-    return df
-```
-
 We can read the `sfr.csv` output file, and inspect the values:
 
 
 ```python
-sfr_obs = obs2df(gwf.obs[0])
+sfr_obs = pd.read_csv(os.path.join(sim_ws, 'sfr.csv'))
 sfr_obs.head()
 ```
 
@@ -269,10 +356,10 @@ sfr_obs.head()
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>totim</th>
+      <th>time</th>
       <th>HEADWATER</th>
       <th>TAILWATER</th>
-      <th>GAGE1</th>
+      <th>GAGE-1</th>
     </tr>
   </thead>
   <tbody>
@@ -317,39 +404,36 @@ sfr_obs.head()
 
 
 
-Simulated values for surface-water flow at the terminal reach are recorded in the "GAGE_1" column:
+Simulated values for surface-water flow at the terminal reach are recorded in the "GAGE1" column:
 
 
 ```python
-sfr_obs.plot(x='totim', y='GAGE1')
+site = 'GAGE-1'
+fig,ax=plt.subplots(1,1)
+obs_data.plot(y=site, ax=ax, label='measured')
+sfr_obs.plot(x='time', y=site, ax=ax, label='modelled')
+ax.set_title(site);
 ```
 
 
-
-
-    <AxesSubplot:xlabel='totim'>
-
-
-
-
     
-![png](freyberg_intro_model_files/freyberg_intro_model_22_1.png)
+![png](freyberg_intro_model_files/freyberg_intro_model_24_0.png)
     
 
 
-Simulated groundwater l are recorded in the "heads.csv" file. Several monitoring sites are simulated, however there is measured data for a only a few of these. 
+Simulated groundwater levels are recorded in the "heads.csv" file. Several monitoring sites are simulated, however there is measured data for a only a few of these. 
 
 The sites for which "measured data" are available are named:
- - trgw_0_26_6
- - trgw_2_26_6
- - trgw_0_3_8
- - trgw_2_3_8
+ - TRGW-0-26-6
+ - TRGW-2-26-6
+ - TRGW-0-3-8
+ - TRGW-2-3-8
 
-The site naming convention is: "TRGW_layer_row_column". Thus, the four sites listed above pertain to two observation locations, with measurments from both the top and botoom layers. 
+The site naming convention is: "TRGW-layer-row-column". Thus, the four sites listed above pertain to two observation locations, with measurments from both the top and bottom layers. 
 
 
 ```python
-hds_obs = obs2df(gwf.obs[1])
+hds_obs = pd.read_csv(os.path.join(sim_ws, 'heads.csv'))
 hds_obs.head()
 ```
 
@@ -374,27 +458,27 @@ hds_obs.head()
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>totim</th>
-      <th>TRGW2215</th>
-      <th>TRGW229</th>
-      <th>TRGW238</th>
-      <th>TRGW291</th>
-      <th>TRGW21310</th>
-      <th>TRGW21516</th>
-      <th>TRGW22110</th>
-      <th>TRGW22215</th>
-      <th>TRGW2244</th>
+      <th>time</th>
+      <th>TRGW-2-2-15</th>
+      <th>TRGW-2-2-9</th>
+      <th>TRGW-2-3-8</th>
+      <th>TRGW-2-9-1</th>
+      <th>TRGW-2-13-10</th>
+      <th>TRGW-2-15-16</th>
+      <th>TRGW-2-21-10</th>
+      <th>TRGW-2-22-15</th>
+      <th>TRGW-2-24-4</th>
       <th>...</th>
-      <th>TRGW091</th>
-      <th>TRGW01310</th>
-      <th>TRGW01516</th>
-      <th>TRGW02110</th>
-      <th>TRGW02215</th>
-      <th>TRGW0244</th>
-      <th>TRGW0266</th>
-      <th>TRGW02915</th>
-      <th>TRGW0337</th>
-      <th>TRGW03410</th>
+      <th>TRGW-0-9-1</th>
+      <th>TRGW-0-13-10</th>
+      <th>TRGW-0-15-16</th>
+      <th>TRGW-0-21-10</th>
+      <th>TRGW-0-22-15</th>
+      <th>TRGW-0-24-4</th>
+      <th>TRGW-0-26-6</th>
+      <th>TRGW-0-29-15</th>
+      <th>TRGW-0-33-7</th>
+      <th>TRGW-0-34-10</th>
     </tr>
   </thead>
   <tbody>
@@ -529,23 +613,26 @@ Let's make a quick plot of time series of simulated groundwater levels from both
 
 
 ```python
-hds_obs.plot(x='totim', y=['TRGW0266','TRGW2266'])
+for site in ['TRGW-0-26-6','TRGW-2-26-6']:
+    fig,ax=plt.subplots(1,1)
+    obs_data.plot(y=site, ax=ax, label='measured')
+    hds_obs.plot(x='time', y=site, ax=ax, label='modelled')
+    ax.set_title(site);
 ```
 
 
-
-
-    <AxesSubplot:xlabel='totim'>
-
+    
+![png](freyberg_intro_model_files/freyberg_intro_model_28_0.png)
+    
 
 
 
     
-![png](freyberg_intro_model_files/freyberg_intro_model_26_1.png)
+![png](freyberg_intro_model_files/freyberg_intro_model_28_1.png)
     
 
 
-Whilst we are at it, lets just make a plot of the spatial distribution of heads in the upper layer. (Heas in the other layers are very similar.)
+Whilst we are at it, lets just make a plot of the spatial distribution of simulated heads in the upper layer. (Heads in the other layers are very similar.)
 
 
 ```python
@@ -556,19 +643,16 @@ hdobj.plot(mflay=0, colorbar=True, totim=times[-1], masked_values=[1e30]);
 
 
     
-![png](freyberg_intro_model_files/freyberg_intro_model_28_0.png)
+![png](freyberg_intro_model_files/freyberg_intro_model_30_0.png)
     
 
 
-### 4. Forecasts
+## Forecasts
 
-Three model simulated outputs are included as forecast "observations". These represent predictions of managemnt interest for our imaginary case. Simulated forecasts are:
+Three model simulated outputs are included as forecast "observations". These represent predictions of management interest for our imaginary case. Simulated forecasts are:
  - aggregated surface-water/grounwdater exchange for reaches 1-20 (recorded under "headwater" in the sfr.csv file) during stress period 22;
- - aggregated surface-water/grounwdater exchange for reaches 21-40 (recorded under "tailwater" in the sfr.csv file) during stress period 13;
+ - aggregated surface-water/grounwdater exchange for reaches 21-40 (recorded under "tailwater" in the sfr.csv file) during stress period 22;
  - groundwater level at TRGW_0_9_1 at the end of stress period 22;
  - travel time for a particle released in the north-west of the domain to exit the model domain.
 
-These forecasts were selected to represent model outputs that are informed in varying degrees by the history matching data. 
-
-
-
+These forecasts were selected to represent model outputs that are informed in varying degrees by the history matching data. Throughout the tutorials we will compare our simulated forecast and uncertainty against "true" values obtained by running the same model with which we generated "measured" observation data. 

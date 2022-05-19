@@ -1,6 +1,6 @@
 ---
 layout: default
-title: PEST++IES Basics
+title: PEST++IES - Basics
 parent: Decision Support Modelling with pyEMU and PEST++
 nav_order: 7
 math: mathjax3

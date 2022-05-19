@@ -22,7 +22,7 @@ import regression_helper as rh
 import ipywidgets as widgets
 ```
 
-### 1. First cook up some data
+## First cook up some data
 In the tutorial folder there is a file named `regression_helper.py` that we have imported as `rh`. It contains functions used throught this notebook. You do not need to know the details of those functions, merely to follow the ideas discussed herein.
 
 We are going to generate some data using the function `rh.data_cooker()`. This function sets a range of x-values, then makes a "true" set of y-values using a second degree polynomial (e.g. `best_degree=2`). 
@@ -55,7 +55,7 @@ rh.plot_truth(xplot,x,y_data, poly_func)
     
 
 
-### 2. Build a Model
+## Build a Model
 
 We are going to construct a model with which we hope to explain the "measured" data. The intention is to use this model to subsequently make a prediction.
 
@@ -81,7 +81,7 @@ rh.plot_truth(xplot,x,y_data, poly_func, model)
     
 
 
-### 3. Measure Model-to-Measurement Fit 
+## Measure Model-to-Measurement Fit 
 
 History-matching (and calibration) are essentialy a search for parameters which allow a model to "better" fit a set of measurement data. This is acomplished through minimizing a so called "objective function" (often displayed as Phi, $\Phi$). The objective function can be defined in many ways. Perhaps the most common is the “**sum of squared weighted differences (or residuals)**” between model outputs and field measurements:
 
@@ -142,7 +142,7 @@ print('Phi =',phi_0)
 
 **History-Matching** is achieved by minimizing the value of this objective function. **Calibration** is achieved by finding the *unique* solution which minimizes the objective function.
 
-### 4. The Response Surface
+## The Response Surface
 
 Now, we can use $\Phi$ to evaluate the **response surface**. In other words, "how $\Phi$ changes with changes in parameter values". 
 
@@ -174,7 +174,7 @@ A, B, SSE_AB = rh.contour_sse(a, b, x, y_data)
     
 
 
-### 5. Fit a Polynomial Function
+## Fit a Polynomial Function
 
 Now we will fit our polynomial model to minimize the misfit between measured and modelled values. Recall that we are assuming a polynomial of the same degree as was used to generate the data (e.g. 2 unkown parameters).
 
@@ -246,7 +246,7 @@ print('The best-estimate parameters are: a={0:.4f}, b={1:.4f}, c={2}'.format(*y_
     The best-estimate parameters are: a=-0.2864, b=0.9604, c=0
     
 
-### 6. The Jacobian (or Sensitivity) Matrix
+## The Jacobian (or Sensitivity) Matrix
 
 The Jacobian matrix, sometimes referred to as a sensitivity matrix, contains the gradients of parameter changes in regard to changes in values of observations. It is a matrix of dimensions ($m * n$), in which $m$ is the number of adjustable parameters and $n$ is the number of observations.
 
@@ -273,7 +273,7 @@ rh.plot_jacobian(sol)
     
 
 
-### 7. Make a Prediction
+## Make a Prediction
 
 Now let us use our model to make a prediction. Because we also know the "truth" we can compare our model prediction to the true value. The function `rh.plot_prediction()` plots the "truth", the data and the model simulated values. Values of the "sum of squared error" (SSE) for the calibration data and the prediction are also shown.
 
@@ -292,7 +292,7 @@ rh.plot_prediction(x, y_data, poly_func, np.poly1d(y_fit_pars_best))
     
 
 
-### 8. Over/Underfitting
+## Over/Underfitting
 
 So far we have considered a scenario in which our model has the same (perfect) number of parameters as the "truth". Let's see what happens if we use less or more parameters (in our case, degrees of freedom in the polynomial function).
 
@@ -352,7 +352,7 @@ rh.plot_error_tradeoff_fine(x, y_data, poly_func)
     
 
 
-### 9. Final Remarks
+## Final Remarks
 
 This notebook has been a very brief introduction to regression. This is intended as a primer, introducing a few fundamental concepts and terminology that play a role in environmental decision-support modelling. Subsequent tutorials will delve into further details as these apply to modelling of groundwater systems.
 

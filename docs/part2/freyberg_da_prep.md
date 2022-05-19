@@ -1,6 +1,6 @@
 ---
 layout: default
-title: PEST++DA Preparing for Sequential Data Assimilation
+title: PEST++DA - Getting Ready
 parent: Decision Support Modelling with pyEMU and PEST++
 nav_order: 10
 math: mathjax3

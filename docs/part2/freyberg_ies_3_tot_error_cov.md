@@ -1,6 +1,6 @@
 ---
 layout: default
-title: PEST++IES Total-Error Covarince Workflow
+title: PEST++IES - Total-Error Covarince Workflow
 parent: Decision Support Modelling with pyEMU and PEST++
 nav_order: 9
 math: mathjax3

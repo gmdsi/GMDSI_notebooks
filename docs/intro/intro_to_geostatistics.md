@@ -6,6 +6,4 @@ nav_order: 4
 math: mathjax3
 ---
 
- - why geostatitisc in gw modelling
- - other resources
- - 
+...coming soon.

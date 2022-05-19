@@ -21,7 +21,7 @@ Throughout the notebook we will:
 
 Here we **do not** demonstrate how to setup a PEST interface from scratch. See the "part2_pstfrom_pest_setup" tutorial for a demonstration on how to use the `PstFrom` class to do so.
 
-### 1. Admin
+### Admin
 
 
 ```python
@@ -51,7 +51,7 @@ Amongst other things, it includes:
 f_d = os.path.join('handling_files')
 ```
 
-### 2. The `Pst` class
+## The `Pst` class
 
 `pyEMU` encapsulates the PEST control file in the `Pst` class. Let's read the `freyberg_pp.pst` control file in the `f_d` folder.
 
@@ -411,7 +411,7 @@ pst.parameter_data.iloc[:3,:]
 
 
 
-#### 2.1. Control Data Section
+### Control Data Section
 
 The `* control data` section is handled by a special class that tries to prevent mistakes. `pyemu` will not allow you to assign an illogical value to a control data variable. This avoids silly mistakes. But it also requires that the user must know what type(s) can be passed to each data variable.
 
@@ -492,7 +492,7 @@ pst.control_data.formatted_values
 
 
 
-#### 2.2. PEST++ Options
+### PEST++ Options
 
 PEST++ options are stored in a dictionary in which the `keys` are the PEST++ Control Variable name (see the PEST++ user manual for names of these variables and their descriptions). Values must be asigned according to what PEST++ expects as input.
 
@@ -572,7 +572,7 @@ pst.pestpp_options
 
 
 
-#### 2.3. Writing the .pst control file
+### Writing the .pst control file
 
 All of these edits are kept in memory untill explicitly written to a .pst file. This is accomplished with the `Pst.write()` method.
 
@@ -608,7 +608,7 @@ pst.write(os.path.join(f_d, "temp_v2.pst"), version=2)
 
 
 
-#### 2.4. Adding Parameters/Observations from .tpl/.ins files
+### Adding Parameters/Observations from .tpl/.ins files
 
 In another tutorial we demonstrate the use of the `PstFrom` to automate construction of a complete PEST interface, starting from scratch.
 
@@ -783,7 +783,7 @@ par.loc[par['pargp'] == 'pargp']
 
 
 
-#### 2.5. Tying Parameters
+### Tying Parameters
 
 We may on ocasion need to tie parameters in the control file. In the `pyemu` world, tied parametes are specified in the `Pst.parameter_data` dataframe. Start by adding a `partied` column and, for parameters you want to tie, changing "partrans" to "tied" and adding the name of the parameter to tie to in the "partied" column. 
 
@@ -918,11 +918,11 @@ par.loc[par['pargp'] == 'pargp', ['partrans', 'partied']]
 
 
 
-### 3. Utilities
+## Utilities
 
 `pyemu` has several built-in methods to make your PEST-life easier. Several of these handle similar tasks as utilities from the PEST-suite, such as adjusting observation weights and assigning prior information equations. Others provide usefull tables or plots that summarize details of the PEST setup and/or outcomes.
 
-#### 3.1. Par and Obs Summaries
+### Par and Obs Summaries
 You can access quick summaries of observation and paramaeter names, group names, etc thorugh the respective `pst` attributes:
 
 
@@ -1343,7 +1343,7 @@ pst.write_obs_summary_table()
 
 
 
-### 3.2. Phi and residuals
+### Phi and residuals
 
 The `Pst` class tries to load a residuals file iduring construction. It looks for a file in the same folder as the control file and with the same base name, but with the extension ".rei". Alterantaively, you can specify the name of the residual file when constructing the `Pst`. (e.g. `pyemu.Pst("controlfile.pst", resfile="residualfile.rei")`)
 
@@ -1614,7 +1614,7 @@ pst.phi_components
 
 
 
-### 3.3. Adjusting Weights for "Visibility"
+## Adjusting Weights for "Visibility"
 
 Prior to estimating parameters using PEST(++), a user must decide how to weight observations. In some
 cases, it is wise to weight observations strictly according to the inverse of the standard deviation of
@@ -1768,7 +1768,7 @@ pst.plot(kind="phi_pie");
     
 
 
-### 3.4. Discrepancy based weight adjustment
+### Discrepancy based weight adjustment
 
 In a perfect (model and algorithm) world, we would acheive a final objective function that is equal to the number of (non-zero weighted) observations. But because of model error and simplifying assumptions in the algorithms we use for history matching, this is rarely the case.  More often, the final objective function is much larger than the number of observations.  This implies that we were not able to "fit" as well as we thought we could (where "thought" is incapsulated in the observations weights in the control file, representing the inverse of measurment noise).  This really matters when we do posterior uncertainty analyses following a PEST run (this will be discussed further in the FOSM and data-worth notebooks). 
 
@@ -1809,7 +1809,7 @@ So we were expecting Phi to be equal to `nnz_obs` (number of non zero observatio
 
 What this means is that, for some observations, weights would have to be *increased* to achieve a contribution to Phi of 1.0. Which is illogical if the original weight is assumed to be the inverse of the measurement noise. In some cases, this requirement may not apply; such as when observatons are weighted for visibility.
 
-### 4. Geostatistics in pyEMU
+## Geostatistics in pyEMU
 
 The `pyemu.geostats` module provides tools for implementing geostatistics in the `pyemu` world. These have similar functions to the PPCOV* utilities from the PEST suite. 
 
@@ -2006,7 +2006,7 @@ plt.imshow(cov_t.x)
     
 
 
-### 5. Prior Information Equations
+## Prior Information Equations
 
 The mathematical term for the process through which a unique solution is sought for a nonunique
 inverse problem is “regularisation”. The goal of regularised inversion is to seek a unique parameter
@@ -2028,7 +2028,7 @@ preferred values that are assigned to linear relationships between parameters. (
 
 *Note: in a similar manner, the PEST-utilities ADDREG1 and ADDREG2 also automate the addition of prior information equations to a PEST-control file.*
 
-### 5.1. Preffered value or Zero Order Tikhonov
+### Preffered value or Zero Order Tikhonov
 
 `pyemu` provides utilities to apply preferred value prior equations to a PEST control file. Note though, pyemu doesn't call it "preferred value"! Rather, it uses the mathematical term "Zero Order Tikhonov".
 
@@ -2221,7 +2221,7 @@ pst.prior_information.head()
 
 
 
-### 5.2. Preferred difference or First Order Pearson Tikhonov
+### Preferred difference or First Order Pearson Tikhonov
 
 We may wish (almost certaintly) to express a preference for similarity between parameters. For example, hydraulic properties of two points close together are more likley to be similar to each other, than two points which are far apart. We describe this relationship using geostatistics, encapsulated in a covariance matrix.
 
@@ -2346,7 +2346,7 @@ pst.prior_information.tail()
 
 
 
-### 5.3. Custom Prior Information Equations
+### Custom Prior Information Equations
 
 `Pst.add_pi_equation()` is a helper to construct prior information equations. We demonstrate below using the "special_par"s we added earlier.
 
@@ -2511,7 +2511,7 @@ pst.prior_information.iloc[-1:]
 
 
 
-### 6. Matrices
+## Matrices
 
 The `pyemu.Matrix` class is the backbone of `pyemu`. The `Matrix` class does some fancy things in the background to make manipulating matrices and linear algebra easier. The class overloads all common mathematical operators and also uses an "auto-align" functionality to line up matrices for multiplication, addition, etc. The `pyemu.Jco` class provides a wrapper to deal with PEST Jacobian matrices. It functions the same as the `Matrix` class.
 
@@ -2982,7 +2982,7 @@ jco.shape
 
 
 
-### 7. Linear Analysis or FOSM
+## Linear Analysis or FOSM
 
 FOSM stands for "First Order, Second Moment". You may also see this referred to as "linear analysis" (e.g. in PEST documentation). We will delve into FOSM in more detail in another tutorial. Here we merely provide a brief introduction.
 
@@ -3702,7 +3702,7 @@ sc.get_forecast_summary()
 
 `pyemu` makes FOSM easy to undertake. It has lot's of usefull functionality. We will not go into further detail here. See the "intro to fosm" tutorial for a deeper dive.
 
-### 8. Ensembles
+## Ensembles
 
 The `pyemu.ParameterEnsemble` and `pyemu.ObservationEnsemble` ensemble classes store parameter or observation ensembles, respectively. These classes are `DataFrames` under the hood, allowing us to use all the baked in Pandas conveniences.
 
@@ -4119,7 +4119,7 @@ plt.imshow(x)
 
 So we can see that with 200 realizations, we can recover the diagonal pretty well, but we have some "spurious" covariances in the off diagonals...
 
-#### 8.1 Bayes Linear Monte Carlo
+### Bayes Linear Monte Carlo
 
 We can use the bayes linear posterior parameter covariance matrix (aka Schur compliment) to "precondition" the realizations using linear algebra so that they hopefully yield a lower phi.  The trick is we just need to pass this
 posterior covariance matrix to the draw method.  Note this covariance matrix is the second moment of the posterior (under the FOSM assumptions) and the final parameter values is the first moment.
@@ -4224,8 +4224,3 @@ pyemu.plot_utils.ensemble_helper(ensemble={"0.5":pe, "b":pe_post,},
 
 
 This is just a basic introduction in to handling ensembles in pyemu, we will see more later...
-
-
-```python
-
-```
