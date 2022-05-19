@@ -1,8 +1,9 @@
 ---
 layout: default
-title: A New Paradigm - Preparing for Sequential Data Assimilation
+title: PEST++DA Preparing for Sequential Data Assimilation
 parent: Decision Support Modelling with pyEMU and PEST++
-nav_order: 8
+nav_order: 10
+math: mathjax3
 ---
 
 # Prepare for sequential data assimilation
@@ -151,33 +152,33 @@ df
       <td>...</td>
     </tr>
     <tr>
-      <th>142</th>
+      <th>190</th>
       <td>sfrgr_inst23_grid.csv.tpl</td>
       <td>mult\sfrgr_inst23_grid.csv</td>
     </tr>
     <tr>
-      <th>143</th>
+      <th>191</th>
       <td>sfrgr_inst24_grid.csv.tpl</td>
       <td>mult\sfrgr_inst24_grid.csv</td>
     </tr>
     <tr>
-      <th>144</th>
+      <th>192</th>
       <td>freyberg6.ic_strt_layer1.txt.tpl</td>
       <td>org\freyberg6.ic_strt_layer1.txt</td>
     </tr>
     <tr>
-      <th>145</th>
+      <th>193</th>
       <td>freyberg6.ic_strt_layer2.txt.tpl</td>
       <td>org\freyberg6.ic_strt_layer2.txt</td>
     </tr>
     <tr>
-      <th>146</th>
+      <th>194</th>
       <td>freyberg6.ic_strt_layer3.txt.tpl</td>
       <td>org\freyberg6.ic_strt_layer3.txt</td>
     </tr>
   </tbody>
 </table>
-<p>147 rows × 2 columns</p>
+<p>195 rows × 2 columns</p>
 </div>
 
 
@@ -226,35 +227,35 @@ sfrdf.head()
   </thead>
   <tbody>
     <tr>
-      <th>119</th>
+      <th>167</th>
       <td>sfrgr_inst0_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>-1</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>120</th>
+      <th>168</th>
       <td>sfrgr_inst1_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>-1</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>121</th>
+      <th>169</th>
       <td>sfrgr_inst2_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>-1</td>
       <td>2</td>
     </tr>
     <tr>
-      <th>122</th>
+      <th>170</th>
       <td>sfrgr_inst3_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>-1</td>
       <td>3</td>
     </tr>
     <tr>
-      <th>123</th>
+      <th>171</th>
       <td>sfrgr_inst4_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>-1</td>
@@ -302,151 +303,151 @@ df.loc[sfrdf.index,:]
   </thead>
   <tbody>
     <tr>
-      <th>119</th>
+      <th>167</th>
       <td>sfrgr_inst0_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>120</th>
+      <th>168</th>
       <td>sfrgr_inst1_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>121</th>
+      <th>169</th>
       <td>sfrgr_inst2_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>2</td>
     </tr>
     <tr>
-      <th>122</th>
+      <th>170</th>
       <td>sfrgr_inst3_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>3</td>
     </tr>
     <tr>
-      <th>123</th>
+      <th>171</th>
       <td>sfrgr_inst4_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>4</td>
     </tr>
     <tr>
-      <th>124</th>
+      <th>172</th>
       <td>sfrgr_inst5_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>5</td>
     </tr>
     <tr>
-      <th>125</th>
+      <th>173</th>
       <td>sfrgr_inst6_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>6</td>
     </tr>
     <tr>
-      <th>126</th>
+      <th>174</th>
       <td>sfrgr_inst7_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>7</td>
     </tr>
     <tr>
-      <th>127</th>
+      <th>175</th>
       <td>sfrgr_inst8_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>8</td>
     </tr>
     <tr>
-      <th>128</th>
+      <th>176</th>
       <td>sfrgr_inst9_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>9</td>
     </tr>
     <tr>
-      <th>129</th>
+      <th>177</th>
       <td>sfrgr_inst10_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>10</td>
     </tr>
     <tr>
-      <th>130</th>
+      <th>178</th>
       <td>sfrgr_inst11_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>11</td>
     </tr>
     <tr>
-      <th>131</th>
+      <th>179</th>
       <td>sfrgr_inst12_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>12</td>
     </tr>
     <tr>
-      <th>132</th>
+      <th>180</th>
       <td>sfrgr_inst13_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>13</td>
     </tr>
     <tr>
-      <th>133</th>
+      <th>181</th>
       <td>sfrgr_inst14_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>14</td>
     </tr>
     <tr>
-      <th>134</th>
+      <th>182</th>
       <td>sfrgr_inst15_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>15</td>
     </tr>
     <tr>
-      <th>135</th>
+      <th>183</th>
       <td>sfrgr_inst16_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>16</td>
     </tr>
     <tr>
-      <th>136</th>
+      <th>184</th>
       <td>sfrgr_inst17_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>17</td>
     </tr>
     <tr>
-      <th>137</th>
+      <th>185</th>
       <td>sfrgr_inst18_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>18</td>
     </tr>
     <tr>
-      <th>138</th>
+      <th>186</th>
       <td>sfrgr_inst19_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>19</td>
     </tr>
     <tr>
-      <th>139</th>
+      <th>187</th>
       <td>sfrgr_inst20_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>20</td>
     </tr>
     <tr>
-      <th>140</th>
+      <th>188</th>
       <td>sfrgr_inst21_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>21</td>
     </tr>
     <tr>
-      <th>141</th>
+      <th>189</th>
       <td>sfrgr_inst22_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>22</td>
     </tr>
     <tr>
-      <th>142</th>
+      <th>190</th>
       <td>sfrgr_inst23_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>23</td>
     </tr>
     <tr>
-      <th>143</th>
+      <th>191</th>
       <td>sfrgr_inst24_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>24</td>
@@ -499,301 +500,301 @@ df.loc[weldf.index,:]
   </thead>
   <tbody>
     <tr>
-      <th>67</th>
+      <th>115</th>
       <td>welcst_inst0_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>68</th>
+      <th>116</th>
       <td>welgrd_inst0_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>69</th>
+      <th>117</th>
       <td>welcst_inst1_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>70</th>
+      <th>118</th>
       <td>welgrd_inst1_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>71</th>
+      <th>119</th>
       <td>welcst_inst2_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>2</td>
     </tr>
     <tr>
-      <th>72</th>
+      <th>120</th>
       <td>welgrd_inst2_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>2</td>
     </tr>
     <tr>
-      <th>73</th>
+      <th>121</th>
       <td>welcst_inst3_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>3</td>
     </tr>
     <tr>
-      <th>74</th>
+      <th>122</th>
       <td>welgrd_inst3_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>3</td>
     </tr>
     <tr>
-      <th>75</th>
+      <th>123</th>
       <td>welcst_inst4_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>4</td>
     </tr>
     <tr>
-      <th>76</th>
+      <th>124</th>
       <td>welgrd_inst4_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>4</td>
     </tr>
     <tr>
-      <th>77</th>
+      <th>125</th>
       <td>welcst_inst5_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>5</td>
     </tr>
     <tr>
-      <th>78</th>
+      <th>126</th>
       <td>welgrd_inst5_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>5</td>
     </tr>
     <tr>
-      <th>79</th>
+      <th>127</th>
       <td>welcst_inst6_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>6</td>
     </tr>
     <tr>
-      <th>80</th>
+      <th>128</th>
       <td>welgrd_inst6_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>6</td>
     </tr>
     <tr>
-      <th>81</th>
+      <th>129</th>
       <td>welcst_inst7_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>7</td>
     </tr>
     <tr>
-      <th>82</th>
+      <th>130</th>
       <td>welgrd_inst7_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>7</td>
     </tr>
     <tr>
-      <th>83</th>
+      <th>131</th>
       <td>welcst_inst8_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>8</td>
     </tr>
     <tr>
-      <th>84</th>
+      <th>132</th>
       <td>welgrd_inst8_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>8</td>
     </tr>
     <tr>
-      <th>85</th>
+      <th>133</th>
       <td>welcst_inst9_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>9</td>
     </tr>
     <tr>
-      <th>86</th>
+      <th>134</th>
       <td>welgrd_inst9_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>9</td>
     </tr>
     <tr>
-      <th>87</th>
+      <th>135</th>
       <td>welcst_inst10_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>10</td>
     </tr>
     <tr>
-      <th>88</th>
+      <th>136</th>
       <td>welgrd_inst10_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>10</td>
     </tr>
     <tr>
-      <th>89</th>
+      <th>137</th>
       <td>welcst_inst11_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>11</td>
     </tr>
     <tr>
-      <th>90</th>
+      <th>138</th>
       <td>welgrd_inst11_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>11</td>
     </tr>
     <tr>
-      <th>91</th>
+      <th>139</th>
       <td>welcst_inst12_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>12</td>
     </tr>
     <tr>
-      <th>92</th>
+      <th>140</th>
       <td>welgrd_inst12_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>12</td>
     </tr>
     <tr>
-      <th>93</th>
+      <th>141</th>
       <td>welcst_inst13_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>13</td>
     </tr>
     <tr>
-      <th>94</th>
+      <th>142</th>
       <td>welgrd_inst13_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>13</td>
     </tr>
     <tr>
-      <th>95</th>
+      <th>143</th>
       <td>welcst_inst14_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>14</td>
     </tr>
     <tr>
-      <th>96</th>
+      <th>144</th>
       <td>welgrd_inst14_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>14</td>
     </tr>
     <tr>
-      <th>97</th>
+      <th>145</th>
       <td>welcst_inst15_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>15</td>
     </tr>
     <tr>
-      <th>98</th>
+      <th>146</th>
       <td>welgrd_inst15_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>15</td>
     </tr>
     <tr>
-      <th>99</th>
+      <th>147</th>
       <td>welcst_inst16_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>16</td>
     </tr>
     <tr>
-      <th>100</th>
+      <th>148</th>
       <td>welgrd_inst16_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>16</td>
     </tr>
     <tr>
-      <th>101</th>
+      <th>149</th>
       <td>welcst_inst17_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>17</td>
     </tr>
     <tr>
-      <th>102</th>
+      <th>150</th>
       <td>welgrd_inst17_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>17</td>
     </tr>
     <tr>
-      <th>103</th>
+      <th>151</th>
       <td>welcst_inst18_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>18</td>
     </tr>
     <tr>
-      <th>104</th>
+      <th>152</th>
       <td>welgrd_inst18_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>18</td>
     </tr>
     <tr>
-      <th>105</th>
+      <th>153</th>
       <td>welcst_inst19_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>19</td>
     </tr>
     <tr>
-      <th>106</th>
+      <th>154</th>
       <td>welgrd_inst19_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>19</td>
     </tr>
     <tr>
-      <th>107</th>
+      <th>155</th>
       <td>welcst_inst20_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>20</td>
     </tr>
     <tr>
-      <th>108</th>
+      <th>156</th>
       <td>welgrd_inst20_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>20</td>
     </tr>
     <tr>
-      <th>109</th>
+      <th>157</th>
       <td>welcst_inst21_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>21</td>
     </tr>
     <tr>
-      <th>110</th>
+      <th>158</th>
       <td>welgrd_inst21_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>21</td>
     </tr>
     <tr>
-      <th>111</th>
+      <th>159</th>
       <td>welcst_inst22_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>22</td>
     </tr>
     <tr>
-      <th>112</th>
+      <th>160</th>
       <td>welgrd_inst22_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>22</td>
     </tr>
     <tr>
-      <th>113</th>
+      <th>161</th>
       <td>welcst_inst23_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>23</td>
     </tr>
     <tr>
-      <th>114</th>
+      <th>162</th>
       <td>welgrd_inst23_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>23</td>
     </tr>
     <tr>
-      <th>115</th>
+      <th>163</th>
       <td>welcst_inst24_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>24</td>
     </tr>
     <tr>
-      <th>116</th>
+      <th>164</th>
       <td>welgrd_inst24_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>24</td>
@@ -842,31 +843,31 @@ df.loc[rchdf.index,:].head()
   </thead>
   <tbody>
     <tr>
-      <th>38</th>
+      <th>86</th>
       <td>rch_recharge_1tcn_inst0_constant.csv.tpl</td>
       <td>mult\rch_recharge_1tcn_inst0_constant.csv</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>39</th>
+      <th>87</th>
       <td>rch_recharge_2tcn_inst0_constant.csv.tpl</td>
       <td>mult\rch_recharge_1tcn_inst0_constant.csv</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>40</th>
+      <th>88</th>
       <td>rch_recharge_3tcn_inst0_constant.csv.tpl</td>
       <td>mult\rch_recharge_1tcn_inst0_constant.csv</td>
       <td>2</td>
     </tr>
     <tr>
-      <th>41</th>
+      <th>89</th>
       <td>rch_recharge_4tcn_inst0_constant.csv.tpl</td>
       <td>mult\rch_recharge_1tcn_inst0_constant.csv</td>
       <td>3</td>
     </tr>
     <tr>
-      <th>42</th>
+      <th>90</th>
       <td>rch_recharge_5tcn_inst0_constant.csv.tpl</td>
       <td>mult\rch_recharge_1tcn_inst0_constant.csv</td>
       <td>4</td>
@@ -1089,19 +1090,19 @@ pst.model_input_data.tail()
   </thead>
   <tbody>
     <tr>
-      <th>144</th>
+      <th>192</th>
       <td>freyberg6.ic_strt_layer1.txt.tpl</td>
       <td>org\freyberg6.ic_strt_layer1.txt</td>
       <td>-1.0</td>
     </tr>
     <tr>
-      <th>145</th>
+      <th>193</th>
       <td>freyberg6.ic_strt_layer2.txt.tpl</td>
       <td>org\freyberg6.ic_strt_layer2.txt</td>
       <td>-1.0</td>
     </tr>
     <tr>
-      <th>146</th>
+      <th>194</th>
       <td>freyberg6.ic_strt_layer3.txt.tpl</td>
       <td>org\freyberg6.ic_strt_layer3.txt</td>
       <td>-1.0</td>
@@ -1716,9 +1717,9 @@ pst.drop_observations(os.path.join(t_d,"freyberg_mp.mpend.ins"),pst_path=".")
   </thead>
   <tbody>
     <tr>
-      <th>part_status</th>
-      <td>part_status</td>
-      <td>3.0000</td>
+      <th>part_time</th>
+      <td>part_time</td>
+      <td>583999.4848</td>
       <td>0.0</td>
       <td>part</td>
       <td>NaN</td>
@@ -1731,9 +1732,9 @@ pst.drop_observations(os.path.join(t_d,"freyberg_mp.mpend.ins"),pst_path=".")
       <td>NaN</td>
     </tr>
     <tr>
-      <th>part_time</th>
-      <td>part_time</td>
-      <td>583999.4848</td>
+      <th>part_status</th>
+      <td>part_status</td>
+      <td>3.0000</td>
       <td>0.0</td>
       <td>part</td>
       <td>NaN</td>
@@ -1814,75 +1815,75 @@ pst.drop_observations(os.path.join(t_d,"sfr.tdiff.csv.ins"),pst_path=".")
   </thead>
   <tbody>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:3773.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:3773.5</td>
-      <td>842.029821</td>
-      <td>0.01</td>
+      <th>oname:sfrtd_otype:lst_usecol:headwater_time:4383.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:headwater_time:4383.5</td>
+      <td>56.876420</td>
+      <td>0.00</td>
+      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>headwater</td>
+      <td>4383.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4352.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:4352.5</td>
+      <td>-485.617327</td>
+      <td>0.00</td>
       <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>gage-1</td>
-      <td>3773.5</td>
+      <td>4352.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>1.0</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3804.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3804.5</td>
-      <td>-233.523278</td>
+      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4322.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:4322.5</td>
+      <td>-289.590076</td>
       <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>headwater</td>
-      <td>3804.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3865.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3865.5</td>
-      <td>224.872677</td>
-      <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>headwater</td>
-      <td>3865.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:3957.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:3957.5</td>
-      <td>-370.470970</td>
-      <td>0.01</td>
       <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>gage-1</td>
-      <td>3957.5</td>
+      <td>4322.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>1.0</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:4077.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:4077.5</td>
-      <td>-240.087273</td>
+      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3896.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3896.5</td>
+      <td>415.021331</td>
       <td>0.00</td>
       <td>oname:sfrtd_otype:lst_usecol:headwater</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>headwater</td>
-      <td>4077.5</td>
+      <td>3896.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:headwater_time:4049.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:headwater_time:4049.5</td>
+      <td>-70.344875</td>
+      <td>0.00</td>
+      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>headwater</td>
+      <td>4049.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -1904,75 +1905,75 @@ pst.drop_observations(os.path.join(t_d,"sfr.tdiff.csv.ins"),pst_path=".")
       <td>...</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:4322.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:4322.5</td>
-      <td>467.709827</td>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:3987.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:3987.5</td>
+      <td>256.007578</td>
       <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
       <td>sfrtd</td>
       <td>lst</td>
-      <td>headwater</td>
-      <td>4322.5</td>
+      <td>tailwater</td>
+      <td>3987.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:3804.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:3804.5</td>
-      <td>1090.165816</td>
+      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:3773.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:3773.5</td>
+      <td>842.029821</td>
       <td>0.01</td>
       <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>gage-1</td>
-      <td>3804.5</td>
+      <td>3773.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>1.0</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4199.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4199.5</td>
-      <td>60.565373</td>
+      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4138.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:4138.5</td>
+      <td>551.787059</td>
       <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
       <td>sfrtd</td>
       <td>lst</td>
-      <td>tailwater</td>
-      <td>4199.5</td>
+      <td>gage-1</td>
+      <td>4138.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:4383.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:4383.5</td>
-      <td>56.876420</td>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4049.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4049.5</td>
+      <td>-78.846029</td>
+      <td>0.00</td>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>tailwater</td>
+      <td>4049.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:headwater_time:4261.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:headwater_time:4261.5</td>
+      <td>493.721852</td>
       <td>0.00</td>
       <td>oname:sfrtd_otype:lst_usecol:headwater</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>headwater</td>
-      <td>4383.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:3865.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:3865.5</td>
-      <td>164.174331</td>
-      <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>tailwater</td>
-      <td>3865.5</td>
+      <td>4261.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -2047,135 +2048,15 @@ pst.drop_observations(os.path.join(t_d,"heads.vdiff.csv.ins"),pst_path=".")
   </thead>
   <tbody>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-26-6_time:3987.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-26-6_time:3987.5</td>
-      <td>0.004241</td>
-      <td>100.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-26-6</td>
-      <td>hdsvd</td>
-      <td>lst</td>
-      <td>trgw-0-26-6</td>
-      <td>3987.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-22-15_time:3743.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-22-15_time:3743.5</td>
-      <td>-0.069423</td>
-      <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-22-15</td>
-      <td>hdsvd</td>
-      <td>lst</td>
-      <td>trgw-0-22-15</td>
-      <td>3743.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3987.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3987.5</td>
-      <td>-0.017555</td>
-      <td>100.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8</td>
-      <td>hdsvd</td>
-      <td>lst</td>
-      <td>trgw-0-3-8</td>
-      <td>3987.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:3683.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:3683.5</td>
-      <td>0.007021</td>
-      <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</td>
-      <td>hdsvd</td>
-      <td>lst</td>
-      <td>trgw-0-9-1</td>
-      <td>3683.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-29-15_time:3987.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-29-15_time:3987.5</td>
-      <td>-0.019528</td>
-      <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-29-15</td>
-      <td>hdsvd</td>
-      <td>lst</td>
-      <td>trgw-0-29-15</td>
-      <td>3987.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3804.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3804.5</td>
-      <td>-0.001889</td>
-      <td>100.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8</td>
-      <td>hdsvd</td>
-      <td>lst</td>
-      <td>trgw-0-3-8</td>
-      <td>3804.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-2-9_time:3804.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-2-9_time:3804.5</td>
-      <td>0.007592</td>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-2-9_time:3987.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-2-9_time:3987.5</td>
+      <td>0.004961</td>
       <td>0.0</td>
       <td>oname:hdsvd_otype:lst_usecol:trgw-0-2-9</td>
       <td>hdsvd</td>
       <td>lst</td>
       <td>trgw-0-2-9</td>
-      <td>3804.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-2-15_time:4383.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-2-15_time:4383.5</td>
-      <td>-0.048761</td>
-      <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-2-15</td>
-      <td>hdsvd</td>
-      <td>lst</td>
-      <td>trgw-0-2-15</td>
-      <td>4383.5</td>
+      <td>3987.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -2197,15 +2078,135 @@ pst.drop_observations(os.path.join(t_d,"heads.vdiff.csv.ins"),pst_path=".")
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-22-15_time:4049.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-22-15_time:4049.5</td>
-      <td>-0.048021</td>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-33-7_time:3957.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-33-7_time:3957.5</td>
+      <td>0.003954</td>
+      <td>0.0</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-33-7</td>
+      <td>hdsvd</td>
+      <td>lst</td>
+      <td>trgw-0-33-7</td>
+      <td>3957.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-26-6_time:3743.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-26-6_time:3743.5</td>
+      <td>0.002085</td>
+      <td>100.0</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-26-6</td>
+      <td>hdsvd</td>
+      <td>lst</td>
+      <td>trgw-0-26-6</td>
+      <td>3743.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-24-4_time:3926.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-24-4_time:3926.5</td>
+      <td>0.005784</td>
+      <td>0.0</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-24-4</td>
+      <td>hdsvd</td>
+      <td>lst</td>
+      <td>trgw-0-24-4</td>
+      <td>3926.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-21-10_time:3896.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-21-10_time:3896.5</td>
+      <td>0.005727</td>
+      <td>0.0</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-21-10</td>
+      <td>hdsvd</td>
+      <td>lst</td>
+      <td>trgw-0-21-10</td>
+      <td>3896.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-2-15_time:4049.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-2-15_time:4049.5</td>
+      <td>-0.056725</td>
+      <td>0.0</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-2-15</td>
+      <td>hdsvd</td>
+      <td>lst</td>
+      <td>trgw-0-2-15</td>
+      <td>4049.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-15-16_time:3987.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-15-16_time:3987.5</td>
+      <td>0.003836</td>
+      <td>0.0</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-15-16</td>
+      <td>hdsvd</td>
+      <td>lst</td>
+      <td>trgw-0-15-16</td>
+      <td>3987.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-15-16_time:4322.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-15-16_time:4322.5</td>
+      <td>0.003808</td>
+      <td>0.0</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-15-16</td>
+      <td>hdsvd</td>
+      <td>lst</td>
+      <td>trgw-0-15-16</td>
+      <td>4322.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-22-15_time:4322.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-22-15_time:4322.5</td>
+      <td>-0.011825</td>
       <td>0.0</td>
       <td>oname:hdsvd_otype:lst_usecol:trgw-0-22-15</td>
       <td>hdsvd</td>
       <td>lst</td>
       <td>trgw-0-22-15</td>
-      <td>4049.5</td>
+      <td>4322.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -2559,710 +2560,710 @@ for site in sites:
 ```
 
     obsnme
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3865.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-13-10_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4169.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4352.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-13-10_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3987.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-13-10_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4049.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-13-10_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4291.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-13-10_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4199.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4352.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4108.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3957.5    0.0
     Name: weight, dtype: float64
     obsnme
     oname:hds_otype:lst_usecol:trgw-0-15-16_time:3926.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-15-16_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3987.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-15-16_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4352.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-15-16_time:3683.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-15-16_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4199.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4049.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4077.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-15-16_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4322.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-15-16_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4108.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-15-16_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3987.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4383.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4383.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-2-15_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4199.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-2-15_time:4291.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3987.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4138.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3957.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4049.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3683.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4108.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3804.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-2-9_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4199.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4291.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3712.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-2-9_time:3987.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-2-9_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3804.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-2-9_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4108.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-2-9_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4199.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-2-9_time:3683.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4352.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3773.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-2-9_time:3957.5    0.0
     Name: weight, dtype: float64
     obsnme
     oname:hds_otype:lst_usecol:trgw-0-21-10_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4108.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4261.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-21-10_time:3773.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-21-10_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4108.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-21-10_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3957.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3683.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-21-10_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3987.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3957.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3926.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-21-10_time:4049.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-21-10_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4352.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4138.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4291.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4291.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-22-15_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3652.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-22-15_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3957.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3987.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4138.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3683.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4049.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4291.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4199.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-22-15_time:4352.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3926.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4261.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-24-4_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3926.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-24-4_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4352.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-24-4_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4108.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4352.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4291.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-24-4_time:4199.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3743.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-24-4_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4138.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-24-4_time:3683.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4049.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3987.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4108.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4138.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4138.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3987.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3957.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4291.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4169.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4108.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3926.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5    10.0
     oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3865.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4383.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4199.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4169.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4049.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4108.5     0.0
     oname:hds_otype:lst_usecol:trgw-0-26-6_time:3834.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3804.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4261.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4077.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4322.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4199.5     0.0
     oname:hds_otype:lst_usecol:trgw-0-26-6_time:4352.5     0.0
     oname:hds_otype:lst_usecol:trgw-0-26-6_time:3896.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4018.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4049.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4230.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4322.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4077.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4138.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4383.5     0.0
     oname:hds_otype:lst_usecol:trgw-0-26-6_time:3652.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3926.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4230.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4291.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3804.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4018.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3987.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3957.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3865.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4261.5     0.0
     Name: weight, dtype: float64
     trgw-0-26-6
     obsnme
+    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3957.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-29-15_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4352.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4108.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-29-15_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4352.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-29-15_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3652.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-29-15_time:3926.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-29-15_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3683.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-29-15_time:4199.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-29-15_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3652.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-29-15_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3957.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-29-15_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4138.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4049.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-29-15_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4291.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3834.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3683.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3865.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4169.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4018.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3834.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3743.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3987.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4230.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4077.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3957.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3926.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4352.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4049.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4108.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3896.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3712.5    10.0
     oname:hds_otype:lst_usecol:trgw-0-3-8_time:3773.5    10.0
     oname:hds_otype:lst_usecol:trgw-0-3-8_time:4322.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4108.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4018.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4352.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3834.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3712.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3865.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3652.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4261.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4169.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3957.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3743.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4199.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3926.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4138.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4383.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4291.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4049.5     0.0
     oname:hds_otype:lst_usecol:trgw-0-3-8_time:3804.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3896.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3987.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4077.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4230.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3652.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4291.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4383.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4199.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3683.5    10.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4138.5     0.0
+    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4261.5     0.0
     Name: weight, dtype: float64
     trgw-0-3-8
     obsnme
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4322.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-33-7_time:3957.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4138.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-33-7_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3683.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-33-7_time:3834.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-33-7_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4291.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-33-7_time:4049.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4230.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-33-7_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4291.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4108.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3987.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4199.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4352.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3804.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-34-10_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3683.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4138.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4352.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4199.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4108.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4291.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-34-10_time:4049.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3957.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-34-10_time:3987.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3865.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4108.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-9-1_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4199.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-9-1_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4108.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3987.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4138.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-9-1_time:3683.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3865.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-9-1_time:3957.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-9-1_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4291.5    0.0
     oname:hds_otype:lst_usecol:trgw-0-9-1_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3834.5    0.0
     Name: weight, dtype: float64
     obsnme
     oname:hds_otype:lst_usecol:trgw-2-13-10_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4169.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-13-10_time:4383.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-13-10_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3987.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3712.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-13-10_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3987.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-13-10_time:3896.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-13-10_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4199.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4108.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4138.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3957.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3773.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-13-10_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4199.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4049.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4352.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4230.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-15-16_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3683.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-15-16_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3957.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-15-16_time:4018.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-15-16_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3865.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-15-16_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4049.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3987.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-15-16_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4138.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3804.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-15-16_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3683.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4352.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3926.5    0.0
     Name: weight, dtype: float64
     obsnme
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3683.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4352.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4138.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3987.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4291.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4077.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-2-15_time:3957.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-2-15_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4049.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-2-15_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4138.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-2-15_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4291.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4049.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3712.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-2-15_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4108.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-2-15_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3804.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4291.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-2-9_time:4169.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-2-9_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4138.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-2-9_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4352.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3987.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3957.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-2-9_time:4018.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-2-9_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4199.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3926.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-2-9_time:3712.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-2-9_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4049.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4291.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4108.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3804.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-21-10_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3773.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-21-10_time:4138.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3683.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4199.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3957.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4352.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4049.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4108.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3987.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4291.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4199.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4352.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-22-15_time:4108.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3683.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4049.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3804.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-22-15_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3957.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4138.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3743.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-22-15_time:3712.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-22-15_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4169.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-22-15_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3804.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-22-15_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3652.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4322.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-24-4_time:4138.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3987.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4199.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4108.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3683.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3957.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4049.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4291.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4352.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4322.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3834.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4018.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4138.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3957.5    10.0
     oname:hds_otype:lst_usecol:trgw-2-26-6_time:3652.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4108.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4291.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4169.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4352.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3926.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4018.5    10.0
     oname:hds_otype:lst_usecol:trgw-2-26-6_time:4077.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3773.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4230.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4261.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3896.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4199.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3683.5    10.0
     oname:hds_otype:lst_usecol:trgw-2-26-6_time:3987.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3804.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4049.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4383.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4261.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4230.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4199.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3926.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3683.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4291.5     0.0
     oname:hds_otype:lst_usecol:trgw-2-26-6_time:3865.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3743.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4049.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3804.5    10.0
     oname:hds_otype:lst_usecol:trgw-2-26-6_time:3712.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3834.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3957.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4108.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3743.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3773.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4383.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4352.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3896.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4169.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4138.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4322.5     0.0
     Name: weight, dtype: float64
     trgw-2-26-6
     obsnme
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3987.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4199.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-29-15_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4138.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4352.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3957.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3683.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4049.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3834.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-29-15_time:3712.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-29-15_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4230.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-29-15_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4138.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3987.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4108.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-29-15_time:3896.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3712.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4108.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3987.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3926.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4018.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4169.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3652.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4049.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3896.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4199.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3865.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3683.5    10.0
     oname:hds_otype:lst_usecol:trgw-2-3-8_time:4322.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3683.5    10.0
     oname:hds_otype:lst_usecol:trgw-2-3-8_time:3804.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3773.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3896.5    10.0
     oname:hds_otype:lst_usecol:trgw-2-3-8_time:4291.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4077.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4383.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3834.5    10.0
     oname:hds_otype:lst_usecol:trgw-2-3-8_time:4230.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3957.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3743.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4261.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4352.5     0.0
     oname:hds_otype:lst_usecol:trgw-2-3-8_time:4138.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4169.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4077.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4108.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3834.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3957.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3865.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3987.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4199.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3712.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4352.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4261.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4049.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3743.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4383.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4018.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3652.5     0.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3773.5    10.0
+    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3926.5    10.0
     Name: weight, dtype: float64
     trgw-2-3-8
     obsnme
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4352.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-33-7_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4291.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3683.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3957.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3865.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-33-7_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4199.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4049.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4108.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3987.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4352.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4138.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4291.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3987.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-34-10_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3652.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-34-10_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4108.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4291.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3987.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-34-10_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4049.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4261.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-34-10_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3957.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4199.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3804.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-34-10_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4138.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3865.5    0.0
     Name: weight, dtype: float64
     obsnme
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3712.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-9-1_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4108.5    0.0
     oname:hds_otype:lst_usecol:trgw-2-9-1_time:4261.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4322.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3743.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3804.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4049.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3834.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4352.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4108.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3957.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4138.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4169.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4199.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3652.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4077.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3865.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4018.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3712.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3896.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4230.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3926.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3773.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4383.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4291.5    0.0
+    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3683.5    0.0
     Name: weight, dtype: float64
     
 
@@ -4337,8 +4338,8 @@ new_df
       <td>free</td>
       <td></td>
       <td>0</td>
-      <td>[10]</td>
-      <td>[0.01]</td>
+      <td>[100.0]</td>
+      <td>[0.001]</td>
       <td>m</td>
       <td>mult\sfrcondcn_inst0_constant.csv</td>
       <td>NaN</td>
@@ -6261,27 +6262,27 @@ df.loc[df.cycle!=-1,["org_file","model_file","cycle"]]
     </tr>
     <tr>
       <th>37</th>
+      <td>org\freyberg6.rch_recharge_1.txt</td>
+      <td>freyberg6.rch_recharge_1.txt</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>38</th>
       <td>org\freyberg6.rch_recharge_2.txt</td>
       <td>freyberg6.rch_recharge_1.txt</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>38</th>
-      <td>org\freyberg6.rch_recharge_3.txt</td>
-      <td>freyberg6.rch_recharge_1.txt</td>
-      <td>2</td>
-    </tr>
-    <tr>
       <th>39</th>
-      <td>org\freyberg6.rch_recharge_4.txt</td>
+      <td>org\freyberg6.rch_recharge_2.txt</td>
       <td>freyberg6.rch_recharge_1.txt</td>
-      <td>3</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>40</th>
-      <td>org\freyberg6.rch_recharge_5.txt</td>
+      <td>org\freyberg6.rch_recharge_3.txt</td>
       <td>freyberg6.rch_recharge_1.txt</td>
-      <td>4</td>
+      <td>2</td>
     </tr>
     <tr>
       <th>...</th>
@@ -6368,7 +6369,7 @@ pst.write(os.path.join(t_d,"freyberg_mf6.pst"),version=2)
 pyemu.os_utils.run("pestpp-da freyberg_mf6.pst",cwd=t_d)
 ```
 
-    noptmax:0, npar_adj:12013, nnz_obs:5
+    noptmax:0, npar_adj:29653, nnz_obs:5
     
 
 

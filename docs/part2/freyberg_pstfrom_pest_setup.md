@@ -3,6 +3,7 @@ layout: default
 title: Constructing a High-Dimensional PEST Interface with pyEMU
 parent: Decision Support Modelling with pyEMU and PEST++
 nav_order: 1
+math: mathjax3
 ---
 
 # Setup the PEST(++) interface around the modified Freyberg model
@@ -1055,7 +1056,7 @@ plt.imshow(ib)
 
 
 
-    <matplotlib.image.AxesImage at 0x1c7b24693a0>
+    <matplotlib.image.AxesImage at 0x1fb893484f0>
 
 
 
@@ -1122,10 +1123,10 @@ df_gr.head()
       <th>partrans</th>
       <th>parubnd</th>
       <th>parlbnd</th>
+      <th>scale</th>
       <th>parchglim</th>
       <th>offset</th>
       <th>dercom</th>
-      <th>scale</th>
     </tr>
   </thead>
   <tbody>
@@ -1144,10 +1145,10 @@ df_gr.head()
       <td>log</td>
       <td>5.0</td>
       <td>0.2</td>
+      <td>1.0</td>
       <td>factor</td>
       <td>0.0</td>
       <td>1</td>
-      <td>1.0</td>
     </tr>
     <tr>
       <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:1_x:375.00_y:9875.00_zone:1</th>
@@ -1164,10 +1165,10 @@ df_gr.head()
       <td>log</td>
       <td>5.0</td>
       <td>0.2</td>
+      <td>1.0</td>
       <td>factor</td>
       <td>0.0</td>
       <td>1</td>
-      <td>1.0</td>
     </tr>
     <tr>
       <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:2_x:625.00_y:9875.00_zone:1</th>
@@ -1184,10 +1185,10 @@ df_gr.head()
       <td>log</td>
       <td>5.0</td>
       <td>0.2</td>
+      <td>1.0</td>
       <td>factor</td>
       <td>0.0</td>
       <td>1</td>
-      <td>1.0</td>
     </tr>
     <tr>
       <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:3_x:875.00_y:9875.00_zone:1</th>
@@ -1204,10 +1205,10 @@ df_gr.head()
       <td>log</td>
       <td>5.0</td>
       <td>0.2</td>
+      <td>1.0</td>
       <td>factor</td>
       <td>0.0</td>
       <td>1</td>
-      <td>1.0</td>
     </tr>
     <tr>
       <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:4_x:1125.00_y:9875.00_zone:1</th>
@@ -1224,10 +1225,10 @@ df_gr.head()
       <td>log</td>
       <td>5.0</td>
       <td>0.2</td>
+      <td>1.0</td>
       <td>factor</td>
       <td>0.0</td>
       <td>1</td>
-      <td>1.0</td>
     </tr>
   </tbody>
 </table>
@@ -1287,7 +1288,7 @@ df_pp = pf.add_parameters(f,
     starting 7
     starting 8
     starting 9
-    took 3.211963 seconds
+    took 4.200763 seconds
     
 
 
@@ -1301,7 +1302,7 @@ ax.scatter(df_pp.x,df_pp.y)
 
 
 
-    <matplotlib.collections.PathCollection at 0x1c7b277f2b0>
+    <matplotlib.collections.PathCollection at 0x1fb89655400>
 
 
 
@@ -1441,14 +1442,14 @@ Well...hot damn, wasn't that easy? Let's speed through the other array parameter
 tag = "npf_k33"
 files = [f for f in os.listdir(template_ws) if tag in f.lower() and f.endswith(".txt")]
 for f in files:
-    add_mult_pars(f, lb=0.2, ub=5.0, ulb=0.01, uub=100)
+    add_mult_pars(f, lb=0.2, ub=5.0, ulb=1e-4, uub=1e3)
 
 # for Ss
 tag = "sto_ss"
 files = [f for f in os.listdir(template_ws) if tag in f.lower() and f.endswith(".txt")]
 # only for layer 2 and 3; we aren't monsters
 for f in files[1:]: 
-    add_mult_pars(f, lb=0.2, ub=5.0, ulb=1e-6, uub=1e-3)
+    add_mult_pars(f, lb=0.2, ub=5.0, ulb=1e-7, uub=1e-3)
 
 # For Sy
 tag = "sto_sy"
@@ -1464,6 +1465,18 @@ for f in files:
     add_mult_pars(f, lb=0.2, ub=5.0, ulb=0.01, uub=0.4)
 
 ```
+
+
+```python
+len([f for f in os.listdir(template_ws) if f.endswith(".tpl")])
+```
+
+
+
+
+    36
+
+
 
 
 ```python
@@ -1574,13 +1587,24 @@ sp.sort()
 files = [d[s] for s in sp]
 print(files)
 # the spatial multiplier parameters; just use the same function
-add_mult_pars(files, lb=0.2, ub=5.0, ulb=2e-5, uub=2e-4, add_coarse=False)
-    
-    
+for f in files: 
+    add_mult_pars(f, lb=0.2, ub=5.0, ulb=0, uub=1e-3, add_coarse=False)
 ```
 
     ['freyberg6.rch_recharge_1.txt', 'freyberg6.rch_recharge_2.txt', 'freyberg6.rch_recharge_3.txt', 'freyberg6.rch_recharge_4.txt', 'freyberg6.rch_recharge_5.txt', 'freyberg6.rch_recharge_6.txt', 'freyberg6.rch_recharge_7.txt', 'freyberg6.rch_recharge_8.txt', 'freyberg6.rch_recharge_9.txt', 'freyberg6.rch_recharge_10.txt', 'freyberg6.rch_recharge_11.txt', 'freyberg6.rch_recharge_12.txt', 'freyberg6.rch_recharge_13.txt', 'freyberg6.rch_recharge_14.txt', 'freyberg6.rch_recharge_15.txt', 'freyberg6.rch_recharge_16.txt', 'freyberg6.rch_recharge_17.txt', 'freyberg6.rch_recharge_18.txt', 'freyberg6.rch_recharge_19.txt', 'freyberg6.rch_recharge_20.txt', 'freyberg6.rch_recharge_21.txt', 'freyberg6.rch_recharge_22.txt', 'freyberg6.rch_recharge_23.txt', 'freyberg6.rch_recharge_24.txt', 'freyberg6.rch_recharge_25.txt']
     
+
+
+```python
+len([f for f in os.listdir(template_ws) if f.endswith(".tpl")])
+```
+
+
+
+
+    86
+
+
 
 Then, we will asign an additional `constant` multiplier parameter for each recharge stress-period file (so, a single multiplier for all recharge paramaters for each stress period). We will specify temporal correlation for these `constant` multipliers. These will all have the same parameter group name, as discussed above. 
 
@@ -1597,7 +1621,7 @@ for f in files:
                     par_name_base=f.split('.')[1]+"tcn",
                     pargp=f.split('.')[1]+"tcn",
                     lower_bound=0.5, upper_bound=1.5,
-                    ult_ubound=2e-4, ult_lbound=2e-5,
+                    ult_ubound=1e-3, ult_lbound=0,
                     datetime=dts[kper], # this places the parameter value on the "time axis"
                     geostruct=temporal_gs)
 ```
@@ -1649,8 +1673,7 @@ for f in files:
                         pargp=name+"gr",
                         index_cols=[0,1,2], #column containing lay,row,col
                         use_cols=[4], #column containing conductance values
-                        lower_bound=0.1,upper_bound=10.0,
-                        ult_lbound=0.1, ult_ubound=100) #absolute limits
+                        lower_bound=0.1,upper_bound=10.0)
     pf.add_parameters(f,
                         par_type="constant",
                         geostruct=grid_gs,
@@ -1659,7 +1682,7 @@ for f in files:
                         index_cols=[0,1,2],
                         use_cols=[4],  
                         lower_bound=0.1,upper_bound=10.0,
-                        ult_lbound=0.1, ult_ubound=100) #absolute limits
+                        ult_lbound=0.01, ult_ubound=100) #absolute limits
 
     # constant and grid scale additive head parameters
     name = 'ghbhead'
@@ -1723,7 +1746,7 @@ for f in files:
                         par_type="constant",    #each well will be adjustable
                         par_name_base="welcst",
                         pargp="welcst", 
-                        upper_bound = 1.5, lower_bound=0.5,
+                        upper_bound = 4, lower_bound=0.25,
                         datetime=dts[kper], # this places the parameter value on the "time axis"
                         geostruct=temporal_gs)
     
@@ -1734,7 +1757,7 @@ for f in files:
                         par_type="grid",    #each well will be adjustable
                         par_name_base="welgrd",
                         pargp="welgrd", 
-                        upper_bound = 1.5, lower_bound=0.5,
+                        upper_bound = 4, lower_bound=0.25,
                         datetime=dts[kper]) # this places the parameter value on the "time axis"
                      
 ```
@@ -1761,8 +1784,7 @@ pf.add_parameters(f,
                 pargp=name+"gr",
                 index_cols=[0,2,3],
                 use_cols=[9],
-                lower_bound=0.1,upper_bound=10.0,
-                ult_lbound=0.01, ult_ubound=10) #absolute limits
+                lower_bound=0.1,upper_bound=10.0)
 pf.add_parameters(f,
                 par_type="constant",
                 geostruct=grid_gs,
@@ -1771,7 +1793,7 @@ pf.add_parameters(f,
                 index_cols=[0,2,3],
                 use_cols=[9],
                 lower_bound=0.1,upper_bound=10.0,
-                ult_lbound=0.01, ult_ubound=10) #absolute limits
+                ult_lbound=0.001, ult_ubound=100) #absolute limits
 ```
 
     ['freyberg6.sfr_packagedata.txt']
@@ -1808,10 +1830,10 @@ pf.add_parameters(f,
       <th>partrans</th>
       <th>parubnd</th>
       <th>parlbnd</th>
+      <th>scale</th>
       <th>parchglim</th>
       <th>offset</th>
       <th>dercom</th>
-      <th>scale</th>
     </tr>
   </thead>
   <tbody>
@@ -1827,10 +1849,10 @@ pf.add_parameters(f,
       <td>log</td>
       <td>10.0</td>
       <td>0.1</td>
+      <td>1.0</td>
       <td>factor</td>
       <td>0.0</td>
       <td>1</td>
-      <td>1.0</td>
     </tr>
   </tbody>
 </table>
@@ -1857,7 +1879,7 @@ for f in files:
                         par_type="grid",    
                         par_name_base="sfrgr",
                         pargp="sfrgr", 
-                        upper_bound = 1.5, lower_bound=0.5, #don't need ult_bounds because it is a single multiplier
+                        upper_bound = 10, lower_bound=0.1, #don't need ult_bounds because it is a single multiplier
                         datetime=dts[kper], # this places the parameter value on the "time axis"
                         geostruct=temporal_gs)
 ```
@@ -1904,6 +1926,56 @@ for f in files:
      'npfklayer3cn_inst0_constant.csv.tpl',
      'npfklayer3gr_inst0_grid.csv.tpl',
      'npfklayer3pp_inst0pp.dat.tpl',
+     'rchrecharge10gr_inst0_grid.csv.tpl',
+     'rchrecharge10pp_inst0pp.dat.tpl',
+     'rchrecharge11gr_inst0_grid.csv.tpl',
+     'rchrecharge11pp_inst0pp.dat.tpl',
+     'rchrecharge12gr_inst0_grid.csv.tpl',
+     'rchrecharge12pp_inst0pp.dat.tpl',
+     'rchrecharge13gr_inst0_grid.csv.tpl',
+     'rchrecharge13pp_inst0pp.dat.tpl',
+     'rchrecharge14gr_inst0_grid.csv.tpl',
+     'rchrecharge14pp_inst0pp.dat.tpl',
+     'rchrecharge15gr_inst0_grid.csv.tpl',
+     'rchrecharge15pp_inst0pp.dat.tpl',
+     'rchrecharge16gr_inst0_grid.csv.tpl',
+     'rchrecharge16pp_inst0pp.dat.tpl',
+     'rchrecharge17gr_inst0_grid.csv.tpl',
+     'rchrecharge17pp_inst0pp.dat.tpl',
+     'rchrecharge18gr_inst0_grid.csv.tpl',
+     'rchrecharge18pp_inst0pp.dat.tpl',
+     'rchrecharge19gr_inst0_grid.csv.tpl',
+     'rchrecharge19pp_inst0pp.dat.tpl',
+     'rchrecharge1gr_inst0_grid.csv.tpl',
+     'rchrecharge1pp_inst0pp.dat.tpl',
+     'rchrecharge20gr_inst0_grid.csv.tpl',
+     'rchrecharge20pp_inst0pp.dat.tpl',
+     'rchrecharge21gr_inst0_grid.csv.tpl',
+     'rchrecharge21pp_inst0pp.dat.tpl',
+     'rchrecharge22gr_inst0_grid.csv.tpl',
+     'rchrecharge22pp_inst0pp.dat.tpl',
+     'rchrecharge23gr_inst0_grid.csv.tpl',
+     'rchrecharge23pp_inst0pp.dat.tpl',
+     'rchrecharge24gr_inst0_grid.csv.tpl',
+     'rchrecharge24pp_inst0pp.dat.tpl',
+     'rchrecharge25gr_inst0_grid.csv.tpl',
+     'rchrecharge25pp_inst0pp.dat.tpl',
+     'rchrecharge2gr_inst0_grid.csv.tpl',
+     'rchrecharge2pp_inst0pp.dat.tpl',
+     'rchrecharge3gr_inst0_grid.csv.tpl',
+     'rchrecharge3pp_inst0pp.dat.tpl',
+     'rchrecharge4gr_inst0_grid.csv.tpl',
+     'rchrecharge4pp_inst0pp.dat.tpl',
+     'rchrecharge5gr_inst0_grid.csv.tpl',
+     'rchrecharge5pp_inst0pp.dat.tpl',
+     'rchrecharge6gr_inst0_grid.csv.tpl',
+     'rchrecharge6pp_inst0pp.dat.tpl',
+     'rchrecharge7gr_inst0_grid.csv.tpl',
+     'rchrecharge7pp_inst0pp.dat.tpl',
+     'rchrecharge8gr_inst0_grid.csv.tpl',
+     'rchrecharge8pp_inst0pp.dat.tpl',
+     'rchrecharge9gr_inst0_grid.csv.tpl',
+     'rchrecharge9pp_inst0pp.dat.tpl',
      'rch_recharge_10tcn_inst0_constant.csv.tpl',
      'rch_recharge_11tcn_inst0_constant.csv.tpl',
      'rch_recharge_12tcn_inst0_constant.csv.tpl',
@@ -1914,8 +1986,6 @@ for f in files:
      'rch_recharge_17tcn_inst0_constant.csv.tpl',
      'rch_recharge_18tcn_inst0_constant.csv.tpl',
      'rch_recharge_19tcn_inst0_constant.csv.tpl',
-     'rch_recharge_1gr_inst0_grid.csv.tpl',
-     'rch_recharge_1pp_inst0pp.dat.tpl',
      'rch_recharge_1tcn_inst0_constant.csv.tpl',
      'rch_recharge_20tcn_inst0_constant.csv.tpl',
      'rch_recharge_21tcn_inst0_constant.csv.tpl',
@@ -2069,7 +2139,7 @@ How about we see that in action? Magic time! Let's create the PEST control file.
 pst = pf.build_pst()
 ```
 
-    noptmax:0, npar_adj:12013, nnz_obs:725
+    noptmax:0, npar_adj:29653, nnz_obs:725
     
 
 Boom! Done. (Well almost.) Check the folder. You should see a new .pst file and the `forward_run.py` file. By default, the .pst file is named after the original model folder name. 
@@ -2189,7 +2259,7 @@ pst = pf.build_pst()
 _ = [print(line.rstrip()) for line in open(os.path.join(template_ws,"forward_run.py"))]
 ```
 
-    noptmax:0, npar_adj:12013, nnz_obs:725
+    noptmax:0, npar_adj:29653, nnz_obs:725
     import os
     import multiprocessing as mp
     import numpy as np
@@ -2426,7 +2496,7 @@ Remember to re-build the Pst control file:
 pst = pf.build_pst()
 ```
 
-    noptmax:0, npar_adj:12013, nnz_obs:62225
+    noptmax:0, npar_adj:29653, nnz_obs:62225
     
 
 
@@ -3696,7 +3766,7 @@ Make sure to re-**write** the PEST control file. But beware, if you re-**build**
 pst.write(os.path.join(template_ws, 'freyberg_mf6.pst'))
 ```
 
-    noptmax:0, npar_adj:12013, nnz_obs:62227
+    noptmax:0, npar_adj:29653, nnz_obs:62227
     
 
 So that was pretty epic. We now have a (very) high-dimensional PEST interface that includes secondary observations, as well as forecasts, ready to roll. 
@@ -3770,7 +3840,7 @@ if pf.pst.npar < 35000:  #if you have more than about 35K pars, the cov matrix b
 
 
     
-![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_146_0.png)
+![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_148_0.png)
     
 
 
@@ -3807,6 +3877,30 @@ pe.to_binary(os.path.join(template_ws,"prior_pe.jcb")) #writes the paramter ense
 assert pe.shape[1] == pst.npar
 ```
 
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
+    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
     SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
     SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
     SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
@@ -3886,7 +3980,127 @@ assert pe.shape[1] == pst.npar
     done
     getting diag var cov 29
     scaling full cov by diag var cov
-    working on pargroups ['rch_recharge_1pp']
+    working on pargroups ['rchrecharge1pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge2pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge3pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge4pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge5pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge6pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge7pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge8pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge9pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge10pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge11pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge12pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge13pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge14pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge15pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge16pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge17pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge18pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge19pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge20pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge21pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge22pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge23pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge24pp']
+    build cov matrix
+    done
+    getting diag var cov 29
+    scaling full cov by diag var cov
+    working on pargroups ['rchrecharge25pp']
     build cov matrix
     done
     getting diag var cov 29
@@ -3956,8 +4170,8 @@ pst.parameter_data.parval1.values
 
 
 
-    array([ 0.72616096,  0.82076147,  1.08770186, ..., 19.43876745,
-           37.17823683, 40.77793808])
+    array([ 0.72616096,  0.82076147,  1.08770186, ..., 29.4805675 ,
+           28.59235782, 35.11449992])
 
 
 
@@ -3968,7 +4182,7 @@ pst.write(os.path.join(template_ws,"test.pst"))
 pyemu.os_utils.run("pestpp-glm test.pst",cwd=template_ws)
 ```
 
-    noptmax:0, npar_adj:12013, nnz_obs:62227
+    noptmax:0, npar_adj:29653, nnz_obs:62227
     
 
 If all went well, that's it! The PEST-interface is setup, tested and we have our prior preprared. We should be good to go!
@@ -4123,6 +4337,6 @@ plt.tight_layout()
 
 
     
-![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_157_0.png)
+![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_159_0.png)
     
 

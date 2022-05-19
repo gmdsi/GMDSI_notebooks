@@ -1,8 +1,9 @@
 ---
 layout: default
-title: Highly-Parameterized Regularized Inversion
+title: PEST++GLM  Highly-Parameterized Regularized Inversion
 parent: Decision Support Modelling with pyEMU and PEST++
 nav_order: 6
+math: mathjax3
 ---
 
 # Highly Parameterized Inversion
@@ -370,7 +371,7 @@ pst.phi
 
 
 
-    791.3667246858223
+    985.953637623473
 
 
 
@@ -381,7 +382,7 @@ Recall that observations are weighted according to the inverse of measurment noi
 print(f"Phi: {pst.phi} \nNumber of non-zero obs: {pst.nnz_obs}")
 ```
 
-    Phi: 791.3667246858223 
+    Phi: 985.953637623473 
     Number of non-zero obs: 144
     
 
@@ -494,8 +495,8 @@ df_obj.head()
     <tr>
       <th>1</th>
       <td>11</td>
-      <td>1366.320</td>
-      <td>1366.320</td>
+      <td>1365.470</td>
+      <td>1365.470</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -507,9 +508,9 @@ df_obj.head()
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>49.9647</td>
+      <td>50.5509</td>
       <td>0</td>
-      <td>91.5172</td>
+      <td>88.9789</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -518,8 +519,8 @@ df_obj.head()
     <tr>
       <th>2</th>
       <td>82</td>
-      <td>1005.930</td>
-      <td>1005.930</td>
+      <td>985.954</td>
+      <td>985.954</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -531,9 +532,9 @@ df_obj.head()
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>49.5541</td>
+      <td>50.4263</td>
       <td>0</td>
-      <td>98.9608</td>
+      <td>89.2332</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -542,8 +543,8 @@ df_obj.head()
     <tr>
       <th>3</th>
       <td>153</td>
-      <td>791.367</td>
-      <td>791.367</td>
+      <td>1538.820</td>
+      <td>1538.820</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -555,9 +556,9 @@ df_obj.head()
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>50.6557</td>
+      <td>50.3518</td>
       <td>0</td>
-      <td>98.4515</td>
+      <td>89.8838</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -647,8 +648,8 @@ pst.res.head()
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>34.190167</td>
-      <td>34.422086</td>
-      <td>-0.231920</td>
+      <td>34.474788</td>
+      <td>-0.284621</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -656,8 +657,8 @@ pst.res.head()
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>34.178076</td>
-      <td>34.471117</td>
-      <td>-0.293041</td>
+      <td>34.521094</td>
+      <td>-0.343018</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -665,8 +666,8 @@ pst.res.head()
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>34.203032</td>
-      <td>34.575332</td>
-      <td>-0.372300</td>
+      <td>34.603723</td>
+      <td>-0.400692</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -674,8 +675,8 @@ pst.res.head()
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>34.274843</td>
-      <td>34.662968</td>
-      <td>-0.388125</td>
+      <td>34.675990</td>
+      <td>-0.401147</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -683,8 +684,8 @@ pst.res.head()
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>34.345650</td>
-      <td>34.707983</td>
-      <td>-0.362332</td>
+      <td>34.715336</td>
+      <td>-0.369686</td>
       <td>0.0</td>
     </tr>
   </tbody>
@@ -811,123 +812,123 @@ oe.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>34.4268</td>
-      <td>34.4897</td>
-      <td>34.5833</td>
-      <td>34.6521</td>
-      <td>34.6949</td>
-      <td>34.6644</td>
-      <td>34.6142</td>
-      <td>34.5528</td>
-      <td>34.4831</td>
-      <td>34.4059</td>
+      <td>34.5481</td>
+      <td>34.5932</td>
+      <td>34.6567</td>
+      <td>34.7126</td>
+      <td>34.7471</td>
+      <td>34.7473</td>
+      <td>34.7086</td>
+      <td>34.6382</td>
+      <td>34.5635</td>
+      <td>34.4894</td>
       <td>...</td>
-      <td>0.011959</td>
-      <td>0.011860</td>
-      <td>0.011805</td>
-      <td>0.011737</td>
-      <td>0.011631</td>
-      <td>0.011462</td>
-      <td>0.011367</td>
-      <td>0.011229</td>
-      <td>2</td>
-      <td>343858.0</td>
+      <td>0.007703</td>
+      <td>0.007820</td>
+      <td>0.008326</td>
+      <td>0.008882</td>
+      <td>0.008934</td>
+      <td>0.008721</td>
+      <td>0.008458</td>
+      <td>0.008111</td>
+      <td>5</td>
+      <td>52839.7</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>34.2188</td>
-      <td>34.2922</td>
-      <td>34.4068</td>
-      <td>34.4630</td>
-      <td>34.5092</td>
-      <td>34.5020</td>
-      <td>34.4447</td>
-      <td>34.3821</td>
-      <td>34.3015</td>
-      <td>34.2250</td>
+      <td>34.6400</td>
+      <td>34.6834</td>
+      <td>34.7517</td>
+      <td>34.8086</td>
+      <td>34.8361</td>
+      <td>34.8187</td>
+      <td>34.7660</td>
+      <td>34.7022</td>
+      <td>34.6245</td>
+      <td>34.5440</td>
       <td>...</td>
-      <td>0.009111</td>
-      <td>0.008212</td>
-      <td>0.007460</td>
-      <td>0.007137</td>
-      <td>0.007227</td>
-      <td>0.007349</td>
-      <td>0.007811</td>
-      <td>0.008304</td>
-      <td>2</td>
-      <td>165083.0</td>
+      <td>0.005073</td>
+      <td>0.005497</td>
+      <td>0.005677</td>
+      <td>0.005544</td>
+      <td>0.005295</td>
+      <td>0.004881</td>
+      <td>0.004505</td>
+      <td>0.004087</td>
+      <td>3</td>
+      <td>152143.0</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>34.5273</td>
-      <td>34.5704</td>
-      <td>34.6693</td>
-      <td>34.7594</td>
-      <td>34.8045</td>
-      <td>34.8087</td>
-      <td>34.7615</td>
-      <td>34.7071</td>
-      <td>34.6095</td>
-      <td>34.5247</td>
+      <td>34.6749</td>
+      <td>34.7132</td>
+      <td>34.7919</td>
+      <td>34.8549</td>
+      <td>34.9010</td>
+      <td>34.8646</td>
+      <td>34.8196</td>
+      <td>34.7437</td>
+      <td>34.6738</td>
+      <td>34.5381</td>
       <td>...</td>
-      <td>0.017277</td>
-      <td>0.016907</td>
-      <td>0.016576</td>
-      <td>0.016501</td>
-      <td>0.016408</td>
-      <td>0.016603</td>
-      <td>0.016726</td>
-      <td>0.016688</td>
+      <td>0.013763</td>
+      <td>0.011992</td>
+      <td>0.010857</td>
+      <td>0.009899</td>
+      <td>0.010157</td>
+      <td>0.010349</td>
+      <td>0.012084</td>
+      <td>0.015690</td>
       <td>2</td>
-      <td>226331.0</td>
+      <td>102617.0</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>34.4931</td>
-      <td>34.5153</td>
-      <td>34.5789</td>
-      <td>34.6542</td>
-      <td>34.7065</td>
-      <td>34.7120</td>
-      <td>34.6740</td>
-      <td>34.6156</td>
-      <td>34.5169</td>
-      <td>34.4181</td>
+      <td>34.5067</td>
+      <td>34.5443</td>
+      <td>34.6118</td>
+      <td>34.6754</td>
+      <td>34.7145</td>
+      <td>34.7052</td>
+      <td>34.6663</td>
+      <td>34.5910</td>
+      <td>34.5341</td>
+      <td>34.4641</td>
       <td>...</td>
-      <td>0.009517</td>
-      <td>0.009138</td>
-      <td>0.008870</td>
-      <td>0.008708</td>
-      <td>0.008652</td>
-      <td>0.008731</td>
-      <td>0.009399</td>
-      <td>0.009033</td>
+      <td>0.008423</td>
+      <td>0.008575</td>
+      <td>0.008570</td>
+      <td>0.008434</td>
+      <td>0.008209</td>
+      <td>0.008051</td>
+      <td>0.007899</td>
+      <td>0.007745</td>
       <td>5</td>
-      <td>180095.0</td>
+      <td>337652.0</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>34.5433</td>
-      <td>34.5854</td>
-      <td>34.6702</td>
-      <td>34.7655</td>
-      <td>34.8129</td>
-      <td>34.8113</td>
-      <td>34.7759</td>
-      <td>34.7356</td>
-      <td>34.6620</td>
-      <td>34.5727</td>
+      <td>34.8016</td>
+      <td>34.8317</td>
+      <td>34.9050</td>
+      <td>34.9618</td>
+      <td>34.9890</td>
+      <td>34.9765</td>
+      <td>34.9221</td>
+      <td>34.8627</td>
+      <td>34.8047</td>
+      <td>34.7095</td>
       <td>...</td>
-      <td>0.014637</td>
-      <td>0.014158</td>
-      <td>0.013854</td>
-      <td>0.013553</td>
-      <td>0.014076</td>
-      <td>0.014631</td>
-      <td>0.015046</td>
-      <td>0.015124</td>
-      <td>5</td>
-      <td>122806.0</td>
+      <td>0.008603</td>
+      <td>0.008449</td>
+      <td>0.008391</td>
+      <td>0.008375</td>
+      <td>0.008343</td>
+      <td>0.008242</td>
+      <td>0.008099</td>
+      <td>0.007894</td>
+      <td>2</td>
+      <td>47534.9</td>
     </tr>
   </tbody>
 </table>
@@ -1140,14 +1141,10 @@ pst.get_adj_pars_at_bounds()
 
 
 
-    (['pname:rch_recharge_12tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:welcst_inst:4_ptype:cn_usecol:3_pstyle:m'],
-     ['pname:rch_recharge_3tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:rch_recharge_4tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:rch_recharge_6tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:rch_recharge_8tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:welcst_inst:9_ptype:cn_usecol:3_pstyle:m',
-      'pname:welcst_inst:10_ptype:cn_usecol:3_pstyle:m'])
+    ([],
+     ['pname:rch_recharge_4tcn_inst:0_ptype:cn_pstyle:m',
+      'pname:rch_recharge_5tcn_inst:0_ptype:cn_pstyle:m',
+      'pname:rch_recharge_6tcn_inst:0_ptype:cn_pstyle:m'])
 
 
 
@@ -1208,46 +1205,46 @@ f_df
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
       <td>34.810</td>
-      <td>0.500154</td>
-      <td>33.8097</td>
-      <td>35.8103</td>
-      <td>34.994</td>
-      <td>0.21371</td>
-      <td>34.5666</td>
-      <td>35.4214</td>
+      <td>0.514595</td>
+      <td>33.7808</td>
+      <td>35.8392</td>
+      <td>34.7992</td>
+      <td>0.251768</td>
+      <td>34.2956</td>
+      <td>35.3027</td>
     </tr>
     <tr>
       <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
       <td>-694.300</td>
-      <td>284.882000</td>
-      <td>-1264.0600</td>
-      <td>-124.5350</td>
-      <td>-804.821</td>
-      <td>179.37300</td>
-      <td>-1163.5700</td>
-      <td>-446.0750</td>
+      <td>321.726000</td>
+      <td>-1337.7500</td>
+      <td>-50.8468</td>
+      <td>-812.0810</td>
+      <td>238.051000</td>
+      <td>-1288.1800</td>
+      <td>-335.9790</td>
     </tr>
     <tr>
       <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
       <td>-519.185</td>
-      <td>410.235000</td>
-      <td>-1339.6600</td>
-      <td>301.2860</td>
-      <td>-702.030</td>
-      <td>202.77800</td>
-      <td>-1107.5900</td>
-      <td>-296.4740</td>
+      <td>427.106000</td>
+      <td>-1373.4000</td>
+      <td>335.0270</td>
+      <td>-768.6680</td>
+      <td>260.383000</td>
+      <td>-1289.4300</td>
+      <td>-247.9030</td>
     </tr>
     <tr>
       <th>part_time</th>
       <td>211849.000</td>
-      <td>306025.000000</td>
-      <td>-400200.0000</td>
-      <td>823899.0000</td>
-      <td>191513.000</td>
-      <td>170146.00000</td>
-      <td>-148779.0000</td>
-      <td>531806.0000</td>
+      <td>308474.000000</td>
+      <td>-405099.0000</td>
+      <td>828797.0000</td>
+      <td>123513.0000</td>
+      <td>188954.000000</td>
+      <td>-254394.0000</td>
+      <td>501420.0000</td>
     </tr>
   </tbody>
 </table>

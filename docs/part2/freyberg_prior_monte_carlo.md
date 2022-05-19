@@ -3,6 +3,7 @@ layout: default
 title: Prior Monte Carlo
 parent: Decision Support Modelling with pyEMU and PEST++
 nav_order: 3
+math: mathjax3
 ---
 
 # Prior Monte Carlo
@@ -103,7 +104,7 @@ pe.shape
 
 
 
-    (50, 12013)
+    (50, 29653)
 
 
 
@@ -127,7 +128,7 @@ pst.control_data.noptmax = 0 # this is ignored by pestpp-swp, but we can use it 
 pst.write(os.path.join(t_d, 'freyberg_mf6.pst'))
 ```
 
-    noptmax:0, npar_adj:12013, nnz_obs:144
+    noptmax:0, npar_adj:29653, nnz_obs:144
     
 
 Always good to do the 'ole `noptmax=0` test:
@@ -496,7 +497,7 @@ pst.control_data.noptmax = -1
 pst.write(os.path.join(t_d,"freyberg_diagprior.pst"))
 ```
 
-    noptmax:-1, npar_adj:12013, nnz_obs:144
+    noptmax:-1, npar_adj:29653, nnz_obs:144
     
 
 Run `pstpp-ies`. This should take about the same amount of time as `pestpp-swp` did.

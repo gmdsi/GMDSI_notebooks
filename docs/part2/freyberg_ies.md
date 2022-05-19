@@ -1,13 +1,24 @@
----
-layout: default
-title: Ensemble Methods with PEST++IES
-parent: Decision Support Modelling with pyEMU and PEST++
-nav_order: 7
----
+# PEST++IES - History Matching For "Nothing", Uncertainty Analysis for Free
 
-# PESTPP-IES
+PEST++IES embodies an approach to data assimilation and uncertainty analysis which is a signifcant departure from the “calibrate first and do uncertainty analysis later”. PEST++IES does away with the search for a "unique" parameter field that calibrates a model. Instead, its goal is to obtain an _ensemble_ of parameter fields, all of which adequately reflect measured data and expert knowledge. By simulating a forecast with this ensemble of models, a sample of the _posterior forecast probability distribution_ is obtained. 
 
-words here
+This approach is a significant departure from the old-school “calibrate first and do uncertainty analysis later” approach. PEST++IES does not seek a parameter field that is deemed to “calibrate” a model. Instead, it seeks a suite of parameter fields which collectively express posterior parameter uncertainty. Astonishingly, as will be discussed below, the numerical cost of obtaining this suite is often low compared with that required to obtain a single “calibrated” parameter field of post-calibration minimum error variance, particular where parameter numbers are high (which is often required to avoid underestimation of predictive uncertainty).
+
+
+### ...
+PESTPP-IES calculates samples of the posterior parameter probability distribution. It is not the only numerical methodology that provides this service. However, it has properties which allow it to serve this purpose well in many modelling contexts. Unlike FOSM methods (such as those implemented by PESTPP-GLM, PyEMU and programs of the PEST PREDUNC suite), PESTPP-IES’s sampling of the posterior parameter probability distribution is not compromised by an assumption of model linearity. At the same time, where parameter numbers are moderate to high, the numerical burden incurred by use of PESTPP-IES is far smaller than that incurred by use of popular Bayesian sampling methodologies such as Markov chain Monte Carlo.
+
+The numerical algorithm that is implemented by PESTPP-IES is referred to as an “iterative ensemble smoother”. The job of an ensemble smoother is to assimilate data in a “batch” sense. (This in contrast to recursive data assimilation that is implemented using the familiar ensemble Kalman filter methodology.) For PESTPP-IES this data comprises a calibration dataset. PESTPP-IES implements an approximate form of Bayes equation wherein efficiencies are gained by combining Bayesian methods with subspace methods. These efficiencies reduce the computational burden of giving effect to Bayesian principles enormously, especially where parameter numbers are high. In fact, beyond a certain threshold set by the information content of measurements comprising a calibration dataset, its numerical burden is almost insensitive to the number of parameters that are employed by a model. This number can thus rise to the hundreds of thousands, or even millions, with little extra computational cost. Hence hydraulic property heterogeneity can be represented at the grid of cell level in a groundwater or subsurface reservoir model.
+
+A PESTPP-IES user commences the model parameterization process with a suite of random parameter fields sampled from the prior parameter probability distribution. These can be generated internally by PESTPP-IES as it begins execution; if parameters exhibit prior spatial correlation this can be expressed using the parcov() control variable, or, if no prior parameter correlation is expected, PESTPP-IES can generate the prior parameter covariance matrix on-the-fly from the parameter bounds, or, optionally, from external parameter data files with a standard_deviation column. Alternatively, if a user generates random parameter fields him/herself, PESTPP-IES can be asked to read these. Where parameters are based on pilot points, the PEST RANDPAR3 utility can be used to generate initial parameter fields; PyEMU provides similar functionality. Alternatively, parameter fields expressing cell-by-cell heterogeneity may be generated with the help of geostatistical software such as SGEMS (Remy et al, 2011). In accordance with normal PEST and PEST++ protocols, all parameters must be given a name, regardless of their number; these names must be recorded in the “parameter data” section of a PEST control file, and in template files that are cited in the PEST control file.
+
+The suite of initial parameter fields comprises an “ensemble”. In general, the greater the number of parameter fields that comprise this ensemble, the better is the history-matching performance of PESTPP-IES. In practice however, the number of realizations is limited by computing resources. A good rule of thumb is to ensure that the number of parameter fields comprising the ensemble exceeds the dimensionality of the solution space of the inverse problem that is posed by the history-matching process. This ensures that the iterative ensemble smoother has access to the directions in parameter space that it requires in order to provide a good fit with the calibration dataset. Normally, this number can only be guessed. However, if a Jacobian matrix is available, the SUPCALC utility from the PEST suite, or functionality available through PyEMU, can be used to assess solution space dimensionality.
+
+Through a series of successive iterations, PESTPP-IES modifies parameter realizations comprising the ensemble such that they all conform with calibration constraints. That is, it adjusts each member of the ensemble such that, when the model is run using each of them, model-to-measurement misfit is good enough for the model to be considered as “calibrated”. The outcome of this multiple parameter field adjustment process is thus an ensemble of parameter fields which can be considered to be samples of the posterior parameter probability distribution.
+
+
+
+
 
 ### 1. The modified Freyberg PEST dataset
 
@@ -112,9 +123,16 @@ pe.shape
 
 
 
-    (50, 12013)
+    (50, 29653)
 
 
+
+
+```python
+#obscov = pyemu.Cov.from_binary(os.path.join(t_d, 'obs_cov.jcb'))
+#oe = pyemu.ObservationEnsemble.from_gaussian_draw(pst, cov=obscov, num_reals=50)
+#oe.to_csv(os.path.join(t_d, 'oe.csv'))
+```
 
 ### 3. Run PESTPP-IES in Parallel
 
@@ -124,8 +142,32 @@ We need to tell PESTPP-IES to use the geostatistical prior parameter ensemble we
 
 
 ```python
+pst.pestpp_options
+```
+
+
+
+
+    {'forecasts': 'oname:sfr_otype:lst_usecol:tailwater_time:4383.5,oname:sfr_otype:lst_usecol:headwater_time:4383.5,oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5,part_time'}
+
+
+
+
+```python
 pst.pestpp_options['ies_parameter_ensemble'] = 'prior_pe.jcb'
 pst.pestpp_options["ies_num_reals"] = 50
+```
+
+
+```python
+pst.pestpp_options["ies_no_noise"] = True
+#pst.pestpp_options["ies_observation_ensemble"] = "oe.csv"
+```
+
+
+```python
+# we will discuss this option later on
+pst.pestpp_options["ies_save_rescov"] = True
 ```
 
 Then, re-write the PEST control file. If you open `freyberg_mf6.pst` in a text editor, you'll see a new PEST++ control variable has been added.
@@ -136,7 +178,7 @@ pst.control_data.noptmax = 0
 pst.write(os.path.join(t_d, 'freyberg_mf6.pst'))
 ```
 
-    noptmax:0, npar_adj:12013, nnz_obs:144
+    noptmax:0, npar_adj:29653, nnz_obs:144
     
 
 Always good to do the 'ole `noptmax=0` test:
@@ -181,7 +223,7 @@ pst.write(os.path.join(t_d, 'freyberg_mf6.pst'))
 m_d = os.path.join('master_ies')
 ```
 
-    noptmax:3, npar_adj:12013, nnz_obs:144
+    noptmax:3, npar_adj:29653, nnz_obs:144
     
 
 The following cell deploys the PEST agents and manager and then starts the run using `pestpp-ies`. Run it by pressing `shift+enter`.
@@ -192,7 +234,7 @@ If you open the tutorial folder, you should also see a bunch of new folders ther
 
 This run should take several minutes to complete (depending on the number of workers and the speed of your machine). If you get an error, make sure that your firewall or antivirus software is not blocking `pestpp-ies` from communicating with the agents (this is a common problem!).
 
-> **Pro Tip**: Running PEST from within a `jupyter notebook` has a tendency to slow things down and hog alot of RAM (at least if you are using Visual Studio Code, as I am). When modelling in the "real world" it is more efficient to implement workflows in scripts which you can call from the command line. For example, for this case it took me 20min when running `pestpp-ies` from the `jupyter notebook`, but only 5min when running form the comand line. If you inspect the tutorial folder, you will find a file named `run.py` that accomplishes this. 
+> **Pro Tip**: Running PEST from within a `jupyter notebook` has a tendency to slow things down and hog alot of RAM. When modelling in the "real world" it is more efficient to implement workflows in scripts which you can call from the command line. 
 
 
 ```python
@@ -209,12 +251,36 @@ pyemu.os_utils.start_workers(t_d, # the folder which contains the "template" PES
 
 words here
 
+a cheap phi progress plot
+
+
+```python
+phi = pd.read_csv(os.path.join(m_d,"freyberg_mf6.phi.actual.csv"),index_col=0)
+phi.index = phi.total_runs
+phi.iloc[:,6:].apply(np.log10).plot(legend=False,lw=0.5,color='k')
+plt.ylabel('log \$Phi$')
+plt.figure()
+phi.iloc[-1,6:].hist()
+plt.title('Final $\Phi$ Distribution');
+```
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_31_0.png)
+    
+
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_31_1.png)
+    
+
+
 
 ```python
 pr_oe = pyemu.ObservationEnsemble.from_csv(pst=pst,filename=os.path.join(m_d,"freyberg_mf6.0.obs.csv"))
 pt_oe = pyemu.ObservationEnsemble.from_csv(pst=pst,filename=os.path.join(m_d,"freyberg_mf6.{0}.obs.csv".format(pst.control_data.noptmax)))
 noise = pyemu.ObservationEnsemble.from_csv(pst=pst,filename=os.path.join(m_d,"freyberg_mf6.obs+noise.csv"))
-
 ```
 
 We can take a look at the distribution of Phi for both prior ensemble and posterior ensemble:
@@ -229,7 +295,7 @@ _ = ax.set_xlabel("$log_{10}\\phi$")
 
 
     
-![png](freyberg_ies_files/freyberg_ies_27_0.png)
+![png](freyberg_ies_files/freyberg_ies_34_0.png)
     
 
 
@@ -237,49 +303,43 @@ Finally, let's plot the obs vs sim timeseries - everyone's fav!
 
 
 ```python
-pst.try_parse_name_metadata()
-obs = pst.observation_data.copy()
-obs = obs.loc[obs.oname.apply(lambda x: x in ["hds","sfr"])]
-obs = obs.loc[obs.obgnme.apply(lambda x: x in pst.nnz_obs_groups),:]
-obs.obgnme.unique()
+def plot_tseries_ensembles(pr_oe, pt_oe, noise, onames=["hds","sfr"]):
+    pst.try_parse_name_metadata()
+    obs = pst.observation_data.copy()
+    obs = obs.loc[obs.oname.apply(lambda x: x in onames)]
+    obs = obs.loc[obs.obgnme.apply(lambda x: x in pst.nnz_obs_groups),:]
+    obs.obgnme.unique()
+
+    ogs = obs.obgnme.unique()
+    fig,axes = plt.subplots(len(ogs),1,figsize=(10,2*len(ogs)))
+    ogs.sort()
+    for ax,og in zip(axes,ogs):
+        oobs = obs.loc[obs.obgnme==og,:].copy()
+        oobs.loc[:,"time"] = oobs.time.astype(float)
+        oobs.sort_values(by="time",inplace=True)
+        tvals = oobs.time.values
+        onames = oobs.obsnme.values
+        [ax.plot(tvals,pr_oe.loc[i,onames].values,"0.5",lw=0.5,alpha=0.5) for i in pr_oe.index]
+        [ax.plot(tvals,pt_oe.loc[i,onames].values,"b",lw=0.5,alpha=0.5) for i in pt_oe.index]
+        
+        oobs = oobs.loc[oobs.weight>0,:]
+        tvals = oobs.time.values
+        onames = oobs.obsnme.values
+        [ax.plot(tvals,noise.loc[i,onames].values,"r",lw=0.5,alpha=0.5) for i in noise.index]
+        ax.plot(oobs.time,oobs.obsval,"r-",lw=2)
+        ax.set_title(og,loc="left")
+    fig.tight_layout()
+    return fig
 ```
 
 
-
-
-    array(['oname:hds_otype:lst_usecol:trgw-0-26-6',
-           'oname:hds_otype:lst_usecol:trgw-0-3-8',
-           'oname:hds_otype:lst_usecol:trgw-2-26-6',
-           'oname:hds_otype:lst_usecol:trgw-2-3-8',
-           'oname:sfr_otype:lst_usecol:gage-1'], dtype=object)
-
-
-
-
 ```python
-ogs = obs.obgnme.unique()
-fig,axes = plt.subplots(len(ogs),1,figsize=(10,5*len(ogs)))
-ogs.sort()
-for ax,og in zip(axes,ogs):
-    oobs = obs.loc[obs.obgnme==og,:].copy()
-    oobs.loc[:,"time"] = oobs.time.astype(float)
-    oobs.sort_values(by="time",inplace=True)
-    tvals = oobs.time.values
-    onames = oobs.obsnme.values
-    [ax.plot(tvals,pr_oe.loc[i,onames].values,"0.5",lw=0.1,alpha=0.5) for i in pr_oe.index]
-    [ax.plot(tvals,pt_oe.loc[i,onames].values,"b",lw=0.1,alpha=0.5) for i in pt_oe.index]
-       
-    oobs = oobs.loc[oobs.weight>0,:]
-    tvals = oobs.time.values
-    onames = oobs.obsnme.values
-    [ax.plot(tvals,noise.loc[i,onames].values,"r",lw=0.1,alpha=0.5) for i in noise.index]
-    ax.plot(oobs.time,oobs.obsval,"r-",lw=2)
-    ax.set_title(og,loc="left")
+fig = plot_tseries_ensembles(pr_oe, pt_oe, noise, onames=["hds","sfr"])
 ```
 
 
     
-![png](freyberg_ies_files/freyberg_ies_30_0.png)
+![png](freyberg_ies_files/freyberg_ies_37_0.png)
     
 
 
@@ -291,7 +351,7 @@ apply an optional additional phi filter to remove poor fitting realizations - us
 
 
 ```python
-thres = 100
+thres = phi.iloc[-1,6:].quantile(0.95)
 pv = pt_oe.phi_vector
 keep = pv.loc[pv<thres]
 if keep.shape[0] != pv.shape[0]:
@@ -305,13 +365,12 @@ if pt_oe.shape[0] == 0:
     print("filtered out all posterior realization #sad")
 ```
 
-    reducing posterior ensemble from 40 to 0 realizations
-    filtered out all posterior realization #sad
+    reducing posterior ensemble from 50 to 47 realizations
     
 
 
     
-![png](freyberg_ies_files/freyberg_ies_33_1.png)
+![png](freyberg_ies_files/freyberg_ies_40_1.png)
     
 
 
@@ -336,37 +395,52 @@ pst.forecast_names
 
 
 ```python
-for forecast in pst.forecast_names:
-    plt.figure()
-    ax = pr_oe.loc[:,forecast].hist(facecolor="0.5",alpha=0.5)
-    ax = pt_oe.loc[:,forecast].hist(facecolor="b",alpha=0.5)
-    
-    ax.set_title(forecast)
-    fval = pst.observation_data.loc[forecast,"obsval"]
-    ax.plot([fval,fval],ax.get_ylim(),"r-")
+def plot_forecast_hist_compare(pt_oe,pr_oe, last_pt_oe=None,last_prior=None ):
+        num_plots = len(pst.forecast_names)
+        num_cols = 1
+        if last_pt_oe!=None:
+            num_cols=2
+        fig,axes = plt.subplots(num_plots, num_cols, figsize=(5*num_cols,num_plots * 2.5), sharex='row',sharey='row')
+        for axs,forecast in zip(axes, pst.forecast_names):
+            # plot first column with currrent outcomes
+            if num_cols==1:
+                axs=[axs]
+            ax = axs[0]
+            # just for aesthetics
+            bin_cols = [pt_oe.loc[:,forecast], pr_oe.loc[:,forecast],]
+            if num_cols>1:
+                bin_cols.extend([last_pt_oe.loc[:,forecast],last_prior.loc[:,forecast]])
+            bins=np.histogram(pd.concat(bin_cols),
+                                         bins=20)[1] #get the bin edges
+            pr_oe.loc[:,forecast].hist(facecolor="0.5",alpha=0.5, bins=bins, ax=ax)
+            pt_oe.loc[:,forecast].hist(facecolor="b",alpha=0.5, bins=bins, ax=ax)
+            ax.set_title(forecast)
+            fval = pst.observation_data.loc[forecast,"obsval"]
+            ax.plot([fval,fval],ax.get_ylim(),"r-")
+            # plot second column with other outcomes
+            if num_cols >1:
+                ax = axs[1]
+                last_prior.loc[:,forecast].hist(facecolor="0.5",alpha=0.5, bins=bins, ax=ax)
+                last_pt_oe.loc[:,forecast].hist(facecolor="b",alpha=0.5, bins=bins, ax=ax)
+                ax.set_title(forecast)
+                fval = pst.observation_data.loc[forecast,"obsval"]
+                ax.plot([fval,fval],ax.get_ylim(),"r-")
+        # set ax column titles
+        if num_cols >1:
+            axes.flatten()[0].text(0.5,1.2,"Current Attempt", transform=axes.flatten()[0].transAxes, weight='bold', fontsize=12, horizontalalignment='center')
+            axes.flatten()[1].text(0.5,1.2,"Previous Attempt", transform=axes.flatten()[1].transAxes, weight='bold', fontsize=12, horizontalalignment='center')
+        fig.tight_layout()
+        return fig
+```
+
+
+```python
+fig = plot_forecast_hist_compare(pt_oe=pt_oe, pr_oe=pr_oe)
 ```
 
 
     
-![png](freyberg_ies_files/freyberg_ies_36_0.png)
-    
-
-
-
-    
-![png](freyberg_ies_files/freyberg_ies_36_1.png)
-    
-
-
-
-    
-![png](freyberg_ies_files/freyberg_ies_36_2.png)
-    
-
-
-
-    
-![png](freyberg_ies_files/freyberg_ies_36_3.png)
+![png](freyberg_ies_files/freyberg_ies_44_0.png)
     
 
 
@@ -375,7 +449,7 @@ Ruh roh!  The posterior isnt covering the correct values for several forecasts. 
 
 ```python
 iter_to_use_as_posterior = 1
-pt_oe = pyemu.ObservationEnsemble.from_csv(pst=pst,filename=os.path.join(m_d,"freyberg_mf6.{0}.obs.csv".\
+pt_oe_iter = pyemu.ObservationEnsemble.from_csv(pst=pst,filename=os.path.join(m_d,"freyberg_mf6.{0}.obs.csv".\
                                                                          format(iter_to_use_as_posterior)))
 
 ```
@@ -384,18 +458,13 @@ pt_oe = pyemu.ObservationEnsemble.from_csv(pst=pst,filename=os.path.join(m_d,"fr
 ```python
 fig,ax = plt.subplots(1,1)
 pr_oe.phi_vector.apply(np.log10).hist(ax=ax,fc="0.5",ec="none",alpha=0.5,density=False)
-pt_oe.phi_vector.apply(np.log10).hist(ax=ax,fc="b",ec="none",alpha=0.5,density=False)
+pt_oe_iter.phi_vector.apply(np.log10).hist(ax=ax,fc="b",ec="none",alpha=0.5,density=False)
 _ = ax.set_xlabel("$log_{10}\phi$")
 ```
 
-    <>:4: DeprecationWarning: invalid escape sequence \p
-    <>:4: DeprecationWarning: invalid escape sequence \p
-    C:\Users\hugm0001\AppData\Local\Temp\ipykernel_23960\4166649625.py:4: DeprecationWarning: invalid escape sequence \p
-    
-
 
     
-![png](freyberg_ies_files/freyberg_ies_39_1.png)
+![png](freyberg_ies_files/freyberg_ies_47_0.png)
     
 
 
@@ -403,31 +472,12 @@ The posterior phi values are more similar to the prior....
 
 
 ```python
-
-
-ogs = obs.obgnme.unique()
-fig,axes = plt.subplots(len(ogs),1,figsize=(10,5*len(ogs)))
-ogs.sort()
-for ax,og in zip(axes,ogs):
-    oobs = obs.loc[obs.obgnme==og,:].copy()
-    oobs.loc[:,"time"] = oobs.time.astype(float)
-    oobs.sort_values(by="time",inplace=True)
-    tvals = oobs.time.values
-    onames = oobs.obsnme.values
-    [ax.plot(tvals,pr_oe.loc[i,onames].values,"0.5",lw=0.1,alpha=0.5) for i in pr_oe.index]
-    [ax.plot(tvals,pt_oe.loc[i,onames].values,"b",lw=0.1,alpha=0.5) for i in pt_oe.index]
-       
-    oobs = oobs.loc[oobs.weight>0,:]
-    tvals = oobs.time.values
-    onames = oobs.obsnme.values
-    [ax.plot(tvals,noise.loc[i,onames].values,"r",lw=0.1,alpha=0.5) for i in noise.index]
-    ax.plot(oobs.time,oobs.obsval,"r-",lw=2)
-    ax.set_title(og,loc="left")
+fig = plot_tseries_ensembles(pr_oe, pt_oe_iter,noise, onames=["hds","sfr"])
 ```
 
 
     
-![png](freyberg_ies_files/freyberg_ies_41_0.png)
+![png](freyberg_ies_files/freyberg_ies_49_0.png)
     
 
 
@@ -437,41 +487,469 @@ Let's see what has happened to the forecasts:
 
 
 ```python
-for forecast in pst.forecast_names:
-    plt.figure()
-    ax = pr_oe.loc[:,forecast].hist(facecolor="0.5",alpha=0.5)
-    ax = pt_oe.loc[:,forecast].hist(facecolor="b",alpha=0.5)
-    
-    ax.set_title(forecast)
-    fval = pst.observation_data.loc[forecast,"obsval"]
-    ax.plot([fval,fval],ax.get_ylim(),"r-")
+fig = plot_forecast_hist_compare(pt_oe=pt_oe_iter,pr_oe=pr_oe,
+                                last_pt_oe=pt_oe,last_prior=pr_oe
+                                )
 ```
 
 
     
-![png](freyberg_ies_files/freyberg_ies_43_0.png)
+![png](freyberg_ies_files/freyberg_ies_51_0.png)
+    
+
+
+Ok, now things are getting interesting - is the posterior covering the truth...success?
+
+How can fit the observations so well and yet get the wrong "answer" for several of the foreacsts?  Here we see a very important outcome:  When you are using an imperfect model (compared to the truth), the link between a good fit of historic conditions and robust forecasts is broken: a good fit doesn't mean a good forecaster.
+
+### PESTPP-IES with automatic prior-data conflict resolution
+
+Prior-data conflict, in the simpliest sense, means that simulated outputs from the prior parameter ensemble don't "cover" the observed values (plus optional measurement noise).  If the outputs from using lots of parameters and conservative (wide) parameter ranges (from the Prior) don't cover the observed values, then that implies we will need extreme parameter values (or extreme combinations) to reproduce these observations - another word for extreme is baised. So we shouldnt attempt parameter adjustments in the presence of prior-data conflict.  The easies way to deal with this is to simply not use conflicted observations for parameter adjustment calculations...PESTPP-IES will do this automatically for you:
+
+# ...ther eisnt much PDC...
+
+we can check whichh observations have PDC:
+
+
+```python
+pdc = pd.read_csv(os.path.join(m_d, "freyberg_mf6.pdc.csv"))
+pdc.name
+```
+
+
+
+
+    0            ONAME:SFR_OTYPE:LST_USECOL:GAGE-1_TIME:3834.5
+    1            ONAME:SFR_OTYPE:LST_USECOL:GAGE-1_TIME:3865.5
+    2            ONAME:SFR_OTYPE:LST_USECOL:GAGE-1_TIME:3896.5
+    3          ONAME:SFRTD_OTYPE:LST_USECOL:GAGE-1_TIME:3865.5
+    4     ONAME:HDSTD_OTYPE:LST_USECOL:TRGW-0-26-6_TIME:3683.5
+    5     ONAME:HDSTD_OTYPE:LST_USECOL:TRGW-0-26-6_TIME:3865.5
+    6     ONAME:HDSTD_OTYPE:LST_USECOL:TRGW-2-26-6_TIME:3865.5
+    7     ONAME:HDSTD_OTYPE:LST_USECOL:TRGW-2-26-6_TIME:3896.5
+    8     ONAME:HDSVD_OTYPE:LST_USECOL:TRGW-0-26-6_TIME:3683.5
+    9     ONAME:HDSVD_OTYPE:LST_USECOL:TRGW-0-26-6_TIME:3773.5
+    10    ONAME:HDSVD_OTYPE:LST_USECOL:TRGW-0-26-6_TIME:3865.5
+    11    ONAME:HDSVD_OTYPE:LST_USECOL:TRGW-0-26-6_TIME:3896.5
+    12     ONAME:HDSVD_OTYPE:LST_USECOL:TRGW-0-3-8_TIME:3743.5
+    13     ONAME:HDSVD_OTYPE:LST_USECOL:TRGW-0-3-8_TIME:3773.5
+    14     ONAME:HDSVD_OTYPE:LST_USECOL:TRGW-0-3-8_TIME:3804.5
+    15     ONAME:HDSVD_OTYPE:LST_USECOL:TRGW-0-3-8_TIME:3834.5
+    16     ONAME:HDSVD_OTYPE:LST_USECOL:TRGW-0-3-8_TIME:3926.5
+    17     ONAME:HDSVD_OTYPE:LST_USECOL:TRGW-0-3-8_TIME:3987.5
+    Name: name, dtype: object
+
+
+
+
+```python
+
+```
+
+
+```python
+pst.pestpp_options["ies_drop_conflicts"] = True
+pst.pestpp_options["ies_pdc_sigma_distance"] = 2.0
+pst.pestpp_options["ies_no_noise"] = True
+pst.write(os.path.join(t_d,"freyberg_mf6.pst"))
+```
+
+    noptmax:3, npar_adj:29653, nnz_obs:144
+    
+
+
+```python
+pyemu.os_utils.start_workers(t_d,"pestpp-ies","freyberg_mf6.pst",num_workers=num_workers,master_dir=m_d)
+```
+
+ies records a csv file with the "adjusted" weights:
+
+
+```python
+
+```
+
+
+```python
+rw_obs = pd.read_csv(os.path.join(m_d,"freyberg_mf6.adjusted.obs_data.csv"), index_col=0)
+rw_obs.loc[[i.lower() for i in pdc.name.tolist()]]
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+      <th>group</th>
+      <th>weight</th>
+    </tr>
+    <tr>
+      <th>name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>oname:sfr_otype:lst_usecol:gage-1_time:3834.5</th>
+      <td>3244.630000</td>
+      <td>oname:sfr_otype:lst_usecol:gage-1</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>oname:sfr_otype:lst_usecol:gage-1_time:3865.5</th>
+      <td>2933.980000</td>
+      <td>oname:sfr_otype:lst_usecol:gage-1</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>oname:sfr_otype:lst_usecol:gage-1_time:3896.5</th>
+      <td>2592.890000</td>
+      <td>oname:sfr_otype:lst_usecol:gage-1</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:3865.5</th>
+      <td>935.558000</td>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3683.5</th>
+      <td>-0.089834</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-26-6</td>
+      <td>20.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3865.5</th>
+      <td>0.467423</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-26-6</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdstd_otype:lst_usecol:trgw-2-26-6_time:3865.5</th>
+      <td>0.555868</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-2-26-6</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdstd_otype:lst_usecol:trgw-2-26-6_time:3896.5</th>
+      <td>0.447572</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-2-26-6</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-26-6_time:3683.5</th>
+      <td>-0.012460</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-26-6</td>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-26-6_time:3773.5</th>
+      <td>-0.004959</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-26-6</td>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-26-6_time:3865.5</th>
+      <td>-0.009928</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-26-6</td>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-26-6_time:3896.5</th>
+      <td>-0.029605</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-26-6</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3743.5</th>
+      <td>-0.061342</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3773.5</th>
+      <td>-0.015666</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8</td>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3804.5</th>
+      <td>-0.001889</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8</td>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3834.5</th>
+      <td>-0.004889</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8</td>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3926.5</th>
+      <td>-0.029573</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3987.5</th>
+      <td>-0.017555</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+## plot match with hist ? Plor forecasts
+
+
+```python
+pr_oe_pdc = pyemu.ObservationEnsemble.from_csv(pst=pst,filename=os.path.join(m_d,"freyberg_mf6.0.obs.csv"))
+pt_oe_pdc = pyemu.ObservationEnsemble.from_csv(pst=pst,filename=os.path.join(m_d,"freyberg_mf6.{0}.obs.csv".format(pst.control_data.noptmax)))
+noise_pdc = pyemu.ObservationEnsemble.from_csv(pst=pst,filename=os.path.join(m_d,"freyberg_mf6.obs+noise.csv"))
+```
+
+
+```python
+fig = plot_tseries_ensembles(pr_oe_pdc, pt_oe_pdc, noise_pdc, onames=["hds","sfr"])
+```
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_66_0.png)
+    
+
+
+
+```python
+fig = plot_forecast_hist_compare(pt_oe=pt_oe_pdc,pr_oe=pr_oe_pdc,
+                                last_pt_oe=pt_oe,last_prior=pr_oe
+                                )
+```
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_67_0.png)
+    
+
+
+# PESTPP-IES in a total error covariance workflow
+
+
+```python
+pst.pestpp_options["ies_save_rescov"] = True
+```
+
+Need to run IES for one iteration to get rescov:
+
+
+```python
+#pst.control_data.noptmax = -1
+#
+#pst.write(os.path.join(t_d,"freyberg_mf6.pst"))
+#pyemu.os_utils.start_workers(t_d,"pestpp-ies","freyberg_mf6.pst",num_workers=num_workers,master_dir=m_d)
+```
+
+
+```python
+res_cov_file = os.path.join(m_d,"freyberg_mf6.{0}.shrunk_res.cov".format(pst.control_data.noptmax))
+
+res_cov = pyemu.Cov.from_ascii(res_cov_file)
+x = res_cov.to_pearson().x.copy()
+x[np.abs(x) < 0.2] = np.NaN
+x[x==1.0] = np.NaN
+
+fig,ax = plt.subplots(1,1,figsize=(10,10))
+cb = ax.imshow(x,cmap="plasma")
+plt.colorbar(cb, shrink=0.8)
+```
+
+
+
+
+    <matplotlib.colorbar.Colorbar at 0x202ca79a2b0>
+
+
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_72_1.png)
+    
+
+
+That would make a nice bohemain rug pattern!  Seriously tho, we see lots of correlation between residuals...so much for the "independence" assumption..
+
+So what should we do?  Well, let's feed that covariance matrix to PESTPP-IES for the next run (an "outer" iteration).  During this run, the noise realizations that are paired with each parameter realization for the calculation of measurement phi will be drawn from this covariance matrix.  Additionally, the weights for non-zero weighted observations maybe lowered if the variance on the diagaonal of this matrix implies lower a weight (weights will never be increased).  In this way, PESTPP-IES is given information about how well it could (or couldn't) fit the observations last time.  In practice, this will keep PESTPP-IES from fitting the obseravtions as well, but more importantly, this helps prevent bias arising from irreducible residual and ultimately, leads to less biased and more covservative forecast estimates. 
+
+Now we need to tell PESTPP-IES to use this covariance matirx and also change some options to be compatible with this mode of operation:
+
+
+```python
+obs=pst.observation_data
+minvar = ((1./obs.loc[res_cov.names,"weight"])**2).min()
+shrink = np.zeros(res_cov.shape)
+np.fill_diagonal(shrink,minvar)
+lamb = 2. / (pt_oe.shape[0] + 1)
+lamb = 0.2
+print(lamb)
+shrunk = (lamb * shrink) + ((1.-lamb) * res_cov.x)
+shrunk = pyemu.Cov(x=shrunk,names=res_cov.names)
+
+# write residual covariance matrix to file
+shrunk.to_ascii(os.path.join(t_d,"shrunk_obs.cov"))
+x = shrunk.to_pearson().x.copy()
+x[x==0.0] = np.NaN
+plt.imshow(x,cmap="plasma")
+plt.colorbar(cb, shrink=0.8)
+```
+
+    0.2
+    
+
+
+
+
+    <matplotlib.colorbar.Colorbar at 0x202db6cfb80>
+
+
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_74_2.png)
+    
+
+
+
+```python
+
+```
+
+
+```python
+pst.control_data.noptmax = 3
+
+# remove PDC resolution
+pst.pestpp_options["ies_drop_conflicts"] = False
+pst.pestpp_options["ies_pdc_sigma_distance"] = 2.0
+# set obs ensemble noise
+pst.pestpp_options["ies_no_noise"] = False
+#res_cov.to_ascii(os.path.join(t_d,"shrunk_obs.cov"))
+pst.pestpp_options["obscov"] = "shrunk_obs.cov"
+pst.pestpp_options["ies_group_draws"] = False
+```
+
+
+```python
+pst.write(os.path.join(t_d,"freyberg_mf6.pst"))
+```
+
+    noptmax:3, npar_adj:29653, nnz_obs:144
+    
+
+
+```python
+pyemu.os_utils.start_workers(t_d,"pestpp-ies","freyberg_mf6.pst",num_workers=num_workers,master_dir=m_d)
+```
+
+
+```python
+#phi = pd.read_csv(os.path.join(m_d,"freyberg_mf6.phi.actual.csv"),index_col=0)
+#best_iteration= phi.loc[phi['mean']==phi['mean'].min()].index.values[0]
+```
+
+
+```python
+pr_oe_rescov = pyemu.ObservationEnsemble.from_csv(pst=pst,filename=os.path.join(m_d,"freyberg_mf6.0.obs.csv"))
+pt_oe_rescov = pyemu.ObservationEnsemble.from_csv(pst=pst,filename=os.path.join(m_d,"freyberg_mf6.{0}.obs.csv".format(pst.control_data.noptmax)))
+noise_rescov = pyemu.ObservationEnsemble.from_csv(pst=pst,filename=os.path.join(m_d,"freyberg_mf6.obs+noise.csv"))
+```
+
+
+```python
+fig = plot_tseries_ensembles(pr_oe_rescov, pt_oe_rescov, noise_rescov, onames=["hds","sfr"])
+```
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_81_0.png)
+    
+
+
+
+```python
+fig = plot_forecast_hist_compare(pt_oe=pt_oe_rescov,pr_oe=pr_oe_rescov,
+                                last_pt_oe=pt_oe_pdc,last_prior=pr_oe_pdc)
+```
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_82_0.png)
+    
+
+
+Check parameer posteriors and comapre to their priors
+...whats this? Why are porosity values changing? tsk tsk
+
+
+```python
+pe_pr = pd.read_csv(os.path.join(m_d,"freyberg_mf6.0.par.csv"),index_col=0)
+pe_pt = pd.read_csv(os.path.join(m_d,"freyberg_mf6.{0}.par.csv".format(pst.control_data.noptmax)),index_col=0)
+par = pst.parameter_data
+pdict = par.groupby("pargp").groups
+
+d = [i for i in pst.par_groups if any(i.startswith(s) for s in ['ne'])]
+pdict = {k:pdict[k] for k in pdict if k in d}
+
+pyemu.plot_utils.ensemble_helper({"0.5":pe_pr,"b":pe_pt},plot_cols=pdict)
+```
+
+
+    <Figure size 576x756 with 0 Axes>
+
+
+
+    
+![png](freyberg_ies_files/freyberg_ies_84_1.png)
     
 
 
 
     
-![png](freyberg_ies_files/freyberg_ies_43_1.png)
+![png](freyberg_ies_files/freyberg_ies_84_2.png)
     
 
 
 
-    
-![png](freyberg_ies_files/freyberg_ies_43_2.png)
-    
+```python
+
+```
 
 
+```python
 
-    
-![png](freyberg_ies_files/freyberg_ies_43_3.png)
-    
-
-
-Ok, now things are getting interesting - the posterior is covering the truth...success?
+```
 
 
 ```python

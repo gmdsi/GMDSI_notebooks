@@ -3,6 +3,7 @@ layout: default
 title: PEST Basics
 parent: Introduction to Theory, Concepts and PEST Mechanic
 nav_order: 2
+math: mathjax3
 ---
 
 # A Whirlwind Introduction to PEST(++)

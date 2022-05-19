@@ -3,6 +3,7 @@ layout: default
 title: Manual Trial-and-Error
 parent: Introduction to Theory, Concepts and PEST Mechanic
 nav_order: 1
+math: mathjax3
 ---
 
 # Manual Trial-and-Error

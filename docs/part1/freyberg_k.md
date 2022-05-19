@@ -3,6 +3,7 @@ layout: default
 title: Automated Calibration with PEST
 parent: Introduction to Theory, Concepts and PEST Mechanic
 nav_order: 3
+math: mathjax3
 ---
 
 # History Match Freyberg using K

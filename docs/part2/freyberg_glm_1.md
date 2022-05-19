@@ -1,8 +1,9 @@
 ---
 layout: default
-title: Calculating a Jacobian Matrix
+title: PEST++GLM Calculating a Jacobian Matrix
 parent: Decision Support Modelling with pyEMU and PEST++
 nav_order: 4
+math: mathjax3
 ---
 
 # Filling a Jacobian Matrix
@@ -242,9 +243,9 @@ pst.write_par_summary_table(filename="none")
       <td>log</td>
       <td>25</td>
       <td>0</td>
-      <td>-0.30103</td>
-      <td>0.176091</td>
-      <td>0.11928</td>
+      <td>-0.60206</td>
+      <td>0.60206</td>
+      <td>0.30103</td>
     </tr>
     <tr>
       <th>welgrd</th>
@@ -252,13 +253,13 @@ pst.write_par_summary_table(filename="none")
       <td>log</td>
       <td>150</td>
       <td>0</td>
-      <td>-0.30103</td>
-      <td>0.176091</td>
-      <td>0.11928</td>
+      <td>-0.60206</td>
+      <td>0.60206</td>
+      <td>0.30103</td>
     </tr>
   </tbody>
 </table>
-<p>75 rows × 7 columns</p>
+<p>123 rows × 7 columns</p>
 </div>
 
 
@@ -275,7 +276,7 @@ pst.npar_adj
 
 
 
-    12013
+    29653
 
 
 
@@ -296,7 +297,7 @@ elapsed
 
 
 
-    6.2568809000000005
+    7.106834600000001
 
 
 
@@ -323,7 +324,7 @@ number_of_cpu_cores = psutil.cpu_count(logical=False)
 print(f'Number of hours to fill a jacobian:{pst.npar_adj * elapsed / 60/60 / number_of_cpu_cores}')
 ```
 
-    Number of hours to fill a jacobian:2.087886395880555
+    Number of hours to fill a jacobian:5.853860177605556
     
 
 Unless you have many many CPU's at hand, that's still going to be pretty long despite the relatively fast model.
@@ -356,7 +357,7 @@ pst.npar_adj
 
 
 
-    2625
+    3321
 
 
 
@@ -421,7 +422,7 @@ OK, let's check that estimate of run time again...hmm...a bit more manageable. O
 print(f'Number of hours to fill a jacobian:{pst.npar_adj * elapsed / 60/60 / number_of_cpu_cores}')
 ```
 
-    Number of hours to fill a jacobian:0.0679566786638889
+    Number of hours to fill a jacobian:0.07718812023888891
     
 
 OK, if we are happy (#sadface) with the number of parameters, we can move on.

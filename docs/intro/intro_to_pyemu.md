@@ -3,6 +3,7 @@ layout: default
 title: Intro to pyEMU
 parent: Introductions to Selected Topics
 nav_order: 3
+math: mathjax3
 ---
 
 # Intro to pyEMU

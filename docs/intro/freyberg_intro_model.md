@@ -3,6 +3,7 @@ layout: default
 title: Intro to Freyberg
 parent: Introductions to Selected Topics
 nav_order: 1
+math: mathjax3
 ---
 
 # Intro to the model

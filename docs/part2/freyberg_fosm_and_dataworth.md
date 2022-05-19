@@ -3,6 +3,7 @@ layout: default
 title: FOSM and Data Worth
 parent: Decision Support Modelling with pyEMU and PEST++
 nav_order: 5
+math: mathjax3
 ---
 
 # FOSM, Data Worth and Related Assessments
@@ -129,7 +130,7 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x15a03fbfcd0>
+    <matplotlib.colorbar.Colorbar at 0x1d91ae6df70>
 
 
 
@@ -180,7 +181,7 @@ sc
 
 
 
-    <pyemu.sc.Schur at 0x15a07246a00>
+    <pyemu.sc.Schur at 0x1d91cacfa00>
 
 
 
@@ -251,7 +252,7 @@ sc.posterior_parameter
 
 
 
-    <pyemu.mat.mat_handler.Cov at 0x15a07b62d90>
+    <pyemu.mat.mat_handler.Cov at 0x1d917206a60>
 
 
 
@@ -292,14 +293,14 @@ sc.posterior_parameter.to_dataframe().sort_index().sort_index(axis=1).iloc[0:3,0
   <tbody>
     <tr>
       <th>pname:ghbcondcn_inst:0_ptype:cn_usecol:4_pstyle:m</th>
-      <td>0.090403</td>
-      <td>0.032059</td>
+      <td>0.094164</td>
+      <td>0.036344</td>
       <td>0.000000</td>
     </tr>
     <tr>
       <th>pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a</th>
-      <td>0.032059</td>
-      <td>0.068818</td>
+      <td>0.036344</td>
+      <td>0.106820</td>
       <td>0.000000</td>
     </tr>
     <tr>
@@ -327,7 +328,7 @@ plt.colorbar(c)
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x15a04337220>
+    <matplotlib.colorbar.Colorbar at 0x1d91aa75310>
 
 
 
@@ -375,32 +376,32 @@ par_sum.head()
     <tr>
       <th>pname:sfrcondcn_inst:0_ptype:cn_usecol:9_pstyle:m</th>
       <td>0.111111</td>
-      <td>0.015306</td>
-      <td>86.225009</td>
-    </tr>
-    <tr>
-      <th>pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a</th>
-      <td>0.444444</td>
-      <td>0.068818</td>
-      <td>84.515935</td>
-    </tr>
-    <tr>
-      <th>pname:stosylayer1cn_inst:0_ptype:cn_pstyle:m</th>
-      <td>0.054284</td>
-      <td>0.009405</td>
-      <td>82.674050</td>
+      <td>0.017837</td>
+      <td>83.946975</td>
     </tr>
     <tr>
       <th>pname:npfklayer3cn_inst:0_ptype:cn_pstyle:m</th>
       <td>0.054284</td>
-      <td>0.009781</td>
-      <td>81.981490</td>
+      <td>0.010565</td>
+      <td>80.537473</td>
     </tr>
     <tr>
-      <th>pname:npfk33layer2pp_inst:0_ptype:pp_pstyle:m_i:27_j:7_zone:1.0</th>
+      <th>pname:stosylayer1cn_inst:0_ptype:cn_pstyle:m</th>
       <td>0.054284</td>
-      <td>0.017619</td>
-      <td>67.543494</td>
+      <td>0.012170</td>
+      <td>77.580115</td>
+    </tr>
+    <tr>
+      <th>pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a</th>
+      <td>0.444444</td>
+      <td>0.106820</td>
+      <td>75.965389</td>
+    </tr>
+    <tr>
+      <th>pname:welcst_inst:9_ptype:cn_usecol:3_pstyle:m</th>
+      <td>0.040275</td>
+      <td>0.010602</td>
+      <td>73.675698</td>
     </tr>
   </tbody>
 </table>
@@ -496,7 +497,7 @@ par_sum.iloc[-5:,:]
       <td>-4.440892e-14</td>
     </tr>
     <tr>
-      <th>pname:nelayer2pp_inst:0_ptype:pp_pstyle:m_i:27_j:12_zone:1.0</th>
+      <th>pname:nelayer2pp_inst:0_ptype:pp_pstyle:m_i:32_j:2_zone:1.0</th>
       <td>0.054284</td>
       <td>0.054284</td>
       <td>-4.440892e-14</td>
@@ -535,14 +536,14 @@ pst.parameter_data.loc[uninf_par_names, 'pargp'].unique()
 
 
 
-    array(['welcst', 'sfrgr', 'npfklayer1pp', 'npfklayer2pp', 'npfklayer2cn',
+    array(['npfklayer1pp', 'npfklayer2pp', 'sfrgr', 'welcst', 'npfklayer2cn',
            'stosslayer3pp', 'stosslayer3cn', 'stosslayer2cn', 'nelayer1pp',
-           'nelayer2pp', 'nelayer3pp', 'rch_recharge_17tcn', 'nelayer1cn',
-           'rch_recharge_18tcn', 'rch_recharge_21tcn', 'rch_recharge_15tcn',
-           'rch_recharge_20tcn', 'rch_recharge_19tcn', 'nelayer3cn',
-           'rch_recharge_14tcn', 'rch_recharge_16tcn', 'rch_recharge_22tcn',
-           'rch_recharge_25tcn', 'rch_recharge_24tcn', 'nelayer2cn',
-           'rch_recharge_23tcn'], dtype=object)
+           'nelayer2pp', 'nelayer3pp', 'nelayer1cn', 'rch_recharge_17tcn',
+           'rch_recharge_16tcn', 'rch_recharge_23tcn', 'nelayer3cn',
+           'rch_recharge_14tcn', 'rch_recharge_15tcn', 'rch_recharge_25tcn',
+           'rch_recharge_24tcn', 'rch_recharge_22tcn', 'rch_recharge_20tcn',
+           'rch_recharge_19tcn', 'nelayer2cn', 'rch_recharge_21tcn',
+           'rch_recharge_18tcn'], dtype=object)
 
 
 
@@ -665,27 +666,27 @@ df
   <tbody>
     <tr>
       <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
-      <td>1.682931e+05</td>
-      <td>3.442848e+04</td>
-      <td>79.542547</td>
+      <td>1.824192e+05</td>
+      <td>5.956144e+04</td>
+      <td>67.349137</td>
     </tr>
     <tr>
       <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
-      <td>8.115779e+04</td>
-      <td>2.790097e+04</td>
-      <td>65.621323</td>
+      <td>1.035079e+05</td>
+      <td>5.176013e+04</td>
+      <td>49.994014</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
-      <td>2.501544e-01</td>
-      <td>4.009638e-02</td>
-      <td>83.971349</td>
+      <td>2.648081e-01</td>
+      <td>5.727902e-02</td>
+      <td>78.369610</td>
     </tr>
     <tr>
       <th>part_time</th>
-      <td>9.365116e+10</td>
-      <td>2.731608e+10</td>
-      <td>70.832102</td>
+      <td>9.515619e+10</td>
+      <td>3.327957e+10</td>
+      <td>65.026369</td>
     </tr>
   </tbody>
 </table>
@@ -762,38 +763,38 @@ par_contrib.head()
   <tbody>
     <tr>
       <th>base</th>
-      <td>34428.484705</td>
-      <td>27900.973961</td>
-      <td>0.040096</td>
-      <td>2.731608e+10</td>
+      <td>59561.437219</td>
+      <td>51760.130357</td>
+      <td>0.057279</td>
+      <td>3.327957e+10</td>
     </tr>
     <tr>
       <th>ghbcondcn</th>
-      <td>34393.364322</td>
-      <td>27186.567298</td>
-      <td>0.039337</td>
-      <td>2.728846e+10</td>
+      <td>59560.166734</td>
+      <td>51126.990125</td>
+      <td>0.056605</td>
+      <td>3.324723e+10</td>
     </tr>
     <tr>
       <th>ghbheadcn</th>
-      <td>26344.522606</td>
-      <td>27221.921202</td>
-      <td>0.036364</td>
-      <td>2.251047e+10</td>
+      <td>42231.382689</td>
+      <td>50342.640087</td>
+      <td>0.050911</td>
+      <td>2.484017e+10</td>
     </tr>
     <tr>
       <th>nelayer1cn</th>
-      <td>34428.484705</td>
-      <td>27900.973961</td>
-      <td>0.040096</td>
-      <td>2.731255e+10</td>
+      <td>59561.437219</td>
+      <td>51760.130357</td>
+      <td>0.057279</td>
+      <td>3.327605e+10</td>
     </tr>
     <tr>
       <th>nelayer1pp</th>
-      <td>34428.484705</td>
-      <td>27900.973961</td>
-      <td>0.040096</td>
-      <td>2.731378e+10</td>
+      <td>59561.437219</td>
+      <td>51760.130357</td>
+      <td>0.057279</td>
+      <td>3.327728e+10</td>
     </tr>
   </tbody>
 </table>
@@ -847,31 +848,31 @@ par_contrib.sort_index().head()
     </tr>
     <tr>
       <th>ghbcondcn</th>
-      <td>1.020097e-01</td>
-      <td>2.560508e+00</td>
-      <td>1.893878e+00</td>
-      <td>0.101108</td>
+      <td>2.133066e-03</td>
+      <td>1.223220e+00</td>
+      <td>1.177386e+00</td>
+      <td>0.097191</td>
     </tr>
     <tr>
       <th>ghbheadcn</th>
-      <td>2.348045e+01</td>
-      <td>2.433796e+00</td>
-      <td>9.309493e+00</td>
-      <td>17.592577</td>
+      <td>2.909610e+01</td>
+      <td>2.738576e+00</td>
+      <td>1.111680e+01</td>
+      <td>25.359096</td>
     </tr>
     <tr>
       <th>nelayer1cn</th>
-      <td>-6.340062e-14</td>
-      <td>-6.519448e-14</td>
-      <td>5.191661e-14</td>
-      <td>0.012916</td>
+      <td>-6.107943e-14</td>
+      <td>0.000000e+00</td>
+      <td>2.422839e-14</td>
+      <td>0.010602</td>
     </tr>
     <tr>
       <th>nelayer1pp</th>
-      <td>6.340062e-14</td>
-      <td>-6.128281e-13</td>
-      <td>-5.883882e-13</td>
-      <td>0.008389</td>
+      <td>2.076701e-13</td>
+      <td>-4.779404e-13</td>
+      <td>-9.206790e-13</td>
+      <td>0.006886</td>
     </tr>
   </tbody>
 </table>
@@ -960,38 +961,38 @@ df_worth.head()
   <tbody>
     <tr>
       <th>base</th>
-      <td>34428.484705</td>
-      <td>27900.973961</td>
-      <td>0.040096</td>
-      <td>2.731608e+10</td>
+      <td>59561.437219</td>
+      <td>51760.130357</td>
+      <td>0.057279</td>
+      <td>3.327957e+10</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5</th>
-      <td>34452.455322</td>
-      <td>27902.385181</td>
-      <td>0.040108</td>
-      <td>2.732999e+10</td>
+      <td>59594.279086</td>
+      <td>51762.585155</td>
+      <td>0.057295</td>
+      <td>3.330021e+10</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5</th>
-      <td>34453.550516</td>
-      <td>27903.072747</td>
-      <td>0.040102</td>
-      <td>2.733301e+10</td>
+      <td>59625.580513</td>
+      <td>51767.784214</td>
+      <td>0.057298</td>
+      <td>3.331757e+10</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5</th>
-      <td>34432.448322</td>
-      <td>27916.696376</td>
-      <td>0.040118</td>
-      <td>2.733938e+10</td>
+      <td>59583.122220</td>
+      <td>51787.525952</td>
+      <td>0.057324</td>
+      <td>3.332052e+10</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5</th>
-      <td>34431.821137</td>
-      <td>27901.372629</td>
-      <td>0.040098</td>
-      <td>2.733434e+10</td>
+      <td>59565.198489</td>
+      <td>51760.160861</td>
+      <td>0.057279</td>
+      <td>3.329369e+10</td>
     </tr>
   </tbody>
 </table>
@@ -1050,38 +1051,38 @@ dw_rm.head()
   <tbody>
     <tr>
       <th>base</th>
-      <td>34428.484705</td>
-      <td>27900.973961</td>
-      <td>0.040096</td>
-      <td>2.731608e+10</td>
+      <td>59561.437219</td>
+      <td>51760.130357</td>
+      <td>0.057279</td>
+      <td>3.327957e+10</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6</th>
-      <td>34894.207085</td>
-      <td>28018.701086</td>
-      <td>0.040317</td>
-      <td>2.767914e+10</td>
+      <td>60113.601986</td>
+      <td>51897.790606</td>
+      <td>0.057567</td>
+      <td>3.374088e+10</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-3-8</th>
-      <td>34779.032519</td>
-      <td>27965.293336</td>
-      <td>0.040619</td>
-      <td>2.735573e+10</td>
+      <td>59979.646407</td>
+      <td>51832.222435</td>
+      <td>0.057743</td>
+      <td>3.333433e+10</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-2-26-6</th>
-      <td>34978.633548</td>
-      <td>28061.612534</td>
-      <td>0.040350</td>
-      <td>2.768577e+10</td>
+      <td>60225.324951</td>
+      <td>51941.013331</td>
+      <td>0.057600</td>
+      <td>3.374710e+10</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-2-3-8</th>
-      <td>34715.495189</td>
-      <td>27956.388540</td>
-      <td>0.040732</td>
-      <td>2.735257e+10</td>
+      <td>59904.408417</td>
+      <td>51820.222115</td>
+      <td>0.057856</td>
+      <td>3.332904e+10</td>
     </tr>
   </tbody>
 </table>
@@ -1138,31 +1139,31 @@ dw_rm.head()
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6</th>
-      <td>1.352724</td>
-      <td>0.421946</td>
-      <td>0.550221</td>
-      <td>1.329109</td>
+      <td>0.927051</td>
+      <td>0.265958</td>
+      <td>0.502687</td>
+      <td>1.386165</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-3-8</th>
-      <td>1.018191</td>
-      <td>0.230527</td>
-      <td>1.302830</td>
-      <td>0.145157</td>
+      <td>0.702148</td>
+      <td>0.139281</td>
+      <td>0.810356</td>
+      <td>0.164537</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-2-26-6</th>
-      <td>1.597947</td>
-      <td>0.575745</td>
-      <td>0.633157</td>
-      <td>1.353404</td>
+      <td>1.114627</td>
+      <td>0.349464</td>
+      <td>0.560166</td>
+      <td>1.404840</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-2-3-8</th>
-      <td>0.833643</td>
-      <td>0.198612</td>
-      <td>1.585331</td>
-      <td>0.133611</td>
+      <td>0.575828</td>
+      <td>0.116097</td>
+      <td>1.007899</td>
+      <td>0.148646</td>
     </tr>
   </tbody>
 </table>
@@ -1298,7 +1299,7 @@ df_worth_new= sc.get_added_obs_importance(base_obslist=sc.pst.nnz_obs_names,
 print("took:",datetime.now() - start)
 ```
 
-    took: 0:01:55.739765
+    took: 0:02:03.322775
     
 
 As before, `get_added_obs_importance()` returns a dataframe with a column for each forecast, and a row for each potential new observation:
@@ -1338,38 +1339,38 @@ df_worth_new.head()
   <tbody>
     <tr>
       <th>base</th>
-      <td>34428.484705</td>
-      <td>27900.973961</td>
-      <td>0.040096</td>
-      <td>2.731608e+10</td>
+      <td>59561.437219</td>
+      <td>51760.130357</td>
+      <td>0.057279</td>
+      <td>3.327957e+10</td>
     </tr>
     <tr>
       <th>i:0_j:0</th>
-      <td>31329.563785</td>
-      <td>25575.286929</td>
-      <td>0.031876</td>
-      <td>2.711733e+10</td>
+      <td>52561.223147</td>
+      <td>46359.936960</td>
+      <td>0.044070</td>
+      <td>3.291755e+10</td>
     </tr>
     <tr>
       <th>i:0_j:1</th>
-      <td>31351.948186</td>
-      <td>25603.702832</td>
-      <td>0.032016</td>
-      <td>2.712331e+10</td>
+      <td>52608.688687</td>
+      <td>46408.943986</td>
+      <td>0.044257</td>
+      <td>3.292824e+10</td>
     </tr>
     <tr>
       <th>i:0_j:10</th>
-      <td>32468.829935</td>
-      <td>26727.320334</td>
-      <td>0.036984</td>
-      <td>2.727953e+10</td>
+      <td>54802.136815</td>
+      <td>48470.527202</td>
+      <td>0.051199</td>
+      <td>3.321296e+10</td>
     </tr>
     <tr>
       <th>i:0_j:11</th>
-      <td>32677.372218</td>
-      <td>26899.456413</td>
-      <td>0.037526</td>
-      <td>2.729292e+10</td>
+      <td>55254.781873</td>
+      <td>48846.148062</td>
+      <td>0.052073</td>
+      <td>3.323746e+10</td>
     </tr>
   </tbody>
 </table>
@@ -1440,50 +1441,50 @@ df_worth_new_plot.head()
   <tbody>
     <tr>
       <th>i:0_j:0</th>
-      <td>9.001038</td>
-      <td>8.335505</td>
-      <td>20.502099</td>
-      <td>0.727582</td>
+      <td>11.752930</td>
+      <td>10.433114</td>
+      <td>23.060982</td>
+      <td>1.087840</td>
       <td>i:0_j:0</td>
       <td>0</td>
       <td>0</td>
     </tr>
     <tr>
       <th>i:0_j:1</th>
-      <td>8.936021</td>
-      <td>8.233659</td>
-      <td>20.153085</td>
-      <td>0.705671</td>
+      <td>11.673238</td>
+      <td>10.338433</td>
+      <td>22.734129</td>
+      <td>1.055696</td>
       <td>i:0_j:1</td>
       <td>0</td>
       <td>1</td>
     </tr>
     <tr>
       <th>i:0_j:10</th>
-      <td>5.691958</td>
-      <td>4.206497</td>
-      <td>7.762642</td>
-      <td>0.133789</td>
+      <td>7.990573</td>
+      <td>6.355477</td>
+      <td>10.614554</td>
+      <td>0.200168</td>
       <td>i:0_j:10</td>
       <td>0</td>
       <td>10</td>
     </tr>
     <tr>
       <th>i:0_j:11</th>
-      <td>5.086232</td>
-      <td>3.589543</td>
-      <td>6.411024</td>
-      <td>0.084772</td>
+      <td>7.230610</td>
+      <td>5.629782</td>
+      <td>9.089283</td>
+      <td>0.126553</td>
       <td>i:0_j:11</td>
       <td>0</td>
       <td>11</td>
     </tr>
     <tr>
       <th>i:0_j:12</th>
-      <td>4.521782</td>
-      <td>2.967906</td>
-      <td>5.202430</td>
-      <td>0.051475</td>
+      <td>6.484469</td>
+      <td>4.887795</td>
+      <td>7.675413</td>
+      <td>0.072924</td>
       <td>i:0_j:12</td>
       <td>0</td>
       <td>12</td>
@@ -1624,7 +1625,7 @@ next_most_df = sc.next_most_important_added_obs(forecast=forecast_name,
 print("took:",datetime.now() - start)
 ```
 
-    took: 0:09:41.669446
+    took: 0:10:28.495257
     
 
 
@@ -1663,37 +1664,37 @@ next_most_df
     <tr>
       <th>i:39_j:5</th>
       <td>i:39_j:5</td>
-      <td>2.620618e+10</td>
-      <td>4.063171</td>
-      <td>4.063171</td>
+      <td>3.056521e+10</td>
+      <td>8.156250</td>
+      <td>8.156250</td>
     </tr>
     <tr>
       <th>i:39_j:6</th>
       <td>i:39_j:6</td>
-      <td>2.561205e+10</td>
-      <td>2.267114</td>
-      <td>6.238169</td>
-    </tr>
-    <tr>
-      <th>i:15_j:0</th>
-      <td>i:15_j:0</td>
-      <td>2.522878e+10</td>
-      <td>1.496439</td>
-      <td>7.641258</td>
+      <td>2.941709e+10</td>
+      <td>3.756296</td>
+      <td>11.606173</td>
     </tr>
     <tr>
       <th>i:39_j:7</th>
       <td>i:39_j:7</td>
-      <td>2.489517e+10</td>
-      <td>1.322337</td>
-      <td>8.862551</td>
+      <td>2.879613e+10</td>
+      <td>2.110876</td>
+      <td>13.472057</td>
     </tr>
     <tr>
-      <th>i:38_j:5</th>
-      <td>i:38_j:5</td>
-      <td>2.467232e+10</td>
-      <td>0.895164</td>
-      <td>9.678381</td>
+      <th>i:9_j:16</th>
+      <td>i:9_j:16</td>
+      <td>2.837543e+10</td>
+      <td>1.460959</td>
+      <td>14.736195</td>
+    </tr>
+    <tr>
+      <th>i:15_j:0</th>
+      <td>i:15_j:0</td>
+      <td>2.789407e+10</td>
+      <td>1.696395</td>
+      <td>16.182606</td>
     </tr>
   </tbody>
 </table>

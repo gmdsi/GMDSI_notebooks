@@ -3,6 +3,7 @@ layout: default
 title: Observation Values, Weights and Noise
 parent: Decision Support Modelling with pyEMU and PEST++
 nav_order: 2
+math: mathjax3
 ---
 
 # Formulating the Objective Function and The Dark Art of Weighting
@@ -753,33 +754,33 @@ obs_sfr.head()
   <tbody>
     <tr>
       <th>3652.5</th>
-      <td>-998.619914</td>
-      <td>-1348.777573</td>
-      <td>2375.319507</td>
+      <td>-830.540950</td>
+      <td>-947.252350</td>
+      <td>1800.635068</td>
     </tr>
     <tr>
       <th>3683.5</th>
-      <td>-1272.712180</td>
-      <td>-1519.339159</td>
-      <td>2880.462424</td>
+      <td>-930.956747</td>
+      <td>-984.886815</td>
+      <td>1919.248255</td>
     </tr>
     <tr>
       <th>3712.5</th>
-      <td>-1437.080948</td>
-      <td>-1666.107492</td>
-      <td>3187.579233</td>
+      <td>-1018.612476</td>
+      <td>-1047.273188</td>
+      <td>2071.582070</td>
     </tr>
     <tr>
       <th>3743.5</th>
-      <td>-1358.139016</td>
-      <td>-1655.745106</td>
-      <td>3093.528575</td>
+      <td>-1054.852127</td>
+      <td>-1281.583118</td>
+      <td>2336.275444</td>
     </tr>
     <tr>
       <th>3773.5</th>
-      <td>-1147.250105</td>
-      <td>-1537.145771</td>
-      <td>2728.430521</td>
+      <td>-1050.008235</td>
+      <td>-1312.987820</td>
+      <td>2362.147089</td>
     </tr>
   </tbody>
 </table>
@@ -1060,7 +1061,7 @@ You got a zero? Alrighty then! Let's write the uprated control file and run PEST
 pst.write(os.path.join(t_d,pst_file))
 ```
 
-    noptmax:0, npar_adj:12013, nnz_obs:144
+    noptmax:0, npar_adj:29653, nnz_obs:144
     
 
 
@@ -1370,7 +1371,7 @@ Don't forget to re-write the .pst file!
 pst.write(os.path.join(t_d,pst_file),version=2)
 ```
 
-    noptmax:0, npar_adj:12013, nnz_obs:144
+    noptmax:0, npar_adj:29653, nnz_obs:144
     
 
 ### Understanding Observation Weights and Measurement Noise
@@ -1737,7 +1738,7 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x1d880683a90>
+    <matplotlib.colorbar.Colorbar at 0x215de2d1820>
 
 
 
@@ -1762,7 +1763,7 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x1d880a17b50>
+    <matplotlib.colorbar.Colorbar at 0x215e71b3820>
 
 
 

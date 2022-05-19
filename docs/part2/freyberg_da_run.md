@@ -1,8 +1,9 @@
 ---
 layout: default
-title: Sequential Data Assimilation with PEST++DA
+title: PEST++DA Sequential Data Assimilation
 parent: Decision Support Modelling with pyEMU and PEST++
-nav_order: 9
+nav_order: 11
+math: mathjax3
 ---
 
 # Run this beast!
@@ -54,7 +55,7 @@ pst.write(os.path.join(t_d, 'freyberg_mf6.pst'))
 m_d = os.path.join('master_da')
 ```
 
-    noptmax:3, npar_adj:12013, nnz_obs:5
+    noptmax:3, npar_adj:29653, nnz_obs:5
     
 
 
