@@ -34,27 +34,22 @@ for d in dirs:
         print(nb_file)
         os.system("jupyter nbconvert --to markdown {0}".format(nb_file))
         # set new name
-        html_file = os.path.basename(nb_file).replace('.ipynb', '.md')
+        md_file = os.path.basename(nb_file).replace('.ipynb', '.md')
         # set the path to md file
         md_dir = os.path.join(docs_dir, d.split("_")[0])
-        ## remove existing file in docs folder
-        #if os.path.exists(os.path.join(md_dir, html_file)):
-        #    os.remove(os.path.join(md_dir, html_file))
+        if not os.path.exists(md_dir):
+            os.makedirs(md_dir)
         # move new file to docs folder
-        shutil.copy(os.path.join(d, html_file), os.path.join(md_dir, html_file))
-        os.remove(os.path.join(d, html_file))
+        shutil.move(os.path.join(d, md_file), os.path.join(md_dir, md_file))
         # move the figures to the docs folder
-        figs_dir = html_file.replace(".md", "_files")
-        # remove existing fig files
-        if os.path.exists(os.path.join(d, figs_dir)):
-            if os.path.exists(os.path.join(md_dir, figs_dir)):
-                shutil.rmtree(os.path.join(md_dir, figs_dir)) 
-            else:
-                os.mkdir(os.path.join(md_dir, figs_dir))
-            # move new fig files
-            shutil.move(os.path.join(d, figs_dir), os.path.join(md_dir, figs_dir))
-        #shutil.rmtree(os.path.join(d, figs_dir))
-        print('preped htmlfile: ', os.path.join(md_dir, html_file))
+        figs_dir = md_file.replace(".md", "_files")
+        if os.path.exists(os.path.join(d,figs_dir)):
+            org = os.path.join(d, figs_dir)
+            dst = os.path.join(md_dir, figs_dir)
+            if os.path.exists(dst):
+                shutil.rmtree(dst)
+            shutil.move(org, dst)
+        print('preped htmlfile: ', os.path.join(md_dir, md_file))
 
 os.chdir(docs_dir)
 md_order = pd.read_csv("notebook_order.csv")
