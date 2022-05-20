@@ -1,0 +1,24 @@
+pcf version=2
+* control data keyword
+pestmode                                 estimation
+noptmax                                 0
+svdmode                                 1
+maxsing                          10000000
+eigthresh                           1e-06
+eigwrite                                1
+forecasts                      oname:sfr_otype:lst_usecol:tailwater_time:4383.5,oname:sfr_otype:lst_usecol:headwater_time:4383.5,oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5,part_time
+ies_parameter_ensemble         prior_pe.jcb
+save_binary                    true
+ies_num_reals                  20
+* parameter groups external
+truth.pargp_data.csv
+* parameter data external
+truth.par_data.csv
+* observation data external
+truth.obs_data.csv
+* model command line
+python forward_run.py
+* model input external
+truth.tplfile_data.csv
+* model output external
+truth.insfile_data.csv
