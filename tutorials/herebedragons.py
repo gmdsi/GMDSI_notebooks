@@ -6,13 +6,14 @@ import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
 import os
 import shutil
-import pyemu
-import flopy 
 import platform
 import pandas as pd 
 import numpy as np
 import matplotlib.pyplot as plt
 import zipfile
+
+import pyemu
+import flopy
 
 def prep_forecasts(pst):
     pred_csv = os.path.join('..', '..', 'models', 'daily_freyberg_mf6_truth',"pred_data.csv")
