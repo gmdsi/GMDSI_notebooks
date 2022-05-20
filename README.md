@@ -37,6 +37,7 @@ To start up the jupyter notebook:
 A jupyter notebook instance should start within the course repo flder. Using the browser, you can now navigate to the "notebooks" folder and open one.
 
 **Before starting Part 2**
+
 If you are going to go through the Part2 notebooks, you will need to run them in the following order:
  1. freyberg_pstfrom_pest_setup.ipynb
  2. freyberg_obs_and_weights.ipynb
