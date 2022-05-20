@@ -25,10 +25,36 @@ You can do this in one of two ways.
 
 **Install Python and dependencies:**
  - If you have already installed Python using Anaconda, you can skip this step. If not, install Anaconda https://www.anaconda.com/products/individual (or Miniconda, if you prefer https://docs.conda.io/en/latest/miniconda.html)
- - If you are using Windows: go to the start menu and open "Anaconda prompt". An anaconda command lline window will open. Navigate to the course repo folder on your machine. You can accomplish this by typing "cd *your folder path*" and pressing < enter >. Replace *your folder path* with the path to the course material folder on your computer.
+ - If you are using __Windows__: go to the start menu and open "Anaconda prompt". An anaconda command line window will open. On __Linux__ or __MacOS__, just use the stndard terminal. Navigate to the course repo folder on your machine. You can accomplish this by typing "cd *your folder path*" and pressing < enter >. Replace *your folder path* with the path to the course material folder on your computer.
  - Next, type "conda env create -f environment.yml". This will create an anaconda environment called "gmdsitut" and install the python dependencies required for this course. It may take a while. Should you wish, you can inspect the *environment.yml* file in the repo folder to see what dependecies are being installed.
 
 **Start jupyter notebook**
 You will need to do this step any time you wish to open one of the course notebooks.
- - In Windows, open the Anaconda prompt. In Mac/Linux, open a terminal. Then, type "conda activate gmdsitut"
- - Next, in the Anaconda prompt or terminal, navigate to the course materials reposiotry folder and type "jupyter notebook". A jupyter notebook instance should start within the course repo flder. Using the browser, you can now navigate to the "notebooks" folder and open one.
+To start up the jupyter notebook:
+- Windows: open the Anaconda prompt and type `conda activate pyclass`
+- Mac/Linux: open a termainal and type `conda activate pyclass`
+- Then navigate to folder where you downloaded the course materials repo and type `jupyter notebook`
+A jupyter notebook instance should start within the course repo flder. Using the browser, you can now navigate to the "notebooks" folder and open one.
+
+**Before starting Part 2**
+If you are going to go through the Part2 notebooks, you will need to run them in the following order:
+ 1. freyberg_pstfrom_pest_setup.ipynb
+ 2. freyberg_obs_and_weights.ipynb
+
+From here you can optionally run each of the following sequences:
+Prior Monte Carlo:
+ 1.freyberg_prior_monte_carlo.ipynb
+
+GLM and data worth:
+ 1. freyberg_glm_1.ipynb
+ 2. freyberg_fosm_and_dataworth.ipynb
+ 3. freyberg_glm_2.ipynb
+
+PEST++IES:
+ 1. freyberg_ies_1_basics.ipynb
+ 2. freyberg_ies_2_localization.ipynb
+ 3. freyberg_ies_3_tot_error_cov.ipynb
+
+PEST++DA:
+ 1. freyberg_da_prep.ipynb
+ 2. freyberg_da_run.ipynb
