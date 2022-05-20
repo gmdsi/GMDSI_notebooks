@@ -3,3 +3,4 @@ prior_cov.jcb
 *.log
 *.rnj
 *.rmr
+*.pyc

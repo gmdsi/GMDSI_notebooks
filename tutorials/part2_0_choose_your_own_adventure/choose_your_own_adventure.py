@@ -11,8 +11,10 @@ import flopy
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt;
+import psutil
 sys.path.append("..")
 import herebedragons as hbd
+
 
 def setup_pst():
 
@@ -132,7 +134,7 @@ def setup_pst():
                             pargp=base+"pp",
                             lower_bound=lb, upper_bound=ub,
                             ult_ubound=uub, ult_lbound=ulb,
-                            pp_space=4) # `PstFrom` will generate a unifrom grid of pilot points in every 4th row and column
+                            pp_space=5) # `PstFrom` will generate a unifrom grid of pilot points in every 4th row and column
         if add_coarse==True:
             # constant (coarse) scale parameters
             pf.add_parameters(f,
@@ -191,7 +193,9 @@ def setup_pst():
     d = {s:f for s,f in zip(sp,files)}
     sp.sort()
     files = [d[s] for s in sp]
-    add_mult_pars(files, lb=0.2, ub=5.0, ulb=2e-5, uub=2e-4, add_coarse=False)
+    #for f in files:
+    # doing it for all spds takes too long
+    add_mult_pars(files, lb=0.2, ub=5.0, ulb=2e-6, uub=2e-4, add_coarse=False)
         
 
     for f in files:   
@@ -368,7 +372,7 @@ def setup_pst():
     import helpers
     helpers.test_extract_hds_arrays(template_ws)
 
-    files = [f for f in os.listdir(template_ws) if f.startswith("hdslay")]
+    files = [f for f in os.listdir(template_ws) if f.startswith("hdslay") and f.endswith("_t1.txt")]
     for f in files:
         pf.add_observations(f,prefix=f.split(".")[0],obsgp=f.split(".")[0])
 
@@ -481,7 +485,7 @@ def setup_pst():
     pst.write(os.path.join(template_ws, 'freyberg_mf6.pst'))
     pyemu.os_utils.run('pestpp-glm freyberg_mf6.pst', cwd=template_ws)
 
-    pe = pf.draw(num_reals=200, use_specsim=True) # draw parameters from the prior distribution
+    pe = pf.draw(num_reals=20, use_specsim=True) # draw parameters from the prior distribution
     pe.enforce() # enforces parameter bounds
     pe.to_binary(os.path.join(template_ws,"prior_pe.jcb")) #writes the paramter ensemble to binary file
     assert pe.shape[1] == pst.npar
@@ -498,9 +502,10 @@ def run_prior_mc(t_d):
     pst = pyemu.Pst(os.path.join(t_d,"freyberg_mf6.pst"))
     pst.control_data.noptmax = -1
     pst.pestpp_options["ies_num_reals"] = 20
+    #pst.pestpp_options["overdue_giveup_fac"] = 5
     pst.write(os.path.join(t_d,"freyberg_mf6.pst"))
-
-    pyemu.os_utils.start_workers(t_d,"pestpp-ies","freyberg_mf6.pst",num_workers=5,worker_root=".",master_dir="master_pmc")
+    num_workers = 5 #psutil.cpu_count(logical=False)
+    pyemu.os_utils.start_workers(t_d,"pestpp-ies","freyberg_mf6.pst",num_workers=num_workers,worker_root=".",master_dir="master_pmc")
 
 
 def pick_truth(m_d,t_d):
@@ -539,9 +544,51 @@ def pick_truth(m_d,t_d):
     #     ax.set_title(forecast,loc="left")
     # plt.show()
 
+def prep_obs_data(truth_d):
+    hds_df = pd.read_csv(os.path.join(truth_d, 'heads.csv'))
+    sfr_df = pd.read_csv(os.path.join(truth_d, 'sfr.csv'))
+    mp_obs = pd.read_csv(os.path.join(truth_d, 'freyberg_mp.mpend'), skiprows=6, header=None, usecols=[3,5], delim_whitespace=True)
+    
+    # prep calib obs
+    obs_sites = ['GAGE-1','TRGW-0-26-6','TRGW-2-26-6','TRGW-0-3-8','TRGW-2-3-8']
+    truth_data = pd.DataFrame()
+    truth_data = pd.concat([truth_data, pd.melt(hds_df, id_vars=['time'], var_name='site')])
+    truth_data = pd.concat([truth_data, pd.melt(sfr_df, id_vars=['time'], var_name='site')])
+    truth_data.set_index('site', inplace=True)
+    truth_data.loc['part_time', ['time', 'value']] = 1e30, mp_obs.iloc[:,-1].values[0]
+    
+    # prep hm obs
+    obs_data = truth_data.loc[obs_sites]
+    # add a wee bit of extra random noise
+    for i in obs_sites:
+        if i=='GAGE-1':
+            scale = abs(0.1*truth_data.loc[i, 'value'].mean())
+            obs_data.loc[i, 'value'] = np.random.normal(truth_data.loc[i, 'value'], scale=scale)
+        else:
+            obs_data.loc[i, 'value'] = np.random.normal(truth_data.loc[i, 'value'], scale=0.1)
+    
+
+    #nnz obs
+    pred_data = truth_data.loc[~truth_data.index.isin(obs_sites)]
+    # write files
+    obs_data.to_csv(os.path.join(truth_d, 'obs_data.csv'))
+    pred_data.to_csv(os.path.join(truth_d, 'pred_data.csv'))
+
+
+def store_truth_model(truth_d):
+    # folder containing original model files
+    org_d = os.path.join(truth_d)
+    # a dir to hold a copy of the org model files
+    tmp_d = os.path.join('..','..', 'models', 'daily_freyberg_mf6_truth')
+    if os.path.exists(tmp_d):
+        shutil.rmtree(tmp_d)
+    shutil.copytree(org_d,tmp_d)
+
+
 if __name__ == "__main__":
     setup_pst()
     run_prior_mc("freyberg6_template")
     pick_truth("master_pmc","freyberg6_template")
-
+    prep_obs_data("truth_template")
+    store_truth_model("truth_template")
     
