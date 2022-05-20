@@ -6,8 +6,6 @@ We have produced a series of tutorial notebooks to assist modellers in setting u
 
 We have endeavoured to make these tutorials as accesible to as many people as possible. Workflows demonstrated herein are implemented programmaticaly in Python, employing functionality to interface with PEST/PEST++ available in pyEMU. However, concepts and the general approaches described are not limited to programmatic workflows. If you are interested in understanding how to implement pyEMU workflows, then you are encouraged to complete the jupyter notebooks yourself. If you just want to get a high-level understanding of decision-support modelling concepts and software, then you can simply read through the notebooks wihtout having to run the code yourself. GMDSI has also produced a separate set of tutorials which demonstrate non-programmatic approaches to working with PEST/PEST++ (https://gmdsi.org/education/tutorials/). 
 
-Tutorials are designed to be modular and independent of each other. Each tutorial addresses its own specific modelling topic. Hence there is no need to work through them in a pre-ordained sequence. However, they also complement each other. Many employ variations of the same synthetic model, and are based on the same simulator (MODFLOW 6). 
-
 ## Pre-requisites (nice to have; not required)
  - Basic understanding of Python 
  - Basic understanding of Jupyter Notebooks
