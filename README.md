@@ -43,6 +43,7 @@ If you are going to go through the Part2 notebooks, you will need to run them in
  2. freyberg_obs_and_weights.ipynb
 
 From here you can optionally run each of the following sequences:
+
 Prior Monte Carlo:
  1.freyberg_prior_monte_carlo.ipynb
 
