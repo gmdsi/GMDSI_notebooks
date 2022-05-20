@@ -17,13 +17,14 @@ from datetime import datetime
 import warnings
 warnings.filterwarnings("ignore")
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
-import pyemu
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt;
-import flopy
-
 import sys
+sys.path.append(os.path.join("..", "..", "dependencies"))
+import pyemu
+import flopy
 sys.path.append("..")
 # import pre-prepared convenience functions
 import herebedragons as hbd
@@ -69,30 +70,6 @@ pyemu.os_utils.start_workers(t_d, # the folder which contains the "template" PES
                             )
 ```
 
-
-    ---------------------------------------------------------------------------
-
-    Exception                                 Traceback (most recent call last)
-
-    Input In [5], in <cell line: 1>()
-    ----> 1 pyemu.os_utils.start_workers(t_d, # the folder which contains the "template" PEST dataset
-          2                             'pestpp-da', #the PEST software version we want to run
-          3                             'freyberg_mf6.pst', # the control file to use with PEST
-          4                             num_workers=num_workers, #how many agents to deploy
-          5                             worker_root='.', #where to deploy the agent directories; relative to where python is running
-          6                             master_dir=m_d, #the manager directory
-          7                             )
-    
-
-    File D:\github\pyemu\pyemu\utils\os_utils.py:362, in start_workers(worker_dir, exe_rel_path, pst_rel_path, num_workers, worker_root, port, rel_path, local, cleanup, master_dir, verbose, silent_master, reuse_master)
-        360 ret_val = master_p.returncode
-        361 if ret_val != 0:
-    --> 362     raise Exception("start_workers() master returned non-zero: {0}".format(ret_val))
-    
-
-    Exception: start_workers() master returned non-zero: 3221226356
-
-
 Like you probably have realized, all things get more complicated with sequential estimation, this includes post processing as well...
 
 Let's load the global obs ensembles
@@ -104,7 +81,7 @@ pr_oes = {int(f.split(".")[1]):pd.read_csv(os.path.join(m_d,f),index_col=0) for 
 print(files)
 ```
 
-    []
+    ['freyberg_mf6.0.0.obs.csv', 'freyberg_mf6.1.0.obs.csv', 'freyberg_mf6.10.0.obs.csv', 'freyberg_mf6.11.0.obs.csv', 'freyberg_mf6.12.0.obs.csv', 'freyberg_mf6.13.0.obs.csv', 'freyberg_mf6.14.0.obs.csv', 'freyberg_mf6.15.0.obs.csv', 'freyberg_mf6.16.0.obs.csv', 'freyberg_mf6.17.0.obs.csv', 'freyberg_mf6.18.0.obs.csv', 'freyberg_mf6.19.0.obs.csv', 'freyberg_mf6.2.0.obs.csv', 'freyberg_mf6.20.0.obs.csv', 'freyberg_mf6.21.0.obs.csv', 'freyberg_mf6.22.0.obs.csv', 'freyberg_mf6.23.0.obs.csv', 'freyberg_mf6.24.0.obs.csv', 'freyberg_mf6.3.0.obs.csv', 'freyberg_mf6.4.0.obs.csv', 'freyberg_mf6.5.0.obs.csv', 'freyberg_mf6.6.0.obs.csv', 'freyberg_mf6.7.0.obs.csv', 'freyberg_mf6.8.0.obs.csv', 'freyberg_mf6.9.0.obs.csv']
     
 
 

@@ -14,7 +14,7 @@ In this tutorial we will add the final tweaks to a PEST dataset and then calibra
 
 Here we will discuss some PEST++GLM specific options and their implications, calibrate the model and then explore outputs - all using a programatic interface. 
 
-### 1. Admin
+### Admin
 
 Start off with the usual loading of dependencies and preparing model and PEST files. We will be continuing to work with the MODFLOW6 modified-Freyberg model (see "freyberg intro to model" notebook), and the high-dimensional PEST dataset prepared in the "freyberg glm 1" notebook. For the purposes of this notebook, you do not require familiarity with previous notebooks (but it helps...). 
 
@@ -27,6 +27,7 @@ import warnings
 warnings.filterwarnings("ignore")
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt;
 import shutil 
 import psutil
@@ -107,7 +108,7 @@ print(f'number of observations: {pst.nnz_obs} \nnumber of parameters: {pst.npar_
     number of parameters: 391
     
 
-### 2. Regularisation
+## Regularisation
 
 We have more unkown parameters than observations. Thus, we have an ill-posed inverse problem. The mathematical term for the process through which a unique solution is sought for a nonunique inverse problem is “regularisation”. The goal of regularised inversion is to seek a unique parameter field that results in a suitable fit between model outputs and field measurements, whilst minimizing the potential for wrongness in model predictions. That is, out of all the ways to fit a calibration dataset, regularized inversion seeks the parameter set of minimum error variance.
 
@@ -117,14 +118,14 @@ There are two main approaches used to stabilize this problem:
 
 These methods can be used by themselves, but are most commonly applied together.
 
-#### 2.1. Tikhonov Regularisation (e.g. "soft knowledge")
+#### Tikhonov Regularisation (e.g. "soft knowledge")
 
 One way to seek a parameter field of minimum error variance is to seek a parameter field that allows the model to fit the calibration dataset, but whose values are also as close as possible to a set of “preferred parameter values”. Ideally, preferred parameter values should also be initial parameter values as listed in the “parameter data” section of the PEST control file. These preferred parameter values are normally close to the centre of the prior parameter probability distribution. At the same time, scales and patterns of departures from the preferred parameter set that are required for model outputs to fit a calibration dataset should be achieved in ways that make “geological sense”.
 
 PEST provides a user with a great deal of flexibility in how Tikhonov constraints can be introduced to an inversion process. The easiest way is to do this is through the use of prior information equations. When prior information equations are employed, Tikhonov constraints are expressed through preferred values that are assigned to linear relationships between parameters. (Equality is the simplest type of linear relationship.) Weights must be assigned to these equations. As is described in PEST documentation, when PEST is run in “regularisation” mode, it makes internal adjustments to the weights that are assigned to any observations or prior information equations that belong to special observation groups that are referred to as “regularisation groups”. 
 
 
-#### 2.2. Promoting "Geologicaly Reasonable" Patterns
+#### Promoting "Geologicaly Reasonable" Patterns
 
 PEST (and PEST_HP) provide the option to replace prior information equation weights with covariance matrices. When prior information equations embody Tikhonov constraints, they can be used to ensure that patterns of parameter heterogeneity that emerge from the inversion process are geologically reasonable. (See the GMDSI Tutorials for examples of how to accompish this with PEST_HP: https://gmdsi.org/blog/calibration-a-simple-model/)
 
@@ -172,7 +173,7 @@ pst.pestpp_options["glm_normal_form"] = "prior"
 
 Boom! Done.
 
-### 2.3. SVD
+###  SVD
 
 Tikhonov regularisation adds information to the calibration process in order to achieve numerical stability. In contrast, subspace methods do so by reducing the dimensionality of the problem, removing and/or combining prameters. When employing SVD in calibration, only parameters and linear combinations of parameters that are suficiently constrained by measured data are estimated. These parameters are said to reside in the *solution space*. Chossing which parameter combinations to estimate is accomplished via singular value decomposition (SVD). SVD-based parameter estimation fixes intial values for parameters/parameter combinations that are not estimable (reside in the *null space*) and does not adjust them during inversion. (So make sure initial parameter values are sensible!)  
 
@@ -193,7 +194,7 @@ pst.svd_data.maxsing = pst.npar_adj
 pst.svd_data.eigthresh = 1e-7
 ```
 
-### 2.4. SVD-assist
+###  SVD-assist
 
 Use of PEST’s “SVD-assist” methodology can promulgate significant increases in the numerical efficiency of highly parameterized inversion. In implementing this methodology, PEST estimates the values of so-called “super parameters” in place of the parameters themselves. 
 
@@ -242,17 +243,79 @@ pst.pestpp_options["n_iter_base"] = -1
 pst.pestpp_options["n_iter_super"] = pst.control_data.noptmax
 ```
 
-The number of super parameters determines the number of model runs undertaken during a super parameter iteration. The number of super parameters to estimate can be set using either or both of the `max_n_super()` and ­`super_eigthresh()` pest++ control variable.  The upper limit of super parameters to form is controlled by `max_n_super()`. Ideally, this value should be as high as possible. In practice, it may have to reflect available computational resources. (See the PEST Manual Part 1 for a pragmatic discussion of how to choose the number of super parameters.) 
+The number of super parameters determines the number of model runs undertaken during a super parameter iteration. The number of super parameters to estimate can be set using either or both of the `max_n_super()` and ­`super_eigthresh()` pest++ control variable.  The upper limit of super parameters to form is controlled by `max_n_super()`. The higher this value is set, the greater the flexibility that PEST++GLM will have to adjust parameters and achieve a good fit with observation data. But, as we discuss quite often over the course of these tutorials, a good fit does not guarantee a good forecast. If you try to esimate more super parameters than there are valid dimensions in the calibration solution space, you run the risk of incurring numerical instability and overfitting. 
 
-For our case, through a bit of trial-and-error we know reasonable results can be achieved with a maximum of super parameters specified in the following cell. That's already a decent amount of savings in terms of run-time! Now, for each iteration instead of running the model several hundred times (i.e. the number of adjustable base parameters; see `pst.npar_adj`) we only need to run the model a few tens of times. An order of magnitude less!
+Ideally an upper limit to `max_n_super` should reflect the amount of information contained in the observation dataset (e.g. the calibration solution space). It cannot be higher than the number of non-zero weighted observations. It will likely be lower. As we have previoulsy calcualted a Jacobian matrix, we can get an estimate of the dimensions of the solution space by inspecting the singular value spectrum using `pyemu.ErrVar` (or the SUPCALC utility form the PEST suite).
+
+First create a linear analysis object.  We will use `ErrVar`  derived type, which replicates the behavior of the `PREDVAR` suite of PEST utilities. We pass it the name of the jacobian matrix file.  If we don't pass an explicit argument for `parcov` or `obscov`, `pyemu` attempts to build them from the parameter bounds and observation weights in a pest control file (.pst) with the same base case name as the jacobian. Seeing as we have a prior covariance matrix, let's pass that in explicitly. 
 
 
 ```python
-pst.pestpp_options["max_n_super"] = 60
+la = pyemu.ErrVar(jco=os.path.join(t_d, "freyberg_pp.jcb"), 
+                    parcov=os.path.join(t_d,"glm_prior.cov"))
+print(la.jco.shape) #without the omitted parameter or the prior info
+la.forecast_names
+```
+
+    (62223, 391)
+    
+
+
+
+
+    ['oname:sfr_otype:lst_usecol:tailwater_time:4383.5',
+     'oname:sfr_otype:lst_usecol:headwater_time:4383.5',
+     'oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5',
+     'part_time']
+
+
+
+We can inspect the singular spectrum of $\mathbf{Q}^{\frac{1}{2}}\mathbf{J}$, where $\mathbf{Q}$ is the cofactor matrix and $\mathbf{J}$ is the jacobian:
+
+
+```python
+s = la.qhalfx.s
+```
+
+If we plot the singular spectrum, we can see that it decays rapidly (note the y-axis is log-scaled). We can really only support about 65 right singular vectors even though we have several hundred adjustable parameters. Should we be using mre super-parameters than that then? Doing so runs the risk of overfitting. Overfitting leads to bias. Bias leads to suffering...
+
+
+```python
+max_sing_val = np.argmax(s.x<1e-8)
+print("Solution space dimensions: ",max_sing_val)
+
+# plot sing sepctrum
+figure = plt.figure(figsize=(10, 4))
+ax = plt.subplot(111)
+ax.plot(s.x)
+ax.set_title("singular spectrum")
+ax.set_ylabel("power")
+ax.set_xlabel("singular value")
+ax.set_xlim(0,pst.nnz_obs)
+ax.set_yscale('log')
+plt.show()
+```
+
+    Solution space dimensions:  65
+    
+
+
+    
+![png](freyberg_glm_2_files/freyberg_glm_2_33_1.png)
+    
+
+
+That's already a decent amount of savings in terms of run-time! Now, for each iteration instead of running the model several hundred times (i.e. the number of adjustable base parameters; see `pst.npar_adj`) we only need to run the model a few tens of times. An order of magnitude less!
+
+In practice, `max_n_super` may be further limited to reflect available computational resources - if you only have time/resources to run the modle 10 times...well then that is what you should set it at. (See the PEST Manual Part 1 for a pragmatic discussion of how to choose the number of super parameters.) 
+
+
+```python
+pst.pestpp_options["max_n_super"] = max_sing_val
 ```
 
 
-### 2.5. FOSM
+### FOSM
  
 
 PEST++GLM makes FOSM parameter and predictive uncertainty analysis a breeze. 
@@ -291,7 +354,7 @@ FOSM implemented by PEST++GLM assumes that the standard deviation of measurement
 
 It is important to keep this in mind. If observation weights in the control file do **not** represent measurement noise, then it may be preferable to not use PEST++GLM to undertake FOSM during parameter estimation. In our case, weights represent the inverse of measurment standard deviations - so we are all good!
 
-### 2.6. FOSM-informed Monte Carlo
+### FOSM-informed Monte Carlo
 
 PEST++GLM also has the ability to undertake nonlinear Monte Carlo uncertainty analysis. FOSM-based posterior Monte Carlo (also called Bayes-linear Monte Carlo) is implemented by drawing samples of parameters from the posterior parameter distribution (described by the posterior parameter covariance matrix and assuming best-fit parameter values as the mean). Each of these parameter realisation is then simulated. As long as forecasts are included as observations in the control file, then the Monte Carlo process provides an ensemble of forecast values. With enough samples of foreacast the posterior predictive uncertainty can be described. In principle, using FOSM-based Monte Carlo to evaluate forecast uncertainty relaxes the assumption of linearity between and foreacsts and parameters - making it more robust.
 
@@ -302,9 +365,9 @@ Activating this option is as easy as adding the `glm_num_reals()` option to the 
 pst.pestpp_options["glm_num_reals"] = 50
 ```
 
-### 2.7. Extra Utility Options
+### Extra Utility Options
 
-There are numerous "utility" options availabel in PEST++GLM. The user manual provides descriptions of all of them. The following two specify options for halting PEST++GLM due to model-run failure:
+There are numerous "utility" options available in PEST++GLM. The user manual provides descriptions of all of them. The following two specify options for halting PEST++GLM due to model-run failure:
 
 
 ```python
@@ -314,7 +377,7 @@ pst.pestpp_options["overdue_giveup_fac"] = 5.0
 pst.pestpp_options["max_run_fail"] = 3
 ```
 
-### 2.8. Re-write Control File and Run PEST++GLM
+### Re-write Control File and Run PEST++GLM
 
 Re-write the control file with the updated pestpp options.
 
@@ -336,11 +399,16 @@ The first thing we will do is specify the number of agents we are going to use.
 
 # Attention!
 
-You must specify the number which is adequate for ***your*** machine! Make sure to assign an appropriate value for the following `num_workers` variable:
+You must specify the number which is adequate for ***your*** machine! Make sure to assign an appropriate value for the following `num_workers` variable. (You can check how many physical cores you have on your local machine with  `psutil`.)
 
 
 ```python
-num_workers = psutil.cpu_count(logical=False) #update this according to your resources
+print(psutil.cpu_count(logical=False))
+```
+
+
+```python
+num_workers = 10 #update this according to your resources
 
 m_d = os.path.join('master_glm_2')
 ```
@@ -356,7 +424,7 @@ pyemu.os_utils.start_workers(t_d,"pestpp-glm",f"{case}.pst",
 
 To see PEST++'s progress, switch to the command line window from which you launched this notebook. Wait until it has completed. This may take several minutes. Feel free to go make a cup of coffee.
 
-### 3. Postprocess
+## Postprocess
 
 During inversion PEST++ records a lot of usefull information in external files. We shall not go through each of these here (see the PEST++ user manual for detailed descriptions). The following are some common outputs a modeller is likely to inspect.
 
@@ -371,7 +439,7 @@ pst.phi
 
 
 
-    985.953637623473
+    503.2307716365608
 
 
 
@@ -382,7 +450,7 @@ Recall that observations are weighted according to the inverse of measurment noi
 print(f"Phi: {pst.phi} \nNumber of non-zero obs: {pst.nnz_obs}")
 ```
 
-    Phi: 985.953637623473 
+    Phi: 503.2307716365608 
     Number of non-zero obs: 144
     
 
@@ -495,8 +563,8 @@ df_obj.head()
     <tr>
       <th>1</th>
       <td>11</td>
-      <td>1365.470</td>
-      <td>1365.470</td>
+      <td>1394.610</td>
+      <td>1394.610</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -508,9 +576,9 @@ df_obj.head()
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>50.5509</td>
+      <td>50.2120</td>
       <td>0</td>
-      <td>88.9789</td>
+      <td>88.4352</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -518,9 +586,9 @@ df_obj.head()
     </tr>
     <tr>
       <th>2</th>
-      <td>82</td>
-      <td>985.954</td>
-      <td>985.954</td>
+      <td>87</td>
+      <td>718.300</td>
+      <td>718.300</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -532,9 +600,9 @@ df_obj.head()
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>50.4263</td>
+      <td>47.2460</td>
       <td>0</td>
-      <td>89.2332</td>
+      <td>80.8141</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -542,9 +610,9 @@ df_obj.head()
     </tr>
     <tr>
       <th>3</th>
-      <td>153</td>
-      <td>1538.820</td>
-      <td>1538.820</td>
+      <td>163</td>
+      <td>503.231</td>
+      <td>503.231</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -556,9 +624,9 @@ df_obj.head()
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>50.3518</td>
+      <td>44.1997</td>
       <td>0</td>
-      <td>89.8838</td>
+      <td>86.9665</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -589,11 +657,11 @@ df_obj.loc[:,["total_phi","model_runs_completed"]].plot(subplots=True)
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_53_1.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_61_1.png)
     
 
 
-### 3.1. Residuals
+### Residuals
 
 We may also wish to compare the measured versus simulated observation values obtained using the "best-fit" parameter set.
 
@@ -648,8 +716,8 @@ pst.res.head()
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>34.190167</td>
-      <td>34.474788</td>
-      <td>-0.284621</td>
+      <td>34.316247</td>
+      <td>-0.126080</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -657,8 +725,8 @@ pst.res.head()
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>34.178076</td>
-      <td>34.521094</td>
-      <td>-0.343018</td>
+      <td>34.326937</td>
+      <td>-0.148861</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -666,8 +734,8 @@ pst.res.head()
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>34.203032</td>
-      <td>34.603723</td>
-      <td>-0.400692</td>
+      <td>34.426585</td>
+      <td>-0.223554</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -675,8 +743,8 @@ pst.res.head()
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>34.274843</td>
-      <td>34.675990</td>
-      <td>-0.401147</td>
+      <td>34.517640</td>
+      <td>-0.242797</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -684,8 +752,8 @@ pst.res.head()
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>34.345650</td>
-      <td>34.715336</td>
-      <td>-0.369686</td>
+      <td>34.575585</td>
+      <td>-0.229935</td>
       <td>0.0</td>
     </tr>
   </tbody>
@@ -698,7 +766,7 @@ And then display 1-to-1 and residual plots for each of the non-zero weighted obs
 
 Scroll down through the plot below. How well does the model replicate historical data? Within the range of "measurement error"? Seems good overall!
 
-What about the residuals? are they evenly distributed around zero? No? Oh dear. This is a sign of bias. It means there is somethign wrong with the model or with the assumptions used for history matching. (In fact, because this is a synthetic model, we know what the cause is: under-parameterisation. Recall all the grid and pilot point parameters that we set as "fixed" during the "freyberg_glm_1" tutorial.) By looking for a "good" fit with our poor model, we may be inducing bias in our predictions. Perhaps we would be better served by accepting a worse fit...let's look at our forecasts.
+What about the residuals? are they evenly distributed around zero? If not, then this is a sign of bias. It means there is something wrong with the model or with the assumptions used for history matching. (In fact, because this is a synthetic model, we know what the cause is: under-parameterisation. Recall all the grid and pilot point parameters that we set as "fixed" during the "freyberg_glm_1" tutorial.) By looking for a "good" fit with our imperfect model, we may be inducing bias in our predictions...?
 
 
 ```python
@@ -712,23 +780,23 @@ pyemu.plot_utils.res_1to1(pst);
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_57_1.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_65_1.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_57_2.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_65_2.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_57_3.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_65_3.png)
     
 
 
-### 3.2. Posterior Monte Carlo 
+### Posterior Monte Carlo 
 
 Because we included FOSM-based Monte Carlo options in the control file, when PEST++GLM concluded the inversion, it subsequently simulated an ensemble of parameters sampled from the linearized posterior parameter probability distribution. Observations from these simulations are recorded in the file named `freyberg_pp.post.obsen.csv`.
 Let's read this file and instantiate a `pyemu.ObservationEnsemble` object to make it easy to plot them:
@@ -812,123 +880,123 @@ oe.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>34.5481</td>
-      <td>34.5932</td>
-      <td>34.6567</td>
-      <td>34.7126</td>
-      <td>34.7471</td>
-      <td>34.7473</td>
-      <td>34.7086</td>
-      <td>34.6382</td>
-      <td>34.5635</td>
-      <td>34.4894</td>
+      <td>34.2111</td>
+      <td>34.2242</td>
+      <td>34.3008</td>
+      <td>34.3539</td>
+      <td>34.3970</td>
+      <td>34.4114</td>
+      <td>34.4017</td>
+      <td>34.3727</td>
+      <td>34.3287</td>
+      <td>34.2190</td>
       <td>...</td>
-      <td>0.007703</td>
-      <td>0.007820</td>
-      <td>0.008326</td>
-      <td>0.008882</td>
-      <td>0.008934</td>
-      <td>0.008721</td>
-      <td>0.008458</td>
-      <td>0.008111</td>
+      <td>0.011337</td>
+      <td>0.011016</td>
+      <td>0.010662</td>
+      <td>0.010477</td>
+      <td>0.010351</td>
+      <td>0.010402</td>
+      <td>0.010510</td>
+      <td>0.010854</td>
       <td>5</td>
-      <td>52839.7</td>
+      <td>349293.0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>34.6400</td>
-      <td>34.6834</td>
-      <td>34.7517</td>
-      <td>34.8086</td>
-      <td>34.8361</td>
-      <td>34.8187</td>
-      <td>34.7660</td>
-      <td>34.7022</td>
-      <td>34.6245</td>
-      <td>34.5440</td>
+      <td>34.4262</td>
+      <td>34.4376</td>
+      <td>34.6092</td>
+      <td>34.7346</td>
+      <td>34.8014</td>
+      <td>34.8035</td>
+      <td>34.7300</td>
+      <td>34.6487</td>
+      <td>34.5675</td>
+      <td>34.2486</td>
       <td>...</td>
-      <td>0.005073</td>
-      <td>0.005497</td>
-      <td>0.005677</td>
-      <td>0.005544</td>
-      <td>0.005295</td>
-      <td>0.004881</td>
-      <td>0.004505</td>
-      <td>0.004087</td>
+      <td>0.004101</td>
+      <td>0.004273</td>
+      <td>0.004347</td>
+      <td>0.004344</td>
+      <td>0.004269</td>
+      <td>0.004057</td>
+      <td>0.003878</td>
+      <td>0.003659</td>
       <td>3</td>
-      <td>152143.0</td>
+      <td>104546.0</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>34.6749</td>
-      <td>34.7132</td>
-      <td>34.7919</td>
-      <td>34.8549</td>
-      <td>34.9010</td>
-      <td>34.8646</td>
-      <td>34.8196</td>
-      <td>34.7437</td>
-      <td>34.6738</td>
-      <td>34.5381</td>
+      <td>34.3853</td>
+      <td>34.4066</td>
+      <td>34.5206</td>
+      <td>34.6064</td>
+      <td>34.6620</td>
+      <td>34.6639</td>
+      <td>34.6397</td>
+      <td>34.5983</td>
+      <td>34.5484</td>
+      <td>34.3352</td>
       <td>...</td>
-      <td>0.013763</td>
-      <td>0.011992</td>
-      <td>0.010857</td>
-      <td>0.009899</td>
-      <td>0.010157</td>
-      <td>0.010349</td>
-      <td>0.012084</td>
-      <td>0.015690</td>
+      <td>0.012864</td>
+      <td>0.012209</td>
+      <td>0.011614</td>
+      <td>0.011344</td>
+      <td>0.011551</td>
+      <td>0.012045</td>
+      <td>0.013027</td>
+      <td>0.013506</td>
       <td>2</td>
-      <td>102617.0</td>
+      <td>359022.0</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>34.5067</td>
-      <td>34.5443</td>
-      <td>34.6118</td>
-      <td>34.6754</td>
-      <td>34.7145</td>
-      <td>34.7052</td>
-      <td>34.6663</td>
-      <td>34.5910</td>
-      <td>34.5341</td>
-      <td>34.4641</td>
+      <td>34.4655</td>
+      <td>34.4778</td>
+      <td>34.5474</td>
+      <td>34.6089</td>
+      <td>34.6413</td>
+      <td>34.6398</td>
+      <td>34.6055</td>
+      <td>34.5647</td>
+      <td>34.4947</td>
+      <td>34.3371</td>
       <td>...</td>
-      <td>0.008423</td>
-      <td>0.008575</td>
-      <td>0.008570</td>
-      <td>0.008434</td>
-      <td>0.008209</td>
-      <td>0.008051</td>
-      <td>0.007899</td>
-      <td>0.007745</td>
-      <td>5</td>
-      <td>337652.0</td>
+      <td>0.015843</td>
+      <td>0.015660</td>
+      <td>0.015567</td>
+      <td>0.015550</td>
+      <td>0.015628</td>
+      <td>0.015745</td>
+      <td>0.015900</td>
+      <td>0.015953</td>
+      <td>2</td>
+      <td>472545.0</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>34.8016</td>
-      <td>34.8317</td>
-      <td>34.9050</td>
-      <td>34.9618</td>
-      <td>34.9890</td>
-      <td>34.9765</td>
-      <td>34.9221</td>
-      <td>34.8627</td>
-      <td>34.8047</td>
-      <td>34.7095</td>
+      <td>34.4859</td>
+      <td>34.4972</td>
+      <td>34.5940</td>
+      <td>34.6826</td>
+      <td>34.7428</td>
+      <td>34.7685</td>
+      <td>34.7559</td>
+      <td>34.7226</td>
+      <td>34.6632</td>
+      <td>34.4963</td>
       <td>...</td>
-      <td>0.008603</td>
-      <td>0.008449</td>
-      <td>0.008391</td>
-      <td>0.008375</td>
-      <td>0.008343</td>
-      <td>0.008242</td>
-      <td>0.008099</td>
-      <td>0.007894</td>
+      <td>0.009302</td>
+      <td>0.009217</td>
+      <td>0.009132</td>
+      <td>0.009042</td>
+      <td>0.008923</td>
+      <td>0.008733</td>
+      <td>0.008572</td>
+      <td>0.008448</td>
       <td>2</td>
-      <td>47534.9</td>
+      <td>113856.0</td>
     </tr>
   </tbody>
 </table>
@@ -953,7 +1021,7 @@ oe.phi_vector.sort_values().hist()
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_61_1.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_69_1.png)
     
 
 
@@ -990,77 +1058,77 @@ plt.show()
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_65_0.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_73_0.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_65_1.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_73_1.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_65_2.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_73_2.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_65_3.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_73_3.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_65_4.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_73_4.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_65_5.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_73_5.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_65_6.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_73_6.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_65_7.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_73_7.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_65_8.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_73_8.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_65_9.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_73_9.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_65_10.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_73_10.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_65_11.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_73_11.png)
     
 
 
-### 3.3. The Minimum Error Variance Parameter Field
+### The Minimum Error Variance Parameter Field
 
 We have inspected the models' ability to replicate measured data. It is also a good idea to inspect how "sensible" are the obtained parameter values. A common easy check is to visualy inspect the spatial distirbution of hydrualic property parameters. One can often find unexpected insight from how parameter patterns emerge during calibration. 
 
@@ -1086,9 +1154,9 @@ pst.write_input_files(pst_path=m_d)
 pyemu.os_utils.run('python forward_run.py', cwd=m_d)
 ```
 
-Now we can use `flopy` to load the model and plot some of the parameters. Let's plot some aps of the spatial distribution of K. (Run the next cell.) 
+Now we can use `flopy` to load the model and plot some of the parameters. Let's plot some maps of the spatial distribution of K. (Run the next cell.) 
 
-Looks a bit "blotchy"...perhaps not particularily realistic, hey? In part, this is due to using the regularized Gauss Levenburg Marquardt option which tends to not look as "smooth" as using Tikhonov regularisation explicitly. In this case, it is also likley due to parameter values compensating for model structural error. So we are getting both a poor representation of measured data _and_ non-realistic parameter fields...not ideal.
+Looks a bit "blotchy"...perhaps not particularily realistic, hey? In part, this is due to using the regularized Gauss Levenburg Marquardt option which tends to not look as "smooth" as using geostatistics-informed Tikhonov regularisation explicitly. In this case, it is also likley due to parameter values compensating for model structural error (e.g. we have n imperfect model and a corase parmaeterisation scheme).
 
 
 ```python
@@ -1112,25 +1180,25 @@ gwf.npf.k.plot(colorbar=True)
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_71_1.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_79_1.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_71_2.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_79_2.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_71_3.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_79_3.png)
     
 
 
 Another quick check is to look for parameters which are at their bounds. (Run the next cell.) 
 
-Ooo - that is concerning. Many parameters at their bounds. Along with the extreme values and blotchiness in the spatial distribution of K we saw earlier, it is often a sign of either a strucutral problem with the model or an inflexible parameterisation scheme. 
+Some parameters are at their bounds. Along with the extreme values and blotchiness in parameter spatial distributions, this can often be a sign of either a strucutral problem with the model or an inflexible parameterisation scheme. 
 
 
 ```python
@@ -1141,10 +1209,21 @@ pst.get_adj_pars_at_bounds()
 
 
 
-    ([],
-     ['pname:rch_recharge_4tcn_inst:0_ptype:cn_pstyle:m',
+    (['pname:npfklayer3pp_inst:0_ptype:pp_pstyle:m_i:27_j:12_zone:1.0',
+      'pname:rch_recharge_2tcn_inst:0_ptype:cn_pstyle:m',
+      'pname:rch_recharge_10tcn_inst:0_ptype:cn_pstyle:m',
+      'pname:rch_recharge_11tcn_inst:0_ptype:cn_pstyle:m',
+      'pname:rch_recharge_12tcn_inst:0_ptype:cn_pstyle:m',
+      'pname:rch_recharge_13tcn_inst:0_ptype:cn_pstyle:m',
+      'pname:welcst_inst:4_ptype:cn_usecol:3_pstyle:m',
+      'pname:welcst_inst:6_ptype:cn_usecol:3_pstyle:m'],
+     ['pname:rch_recharge_3tcn_inst:0_ptype:cn_pstyle:m',
+      'pname:rch_recharge_4tcn_inst:0_ptype:cn_pstyle:m',
       'pname:rch_recharge_5tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:rch_recharge_6tcn_inst:0_ptype:cn_pstyle:m'])
+      'pname:rch_recharge_6tcn_inst:0_ptype:cn_pstyle:m',
+      'pname:rch_recharge_7tcn_inst:0_ptype:cn_pstyle:m',
+      'pname:rch_recharge_8tcn_inst:0_ptype:cn_pstyle:m',
+      'pname:welcst_inst:9_ptype:cn_usecol:3_pstyle:m'])
 
 
 
@@ -1208,10 +1287,10 @@ f_df
       <td>0.514595</td>
       <td>33.7808</td>
       <td>35.8392</td>
-      <td>34.7992</td>
-      <td>0.251768</td>
-      <td>34.2956</td>
-      <td>35.3027</td>
+      <td>35.2258</td>
+      <td>0.251279</td>
+      <td>34.7232</td>
+      <td>35.7283</td>
     </tr>
     <tr>
       <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
@@ -1219,10 +1298,10 @@ f_df
       <td>321.726000</td>
       <td>-1337.7500</td>
       <td>-50.8468</td>
-      <td>-812.0810</td>
-      <td>238.051000</td>
-      <td>-1288.1800</td>
-      <td>-335.9790</td>
+      <td>-789.5830</td>
+      <td>234.854000</td>
+      <td>-1259.2900</td>
+      <td>-319.8740</td>
     </tr>
     <tr>
       <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
@@ -1230,10 +1309,10 @@ f_df
       <td>427.106000</td>
       <td>-1373.4000</td>
       <td>335.0270</td>
-      <td>-768.6680</td>
-      <td>260.383000</td>
-      <td>-1289.4300</td>
-      <td>-247.9030</td>
+      <td>-729.1300</td>
+      <td>254.449000</td>
+      <td>-1238.0300</td>
+      <td>-220.2320</td>
     </tr>
     <tr>
       <th>part_time</th>
@@ -1241,10 +1320,10 @@ f_df
       <td>308474.000000</td>
       <td>-405099.0000</td>
       <td>828797.0000</td>
-      <td>123513.0000</td>
-      <td>188954.000000</td>
-      <td>-254394.0000</td>
-      <td>501420.0000</td>
+      <td>195843.0000</td>
+      <td>186495.000000</td>
+      <td>-177147.0000</td>
+      <td>568833.0000</td>
     </tr>
   </tbody>
 </table>
@@ -1285,32 +1364,30 @@ for forecast in fnames:
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_77_0.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_85_0.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_77_1.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_85_1.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_77_2.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_85_2.png)
     
 
 
 
     
-![png](freyberg_glm_2_files/freyberg_glm_2_77_3.png)
+![png](freyberg_glm_2_files/freyberg_glm_2_85_3.png)
     
 
 
-Does the FOSM posterior (blue-shaded area) overlap the Monte Carlo posterior (blue columns) for all forecasts? If so, that's good news. It measn the assumed linear parameter-forecast relation in the FOSM calculations holds true. If it does not, then the usefullness of FOSM for forecast uncertainty analysis is erroded.
+Does the FOSM posterior (blue-shaded area) overlap the Monte Carlo posterior (blue columns) for all forecasts? If so, that's good news. It means the assumed linear parameter-forecast relation in the FOSM calculations holds true. If it does not, then the usefullness of FOSM for forecast uncertainty analysis is erroded.
 
-Because we are working with a synthetic case for which we know the truth, we can also assess whether forecast posteriors include the true value. Naturally, this would not be possible for a real-world case. Do each of the red lines fall within the FOSM (blue shaded area) and Monte Carlo (blue column) posteriors? If so, then technically uncertainty analysis has not failed. If not, then it has failed - major bad times.
+Because we are working with a synthetic case for which we know the truth, we can also assess whether forecast posteriors include the true value. Naturally, this would not be possible for a real-world case. Do each of the red lines fall within the FOSM (blue shaded area) and Monte Carlo (blue column) posteriors? If so, then technically uncertainty analysis has not failed. #winning. If not, then it has failed. #major bad times.
 
-Of course, in the real-world we wouldn't be able to assess whether it had failed. However, we saw earlier that there were indications of structural error. We also saw signs of the emergence of compensatory roles in parameters during calibration. Both of these are warning signs that calibration (with this reduced parameterisation scheme...) may actualy be detrimental for decision-support. It may be safer to omit calibration and avoid the risk of introducing bias into our forecast - the cost being accepting more uncertainty. We will return to this topic in the tutorials discussing ensemble methods (i.e. PEST++IES).
-
-A modeller might now go back and try and correct the model setup and or parameterisation. For this tutorial, we will not do so. We *know* why it happend because we (the authors) engineered it. However, if you have the inclination, why not try and see if you can come up with a solution? hint: in the "freyberg_glm_1" notebook we induced under-parameterisation, in particular for recharge parameters; what happens if you relax some of the parameter bounds? Or release some of the pilot point parameters? We encourage readers to use this notebook to explore the effects of alternative parameterisation schemes and PEST++GLM settings. The model is relatively fast and enables experimentation. Why not explore the implications of not using SVD-Assist? Or different observation weighting schemes? Or more/other parameters? What are the costs/benefits? 
+In this case we have done a pretty good job. We seem to have avoided underestimating uncertainty, even for the difficult null-space dependent forecasts. Counterintuitively, we did so by _not_ getting a really good fit with with measured data. Only _as good_ a fit as is reasonable given the information content therein. Of course, in the real-world we wouldn't be able to assess whether uncertainty analysis had failed. The somewhat irrealistic parameter patterns (all those bullseyes in the calibrated K field), the fact that several parameters are at their bounds and that the posterior parameter ensemble does not cover observed values are all red-flags. They suggest the potential emergence of bias and parameters taking on compensatory roles.  A modeller might wish to revisti their model and parameterisation to resolve the source of some of this structural error. Or, omitting clairbation entirely might provide a more conservative and robust forecast.We will return to these concepts during the PEST++IES tutorial notebooks.

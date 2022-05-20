@@ -24,16 +24,22 @@ from datetime import datetime
 import warnings
 warnings.filterwarnings("ignore")
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
-import pyemu
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt;
-import flopy
+
 
 import sys
+sys.path.append(os.path.join("..", "..", "dependencies"))
+import pyemu
+import flopy
 sys.path.append("..")
 # import pre-prepared convenience functions
 import herebedragons as hbd
+
+
+
 ```
 
 
@@ -1757,7 +1763,6 @@ Same for temporal-based difference observations....
 
 ```python
 pst.drop_observations(os.path.join(t_d,"sfr.tdiff.csv.ins"),pst_path=".")
-
 ```
 
     75 obs dropped from instruction file freyberg6_da_template\sfr.tdiff.csv.ins
@@ -1815,104 +1820,29 @@ pst.drop_observations(os.path.join(t_d,"sfr.tdiff.csv.ins"),pst_path=".")
   </thead>
   <tbody>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:4383.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:4383.5</td>
-      <td>56.876420</td>
-      <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>headwater</td>
-      <td>4383.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4352.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:4352.5</td>
-      <td>-485.617327</td>
+      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4169.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:4169.5</td>
+      <td>845.752032</td>
       <td>0.00</td>
       <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>gage-1</td>
-      <td>4352.5</td>
+      <td>4169.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4322.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:4322.5</td>
-      <td>-289.590076</td>
-      <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>gage-1</td>
-      <td>4322.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3896.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3896.5</td>
-      <td>415.021331</td>
+      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3987.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3987.5</td>
+      <td>377.369968</td>
       <td>0.00</td>
       <td>oname:sfrtd_otype:lst_usecol:headwater</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>headwater</td>
-      <td>3896.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:4049.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:4049.5</td>
-      <td>-70.344875</td>
-      <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>headwater</td>
-      <td>4049.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:3987.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:3987.5</td>
-      <td>256.007578</td>
-      <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>tailwater</td>
       <td>3987.5</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -1935,29 +1865,89 @@ pst.drop_observations(os.path.join(t_d,"sfr.tdiff.csv.ins"),pst_path=".")
       <td>1.0</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4138.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:4138.5</td>
-      <td>551.787059</td>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:3896.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:3896.5</td>
+      <td>298.651545</td>
       <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
       <td>sfrtd</td>
       <td>lst</td>
-      <td>gage-1</td>
-      <td>4138.5</td>
+      <td>tailwater</td>
+      <td>3896.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4049.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4049.5</td>
-      <td>-78.846029</td>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4199.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4199.5</td>
+      <td>60.565373</td>
       <td>0.00</td>
       <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>tailwater</td>
+      <td>4199.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4230.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4230.5</td>
+      <td>223.737212</td>
+      <td>0.00</td>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>tailwater</td>
+      <td>4230.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:3957.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:3957.5</td>
+      <td>-370.470970</td>
+      <td>0.01</td>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>gage-1</td>
+      <td>3957.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:headwater_time:4049.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:headwater_time:4049.5</td>
+      <td>-70.344875</td>
+      <td>0.00</td>
+      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>headwater</td>
       <td>4049.5</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -1965,19 +1955,34 @@ pst.drop_observations(os.path.join(t_d,"sfr.tdiff.csv.ins"),pst_path=".")
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:4261.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:4261.5</td>
-      <td>493.721852</td>
+      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3957.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3957.5</td>
+      <td>504.114353</td>
       <td>0.00</td>
       <td>oname:sfrtd_otype:lst_usecol:headwater</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>headwater</td>
-      <td>4261.5</td>
+      <td>3957.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:3804.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:3804.5</td>
+      <td>1090.165816</td>
+      <td>0.01</td>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>gage-1</td>
+      <td>3804.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.0</td>
     </tr>
   </tbody>
 </table>
@@ -2048,75 +2053,75 @@ pst.drop_observations(os.path.join(t_d,"heads.vdiff.csv.ins"),pst_path=".")
   </thead>
   <tbody>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-2-9_time:3987.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-2-9_time:3987.5</td>
-      <td>0.004961</td>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-29-15_time:4199.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-29-15_time:4199.5</td>
+      <td>-0.034342</td>
       <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-2-9</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-29-15</td>
       <td>hdsvd</td>
       <td>lst</td>
-      <td>trgw-0-2-9</td>
-      <td>3987.5</td>
+      <td>trgw-0-29-15</td>
+      <td>4199.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-13-10_time:4138.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-13-10_time:4138.5</td>
-      <td>0.007161</td>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-29-15_time:4261.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-29-15_time:4261.5</td>
+      <td>-0.012459</td>
       <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-13-10</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-29-15</td>
       <td>hdsvd</td>
       <td>lst</td>
-      <td>trgw-0-13-10</td>
-      <td>4138.5</td>
+      <td>trgw-0-29-15</td>
+      <td>4261.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-33-7_time:3957.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-33-7_time:3957.5</td>
-      <td>0.003954</td>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-34-10_time:3712.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-34-10_time:3712.5</td>
+      <td>0.006580</td>
       <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-33-7</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-34-10</td>
       <td>hdsvd</td>
       <td>lst</td>
-      <td>trgw-0-33-7</td>
-      <td>3957.5</td>
+      <td>trgw-0-34-10</td>
+      <td>3712.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-26-6_time:3743.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-26-6_time:3743.5</td>
-      <td>0.002085</td>
-      <td>100.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-26-6</td>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-34-10_time:3743.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-34-10_time:3743.5</td>
+      <td>0.007652</td>
+      <td>0.0</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-34-10</td>
       <td>hdsvd</td>
       <td>lst</td>
-      <td>trgw-0-26-6</td>
+      <td>trgw-0-34-10</td>
       <td>3743.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>1.0</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-24-4_time:3926.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-24-4_time:3926.5</td>
-      <td>0.005784</td>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:3773.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:3773.5</td>
+      <td>0.007117</td>
       <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-24-4</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</td>
       <td>hdsvd</td>
       <td>lst</td>
-      <td>trgw-0-24-4</td>
-      <td>3926.5</td>
+      <td>trgw-0-9-1</td>
+      <td>3773.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -2138,79 +2143,79 @@ pst.drop_observations(os.path.join(t_d,"heads.vdiff.csv.ins"),pst_path=".")
       <td>...</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-21-10_time:3896.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-21-10_time:3896.5</td>
-      <td>0.005727</td>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-34-10_time:3926.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-34-10_time:3926.5</td>
+      <td>0.004009</td>
       <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-21-10</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-34-10</td>
       <td>hdsvd</td>
       <td>lst</td>
-      <td>trgw-0-21-10</td>
-      <td>3896.5</td>
+      <td>trgw-0-34-10</td>
+      <td>3926.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-2-15_time:4049.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-2-15_time:4049.5</td>
-      <td>-0.056725</td>
-      <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-2-15</td>
-      <td>hdsvd</td>
-      <td>lst</td>
-      <td>trgw-0-2-15</td>
-      <td>4049.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-15-16_time:3987.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-15-16_time:3987.5</td>
-      <td>0.003836</td>
-      <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-15-16</td>
-      <td>hdsvd</td>
-      <td>lst</td>
-      <td>trgw-0-15-16</td>
-      <td>3987.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-15-16_time:4322.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-15-16_time:4322.5</td>
-      <td>0.003808</td>
-      <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-15-16</td>
-      <td>hdsvd</td>
-      <td>lst</td>
-      <td>trgw-0-15-16</td>
-      <td>4322.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-22-15_time:4322.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-22-15_time:4322.5</td>
-      <td>-0.011825</td>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-22-15_time:4352.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-22-15_time:4352.5</td>
+      <td>-0.024070</td>
       <td>0.0</td>
       <td>oname:hdsvd_otype:lst_usecol:trgw-0-22-15</td>
       <td>hdsvd</td>
       <td>lst</td>
       <td>trgw-0-22-15</td>
-      <td>4322.5</td>
+      <td>4352.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3683.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3683.5</td>
+      <td>0.028698</td>
+      <td>100.0</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8</td>
+      <td>hdsvd</td>
+      <td>lst</td>
+      <td>trgw-0-3-8</td>
+      <td>3683.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-22-15_time:3834.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-22-15_time:3834.5</td>
+      <td>-0.039959</td>
+      <td>0.0</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-22-15</td>
+      <td>hdsvd</td>
+      <td>lst</td>
+      <td>trgw-0-22-15</td>
+      <td>3834.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3926.5</th>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3926.5</td>
+      <td>-0.029573</td>
+      <td>100.0</td>
+      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8</td>
+      <td>hdsvd</td>
+      <td>lst</td>
+      <td>trgw-0-3-8</td>
+      <td>3926.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.0</td>
     </tr>
   </tbody>
 </table>
@@ -2230,6 +2235,11 @@ hdf = pst.drop_observations(os.path.join(t_d,"heads.csv.ins"),pst_path=".")
 
     650 obs dropped from instruction file freyberg6_da_template\heads.csv.ins
     
+
+
+```python
+#[i for i in pst.model_output_data.model_file if i.startswith('hdslay')]
+```
 
 
 ```python
@@ -2333,14 +2343,18 @@ for ins_file in pst.model_output_data.pest_file:
     if ins_file.startswith("hdslay") and ins_file.endswith("_t1.txt.ins"):
         print('not dropping:', ins_file)
         continue
-    lines = open(os.path.join(t_d,ins_file),'r').readlines()
-    df = pst.drop_observations(os.path.join(t_d,ins_file),pst_path=".")
-    if ins_file == "sfr.csv.ins":
-        sfrdf = df
-    with open(os.path.join(t_d,ins_file),'w') as f:
-        for line in lines[:3]:
-            f.write(line.replace("_totim:3652.5","").replace("_time:3652.5",""))
-    pst.add_observations(os.path.join(t_d,ins_file),pst_path=".")
+    elif ins_file.startswith("hdslay"):
+        df = pst.drop_observations(os.path.join(t_d,ins_file),pst_path=".")
+        print('dropping:',ins_file)
+    else:
+        lines = open(os.path.join(t_d,ins_file),'r').readlines()
+        df = pst.drop_observations(os.path.join(t_d,ins_file),pst_path=".")
+        if ins_file == "sfr.csv.ins":
+            sfrdf = df
+        with open(os.path.join(t_d,ins_file),'w') as f:
+            for line in lines[:3]:
+                f.write(line.replace("_totim:3652.5","").replace("_time:3652.5",""))
+        pst.add_observations(os.path.join(t_d,ins_file),pst_path=".")
 assert sfrdf is not None
 ```
 
@@ -2348,156 +2362,235 @@ assert sfrdf is not None
     3 obs added from instruction file freyberg6_da_template\.\sfr.csv.ins
     not dropping: hdslay1_t1.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t10.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t10.txt.ins
+    dropping: hdslay1_t10.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t11.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t11.txt.ins
+    dropping: hdslay1_t11.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t12.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t12.txt.ins
+    dropping: hdslay1_t12.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t13.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t13.txt.ins
+    dropping: hdslay1_t13.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t14.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t14.txt.ins
+    dropping: hdslay1_t14.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t15.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t15.txt.ins
+    dropping: hdslay1_t15.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t16.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t16.txt.ins
+    dropping: hdslay1_t16.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t17.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t17.txt.ins
+    dropping: hdslay1_t17.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t18.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t18.txt.ins
+    dropping: hdslay1_t18.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t19.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t19.txt.ins
+    dropping: hdslay1_t19.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t2.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t2.txt.ins
+    dropping: hdslay1_t2.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t20.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t20.txt.ins
+    dropping: hdslay1_t20.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t21.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t21.txt.ins
+    dropping: hdslay1_t21.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t22.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t22.txt.ins
+    dropping: hdslay1_t22.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t23.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t23.txt.ins
+    dropping: hdslay1_t23.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t24.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t24.txt.ins
+    dropping: hdslay1_t24.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t25.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t25.txt.ins
+    dropping: hdslay1_t25.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t3.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t3.txt.ins
+    dropping: hdslay1_t3.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t4.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t4.txt.ins
+    dropping: hdslay1_t4.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t5.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t5.txt.ins
+    dropping: hdslay1_t5.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t6.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t6.txt.ins
+    dropping: hdslay1_t6.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t7.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t7.txt.ins
+    dropping: hdslay1_t7.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t8.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t8.txt.ins
+    dropping: hdslay1_t8.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t9.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay1_t9.txt.ins
+    dropping: hdslay1_t9.txt.ins
     not dropping: hdslay2_t1.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t10.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t10.txt.ins
+    dropping: hdslay2_t10.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t11.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t11.txt.ins
+    dropping: hdslay2_t11.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t12.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t12.txt.ins
+    dropping: hdslay2_t12.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t13.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t13.txt.ins
+    dropping: hdslay2_t13.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t14.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t14.txt.ins
+    dropping: hdslay2_t14.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t15.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t15.txt.ins
+    dropping: hdslay2_t15.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t16.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t16.txt.ins
+    dropping: hdslay2_t16.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t17.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t17.txt.ins
+    dropping: hdslay2_t17.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t18.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t18.txt.ins
+    dropping: hdslay2_t18.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t19.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t19.txt.ins
+    dropping: hdslay2_t19.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t2.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t2.txt.ins
+    dropping: hdslay2_t2.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t20.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t20.txt.ins
+    dropping: hdslay2_t20.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t21.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t21.txt.ins
+    dropping: hdslay2_t21.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t22.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t22.txt.ins
+    dropping: hdslay2_t22.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t23.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t23.txt.ins
+    dropping: hdslay2_t23.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t24.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t24.txt.ins
+    dropping: hdslay2_t24.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t25.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t25.txt.ins
+    dropping: hdslay2_t25.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t3.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t3.txt.ins
+    dropping: hdslay2_t3.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t4.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t4.txt.ins
+    dropping: hdslay2_t4.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t5.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t5.txt.ins
+    dropping: hdslay2_t5.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t6.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t6.txt.ins
+    dropping: hdslay2_t6.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t7.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t7.txt.ins
+    dropping: hdslay2_t7.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t8.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t8.txt.ins
+    dropping: hdslay2_t8.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay2_t9.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay2_t9.txt.ins
+    dropping: hdslay2_t9.txt.ins
     not dropping: hdslay3_t1.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t10.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t10.txt.ins
+    dropping: hdslay3_t10.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t11.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t11.txt.ins
+    dropping: hdslay3_t11.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t12.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t12.txt.ins
+    dropping: hdslay3_t12.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t13.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t13.txt.ins
+    dropping: hdslay3_t13.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t14.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t14.txt.ins
+    dropping: hdslay3_t14.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t15.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t15.txt.ins
+    dropping: hdslay3_t15.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t16.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t16.txt.ins
+    dropping: hdslay3_t16.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t17.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t17.txt.ins
+    dropping: hdslay3_t17.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t18.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t18.txt.ins
+    dropping: hdslay3_t18.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t19.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t19.txt.ins
+    dropping: hdslay3_t19.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t2.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t2.txt.ins
+    dropping: hdslay3_t2.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t20.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t20.txt.ins
+    dropping: hdslay3_t20.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t21.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t21.txt.ins
+    dropping: hdslay3_t21.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t22.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t22.txt.ins
+    dropping: hdslay3_t22.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t23.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t23.txt.ins
+    dropping: hdslay3_t23.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t24.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t24.txt.ins
+    dropping: hdslay3_t24.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t25.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t25.txt.ins
+    dropping: hdslay3_t25.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t3.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t3.txt.ins
+    dropping: hdslay3_t3.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t4.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t4.txt.ins
+    dropping: hdslay3_t4.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t5.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t5.txt.ins
+    dropping: hdslay3_t5.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t6.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t6.txt.ins
+    dropping: hdslay3_t6.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t7.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t7.txt.ins
+    dropping: hdslay3_t7.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t8.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t8.txt.ins
+    dropping: hdslay3_t8.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay3_t9.txt.ins
-    40 obs added from instruction file freyberg6_da_template\.\hdslay3_t9.txt.ins
+    dropping: hdslay3_t9.txt.ins
     225 obs dropped from instruction file freyberg6_da_template\inc.csv.ins
     9 obs added from instruction file freyberg6_da_template\.\inc.csv.ins
     225 obs dropped from instruction file freyberg6_da_template\cum.csv.ins
     9 obs added from instruction file freyberg6_da_template\.\cum.csv.ins
     
+
+
+```python
+[i for i in pst.model_output_data.model_file if i.startswith('hdslay')]
+```
+
+
+
+
+    ['hdslay1_t1.txt', 'hdslay2_t1.txt', 'hdslay3_t1.txt']
+
+
+
+
+```python
+pst.model_output_data
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pest_file</th>
+      <th>model_file</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>hdslay1_t1.txt.ins</td>
+      <td>hdslay1_t1.txt</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>hdslay2_t1.txt.ins</td>
+      <td>hdslay2_t1.txt</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>hdslay3_t1.txt.ins</td>
+      <td>hdslay3_t1.txt</td>
+    </tr>
+    <tr>
+      <th>.\sfr.csv.ins</th>
+      <td>.\sfr.csv.ins</td>
+      <td>.\sfr.csv</td>
+    </tr>
+    <tr>
+      <th>.\inc.csv.ins</th>
+      <td>.\inc.csv.ins</td>
+      <td>.\inc.csv</td>
+    </tr>
+    <tr>
+      <th>.\cum.csv.ins</th>
+      <td>.\cum.csv.ins</td>
+      <td>.\cum.csv</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 Time to work out a mapping from the MF6 head obs data (that have the actual head observations and weight we want) to the array based GW level observations.  We will again use a special set of PESTPP-DA specific options to help us here.  Since the observed value of GW level and the weights change through time (e.g. across cycles) but we are recording the array-based GW level observations every cycle, we need a way to tell PESTPP-DA to use specific `obsval`s and `weight`s for a given cycle.  `da_observation_cycle_table` and `da_weight_cycle_table` to the rescue!
 
@@ -2544,727 +2637,49 @@ wdata = {}
 alldata = {}
 for site in sites:
     sdf = hdf.loc[hdf.usecol==site,:].copy()
-    print(sdf.weight)
+    #print(sdf.weight)
     
     sdf.sort_values(by="time",inplace=True)
     k,i,j = sdf.k.iloc[0],sdf.i.iloc[0],sdf.j.iloc[0]
     hds = hdsobs.loc[hdsobs.apply(lambda x: x.i==i and x.j==j and x.k==k,axis=1),:].copy()
-    assert hds.shape[0] == 1,site
-    alldata[hds.obsnme.iloc[0]] = sdf.obsval.values
+    #assert hds.shape[0] == 1,site
+    obname = hds.obsnme.iloc[0]
+    print(obname)
+    alldata[obname] = sdf.obsval.values
     if sdf.weight.sum() == 0:
         continue
-    odata[hds.obsnme.iloc[0]] = sdf.obsval.values
-    wdata[hds.obsnme.iloc[0]] = sdf.weight.values
-    print(site)
+    odata[obname] = sdf.obsval.values
+    wdata[obname] = sdf.weight.values
+    #print(site)
         
 ```
 
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-13-10_time:3957.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-15-16_time:4383.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-15_time:4108.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-2-9_time:3957.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-21-10_time:4291.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-22-15_time:3926.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-24-4_time:4138.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4169.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4049.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4108.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3834.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4077.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4322.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4199.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4352.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3896.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4138.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4383.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3652.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3926.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4230.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4291.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3804.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4018.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3987.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3957.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:3865.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-26-6_time:4261.5     0.0
-    Name: weight, dtype: float64
-    trgw-0-26-6
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-29-15_time:3834.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3865.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4169.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4018.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3834.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3743.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3987.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4230.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4077.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3957.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3926.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4352.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4049.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4108.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3896.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3712.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3773.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4322.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3804.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3652.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4291.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4383.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4199.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:3683.5    10.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4138.5     0.0
-    oname:hds_otype:lst_usecol:trgw-0-3-8_time:4261.5     0.0
-    Name: weight, dtype: float64
-    trgw-0-3-8
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-33-7_time:4352.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-34-10_time:3865.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-0-9-1_time:4352.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-13-10_time:4049.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-15-16_time:3926.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-15_time:3804.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-2-9_time:4108.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-21-10_time:4291.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-22-15_time:3652.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-24-4_time:4352.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3652.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4018.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4077.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3987.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4261.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4230.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4199.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3926.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3683.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4291.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3865.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4049.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3804.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3712.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3834.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3957.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4108.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3743.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3773.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4383.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4352.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:3896.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4169.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4138.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-26-6_time:4322.5     0.0
-    Name: weight, dtype: float64
-    trgw-2-26-6
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-29-15_time:3896.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4322.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3683.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3804.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3896.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4291.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4230.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4138.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4169.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4077.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4108.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3834.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3957.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3865.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3987.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4199.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3712.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4352.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4261.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4049.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3743.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4383.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:4018.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3652.5     0.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3773.5    10.0
-    oname:hds_otype:lst_usecol:trgw-2-3-8_time:3926.5    10.0
-    Name: weight, dtype: float64
-    trgw-2-3-8
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-33-7_time:4291.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3683.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-34-10_time:3865.5    0.0
-    Name: weight, dtype: float64
-    obsnme
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3987.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4261.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4322.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3743.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3804.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4049.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3834.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4352.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4108.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3957.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4138.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4169.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4199.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3652.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4077.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3865.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4018.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3712.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3896.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4230.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3926.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3773.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4383.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:4291.5    0.0
-    oname:hds_otype:lst_usecol:trgw-2-9-1_time:3683.5    0.0
-    Name: weight, dtype: float64
+    oname:hdslay1_t1_otype:arr_i:13_j:10
+    oname:hdslay1_t1_otype:arr_i:15_j:16
+    oname:hdslay1_t1_otype:arr_i:2_j:15
+    oname:hdslay1_t1_otype:arr_i:2_j:9
+    oname:hdslay1_t1_otype:arr_i:21_j:10
+    oname:hdslay1_t1_otype:arr_i:22_j:15
+    oname:hdslay1_t1_otype:arr_i:24_j:4
+    oname:hdslay1_t1_otype:arr_i:26_j:6
+    oname:hdslay1_t1_otype:arr_i:29_j:15
+    oname:hdslay1_t1_otype:arr_i:3_j:8
+    oname:hdslay1_t1_otype:arr_i:33_j:7
+    oname:hdslay1_t1_otype:arr_i:34_j:10
+    oname:hdslay1_t1_otype:arr_i:9_j:1
+    oname:hdslay3_t1_otype:arr_i:13_j:10
+    oname:hdslay3_t1_otype:arr_i:15_j:16
+    oname:hdslay3_t1_otype:arr_i:2_j:15
+    oname:hdslay3_t1_otype:arr_i:2_j:9
+    oname:hdslay3_t1_otype:arr_i:21_j:10
+    oname:hdslay3_t1_otype:arr_i:22_j:15
+    oname:hdslay3_t1_otype:arr_i:24_j:4
+    oname:hdslay3_t1_otype:arr_i:26_j:6
+    oname:hdslay3_t1_otype:arr_i:29_j:15
+    oname:hdslay3_t1_otype:arr_i:3_j:8
+    oname:hdslay3_t1_otype:arr_i:33_j:7
+    oname:hdslay3_t1_otype:arr_i:34_j:10
+    oname:hdslay3_t1_otype:arr_i:9_j:1
     
 
 Same for the SFR "gage-1" observations
@@ -3957,7 +3372,7 @@ obs.loc[hdsobs.obsnme,:]
     <tr>
       <th>oname:hdslay1_t1_otype:arr_i:0_j:0</th>
       <td>oname:hdslay1_t1_otype:arr_i:0_j:0</td>
-      <td>35.00016</td>
+      <td>3.500016e+01</td>
       <td>0</td>
       <td>hdslay1_t1</td>
       <td>hdslay1</td>
@@ -3974,7 +3389,7 @@ obs.loc[hdsobs.obsnme,:]
     <tr>
       <th>oname:hdslay1_t1_otype:arr_i:0_j:1</th>
       <td>oname:hdslay1_t1_otype:arr_i:0_j:1</td>
-      <td>34.99182</td>
+      <td>3.499182e+01</td>
       <td>0</td>
       <td>hdslay1_t1</td>
       <td>hdslay1</td>
@@ -3991,7 +3406,7 @@ obs.loc[hdsobs.obsnme,:]
     <tr>
       <th>oname:hdslay1_t1_otype:arr_i:0_j:10</th>
       <td>oname:hdslay1_t1_otype:arr_i:0_j:10</td>
-      <td>34.66480</td>
+      <td>3.466480e+01</td>
       <td>0</td>
       <td>hdslay1_t1</td>
       <td>hdslay1</td>
@@ -4008,7 +3423,7 @@ obs.loc[hdsobs.obsnme,:]
     <tr>
       <th>oname:hdslay1_t1_otype:arr_i:0_j:11</th>
       <td>oname:hdslay1_t1_otype:arr_i:0_j:11</td>
-      <td>34.61760</td>
+      <td>3.461760e+01</td>
       <td>0</td>
       <td>hdslay1_t1</td>
       <td>hdslay1</td>
@@ -4025,7 +3440,7 @@ obs.loc[hdsobs.obsnme,:]
     <tr>
       <th>oname:hdslay1_t1_otype:arr_i:0_j:12</th>
       <td>oname:hdslay1_t1_otype:arr_i:0_j:12</td>
-      <td>34.56958</td>
+      <td>3.456958e+01</td>
       <td>0</td>
       <td>hdslay1_t1</td>
       <td>hdslay1</td>
@@ -4057,93 +3472,93 @@ obs.loc[hdsobs.obsnme,:]
       <td>...</td>
     </tr>
     <tr>
-      <th>oname:hdslay3_t9_otype:arr_i:1_j:15</th>
-      <td>oname:hdslay3_t9_otype:arr_i:1_j:15</td>
-      <td>34.24013</td>
+      <th>oname:hdslay3_t1_otype:arr_i:9_j:5</th>
+      <td>oname:hdslay3_t1_otype:arr_i:9_j:5</td>
+      <td>1.000000e+30</td>
       <td>0</td>
-      <td>obgnme</td>
+      <td>hdslay3_t1</td>
       <td>hdslay3</td>
       <td>arr</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>1</td>
-      <td>15</td>
+      <td>9</td>
+      <td>5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>-1</td>
-      <td>pname:icstrtlayer3_inst:0_ptype:gr_pstyle:d_i:1_j:15_x:3875.00_y:9625.00_zone:1</td>
+      <td></td>
     </tr>
     <tr>
-      <th>oname:hdslay3_t9_otype:arr_i:1_j:16</th>
-      <td>oname:hdslay3_t9_otype:arr_i:1_j:16</td>
-      <td>34.23576</td>
+      <th>oname:hdslay3_t1_otype:arr_i:9_j:6</th>
+      <td>oname:hdslay3_t1_otype:arr_i:9_j:6</td>
+      <td>1.000000e+30</td>
       <td>0</td>
-      <td>obgnme</td>
+      <td>hdslay3_t1</td>
       <td>hdslay3</td>
       <td>arr</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>1</td>
-      <td>16</td>
+      <td>9</td>
+      <td>6</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>-1</td>
-      <td>pname:icstrtlayer3_inst:0_ptype:gr_pstyle:d_i:1_j:16_x:4125.00_y:9625.00_zone:1</td>
+      <td></td>
     </tr>
     <tr>
-      <th>oname:hdslay3_t9_otype:arr_i:1_j:17</th>
-      <td>oname:hdslay3_t9_otype:arr_i:1_j:17</td>
-      <td>34.23270</td>
+      <th>oname:hdslay3_t1_otype:arr_i:9_j:7</th>
+      <td>oname:hdslay3_t1_otype:arr_i:9_j:7</td>
+      <td>1.000000e+30</td>
       <td>0</td>
-      <td>obgnme</td>
+      <td>hdslay3_t1</td>
       <td>hdslay3</td>
       <td>arr</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>1</td>
-      <td>17</td>
+      <td>9</td>
+      <td>7</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>-1</td>
-      <td>pname:icstrtlayer3_inst:0_ptype:gr_pstyle:d_i:1_j:17_x:4375.00_y:9625.00_zone:1</td>
+      <td></td>
     </tr>
     <tr>
-      <th>oname:hdslay3_t9_otype:arr_i:1_j:18</th>
-      <td>oname:hdslay3_t9_otype:arr_i:1_j:18</td>
-      <td>34.23070</td>
+      <th>oname:hdslay3_t1_otype:arr_i:9_j:8</th>
+      <td>oname:hdslay3_t1_otype:arr_i:9_j:8</td>
+      <td>3.450352e+01</td>
       <td>0</td>
-      <td>obgnme</td>
+      <td>hdslay3_t1</td>
       <td>hdslay3</td>
       <td>arr</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>1</td>
-      <td>18</td>
+      <td>9</td>
+      <td>8</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>-1</td>
-      <td>pname:icstrtlayer3_inst:0_ptype:gr_pstyle:d_i:1_j:18_x:4625.00_y:9625.00_zone:1</td>
+      <td>pname:icstrtlayer3_inst:0_ptype:gr_pstyle:d_i:9_j:8_x:2125.00_y:7625.00_zone:1</td>
     </tr>
     <tr>
-      <th>oname:hdslay3_t9_otype:arr_i:1_j:19</th>
-      <td>oname:hdslay3_t9_otype:arr_i:1_j:19</td>
-      <td>34.22971</td>
+      <th>oname:hdslay3_t1_otype:arr_i:9_j:9</th>
+      <td>oname:hdslay3_t1_otype:arr_i:9_j:9</td>
+      <td>3.447937e+01</td>
       <td>0</td>
-      <td>obgnme</td>
+      <td>hdslay3_t1</td>
       <td>hdslay3</td>
       <td>arr</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>1</td>
-      <td>19</td>
+      <td>9</td>
+      <td>9</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>-1</td>
-      <td>pname:icstrtlayer3_inst:0_ptype:gr_pstyle:d_i:1_j:19_x:4875.00_y:9625.00_zone:1</td>
+      <td>pname:icstrtlayer3_inst:0_ptype:gr_pstyle:d_i:9_j:9_x:2375.00_y:7625.00_zone:1</td>
     </tr>
   </tbody>
 </table>
-<p>5280 rows × 14 columns</p>
+<p>2400 rows × 14 columns</p>
 </div>
 
 
@@ -6358,11 +5773,6 @@ with open(os.path.join(t_d,"forward_run.py"),'w') as f:
 
 
 ```python
-
-```
-
-
-```python
 pst.pestpp_options.pop("forecasts",None)
 pst.control_data.noptmax = 0
 pst.write(os.path.join(t_d,"freyberg_mf6.pst"),version=2)
@@ -6371,28 +5781,6 @@ pyemu.os_utils.run("pestpp-da freyberg_mf6.pst",cwd=t_d)
 
     noptmax:0, npar_adj:29653, nnz_obs:5
     
-
-
-    ---------------------------------------------------------------------------
-
-    Exception                                 Traceback (most recent call last)
-
-    Input In [55], in <cell line: 4>()
-          2 pst.control_data.noptmax = 0
-          3 pst.write(os.path.join(t_d,"freyberg_mf6.pst"),version=2)
-    ----> 4 pyemu.os_utils.run("pestpp-da freyberg_mf6.pst",cwd=t_d)
-    
-
-    File D:\github\pyemu\pyemu\utils\os_utils.py:126, in run(cmd_str, cwd, verbose)
-        124 if "window" in platform.platform().lower():
-        125     if ret_val != 0:
-    --> 126         raise Exception("run() returned non-zero: {0}".format(ret_val))
-        127 else:
-        128     estat = os.WEXITSTATUS(ret_val)
-    
-
-    Exception: run() returned non-zero: -1073740940
-
 
 Wow, that takes a lot longer...this is the price of sequential estimation...
 
