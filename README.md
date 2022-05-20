@@ -45,7 +45,7 @@ If you are going to go through the Part2 notebooks, you will need to run them in
 From here you can optionally run each of the following sequences:
 
 Prior Monte Carlo:
- 1.freyberg_prior_monte_carlo.ipynb
+ 1. freyberg_prior_monte_carlo.ipynb
 
 GLM and data worth:
  1. freyberg_glm_1.ipynb
