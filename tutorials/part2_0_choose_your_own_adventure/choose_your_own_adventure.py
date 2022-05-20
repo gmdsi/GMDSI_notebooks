@@ -193,7 +193,9 @@ def setup_pst():
     d = {s:f for s,f in zip(sp,files)}
     sp.sort()
     files = [d[s] for s in sp]
-    add_mult_pars(files, lb=0.2, ub=5.0, ulb=2e-5, uub=2e-4, add_coarse=False)
+    #for f in files:
+    # doing it for all spds takes too long
+    add_mult_pars(files, lb=0.2, ub=5.0, ulb=2e-6, uub=2e-4, add_coarse=False)
         
 
     for f in files:   

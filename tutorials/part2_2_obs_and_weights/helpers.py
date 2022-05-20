@@ -32,9 +32,11 @@ def process_secondary_obs(ws='.'):
 def extract_hds_arrays_and_list_dfs():
     import flopy
     hds = flopy.utils.HeadFile("freyberg6_freyberg.hds")
-    arr = hds.get_data()
-    for i,a in enumerate(arr):
-        np.savetxt("hdslay{0}.txt".format(i+1),a,fmt="%15.6E")
+    for it,t in enumerate(hds.get_times()):
+        d = hds.get_data(totim=t)
+        for k,dlay in enumerate(d):
+            np.savetxt("hdslay{0}_t{1}.txt".format(k+1,it+1),d[k,:,:],fmt="%15.6E")
+            
     lst = flopy.utils.Mf6ListBudget("freyberg6.lst")
     inc,cum = lst.get_dataframes(diff=True,start_datetime=None)
     inc.columns = inc.columns.map(lambda x: x.lower().replace("_","-"))
@@ -43,6 +45,7 @@ def extract_hds_arrays_and_list_dfs():
     cum.index.name = "totim"
     inc.to_csv("inc.csv")
     cum.to_csv("cum.csv")
+    return
     
 
 def test_extract_hds_arrays(d):
