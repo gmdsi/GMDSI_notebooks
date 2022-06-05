@@ -22,8 +22,10 @@ def process_secondary_obs(ws='.'):
     df = pd.read_csv(os.path.join(ws,'heads.csv'), index_col='time')
     df.sort_index(axis=1, inplace=True)
     dh = df.loc[:, [i for i in df.columns if i.startswith('TRGW-0-')]]
-    dh = dh - df.loc[:, [i for i in df.columns if i.startswith('TRGW-2-')]].values
-    dh.to_csv(os.path.join(ws,'heads.vdiff.csv'))
+    dh2 = df.loc[:, df.columns.map(lambda x: x.startswith('TRGW-2-'))]
+    if dh2.shape[1] > 0:
+        dh = dh - dh2.values
+        dh.to_csv(os.path.join(ws,'heads.vdiff.csv'))
 
     print('Secondary observation files processed.')
     return 
@@ -56,5 +58,5 @@ def test_extract_hds_arrays(d):
 
 
 if __name__ == "__main__":
-	#process_secondary_obs()
-    test_extract_hds_arrays("freyberg6_template")
+	process_secondary_obs("freyberg6_template")
+    #test_extract_hds_arrays("freyberg6_template")

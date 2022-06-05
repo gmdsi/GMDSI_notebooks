@@ -7,7 +7,7 @@ cwd = os.getcwd()
 
 clear = False
 pdf = False
-html = False
+html = True
 
 
 def run_nb(nb_file, nb_dir): 
@@ -53,8 +53,6 @@ nb_dir = "part2_6_ies"
 nb_file = "freyberg_ies_1_basics.ipynb"
 run_nb(nb_file, nb_dir)
 nb_file = "freyberg_ies_2_localization.ipynb"
-run_nb(nb_file, nb_dir)
-nb_file = "freyberg_ies_3_tot_error_cov.ipynb"
 run_nb(nb_file, nb_dir)
 
 nb_dir = "part2_da"
