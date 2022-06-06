@@ -13,9 +13,8 @@ import numpy as np
 import matplotlib.pyplot as plt;
 import psutil
 sys.path.insert(0,"..")
-import herebedragons as hbd
-sys.path.insert(0,os.path.join("..","..","dependencies","flopy"))                
-sys.path.insert(0,os.path.join("..","..","dependencies","pyemu"))                               
+import herebedragons as hbd               
+sys.path.insert(0,os.path.join("..","..","dependencies"))                               
 import pyemu
 import flopy
 
