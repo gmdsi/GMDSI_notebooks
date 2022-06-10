@@ -6,7 +6,10 @@ on:
   #  - cron: '0 8 * * *' # run at 8 AM UTC (12 am PST)
   pull_request:  
     branches:    
-      - main
+      - "**"
+  push:
+    branches:
+      - "**"
 
 env:
   CACHE_NUMBER: 0  # increase to reset cache manually
