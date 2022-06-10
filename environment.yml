@@ -25,5 +25,6 @@ dependencies:
   - pyshp
   - gdal
   - fiona
+  - psutil
 
 
