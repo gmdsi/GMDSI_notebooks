@@ -1,3 +1,0 @@
-  headwater  sfr  headwater
-  tailwater  sfr  tailwater
-  gage-1  inflow  40
