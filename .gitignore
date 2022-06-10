@@ -4,3 +4,4 @@ prior_cov.jcb
 *.rnj
 *.rmr
 *.pyc
+.DS_Store

@@ -857,7 +857,11 @@ class ModflowUzf1(Package):
                 write_transient("extdp")
                 if self.iuzfopt > 0:
                     write_transient("extwc")
-            if self.capillaryuzet and "nwt" in self.parent.version:
+            if (
+                self.capillaryuzet
+                and "nwt" in self.parent.version
+                and self.iuzfopt > 0
+            ):
                 write_transient("air_entry")
                 write_transient("hroot")
                 write_transient("rootact")
@@ -1005,7 +1009,7 @@ class ModflowUzf1(Package):
             load_util2d("irunbnd", np.int32)
 
         # dataset 4
-        if iuzfopt in [0, 1]:
+        if np.abs(iuzfopt) in [0, 1]:
             load_util2d("vks", np.float32)
 
         # dataset 4b
@@ -1063,13 +1067,14 @@ class ModflowUzf1(Package):
                     # dataset 14
                     load_util2d("extdp", np.float32, per=per)
                 # dataset 15
-                line = line_parse(f.readline())
-                nuzf4 = pop_item(line, int)
-                if nuzf4 >= 0:
-                    # dataset 16
-                    load_util2d("extwc", np.float32, per=per)
+                if iuzfopt > 0:
+                    line = line_parse(f.readline())
+                    nuzf4 = pop_item(line, int)
+                    if nuzf4 >= 0:
+                        # dataset 16
+                        load_util2d("extwc", np.float32, per=per)
 
-                if capillaryuzet:
+                if capillaryuzet and iuzfopt > 0:
                     # dataset 17
                     line = line_parse(f.readline())
                     nuzf5 = pop_item(line, int)

@@ -735,7 +735,11 @@ class PlotMapView:
 
         # make sure pathlines is a list
         if not isinstance(pl, list):
-            pl = [pl]
+            pids = np.unique(pl["particleid"])
+            if len(pids) > 1:
+                pl = [pl[pl["particleid"] == pid] for pid in pids]
+            else:
+                pl = [pl]
 
         if "layer" in kwargs:
             kon = kwargs.pop("layer")
@@ -805,6 +809,9 @@ class PlotMapView:
                     color=markercolor,
                     ms=markersize,
                 )
+
+        ax.set_xlim(self.extent[0], self.extent[1])
+        ax.set_ylim(self.extent[2], self.extent[3])
         return lc
 
     def plot_timeseries(self, ts, travel_time=None, **kwargs):

@@ -13,7 +13,7 @@ import shutil
 import copy
 from ast import literal_eval
 import traceback
-import sys
+import re
 import numpy as np
 import pandas as pd
 
@@ -30,8 +30,69 @@ import pyemu
 from pyemu.utils.os_utils import run, start_workers
 
 
+class Trie:
+    """Regex::Trie in Python. Creates a Trie out of a list of words. The trie can be exported to a Regex pattern.
+    The corresponding Regex should match much faster than a simple Regex union."""
+    # after https://gist.github.com/EricDuminil/8faabc2f3de82b24e5a371b6dc0fd1e0
+    def __init__(self):
+        self.data = {}
+
+    def add(self, word):
+        ref = self.data
+        for char in word:
+            ref[char] = char in ref and ref[char] or {}
+            ref = ref[char]
+        ref[''] = 1
+
+    def dump(self):
+        return self.data
+
+    def quote(self, char):
+        return re.escape(char)
+
+    def _pattern(self, pData):
+        data = pData
+        if "" in data and len(data.keys()) == 1:
+            return None
+
+        alt = []
+        cc = []
+        q = 0
+        for char in sorted(data.keys()):
+            if isinstance(data[char], dict):
+                try:
+                    recurse = self._pattern(data[char])
+                    alt.append(self.quote(char) + recurse)
+                except:
+                    cc.append(self.quote(char))
+            else:
+                q = 1
+        cconly = not len(alt) > 0
+
+        if len(cc) > 0:
+            if len(cc) == 1:
+                alt.append(cc[0])
+            else:
+                alt.append('[' + ''.join(cc) + ']')
+
+        if len(alt) == 1:
+            result = alt[0]
+        else:
+            result = "(?:" + "|".join(alt) + ")"
+
+        if q:
+            if cconly:
+                result += "?"
+            else:
+                result = "(?:%s)?" % result
+        return result
+
+    def pattern(self):
+        return self._pattern(self.dump())
+
 def geostatistical_draws(
-    pst, struct_dict, num_reals=100, sigma_range=4, verbose=True, scale_offset=True
+    pst, struct_dict, num_reals=100, sigma_range=4, verbose=True,
+        scale_offset=True, subset=None
 ):
     """construct a parameter ensemble from a prior covariance matrix
     implied by geostatistical structure(s) and parameter bounds.
@@ -53,6 +114,8 @@ def geostatistical_draws(
         scale_offset (`bool`,optional): flag to apply scale and offset to parameter bounds
             when calculating variances - this is passed through to `pyemu.Cov.from_parameter_data()`.
             Default is True.
+        subset (`array-like`, optional): list, array, set or pandas index defining subset of paramters
+            for draw.
 
     Returns
         **pyemu.ParameterEnsemble**: the realized parameter ensemble.
@@ -81,9 +144,16 @@ def geostatistical_draws(
     )
     if verbose:
         print("building diagonal cov")
-
+    if subset is not None:
+        if subset.empty or subset.intersection(pst.par_names).empty:
+            warnings.warn(
+                "Empty subset passed to draw method, or no intersecting pars "
+                "with pst...\nwill draw full cov", PyemuWarning
+            )
+            subset = None
     full_cov = pyemu.Cov.from_parameter_data(
-        pst, sigma_range=sigma_range, scale_offset=scale_offset
+        pst, sigma_range=sigma_range, scale_offset=scale_offset,
+        subset=subset
     )
     full_cov_dict = {n: float(v) for n, v in zip(full_cov.col_names, full_cov.x)}
 
@@ -129,14 +199,14 @@ def geostatistical_draws(
             for req in ["x", "y", "parnme"]:
                 if req not in df.columns:
                     raise Exception("{0} is not in the columns".format(req))
-            missing = df.loc[df.parnme.apply(lambda x: x not in par.parnme), "parnme"]
+            missing = df.loc[~df.parnme.isin(par.parnme), "parnme"]
             if len(missing) > 0:
                 warnings.warn(
                     "the following parameters are not "
                     + "in the control file: {0}".format(",".join(missing)),
                     PyemuWarning,
                 )
-                df = df.loc[df.parnme.apply(lambda x: x not in missing)]
+                df = df.loc[~df.parnme.isin(missing)]
             if df.shape[0] == 0:
                 warnings.warn(
                     "geostatistical_draws(): empty parameter df at position {0} items for geostruct {1}, skipping...".format(
@@ -150,7 +220,7 @@ def geostatistical_draws(
             aset = set(pst.adj_par_names)
             for zone in zones:
                 df_zone = df.loc[df.zone == zone, :].copy()
-                df_zone = df_zone.loc[df_zone.parnme.apply(lambda x: x in aset), :]
+                df_zone = df_zone.loc[df_zone.parnme.isin(aset), :]
                 if df_zone.shape[0] == 0:
                     warnings.warn(
                         "all parameters in zone {0} tied and/or fixed, skipping...".format(
@@ -3634,6 +3704,10 @@ def apply_list_and_array_pars(arr_par_file="mult2model_info.csv", chunk_len=50):
     if "operator" not in df.columns:
         df.loc[:, "operator"] = "m"
     df.loc[pd.isna(df.operator), "operator"] = "m"
+    file_cols = df.columns.values[df.columns.str.contains("file")]
+    for file_col in file_cols:
+        df.loc[:,file_col] = df.loc[:,file_col].apply(lambda x: os.path.join(*x.replace("\\","/").split("/")) if isinstance(x,str) else x)
+    df.to_csv("test.csv")
     arr_pars = df.loc[df.index_cols.isna()].copy()
     list_pars = df.loc[df.index_cols.notna()].copy()
     # extract lists from string in input df
@@ -3641,6 +3715,7 @@ def apply_list_and_array_pars(arr_par_file="mult2model_info.csv", chunk_len=50):
     list_pars["use_cols"] = list_pars.use_cols.apply(literal_eval)
     list_pars["lower_bound"] = list_pars.lower_bound.apply(literal_eval)
     list_pars["upper_bound"] = list_pars.upper_bound.apply(literal_eval)
+
     # TODO check use_cols is always present
     apply_genericlist_pars(list_pars, chunk_len=chunk_len)
     apply_array_pars(arr_pars, chunk_len=chunk_len)
@@ -4013,6 +4088,10 @@ def calc_array_par_summary_stats(arr_par_file="mult2model_info.csv"):
     df = df.loc[df.index_cols.isna(), :].copy()
     if df.shape[0] == 0:
         return None
+    file_cols = df.columns.values[df.columns.str.contains("file")]
+    for file_col in file_cols:
+        df.loc[:, file_col] = df.loc[:, file_col].apply(
+            lambda x: os.path.join(*x.replace("\\", "/").split("/")) if isinstance(x, str) else x)
     model_input_files = df.model_file.unique()
     model_input_files.sort()
     records = dict()
