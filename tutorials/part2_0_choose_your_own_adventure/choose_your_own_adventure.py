@@ -580,13 +580,19 @@ def store_truth_model(truth_d):
     tmp_d = os.path.join('..','..', 'models', 'daily_freyberg_mf6_truth')
     if os.path.exists(tmp_d):
         shutil.rmtree(tmp_d)
-    shutil.copytree(org_d,tmp_d)
+    #shutil.copytree(org_d,tmp_d)
+    os.makedirs(tmp_d)
+    pst = pyemu.Pst(os.path.join(truth_d,"truth.pst"))
+    pst.write(os.path.join(tmp_d,"truth.pst"),version=2)
+    shutil.copy2(os.path.join(truth_d,"obs_data.csv"),os.path.join(tmp_d,"obs_data.csv"))
+    shutil.copy2(os.path.join(truth_d,"pred_data.csv"),os.path.join(tmp_d,"pred_data.csv"))
+
 
 
 if __name__ == "__main__":
-    setup_pst()
-    run_prior_mc("freyberg6_template")
-    pick_truth("master_pmc","freyberg6_template")
-    prep_obs_data("truth_template")
+    #setup_pst()
+    #run_prior_mc("freyberg6_template")
+    #pick_truth("master_pmc","freyberg6_template")
+    #prep_obs_data("truth_template")
     store_truth_model("truth_template")
     
