@@ -1,0 +1,11 @@
+pest_file,model_file
+heads.csv.ins,heads.csv
+sfr.csv.ins,sfr.csv
+hdslay1_t1.txt.ins,hdslay1_t1.txt
+hdslay2_t1.txt.ins,hdslay2_t1.txt
+hdslay3_t1.txt.ins,hdslay3_t1.txt
+inc.csv.ins,inc.csv
+cum.csv.ins,cum.csv
+sfr.tdiff.csv.ins,sfr.tdiff.csv
+heads.tdiff.csv.ins,heads.tdiff.csv
+.\freyberg_mp.mpend.ins,.\freyberg_mp.mpend

@@ -1,0 +1,101 @@
+# ripped from pyemu repo
+name: repo ci
+
+on: 
+  #schedule:
+  #  - cron: '0 8 * * *' # run at 8 AM UTC (12 am PST)
+  pull_request:  
+    branches:    
+      - "**"
+  push:
+    branches:
+      - "**"
+
+env:
+  CACHE_NUMBER: 0  # increase to reset cache manually
+
+jobs:
+  build:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["windows-latest", "ubuntu-latest", "macos-latest"]
+        python-version: ["3.9"]
+        test-path: [
+              "nb_tests.py"
+                  ]      
+
+    name: ${{ matrix.os }}-${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Mambaforge
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+            miniforge-variant: Mambaforge
+            miniforge-version: latest
+            activate-environment: gmdsitut
+            use-mamba: true
+            python-version: ${{ matrix.python-version }}
+
+     #- name: Set cache date
+     #  run: echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
+
+      - name: Set cache environment variables
+        shell: bash -l {0}
+        run: |
+          echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
+          CONDA_PREFIX=$(python -c "import sys; print(sys.prefix)")
+          echo "CONDA_PREFIX=$CONDA_PREFIX" >> $GITHUB_ENV
+
+     # - uses: actions/cache@v2
+     #   with:
+     #     path: ${{ matrix.prefix }}
+     #     key: ${{ matrix.label }}-conda-${{ hashFiles('environment.yml') }}-${{ env.DATE }}-${{ env.CACHE_NUMBER }}
+     #   id: cache
+
+      # make the cache
+      - uses: actions/cache@v3
+        with:
+          path: ${{ env.CONDA_PREFIX }}
+          key: ${{ matrix.os }}-${{matrix.python-version}}-conda-${{ hashFiles('environment.yml') }}-${{ env.DATE }}-${{ env.CACHE_NUMBER }}
+        id: cache
+      
+      # update the cache if ncessary
+      - name: Update environment
+        run: mamba env update -n gmdsitut -f environment.yml
+        if: steps.cache.outputs.cache-hit != 'true'
+
+      # add exes to path so that they run in non-win OSs
+      - name: PESTPP exe install
+        shell: bash -l {0}
+        run: |
+          if [[ ! -d "$HOME/.local/bin" ]]; then
+              mkdir -p "$HOME/.local/bin";
+          fi
+          # copy bins to local dir to add to PATH later
+          if [ "$RUNNER_OS" == "Windows" ]; then
+              d="win"
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+              d="mac"
+          elif [ "$RUNNER_OS" == "Linux" ]; then
+              d="linux"
+          else
+              d="unexpectedos"
+              exit 1
+          fi
+          cp -r bin_new/$d/. "$HOME/.local/bin/"
+          
+          # do we also need to cp to os specific within .local/bin/? probs...
+          find bin -maxdepth 1 -type f -exec cp {} $HOME/.local/bin/. \;
+          # cp -r bin ../bin
+          cd ..
+
+
+
+      # run .py that calls nb's
+      - name: Run tests
+        shell: bash -l {0}
+        run: python ./autotest/${{ matrix.test-path }}

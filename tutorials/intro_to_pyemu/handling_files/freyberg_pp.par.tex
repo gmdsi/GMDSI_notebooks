@@ -1,0 +1,31 @@
+\documentclass{article}
+\usepackage{booktabs}
+\usepackage{pdflscape}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{nopageno}
+\begin{document}
+\begin{center}
+Parameter Summary
+\end{center}
+\begin{center}
+\begin{landscape}
+\begin{longtable}{llrllll}
+type & transform & count & initial value & lower bound & upper bound & standard deviation \\
+\endfirsthead
+type & transform & count & initial value & lower bound & upper bound & standard deviation \\
+\endhead
+\multicolumn{7}{r}{Continued on next page} \\
+\endfoot
+\endlastfoot
+hk & log & 32 & 0.0413927 & -0.30103 & 1.69897 &   0.5 \\
+pargp & mixed & 2 &     0 to     1 &    -1 to   0.1 &     1 to    10 &   0.5 to 2.475 \\
+porosity & log & 1 & 0.0413927 & -2.30103 & -1.69897 & 0.150515 \\
+rch & log & 2 & 0.0413927 & -0.60206 to -0.30103 & 0.30103 to 0.477121 & 0.150515 to 0.269795 \\
+sfr & log & 1 & 0.0413927 &    -2 &     1 &  0.75 \\
+w0 & log & 6 & 0.0413927 & -0.30103 & 0.30103 & 0.150515 \\
+w1 & log & 6 & 0.0413927 &    -1 &     1 &   0.5 \\
+\end{longtable}
+\end{landscape}
+\end{center}
+\end{document}

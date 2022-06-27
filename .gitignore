@@ -1,0 +1,7 @@
+__pycache__/
+prior_cov.jcb
+*.log
+*.rnj
+*.rmr
+*.pyc
+.DS_Store
