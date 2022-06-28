@@ -31,8 +31,8 @@ You can do this in one of two ways.
 **Start jupyter notebook**
 You will need to do this step any time you wish to open one of the course notebooks.
 To start up the jupyter notebook:
-- Windows: open the Anaconda prompt and type `conda activate pyclass`
-- Mac/Linux: open a termainal and type `conda activate pyclass`
+- Windows: open the Anaconda prompt and type `conda activate gmdsitut`
+- Mac/Linux: open a termainal and type `conda activate gmdsitut`
 - Then navigate to folder where you downloaded the course materials repo and type `jupyter notebook`
 A jupyter notebook instance should start within the course repo flder. Using the browser, you can now navigate to the "notebooks" folder and open one.
 
