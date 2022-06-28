@@ -38,25 +38,27 @@ import matplotlib.pyplot as plt;
 import psutil 
 
 import sys
-sys.path.append(os.path.join("..", "..", "dependencies"))
+sys.path.insert(0,os.path.join("..", "..", "dependencies"))
 import pyemu
 import flopy
-
-sys.path.append("..")
+assert "dependencies" in flopy.__file__
+assert "dependencies" in pyemu.__file__
+sys.path.insert(0,"..")
 import herebedragons as hbd
+
+
 ```
 
 
 ```python
 # specify the temporary working folder
 t_d = os.path.join('freyberg6_template')
+if os.path.exists(t_d):
+    shutil.rmtree(t_d)
 
 org_t_d = os.path.join("..","part2_2_obs_and_weights","freyberg6_template")
 if not os.path.exists(org_t_d):
     raise Exception("you need to run the '/part2_2_obs_and_weights/freyberg_obs_and_weights.ipynb' notebook")
-
-if os.path.exists(t_d):
-    shutil.rmtree(t_d)
 shutil.copytree(org_t_d,t_d)
 ```
 
@@ -71,6 +73,7 @@ Load the PEST control file as a `Pst` object.
 
 
 ```python
+pst_path = os.path.join(t_d, 'freyberg_mf6.pst')
 pst = pyemu.Pst(os.path.join(t_d, 'freyberg_mf6.pst'))
 ```
 
@@ -104,7 +107,7 @@ pe.shape
 
 
 
-    (50, 29653)
+    (500, 23786)
 
 
 
@@ -128,7 +131,7 @@ pst.control_data.noptmax = 0 # this is ignored by pestpp-swp, but we can use it 
 pst.write(os.path.join(t_d, 'freyberg_mf6.pst'))
 ```
 
-    noptmax:0, npar_adj:29653, nnz_obs:144
+    noptmax:0, npar_adj:23786, nnz_obs:72
     
 
 Always good to do the 'ole `noptmax=0` test:
@@ -195,7 +198,7 @@ obs_df = pd.read_csv(os.path.join(m_d,"sweep_out.csv"),index_col=0)
 print('number of realization in the ensemble before dropping: ' + str(obs_df.shape[0]))
 ```
 
-    number of realization in the ensemble before dropping: 50
+    number of realization in the ensemble before dropping: 500
     
 
 
@@ -204,7 +207,7 @@ obs_df = obs_df.loc[obs_df.failed_flag==0,:]
 print('number of realization in the ensemble **after** dropping: ' + str(obs_df.shape[0]))
 ```
 
-    number of realization in the ensemble **after** dropping: 50
+    number of realization in the ensemble **after** dropping: 500
     
 
 Are they the same? Good, that means none failed. If any had failed, this would be an opportunity to go and figure out why, by identifying the parameter realisations that failed and figuring out why they may have had trouble converging. This might lead to discovering inadequacies in the model configuration and/or parameterisation.  Better to catch them now, before spending alot of effort history matching the model... 
@@ -254,7 +257,7 @@ len(zero_weighted_obs_groups)
 
 
 
-    153
+    70
 
 
 
@@ -279,12 +282,6 @@ pyemu.plot_utils.ensemble_res_1to1(obs_df, pst, skip_groups=zero_weighted_obs_gr
     
 
 
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_33_3.png)
-    
-
-
 As we can see above, the prior covers the "measured" values (which is good).
 
 But hold on a second! What about measurement noise? If we are saying that it is *possible* that our measurements are wrong by a certain amount, shouldn't we make sure our model can represent conditions in which they are? Yes, of course!
@@ -299,14 +296,8 @@ obs_plus_noise = pyemu.ObservationEnsemble.from_gaussian_draw(pst=pst, cov=obs_c
 
     drawing from group oname:hds_otype:lst_usecol:trgw-0-26-6
     drawing from group oname:hds_otype:lst_usecol:trgw-0-3-8
-    drawing from group oname:hds_otype:lst_usecol:trgw-2-26-6
-    drawing from group oname:hds_otype:lst_usecol:trgw-2-3-8
     drawing from group oname:hdstd_otype:lst_usecol:trgw-0-26-6
     drawing from group oname:hdstd_otype:lst_usecol:trgw-0-3-8
-    drawing from group oname:hdstd_otype:lst_usecol:trgw-2-26-6
-    drawing from group oname:hdstd_otype:lst_usecol:trgw-2-3-8
-    drawing from group oname:hdsvd_otype:lst_usecol:trgw-0-26-6
-    drawing from group oname:hdsvd_otype:lst_usecol:trgw-0-3-8
     drawing from group oname:sfr_otype:lst_usecol:gage-1
     drawing from group oname:sfrtd_otype:lst_usecol:gage-1
     
@@ -339,12 +330,6 @@ pyemu.plot_utils.ensemble_res_1to1(obs_df,
     
 
 
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_37_3.png)
-    
-
-
 Another, perhaps coarser, method to quickly explore outcomes is to look at histograms of observations. 
 
 The following figure groups obsevrations according to type (just to lump them together and make a smaller plot) and then plots histograms of observation values. Grey shaded columns represent simulated values from the prior. Red shaded columns represent the ensemble of measured values + noise. The grey columns should ideally be spread wider than the red columns.
@@ -369,12 +354,6 @@ plt.show();
     
 
 
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_39_2.png)
-    
-
-
 Finally, let's plot the obs vs sim timeseries - everyone's fav!
 
 
@@ -391,8 +370,6 @@ obs.obgnme.unique()
 
     array(['oname:hds_otype:lst_usecol:trgw-0-26-6',
            'oname:hds_otype:lst_usecol:trgw-0-3-8',
-           'oname:hds_otype:lst_usecol:trgw-2-26-6',
-           'oname:hds_otype:lst_usecol:trgw-2-3-8',
            'oname:sfr_otype:lst_usecol:gage-1'], dtype=object)
 
 
@@ -497,7 +474,7 @@ pst.control_data.noptmax = -1
 pst.write(os.path.join(t_d,"freyberg_diagprior.pst"))
 ```
 
-    noptmax:-1, npar_adj:29653, nnz_obs:144
+    noptmax:-1, npar_adj:23786, nnz_obs:72
     
 
 Run `pstpp-ies`. This should take about the same amount of time as `pestpp-swp` did.

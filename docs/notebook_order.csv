@@ -14,6 +14,5 @@ FOSM and Data Worth,freyberg_fosm_and_dataworth.md,5,Decision Support Modelling 
 PEST++GLM  - Highly-Parameterized Regularized Inversion,freyberg_glm_2.md,6,Decision Support Modelling with pyEMU and PEST++,part2
 PEST++IES - Basics,freyberg_ies_1_basics.md,7,Decision Support Modelling with pyEMU and PEST++,part2
 PEST++IES - Localization,freyberg_ies_2_localization.md,8,Decision Support Modelling with pyEMU and PEST++,part2
-PEST++IES - Total-Error Covarince Workflow,freyberg_ies_3_tot_error_cov.md,9,Decision Support Modelling with pyEMU and PEST++,part2
 PEST++DA - Getting Ready,freyberg_da_prep.md,10,Decision Support Modelling with pyEMU and PEST++,part2
 PEST++DA - Sequential Data Assimilation,freyberg_da_run.md,11,Decision Support Modelling with pyEMU and PEST++,part2

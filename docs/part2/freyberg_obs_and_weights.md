@@ -61,14 +61,18 @@ import matplotlib.pyplot as plt;
 import matplotlib
 
 import sys
-sys.path.append(os.path.join("..", "..", "dependencies"))
+sys.path.insert(0,os.path.join("..", "..", "dependencies"))
 import pyemu
 import flopy
+assert "dependencies" in flopy.__file__
+assert "dependencies" in pyemu.__file__
+sys.path.insert(0,"..")
+import herebedragons as hbd
+
+
 
 plt.rcParams.update({'font.size': 10})
 
-sys.path.append("..")
-import herebedragons as hbd
 ```
 
 
@@ -84,23 +88,26 @@ t_d = os.path.join('freyberg6_template')
 if os.path.exists(t_d):
         shutil.rmtree(t_d)
 org_t_d = os.path.join("..","part2_1_pstfrom_pest_setup",t_d)
-if not os.path.exists(org_t_d):
-    hbd.dir_cleancopy(org_d=os.path.join('..','..', 'models','freyberg_pstfrom_pest_setup'),
-                    new_d=t_d)
-else:
-    print("using files at ",org_t_d)
-    shutil.copytree(org_t_d,t_d)
+assert os.path.exists(org_t_d),"you need to run the '/part2_1_pstfrom_pest_setup/freyberg_pstfrom_pest_setup.ipynb' notebook"
+print("using files at ",org_t_d)
+shutil.copytree(org_t_d,t_d)
 ```
 
     using files at  ..\part2_1_pstfrom_pest_setup\freyberg6_template
     
+
+
+
+
+    'freyberg6_template'
+
+
 
 Let's load in the `Pst` control file we constructed during the "pstfrom" tutorial:
 
 
 ```python
 pst_file = "freyberg_mf6.pst"
-
 pst = pyemu.Pst(os.path.join(t_d, pst_file))
 ```
 
@@ -166,7 +173,7 @@ obs.head()
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</td>
-      <td>34.326872</td>
+      <td>34.797358</td>
       <td>1.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -180,7 +187,7 @@ obs.head()
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</td>
-      <td>34.440950</td>
+      <td>34.768494</td>
       <td>1.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -194,7 +201,7 @@ obs.head()
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</td>
-      <td>34.534811</td>
+      <td>34.821230</td>
       <td>1.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -208,7 +215,7 @@ obs.head()
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</td>
-      <td>34.582875</td>
+      <td>34.920983</td>
       <td>1.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -222,7 +229,7 @@ obs.head()
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</td>
-      <td>34.561764</td>
+      <td>35.008383</td>
       <td>1.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -255,7 +262,7 @@ obs.weight.value_counts()
 
 
 
-    1.0    62227
+    1.0    21252
     Name: weight, dtype: int64
 
 
@@ -327,27 +334,27 @@ obs_data.iloc[:5]
     <tr>
       <th>GAGE-1</th>
       <td>3652.5</td>
-      <td>1713.876690</td>
+      <td>4393.623174</td>
     </tr>
     <tr>
       <th>GAGE-1</th>
       <td>3653.5</td>
-      <td>2476.327373</td>
+      <td>3209.950982</td>
     </tr>
     <tr>
       <th>GAGE-1</th>
       <td>3654.5</td>
-      <td>1505.541231</td>
+      <td>4378.326547</td>
     </tr>
     <tr>
       <th>GAGE-1</th>
       <td>3655.5</td>
-      <td>2210.090691</td>
+      <td>4093.781759</td>
     </tr>
     <tr>
       <th>GAGE-1</th>
       <td>3656.5</td>
-      <td>2207.018734</td>
+      <td>3417.487795</td>
     </tr>
   </tbody>
 </table>
@@ -560,43 +567,43 @@ ess_obs_data.head()
   <tbody>
     <tr>
       <th>3652.5</th>
-      <td>1998.425564</td>
-      <td>34.644013</td>
-      <td>34.565496</td>
-      <td>34.571747</td>
-      <td>34.579985</td>
+      <td>3809.880113</td>
+      <td>34.852666</td>
+      <td>34.811553</td>
+      <td>35.056132</td>
+      <td>35.011778</td>
     </tr>
     <tr>
       <th>3683.5</th>
-      <td>1914.074438</td>
-      <td>34.554179</td>
-      <td>34.566638</td>
-      <td>34.580241</td>
-      <td>34.551542</td>
+      <td>3867.951586</td>
+      <td>34.795085</td>
+      <td>34.798380</td>
+      <td>35.047742</td>
+      <td>35.027667</td>
     </tr>
     <tr>
       <th>3712.5</th>
-      <td>2047.803833</td>
-      <td>34.639517</td>
-      <td>34.636888</td>
-      <td>34.559523</td>
-      <td>34.534734</td>
+      <td>3757.724334</td>
+      <td>34.768398</td>
+      <td>34.780762</td>
+      <td>35.069538</td>
+      <td>35.087313</td>
     </tr>
     <tr>
       <th>3743.5</th>
-      <td>2538.185281</td>
-      <td>34.797994</td>
-      <td>34.795909</td>
-      <td>34.614963</td>
-      <td>34.676304</td>
+      <td>3988.281927</td>
+      <td>34.896937</td>
+      <td>34.840917</td>
+      <td>35.129611</td>
+      <td>35.123838</td>
     </tr>
     <tr>
       <th>3773.5</th>
-      <td>2840.455384</td>
-      <td>34.923169</td>
-      <td>34.928128</td>
-      <td>34.651341</td>
-      <td>34.667008</td>
+      <td>4135.608082</td>
+      <td>34.979874</td>
+      <td>34.896721</td>
+      <td>35.164669</td>
+      <td>35.187964</td>
     </tr>
   </tbody>
 </table>
@@ -623,7 +630,10 @@ def update_pst_obsvals(obs_names, obs_data):
         for string, oval, time in zip(obs_sufix,obs_data.loc[:,col].values, obs_data.index.values):
                 
                 if not any(string in obsnme for obsnme in obs_names):
-                    missing.append(string)
+                    if string.startswith("trgw-2"):
+                        pass
+                    else:
+                        missing.append(string)
                 # if not, then update the pst.observation_data
                 else:
                     # get a list of obsnames
@@ -672,8 +682,8 @@ update_pst_obsvals(obs_names, ess_obs_data)
 ```
 
     All good.
-    Number of new nonzero obs: 60
-    Number of nonzero obs: 60
+    Number of new nonzero obs: 36
+    Number of nonzero obs: 36
     
 
 
@@ -686,8 +696,6 @@ pst.nnz_obs_groups
 
     ['oname:hds_otype:lst_usecol:trgw-0-26-6',
      'oname:hds_otype:lst_usecol:trgw-0-3-8',
-     'oname:hds_otype:lst_usecol:trgw-2-26-6',
-     'oname:hds_otype:lst_usecol:trgw-2-3-8',
      'oname:sfr_otype:lst_usecol:gage-1']
 
 
@@ -700,8 +708,8 @@ pst.observation_data.oname.unique()
 
 
 
-    array(['hds', 'sfr', 'hdslay1', 'hdslay2', 'hdslay3', 'inc', 'cum',
-           'sfrtd', 'hdstd', 'hdsvd', nan], dtype=object)
+    array(['hds', 'sfr', 'hdslay1', 'inc', 'cum', 'sfrtd', 'hdstd', nan],
+          dtype=object)
 
 
 
@@ -754,33 +762,33 @@ obs_sfr.head()
   <tbody>
     <tr>
       <th>3652.5</th>
-      <td>-830.540950</td>
-      <td>-947.252350</td>
-      <td>1800.635068</td>
+      <td>-320.112647</td>
+      <td>-745.527258</td>
+      <td>1156.430955</td>
     </tr>
     <tr>
       <th>3683.5</th>
-      <td>-930.956747</td>
-      <td>-984.886815</td>
-      <td>1919.248255</td>
+      <td>-630.857993</td>
+      <td>-1003.607340</td>
+      <td>1718.530259</td>
     </tr>
     <tr>
       <th>3712.5</th>
-      <td>-1018.612476</td>
-      <td>-1047.273188</td>
-      <td>2071.582070</td>
+      <td>-697.976706</td>
+      <td>-1120.848564</td>
+      <td>1900.486414</td>
     </tr>
     <tr>
       <th>3743.5</th>
-      <td>-1054.852127</td>
-      <td>-1281.583118</td>
-      <td>2336.275444</td>
+      <td>-1565.064391</td>
+      <td>-2799.986149</td>
+      <td>4425.293193</td>
     </tr>
     <tr>
       <th>3773.5</th>
-      <td>-1050.008235</td>
-      <td>-1312.987820</td>
-      <td>2362.147089</td>
+      <td>-1670.229662</td>
+      <td>-2487.670925</td>
+      <td>4222.552369</td>
     </tr>
   </tbody>
 </table>
@@ -837,8 +845,8 @@ obs.oname.unique()
 
 
 
-    array(['hds', 'sfr', 'hdslay1', 'hdslay2', 'hdslay3', 'inc', 'cum',
-           'sfrtd', 'hdstd', 'hdsvd', nan], dtype=object)
+    array(['hds', 'sfr', 'hdslay1', 'inc', 'cum', 'sfrtd', 'hdstd', nan],
+          dtype=object)
 
 
 
@@ -855,10 +863,10 @@ print('Number of nonzero obs:', pst.nnz_obs)
 
 diff_obsdict = {'sfrtd': "sfr.tdiff.csv", 
                 'hdstd': "heads.tdiff.csv",
-                'hdsvd': "heads.vdiff.csv"
                 }
 
 for keys, value in diff_obsdict.items():
+    print(keys)
     # get subselct of obs names
     obs_names = obs.loc[obs.oname.isin([keys]), 'obsnme']
     # get df
@@ -872,19 +880,27 @@ for keys, value in diff_obsdict.items():
     update_pst_obsvals(obs_names,
                         obs_csv)
     # verify num of new nnz obs
+    print(pst.nnz_obs)
+    print(len(org_nnz_obs_names))
+    print(len(usecols))
     assert (pst.nnz_obs-len(org_nnz_obs_names))==12*len(usecols), [i for i in pst.nnz_obs_names if i not in org_nnz_obs_names]
 ```
 
-    Number of nonzero obs: 60
+    Number of nonzero obs: 36
+    sfrtd
     All good.
     Number of new nonzero obs: 12
-    Number of nonzero obs: 72
-    All good.
-    Number of new nonzero obs: 48
-    Number of nonzero obs: 120
+    Number of nonzero obs: 48
+    48
+    36
+    1
+    hdstd
     All good.
     Number of new nonzero obs: 24
-    Number of nonzero obs: 144
+    Number of nonzero obs: 72
+    72
+    48
+    2
     
 
 
@@ -897,20 +913,213 @@ pst.nnz_obs_groups
 
     ['oname:hds_otype:lst_usecol:trgw-0-26-6',
      'oname:hds_otype:lst_usecol:trgw-0-3-8',
-     'oname:hds_otype:lst_usecol:trgw-2-26-6',
-     'oname:hds_otype:lst_usecol:trgw-2-3-8',
      'oname:sfr_otype:lst_usecol:gage-1',
      'oname:sfrtd_otype:lst_usecol:gage-1',
      'oname:hdstd_otype:lst_usecol:trgw-0-26-6',
-     'oname:hdstd_otype:lst_usecol:trgw-0-3-8',
-     'oname:hdstd_otype:lst_usecol:trgw-2-26-6',
-     'oname:hdstd_otype:lst_usecol:trgw-2-3-8',
-     'oname:hdsvd_otype:lst_usecol:trgw-0-26-6',
-     'oname:hdsvd_otype:lst_usecol:trgw-0-3-8']
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8']
+
+
+
+
+```python
+pst.nnz_obs_names
+```
+
+
+
+
+    ['oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5',
+     'oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5',
+     'oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5',
+     'oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5',
+     'oname:hds_otype:lst_usecol:trgw-0-26-6_time:3804.5',
+     'oname:hds_otype:lst_usecol:trgw-0-26-6_time:3834.5',
+     'oname:hds_otype:lst_usecol:trgw-0-26-6_time:3865.5',
+     'oname:hds_otype:lst_usecol:trgw-0-26-6_time:3896.5',
+     'oname:hds_otype:lst_usecol:trgw-0-26-6_time:3926.5',
+     'oname:hds_otype:lst_usecol:trgw-0-26-6_time:3957.5',
+     'oname:hds_otype:lst_usecol:trgw-0-26-6_time:3987.5',
+     'oname:hds_otype:lst_usecol:trgw-0-26-6_time:4018.5',
+     'oname:hds_otype:lst_usecol:trgw-0-3-8_time:3683.5',
+     'oname:hds_otype:lst_usecol:trgw-0-3-8_time:3712.5',
+     'oname:hds_otype:lst_usecol:trgw-0-3-8_time:3743.5',
+     'oname:hds_otype:lst_usecol:trgw-0-3-8_time:3773.5',
+     'oname:hds_otype:lst_usecol:trgw-0-3-8_time:3804.5',
+     'oname:hds_otype:lst_usecol:trgw-0-3-8_time:3834.5',
+     'oname:hds_otype:lst_usecol:trgw-0-3-8_time:3865.5',
+     'oname:hds_otype:lst_usecol:trgw-0-3-8_time:3896.5',
+     'oname:hds_otype:lst_usecol:trgw-0-3-8_time:3926.5',
+     'oname:hds_otype:lst_usecol:trgw-0-3-8_time:3957.5',
+     'oname:hds_otype:lst_usecol:trgw-0-3-8_time:3987.5',
+     'oname:hds_otype:lst_usecol:trgw-0-3-8_time:4018.5',
+     'oname:sfr_otype:lst_usecol:gage-1_time:3683.5',
+     'oname:sfr_otype:lst_usecol:gage-1_time:3712.5',
+     'oname:sfr_otype:lst_usecol:gage-1_time:3743.5',
+     'oname:sfr_otype:lst_usecol:gage-1_time:3773.5',
+     'oname:sfr_otype:lst_usecol:gage-1_time:3804.5',
+     'oname:sfr_otype:lst_usecol:gage-1_time:3834.5',
+     'oname:sfr_otype:lst_usecol:gage-1_time:3865.5',
+     'oname:sfr_otype:lst_usecol:gage-1_time:3896.5',
+     'oname:sfr_otype:lst_usecol:gage-1_time:3926.5',
+     'oname:sfr_otype:lst_usecol:gage-1_time:3957.5',
+     'oname:sfr_otype:lst_usecol:gage-1_time:3987.5',
+     'oname:sfr_otype:lst_usecol:gage-1_time:4018.5',
+     'oname:sfrtd_otype:lst_usecol:gage-1_time:3683.5',
+     'oname:sfrtd_otype:lst_usecol:gage-1_time:3712.5',
+     'oname:sfrtd_otype:lst_usecol:gage-1_time:3743.5',
+     'oname:sfrtd_otype:lst_usecol:gage-1_time:3773.5',
+     'oname:sfrtd_otype:lst_usecol:gage-1_time:3804.5',
+     'oname:sfrtd_otype:lst_usecol:gage-1_time:3834.5',
+     'oname:sfrtd_otype:lst_usecol:gage-1_time:3865.5',
+     'oname:sfrtd_otype:lst_usecol:gage-1_time:3896.5',
+     'oname:sfrtd_otype:lst_usecol:gage-1_time:3926.5',
+     'oname:sfrtd_otype:lst_usecol:gage-1_time:3957.5',
+     'oname:sfrtd_otype:lst_usecol:gage-1_time:3987.5',
+     'oname:sfrtd_otype:lst_usecol:gage-1_time:4018.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3683.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3712.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3743.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3773.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3804.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3834.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3865.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3896.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3926.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3957.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3987.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:4018.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3683.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3712.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3743.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3773.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3804.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3834.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3865.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3896.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3926.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3957.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3987.5',
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:4018.5']
 
 
 
 The next cell does some sneaky things in the background to populate `obsvals` for forecast observations just so that we can keep track of the truth. In real-world applications you might assign values that reflect decision-criteria (such as limits at which "bad things" happen, for example) simply as a convenience. For the purposes of history matching, these values have no impact. They can play a role in specifying constraints when undertaking optimisation problems.  
+
+
+```python
+pst.observation_data.loc[pst.forecast_names]
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>obsnme</th>
+      <th>obsval</th>
+      <th>weight</th>
+      <th>obgnme</th>
+      <th>oname</th>
+      <th>otype</th>
+      <th>usecol</th>
+      <th>time</th>
+      <th>i</th>
+      <th>j</th>
+      <th>totim</th>
+    </tr>
+    <tr>
+      <th>obsnme</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
+      <td>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</td>
+      <td>92.911368</td>
+      <td>0</td>
+      <td>oname:sfr_otype:lst_usecol:tailwater</td>
+      <td>sfr</td>
+      <td>lst</td>
+      <td>tailwater</td>
+      <td>4383.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
+      <td>oname:sfr_otype:lst_usecol:headwater_time:4383.5</td>
+      <td>-127.192506</td>
+      <td>0</td>
+      <td>oname:sfr_otype:lst_usecol:headwater</td>
+      <td>sfr</td>
+      <td>lst</td>
+      <td>headwater</td>
+      <td>4383.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <td>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</td>
+      <td>35.559841</td>
+      <td>0</td>
+      <td>oname:hds_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hds</td>
+      <td>lst</td>
+      <td>trgw-0-9-1</td>
+      <td>4383.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>part_time</th>
+      <td>part_time</td>
+      <td>99358.429160</td>
+      <td>0</td>
+      <td>part</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 
 ```python
@@ -974,7 +1183,7 @@ pst.observation_data.loc[pst.forecast_names]
     <tr>
       <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
       <td>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</td>
-      <td>-586.379558</td>
+      <td>-514.965935</td>
       <td>0</td>
       <td>oname:sfr_otype:lst_usecol:tailwater</td>
       <td>sfr</td>
@@ -988,7 +1197,7 @@ pst.observation_data.loc[pst.forecast_names]
     <tr>
       <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
       <td>oname:sfr_otype:lst_usecol:headwater_time:4383.5</td>
-      <td>-388.766627</td>
+      <td>-179.032036</td>
       <td>0</td>
       <td>oname:sfr_otype:lst_usecol:headwater</td>
       <td>sfr</td>
@@ -1002,7 +1211,7 @@ pst.observation_data.loc[pst.forecast_names]
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</td>
-      <td>34.913079</td>
+      <td>34.615595</td>
       <td>0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-9-1</td>
       <td>hds</td>
@@ -1016,7 +1225,7 @@ pst.observation_data.loc[pst.forecast_names]
     <tr>
       <th>part_time</th>
       <td>part_time</td>
-      <td>583999.484800</td>
+      <td>36377.040060</td>
       <td>0</td>
       <td>part</td>
       <td>NaN</td>
@@ -1061,7 +1270,7 @@ You got a zero? Alrighty then! Let's write the uprated control file and run PEST
 pst.write(os.path.join(t_d,pst_file))
 ```
 
-    noptmax:0, npar_adj:29653, nnz_obs:144
+    noptmax:0, npar_adj:23786, nnz_obs:72
     
 
 
@@ -1080,7 +1289,7 @@ pst.phi
 
 
 
-    26308895.02141707
+    15269939.507824449
 
 
 
@@ -1122,56 +1331,6 @@ pst.phi_components
      'hdslay1_t7': 0.0,
      'hdslay1_t8': 0.0,
      'hdslay1_t9': 0.0,
-     'hdslay2_t1': 0.0,
-     'hdslay2_t10': 0.0,
-     'hdslay2_t11': 0.0,
-     'hdslay2_t12': 0.0,
-     'hdslay2_t13': 0.0,
-     'hdslay2_t14': 0.0,
-     'hdslay2_t15': 0.0,
-     'hdslay2_t16': 0.0,
-     'hdslay2_t17': 0.0,
-     'hdslay2_t18': 0.0,
-     'hdslay2_t19': 0.0,
-     'hdslay2_t2': 0.0,
-     'hdslay2_t20': 0.0,
-     'hdslay2_t21': 0.0,
-     'hdslay2_t22': 0.0,
-     'hdslay2_t23': 0.0,
-     'hdslay2_t24': 0.0,
-     'hdslay2_t25': 0.0,
-     'hdslay2_t3': 0.0,
-     'hdslay2_t4': 0.0,
-     'hdslay2_t5': 0.0,
-     'hdslay2_t6': 0.0,
-     'hdslay2_t7': 0.0,
-     'hdslay2_t8': 0.0,
-     'hdslay2_t9': 0.0,
-     'hdslay3_t1': 0.0,
-     'hdslay3_t10': 0.0,
-     'hdslay3_t11': 0.0,
-     'hdslay3_t12': 0.0,
-     'hdslay3_t13': 0.0,
-     'hdslay3_t14': 0.0,
-     'hdslay3_t15': 0.0,
-     'hdslay3_t16': 0.0,
-     'hdslay3_t17': 0.0,
-     'hdslay3_t18': 0.0,
-     'hdslay3_t19': 0.0,
-     'hdslay3_t2': 0.0,
-     'hdslay3_t20': 0.0,
-     'hdslay3_t21': 0.0,
-     'hdslay3_t22': 0.0,
-     'hdslay3_t23': 0.0,
-     'hdslay3_t24': 0.0,
-     'hdslay3_t25': 0.0,
-     'hdslay3_t3': 0.0,
-     'hdslay3_t4': 0.0,
-     'hdslay3_t5': 0.0,
-     'hdslay3_t6': 0.0,
-     'hdslay3_t7': 0.0,
-     'hdslay3_t8': 0.0,
-     'hdslay3_t9': 0.0,
      'inc': 0.0,
      'oname:cum_otype:lst_usecol:in-out': 0.0,
      'oname:cum_otype:lst_usecol:percent-discrepancy': 0.0,
@@ -1188,25 +1347,12 @@ pst.phi_components
      'oname:hds_otype:lst_usecol:trgw-0-21-10': 0.0,
      'oname:hds_otype:lst_usecol:trgw-0-22-15': 0.0,
      'oname:hds_otype:lst_usecol:trgw-0-24-4': 0.0,
-     'oname:hds_otype:lst_usecol:trgw-0-26-6': 4.898094521927968,
+     'oname:hds_otype:lst_usecol:trgw-0-26-6': 0.6231192129925701,
      'oname:hds_otype:lst_usecol:trgw-0-29-15': 0.0,
-     'oname:hds_otype:lst_usecol:trgw-0-3-8': 0.7050208004269597,
+     'oname:hds_otype:lst_usecol:trgw-0-3-8': 6.3484099263888245,
      'oname:hds_otype:lst_usecol:trgw-0-33-7': 0.0,
      'oname:hds_otype:lst_usecol:trgw-0-34-10': 0.0,
      'oname:hds_otype:lst_usecol:trgw-0-9-1': 0.0,
-     'oname:hds_otype:lst_usecol:trgw-2-13-10': 0.0,
-     'oname:hds_otype:lst_usecol:trgw-2-15-16': 0.0,
-     'oname:hds_otype:lst_usecol:trgw-2-2-15': 0.0,
-     'oname:hds_otype:lst_usecol:trgw-2-2-9': 0.0,
-     'oname:hds_otype:lst_usecol:trgw-2-21-10': 0.0,
-     'oname:hds_otype:lst_usecol:trgw-2-22-15': 0.0,
-     'oname:hds_otype:lst_usecol:trgw-2-24-4': 0.0,
-     'oname:hds_otype:lst_usecol:trgw-2-26-6': 4.869191056599954,
-     'oname:hds_otype:lst_usecol:trgw-2-29-15': 0.0,
-     'oname:hds_otype:lst_usecol:trgw-2-3-8': 0.68853927829098,
-     'oname:hds_otype:lst_usecol:trgw-2-33-7': 0.0,
-     'oname:hds_otype:lst_usecol:trgw-2-34-10': 0.0,
-     'oname:hds_otype:lst_usecol:trgw-2-9-1': 0.0,
      'oname:hdstd_otype:lst_usecol:trgw-0-13-10': 0.0,
      'oname:hdstd_otype:lst_usecol:trgw-0-15-16': 0.0,
      'oname:hdstd_otype:lst_usecol:trgw-0-2-15': 0.0,
@@ -1214,38 +1360,12 @@ pst.phi_components
      'oname:hdstd_otype:lst_usecol:trgw-0-21-10': 0.0,
      'oname:hdstd_otype:lst_usecol:trgw-0-22-15': 0.0,
      'oname:hdstd_otype:lst_usecol:trgw-0-24-4': 0.0,
-     'oname:hdstd_otype:lst_usecol:trgw-0-26-6': 1.49327820280544,
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6': 0.3214311394287347,
      'oname:hdstd_otype:lst_usecol:trgw-0-29-15': 0.0,
-     'oname:hdstd_otype:lst_usecol:trgw-0-3-8': 0.9759377312159214,
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8': 0.23244156646962105,
      'oname:hdstd_otype:lst_usecol:trgw-0-33-7': 0.0,
      'oname:hdstd_otype:lst_usecol:trgw-0-34-10': 0.0,
      'oname:hdstd_otype:lst_usecol:trgw-0-9-1': 0.0,
-     'oname:hdstd_otype:lst_usecol:trgw-2-13-10': 0.0,
-     'oname:hdstd_otype:lst_usecol:trgw-2-15-16': 0.0,
-     'oname:hdstd_otype:lst_usecol:trgw-2-2-15': 0.0,
-     'oname:hdstd_otype:lst_usecol:trgw-2-2-9': 0.0,
-     'oname:hdstd_otype:lst_usecol:trgw-2-21-10': 0.0,
-     'oname:hdstd_otype:lst_usecol:trgw-2-22-15': 0.0,
-     'oname:hdstd_otype:lst_usecol:trgw-2-24-4': 0.0,
-     'oname:hdstd_otype:lst_usecol:trgw-2-26-6': 1.830192780906995,
-     'oname:hdstd_otype:lst_usecol:trgw-2-29-15': 0.0,
-     'oname:hdstd_otype:lst_usecol:trgw-2-3-8': 0.9407597290573477,
-     'oname:hdstd_otype:lst_usecol:trgw-2-33-7': 0.0,
-     'oname:hdstd_otype:lst_usecol:trgw-2-34-10': 0.0,
-     'oname:hdstd_otype:lst_usecol:trgw-2-9-1': 0.0,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-13-10': 0.0,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-15-16': 0.0,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-2-15': 0.0,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-2-9': 0.0,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-21-10': 0.0,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-22-15': 0.0,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-24-4': 0.0,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-26-6': 0.005316821370432254,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-29-15': 0.0,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-3-8': 0.008412014031608014,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-33-7': 0.0,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-34-10': 0.0,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-9-1': 0.0,
      'oname:inc_otype:lst_usecol:in-out': 0.0,
      'oname:inc_otype:lst_usecol:percent-discrepancy': 0.0,
      'oname:inc_otype:lst_usecol:rcha': 0.0,
@@ -1254,10 +1374,10 @@ pst.phi_components
      'oname:inc_otype:lst_usecol:sto-sy': 0.0,
      'oname:inc_otype:lst_usecol:total': 0.0,
      'oname:inc_otype:lst_usecol:wel': 0.0,
-     'oname:sfr_otype:lst_usecol:gage-1': 18508632.42733321,
+     'oname:sfr_otype:lst_usecol:gage-1': 14537208.306794439,
      'oname:sfr_otype:lst_usecol:headwater': 0.0,
      'oname:sfr_otype:lst_usecol:tailwater': 0.0,
-     'oname:sfrtd_otype:lst_usecol:gage-1': 7800246.179340925,
+     'oname:sfrtd_otype:lst_usecol:gage-1': 732723.6756281655,
      'oname:sfrtd_otype:lst_usecol:headwater': 0.0,
      'oname:sfrtd_otype:lst_usecol:tailwater': 0.0,
      'part': 0.0}
@@ -1278,18 +1398,12 @@ nnz_phi_components
 
 
 
-    {'oname:hds_otype:lst_usecol:trgw-0-26-6': 4.898094521927968,
-     'oname:hds_otype:lst_usecol:trgw-0-3-8': 0.7050208004269597,
-     'oname:hds_otype:lst_usecol:trgw-2-26-6': 4.869191056599954,
-     'oname:hds_otype:lst_usecol:trgw-2-3-8': 0.68853927829098,
-     'oname:sfr_otype:lst_usecol:gage-1': 18508632.42733321,
-     'oname:sfrtd_otype:lst_usecol:gage-1': 7800246.179340925,
-     'oname:hdstd_otype:lst_usecol:trgw-0-26-6': 1.49327820280544,
-     'oname:hdstd_otype:lst_usecol:trgw-0-3-8': 0.9759377312159214,
-     'oname:hdstd_otype:lst_usecol:trgw-2-26-6': 1.830192780906995,
-     'oname:hdstd_otype:lst_usecol:trgw-2-3-8': 0.9407597290573477,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-26-6': 0.005316821370432254,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-3-8': 0.008412014031608014}
+    {'oname:hds_otype:lst_usecol:trgw-0-26-6': 0.6231192129925701,
+     'oname:hds_otype:lst_usecol:trgw-0-3-8': 6.3484099263888245,
+     'oname:sfr_otype:lst_usecol:gage-1': 14537208.306794439,
+     'oname:sfrtd_otype:lst_usecol:gage-1': 732723.6756281655,
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6': 0.3214311394287347,
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8': 0.23244156646962105}
 
 
 
@@ -1306,7 +1420,7 @@ plt.pie(phicomp, labels=phicomp.index.values);
 
 
     
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_55_0.png)
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_57_0.png)
     
 
 
@@ -1323,7 +1437,7 @@ nz_obs.oname.unique()
 
 
 
-    array(['hds', 'sfr', 'sfrtd', 'hdstd', 'hdsvd'], dtype=object)
+    array(['hds', 'sfr', 'sfrtd', 'hdstd'], dtype=object)
 
 
 
@@ -1350,7 +1464,7 @@ plt.tight_layout()
 
 
     
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_60_0.png)
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_62_0.png)
     
 
 
@@ -1371,7 +1485,7 @@ Don't forget to re-write the .pst file!
 pst.write(os.path.join(t_d,pst_file),version=2)
 ```
 
-    noptmax:0, npar_adj:29653, nnz_obs:144
+    noptmax:0, npar_adj:23786, nnz_obs:72
     
 
 ### Understanding Observation Weights and Measurement Noise
@@ -1429,13 +1543,13 @@ plot_obs_ts(pst, oe, ts_obs)
 
 
     
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_71_0.png)
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_73_0.png)
     
 
 
 
     
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_71_1.png)
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_73_1.png)
     
 
 
@@ -1487,8 +1601,8 @@ print('Target phi:',pst.nnz_obs)
 print('Current phi:', pst.phi)
 ```
 
-    Target phi: 144
-    Current phi: 4436.408576252603
+    Target phi: 72
+    Current phi: 1132.7129982842712
     
 
 Right, so we have or observation weights sorted out. Let's just make a quick check of how model outputs and measured values compare by looking at a 1to1 plot for each observation group:
@@ -1506,19 +1620,13 @@ plt.show()
 
 
     
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_77_1.png)
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_79_1.png)
     
 
 
 
     
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_77_2.png)
-    
-
-
-
-    
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_77_3.png)
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_79_2.png)
     
 
 
@@ -1585,16 +1693,16 @@ df.head()
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3926.5</th>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3957.5</th>
       <th>...</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3743.5</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3773.5</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3804.5</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3834.5</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3865.5</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3896.5</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3926.5</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3957.5</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3987.5</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:4018.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3743.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3773.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3804.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3834.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3865.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3896.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3926.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3957.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:3987.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:4018.5</th>
     </tr>
   </thead>
   <tbody>
@@ -1720,7 +1828,7 @@ df.head()
     </tr>
   </tbody>
 </table>
-<p>5 rows × 144 columns</p>
+<p>5 rows × 72 columns</p>
 </div>
 
 
@@ -1738,13 +1846,13 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x215de2d1820>
+    <matplotlib.colorbar.Colorbar at 0x1779dfcf550>
 
 
 
 
     
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_81_1.png)
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_83_1.png)
     
 
 
@@ -1763,13 +1871,13 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x215e71b3820>
+    <matplotlib.colorbar.Colorbar at 0x1779cac7850>
 
 
 
 
     
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_83_1.png)
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_85_1.png)
     
 
 
@@ -1781,7 +1889,7 @@ First, construct a geostatistical structure and variogram. Here we are using a r
 
 
 ```python
-v = pyemu.geostats.ExpVario(a=30,contribution=1.0)
+v = pyemu.geostats.ExpVario(a=730,contribution=1.0)
 x = obs_select.time.astype(float).values #np.arange(float(obs.time.values[:11].max()))
 y = np.zeros_like(x)
 names = ["obs_{0}".format(xx) for xx in x]
@@ -1806,7 +1914,7 @@ plt.colorbar();
 
 
     
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_87_0.png)
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_89_0.png)
     
 
 
@@ -1851,7 +1959,7 @@ plt.imshow(x);
 
 
     
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_93_0.png)
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_95_0.png)
     
 
 
@@ -1868,14 +1976,8 @@ oe_tv = pyemu.ObservationEnsemble.from_gaussian_draw(pst=pst,
 
     drawing from group oname:hds_otype:lst_usecol:trgw-0-26-6
     drawing from group oname:hds_otype:lst_usecol:trgw-0-3-8
-    drawing from group oname:hds_otype:lst_usecol:trgw-2-26-6
-    drawing from group oname:hds_otype:lst_usecol:trgw-2-3-8
     drawing from group oname:hdstd_otype:lst_usecol:trgw-0-26-6
     drawing from group oname:hdstd_otype:lst_usecol:trgw-0-3-8
-    drawing from group oname:hdstd_otype:lst_usecol:trgw-2-26-6
-    drawing from group oname:hdstd_otype:lst_usecol:trgw-2-3-8
-    drawing from group oname:hdsvd_otype:lst_usecol:trgw-0-26-6
-    drawing from group oname:hdsvd_otype:lst_usecol:trgw-0-3-8
     drawing from group oname:sfr_otype:lst_usecol:gage-1
     drawing from group oname:sfrtd_otype:lst_usecol:gage-1
     
@@ -1893,13 +1995,13 @@ plot_obs_ts(pst, oe, ts_obs)
 
 
     
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_98_1.png)
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_100_1.png)
     
 
 
 
     
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_98_2.png)
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_100_2.png)
     
 
 
@@ -1917,13 +2019,13 @@ plot_obs_ts(pst, oe_tv, ts_obs)
 
 
     
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_100_1.png)
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_102_1.png)
     
 
 
 
     
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_100_2.png)
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_102_2.png)
     
 
 
@@ -1952,16 +2054,10 @@ balanced_groups
 
     {'oname:hds_otype:lst_usecol:trgw-0-26-6': 100,
      'oname:hds_otype:lst_usecol:trgw-0-3-8': 100,
-     'oname:hds_otype:lst_usecol:trgw-2-26-6': 100,
-     'oname:hds_otype:lst_usecol:trgw-2-3-8': 100,
      'oname:sfr_otype:lst_usecol:gage-1': 100,
      'oname:sfrtd_otype:lst_usecol:gage-1': 100,
      'oname:hdstd_otype:lst_usecol:trgw-0-26-6': 100,
-     'oname:hdstd_otype:lst_usecol:trgw-0-3-8': 100,
-     'oname:hdstd_otype:lst_usecol:trgw-2-26-6': 100,
-     'oname:hdstd_otype:lst_usecol:trgw-2-3-8': 100,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-26-6': 100,
-     'oname:hdsvd_otype:lst_usecol:trgw-0-3-8': 100}
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8': 100}
 
 
 
@@ -1983,7 +2079,7 @@ plt.pie(phicomp, labels=phicomp.index.values);
 
 
     
-![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_106_0.png)
+![png](freyberg_obs_and_weights_files/freyberg_obs_and_weights_108_0.png)
     
 
 

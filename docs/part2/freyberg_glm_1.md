@@ -12,15 +12,15 @@ This notebook is an optional, but recommended, first step for a workflow that im
 
 Here, we are going to calculate a base Jacobian. In other words, we are going to calculate partial derivatives of model outputs with respect to (adjustable) model parameters. Or "how much each observation value changes for a change in each parameter value".  These partial derivatives (or *sensitivity coefficients*) are fundamental for the implementation of inversion and for linear uncertainty analysis. They form a two-dimensional array of values with as many rows as observations and as many columns as parameters. This array is commonly known as the **Jacobian matrix**. 
 
-PEST and PEST++GLM (as well as some other PEST++ versions) calculate and record a Jacobian as part of normal execution. They do so by running "the model" as many times as there are adjustable parameters. Each time, a parameter is adjusted and the corresponding effects on all observations are recorded. These are used to fill in the Jacobian matrix. Once the Jacobian is calculated, the derivative information is used to identify parameter changes that will improve the fit between model outputs and measured data. These are used to update the "calibrated" parameter set. Due to the nonlinear nature of groundwater inverse problems, this process may need to be repeated numerous times during calibration. As you can imagine, if there are many adjustable parameters, this process can take up a lot of computation time. 
+PEST and PESTPP-GLM (as well as some other PEST++ versions) calculate and record a Jacobian as part of normal execution. They do so by running "the model" as many times as there are adjustable parameters. Each time, a parameter is adjusted and the corresponding effects on all observations are recorded. These are used to fill in the Jacobian matrix. Once the Jacobian is calculated, the derivative information is used to identify parameter changes that will improve the fit between model outputs and measured data. These are used to update the "calibrated" parameter set. Due to the nonlinear nature of groundwater inverse problems, this process may need to be repeated numerous times during calibration. As you can imagine, if there are many adjustable parameters, this process can take up a lot of computation time. 
 
-Filling the Jacobian is perhaps the main computational cost of derivative-based optimisation methods such as are implemented in PEST and PEST++GLM. 
+Filling the Jacobian is perhaps the main computational cost of derivative-based optimisation methods such as are implemented in PEST and PESTPP-GLM. 
 
-However, this cost is often worth it, as a Jacobian matrix has many uses. Many of these uses are as important as the model calibration process itself. Hence it is not unusual for PEST or PEST++GLM to be run purely for the purpose of filling a Jacobian matrix (as we will do here). 
+However, this cost is often worth it, as a Jacobian matrix has many uses. Many of these uses are as important as the model calibration process itself. Hence it is not unusual for PEST or PESTPP-GLM to be run purely for the purpose of filling a Jacobian matrix (as we will do here). 
 
 Uses to which a Jacobian matrix may be put include the following:
  - Examination of local sensitivities of model outputs to parameters and/or decision variables.
- - Giving PEST or PEST++GLM a “head start” in calibrating a model by providing it with a pre-calculated Jacobian matrix to use in its first iteration. For PEST++GLM this is achieved through use of the `base_jacobian()` control variable, as we will demonstrate in a subsequent tutorial.
+ - Giving PEST or PESTPP-GLM a “head start” in calibrating a model by providing it with a pre-calculated Jacobian matrix to use in its first iteration. For PESTPP-GLM this is achieved through use of the `base_jacobian()` control variable, as we will demonstrate in a subsequent tutorial.
  - To support the many types of linear analysis implemented by utility programs supplied with PEST, and functions provided by `pyEMU`; these calculate:
     - parameter identifiability;
     - parameter and predictive uncertainty;
@@ -49,12 +49,15 @@ import shutil
 import psutil
 
 import sys
-sys.path.append(os.path.join("..", "..", "dependencies"))
+sys.path.insert(0,os.path.join("..", "..", "dependencies"))
 import pyemu
 import flopy
-
-sys.path.append("..")
+assert "dependencies" in flopy.__file__
+assert "dependencies" in pyemu.__file__
+sys.path.insert(0,"..")
 import herebedragons as hbd
+
+
 ```
 
 To maintain continuity in the series of tutorials, we we use the PEST-dataset prepared in the "obs and weigths" tutorial. Run the next cell to copy fthe necessary files across. Note that if you will need to run the previous notebooks in the correct order beforehand.
@@ -65,13 +68,13 @@ Specify the path to the PEST dataset template folder. Recall that we will prepar
 ```python
 # specify the temporary working folder
 t_d = os.path.join('freyberg6_template')
+if os.path.exists(t_d):
+    shutil.rmtree(t_d)
 
 org_t_d = os.path.join("..","part2_2_obs_and_weights","freyberg6_template")
 if not os.path.exists(org_t_d):
     raise Exception("you need to run the '/part2_2_obs_and_weights/freyberg_obs_and_weights.ipynb' notebook")
 
-if os.path.exists(t_d):
-    shutil.rmtree(t_d)
 shutil.copytree(org_t_d,t_d)
 ```
 
@@ -85,10 +88,6 @@ shutil.copytree(org_t_d,t_d)
 
 ```python
 pst_path = os.path.join(t_d, 'freyberg_mf6.pst')
-
-# a check to make sure the files exist
-if not os.path.exists(pst_path):
-    raise Exception("you need to run the '/part2_2_obs_and_weights/freyberg_obs_and_weights.ipynb' notebook")
 ```
 
 ### 2. Inspect the PEST Dataset
@@ -161,7 +160,7 @@ pst.write_par_summary_table(filename="none")
       <th>ghbcondgr</th>
       <td>ghbcondgr</td>
       <td>log</td>
-      <td>30</td>
+      <td>10</td>
       <td>0</td>
       <td>-1</td>
       <td>1</td>
@@ -181,7 +180,7 @@ pst.write_par_summary_table(filename="none")
       <th>ghbheadgr</th>
       <td>ghbheadgr</td>
       <td>none</td>
-      <td>30</td>
+      <td>10</td>
       <td>10</td>
       <td>8</td>
       <td>12</td>
@@ -192,7 +191,7 @@ pst.write_par_summary_table(filename="none")
       <td>icstrtlayer1</td>
       <td>none</td>
       <td>706</td>
-      <td>32.5066 to 40.135</td>
+      <td>32.5287 to 40.1337</td>
       <td>15</td>
       <td>50</td>
       <td>8.75</td>
@@ -251,7 +250,7 @@ pst.write_par_summary_table(filename="none")
       <th>welgrd</th>
       <td>welgrd</td>
       <td>log</td>
-      <td>150</td>
+      <td>175</td>
       <td>0</td>
       <td>-0.60206</td>
       <td>0.60206</td>
@@ -259,7 +258,7 @@ pst.write_par_summary_table(filename="none")
     </tr>
   </tbody>
 </table>
-<p>123 rows × 7 columns</p>
+<p>103 rows × 7 columns</p>
 </div>
 
 
@@ -276,7 +275,7 @@ pst.npar_adj
 
 
 
-    29653
+    23786
 
 
 
@@ -297,7 +296,7 @@ elapsed
 
 
 
-    7.106834600000001
+    4.7310210999999995
 
 
 
@@ -324,7 +323,7 @@ number_of_cpu_cores = psutil.cpu_count(logical=False)
 print(f'Number of hours to fill a jacobian:{pst.npar_adj * elapsed / 60/60 / number_of_cpu_cores}')
 ```
 
-    Number of hours to fill a jacobian:5.853860177605556
+    Number of hours to fill a jacobian:3.1258907745722224
     
 
 Unless you have many many CPU's at hand, that's still going to be pretty long despite the relatively fast model.
@@ -357,7 +356,7 @@ pst.npar_adj
 
 
 
-    3321
+    1705
 
 
 
@@ -373,7 +372,7 @@ pst.npar_adj
 
 
 
-    2596
+    980
 
 
 
@@ -389,7 +388,7 @@ pst.npar_adj
 
 
 
-    478
+    274
 
 
 
@@ -411,7 +410,7 @@ pst.npar_adj
 
 
 
-    391
+    245
 
 
 
@@ -422,7 +421,7 @@ OK, let's check that estimate of run time again...hmm...a bit more manageable. O
 print(f'Number of hours to fill a jacobian:{pst.npar_adj * elapsed / 60/60 / number_of_cpu_cores}')
 ```
 
-    Number of hours to fill a jacobian:0.07718812023888891
+    Number of hours to fill a jacobian:0.03219722693055556
     
 
 OK, if we are happy (#sadface) with the number of parameters, we can move on.
@@ -441,7 +440,7 @@ We are now ready to go. Let's re-write the control file. We will record this wit
 pst.write(os.path.join(t_d,"freyberg_pp.pst"))
 ```
 
-    noptmax:-1, npar_adj:391, nnz_obs:144
+    noptmax:-1, npar_adj:245, nnz_obs:72
     
 
 ### 4. Run PEST++GLM

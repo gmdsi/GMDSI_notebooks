@@ -105,13 +105,6 @@ gwf = sim.get_model()
 sim.run_simulation()
 ```
 
-
-
-
-    (True, [])
-
-
-
 ### Model Domain, BCs and Properties
 
 The figure belows shows the model domain and boundary conditions. The model has 3 layers, 40 rows and 20 columns. Cell dimensions are 250m x 250m. There are inactive outcrop areas within the model domain (shown in black in the figure).
@@ -121,9 +114,6 @@ The figure belows shows the model domain and boundary conditions. The model has 
 dis = gwf.dis
 print(f'layers:{dis.nlay.get_data()} nrows:{dis.nrow.get_data()} columns:{dis.ncol.get_data()}')
 ```
-
-    layers:3 nrows:40 columns:20
-    
 
 There is a GHB along the southern boundary in all layers. All other external boundaries are no-flow. 
 
@@ -153,12 +143,6 @@ mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=2)
 mm.plot_bc('wel');
 ```
 
-
-    
-![png](freyberg_intro_model_files/freyberg_intro_model_10_0.png)
-    
-
-
 Take a quick look at everyone's favourite parameter, hydraulic conductivity (K). Values in the plot below show K in layer 1. If you check each layer (by changing the mflay value), you will see different initial values in each. 
 
 Layer 3 is the most permeable. Layer 2 has low permeabilities. Layer 1 is somewhere in between. 
@@ -169,21 +153,10 @@ for lay in range(gwf.dis.nlay.array):
     print(f'K in layer {lay+1}:', "{:10.1f}".format(gwf.npf.k.get_data(lay).mean()))
 ```
 
-    K in layer 1:        3.0
-    K in layer 2:        0.3
-    K in layer 3:       30.0
-    
-
 
 ```python
 gwf.npf.k.plot(colorbar=True, mflay=0);
 ```
-
-
-    
-![png](freyberg_intro_model_files/freyberg_intro_model_13_0.png)
-    
-
 
 Surface topography and the bottom elevation are not uniform (see plots below). The middle layer has a constant thickness of 2.5m, with a top and bottom elevation of 32.5m and 30m, respectively.
 
@@ -195,18 +168,6 @@ gwf.dis.top.plot(colorbar=True, masked_values=[-1049.99])
 # plot bottom of bottom layer
 gwf.dis.botm.plot(colorbar=True, mflay=2);
 ```
-
-
-    
-![png](freyberg_intro_model_files/freyberg_intro_model_15_0.png)
-    
-
-
-
-    
-![png](freyberg_intro_model_files/freyberg_intro_model_15_1.png)
-    
-
 
 ### Time Discretisation
 
@@ -231,89 +192,6 @@ obs_data = obs_data.pivot(index='time', columns='site', values='value')
 obs_data.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th>site</th>
-      <th>GAGE-1</th>
-      <th>TRGW-0-26-6</th>
-      <th>TRGW-0-3-8</th>
-      <th>TRGW-2-26-6</th>
-      <th>TRGW-2-3-8</th>
-    </tr>
-    <tr>
-      <th>time</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>3652.5</th>
-      <td>1713.876690</td>
-      <td>34.780818</td>
-      <td>34.621020</td>
-      <td>34.382895</td>
-      <td>34.612454</td>
-    </tr>
-    <tr>
-      <th>3653.5</th>
-      <td>2476.327373</td>
-      <td>34.588687</td>
-      <td>34.477117</td>
-      <td>34.627812</td>
-      <td>34.563783</td>
-    </tr>
-    <tr>
-      <th>3654.5</th>
-      <td>1505.541231</td>
-      <td>34.505069</td>
-      <td>34.554786</td>
-      <td>34.573804</td>
-      <td>34.420837</td>
-    </tr>
-    <tr>
-      <th>3655.5</th>
-      <td>2210.090691</td>
-      <td>34.770207</td>
-      <td>34.603493</td>
-      <td>34.510403</td>
-      <td>34.656066</td>
-    </tr>
-    <tr>
-      <th>3656.5</th>
-      <td>2207.018734</td>
-      <td>34.724382</td>
-      <td>34.623075</td>
-      <td>34.626356</td>
-      <td>34.584529</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
 Model simulated counterparts to these observations are recorded in external CSV files. Let's take a look:
 
 
@@ -323,10 +201,6 @@ for i in gwf.obs:
     print(i.output.obs_names)
 ```
 
-    ['sfr.csv']
-    ['heads.csv']
-    
-
 We can read the `sfr.csv` output file, and inspect the values:
 
 
@@ -334,75 +208,6 @@ We can read the `sfr.csv` output file, and inspect the values:
 sfr_obs = pd.read_csv(os.path.join(sim_ws, 'sfr.csv'))
 sfr_obs.head()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>time</th>
-      <th>HEADWATER</th>
-      <th>TAILWATER</th>
-      <th>GAGE-1</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>3652.5</td>
-      <td>-751.85</td>
-      <td>-531.46</td>
-      <td>1365.0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>3683.5</td>
-      <td>-952.74</td>
-      <td>-674.01</td>
-      <td>1759.3</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>3712.5</td>
-      <td>-1109.70</td>
-      <td>-798.24</td>
-      <td>2046.9</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>3743.5</td>
-      <td>-1181.90</td>
-      <td>-854.51</td>
-      <td>2165.1</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>3773.5</td>
-      <td>-1138.00</td>
-      <td>-821.46</td>
-      <td>2064.4</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 Simulated values for surface-water flow at the terminal reach are recorded in the "GAGE1" column:
 
@@ -414,12 +219,6 @@ obs_data.plot(y=site, ax=ax, label='measured')
 sfr_obs.plot(x='time', y=site, ax=ax, label='modelled')
 ax.set_title(site);
 ```
-
-
-    
-![png](freyberg_intro_model_files/freyberg_intro_model_24_0.png)
-    
-
 
 Simulated groundwater levels are recorded in the "heads.csv" file. Several monitoring sites are simulated, however there is measured data for a only a few of these. 
 
@@ -437,178 +236,6 @@ hds_obs = pd.read_csv(os.path.join(sim_ws, 'heads.csv'))
 hds_obs.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>time</th>
-      <th>TRGW-2-2-15</th>
-      <th>TRGW-2-2-9</th>
-      <th>TRGW-2-3-8</th>
-      <th>TRGW-2-9-1</th>
-      <th>TRGW-2-13-10</th>
-      <th>TRGW-2-15-16</th>
-      <th>TRGW-2-21-10</th>
-      <th>TRGW-2-22-15</th>
-      <th>TRGW-2-24-4</th>
-      <th>...</th>
-      <th>TRGW-0-9-1</th>
-      <th>TRGW-0-13-10</th>
-      <th>TRGW-0-15-16</th>
-      <th>TRGW-0-21-10</th>
-      <th>TRGW-0-22-15</th>
-      <th>TRGW-0-24-4</th>
-      <th>TRGW-0-26-6</th>
-      <th>TRGW-0-29-15</th>
-      <th>TRGW-0-33-7</th>
-      <th>TRGW-0-34-10</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>3652.5</td>
-      <td>34.399290</td>
-      <td>34.691525</td>
-      <td>34.728569</td>
-      <td>35.061060</td>
-      <td>34.320957</td>
-      <td>34.180851</td>
-      <td>34.200938</td>
-      <td>34.066219</td>
-      <td>34.405733</td>
-      <td>...</td>
-      <td>35.068338</td>
-      <td>34.326896</td>
-      <td>34.186174</td>
-      <td>34.206846</td>
-      <td>34.025747</td>
-      <td>34.412096</td>
-      <td>34.251506</td>
-      <td>33.937832</td>
-      <td>34.030710</td>
-      <td>33.923445</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>3683.5</td>
-      <td>34.473764</td>
-      <td>34.772123</td>
-      <td>34.809126</td>
-      <td>35.126827</td>
-      <td>34.434959</td>
-      <td>34.283819</td>
-      <td>34.319984</td>
-      <td>34.171011</td>
-      <td>34.515566</td>
-      <td>...</td>
-      <td>35.133817</td>
-      <td>34.440124</td>
-      <td>34.288730</td>
-      <td>34.324980</td>
-      <td>34.115906</td>
-      <td>34.520964</td>
-      <td>34.379532</td>
-      <td>34.016423</td>
-      <td>34.141237</td>
-      <td>34.034923</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>3712.5</td>
-      <td>34.539742</td>
-      <td>34.855185</td>
-      <td>34.893566</td>
-      <td>35.211003</td>
-      <td>34.527661</td>
-      <td>34.363167</td>
-      <td>34.417107</td>
-      <td>34.247456</td>
-      <td>34.620546</td>
-      <td>...</td>
-      <td>35.217810</td>
-      <td>34.533812</td>
-      <td>34.369042</td>
-      <td>34.423098</td>
-      <td>34.182401</td>
-      <td>34.626410</td>
-      <td>34.485296</td>
-      <td>34.078743</td>
-      <td>34.229400</td>
-      <td>34.111873</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>3743.5</td>
-      <td>34.577505</td>
-      <td>34.912040</td>
-      <td>34.952401</td>
-      <td>35.282335</td>
-      <td>34.573685</td>
-      <td>34.398859</td>
-      <td>34.465330</td>
-      <td>34.280521</td>
-      <td>34.686225</td>
-      <td>...</td>
-      <td>35.289225</td>
-      <td>34.580980</td>
-      <td>34.405657</td>
-      <td>34.472538</td>
-      <td>34.211387</td>
-      <td>34.693043</td>
-      <td>34.541211</td>
-      <td>34.107372</td>
-      <td>34.271897</td>
-      <td>34.142187</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>3773.5</td>
-      <td>34.568882</td>
-      <td>34.913084</td>
-      <td>34.954807</td>
-      <td>35.301600</td>
-      <td>34.552253</td>
-      <td>34.376324</td>
-      <td>34.442806</td>
-      <td>34.256405</td>
-      <td>34.679251</td>
-      <td>...</td>
-      <td>35.308694</td>
-      <td>34.560270</td>
-      <td>34.383636</td>
-      <td>34.450839</td>
-      <td>34.190749</td>
-      <td>34.686945</td>
-      <td>34.520264</td>
-      <td>34.090823</td>
-      <td>34.249617</td>
-      <td>34.113480</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 27 columns</p>
-</div>
-
-
-
 Let's make a quick plot of time series of simulated groundwater levels from both layers at a single location:
 
 
@@ -620,18 +247,6 @@ for site in ['TRGW-0-26-6','TRGW-2-26-6']:
     ax.set_title(site);
 ```
 
-
-    
-![png](freyberg_intro_model_files/freyberg_intro_model_28_0.png)
-    
-
-
-
-    
-![png](freyberg_intro_model_files/freyberg_intro_model_28_1.png)
-    
-
-
 Whilst we are at it, lets just make a plot of the spatial distribution of simulated heads in the upper layer. (Heads in the other layers are very similar.)
 
 
@@ -640,12 +255,6 @@ hdobj = gwf.output.head()
 times = hdobj.get_times()
 hdobj.plot(mflay=0, colorbar=True, totim=times[-1], masked_values=[1e30]);
 ```
-
-
-    
-![png](freyberg_intro_model_files/freyberg_intro_model_30_0.png)
-    
-
 
 ## Forecasts
 

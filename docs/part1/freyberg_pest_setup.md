@@ -82,12 +82,15 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt;
 
-sys.path.append(os.path.join("..", "..", "dependencies"))
+sys.path.insert(0,os.path.join("..", "..", "dependencies"))
 import pyemu
 import flopy
-
-sys.path.append("..")
+assert "dependencies" in flopy.__file__
+assert "dependencies" in pyemu.__file__
+sys.path.insert(0,"..")
 import herebedragons as hbd
+
+
 ```
 
 
@@ -102,12 +105,6 @@ hbd.prep_deps(tmp_d)
 # run our convenience functions to prepare the PEST and model folder
 hbd.prep_pest(tmp_d)
 ```
-
-    ins file for heads.csv prepared.
-    ins file for sfr.csv prepared.
-    noptmax:0, npar_adj:3, nnz_obs:312
-    written pest control file: pest_files\freyberg.pst
-    
 
 ### 1.5. Reminder - the modified-Freyberg model
 Just a quick reminder of what the model looks like and what we are doing. 
@@ -124,12 +121,6 @@ A subsequent twelve transient stress periods representing a period in the future
 ```python
 hbd.plot_freyberg(tmp_d)
 ```
-
-
-    
-![png](freyberg_pest_setup_files/freyberg_pest_setup_4_0.png)
-    
-
 
 In the previous tutorial on manual trial-and-error, we "manually" changed parameter values to get a good fit with measured data. We want PEST to this for us instead. To do so, we need to provide PEST with conduits that change a model input file and that extract model outputs after the model has been run. 
 

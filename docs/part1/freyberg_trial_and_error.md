@@ -41,12 +41,6 @@ import freyberg_trial_and_error as te
 te.get_model()
 ```
 
-    D:\Workspace\hugm0001\anaconda\lib\site-packages\fontTools\misc\py23.py:11: DeprecationWarning: The py23 module has been deprecated and will be removed in a future release. Please update your code.
-    
-
-    model files are in: freyberg_mf6
-    
-
 ### 2. Trial and Error
 
 The `te.update_par()` function loads the modified Freyberg model (see the "freyberg intro to model" notebook), updates parameters, runs the model and then plots simulated values against measured values.
@@ -72,12 +66,6 @@ te.update_par(k1=1,     # K in layer 1
               rch_factor=0.35) # recharge is multiplied by rch_factor
 ```
 
-
-    
-![png](freyberg_trial_and_error_files/freyberg_trial_and_error_4_0.png)
-    
-
-
 ### 3. Do It Yourself
 
 Experiment with changing values for `k1`,`k2`,`k3` and `rch_factor`. See if you can achieve a good fit between measured and simulated values of head and river flow (e.g. minimize RMSE). 
@@ -89,12 +77,6 @@ Whilst you are doing so, pay attention to the forecast of river flux. Does the f
 # change the parameter values untill you are happy with the fit
 te.update_par(k1=10, k2=10, k3=10, rch_factor=1)
 ```
-
-
-    
-![png](freyberg_trial_and_error_files/freyberg_trial_and_error_6_0.png)
-    
-
 
 ### 4. Non-Uniqueness and Correlated Parameters
 
@@ -110,21 +92,9 @@ te.update_par(k1=30, k2=30, k3=30, rch_factor=1)
 ```
 
 
-    
-![png](freyberg_trial_and_error_files/freyberg_trial_and_error_8_0.png)
-    
-
-
-
 ```python
 te.update_par(k1=3, k2=0.3, k3=30, rch_factor=1)
 ```
-
-
-    
-![png](freyberg_trial_and_error_files/freyberg_trial_and_error_9_0.png)
-    
-
 
 And what about when we adjust K and recharge at the same time? 
 
@@ -135,12 +105,6 @@ And what about when we adjust K and recharge at the same time?
 te.update_par(k1=3, k2=3, k3=15, rch_factor=0.5, sfrplot=False)
 ```
 
-
-    
-![png](freyberg_trial_and_error_files/freyberg_trial_and_error_11_0.png)
-    
-
-
 ### 5. Structural Error
 
 Can you find a parameter combination that results in a "correct" forecast? What do the corresponding fits with observation data look like? 
@@ -149,12 +113,6 @@ Can you find a parameter combination that results in a "correct" forecast? What 
 ```python
 te.update_par(k1=3, k2=0.3, k3=30, rch_factor=0.8)
 ```
-
-
-    
-![png](freyberg_trial_and_error_files/freyberg_trial_and_error_13_0.png)
-    
-
 
 So...is history-matching a lie? It seems to make our model worse at making a prediction! 
 

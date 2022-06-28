@@ -10,9 +10,9 @@ math: mathjax3
 
 The current tutorial continues where the "freyberg glm part1" notebook left off. The "freyberg intro to model" and "freyberg pstfrom pest setup" provide details on the model and PEST dataset. The "freyberg glm 1" notebooks introduced changes to the PEST setup that are relevant to the current tutorial. You do not need to know the details of all these noteboks to follow along with general points of the current tutorial - but it helps! 
 
-In this tutorial we will add the final tweaks to a PEST dataset and then calibrate our model using PEST++GLM. Much like PEST, PEST++GLM undertakes highly parameterized inversion. However, it streamlines alot of the user-input process. It also automates FOSM and FOSM-based Monte Carlo uncertainty analyses. This drastically reduces requirements for user input, making workflows easier to implement. However, it also increases the number of moving pieces that a user must be familiar with (no free lunch!).
+In this tutorial we will add the final tweaks to a PEST dataset and then calibrate our model using PESTPP-GLM. Much like PEST, PESTPP-GLM undertakes highly parameterized inversion. However, it streamlines alot of the user-input process. It also automates FOSM and FOSM-based Monte Carlo uncertainty analyses. This drastically reduces requirements for user input, making workflows easier to implement. However, it also increases the number of moving pieces that a user must be familiar with (no free lunch!).
 
-Here we will discuss some PEST++GLM specific options and their implications, calibrate the model and then explore outputs - all using a programatic interface. 
+Here we will discuss some PESTPP-GLM specific options and their implications, calibrate the model and then explore outputs - all using a programatic interface. 
 
 ### Admin
 
@@ -33,12 +33,15 @@ import shutil
 import psutil
 
 import sys
-sys.path.append(os.path.join("..", "..", "dependencies"))
+sys.path.insert(0,os.path.join("..", "..", "dependencies"))
 import pyemu
 import flopy
-
-sys.path.append("..")
+assert "dependencies" in flopy.__file__
+assert "dependencies" in pyemu.__file__
+sys.path.insert(0,"..")
 import herebedragons as hbd
+
+
 ```
 
 Specify the path to the PEST dataset template folder:
@@ -72,10 +75,6 @@ shutil.copytree(org_t_d,t_d)
 
 ```python
 pst_path = os.path.join(t_d, 'freyberg_pp.pst')
-
-# a check to make sure the files exist
-if not os.path.exists(pst_path):
-    raise Exception("you need to run the '/part2_4_glm/freyberg_glm_1.ipynb' notebook")
 ```
 
 Right then, let's load in our PEST control file.
@@ -104,8 +103,8 @@ if not pst.observation_data.observed.sum()>0:
 print(f'number of observations: {pst.nnz_obs} \nnumber of parameters: {pst.npar_adj}')
 ```
 
-    number of observations: 144 
-    number of parameters: 391
+    number of observations: 72 
+    number of parameters: 245
     
 
 ## Regularisation
@@ -257,7 +256,7 @@ print(la.jco.shape) #without the omitted parameter or the prior info
 la.forecast_names
 ```
 
-    (62223, 391)
+    (21248, 245)
     
 
 
@@ -296,7 +295,7 @@ ax.set_yscale('log')
 plt.show()
 ```
 
-    Solution space dimensions:  65
+    Solution space dimensions:  39
     
 
 
@@ -388,7 +387,7 @@ case = 'freyberg_pp'
 pst.write(os.path.join(t_d,f"{case}.pst"))
 ```
 
-    noptmax:3, npar_adj:391, nnz_obs:144
+    noptmax:3, npar_adj:245, nnz_obs:72
     
 
 Now, deploy PEST++GLM in parallel.
@@ -405,6 +404,9 @@ You must specify the number which is adequate for ***your*** machine! Make sure 
 ```python
 print(psutil.cpu_count(logical=False))
 ```
+
+    10
+    
 
 
 ```python
@@ -439,7 +441,7 @@ pst.phi
 
 
 
-    503.2307716365608
+    44.98457706481814
 
 
 
@@ -450,8 +452,8 @@ Recall that observations are weighted according to the inverse of measurment noi
 print(f"Phi: {pst.phi} \nNumber of non-zero obs: {pst.nnz_obs}")
 ```
 
-    Phi: 503.2307716365608 
-    Number of non-zero obs: 144
+    Phi: 44.98457706481814 
+    Number of non-zero obs: 72
     
 
 A usefull way to track PEST's performance is to look at the evolution of Phi throughout the inversion. This is recorded in a file with the extension `*.iobj`  (e.g. `freyperg_pp.iobj`). You can read this file whilst PEST++ is working if you like. PEST++ will update the file after every iteration, thus it provides an easy way to keep an eye on the inversion progress.
@@ -499,15 +501,15 @@ df_obj.head()
       <th>oname:hds_otype:lst_usecol:trgw-0-21-10</th>
       <th>oname:hds_otype:lst_usecol:trgw-0-22-15</th>
       <th>...</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-21-10</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-22-15</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-24-4</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-26-6</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-29-15</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-33-7</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-34-10</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-21-10</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-22-15</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-24-4</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-26-6</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-29-15</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-33-7</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-34-10</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1</th>
       <th>part</th>
     </tr>
     <tr>
@@ -539,8 +541,8 @@ df_obj.head()
     <tr>
       <th>0</th>
       <td>0</td>
-      <td>4436.410</td>
-      <td>4436.410</td>
+      <td>1132.7100</td>
+      <td>1132.7100</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -552,9 +554,9 @@ df_obj.head()
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>53.1682</td>
+      <td>128.57200</td>
       <td>0</td>
-      <td>84.1201</td>
+      <td>92.97660</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -563,8 +565,8 @@ df_obj.head()
     <tr>
       <th>1</th>
       <td>11</td>
-      <td>1394.610</td>
-      <td>1394.610</td>
+      <td>229.3270</td>
+      <td>229.3270</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -576,9 +578,9 @@ df_obj.head()
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>50.2120</td>
+      <td>19.19010</td>
       <td>0</td>
-      <td>88.4352</td>
+      <td>27.31780</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -586,9 +588,9 @@ df_obj.head()
     </tr>
     <tr>
       <th>2</th>
-      <td>87</td>
-      <td>718.300</td>
-      <td>718.300</td>
+      <td>61</td>
+      <td>50.5469</td>
+      <td>50.5469</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -600,9 +602,9 @@ df_obj.head()
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>47.2460</td>
+      <td>4.65402</td>
       <td>0</td>
-      <td>80.8141</td>
+      <td>6.56466</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -610,9 +612,9 @@ df_obj.head()
     </tr>
     <tr>
       <th>3</th>
-      <td>163</td>
-      <td>503.231</td>
-      <td>503.231</td>
+      <td>111</td>
+      <td>44.9846</td>
+      <td>44.9846</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -624,9 +626,9 @@ df_obj.head()
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>44.1997</td>
+      <td>9.74367</td>
       <td>0</td>
-      <td>86.9665</td>
+      <td>6.52797</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -634,7 +636,7 @@ df_obj.head()
     </tr>
   </tbody>
 </table>
-<p>4 rows × 169 columns</p>
+<p>4 rows × 80 columns</p>
 </div>
 
 
@@ -715,45 +717,45 @@ pst.res.head()
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
-      <td>34.190167</td>
-      <td>34.316247</td>
-      <td>-0.126080</td>
+      <td>34.720563</td>
+      <td>34.606945</td>
+      <td>0.113618</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
-      <td>34.178076</td>
-      <td>34.326937</td>
-      <td>-0.148861</td>
+      <td>34.722037</td>
+      <td>34.603903</td>
+      <td>0.118133</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
-      <td>34.203032</td>
-      <td>34.426585</td>
-      <td>-0.223554</td>
+      <td>34.714429</td>
+      <td>34.632920</td>
+      <td>0.081509</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
-      <td>34.274843</td>
-      <td>34.517640</td>
-      <td>-0.242797</td>
+      <td>34.782017</td>
+      <td>34.674624</td>
+      <td>0.107392</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
-      <td>34.345650</td>
-      <td>34.575585</td>
-      <td>-0.229935</td>
+      <td>34.841318</td>
+      <td>34.709359</td>
+      <td>0.131960</td>
       <td>0.0</td>
     </tr>
   </tbody>
@@ -787,12 +789,6 @@ pyemu.plot_utils.res_1to1(pst);
 
     
 ![png](freyberg_glm_2_files/freyberg_glm_2_65_2.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_65_3.png)
     
 
 
@@ -841,14 +837,14 @@ oe.head()
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3896.5</th>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3926.5</th>
       <th>...</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4169.5</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4199.5</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4230.5</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4261.5</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4291.5</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4322.5</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4352.5</th>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4169.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4199.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4230.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4261.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4291.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4322.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4352.5</th>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
       <th>part_status</th>
       <th>part_time</th>
     </tr>
@@ -880,127 +876,127 @@ oe.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>34.2111</td>
-      <td>34.2242</td>
-      <td>34.3008</td>
-      <td>34.3539</td>
-      <td>34.3970</td>
-      <td>34.4114</td>
-      <td>34.4017</td>
-      <td>34.3727</td>
-      <td>34.3287</td>
-      <td>34.2190</td>
+      <td>34.5658</td>
+      <td>34.5491</td>
+      <td>34.6170</td>
+      <td>34.6275</td>
+      <td>34.6369</td>
+      <td>34.6675</td>
+      <td>34.6935</td>
+      <td>34.6219</td>
+      <td>34.5075</td>
+      <td>34.3759</td>
       <td>...</td>
-      <td>0.011337</td>
-      <td>0.011016</td>
-      <td>0.010662</td>
-      <td>0.010477</td>
-      <td>0.010351</td>
-      <td>0.010402</td>
-      <td>0.010510</td>
-      <td>0.010854</td>
+      <td>-0.174247</td>
+      <td>-0.183912</td>
+      <td>-0.286721</td>
+      <td>-0.416190</td>
+      <td>-0.574808</td>
+      <td>-0.716813</td>
+      <td>-0.800129</td>
+      <td>-0.756522</td>
       <td>5</td>
-      <td>349293.0</td>
+      <td>109238.0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>34.4262</td>
-      <td>34.4376</td>
-      <td>34.6092</td>
-      <td>34.7346</td>
-      <td>34.8014</td>
-      <td>34.8035</td>
-      <td>34.7300</td>
-      <td>34.6487</td>
-      <td>34.5675</td>
-      <td>34.2486</td>
+      <td>34.6788</td>
+      <td>34.6724</td>
+      <td>34.7032</td>
+      <td>34.7365</td>
+      <td>34.8034</td>
+      <td>34.8209</td>
+      <td>34.8087</td>
+      <td>34.7427</td>
+      <td>34.5951</td>
+      <td>34.4368</td>
       <td>...</td>
-      <td>0.004101</td>
-      <td>0.004273</td>
-      <td>0.004347</td>
-      <td>0.004344</td>
-      <td>0.004269</td>
-      <td>0.004057</td>
-      <td>0.003878</td>
-      <td>0.003659</td>
-      <td>3</td>
-      <td>104546.0</td>
+      <td>-0.444303</td>
+      <td>-0.450600</td>
+      <td>-0.527780</td>
+      <td>-0.645964</td>
+      <td>-0.784631</td>
+      <td>-0.924906</td>
+      <td>-1.031560</td>
+      <td>-1.038010</td>
+      <td>5</td>
+      <td>27697.9</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>34.3853</td>
-      <td>34.4066</td>
-      <td>34.5206</td>
-      <td>34.6064</td>
-      <td>34.6620</td>
-      <td>34.6639</td>
-      <td>34.6397</td>
-      <td>34.5983</td>
-      <td>34.5484</td>
-      <td>34.3352</td>
+      <td>34.6872</td>
+      <td>34.6811</td>
+      <td>34.7187</td>
+      <td>34.7187</td>
+      <td>34.7481</td>
+      <td>34.7982</td>
+      <td>34.8003</td>
+      <td>34.7419</td>
+      <td>34.6521</td>
+      <td>34.4820</td>
       <td>...</td>
-      <td>0.012864</td>
-      <td>0.012209</td>
-      <td>0.011614</td>
-      <td>0.011344</td>
-      <td>0.011551</td>
-      <td>0.012045</td>
-      <td>0.013027</td>
-      <td>0.013506</td>
-      <td>2</td>
-      <td>359022.0</td>
+      <td>-0.317830</td>
+      <td>-0.304507</td>
+      <td>-0.419309</td>
+      <td>-0.567078</td>
+      <td>-0.725442</td>
+      <td>-0.873906</td>
+      <td>-0.965150</td>
+      <td>-0.955786</td>
+      <td>5</td>
+      <td>62101.6</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>34.4655</td>
-      <td>34.4778</td>
-      <td>34.5474</td>
-      <td>34.6089</td>
-      <td>34.6413</td>
-      <td>34.6398</td>
-      <td>34.6055</td>
-      <td>34.5647</td>
-      <td>34.4947</td>
-      <td>34.3371</td>
+      <td>34.8025</td>
+      <td>34.7905</td>
+      <td>34.8308</td>
+      <td>34.8794</td>
+      <td>34.9136</td>
+      <td>34.9518</td>
+      <td>34.9019</td>
+      <td>34.8590</td>
+      <td>34.7302</td>
+      <td>34.5304</td>
       <td>...</td>
-      <td>0.015843</td>
-      <td>0.015660</td>
-      <td>0.015567</td>
-      <td>0.015550</td>
-      <td>0.015628</td>
-      <td>0.015745</td>
-      <td>0.015900</td>
-      <td>0.015953</td>
-      <td>2</td>
-      <td>472545.0</td>
+      <td>-0.395528</td>
+      <td>-0.375856</td>
+      <td>-0.422554</td>
+      <td>-0.513051</td>
+      <td>-0.638089</td>
+      <td>-0.772675</td>
+      <td>-0.875100</td>
+      <td>-0.919789</td>
+      <td>5</td>
+      <td>40540.2</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>34.4859</td>
-      <td>34.4972</td>
-      <td>34.5940</td>
-      <td>34.6826</td>
-      <td>34.7428</td>
-      <td>34.7685</td>
-      <td>34.7559</td>
-      <td>34.7226</td>
-      <td>34.6632</td>
-      <td>34.4963</td>
+      <td>34.7114</td>
+      <td>34.7245</td>
+      <td>34.7607</td>
+      <td>34.8822</td>
+      <td>34.8998</td>
+      <td>34.9432</td>
+      <td>34.9049</td>
+      <td>34.8510</td>
+      <td>34.7180</td>
+      <td>34.5235</td>
       <td>...</td>
-      <td>0.009302</td>
-      <td>0.009217</td>
-      <td>0.009132</td>
-      <td>0.009042</td>
-      <td>0.008923</td>
-      <td>0.008733</td>
-      <td>0.008572</td>
-      <td>0.008448</td>
-      <td>2</td>
-      <td>113856.0</td>
+      <td>-0.229453</td>
+      <td>-0.216106</td>
+      <td>-0.299691</td>
+      <td>-0.402041</td>
+      <td>-0.526137</td>
+      <td>-0.641154</td>
+      <td>-0.713122</td>
+      <td>-0.724800</td>
+      <td>5</td>
+      <td>83868.5</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 62227 columns</p>
+<p>5 rows × 21252 columns</p>
 </div>
 
 
@@ -1092,42 +1088,6 @@ plt.show()
     
 
 
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_73_6.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_73_7.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_73_8.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_73_9.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_73_10.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_73_11.png)
-    
-
-
 ### The Minimum Error Variance Parameter Field
 
 We have inspected the models' ability to replicate measured data. It is also a good idea to inspect how "sensible" are the obtained parameter values. A common easy check is to visualy inspect the spatial distirbution of hydrualic property parameters. One can often find unexpected insight from how parameter patterns emerge during calibration. 
@@ -1172,27 +1132,13 @@ gwf.npf.k.plot(colorbar=True)
 
 
 
-    [<AxesSubplot:title={'center':'k layer 1'}>,
-     <AxesSubplot:title={'center':'k layer 2'}>,
-     <AxesSubplot:title={'center':'k layer 3'}>]
+    <AxesSubplot:title={'center':'k'}>
 
 
 
 
     
 ![png](freyberg_glm_2_files/freyberg_glm_2_79_1.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_79_2.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_79_3.png)
     
 
 
@@ -1209,21 +1155,9 @@ pst.get_adj_pars_at_bounds()
 
 
 
-    (['pname:npfklayer3pp_inst:0_ptype:pp_pstyle:m_i:27_j:12_zone:1.0',
-      'pname:rch_recharge_2tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:rch_recharge_10tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:rch_recharge_11tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:rch_recharge_12tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:rch_recharge_13tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:welcst_inst:4_ptype:cn_usecol:3_pstyle:m',
-      'pname:welcst_inst:6_ptype:cn_usecol:3_pstyle:m'],
-     ['pname:rch_recharge_3tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:rch_recharge_4tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:rch_recharge_5tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:rch_recharge_6tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:rch_recharge_7tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:rch_recharge_8tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:welcst_inst:9_ptype:cn_usecol:3_pstyle:m'])
+    (['pname:rch_recharge_13tcn_inst:0_ptype:cn_pstyle:m'],
+     ['pname:rch_recharge_7tcn_inst:0_ptype:cn_pstyle:m',
+      'pname:rch_recharge_8tcn_inst:0_ptype:cn_pstyle:m'])
 
 
 
@@ -1283,47 +1217,47 @@ f_df
   <tbody>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
-      <td>34.810</td>
-      <td>0.514595</td>
-      <td>33.7808</td>
-      <td>35.8392</td>
-      <td>35.2258</td>
-      <td>0.251279</td>
-      <td>34.7232</td>
-      <td>35.7283</td>
+      <td>35.5598</td>
+      <td>1.3548</td>
+      <td>32.8502</td>
+      <td>38.2694</td>
+      <td>34.4288</td>
+      <td>0.350009</td>
+      <td>33.7288</td>
+      <td>35.1289</td>
     </tr>
     <tr>
       <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
-      <td>-694.300</td>
-      <td>321.726000</td>
-      <td>-1337.7500</td>
-      <td>-50.8468</td>
-      <td>-789.5830</td>
-      <td>234.854000</td>
-      <td>-1259.2900</td>
-      <td>-319.8740</td>
+      <td>-127.1930</td>
+      <td>467.6410</td>
+      <td>-1062.4700</td>
+      <td>808.0890</td>
+      <td>-112.0640</td>
+      <td>274.703000</td>
+      <td>-661.4690</td>
+      <td>437.3420</td>
     </tr>
     <tr>
       <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
-      <td>-519.185</td>
-      <td>427.106000</td>
-      <td>-1373.4000</td>
-      <td>335.0270</td>
-      <td>-729.1300</td>
-      <td>254.449000</td>
-      <td>-1238.0300</td>
-      <td>-220.2320</td>
+      <td>92.9114</td>
+      <td>398.7560</td>
+      <td>-704.6000</td>
+      <td>890.4220</td>
+      <td>-102.0130</td>
+      <td>273.360000</td>
+      <td>-648.7330</td>
+      <td>444.7080</td>
     </tr>
     <tr>
       <th>part_time</th>
-      <td>211849.000</td>
-      <td>308474.000000</td>
-      <td>-405099.0000</td>
-      <td>828797.0000</td>
-      <td>195843.0000</td>
-      <td>186495.000000</td>
-      <td>-177147.0000</td>
-      <td>568833.0000</td>
+      <td>99358.4000</td>
+      <td>48689.3000</td>
+      <td>1979.8600</td>
+      <td>196737.0000</td>
+      <td>80508.8000</td>
+      <td>47339.400000</td>
+      <td>-14169.9000</td>
+      <td>175188.0000</td>
     </tr>
   </tbody>
 </table>
@@ -1391,3 +1325,13 @@ Does the FOSM posterior (blue-shaded area) overlap the Monte Carlo posterior (bl
 Because we are working with a synthetic case for which we know the truth, we can also assess whether forecast posteriors include the true value. Naturally, this would not be possible for a real-world case. Do each of the red lines fall within the FOSM (blue shaded area) and Monte Carlo (blue column) posteriors? If so, then technically uncertainty analysis has not failed. #winning. If not, then it has failed. #major bad times.
 
 In this case we have done a pretty good job. We seem to have avoided underestimating uncertainty, even for the difficult null-space dependent forecasts. Counterintuitively, we did so by _not_ getting a really good fit with with measured data. Only _as good_ a fit as is reasonable given the information content therein. Of course, in the real-world we wouldn't be able to assess whether uncertainty analysis had failed. The somewhat irrealistic parameter patterns (all those bullseyes in the calibrated K field), the fact that several parameters are at their bounds and that the posterior parameter ensemble does not cover observed values are all red-flags. They suggest the potential emergence of bias and parameters taking on compensatory roles.  A modeller might wish to revisti their model and parameterisation to resolve the source of some of this structural error. Or, omitting clairbation entirely might provide a more conservative and robust forecast.We will return to these concepts during the PEST++IES tutorial notebooks.
+
+
+```python
+
+```
+
+
+```python
+
+```

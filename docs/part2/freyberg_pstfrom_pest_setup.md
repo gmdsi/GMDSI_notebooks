@@ -44,13 +44,15 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt;
 
-
-sys.path.append(os.path.join("..", "..", "dependencies"))
+sys.path.insert(0,os.path.join("..", "..", "dependencies"))
 import pyemu
 import flopy
-
-sys.path.append("..")
+assert "dependencies" in flopy.__file__
+assert "dependencies" in pyemu.__file__
+sys.path.insert(0,"..")
 import herebedragons as hbd
+
+
 ```
 
 We will be calling a few external programs throughout this tutorial. Namely, MODFLOW 6 and PESTPP-GLM. For the purposes of the tutorial(s), we have included executables in the tutorial repository. They are in the `bin` folder, organized by operating system and will programmatically copied into the working dirs as needed. 
@@ -65,7 +67,7 @@ Let's copy the original model folder into a new working directory, just to ensur
 
 ```python
 # folder containing original model files
-org_d = os.path.join('..', '..', 'models', 'freyberg_mf6')
+org_d = os.path.join('..', '..', 'models', 'monthly_model_files_1lyr_newstress')
 
 # a dir to hold a copy of the org model files
 tmp_d = os.path.join('freyberg_mf6')
@@ -98,33 +100,23 @@ os.listdir(tmp_d)
      'freyberg6.dis',
      'freyberg6.dis.grb',
      'freyberg6.dis_botm_layer1.txt',
-     'freyberg6.dis_botm_layer2.txt',
-     'freyberg6.dis_botm_layer3.txt',
      'freyberg6.dis_delc.txt',
      'freyberg6.dis_delr.txt',
      'freyberg6.dis_idomain_layer1.txt',
-     'freyberg6.dis_idomain_layer2.txt',
-     'freyberg6.dis_idomain_layer3.txt',
      'freyberg6.dis_top.txt',
      'freyberg6.ghb',
      'freyberg6.ghb_stress_period_data_1.txt',
+     'freyberg6.gwfgwt',
      'freyberg6.ic',
+     'freyberg6.ic_conc_strt_layer1.txt',
      'freyberg6.ic_strt_layer1.txt',
-     'freyberg6.ic_strt_layer2.txt',
-     'freyberg6.ic_strt_layer3.txt',
      'freyberg6.ims',
-     'freyberg6.lst',
      'freyberg6.nam',
      'freyberg6.npf',
      'freyberg6.npf_icelltype_layer1.txt',
-     'freyberg6.npf_icelltype_layer2.txt',
-     'freyberg6.npf_icelltype_layer3.txt',
      'freyberg6.npf_k33_layer1.txt',
-     'freyberg6.npf_k33_layer2.txt',
-     'freyberg6.npf_k33_layer3.txt',
      'freyberg6.npf_k_layer1.txt',
-     'freyberg6.npf_k_layer2.txt',
-     'freyberg6.npf_k_layer3.txt',
+     'freyberg6.obs',
      'freyberg6.oc',
      'freyberg6.rch',
      'freyberg6.rch_recharge_1.txt',
@@ -156,40 +148,11 @@ os.listdir(tmp_d)
      'freyberg6.sfr_connectiondata.txt',
      'freyberg6.sfr_packagedata.txt',
      'freyberg6.sfr_perioddata_1.txt',
-     'freyberg6.sfr_perioddata_10.txt',
-     'freyberg6.sfr_perioddata_11.txt',
-     'freyberg6.sfr_perioddata_12.txt',
-     'freyberg6.sfr_perioddata_13.txt',
-     'freyberg6.sfr_perioddata_14.txt',
-     'freyberg6.sfr_perioddata_15.txt',
-     'freyberg6.sfr_perioddata_16.txt',
-     'freyberg6.sfr_perioddata_17.txt',
-     'freyberg6.sfr_perioddata_18.txt',
-     'freyberg6.sfr_perioddata_19.txt',
-     'freyberg6.sfr_perioddata_2.txt',
-     'freyberg6.sfr_perioddata_20.txt',
-     'freyberg6.sfr_perioddata_21.txt',
-     'freyberg6.sfr_perioddata_22.txt',
-     'freyberg6.sfr_perioddata_23.txt',
-     'freyberg6.sfr_perioddata_24.txt',
-     'freyberg6.sfr_perioddata_25.txt',
-     'freyberg6.sfr_perioddata_3.txt',
-     'freyberg6.sfr_perioddata_4.txt',
-     'freyberg6.sfr_perioddata_5.txt',
-     'freyberg6.sfr_perioddata_6.txt',
-     'freyberg6.sfr_perioddata_7.txt',
-     'freyberg6.sfr_perioddata_8.txt',
-     'freyberg6.sfr_perioddata_9.txt',
+     'freyberg6.sft_package_data.txt',
      'freyberg6.sto',
      'freyberg6.sto_iconvert_layer1.txt',
-     'freyberg6.sto_iconvert_layer2.txt',
-     'freyberg6.sto_iconvert_layer3.txt',
      'freyberg6.sto_ss_layer1.txt',
-     'freyberg6.sto_ss_layer2.txt',
-     'freyberg6.sto_ss_layer3.txt',
      'freyberg6.sto_sy_layer1.txt',
-     'freyberg6.sto_sy_layer2.txt',
-     'freyberg6.sto_sy_layer3.txt',
      'freyberg6.tdis',
      'freyberg6.wel',
      'freyberg6.wel_stress_period_data_1.txt',
@@ -217,22 +180,16 @@ os.listdir(tmp_d)
      'freyberg6.wel_stress_period_data_7.txt',
      'freyberg6.wel_stress_period_data_8.txt',
      'freyberg6.wel_stress_period_data_9.txt',
-     'freyberg6_freyberg.cbc',
-     'freyberg6_freyberg.hds',
      'freyberg_mp.mpbas',
-     'freyberg_mp.mpend',
-     'freyberg_mp.mplst',
      'freyberg_mp.mpnam',
      'freyberg_mp.mpsim',
      'freyberg_mp.ne_layer1.txt',
      'freyberg_mp.ne_layer2.txt',
      'freyberg_mp.ne_layer3.txt',
-     'head.obs',
      'heads.csv',
      'inschek.exe',
      'mf5to6.exe',
      'mf6.exe',
-     'mfsim.lst',
      'mfsim.nam',
      'mp7.exe',
      'pestchek.exe',
@@ -284,6 +241,7 @@ pyemu.os_utils.run(r'mp7 freyberg_mp.mpsim', cwd=tmp_d)
         loading package wel...
         loading package rch...
         loading package ghb...
+    INFORMATION: maxbound in ('gwf6', 'ghb', 'dimensions') changed to 10 based on size of stress_period_data
         loading package sfr...
         loading package obs...
       loading ims package freyberg6...
@@ -350,33 +308,24 @@ os.listdir(template_ws)
      'freyberg6.dis',
      'freyberg6.dis.grb',
      'freyberg6.dis_botm_layer1.txt',
-     'freyberg6.dis_botm_layer2.txt',
-     'freyberg6.dis_botm_layer3.txt',
      'freyberg6.dis_delc.txt',
      'freyberg6.dis_delr.txt',
      'freyberg6.dis_idomain_layer1.txt',
-     'freyberg6.dis_idomain_layer2.txt',
-     'freyberg6.dis_idomain_layer3.txt',
      'freyberg6.dis_top.txt',
      'freyberg6.ghb',
      'freyberg6.ghb_stress_period_data_1.txt',
+     'freyberg6.gwfgwt',
      'freyberg6.ic',
+     'freyberg6.ic_conc_strt_layer1.txt',
      'freyberg6.ic_strt_layer1.txt',
-     'freyberg6.ic_strt_layer2.txt',
-     'freyberg6.ic_strt_layer3.txt',
      'freyberg6.ims',
      'freyberg6.lst',
      'freyberg6.nam',
      'freyberg6.npf',
      'freyberg6.npf_icelltype_layer1.txt',
-     'freyberg6.npf_icelltype_layer2.txt',
-     'freyberg6.npf_icelltype_layer3.txt',
      'freyberg6.npf_k33_layer1.txt',
-     'freyberg6.npf_k33_layer2.txt',
-     'freyberg6.npf_k33_layer3.txt',
      'freyberg6.npf_k_layer1.txt',
-     'freyberg6.npf_k_layer2.txt',
-     'freyberg6.npf_k_layer3.txt',
+     'freyberg6.obs',
      'freyberg6.oc',
      'freyberg6.rch',
      'freyberg6.rch_recharge_1.txt',
@@ -408,40 +357,11 @@ os.listdir(template_ws)
      'freyberg6.sfr_connectiondata.txt',
      'freyberg6.sfr_packagedata.txt',
      'freyberg6.sfr_perioddata_1.txt',
-     'freyberg6.sfr_perioddata_10.txt',
-     'freyberg6.sfr_perioddata_11.txt',
-     'freyberg6.sfr_perioddata_12.txt',
-     'freyberg6.sfr_perioddata_13.txt',
-     'freyberg6.sfr_perioddata_14.txt',
-     'freyberg6.sfr_perioddata_15.txt',
-     'freyberg6.sfr_perioddata_16.txt',
-     'freyberg6.sfr_perioddata_17.txt',
-     'freyberg6.sfr_perioddata_18.txt',
-     'freyberg6.sfr_perioddata_19.txt',
-     'freyberg6.sfr_perioddata_2.txt',
-     'freyberg6.sfr_perioddata_20.txt',
-     'freyberg6.sfr_perioddata_21.txt',
-     'freyberg6.sfr_perioddata_22.txt',
-     'freyberg6.sfr_perioddata_23.txt',
-     'freyberg6.sfr_perioddata_24.txt',
-     'freyberg6.sfr_perioddata_25.txt',
-     'freyberg6.sfr_perioddata_3.txt',
-     'freyberg6.sfr_perioddata_4.txt',
-     'freyberg6.sfr_perioddata_5.txt',
-     'freyberg6.sfr_perioddata_6.txt',
-     'freyberg6.sfr_perioddata_7.txt',
-     'freyberg6.sfr_perioddata_8.txt',
-     'freyberg6.sfr_perioddata_9.txt',
+     'freyberg6.sft_package_data.txt',
      'freyberg6.sto',
      'freyberg6.sto_iconvert_layer1.txt',
-     'freyberg6.sto_iconvert_layer2.txt',
-     'freyberg6.sto_iconvert_layer3.txt',
      'freyberg6.sto_ss_layer1.txt',
-     'freyberg6.sto_ss_layer2.txt',
-     'freyberg6.sto_ss_layer3.txt',
      'freyberg6.sto_sy_layer1.txt',
-     'freyberg6.sto_sy_layer2.txt',
-     'freyberg6.sto_sy_layer3.txt',
      'freyberg6.tdis',
      'freyberg6.wel',
      'freyberg6.wel_stress_period_data_1.txt',
@@ -479,7 +399,6 @@ os.listdir(template_ws)
      'freyberg_mp.ne_layer1.txt',
      'freyberg_mp.ne_layer2.txt',
      'freyberg_mp.ne_layer3.txt',
-     'head.obs',
      'heads.csv',
      'inschek.exe',
      'mf5to6.exe',
@@ -561,17 +480,9 @@ df.head()
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>TRGW-2-2-15</th>
-      <th>TRGW-2-2-9</th>
-      <th>TRGW-2-3-8</th>
-      <th>TRGW-2-9-1</th>
-      <th>TRGW-2-13-10</th>
-      <th>TRGW-2-15-16</th>
-      <th>TRGW-2-21-10</th>
-      <th>TRGW-2-22-15</th>
-      <th>TRGW-2-24-4</th>
-      <th>TRGW-2-26-6</th>
-      <th>...</th>
+      <th>TRGW-0-2-15</th>
+      <th>TRGW-0-2-9</th>
+      <th>TRGW-0-3-8</th>
       <th>TRGW-0-9-1</th>
       <th>TRGW-0-13-10</th>
       <th>TRGW-0-15-16</th>
@@ -598,140 +509,91 @@ df.head()
       <th></th>
       <th></th>
       <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>3652.5</th>
-      <td>34.399753</td>
-      <td>34.692968</td>
-      <td>34.730206</td>
-      <td>35.065796</td>
-      <td>34.320937</td>
-      <td>34.180708</td>
-      <td>34.200684</td>
-      <td>34.065937</td>
-      <td>34.406587</td>
-      <td>34.245567</td>
-      <td>...</td>
-      <td>35.073084</td>
-      <td>34.326872</td>
-      <td>34.186027</td>
-      <td>34.206589</td>
-      <td>34.025500</td>
-      <td>34.412947</td>
-      <td>34.251605</td>
-      <td>33.937893</td>
-      <td>34.031870</td>
-      <td>33.924572</td>
+      <td>34.626504</td>
+      <td>35.594707</td>
+      <td>35.715488</td>
+      <td>36.718945</td>
+      <td>34.797358</td>
+      <td>34.378744</td>
+      <td>34.713368</td>
+      <td>34.239559</td>
+      <td>35.452834</td>
+      <td>35.066278</td>
+      <td>34.166173</td>
+      <td>34.636158</td>
+      <td>34.341889</td>
     </tr>
     <tr>
       <th>3683.5</th>
-      <td>34.474597</td>
-      <td>34.773873</td>
-      <td>34.811043</td>
-      <td>35.130920</td>
-      <td>34.435795</td>
-      <td>34.284363</td>
-      <td>34.320775</td>
-      <td>34.171539</td>
-      <td>34.517134</td>
-      <td>34.376046</td>
-      <td>...</td>
-      <td>35.137941</td>
-      <td>34.440950</td>
-      <td>34.289268</td>
-      <td>34.325758</td>
-      <td>34.116346</td>
-      <td>34.522520</td>
-      <td>34.380738</td>
-      <td>34.017081</td>
-      <td>34.142435</td>
-      <td>34.035987</td>
+      <td>34.633560</td>
+      <td>35.608653</td>
+      <td>35.728759</td>
+      <td>36.732080</td>
+      <td>34.768494</td>
+      <td>34.359508</td>
+      <td>34.679023</td>
+      <td>34.205825</td>
+      <td>35.436127</td>
+      <td>35.008396</td>
+      <td>34.156127</td>
+      <td>34.604404</td>
+      <td>34.285080</td>
     </tr>
     <tr>
       <th>3712.5</th>
-      <td>34.540686</td>
-      <td>34.856926</td>
-      <td>34.895437</td>
-      <td>35.214427</td>
-      <td>34.528656</td>
-      <td>34.363909</td>
-      <td>34.418080</td>
-      <td>34.248171</td>
-      <td>34.622236</td>
-      <td>34.480890</td>
-      <td>...</td>
-      <td>35.221267</td>
-      <td>34.534811</td>
-      <td>34.369785</td>
-      <td>34.424073</td>
-      <td>34.183016</td>
-      <td>34.628106</td>
-      <td>34.486650</td>
-      <td>34.079395</td>
-      <td>34.230419</td>
-      <td>34.112732</td>
+      <td>34.684382</td>
+      <td>35.696183</td>
+      <td>35.818154</td>
+      <td>36.833304</td>
+      <td>34.821230</td>
+      <td>34.399718</td>
+      <td>34.726236</td>
+      <td>34.240511</td>
+      <td>35.500678</td>
+      <td>35.055096</td>
+      <td>34.195098</td>
+      <td>34.654121</td>
+      <td>34.328380</td>
     </tr>
     <tr>
       <th>3743.5</th>
-      <td>34.578877</td>
-      <td>34.913862</td>
-      <td>34.954331</td>
-      <td>35.285693</td>
-      <td>34.575597</td>
-      <td>34.400771</td>
-      <td>34.466995</td>
-      <td>34.282155</td>
-      <td>34.687775</td>
-      <td>34.535632</td>
-      <td>...</td>
-      <td>35.292600</td>
-      <td>34.582875</td>
-      <td>34.407581</td>
-      <td>34.474190</td>
-      <td>34.212731</td>
-      <td>34.694595</td>
-      <td>34.542664</td>
-      <td>34.108744</td>
-      <td>34.273212</td>
-      <td>34.143653</td>
+      <td>34.756157</td>
+      <td>35.829617</td>
+      <td>35.956444</td>
+      <td>36.997418</td>
+      <td>34.920983</td>
+      <td>34.469788</td>
+      <td>34.822798</td>
+      <td>34.303634</td>
+      <td>35.624531</td>
+      <td>35.166286</td>
+      <td>34.258479</td>
+      <td>34.754157</td>
+      <td>34.416088</td>
     </tr>
     <tr>
       <th>3773.5</th>
-      <td>34.570039</td>
-      <td>34.914817</td>
-      <td>34.956630</td>
-      <td>35.304308</td>
-      <td>34.553737</td>
-      <td>34.377572</td>
-      <td>34.444166</td>
-      <td>34.257522</td>
-      <td>34.680793</td>
-      <td>34.513612</td>
-      <td>...</td>
-      <td>35.311425</td>
-      <td>34.561764</td>
-      <td>34.384903</td>
-      <td>34.452207</td>
-      <td>34.191712</td>
-      <td>34.688486</td>
-      <td>34.521646</td>
-      <td>34.091720</td>
-      <td>34.250685</td>
-      <td>34.114481</td>
+      <td>34.813334</td>
+      <td>35.948797</td>
+      <td>36.081709</td>
+      <td>37.157083</td>
+      <td>35.008383</td>
+      <td>34.526045</td>
+      <td>34.909527</td>
+      <td>34.354764</td>
+      <td>35.744619</td>
+      <td>35.274165</td>
+      <td>34.308607</td>
+      <td>34.844030</td>
+      <td>34.490486</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 26 columns</p>
 </div>
 
 
@@ -808,35 +670,35 @@ hds_df.head()
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</td>
-      <td>34.326872</td>
+      <td>34.797358</td>
       <td>1.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</td>
-      <td>34.440950</td>
+      <td>34.768494</td>
       <td>1.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</td>
-      <td>34.534811</td>
+      <td>34.821230</td>
       <td>1.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</td>
-      <td>34.582875</td>
+      <td>34.920983</td>
       <td>1.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</td>
-      <td>34.561764</td>
+      <td>35.008383</td>
       <td>1.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
     </tr>
@@ -905,33 +767,33 @@ df.head()
   <tbody>
     <tr>
       <th>3652.5</th>
-      <td>-751.175944</td>
-      <td>-530.017751</td>
-      <td>1362.956403</td>
+      <td>-1271.609373</td>
+      <td>-934.744886</td>
+      <td>2675.694849</td>
     </tr>
     <tr>
       <th>3683.5</th>
-      <td>-953.833450</td>
-      <td>-674.975248</td>
-      <td>1761.276157</td>
+      <td>-1188.261301</td>
+      <td>-903.583105</td>
+      <td>2561.700004</td>
     </tr>
     <tr>
       <th>3712.5</th>
-      <td>-1111.264769</td>
-      <td>-799.212978</td>
-      <td>2049.386246</td>
+      <td>-1278.176409</td>
+      <td>-975.062935</td>
+      <td>2720.180988</td>
     </tr>
     <tr>
       <th>3743.5</th>
-      <td>-1180.723380</td>
-      <td>-853.985397</td>
-      <td>2163.434411</td>
+      <td>-1442.004051</td>
+      <td>-1100.483634</td>
+      <td>3005.022456</td>
     </tr>
     <tr>
       <th>3773.5</th>
-      <td>-1140.609765</td>
-      <td>-823.268420</td>
-      <td>2068.666541</td>
+      <td>-1576.905331</td>
+      <td>-1201.101468</td>
+      <td>3237.266916</td>
     </tr>
   </tbody>
 </table>
@@ -985,19 +847,12 @@ v_space = pyemu.geostats.ExpVario(contribution=1.0, #sill
 grid_gs = pyemu.geostats.GeoStruct(variograms=v_space, transform='log') 
 
 # plot the gs if you like:
-grid_gs.plot()
+_ = grid_gs.plot()
 ```
 
 
-
-
-    <AxesSubplot:xlabel='distance', ylabel='$\\gamma$'>
-
-
-
-
     
-![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_32_1.png)
+![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_32_0.png)
     
 
 
@@ -1027,7 +882,7 @@ files = [f for f in os.listdir(template_ws) if tag in f.lower() and f.endswith("
 print(files)
 ```
 
-    ['freyberg6.npf_k_layer1.txt', 'freyberg6.npf_k_layer2.txt', 'freyberg6.npf_k_layer3.txt']
+    ['freyberg6.npf_k_layer1.txt']
     
 
 Let's setup multiple spatial scales of parameters for Kh. To do this we will use three of the parameter "types" described above. The coarse scale will be a `constant` single value for each array. The medium scale will `pilot points`. The finest scale will use parameters as the `grid` scale (a unique parameter for each model cell!)
@@ -1049,14 +904,14 @@ We start by getting the idomain array. As our model has inactive cells, this hel
 
 ```python
 # as IDOMIAN is the same in all layers, we can use any layer
-ib = gwf.dis.idomain.get_data(layer=0)
+ib = gwf.dis.idomain.array[0]
 plt.imshow(ib)
 ```
 
 
 
 
-    <matplotlib.image.AxesImage at 0x1fb893484f0>
+    <matplotlib.image.AxesImage at 0x2b18473e3d0>
 
 
 
@@ -1123,9 +978,9 @@ df_gr.head()
       <th>partrans</th>
       <th>parubnd</th>
       <th>parlbnd</th>
-      <th>scale</th>
       <th>parchglim</th>
       <th>offset</th>
+      <th>scale</th>
       <th>dercom</th>
     </tr>
   </thead>
@@ -1145,9 +1000,9 @@ df_gr.head()
       <td>log</td>
       <td>5.0</td>
       <td>0.2</td>
-      <td>1.0</td>
       <td>factor</td>
       <td>0.0</td>
+      <td>1.0</td>
       <td>1</td>
     </tr>
     <tr>
@@ -1165,9 +1020,9 @@ df_gr.head()
       <td>log</td>
       <td>5.0</td>
       <td>0.2</td>
-      <td>1.0</td>
       <td>factor</td>
       <td>0.0</td>
+      <td>1.0</td>
       <td>1</td>
     </tr>
     <tr>
@@ -1185,9 +1040,9 @@ df_gr.head()
       <td>log</td>
       <td>5.0</td>
       <td>0.2</td>
-      <td>1.0</td>
       <td>factor</td>
       <td>0.0</td>
+      <td>1.0</td>
       <td>1</td>
     </tr>
     <tr>
@@ -1205,9 +1060,9 @@ df_gr.head()
       <td>log</td>
       <td>5.0</td>
       <td>0.2</td>
-      <td>1.0</td>
       <td>factor</td>
       <td>0.0</td>
+      <td>1.0</td>
       <td>1</td>
     </tr>
     <tr>
@@ -1225,9 +1080,9 @@ df_gr.head()
       <td>log</td>
       <td>5.0</td>
       <td>0.2</td>
-      <td>1.0</td>
       <td>factor</td>
       <td>0.0</td>
+      <td>1.0</td>
       <td>1</td>
     </tr>
   </tbody>
@@ -1288,7 +1143,7 @@ df_pp = pf.add_parameters(f,
     starting 7
     starting 8
     starting 9
-    took 4.200763 seconds
+    took 3.79733 seconds
     
 
 
@@ -1302,7 +1157,7 @@ ax.scatter(df_pp.x,df_pp.y)
 
 
 
-    <matplotlib.collections.PathCollection at 0x1fb89655400>
+    <matplotlib.collections.PathCollection at 0x2b184a85fa0>
 
 
 
@@ -1388,52 +1243,6 @@ def add_mult_pars(f, lb=0.2, ub=5.0, ulb=0.01, uub=100, add_coarse=True):
     return
 ```
 
-A reminder of which files are listed in `files`:
-
-
-```python
-files
-```
-
-
-
-
-    ['freyberg6.npf_k_layer1.txt',
-     'freyberg6.npf_k_layer2.txt',
-     'freyberg6.npf_k_layer3.txt']
-
-
-
-Now let's apply our function to the last two:
-
-
-```python
-for f in files[1:]:
-    add_mult_pars(f, lb=0.2, ub=5.0, ulb=0.01, uub=100)
-```
-
-Let's see what .tpl files have been added:
-
-
-```python
-[f for f in os.listdir(template_ws) if f.endswith(".tpl")]
-```
-
-
-
-
-    ['npfklayer1cn_inst0_constant.csv.tpl',
-     'npfklayer1gr_inst0_grid.csv.tpl',
-     'npfklayer1pp_inst0pp.dat.tpl',
-     'npfklayer2cn_inst0_constant.csv.tpl',
-     'npfklayer2gr_inst0_grid.csv.tpl',
-     'npfklayer2pp_inst0pp.dat.tpl',
-     'npfklayer3cn_inst0_constant.csv.tpl',
-     'npfklayer3gr_inst0_grid.csv.tpl',
-     'npfklayer3pp_inst0pp.dat.tpl']
-
-
-
 Well...hot damn, wasn't that easy? Let's speed through the other array parameter files.
 
 
@@ -1474,7 +1283,7 @@ len([f for f in os.listdir(template_ws) if f.endswith(".tpl")])
 
 
 
-    36
+    18
 
 
 
@@ -1498,27 +1307,9 @@ len([f for f in os.listdir(template_ws) if f.endswith(".tpl")])
      'npfk33layer1cn_inst0_constant.csv.tpl',
      'npfk33layer1gr_inst0_grid.csv.tpl',
      'npfk33layer1pp_inst0pp.dat.tpl',
-     'npfk33layer2cn_inst0_constant.csv.tpl',
-     'npfk33layer2gr_inst0_grid.csv.tpl',
-     'npfk33layer2pp_inst0pp.dat.tpl',
-     'npfk33layer3cn_inst0_constant.csv.tpl',
-     'npfk33layer3gr_inst0_grid.csv.tpl',
-     'npfk33layer3pp_inst0pp.dat.tpl',
      'npfklayer1cn_inst0_constant.csv.tpl',
      'npfklayer1gr_inst0_grid.csv.tpl',
      'npfklayer1pp_inst0pp.dat.tpl',
-     'npfklayer2cn_inst0_constant.csv.tpl',
-     'npfklayer2gr_inst0_grid.csv.tpl',
-     'npfklayer2pp_inst0pp.dat.tpl',
-     'npfklayer3cn_inst0_constant.csv.tpl',
-     'npfklayer3gr_inst0_grid.csv.tpl',
-     'npfklayer3pp_inst0pp.dat.tpl',
-     'stosslayer2cn_inst0_constant.csv.tpl',
-     'stosslayer2gr_inst0_grid.csv.tpl',
-     'stosslayer2pp_inst0pp.dat.tpl',
-     'stosslayer3cn_inst0_constant.csv.tpl',
-     'stosslayer3gr_inst0_grid.csv.tpl',
-     'stosslayer3pp_inst0pp.dat.tpl',
      'stosylayer1cn_inst0_constant.csv.tpl',
      'stosylayer1gr_inst0_grid.csv.tpl',
      'stosylayer1pp_inst0pp.dat.tpl']
@@ -1602,7 +1393,7 @@ len([f for f in os.listdir(template_ws) if f.endswith(".tpl")])
 
 
 
-    86
+    68
 
 
 
@@ -1830,9 +1621,9 @@ pf.add_parameters(f,
       <th>partrans</th>
       <th>parubnd</th>
       <th>parlbnd</th>
-      <th>scale</th>
       <th>parchglim</th>
       <th>offset</th>
+      <th>scale</th>
       <th>dercom</th>
     </tr>
   </thead>
@@ -1849,9 +1640,9 @@ pf.add_parameters(f,
       <td>log</td>
       <td>10.0</td>
       <td>0.1</td>
-      <td>1.0</td>
       <td>factor</td>
       <td>0.0</td>
+      <td>1.0</td>
       <td>1</td>
     </tr>
   </tbody>
@@ -1884,7 +1675,7 @@ for f in files:
                         geostruct=temporal_gs)
 ```
 
-    ['freyberg6.sfr_perioddata_1.txt', 'freyberg6.sfr_perioddata_2.txt', 'freyberg6.sfr_perioddata_3.txt', 'freyberg6.sfr_perioddata_4.txt', 'freyberg6.sfr_perioddata_5.txt', 'freyberg6.sfr_perioddata_6.txt', 'freyberg6.sfr_perioddata_7.txt', 'freyberg6.sfr_perioddata_8.txt', 'freyberg6.sfr_perioddata_9.txt', 'freyberg6.sfr_perioddata_10.txt', 'freyberg6.sfr_perioddata_11.txt', 'freyberg6.sfr_perioddata_12.txt', 'freyberg6.sfr_perioddata_13.txt', 'freyberg6.sfr_perioddata_14.txt', 'freyberg6.sfr_perioddata_15.txt', 'freyberg6.sfr_perioddata_16.txt', 'freyberg6.sfr_perioddata_17.txt', 'freyberg6.sfr_perioddata_18.txt', 'freyberg6.sfr_perioddata_19.txt', 'freyberg6.sfr_perioddata_20.txt', 'freyberg6.sfr_perioddata_21.txt', 'freyberg6.sfr_perioddata_22.txt', 'freyberg6.sfr_perioddata_23.txt', 'freyberg6.sfr_perioddata_24.txt', 'freyberg6.sfr_perioddata_25.txt']
+    ['freyberg6.sfr_perioddata_1.txt']
     
 
 
@@ -1911,21 +1702,9 @@ for f in files:
      'npfk33layer1cn_inst0_constant.csv.tpl',
      'npfk33layer1gr_inst0_grid.csv.tpl',
      'npfk33layer1pp_inst0pp.dat.tpl',
-     'npfk33layer2cn_inst0_constant.csv.tpl',
-     'npfk33layer2gr_inst0_grid.csv.tpl',
-     'npfk33layer2pp_inst0pp.dat.tpl',
-     'npfk33layer3cn_inst0_constant.csv.tpl',
-     'npfk33layer3gr_inst0_grid.csv.tpl',
-     'npfk33layer3pp_inst0pp.dat.tpl',
      'npfklayer1cn_inst0_constant.csv.tpl',
      'npfklayer1gr_inst0_grid.csv.tpl',
      'npfklayer1pp_inst0pp.dat.tpl',
-     'npfklayer2cn_inst0_constant.csv.tpl',
-     'npfklayer2gr_inst0_grid.csv.tpl',
-     'npfklayer2pp_inst0pp.dat.tpl',
-     'npfklayer3cn_inst0_constant.csv.tpl',
-     'npfklayer3gr_inst0_grid.csv.tpl',
-     'npfklayer3pp_inst0pp.dat.tpl',
      'rchrecharge10gr_inst0_grid.csv.tpl',
      'rchrecharge10pp_inst0pp.dat.tpl',
      'rchrecharge11gr_inst0_grid.csv.tpl',
@@ -2004,36 +1783,6 @@ for f in files:
      'sfrcondcn_inst0_constant.csv.tpl',
      'sfrcondgr_inst0_grid.csv.tpl',
      'sfrgr_inst0_grid.csv.tpl',
-     'sfrgr_inst10_grid.csv.tpl',
-     'sfrgr_inst11_grid.csv.tpl',
-     'sfrgr_inst12_grid.csv.tpl',
-     'sfrgr_inst13_grid.csv.tpl',
-     'sfrgr_inst14_grid.csv.tpl',
-     'sfrgr_inst15_grid.csv.tpl',
-     'sfrgr_inst16_grid.csv.tpl',
-     'sfrgr_inst17_grid.csv.tpl',
-     'sfrgr_inst18_grid.csv.tpl',
-     'sfrgr_inst19_grid.csv.tpl',
-     'sfrgr_inst1_grid.csv.tpl',
-     'sfrgr_inst20_grid.csv.tpl',
-     'sfrgr_inst21_grid.csv.tpl',
-     'sfrgr_inst22_grid.csv.tpl',
-     'sfrgr_inst23_grid.csv.tpl',
-     'sfrgr_inst24_grid.csv.tpl',
-     'sfrgr_inst2_grid.csv.tpl',
-     'sfrgr_inst3_grid.csv.tpl',
-     'sfrgr_inst4_grid.csv.tpl',
-     'sfrgr_inst5_grid.csv.tpl',
-     'sfrgr_inst6_grid.csv.tpl',
-     'sfrgr_inst7_grid.csv.tpl',
-     'sfrgr_inst8_grid.csv.tpl',
-     'sfrgr_inst9_grid.csv.tpl',
-     'stosslayer2cn_inst0_constant.csv.tpl',
-     'stosslayer2gr_inst0_grid.csv.tpl',
-     'stosslayer2pp_inst0pp.dat.tpl',
-     'stosslayer3cn_inst0_constant.csv.tpl',
-     'stosslayer3gr_inst0_grid.csv.tpl',
-     'stosslayer3pp_inst0pp.dat.tpl',
      'stosylayer1cn_inst0_constant.csv.tpl',
      'stosylayer1gr_inst0_grid.csv.tpl',
      'stosylayer1pp_inst0pp.dat.tpl',
@@ -2101,9 +1850,7 @@ files
 
 
 
-    ['freyberg6.ic_strt_layer1.txt',
-     'freyberg6.ic_strt_layer2.txt',
-     'freyberg6.ic_strt_layer3.txt']
+    ['freyberg6.ic_strt_layer1.txt']
 
 
 
@@ -2119,8 +1866,6 @@ for f in files:
 
 ```
 
-    (706, 17)
-    (706, 17)
     (706, 17)
     
 
@@ -2139,7 +1884,7 @@ How about we see that in action? Magic time! Let's create the PEST control file.
 pst = pf.build_pst()
 ```
 
-    noptmax:0, npar_adj:29653, nnz_obs:725
+    noptmax:0, npar_adj:23786, nnz_obs:400
     
 
 Boom! Done. (Well almost.) Check the folder. You should see a new .pst file and the `forward_run.py` file. By default, the .pst file is named after the original model folder name. 
@@ -2259,7 +2004,7 @@ pst = pf.build_pst()
 _ = [print(line.rstrip()) for line in open(os.path.join(template_ws,"forward_run.py"))]
 ```
 
-    noptmax:0, npar_adj:29653, nnz_obs:725
+    noptmax:0, npar_adj:23786, nnz_obs:400
     import os
     import multiprocessing as mp
     import numpy as np
@@ -2341,57 +2086,7 @@ files
      'hdslay1_t6.txt',
      'hdslay1_t7.txt',
      'hdslay1_t8.txt',
-     'hdslay1_t9.txt',
-     'hdslay2_t1.txt',
-     'hdslay2_t10.txt',
-     'hdslay2_t11.txt',
-     'hdslay2_t12.txt',
-     'hdslay2_t13.txt',
-     'hdslay2_t14.txt',
-     'hdslay2_t15.txt',
-     'hdslay2_t16.txt',
-     'hdslay2_t17.txt',
-     'hdslay2_t18.txt',
-     'hdslay2_t19.txt',
-     'hdslay2_t2.txt',
-     'hdslay2_t20.txt',
-     'hdslay2_t21.txt',
-     'hdslay2_t22.txt',
-     'hdslay2_t23.txt',
-     'hdslay2_t24.txt',
-     'hdslay2_t25.txt',
-     'hdslay2_t3.txt',
-     'hdslay2_t4.txt',
-     'hdslay2_t5.txt',
-     'hdslay2_t6.txt',
-     'hdslay2_t7.txt',
-     'hdslay2_t8.txt',
-     'hdslay2_t9.txt',
-     'hdslay3_t1.txt',
-     'hdslay3_t10.txt',
-     'hdslay3_t11.txt',
-     'hdslay3_t12.txt',
-     'hdslay3_t13.txt',
-     'hdslay3_t14.txt',
-     'hdslay3_t15.txt',
-     'hdslay3_t16.txt',
-     'hdslay3_t17.txt',
-     'hdslay3_t18.txt',
-     'hdslay3_t19.txt',
-     'hdslay3_t2.txt',
-     'hdslay3_t20.txt',
-     'hdslay3_t21.txt',
-     'hdslay3_t22.txt',
-     'hdslay3_t23.txt',
-     'hdslay3_t24.txt',
-     'hdslay3_t25.txt',
-     'hdslay3_t3.txt',
-     'hdslay3_t4.txt',
-     'hdslay3_t5.txt',
-     'hdslay3_t6.txt',
-     'hdslay3_t7.txt',
-     'hdslay3_t8.txt',
-     'hdslay3_t9.txt']
+     'hdslay1_t9.txt']
 
 
 
@@ -2443,7 +2138,6 @@ helpers.process_secondary_obs(ws=template_ws)
     ['cum.csv',
      'heads.csv',
      'heads.tdiff.csv',
-     'heads.vdiff.csv',
      'inc.csv',
      'mult2model_info.csv',
      'sfr.csv',
@@ -2480,13 +2174,6 @@ _ = pf.add_observations("heads.tdiff.csv", # the model output file to read
                             index_cols="time", #column header to use as index; can also use column number (zero-based) instead of the header name
                             use_cols=list(df.columns.values), #names of columns that include observation values; can also use column number (zero-based) instead of the header name
                             prefix="hdstd") #prefix to all observation names
-
-df = pd.read_csv(os.path.join(template_ws, "heads.vdiff.csv"), index_col=0)
-_ = pf.add_observations("heads.vdiff.csv", # the model output file to read
-                            insfile="heads.vdiff.csv.ins", #optional, the instruction file name
-                            index_cols="time", #column header to use as index; can also use column number (zero-based) instead of the header name
-                            use_cols=list(df.columns.values), #names of columns that include observation values; can also use column number (zero-based) instead of the header name
-                            prefix="hdsvd") #prefix to all observation names
 ```
 
 Remember to re-build the Pst control file:
@@ -2496,7 +2183,7 @@ Remember to re-build the Pst control file:
 pst = pf.build_pst()
 ```
 
-    noptmax:0, npar_adj:29653, nnz_obs:62225
+    noptmax:0, npar_adj:23786, nnz_obs:21250
     
 
 
@@ -2553,8 +2240,10 @@ _ = [print(line.rstrip()) for line in open(os.path.join(template_ws,"forward_run
         df = pd.read_csv(os.path.join(ws,'heads.csv'), index_col='time')
         df.sort_index(axis=1, inplace=True)
         dh = df.loc[:, [i for i in df.columns if i.startswith('TRGW-0-')]]
-        dh = dh - df.loc[:, [i for i in df.columns if i.startswith('TRGW-2-')]].values
-        dh.to_csv(os.path.join(ws,'heads.vdiff.csv'))
+        dh2 = df.loc[:, df.columns.map(lambda x: x.startswith('TRGW-2-'))]
+        if dh2.shape[1] > 0:
+            dh = dh - dh2.values
+            dh.to_csv(os.path.join(ws,'heads.vdiff.csv'))
     
         print('Secondary observation files processed.')
         return
@@ -2672,206 +2361,6 @@ _ = [print(line.rstrip()) for line in open(os.path.join(template_ws,"forward_run
         except Exception as e:
            print(r'error removing tmp file:hdslay1_t9.txt')
         try:
-           os.remove(r'hdslay2_t1.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t1.txt')
-        try:
-           os.remove(r'hdslay2_t10.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t10.txt')
-        try:
-           os.remove(r'hdslay2_t11.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t11.txt')
-        try:
-           os.remove(r'hdslay2_t12.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t12.txt')
-        try:
-           os.remove(r'hdslay2_t13.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t13.txt')
-        try:
-           os.remove(r'hdslay2_t14.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t14.txt')
-        try:
-           os.remove(r'hdslay2_t15.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t15.txt')
-        try:
-           os.remove(r'hdslay2_t16.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t16.txt')
-        try:
-           os.remove(r'hdslay2_t17.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t17.txt')
-        try:
-           os.remove(r'hdslay2_t18.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t18.txt')
-        try:
-           os.remove(r'hdslay2_t19.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t19.txt')
-        try:
-           os.remove(r'hdslay2_t2.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t2.txt')
-        try:
-           os.remove(r'hdslay2_t20.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t20.txt')
-        try:
-           os.remove(r'hdslay2_t21.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t21.txt')
-        try:
-           os.remove(r'hdslay2_t22.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t22.txt')
-        try:
-           os.remove(r'hdslay2_t23.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t23.txt')
-        try:
-           os.remove(r'hdslay2_t24.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t24.txt')
-        try:
-           os.remove(r'hdslay2_t25.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t25.txt')
-        try:
-           os.remove(r'hdslay2_t3.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t3.txt')
-        try:
-           os.remove(r'hdslay2_t4.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t4.txt')
-        try:
-           os.remove(r'hdslay2_t5.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t5.txt')
-        try:
-           os.remove(r'hdslay2_t6.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t6.txt')
-        try:
-           os.remove(r'hdslay2_t7.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t7.txt')
-        try:
-           os.remove(r'hdslay2_t8.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t8.txt')
-        try:
-           os.remove(r'hdslay2_t9.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay2_t9.txt')
-        try:
-           os.remove(r'hdslay3_t1.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t1.txt')
-        try:
-           os.remove(r'hdslay3_t10.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t10.txt')
-        try:
-           os.remove(r'hdslay3_t11.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t11.txt')
-        try:
-           os.remove(r'hdslay3_t12.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t12.txt')
-        try:
-           os.remove(r'hdslay3_t13.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t13.txt')
-        try:
-           os.remove(r'hdslay3_t14.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t14.txt')
-        try:
-           os.remove(r'hdslay3_t15.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t15.txt')
-        try:
-           os.remove(r'hdslay3_t16.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t16.txt')
-        try:
-           os.remove(r'hdslay3_t17.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t17.txt')
-        try:
-           os.remove(r'hdslay3_t18.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t18.txt')
-        try:
-           os.remove(r'hdslay3_t19.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t19.txt')
-        try:
-           os.remove(r'hdslay3_t2.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t2.txt')
-        try:
-           os.remove(r'hdslay3_t20.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t20.txt')
-        try:
-           os.remove(r'hdslay3_t21.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t21.txt')
-        try:
-           os.remove(r'hdslay3_t22.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t22.txt')
-        try:
-           os.remove(r'hdslay3_t23.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t23.txt')
-        try:
-           os.remove(r'hdslay3_t24.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t24.txt')
-        try:
-           os.remove(r'hdslay3_t25.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t25.txt')
-        try:
-           os.remove(r'hdslay3_t3.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t3.txt')
-        try:
-           os.remove(r'hdslay3_t4.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t4.txt')
-        try:
-           os.remove(r'hdslay3_t5.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t5.txt')
-        try:
-           os.remove(r'hdslay3_t6.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t6.txt')
-        try:
-           os.remove(r'hdslay3_t7.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t7.txt')
-        try:
-           os.remove(r'hdslay3_t8.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t8.txt')
-        try:
-           os.remove(r'hdslay3_t9.txt')
-        except Exception as e:
-           print(r'error removing tmp file:hdslay3_t9.txt')
-        try:
            os.remove(r'inc.csv')
         except Exception as e:
            print(r'error removing tmp file:inc.csv')
@@ -2887,10 +2376,6 @@ _ = [print(line.rstrip()) for line in open(os.path.join(template_ws,"forward_run
            os.remove(r'heads.tdiff.csv')
         except Exception as e:
            print(r'error removing tmp file:heads.tdiff.csv')
-        try:
-           os.remove(r'heads.vdiff.csv')
-        except Exception as e:
-           print(r'error removing tmp file:heads.vdiff.csv')
         pyemu.helpers.apply_list_and_array_pars(arr_par_file='mult2model_info.csv',chunk_len=50)
         pyemu.os_utils.run(r'mf6')
     
@@ -2951,7 +2436,7 @@ obs
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</td>
-      <td>34.326872</td>
+      <td>34.797358</td>
       <td>1.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -2965,7 +2450,7 @@ obs
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</td>
-      <td>34.440950</td>
+      <td>34.768494</td>
       <td>1.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -2979,7 +2464,7 @@ obs
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</td>
-      <td>34.534811</td>
+      <td>34.821230</td>
       <td>1.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -2993,7 +2478,7 @@ obs
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</td>
-      <td>34.582875</td>
+      <td>34.920983</td>
       <td>1.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -3007,7 +2492,7 @@ obs
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</td>
-      <td>34.561764</td>
+      <td>35.008383</td>
       <td>1.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -3033,12 +2518,12 @@ obs
       <td>...</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4261.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4261.5</td>
-      <td>0.006427</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4261.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4261.5</td>
+      <td>-0.416852</td>
       <td>1.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</td>
-      <td>hdsvd</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hdstd</td>
       <td>lst</td>
       <td>trgw-0-9-1</td>
       <td>4261.5</td>
@@ -3047,12 +2532,12 @@ obs
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4291.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4291.5</td>
-      <td>0.006136</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4291.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4291.5</td>
+      <td>-0.669533</td>
       <td>1.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</td>
-      <td>hdsvd</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hdstd</td>
       <td>lst</td>
       <td>trgw-0-9-1</td>
       <td>4291.5</td>
@@ -3061,12 +2546,12 @@ obs
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4322.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4322.5</td>
-      <td>0.005765</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4322.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4322.5</td>
+      <td>-0.927476</td>
       <td>1.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</td>
-      <td>hdsvd</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hdstd</td>
       <td>lst</td>
       <td>trgw-0-9-1</td>
       <td>4322.5</td>
@@ -3075,12 +2560,12 @@ obs
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4352.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4352.5</td>
-      <td>0.005441</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4352.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4352.5</td>
+      <td>-1.116548</td>
       <td>1.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</td>
-      <td>hdsvd</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hdstd</td>
       <td>lst</td>
       <td>trgw-0-9-1</td>
       <td>4352.5</td>
@@ -3089,12 +2574,12 @@ obs
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4383.5</td>
-      <td>0.005251</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4383.5</td>
+      <td>-1.159104</td>
       <td>1.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</td>
-      <td>hdsvd</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hdstd</td>
       <td>lst</td>
       <td>trgw-0-9-1</td>
       <td>4383.5</td>
@@ -3104,7 +2589,7 @@ obs
     </tr>
   </tbody>
 </table>
-<p>62225 rows × 11 columns</p>
+<p>21250 rows × 11 columns</p>
 </div>
 
 
@@ -3191,7 +2676,7 @@ obs.iloc[-2:]
     <tr>
       <th>part_status</th>
       <td>part_status</td>
-      <td>3.0000</td>
+      <td>5.00000</td>
       <td>1.0</td>
       <td>part</td>
       <td>NaN</td>
@@ -3205,7 +2690,7 @@ obs.iloc[-2:]
     <tr>
       <th>part_time</th>
       <td>part_time</td>
-      <td>211849.2446</td>
+      <td>99358.42916</td>
       <td>1.0</td>
       <td>part</td>
       <td>NaN</td>
@@ -3289,7 +2774,9 @@ par.loc[par_names].head()
       <th>scale</th>
       <th>offset</th>
       <th>dercom</th>
-      <th>...</th>
+      <th>pname</th>
+      <th>inst</th>
+      <th>ptype</th>
       <th>pstyle</th>
       <th>i</th>
       <th>j</th>
@@ -3304,8 +2791,8 @@ par.loc[par_names].head()
   </thead>
   <tbody>
     <tr>
-      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:8</th>
-      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:8</td>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:7</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:7</td>
       <td>none</td>
       <td>relative</td>
       <td>0.0</td>
@@ -3315,7 +2802,9 @@ par.loc[par_names].head()
       <td>1.0</td>
       <td>0.0</td>
       <td>1</td>
-      <td>...</td>
+      <td>ghbheadgr</td>
+      <td>0</td>
+      <td>gr</td>
       <td>a</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -3323,13 +2812,13 @@ par.loc[par_names].head()
       <td>NaN</td>
       <td>NaN</td>
       <td>3</td>
-      <td>1</td>
+      <td>0</td>
       <td>39</td>
-      <td>8</td>
+      <td>7</td>
     </tr>
     <tr>
-      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:13</th>
-      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:13</td>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:10</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:10</td>
       <td>none</td>
       <td>relative</td>
       <td>0.0</td>
@@ -3339,7 +2828,9 @@ par.loc[par_names].head()
       <td>1.0</td>
       <td>0.0</td>
       <td>1</td>
-      <td>...</td>
+      <td>ghbheadgr</td>
+      <td>0</td>
+      <td>gr</td>
       <td>a</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -3347,57 +2838,35 @@ par.loc[par_names].head()
       <td>NaN</td>
       <td>NaN</td>
       <td>3</td>
-      <td>2</td>
+      <td>0</td>
+      <td>39</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:13</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:13</td>
+      <td>none</td>
+      <td>relative</td>
+      <td>0.0</td>
+      <td>-2.0</td>
+      <td>2.0</td>
+      <td>ghbheadgr</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>ghbheadgr</td>
+      <td>0</td>
+      <td>gr</td>
+      <td>a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>0</td>
       <td>39</td>
       <td>13</td>
-    </tr>
-    <tr>
-      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:11</th>
-      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:11</td>
-      <td>none</td>
-      <td>relative</td>
-      <td>0.0</td>
-      <td>-2.0</td>
-      <td>2.0</td>
-      <td>ghbheadgr</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>...</td>
-      <td>a</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>3</td>
-      <td>1</td>
-      <td>39</td>
-      <td>11</td>
-    </tr>
-    <tr>
-      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:14</th>
-      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:14</td>
-      <td>none</td>
-      <td>relative</td>
-      <td>0.0</td>
-      <td>-2.0</td>
-      <td>2.0</td>
-      <td>ghbheadgr</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>...</td>
-      <td>a</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>3</td>
-      <td>1</td>
-      <td>39</td>
-      <td>14</td>
     </tr>
     <tr>
       <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:9</th>
@@ -3411,7 +2880,9 @@ par.loc[par_names].head()
       <td>1.0</td>
       <td>0.0</td>
       <td>1</td>
-      <td>...</td>
+      <td>ghbheadgr</td>
+      <td>0</td>
+      <td>gr</td>
       <td>a</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -3423,9 +2894,34 @@ par.loc[par_names].head()
       <td>39</td>
       <td>9</td>
     </tr>
+    <tr>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:6</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:6</td>
+      <td>none</td>
+      <td>relative</td>
+      <td>0.0</td>
+      <td>-2.0</td>
+      <td>2.0</td>
+      <td>ghbheadgr</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>ghbheadgr</td>
+      <td>0</td>
+      <td>gr</td>
+      <td>a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>0</td>
+      <td>39</td>
+      <td>6</td>
+    </tr>
   </tbody>
 </table>
-<p>5 rows × 23 columns</p>
 </div>
 
 
@@ -3470,7 +2966,9 @@ par.loc[par_names].head()
       <th>scale</th>
       <th>offset</th>
       <th>dercom</th>
-      <th>...</th>
+      <th>pname</th>
+      <th>inst</th>
+      <th>ptype</th>
       <th>pstyle</th>
       <th>i</th>
       <th>j</th>
@@ -3485,8 +2983,8 @@ par.loc[par_names].head()
   </thead>
   <tbody>
     <tr>
-      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:8</th>
-      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:8</td>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:7</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:7</td>
       <td>none</td>
       <td>relative</td>
       <td>10.0</td>
@@ -3496,7 +2994,9 @@ par.loc[par_names].head()
       <td>1.0</td>
       <td>-10.0</td>
       <td>1</td>
-      <td>...</td>
+      <td>ghbheadgr</td>
+      <td>0</td>
+      <td>gr</td>
       <td>a</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -3504,13 +3004,13 @@ par.loc[par_names].head()
       <td>NaN</td>
       <td>NaN</td>
       <td>3</td>
-      <td>1</td>
+      <td>0</td>
       <td>39</td>
-      <td>8</td>
+      <td>7</td>
     </tr>
     <tr>
-      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:13</th>
-      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:2_idx1:39_idx2:13</td>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:10</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:10</td>
       <td>none</td>
       <td>relative</td>
       <td>10.0</td>
@@ -3520,7 +3020,9 @@ par.loc[par_names].head()
       <td>1.0</td>
       <td>-10.0</td>
       <td>1</td>
-      <td>...</td>
+      <td>ghbheadgr</td>
+      <td>0</td>
+      <td>gr</td>
       <td>a</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -3528,57 +3030,35 @@ par.loc[par_names].head()
       <td>NaN</td>
       <td>NaN</td>
       <td>3</td>
-      <td>2</td>
+      <td>0</td>
+      <td>39</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:13</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:13</td>
+      <td>none</td>
+      <td>relative</td>
+      <td>10.0</td>
+      <td>8.0</td>
+      <td>12.0</td>
+      <td>ghbheadgr</td>
+      <td>1.0</td>
+      <td>-10.0</td>
+      <td>1</td>
+      <td>ghbheadgr</td>
+      <td>0</td>
+      <td>gr</td>
+      <td>a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>0</td>
       <td>39</td>
       <td>13</td>
-    </tr>
-    <tr>
-      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:11</th>
-      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:11</td>
-      <td>none</td>
-      <td>relative</td>
-      <td>10.0</td>
-      <td>8.0</td>
-      <td>12.0</td>
-      <td>ghbheadgr</td>
-      <td>1.0</td>
-      <td>-10.0</td>
-      <td>1</td>
-      <td>...</td>
-      <td>a</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>3</td>
-      <td>1</td>
-      <td>39</td>
-      <td>11</td>
-    </tr>
-    <tr>
-      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:14</th>
-      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:1_idx1:39_idx2:14</td>
-      <td>none</td>
-      <td>relative</td>
-      <td>10.0</td>
-      <td>8.0</td>
-      <td>12.0</td>
-      <td>ghbheadgr</td>
-      <td>1.0</td>
-      <td>-10.0</td>
-      <td>1</td>
-      <td>...</td>
-      <td>a</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>3</td>
-      <td>1</td>
-      <td>39</td>
-      <td>14</td>
     </tr>
     <tr>
       <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:9</th>
@@ -3592,7 +3072,9 @@ par.loc[par_names].head()
       <td>1.0</td>
       <td>-10.0</td>
       <td>1</td>
-      <td>...</td>
+      <td>ghbheadgr</td>
+      <td>0</td>
+      <td>gr</td>
       <td>a</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -3604,9 +3086,34 @@ par.loc[par_names].head()
       <td>39</td>
       <td>9</td>
     </tr>
+    <tr>
+      <th>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:6</th>
+      <td>pname:ghbheadgr_inst:0_ptype:gr_usecol:3_pstyle:a_idx0:0_idx1:39_idx2:6</td>
+      <td>none</td>
+      <td>relative</td>
+      <td>10.0</td>
+      <td>8.0</td>
+      <td>12.0</td>
+      <td>ghbheadgr</td>
+      <td>1.0</td>
+      <td>-10.0</td>
+      <td>1</td>
+      <td>ghbheadgr</td>
+      <td>0</td>
+      <td>gr</td>
+      <td>a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>0</td>
+      <td>39</td>
+      <td>6</td>
+    </tr>
   </tbody>
 </table>
-<p>5 rows × 23 columns</p>
 </div>
 
 
@@ -3691,7 +3198,7 @@ fobs
     <tr>
       <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
       <td>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</td>
-      <td>-519.184506</td>
+      <td>92.911368</td>
       <td>1.0</td>
       <td>oname:sfr_otype:lst_usecol:tailwater</td>
       <td>sfr</td>
@@ -3705,7 +3212,7 @@ fobs
     <tr>
       <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
       <td>oname:sfr_otype:lst_usecol:headwater_time:4383.5</td>
-      <td>-694.299524</td>
+      <td>-127.192506</td>
       <td>1.0</td>
       <td>oname:sfr_otype:lst_usecol:headwater</td>
       <td>sfr</td>
@@ -3719,7 +3226,7 @@ fobs
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</td>
-      <td>34.809963</td>
+      <td>35.559841</td>
       <td>1.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-9-1</td>
       <td>hds</td>
@@ -3733,7 +3240,7 @@ fobs
     <tr>
       <th>part_time</th>
       <td>part_time</td>
-      <td>211849.244600</td>
+      <td>99358.429160</td>
       <td>1.0</td>
       <td>part</td>
       <td>NaN</td>
@@ -3766,7 +3273,7 @@ Make sure to re-**write** the PEST control file. But beware, if you re-**build**
 pst.write(os.path.join(template_ws, 'freyberg_mf6.pst'))
 ```
 
-    noptmax:0, npar_adj:29653, nnz_obs:62227
+    noptmax:0, npar_adj:23786, nnz_obs:21252
     
 
 So that was pretty epic. We now have a (very) high-dimensional PEST interface that includes secondary observations, as well as forecasts, ready to roll. 
@@ -3840,7 +3347,7 @@ if pf.pst.npar < 35000:  #if you have more than about 35K pars, the cov matrix b
 
 
     
-![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_148_0.png)
+![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_142_0.png)
     
 
 
@@ -3871,18 +3378,12 @@ And now generate a prior parameter ensemble. This step is relevant for using pes
 
 
 ```python
-pe = pf.draw(num_reals=50, use_specsim=True) # draw parameters from the prior distribution
+pe = pf.draw(num_reals=500, use_specsim=True) # draw parameters from the prior distribution
 pe.enforce() # enforces parameter bounds
 pe.to_binary(os.path.join(template_ws,"prior_pe.jcb")) #writes the paramter ensemble to binary file
 assert pe.shape[1] == pst.npar
 ```
 
-    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
-    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
-    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
-    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
-    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
-    SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
     SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
     SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
     SpecSim.initialize() summary: full_delx X full_dely: 72 X 72
@@ -3925,37 +3426,7 @@ assert pe.shape[1] == pst.npar
     done
     getting diag var cov 29
     scaling full cov by diag var cov
-    working on pargroups ['npfklayer2pp']
-    build cov matrix
-    done
-    getting diag var cov 29
-    scaling full cov by diag var cov
-    working on pargroups ['npfklayer3pp']
-    build cov matrix
-    done
-    getting diag var cov 29
-    scaling full cov by diag var cov
     working on pargroups ['npfk33layer1pp']
-    build cov matrix
-    done
-    getting diag var cov 29
-    scaling full cov by diag var cov
-    working on pargroups ['npfk33layer2pp']
-    build cov matrix
-    done
-    getting diag var cov 29
-    scaling full cov by diag var cov
-    working on pargroups ['npfk33layer3pp']
-    build cov matrix
-    done
-    getting diag var cov 29
-    scaling full cov by diag var cov
-    working on pargroups ['stosslayer2pp']
-    build cov matrix
-    done
-    getting diag var cov 29
-    scaling full cov by diag var cov
-    working on pargroups ['stosslayer3pp']
     build cov matrix
     done
     getting diag var cov 29
@@ -4110,16 +3581,6 @@ assert pe.shape[1] == pst.npar
     done
     getting diag var cov 10
     scaling full cov by diag var cov
-    working on pargroups ['ghbcondgr']
-    build cov matrix
-    done
-    getting diag var cov 10
-    scaling full cov by diag var cov
-    working on pargroups ['ghbcondgr']
-    build cov matrix
-    done
-    getting diag var cov 10
-    scaling full cov by diag var cov
     working on pargroups ['sfrcondgr']
     build cov matrix
     done
@@ -4133,24 +3594,9 @@ assert pe.shape[1] == pst.npar
     done
     getting diag var cov 25
     scaling full cov by diag var cov
-    working on pargroups ['sfrgr']
-    build cov matrix
-    done
-    getting diag var cov 25
-    scaling full cov by diag var cov
     processing  name:struct1,nugget:0.0,structures:
     name:var1,contribution:1.0,a:1000.0,anisotropy:1.0,bearing:0.0
     
-    working on pargroups ['ghbheadgr']
-    build cov matrix
-    done
-    getting diag var cov 10
-    scaling full cov by diag var cov
-    working on pargroups ['ghbheadgr']
-    build cov matrix
-    done
-    getting diag var cov 10
-    scaling full cov by diag var cov
     working on pargroups ['ghbheadgr']
     build cov matrix
     done
@@ -4170,8 +3616,8 @@ pst.parameter_data.parval1.values
 
 
 
-    array([ 0.72616096,  0.82076147,  1.08770186, ..., 29.4805675 ,
-           28.59235782, 35.11449992])
+    array([ 0.72616096,  0.82076147,  1.08770186, ..., 29.05580521,
+           28.98807606, 34.19049144])
 
 
 
@@ -4182,7 +3628,7 @@ pst.write(os.path.join(template_ws,"test.pst"))
 pyemu.os_utils.run("pestpp-glm test.pst",cwd=template_ws)
 ```
 
-    noptmax:0, npar_adj:29653, nnz_obs:62227
+    noptmax:0, npar_adj:23786, nnz_obs:21252
     
 
 If all went well, that's it! The PEST-interface is setup, tested and we have our prior preprared. We should be good to go!
@@ -4337,6 +3783,6 @@ plt.tight_layout()
 
 
     
-![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_159_0.png)
+![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_153_0.png)
     
 

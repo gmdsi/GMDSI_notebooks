@@ -6,11 +6,11 @@ nav_order: 8
 math: mathjax3
 ---
 
-# PEST++IES - Localization
+# PESTPP-IES - Localization
 
-In the previous tutorial ("ies_1_basics") we introduced PEST++IES, demonstrated a rudimentary setup and explored some of the outcomes. In the current tutorial we are going to introduce "localization".
+In the previous tutorial ("ies_1_basics") we introduced PESTPP-IES, demonstrated a rudimentary setup and explored some of the outcomes. In the current tutorial we are going to introduce "localization".
 
-As discussed in the previous tutorial, PEST++IES does not calculate derivatives using finite parameter differences. Instead, by running the model using each member of the parameter ensemble, it calculates approximate partial derivatives from cross-covariances between parameter values and model outputs that are calculated using members of the ensemble. This formulation of the inverse problem allows estimation of a virtually unlimited set of parameters, and drastically reduces the computational burden of estimating the relation between parameters and observations.
+As discussed in the previous tutorial, PESTPP-IES does not calculate derivatives using finite parameter differences. Instead, by running the model using each member of the parameter ensemble, it calculates approximate partial derivatives from cross-covariances between parameter values and model outputs that are calculated using members of the ensemble. This formulation of the inverse problem allows estimation of a virtually unlimited set of parameters, and drastically reduces the computational burden of estimating the relation between parameters and observations.
 
 But it is not all sunshine and rainbows.
 
@@ -23,11 +23,11 @@ This results in some parameters being adjusted, even if there was no information
 To deal with these challenges we can employ "localization". Localization refers to a strategy in which only "local" covariances are allowed to emerge. In essence, a modeller defines a "local" neighbourhood around each observation, specifying the parameters which are expected to influence it. Effectively, this creates a series of "local" history matching problems using subsets of parameters and observations. Conceptually, localization allows a form of expert knowledge to be expreseed in regard to how parametes and observations are or are not related. For example, an observation of groundwater level today cannot be correlated to the recharge which will occur tomorrow (e.g. information cannot flow backwards in time), or groundwater levels cannot inform porosity parameters, etc. 
 
 #### Localization Matrix
-PEST++IES allows users to provide a localizing matrix to enforce physically plausible parameter-to-observation relations. This matrix must be preapred by the user. Matrix rows are observation names and/or observation group names, and columns are parameter names and/or parameter group names. Elements of the matrix should range between 0.0 and 1.0. A value of 0.0 removes any spurious sensitivities between the relevant observation and parameter. During this tutorial we will demosntrate how to construct such a amtrix using `pyEMU` using two localization strategies.
+PESTPP-IES allows users to provide a localizing matrix to enforce physically plausible parameter-to-observation relations. This matrix must be preapred by the user. Matrix rows are observation names and/or observation group names, and columns are parameter names and/or parameter group names. Elements of the matrix should range between 0.0 and 1.0. A value of 0.0 removes any spurious sensitivities between the relevant observation and parameter. During this tutorial we will demosntrate how to construct such a amtrix using `pyEMU` using two localization strategies.
 
 #### Automatic Adaptive Localization
 
-PEST++IES also has an option to automate this process by implementing a form of `automatic adaptive localization`. When employed, during each iteration, PEST++IES calculates the empirical correlation coefficient between each parameter and each observation. A "background" or "error" distribution for this correlation coeficeint is also calcualted. By comparing (in  staitstical sense) these two, statstically significant corelations are identified and retained to construct a localization matrix. This matrix is then fed forward into the parameter adjustment process. Note taht automatic adaptive localization ncan be implemented in tandem with a user supplied localization matrix. In this manner, the automated process is only applied to non-zero elements in the user supplied matrix. We will implement this option during the current tutorial.
+PESTPP-IES also has an option to automate this process by implementing a form of `automatic adaptive localization`. When employed, during each iteration, PESTPP-IES calculates the empirical correlation coefficient between each parameter and each observation. A "background" or "error" distribution for this correlation coeficeint is also calcualted. By comparing (in  staitstical sense) these two, statstically significant corelations are identified and retained to construct a localization matrix. This matrix is then fed forward into the parameter adjustment process. Note taht automatic adaptive localization ncan be implemented in tandem with a user supplied localization matrix. In this manner, the automated process is only applied to non-zero elements in the user supplied matrix. We will implement this option during the current tutorial.
 
 In practice, automatic localization doesn't resolve the level of localization that can be achieved by a matrix explicitly constructed by the user. However, it is better than no localization at all. In general, implementing some form of localization is recommended.
 
@@ -48,19 +48,21 @@ import shutil
 import warnings
 warnings.filterwarnings("ignore")
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
-import pyemu
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt;
 import psutil
 
 import sys
-sys.path.append(os.path.join("..", "..", "dependencies"))
+sys.path.insert(0,os.path.join("..", "..", "dependencies"))
 import pyemu
 import flopy
-
-sys.path.append("..")
+assert "dependencies" in flopy.__file__
+assert "dependencies" in pyemu.__file__
+sys.path.insert(0,"..")
 import herebedragons as hbd
+
+
 ```
 
 Prepare the template directory and copy across model files from the previous tutorial. Make sure you complete the previous tutorial first.
@@ -114,9 +116,9 @@ pst.pestpp_options
 
     {'forecasts': 'oname:sfr_otype:lst_usecol:tailwater_time:4383.5,oname:sfr_otype:lst_usecol:headwater_time:4383.5,oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5,part_time',
      'ies_num_reals': 50,
-     'ies_save_rescov': 'true',
      'ies_parameter_ensemble': 'prior_pe.jcb',
-     'ies_observation_ensemble': 'oe.csv'}
+     'ies_observation_ensemble': 'oe.csv',
+     'ies_bad_phi_sigma': 2.0}
 
 
 
@@ -311,7 +313,7 @@ As described a tthe beggining of the notebook, a user can provide PEST++IES with
 Right then, let's get started and add some localization. The obvious stuff is temporal localization - scenario parameters can't influence historic observations (and the inverse is true) so let's tell PEST++IES about this.  Also, as discussed, should porosity be adjusted at all given the observations we have? (Not for history matching, but yes, it should be adjusted for forecast uncertainty analysis.)
 
 This involves several steps:
- - identify parameer names or parameter group names to specify in the matrix
+ - identify parameter names or parameter group names to specify in the matrix
  - identify observation names to specify in the matrix
  - construct a template matrix from the names
  - assign values to elements of the matrix for each parameter/observation pair
@@ -350,12 +352,26 @@ So we need to align these. We could go either way, but it is probalby more robus
 
 
 ```python
+rpar = par.loc[par.parnme.str.contains("recharge"),:]
+rpar = rpar.loc[rpar.ptype=="cn",:]
+```
+
+
+```python
+par.loc[rpar.parnme,"inst"] = rpar.parnme.apply(lambda x: int(x.split("tcn")[0].split('_')[-1])-1)
+```
+
+
+```python
 # add a column for each stress period; 
 # we already have spd values assocaited to paranetemr names, 
 # so we will use this to associate parameters to observations in time
-for kper, time in enumerate(obs.time.unique()[:-1]):
+times = obs.time.unique()
+times.sort()
+for kper, time in enumerate(times):
     par.loc[par.inst==int(kper), 'time'] = time
-par.head()
+    
+par.loc[rpar.parnme,["inst","time"]]
 ```
 
 
@@ -379,178 +395,159 @@ par.head()
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>parnme</th>
-      <th>partrans</th>
-      <th>parchglim</th>
-      <th>parval1</th>
-      <th>parlbnd</th>
-      <th>parubnd</th>
-      <th>pargp</th>
-      <th>scale</th>
-      <th>offset</th>
-      <th>dercom</th>
-      <th>...</th>
-      <th>i</th>
-      <th>j</th>
-      <th>x</th>
-      <th>y</th>
-      <th>zone</th>
-      <th>usecol</th>
-      <th>idx0</th>
-      <th>idx1</th>
-      <th>idx2</th>
+      <th>inst</th>
       <th>time</th>
     </tr>
     <tr>
       <th>parnme</th>
       <th></th>
       <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:0_x:125.00_y:9875.00_zone:1</th>
-      <td>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:0_x:125.00_y:9875.00_zone:1</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>0.2</td>
-      <td>5.0</td>
-      <td>npfklayer1gr</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>...</td>
+      <th>pname:rch_recharge_1tcn_inst:0_ptype:cn_pstyle:m</th>
       <td>0</td>
-      <td>0</td>
-      <td>125.00</td>
-      <td>9875.00</td>
-      <td>1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
       <td>3652.5</td>
     </tr>
     <tr>
-      <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:1_x:375.00_y:9875.00_zone:1</th>
-      <td>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:1_x:375.00_y:9875.00_zone:1</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>0.2</td>
-      <td>5.0</td>
-      <td>npfklayer1gr</td>
-      <td>1.0</td>
-      <td>0.0</td>
+      <th>pname:rch_recharge_2tcn_inst:0_ptype:cn_pstyle:m</th>
       <td>1</td>
-      <td>...</td>
-      <td>0</td>
-      <td>1</td>
-      <td>375.00</td>
-      <td>9875.00</td>
-      <td>1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>3652.5</td>
+      <td>3683.5</td>
     </tr>
     <tr>
-      <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:2_x:625.00_y:9875.00_zone:1</th>
-      <td>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:2_x:625.00_y:9875.00_zone:1</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>0.2</td>
-      <td>5.0</td>
-      <td>npfklayer1gr</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>...</td>
-      <td>0</td>
+      <th>pname:rch_recharge_3tcn_inst:0_ptype:cn_pstyle:m</th>
       <td>2</td>
-      <td>625.00</td>
-      <td>9875.00</td>
-      <td>1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>3652.5</td>
+      <td>3712.5</td>
     </tr>
     <tr>
-      <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:3_x:875.00_y:9875.00_zone:1</th>
-      <td>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:3_x:875.00_y:9875.00_zone:1</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>0.2</td>
-      <td>5.0</td>
-      <td>npfklayer1gr</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>...</td>
-      <td>0</td>
+      <th>pname:rch_recharge_4tcn_inst:0_ptype:cn_pstyle:m</th>
       <td>3</td>
-      <td>875.00</td>
-      <td>9875.00</td>
-      <td>1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>3652.5</td>
+      <td>3743.5</td>
     </tr>
     <tr>
-      <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:4_x:1125.00_y:9875.00_zone:1</th>
-      <td>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:4_x:1125.00_y:9875.00_zone:1</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>0.2</td>
-      <td>5.0</td>
-      <td>npfklayer1gr</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>...</td>
-      <td>0</td>
+      <th>pname:rch_recharge_5tcn_inst:0_ptype:cn_pstyle:m</th>
       <td>4</td>
-      <td>1125.00</td>
-      <td>9875.00</td>
-      <td>1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>3652.5</td>
+      <td>3773.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_6tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>5</td>
+      <td>3804.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_7tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>6</td>
+      <td>3834.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_8tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>7</td>
+      <td>3865.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_9tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>8</td>
+      <td>3896.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_10tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>9</td>
+      <td>3926.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_11tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>10</td>
+      <td>3957.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_12tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>11</td>
+      <td>3987.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_13tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>12</td>
+      <td>4018.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_14tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>13</td>
+      <td>4049.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_15tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>14</td>
+      <td>4077.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_16tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>15</td>
+      <td>4108.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_17tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>16</td>
+      <td>4138.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_18tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>17</td>
+      <td>4169.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_19tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>18</td>
+      <td>4199.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_20tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>19</td>
+      <td>4230.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_21tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>20</td>
+      <td>4261.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_22tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>21</td>
+      <td>4291.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_23tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>22</td>
+      <td>4322.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_24tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>23</td>
+      <td>4352.5</td>
+    </tr>
+    <tr>
+      <th>pname:rch_recharge_25tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>24</td>
+      <td>4383.5</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 24 columns</p>
 </div>
+
+
+
+
+```python
+times
+```
+
+
+
+
+    array([3652.5, 3683.5, 3712.5, 3743.5, 3773.5, 3804.5, 3834.5, 3865.5,
+           3896.5, 3926.5, 3957.5, 3987.5, 4018.5, 4049.5, 4077.5, 4108.5,
+           4138.5, 4169.5, 4199.5, 4230.5, 4261.5, 4291.5, 4322.5, 4352.5,
+           4383.5,    nan])
 
 
 
@@ -587,8 +584,10 @@ Lastly, let us make a list of parameter _names_ (not group names!) for parameter
 # so, an observation in stress period 2 cannot inform a rechange parameter in stress period 1, and so on...
 prefixes = ['wel', 'rch', 'sfrgr']
 temp_pargps = [i for i in pst.par_groups if any(i.startswith(s) for s in prefixes)]
+temporal_pars = par.loc[par.apply(lambda x: "gr" not in x.parnme and "pp" not in x.parnme
+                                          and x.pargp in temp_pargps,axis=1),:].copy()
 # for the localization matrix we are going to need to go parameter by parameter, so lets get the list of parameter _names_
-temporal_pars = par.loc[par.pargp.isin(temp_pargps)]
+#temporal_pars = par.loc[par.pargp.isin(temp_pargps)] = [t for t in temporal pars if gr]
 # extend the column name list
 loc_matrix_cols.extend(temporal_pars.parnme.tolist())
 ```
@@ -632,24 +631,24 @@ loc.head()
       <th>npfklayer1gr</th>
       <th>npfklayer1pp</th>
       <th>npfklayer1cn</th>
-      <th>npfklayer2gr</th>
-      <th>npfklayer2pp</th>
-      <th>npfklayer2cn</th>
-      <th>npfklayer3gr</th>
-      <th>npfklayer3pp</th>
-      <th>npfklayer3cn</th>
       <th>npfk33layer1gr</th>
+      <th>npfk33layer1pp</th>
+      <th>npfk33layer1cn</th>
+      <th>stosylayer1gr</th>
+      <th>stosylayer1pp</th>
+      <th>stosylayer1cn</th>
+      <th>ghbcondgr</th>
       <th>...</th>
-      <th>pname:sfrgr_inst:15_ptype:gr_usecol:2_pstyle:m_idx0:0</th>
-      <th>pname:sfrgr_inst:16_ptype:gr_usecol:2_pstyle:m_idx0:0</th>
-      <th>pname:sfrgr_inst:17_ptype:gr_usecol:2_pstyle:m_idx0:0</th>
-      <th>pname:sfrgr_inst:18_ptype:gr_usecol:2_pstyle:m_idx0:0</th>
-      <th>pname:sfrgr_inst:19_ptype:gr_usecol:2_pstyle:m_idx0:0</th>
-      <th>pname:sfrgr_inst:20_ptype:gr_usecol:2_pstyle:m_idx0:0</th>
-      <th>pname:sfrgr_inst:21_ptype:gr_usecol:2_pstyle:m_idx0:0</th>
-      <th>pname:sfrgr_inst:22_ptype:gr_usecol:2_pstyle:m_idx0:0</th>
-      <th>pname:sfrgr_inst:23_ptype:gr_usecol:2_pstyle:m_idx0:0</th>
-      <th>pname:sfrgr_inst:24_ptype:gr_usecol:2_pstyle:m_idx0:0</th>
+      <th>pname:welcst_inst:15_ptype:cn_usecol:3_pstyle:m</th>
+      <th>pname:welcst_inst:16_ptype:cn_usecol:3_pstyle:m</th>
+      <th>pname:welcst_inst:17_ptype:cn_usecol:3_pstyle:m</th>
+      <th>pname:welcst_inst:18_ptype:cn_usecol:3_pstyle:m</th>
+      <th>pname:welcst_inst:19_ptype:cn_usecol:3_pstyle:m</th>
+      <th>pname:welcst_inst:20_ptype:cn_usecol:3_pstyle:m</th>
+      <th>pname:welcst_inst:21_ptype:cn_usecol:3_pstyle:m</th>
+      <th>pname:welcst_inst:22_ptype:cn_usecol:3_pstyle:m</th>
+      <th>pname:welcst_inst:23_ptype:cn_usecol:3_pstyle:m</th>
+      <th>pname:welcst_inst:24_ptype:cn_usecol:3_pstyle:m</th>
     </tr>
   </thead>
   <tbody>
@@ -775,7 +774,7 @@ loc.head()
     </tr>
   </tbody>
 </table>
-<p>5 rows × 18645 columns</p>
+<p>5 rows × 75 columns</p>
 </div>
 
 
@@ -815,14 +814,11 @@ loc.loc[:,static_pargps].head()
       <th>npfklayer1gr</th>
       <th>npfklayer1pp</th>
       <th>npfklayer1cn</th>
-      <th>npfklayer2gr</th>
-      <th>npfklayer2pp</th>
-      <th>npfklayer2cn</th>
-      <th>npfklayer3gr</th>
-      <th>npfklayer3pp</th>
-      <th>npfklayer3cn</th>
       <th>npfk33layer1gr</th>
-      <th>...</th>
+      <th>npfk33layer1pp</th>
+      <th>npfk33layer1cn</th>
+      <th>stosylayer1gr</th>
+      <th>stosylayer1pp</th>
       <th>stosylayer1cn</th>
       <th>ghbcondgr</th>
       <th>ghbcondcn</th>
@@ -831,8 +827,6 @@ loc.loc[:,static_pargps].head()
       <th>sfrcondgr</th>
       <th>sfrcondcn</th>
       <th>icstrtlayer1</th>
-      <th>icstrtlayer2</th>
-      <th>icstrtlayer3</th>
     </tr>
   </thead>
   <tbody>
@@ -844,11 +838,6 @@ loc.loc[:,static_pargps].head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>...</td>
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
@@ -872,11 +861,6 @@ loc.loc[:,static_pargps].head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>...</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
@@ -892,11 +876,6 @@ loc.loc[:,static_pargps].head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>...</td>
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
@@ -920,11 +899,6 @@ loc.loc[:,static_pargps].head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>...</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
@@ -944,11 +918,6 @@ loc.loc[:,static_pargps].head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>...</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
@@ -958,7 +927,6 @@ loc.loc[:,static_pargps].head()
     </tr>
   </tbody>
 </table>
-<p>5 rows × 36 columns</p>
 </div>
 
 
@@ -972,7 +940,9 @@ Here comes the tricky bit - assigning localization for time-dependent parameters
 # up to 180 days into the past; not in the future. Parameters that are beyond the historic period are not informed by observations
 nz_obs = pst.observation_data.loc[pst.nnz_obs_names,:]
 cutoff = 180
-for time in nz_obs.time.unique():
+times = nz_obs.time.unique()
+times.sort()
+for time in times:
     kper_obs_names = nz_obs.loc[nz_obs.time==time].obsnme.tolist()
     # get pars from the same kper and up to -180 days backward in time
     kper_par_names = temporal_pars.loc[temporal_pars.time.apply(lambda x: x>time-cutoff and x<=time)].parnme.tolist()
@@ -1003,27 +973,18 @@ loc.loc[kper_obs_names, kper_par_names].head()
   <thead>
     <tr style="text-align: right;">
       <th></th>
+      <th>pname:rch_recharge_8tcn_inst:0_ptype:cn_pstyle:m</th>
+      <th>pname:rch_recharge_9tcn_inst:0_ptype:cn_pstyle:m</th>
+      <th>pname:rch_recharge_10tcn_inst:0_ptype:cn_pstyle:m</th>
+      <th>pname:rch_recharge_11tcn_inst:0_ptype:cn_pstyle:m</th>
+      <th>pname:rch_recharge_12tcn_inst:0_ptype:cn_pstyle:m</th>
+      <th>pname:rch_recharge_13tcn_inst:0_ptype:cn_pstyle:m</th>
       <th>pname:welcst_inst:7_ptype:cn_usecol:3_pstyle:m</th>
-      <th>pname:welgrd_inst:7_ptype:gr_usecol:3_pstyle:m_idx0:2_idx1:34_idx2:12</th>
-      <th>pname:welgrd_inst:7_ptype:gr_usecol:3_pstyle:m_idx0:2_idx1:26_idx2:10</th>
-      <th>pname:welgrd_inst:7_ptype:gr_usecol:3_pstyle:m_idx0:2_idx1:29_idx2:6</th>
-      <th>pname:welgrd_inst:7_ptype:gr_usecol:3_pstyle:m_idx0:2_idx1:20_idx2:14</th>
-      <th>pname:welgrd_inst:7_ptype:gr_usecol:3_pstyle:m_idx0:2_idx1:9_idx2:16</th>
-      <th>pname:welgrd_inst:7_ptype:gr_usecol:3_pstyle:m_idx0:2_idx1:11_idx2:13</th>
       <th>pname:welcst_inst:8_ptype:cn_usecol:3_pstyle:m</th>
-      <th>pname:welgrd_inst:8_ptype:gr_usecol:3_pstyle:m_idx0:2_idx1:34_idx2:12</th>
-      <th>pname:welgrd_inst:8_ptype:gr_usecol:3_pstyle:m_idx0:2_idx1:26_idx2:10</th>
-      <th>...</th>
-      <th>pname:welgrd_inst:12_ptype:gr_usecol:3_pstyle:m_idx0:2_idx1:29_idx2:6</th>
-      <th>pname:welgrd_inst:12_ptype:gr_usecol:3_pstyle:m_idx0:2_idx1:20_idx2:14</th>
-      <th>pname:welgrd_inst:12_ptype:gr_usecol:3_pstyle:m_idx0:2_idx1:9_idx2:16</th>
-      <th>pname:welgrd_inst:12_ptype:gr_usecol:3_pstyle:m_idx0:2_idx1:11_idx2:13</th>
-      <th>pname:sfrgr_inst:7_ptype:gr_usecol:2_pstyle:m_idx0:0</th>
-      <th>pname:sfrgr_inst:8_ptype:gr_usecol:2_pstyle:m_idx0:0</th>
-      <th>pname:sfrgr_inst:9_ptype:gr_usecol:2_pstyle:m_idx0:0</th>
-      <th>pname:sfrgr_inst:10_ptype:gr_usecol:2_pstyle:m_idx0:0</th>
-      <th>pname:sfrgr_inst:11_ptype:gr_usecol:2_pstyle:m_idx0:0</th>
-      <th>pname:sfrgr_inst:12_ptype:gr_usecol:2_pstyle:m_idx0:0</th>
+      <th>pname:welcst_inst:9_ptype:cn_usecol:3_pstyle:m</th>
+      <th>pname:welcst_inst:10_ptype:cn_usecol:3_pstyle:m</th>
+      <th>pname:welcst_inst:11_ptype:cn_usecol:3_pstyle:m</th>
+      <th>pname:welcst_inst:12_ptype:cn_usecol:3_pstyle:m</th>
     </tr>
   </thead>
   <tbody>
@@ -1031,15 +992,6 @@ loc.loc[kper_obs_names, kper_par_names].head()
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:4018.5</th>
       <td>1.0</td>
       <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>...</td>
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
@@ -1063,63 +1015,6 @@ loc.loc[kper_obs_names, kper_par_names].head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>...</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-2-26-6_time:4018.5</th>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>...</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-2-3-8_time:4018.5</th>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>...</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
     </tr>
@@ -1135,7 +1030,28 @@ loc.loc[kper_obs_names, kper_par_names].head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>...</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4018.5</th>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:4018.5</th>
+      <td>1.0</td>
+      <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
@@ -1149,9 +1065,24 @@ loc.loc[kper_obs_names, kper_par_names].head()
     </tr>
   </tbody>
 </table>
-<p>5 rows × 48 columns</p>
 </div>
 
+
+
+
+```python
+fig,ax = plt.subplots(1,1,figsize=(20,20))
+ax.imshow(loc.values)
+ax.set_xticks(np.arange(loc.shape[1]))
+ax.set_xticklabels(loc.columns.values,rotation=90)
+ax.set_yticks(np.arange(loc.shape[0]))
+_ = ax.set_yticklabels(loc.index.values)
+```
+
+
+    
+![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_48_0.png)
+    
 
 
 OK! We should be good to go. Just a quick to check to see if we messed something up:
@@ -1180,10 +1111,15 @@ Don't forget to re-write the control file!
 
 
 ```python
+pst.pestpp_options["ies_num_reals"] = 30 # in theory, with localization we can get by with less reals...lets see!
+```
+
+
+```python
 pst.write(os.path.join(t_d, 'freyberg_mf6.pst'))
 ```
 
-    noptmax:3, npar_adj:29653, nnz_obs:144
+    noptmax:3, npar_adj:23786, nnz_obs:72
     
 
 OK, good to go. As usual, make sure to specify the number of workers that your machine can cope with. 
@@ -1226,9 +1162,11 @@ fig = pyemu.plot_utils.ensemble_helper({"0.5":pe_pr_tloc,"b":pe_pt_tloc},plot_co
 
 
     
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_58_1.png)
+![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_63_1.png)
     
 
+
+Ok!  Now we see that the porosity parameters are unchanged - just like we wanted!  Do you think this will effect the travel time forecast???
 
 Now read in the new posterior observation ensemble.
 
@@ -1246,7 +1184,7 @@ fig = plot_tseries_ensembles(pr_oe, pt_oe_tloc,noise, onames=["hds","sfr"])
 
 
     
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_62_0.png)
+![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_68_0.png)
     
 
 
@@ -1259,9 +1197,11 @@ fig = plot_forecast_hist_compare(pt_oe=pt_oe_tloc, pr_oe=pr_oe, last_pt_oe=pt_oe
 
 
     
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_64_0.png)
+![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_70_0.png)
     
 
+
+Ok, much wider posterior distributions, but that could also be from a larger posterior objective function. In any event, much improvement...
 
 ## Distance Based Localization
 
@@ -1356,7 +1296,7 @@ hobs.head()
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5</td>
-      <td>34.554179</td>
+      <td>34.795085</td>
       <td>10.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6</td>
       <td>hds</td>
@@ -1374,7 +1314,7 @@ hobs.head()
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5</td>
-      <td>34.639517</td>
+      <td>34.768398</td>
       <td>10.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6</td>
       <td>hds</td>
@@ -1392,7 +1332,7 @@ hobs.head()
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5</td>
-      <td>34.797994</td>
+      <td>34.896937</td>
       <td>10.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6</td>
       <td>hds</td>
@@ -1410,7 +1350,7 @@ hobs.head()
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5</td>
-      <td>34.923169</td>
+      <td>34.979874</td>
       <td>10.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6</td>
       <td>hds</td>
@@ -1428,7 +1368,7 @@ hobs.head()
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3804.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3804.5</td>
-      <td>35.080453</td>
+      <td>34.957829</td>
       <td>10.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6</td>
       <td>hds</td>
@@ -1733,9 +1673,13 @@ A final consideration.
 
 Through localization, a complex parameter estimation problem can be turned into a series of independent parameter estimation problems. If large numbers of parameters are being adjusted, the parameter upgrade calculation process for a given lambda will require as many truncated SVD solves as there are adjustable parameters. This can require considerable numerical effort. To overcome this problem, the localized upgrade solution process in PESTP++IES has been multithreaded; this is possible in circumstances such as these where each local solve is independent of every other local solve. The use of multiple threads is invoked through the `ies_num_threads()` control variable. It should be noted that the optimal number of threads to use is  problem-specific. Furthermore, it should not exceed the number of physical cores of the host machine on which the PEST++IES master instance is running.
 
+However, the fully localized solve is still sssslllloooooowwwwwww.  So if you have heaps of parameters (>30,000 say) it may actually be faster to use more realizations rather than use localization in terms of wall time - more realizations will over come the issues related to spurious correlation simply by having more samples to calculate the empirical derivatives with...but this depends on the runtime of the forward model as well. As usual, the answer is: "It depends" - haha!
+
+Just to make this notebook experience more enjoyable, lets limit the number of lambdas being tested (so that we only have to solve the fully localized solution once per iteration...):
+
 
 ```python
-pst.pestpp_options['ies_num_threads'] = 3 # make sure it is less than the number of physical cores on your machine
+pst.pestpp_options["ies_lambda_mults"] = 1.0
 ```
 
 Rewrite the control file and deploy PEST++IES:
@@ -1743,9 +1687,10 @@ Rewrite the control file and deploy PEST++IES:
 
 ```python
 pst.write(os.path.join(t_d,"freyberg_mf6.pst"))
+m_d = os.path.join('master_ies_3')
 ```
 
-    noptmax:3, npar_adj:29653, nnz_obs:144
+    noptmax:3, npar_adj:23786, nnz_obs:72
     
 
 
@@ -1780,7 +1725,7 @@ fig = pyemu.plot_utils.ensemble_helper({"0.5":pe_pr_sloc,"b":pe_pt_sloc},plot_co
 
 
     
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_88_1.png)
+![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_95_1.png)
     
 
 
@@ -1800,7 +1745,7 @@ fig = plot_tseries_ensembles(pr_oe, pt_oe_sloc,noise, onames=["hds","sfr"])
 
 
     
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_92_0.png)
+![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_99_0.png)
     
 
 
@@ -1813,7 +1758,7 @@ fig = plot_forecast_hist_compare(pt_oe=pt_oe_sloc, pr_oe=pr_oe, last_pt_oe=pt_oe
 
 
     
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_94_0.png)
+![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_101_0.png)
     
 
 
@@ -1851,9 +1796,10 @@ Cool beans. We are good to go. Just re-write the control file and let PEST++IES 
 
 ```python
 pst.write(os.path.join(t_d,"freyberg_mf6.pst"))
+m_d = os.path.join('master_ies_3')
 ```
 
-    noptmax:3, npar_adj:29653, nnz_obs:144
+    noptmax:3, npar_adj:23786, nnz_obs:72
     
 
 
@@ -1869,7 +1815,7 @@ pyemu.os_utils.start_workers(t_d, # the folder which contains the "template" PES
 
 ### AutoAdaLoc Outcomes
 
-Right, let's go straight for our forecasts! Have we solved this yet? Ergh - not yet. As expected, the variance for forecasts is a bit larger. And our posteriors are bit better (e.g. closer to the truth) but we are still failing to capture the truth for all forecast. So we are still failing. How depressing.
+Right, let's go straight for our forecasts!
 
 
 ```python
@@ -1886,10 +1832,30 @@ fig = plot_forecast_hist_compare(pt_oe=pt_oe_autoloc,
 
 
     
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_105_0.png)
+![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_112_0.png)
     
 
 
 Thus far we have implemented localization, a strategy to tackle spurious parameter-to-observation correlation. In doing so we reduce the potential for "ensemble colapse", a fancy term that means an "underestimate of forecast uncertainty caused by artificial parameter-to-observation relations". This solves history-matching induced through using ensemble based methods, but it does not solve a (the?) core issue - trying to "perfectly" fit data with an imperfect model will induce bias. 
 
 Now, as we have seen, for some forecasts this is not a huge problem (these are data-driven forecasts, which are well informed by available observation data). For others, it is (these are the forecasts which are influenced by parameter combinations in the null space, that are not informed by observation data). But when undertaking modelling in the real world, we will rarely know where our forecast lies on that spectrum (probably somewhere in the middle...).  So, if we do need to undertake history matching for uncertainty reduction, we still need a strategy which keeps us from inducing bias. The next tutorial introduces two: automated prior data conflict resolution and a total error covariance workflow.
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```

@@ -53,15 +53,20 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt;
 
-
 import shutil 
 import scipy.stats as stats
 import math
 
 import sys
-sys.path.append(os.path.join("..", "..", "dependencies"))
+sys.path.insert(0,os.path.join("..", "..", "dependencies"))
 import pyemu
 import flopy
+assert "dependencies" in flopy.__file__
+assert "dependencies" in pyemu.__file__
+sys.path.insert(0,"..")
+import herebedragons as hbd
+
+
 
 plt.rcParams.update({'font.size': 10})
 ```
@@ -88,8 +93,8 @@ print('adjustable parameters:',pst.npar_adj,'\nnonzero observations:', pst.nnz_o
 #pst.write_par_summary_table(filename="none")
 ```
 
-    adjustable parameters: 391 
-    nonzero observations: 144
+    adjustable parameters: 245 
+    nonzero observations: 72
     
 
 ### Getting ready for FOSM
@@ -130,7 +135,7 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x1d91ae6df70>
+    <matplotlib.colorbar.Colorbar at 0x14bc59412b0>
 
 
 
@@ -181,7 +186,7 @@ sc
 
 
 
-    <pyemu.sc.Schur at 0x1d91cacfa00>
+    <pyemu.sc.Schur at 0x14bc67767c0>
 
 
 
@@ -218,7 +223,7 @@ forecast_jco.shape, jco.shape
 
 
 
-    ((4, 391), (62223, 391))
+    ((4, 245), (21248, 245))
 
 
 
@@ -252,7 +257,7 @@ sc.posterior_parameter
 
 
 
-    <pyemu.mat.mat_handler.Cov at 0x1d917206a60>
+    <pyemu.mat.mat_handler.Cov at 0x14bc57db7f0>
 
 
 
@@ -293,14 +298,14 @@ sc.posterior_parameter.to_dataframe().sort_index().sort_index(axis=1).iloc[0:3,0
   <tbody>
     <tr>
       <th>pname:ghbcondcn_inst:0_ptype:cn_usecol:4_pstyle:m</th>
-      <td>0.094164</td>
-      <td>0.036344</td>
+      <td>0.103256</td>
+      <td>0.013934</td>
       <td>0.000000</td>
     </tr>
     <tr>
       <th>pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a</th>
-      <td>0.036344</td>
-      <td>0.106820</td>
+      <td>0.013934</td>
+      <td>0.365437</td>
       <td>0.000000</td>
     </tr>
     <tr>
@@ -328,7 +333,7 @@ plt.colorbar(c)
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x1d91aa75310>
+    <matplotlib.colorbar.Colorbar at 0x14bc62de700>
 
 
 
@@ -374,34 +379,34 @@ par_sum.head()
   </thead>
   <tbody>
     <tr>
-      <th>pname:sfrcondcn_inst:0_ptype:cn_usecol:9_pstyle:m</th>
-      <td>0.111111</td>
-      <td>0.017837</td>
-      <td>83.946975</td>
+      <th>pname:rch_recharge_1tcn_inst:0_ptype:cn_pstyle:m</th>
+      <td>0.006323</td>
+      <td>0.000014</td>
+      <td>99.779224</td>
     </tr>
     <tr>
-      <th>pname:npfklayer3cn_inst:0_ptype:cn_pstyle:m</th>
-      <td>0.054284</td>
-      <td>0.010565</td>
-      <td>80.537473</td>
+      <th>pname:welcst_inst:12_ptype:cn_usecol:3_pstyle:m</th>
+      <td>0.040275</td>
+      <td>0.004612</td>
+      <td>88.549712</td>
     </tr>
     <tr>
       <th>pname:stosylayer1cn_inst:0_ptype:cn_pstyle:m</th>
       <td>0.054284</td>
-      <td>0.012170</td>
-      <td>77.580115</td>
+      <td>0.009224</td>
+      <td>83.007933</td>
     </tr>
     <tr>
-      <th>pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a</th>
-      <td>0.444444</td>
-      <td>0.106820</td>
-      <td>75.965389</td>
+      <th>pname:npfklayer1cn_inst:0_ptype:cn_pstyle:m</th>
+      <td>0.054284</td>
+      <td>0.009262</td>
+      <td>82.937428</td>
     </tr>
     <tr>
-      <th>pname:welcst_inst:9_ptype:cn_usecol:3_pstyle:m</th>
+      <th>pname:welcst_inst:11_ptype:cn_usecol:3_pstyle:m</th>
       <td>0.040275</td>
-      <td>0.010602</td>
-      <td>73.675698</td>
+      <td>0.008908</td>
+      <td>77.882104</td>
     </tr>
   </tbody>
 </table>
@@ -485,13 +490,13 @@ par_sum.iloc[-5:,:]
   </thead>
   <tbody>
     <tr>
-      <th>pname:nelayer1pp_inst:0_ptype:pp_pstyle:m_i:32_j:2_zone:1.0</th>
+      <th>pname:nelayer3pp_inst:0_ptype:pp_pstyle:m_i:27_j:12_zone:1.0</th>
       <td>0.054284</td>
       <td>0.054284</td>
       <td>-4.440892e-14</td>
     </tr>
     <tr>
-      <th>pname:nelayer3pp_inst:0_ptype:pp_pstyle:m_i:27_j:2_zone:1.0</th>
+      <th>pname:nelayer2pp_inst:0_ptype:pp_pstyle:m_i:32_j:12_zone:1.0</th>
       <td>0.054284</td>
       <td>0.054284</td>
       <td>-4.440892e-14</td>
@@ -503,16 +508,16 @@ par_sum.iloc[-5:,:]
       <td>-4.440892e-14</td>
     </tr>
     <tr>
-      <th>pname:nelayer1pp_inst:0_ptype:pp_pstyle:m_i:32_j:7_zone:1.0</th>
+      <th>pname:nelayer3pp_inst:0_ptype:pp_pstyle:m_i:17_j:12_zone:1.0</th>
       <td>0.054284</td>
       <td>0.054284</td>
-      <td>-6.661338e-14</td>
+      <td>-4.440892e-14</td>
     </tr>
     <tr>
-      <th>pname:nelayer2pp_inst:0_ptype:pp_pstyle:m_i:32_j:7_zone:1.0</th>
+      <th>pname:nelayer1pp_inst:0_ptype:pp_pstyle:m_i:27_j:2_zone:1.0</th>
       <td>0.054284</td>
       <td>0.054284</td>
-      <td>-6.661338e-14</td>
+      <td>-4.440892e-14</td>
     </tr>
   </tbody>
 </table>
@@ -536,14 +541,14 @@ pst.parameter_data.loc[uninf_par_names, 'pargp'].unique()
 
 
 
-    array(['npfklayer1pp', 'npfklayer2pp', 'sfrgr', 'welcst', 'npfklayer2cn',
-           'stosslayer3pp', 'stosslayer3cn', 'stosslayer2cn', 'nelayer1pp',
-           'nelayer2pp', 'nelayer3pp', 'nelayer1cn', 'rch_recharge_17tcn',
-           'rch_recharge_16tcn', 'rch_recharge_23tcn', 'nelayer3cn',
-           'rch_recharge_14tcn', 'rch_recharge_15tcn', 'rch_recharge_25tcn',
-           'rch_recharge_24tcn', 'rch_recharge_22tcn', 'rch_recharge_20tcn',
-           'rch_recharge_19tcn', 'nelayer2cn', 'rch_recharge_21tcn',
-           'rch_recharge_18tcn'], dtype=object)
+    array(['stosylayer1pp', 'npfklayer1pp', 'rch_recharge_10tcn', 'welcst',
+           'rch_recharge_11tcn', 'nelayer3pp', 'nelayer1pp', 'nelayer2pp',
+           'nelayer1cn', 'rch_recharge_17tcn', 'npfk33layer1cn', 'nelayer3cn',
+           'rch_recharge_14tcn', 'rch_recharge_16tcn', 'rch_recharge_15tcn',
+           'rch_recharge_18tcn', 'rch_recharge_20tcn', 'nelayer2cn',
+           'rch_recharge_25tcn', 'rch_recharge_19tcn', 'rch_recharge_24tcn',
+           'rch_recharge_23tcn', 'rch_recharge_22tcn', 'rch_recharge_21tcn'],
+          dtype=object)
 
 
 
@@ -594,8 +599,8 @@ obs_y = [gwf.modelgrid.ycellcenters[int(i)-1,int(j)-1] for i,j in obs_ij]
 ax.scatter(obs_x,obs_y,marker='x', c='red', s=50)
 
 
-# Plot wells in layer 3
-mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=2)
+# Plot wells
+mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
 mm.plot_bc('wel');
 ```
 
@@ -666,27 +671,27 @@ df
   <tbody>
     <tr>
       <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
-      <td>1.824192e+05</td>
-      <td>5.956144e+04</td>
-      <td>67.349137</td>
+      <td>1.590060e+05</td>
+      <td>7.454419e+04</td>
+      <td>53.118626</td>
     </tr>
     <tr>
       <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
-      <td>1.035079e+05</td>
-      <td>5.176013e+04</td>
-      <td>49.994014</td>
+      <td>2.186878e+05</td>
+      <td>7.525733e+04</td>
+      <td>65.586858</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
-      <td>2.648081e-01</td>
-      <td>5.727902e-02</td>
-      <td>78.369610</td>
+      <td>1.835477e+00</td>
+      <td>1.200979e-01</td>
+      <td>93.456855</td>
     </tr>
     <tr>
       <th>part_time</th>
-      <td>9.515619e+10</td>
-      <td>3.327957e+10</td>
-      <td>65.026369</td>
+      <td>2.370646e+09</td>
+      <td>2.238014e+09</td>
+      <td>5.594795</td>
     </tr>
   </tbody>
 </table>
@@ -763,38 +768,38 @@ par_contrib.head()
   <tbody>
     <tr>
       <th>base</th>
-      <td>59561.437219</td>
-      <td>51760.130357</td>
-      <td>0.057279</td>
-      <td>3.327957e+10</td>
+      <td>74544.185170</td>
+      <td>75257.326284</td>
+      <td>0.120098</td>
+      <td>2.238014e+09</td>
     </tr>
     <tr>
       <th>ghbcondcn</th>
-      <td>59560.166734</td>
-      <td>51126.990125</td>
-      <td>0.056605</td>
-      <td>3.324723e+10</td>
+      <td>74273.294416</td>
+      <td>75248.620049</td>
+      <td>0.119996</td>
+      <td>2.237215e+09</td>
     </tr>
     <tr>
       <th>ghbheadcn</th>
-      <td>42231.382689</td>
-      <td>50342.640087</td>
-      <td>0.050911</td>
-      <td>2.484017e+10</td>
+      <td>57776.719024</td>
+      <td>75257.096830</td>
+      <td>0.120002</td>
+      <td>2.235594e+09</td>
     </tr>
     <tr>
       <th>nelayer1cn</th>
-      <td>59561.437219</td>
-      <td>51760.130357</td>
-      <td>0.057279</td>
-      <td>3.327605e+10</td>
+      <td>74544.185170</td>
+      <td>75257.326284</td>
+      <td>0.120098</td>
+      <td>1.316141e+09</td>
     </tr>
     <tr>
       <th>nelayer1pp</th>
-      <td>59561.437219</td>
-      <td>51760.130357</td>
-      <td>0.057279</td>
-      <td>3.327728e+10</td>
+      <td>74544.185170</td>
+      <td>75257.326284</td>
+      <td>0.120098</td>
+      <td>1.823212e+09</td>
     </tr>
   </tbody>
 </table>
@@ -848,31 +853,31 @@ par_contrib.sort_index().head()
     </tr>
     <tr>
       <th>ghbcondcn</th>
-      <td>2.133066e-03</td>
-      <td>1.223220e+00</td>
-      <td>1.177386e+00</td>
-      <td>0.097191</td>
+      <td>3.633962e-01</td>
+      <td>1.156862e-02</td>
+      <td>8.520421e-02</td>
+      <td>0.035695</td>
     </tr>
     <tr>
       <th>ghbheadcn</th>
-      <td>2.909610e+01</td>
-      <td>2.738576e+00</td>
-      <td>1.111680e+01</td>
-      <td>25.359096</td>
+      <td>2.249333e+01</td>
+      <td>3.048921e-04</td>
+      <td>8.022239e-02</td>
+      <td>0.108102</td>
     </tr>
     <tr>
       <th>nelayer1cn</th>
-      <td>-6.107943e-14</td>
-      <td>0.000000e+00</td>
-      <td>2.422839e-14</td>
-      <td>0.010602</td>
+      <td>1.952119e-14</td>
+      <td>5.800863e-14</td>
+      <td>-6.933236e-14</td>
+      <td>41.191544</td>
     </tr>
     <tr>
       <th>nelayer1pp</th>
-      <td>2.076701e-13</td>
-      <td>-4.779404e-13</td>
-      <td>-9.206790e-13</td>
-      <td>0.006886</td>
+      <td>-1.952119e-14</td>
+      <td>0.000000e+00</td>
+      <td>-6.702128e-13</td>
+      <td>18.534378</td>
     </tr>
   </tbody>
 </table>
@@ -885,7 +890,7 @@ Now it is a simple matter to plot these up for each forecast. Remember! Paramete
 
 
 ```python
-plt.figure(figsize=(15,4))
+plt.figure(figsize=(20,4))
 i=1
 for forecast in par_contrib.columns:
     fore_df = par_contrib.loc[:,forecast].copy()
@@ -961,38 +966,38 @@ df_worth.head()
   <tbody>
     <tr>
       <th>base</th>
-      <td>59561.437219</td>
-      <td>51760.130357</td>
-      <td>0.057279</td>
-      <td>3.327957e+10</td>
+      <td>74544.185170</td>
+      <td>75257.326284</td>
+      <td>0.120098</td>
+      <td>2.238014e+09</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5</th>
-      <td>59594.279086</td>
-      <td>51762.585155</td>
-      <td>0.057295</td>
-      <td>3.330021e+10</td>
+      <td>74557.725709</td>
+      <td>75277.163729</td>
+      <td>0.120099</td>
+      <td>2.238095e+09</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5</th>
-      <td>59625.580513</td>
-      <td>51767.784214</td>
-      <td>0.057298</td>
-      <td>3.331757e+10</td>
+      <td>74559.787726</td>
+      <td>75265.039572</td>
+      <td>0.120098</td>
+      <td>2.238036e+09</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5</th>
-      <td>59583.122220</td>
-      <td>51787.525952</td>
-      <td>0.057324</td>
-      <td>3.332052e+10</td>
+      <td>74567.060864</td>
+      <td>75272.941352</td>
+      <td>0.120107</td>
+      <td>2.238022e+09</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5</th>
-      <td>59565.198489</td>
-      <td>51760.160861</td>
-      <td>0.057279</td>
-      <td>3.329369e+10</td>
+      <td>74561.581681</td>
+      <td>75273.228215</td>
+      <td>0.120125</td>
+      <td>2.238084e+09</td>
     </tr>
   </tbody>
 </table>
@@ -1051,38 +1056,38 @@ dw_rm.head()
   <tbody>
     <tr>
       <th>base</th>
-      <td>59561.437219</td>
-      <td>51760.130357</td>
-      <td>0.057279</td>
-      <td>3.327957e+10</td>
+      <td>74544.185170</td>
+      <td>75257.326284</td>
+      <td>0.120098</td>
+      <td>2.238014e+09</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6</th>
-      <td>60113.601986</td>
-      <td>51897.790606</td>
-      <td>0.057567</td>
-      <td>3.374088e+10</td>
+      <td>83600.457029</td>
+      <td>77813.243776</td>
+      <td>0.121309</td>
+      <td>2.243541e+09</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-3-8</th>
-      <td>59979.646407</td>
-      <td>51832.222435</td>
-      <td>0.057743</td>
-      <td>3.333433e+10</td>
+      <td>74791.563648</td>
+      <td>76840.518883</td>
+      <td>0.356047</td>
+      <td>2.239789e+09</td>
     </tr>
     <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-2-26-6</th>
-      <td>60225.324951</td>
-      <td>51941.013331</td>
-      <td>0.057600</td>
-      <td>3.374710e+10</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-26-6</th>
+      <td>75861.873953</td>
+      <td>76294.769289</td>
+      <td>0.126410</td>
+      <td>2.264246e+09</td>
     </tr>
     <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-2-3-8</th>
-      <td>59904.408417</td>
-      <td>51820.222115</td>
-      <td>0.057856</td>
-      <td>3.332904e+10</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8</th>
+      <td>75132.235138</td>
+      <td>76350.503153</td>
+      <td>0.133162</td>
+      <td>2.242958e+09</td>
     </tr>
   </tbody>
 </table>
@@ -1139,31 +1144,31 @@ dw_rm.head()
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6</th>
-      <td>0.927051</td>
-      <td>0.265958</td>
-      <td>0.502687</td>
-      <td>1.386165</td>
+      <td>12.148864</td>
+      <td>3.396237</td>
+      <td>1.008373</td>
+      <td>0.246969</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-3-8</th>
-      <td>0.702148</td>
-      <td>0.139281</td>
-      <td>0.810356</td>
-      <td>0.164537</td>
+      <td>0.331855</td>
+      <td>2.103706</td>
+      <td>196.463833</td>
+      <td>0.079337</td>
     </tr>
     <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-2-26-6</th>
-      <td>1.114627</td>
-      <td>0.349464</td>
-      <td>0.560166</td>
-      <td>1.404840</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-26-6</th>
+      <td>1.767661</td>
+      <td>1.378528</td>
+      <td>5.256185</td>
+      <td>1.172123</td>
     </tr>
     <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-2-3-8</th>
-      <td>0.575828</td>
-      <td>0.116097</td>
-      <td>1.007899</td>
-      <td>0.148646</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8</th>
+      <td>0.788861</td>
+      <td>1.452585</td>
+      <td>10.877873</td>
+      <td>0.220929</td>
     </tr>
   </tbody>
 </table>
@@ -1245,9 +1250,9 @@ As we did previously, start by creating a dictionary of observations at each mod
 obs = sc.pst.observation_data
 
 # get list of obs names; oname column to the rescue
-obsnames = obs.loc[obs.oname=='hdslay3','obsnme'].tolist()
+obsnames = obs.loc[obs.oname=='hdslay1','obsnme'].tolist()
 # get obs data for seelcted observations
-obs_new = obs.loc[obs.oname=='hdslay3']
+obs_new = obs.loc[obs.oname=='hdslay1']
 # assign spd number to new column to make life easier
 obs_new['spd'] = obs_new.obsnme.apply(lambda x:int(x.split('_')[1].replace('t','')) )
 # lets keep only the observations in the "future":
@@ -1299,7 +1304,7 @@ df_worth_new= sc.get_added_obs_importance(base_obslist=sc.pst.nnz_obs_names,
 print("took:",datetime.now() - start)
 ```
 
-    took: 0:02:03.322775
+    took: 0:01:14.133255
     
 
 As before, `get_added_obs_importance()` returns a dataframe with a column for each forecast, and a row for each potential new observation:
@@ -1339,38 +1344,38 @@ df_worth_new.head()
   <tbody>
     <tr>
       <th>base</th>
-      <td>59561.437219</td>
-      <td>51760.130357</td>
-      <td>0.057279</td>
-      <td>3.327957e+10</td>
+      <td>74544.185170</td>
+      <td>75257.326284</td>
+      <td>0.120098</td>
+      <td>2.238014e+09</td>
     </tr>
     <tr>
       <th>i:0_j:0</th>
-      <td>52561.223147</td>
-      <td>46359.936960</td>
-      <td>0.044070</td>
-      <td>3.291755e+10</td>
+      <td>73720.274051</td>
+      <td>74604.671732</td>
+      <td>0.086097</td>
+      <td>2.232469e+09</td>
     </tr>
     <tr>
       <th>i:0_j:1</th>
-      <td>52608.688687</td>
-      <td>46408.943986</td>
-      <td>0.044257</td>
-      <td>3.292824e+10</td>
+      <td>73715.234223</td>
+      <td>74596.580066</td>
+      <td>0.087085</td>
+      <td>2.232677e+09</td>
     </tr>
     <tr>
       <th>i:0_j:10</th>
-      <td>54802.136815</td>
-      <td>48470.527202</td>
-      <td>0.051199</td>
-      <td>3.321296e+10</td>
+      <td>73219.410735</td>
+      <td>73980.416663</td>
+      <td>0.116369</td>
+      <td>2.231049e+09</td>
     </tr>
     <tr>
       <th>i:0_j:11</th>
-      <td>55254.781873</td>
-      <td>48846.148062</td>
-      <td>0.052073</td>
-      <td>3.323746e+10</td>
+      <td>73188.697950</td>
+      <td>73809.322516</td>
+      <td>0.117496</td>
+      <td>2.230403e+09</td>
     </tr>
   </tbody>
 </table>
@@ -1441,50 +1446,50 @@ df_worth_new_plot.head()
   <tbody>
     <tr>
       <th>i:0_j:0</th>
-      <td>11.752930</td>
-      <td>10.433114</td>
-      <td>23.060982</td>
-      <td>1.087840</td>
+      <td>1.105265</td>
+      <td>0.867231</td>
+      <td>28.311088</td>
+      <td>0.247728</td>
       <td>i:0_j:0</td>
       <td>0</td>
       <td>0</td>
     </tr>
     <tr>
       <th>i:0_j:1</th>
-      <td>11.673238</td>
-      <td>10.338433</td>
-      <td>22.734129</td>
-      <td>1.055696</td>
+      <td>1.112026</td>
+      <td>0.877983</td>
+      <td>27.488120</td>
+      <td>0.238451</td>
       <td>i:0_j:1</td>
       <td>0</td>
       <td>1</td>
     </tr>
     <tr>
       <th>i:0_j:10</th>
-      <td>7.990573</td>
-      <td>6.355477</td>
-      <td>10.614554</td>
-      <td>0.200168</td>
+      <td>1.777167</td>
+      <td>1.696725</td>
+      <td>3.104876</td>
+      <td>0.311183</td>
       <td>i:0_j:10</td>
       <td>0</td>
       <td>10</td>
     </tr>
     <tr>
       <th>i:0_j:11</th>
-      <td>7.230610</td>
-      <td>5.629782</td>
-      <td>9.089283</td>
-      <td>0.126553</td>
+      <td>1.818367</td>
+      <td>1.924070</td>
+      <td>2.166126</td>
+      <td>0.340051</td>
       <td>i:0_j:11</td>
       <td>0</td>
       <td>11</td>
     </tr>
     <tr>
       <th>i:0_j:12</th>
-      <td>6.484469</td>
-      <td>4.887795</td>
-      <td>7.675413</td>
-      <td>0.072924</td>
+      <td>1.801007</td>
+      <td>2.109504</td>
+      <td>1.610365</td>
+      <td>0.361516</td>
       <td>i:0_j:12</td>
       <td>0</td>
       <td>12</td>
@@ -1542,8 +1547,6 @@ def plot_added_importance(df_worth_new_plot, forecast_name, newlox=None):
     mm.plot_inactive()
     mm.plot_bc('ghb')
     mm.plot_bc('sfr')
-    # Plot wells in layer 3
-    mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=2)
     mm.plot_bc('wel');
 
     ax.set_title(f"{forecast_name}")
@@ -1625,7 +1628,7 @@ next_most_df = sc.next_most_important_added_obs(forecast=forecast_name,
 print("took:",datetime.now() - start)
 ```
 
-    took: 0:10:28.495257
+    took: 0:06:00.268748
     
 
 
@@ -1662,39 +1665,39 @@ next_most_df
   </thead>
   <tbody>
     <tr>
-      <th>i:39_j:5</th>
-      <td>i:39_j:5</td>
-      <td>3.056521e+10</td>
-      <td>8.156250</td>
-      <td>8.156250</td>
+      <th>i:16_j:2</th>
+      <td>i:16_j:2</td>
+      <td>2.006684e+09</td>
+      <td>10.336393</td>
+      <td>10.336393</td>
     </tr>
     <tr>
-      <th>i:39_j:6</th>
-      <td>i:39_j:6</td>
-      <td>2.941709e+10</td>
-      <td>3.756296</td>
-      <td>11.606173</td>
+      <th>i:24_j:4</th>
+      <td>i:24_j:4</td>
+      <td>1.887479e+09</td>
+      <td>5.940408</td>
+      <td>15.662777</td>
     </tr>
     <tr>
-      <th>i:39_j:7</th>
-      <td>i:39_j:7</td>
-      <td>2.879613e+10</td>
-      <td>2.110876</td>
-      <td>13.472057</td>
+      <th>i:16_j:3</th>
+      <td>i:16_j:3</td>
+      <td>1.841797e+09</td>
+      <td>2.420265</td>
+      <td>17.703961</td>
     </tr>
     <tr>
-      <th>i:9_j:16</th>
-      <td>i:9_j:16</td>
-      <td>2.837543e+10</td>
-      <td>1.460959</td>
-      <td>14.736195</td>
+      <th>i:29_j:6</th>
+      <td>i:29_j:6</td>
+      <td>1.812735e+09</td>
+      <td>1.577887</td>
+      <td>19.002500</td>
     </tr>
     <tr>
-      <th>i:15_j:0</th>
-      <td>i:15_j:0</td>
-      <td>2.789407e+10</td>
-      <td>1.696395</td>
-      <td>16.182606</td>
+      <th>i:15_j:2</th>
+      <td>i:15_j:2</td>
+      <td>1.793659e+09</td>
+      <td>1.052343</td>
+      <td>19.854872</td>
     </tr>
   </tbody>
 </table>

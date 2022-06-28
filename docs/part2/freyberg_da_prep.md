@@ -16,6 +16,10 @@ The modified Freyberg model is introduced in another tutorial notebook (see "fre
 
 The next couple of cells load necessary dependencies and call a convenience function to prepare the PEST dataset folder for you. This is the same dataset that was constructed during the "freyberg pstfrom pest setup" tutorial. Simply press `shift+enter` to run the cells.
 
+### Admin
+
+The next couple of cells load necessary dependencies and call a convenience function to prepare the PEST dataset folder for you. Simply press `shift+enter` to run the cells.
+
 
 ```python
 import os
@@ -31,12 +35,14 @@ import matplotlib.pyplot as plt;
 
 
 import sys
-sys.path.append(os.path.join("..", "..", "dependencies"))
+sys.path.insert(0,os.path.join("..", "..", "dependencies"))
 import pyemu
 import flopy
-sys.path.append("..")
-# import pre-prepared convenience functions
+assert "dependencies" in flopy.__file__
+assert "dependencies" in pyemu.__file__
+sys.path.insert(0,"..")
 import herebedragons as hbd
+
 
 
 
@@ -63,6 +69,8 @@ shutil.copytree(org_t_d,t_d)
 
 
 
+## Modify the model itself
+
 There are several modifications we need to make to both the model and pest interface in order to go from batch estimation to sequential estimation.  First, we need to make the model a single stress period model - PESTPP-DA will take control of the advancement of simulation time...
 
 
@@ -83,7 +91,9 @@ Now, just make sure we havent done something dumb (er than usual):
 pyemu.os_utils.run("mf6",cwd=t_d)
 ```
 
-# Now for the hard part
+# Now for the hard part: modifying the interface from batch to sequential
+
+## This is going to be rough...
 
 First, let's assign cycle numbers to the time-varying parameters and their template files.  The "cycle" concept is core to squential estimation with PESTPP-DA.  A cycle can be thought of as a unit of simulation time that we are interested in. In the PEST interface, a cycle defines a set of parameters and observations, so you can think of a cycle as a "sub-problem" in the PEST since - PESTPP-DA creates this subproblem under the hood for us. For a given cycle, we will "assimilate" all non-zero weighted obsevations in that cycle using the adjustable parameters and states in that cycle.  If a parameter/observation (and associated input/outputs files) are assigned a cycle value of -1, that means it applies to all cycles. 
 
@@ -144,13 +154,13 @@ df
     </tr>
     <tr>
       <th>3</th>
-      <td>npfklayer2gr_inst0_grid.csv.tpl</td>
-      <td>mult\npfklayer2gr_inst0_grid.csv</td>
+      <td>npfk33layer1gr_inst0_grid.csv.tpl</td>
+      <td>mult\npfk33layer1gr_inst0_grid.csv</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>npfklayer2pp_inst0pp.dat.tpl</td>
-      <td>npfklayer2pp_inst0pp.dat</td>
+      <td>npfk33layer1pp_inst0pp.dat.tpl</td>
+      <td>npfk33layer1pp_inst0pp.dat</td>
     </tr>
     <tr>
       <th>...</th>
@@ -158,33 +168,33 @@ df
       <td>...</td>
     </tr>
     <tr>
-      <th>190</th>
-      <td>sfrgr_inst23_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst23_grid.csv</td>
+      <th>146</th>
+      <td>welgrd_inst24_grid.csv.tpl</td>
+      <td>mult\welgrd_inst24_grid.csv</td>
     </tr>
     <tr>
-      <th>191</th>
-      <td>sfrgr_inst24_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst24_grid.csv</td>
+      <th>147</th>
+      <td>sfrcondgr_inst0_grid.csv.tpl</td>
+      <td>mult\sfrcondgr_inst0_grid.csv</td>
     </tr>
     <tr>
-      <th>192</th>
+      <th>148</th>
+      <td>sfrcondcn_inst0_constant.csv.tpl</td>
+      <td>mult\sfrcondcn_inst0_constant.csv</td>
+    </tr>
+    <tr>
+      <th>149</th>
+      <td>sfrgr_inst0_grid.csv.tpl</td>
+      <td>mult\sfrgr_inst0_grid.csv</td>
+    </tr>
+    <tr>
+      <th>150</th>
       <td>freyberg6.ic_strt_layer1.txt.tpl</td>
       <td>org\freyberg6.ic_strt_layer1.txt</td>
     </tr>
-    <tr>
-      <th>193</th>
-      <td>freyberg6.ic_strt_layer2.txt.tpl</td>
-      <td>org\freyberg6.ic_strt_layer2.txt</td>
-    </tr>
-    <tr>
-      <th>194</th>
-      <td>freyberg6.ic_strt_layer3.txt.tpl</td>
-      <td>org\freyberg6.ic_strt_layer3.txt</td>
-    </tr>
   </tbody>
 </table>
-<p>195 rows × 2 columns</p>
+<p>151 rows × 2 columns</p>
 </div>
 
 
@@ -233,39 +243,11 @@ sfrdf.head()
   </thead>
   <tbody>
     <tr>
-      <th>167</th>
+      <th>149</th>
       <td>sfrgr_inst0_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>-1</td>
       <td>0</td>
-    </tr>
-    <tr>
-      <th>168</th>
-      <td>sfrgr_inst1_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>-1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>169</th>
-      <td>sfrgr_inst2_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>-1</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>170</th>
-      <td>sfrgr_inst3_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>-1</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>171</th>
-      <td>sfrgr_inst4_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>-1</td>
-      <td>4</td>
     </tr>
   </tbody>
 </table>
@@ -309,154 +291,10 @@ df.loc[sfrdf.index,:]
   </thead>
   <tbody>
     <tr>
-      <th>167</th>
+      <th>149</th>
       <td>sfrgr_inst0_grid.csv.tpl</td>
       <td>mult\sfrgr_inst0_grid.csv</td>
       <td>0</td>
-    </tr>
-    <tr>
-      <th>168</th>
-      <td>sfrgr_inst1_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>169</th>
-      <td>sfrgr_inst2_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>170</th>
-      <td>sfrgr_inst3_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>171</th>
-      <td>sfrgr_inst4_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>172</th>
-      <td>sfrgr_inst5_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>173</th>
-      <td>sfrgr_inst6_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>174</th>
-      <td>sfrgr_inst7_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>7</td>
-    </tr>
-    <tr>
-      <th>175</th>
-      <td>sfrgr_inst8_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>8</td>
-    </tr>
-    <tr>
-      <th>176</th>
-      <td>sfrgr_inst9_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>9</td>
-    </tr>
-    <tr>
-      <th>177</th>
-      <td>sfrgr_inst10_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>10</td>
-    </tr>
-    <tr>
-      <th>178</th>
-      <td>sfrgr_inst11_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>11</td>
-    </tr>
-    <tr>
-      <th>179</th>
-      <td>sfrgr_inst12_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>12</td>
-    </tr>
-    <tr>
-      <th>180</th>
-      <td>sfrgr_inst13_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>13</td>
-    </tr>
-    <tr>
-      <th>181</th>
-      <td>sfrgr_inst14_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>14</td>
-    </tr>
-    <tr>
-      <th>182</th>
-      <td>sfrgr_inst15_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>15</td>
-    </tr>
-    <tr>
-      <th>183</th>
-      <td>sfrgr_inst16_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>16</td>
-    </tr>
-    <tr>
-      <th>184</th>
-      <td>sfrgr_inst17_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>17</td>
-    </tr>
-    <tr>
-      <th>185</th>
-      <td>sfrgr_inst18_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>18</td>
-    </tr>
-    <tr>
-      <th>186</th>
-      <td>sfrgr_inst19_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>19</td>
-    </tr>
-    <tr>
-      <th>187</th>
-      <td>sfrgr_inst20_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>20</td>
-    </tr>
-    <tr>
-      <th>188</th>
-      <td>sfrgr_inst21_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>21</td>
-    </tr>
-    <tr>
-      <th>189</th>
-      <td>sfrgr_inst22_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>22</td>
-    </tr>
-    <tr>
-      <th>190</th>
-      <td>sfrgr_inst23_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>23</td>
-    </tr>
-    <tr>
-      <th>191</th>
-      <td>sfrgr_inst24_grid.csv.tpl</td>
-      <td>mult\sfrgr_inst0_grid.csv</td>
-      <td>24</td>
     </tr>
   </tbody>
 </table>
@@ -506,301 +344,301 @@ df.loc[weldf.index,:]
   </thead>
   <tbody>
     <tr>
-      <th>115</th>
+      <th>97</th>
       <td>welcst_inst0_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>116</th>
+      <th>98</th>
       <td>welgrd_inst0_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>117</th>
+      <th>99</th>
       <td>welcst_inst1_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>118</th>
+      <th>100</th>
       <td>welgrd_inst1_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>119</th>
+      <th>101</th>
       <td>welcst_inst2_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>2</td>
     </tr>
     <tr>
-      <th>120</th>
+      <th>102</th>
       <td>welgrd_inst2_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>2</td>
     </tr>
     <tr>
-      <th>121</th>
+      <th>103</th>
       <td>welcst_inst3_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>3</td>
     </tr>
     <tr>
-      <th>122</th>
+      <th>104</th>
       <td>welgrd_inst3_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>3</td>
     </tr>
     <tr>
-      <th>123</th>
+      <th>105</th>
       <td>welcst_inst4_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>4</td>
     </tr>
     <tr>
-      <th>124</th>
+      <th>106</th>
       <td>welgrd_inst4_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>4</td>
     </tr>
     <tr>
-      <th>125</th>
+      <th>107</th>
       <td>welcst_inst5_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>5</td>
     </tr>
     <tr>
-      <th>126</th>
+      <th>108</th>
       <td>welgrd_inst5_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>5</td>
     </tr>
     <tr>
-      <th>127</th>
+      <th>109</th>
       <td>welcst_inst6_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>6</td>
     </tr>
     <tr>
-      <th>128</th>
+      <th>110</th>
       <td>welgrd_inst6_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>6</td>
     </tr>
     <tr>
-      <th>129</th>
+      <th>111</th>
       <td>welcst_inst7_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>7</td>
     </tr>
     <tr>
-      <th>130</th>
+      <th>112</th>
       <td>welgrd_inst7_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>7</td>
     </tr>
     <tr>
-      <th>131</th>
+      <th>113</th>
       <td>welcst_inst8_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>8</td>
     </tr>
     <tr>
-      <th>132</th>
+      <th>114</th>
       <td>welgrd_inst8_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>8</td>
     </tr>
     <tr>
-      <th>133</th>
+      <th>115</th>
       <td>welcst_inst9_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>9</td>
     </tr>
     <tr>
-      <th>134</th>
+      <th>116</th>
       <td>welgrd_inst9_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>9</td>
     </tr>
     <tr>
-      <th>135</th>
+      <th>117</th>
       <td>welcst_inst10_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>10</td>
     </tr>
     <tr>
-      <th>136</th>
+      <th>118</th>
       <td>welgrd_inst10_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>10</td>
     </tr>
     <tr>
-      <th>137</th>
+      <th>119</th>
       <td>welcst_inst11_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>11</td>
     </tr>
     <tr>
-      <th>138</th>
+      <th>120</th>
       <td>welgrd_inst11_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>11</td>
     </tr>
     <tr>
-      <th>139</th>
+      <th>121</th>
       <td>welcst_inst12_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>12</td>
     </tr>
     <tr>
-      <th>140</th>
+      <th>122</th>
       <td>welgrd_inst12_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>12</td>
     </tr>
     <tr>
-      <th>141</th>
+      <th>123</th>
       <td>welcst_inst13_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>13</td>
     </tr>
     <tr>
-      <th>142</th>
+      <th>124</th>
       <td>welgrd_inst13_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>13</td>
     </tr>
     <tr>
-      <th>143</th>
+      <th>125</th>
       <td>welcst_inst14_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>14</td>
     </tr>
     <tr>
-      <th>144</th>
+      <th>126</th>
       <td>welgrd_inst14_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>14</td>
     </tr>
     <tr>
-      <th>145</th>
+      <th>127</th>
       <td>welcst_inst15_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>15</td>
     </tr>
     <tr>
-      <th>146</th>
+      <th>128</th>
       <td>welgrd_inst15_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>15</td>
     </tr>
     <tr>
-      <th>147</th>
+      <th>129</th>
       <td>welcst_inst16_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>16</td>
     </tr>
     <tr>
-      <th>148</th>
+      <th>130</th>
       <td>welgrd_inst16_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>16</td>
     </tr>
     <tr>
-      <th>149</th>
+      <th>131</th>
       <td>welcst_inst17_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>17</td>
     </tr>
     <tr>
-      <th>150</th>
+      <th>132</th>
       <td>welgrd_inst17_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>17</td>
     </tr>
     <tr>
-      <th>151</th>
+      <th>133</th>
       <td>welcst_inst18_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>18</td>
     </tr>
     <tr>
-      <th>152</th>
+      <th>134</th>
       <td>welgrd_inst18_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>18</td>
     </tr>
     <tr>
-      <th>153</th>
+      <th>135</th>
       <td>welcst_inst19_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>19</td>
     </tr>
     <tr>
-      <th>154</th>
+      <th>136</th>
       <td>welgrd_inst19_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>19</td>
     </tr>
     <tr>
-      <th>155</th>
+      <th>137</th>
       <td>welcst_inst20_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>20</td>
     </tr>
     <tr>
-      <th>156</th>
+      <th>138</th>
       <td>welgrd_inst20_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>20</td>
     </tr>
     <tr>
-      <th>157</th>
+      <th>139</th>
       <td>welcst_inst21_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>21</td>
     </tr>
     <tr>
-      <th>158</th>
+      <th>140</th>
       <td>welgrd_inst21_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>21</td>
     </tr>
     <tr>
-      <th>159</th>
+      <th>141</th>
       <td>welcst_inst22_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>22</td>
     </tr>
     <tr>
-      <th>160</th>
+      <th>142</th>
       <td>welgrd_inst22_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>22</td>
     </tr>
     <tr>
-      <th>161</th>
+      <th>143</th>
       <td>welcst_inst23_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>23</td>
     </tr>
     <tr>
-      <th>162</th>
+      <th>144</th>
       <td>welgrd_inst23_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>23</td>
     </tr>
     <tr>
-      <th>163</th>
+      <th>145</th>
       <td>welcst_inst24_constant.csv.tpl</td>
       <td>mult\welcst_inst0_constant.csv</td>
       <td>24</td>
     </tr>
     <tr>
-      <th>164</th>
+      <th>146</th>
       <td>welgrd_inst24_grid.csv.tpl</td>
       <td>mult\welgrd_inst0_grid.csv</td>
       <td>24</td>
@@ -849,33 +687,282 @@ df.loc[rchdf.index,:].head()
   </thead>
   <tbody>
     <tr>
-      <th>86</th>
+      <th>68</th>
       <td>rch_recharge_1tcn_inst0_constant.csv.tpl</td>
       <td>mult\rch_recharge_1tcn_inst0_constant.csv</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>87</th>
+      <th>69</th>
       <td>rch_recharge_2tcn_inst0_constant.csv.tpl</td>
       <td>mult\rch_recharge_1tcn_inst0_constant.csv</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>88</th>
+      <th>70</th>
       <td>rch_recharge_3tcn_inst0_constant.csv.tpl</td>
       <td>mult\rch_recharge_1tcn_inst0_constant.csv</td>
       <td>2</td>
     </tr>
     <tr>
-      <th>89</th>
+      <th>71</th>
       <td>rch_recharge_4tcn_inst0_constant.csv.tpl</td>
       <td>mult\rch_recharge_1tcn_inst0_constant.csv</td>
       <td>3</td>
     </tr>
     <tr>
-      <th>90</th>
+      <th>72</th>
       <td>rch_recharge_5tcn_inst0_constant.csv.tpl</td>
       <td>mult\rch_recharge_1tcn_inst0_constant.csv</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+and for rch pp and grd:
+
+
+```python
+df.loc[df.pest_file.apply(lambda x: "rch" in x ),:]
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pest_file</th>
+      <th>model_file</th>
+      <th>cycle</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>18</th>
+      <td>rchrecharge1gr_inst0_grid.csv.tpl</td>
+      <td>mult\rchrecharge1gr_inst0_grid.csv</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>rchrecharge1pp_inst0pp.dat.tpl</td>
+      <td>rchrecharge1pp_inst0pp.dat</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>rchrecharge2gr_inst0_grid.csv.tpl</td>
+      <td>mult\rchrecharge2gr_inst0_grid.csv</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>rchrecharge2pp_inst0pp.dat.tpl</td>
+      <td>rchrecharge2pp_inst0pp.dat</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>rchrecharge3gr_inst0_grid.csv.tpl</td>
+      <td>mult\rchrecharge3gr_inst0_grid.csv</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>88</th>
+      <td>rch_recharge_21tcn_inst0_constant.csv.tpl</td>
+      <td>mult\rch_recharge_1tcn_inst0_constant.csv</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>89</th>
+      <td>rch_recharge_22tcn_inst0_constant.csv.tpl</td>
+      <td>mult\rch_recharge_1tcn_inst0_constant.csv</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>90</th>
+      <td>rch_recharge_23tcn_inst0_constant.csv.tpl</td>
+      <td>mult\rch_recharge_1tcn_inst0_constant.csv</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <th>91</th>
+      <td>rch_recharge_24tcn_inst0_constant.csv.tpl</td>
+      <td>mult\rch_recharge_1tcn_inst0_constant.csv</td>
+      <td>23</td>
+    </tr>
+    <tr>
+      <th>92</th>
+      <td>rch_recharge_25tcn_inst0_constant.csv.tpl</td>
+      <td>mult\rch_recharge_1tcn_inst0_constant.csv</td>
+      <td>24</td>
+    </tr>
+  </tbody>
+</table>
+<p>75 rows × 3 columns</p>
+</div>
+
+
+
+
+```python
+rchgrdf = df.loc[df.pest_file.apply(lambda x: "rch" in x and "gr" in x),:]
+df.loc[rchgrdf.index,"cycle"] = rchgrdf.pest_file.apply(lambda x: int(x.split("gr")[0].split("rchrecharge")[-1])-1)
+df.loc[rchgrdf.index,"model_file"] = rchgrdf.model_file.iloc[0]
+df.loc[rchgrdf.index,:].head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pest_file</th>
+      <th>model_file</th>
+      <th>cycle</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>18</th>
+      <td>rchrecharge1gr_inst0_grid.csv.tpl</td>
+      <td>mult\rchrecharge1gr_inst0_grid.csv</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>rchrecharge2gr_inst0_grid.csv.tpl</td>
+      <td>mult\rchrecharge1gr_inst0_grid.csv</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>rchrecharge3gr_inst0_grid.csv.tpl</td>
+      <td>mult\rchrecharge1gr_inst0_grid.csv</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>rchrecharge4gr_inst0_grid.csv.tpl</td>
+      <td>mult\rchrecharge1gr_inst0_grid.csv</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>rchrecharge5gr_inst0_grid.csv.tpl</td>
+      <td>mult\rchrecharge1gr_inst0_grid.csv</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+rchppdf = df.loc[df.pest_file.apply(lambda x: "rch" in x and "pp" in x),:]
+df.loc[rchppdf.index,"cycle"] = rchppdf.pest_file.apply(lambda x: int(x.split("pp")[0].split("rchrecharge")[-1])-1)
+df.loc[rchppdf.index,"model_file"] = rchppdf.model_file.iloc[0]
+df.loc[rchppdf.index,:].head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pest_file</th>
+      <th>model_file</th>
+      <th>cycle</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>19</th>
+      <td>rchrecharge1pp_inst0pp.dat.tpl</td>
+      <td>rchrecharge1pp_inst0pp.dat</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>rchrecharge2pp_inst0pp.dat.tpl</td>
+      <td>rchrecharge1pp_inst0pp.dat</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>rchrecharge3pp_inst0pp.dat.tpl</td>
+      <td>rchrecharge1pp_inst0pp.dat</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>rchrecharge4pp_inst0pp.dat.tpl</td>
+      <td>rchrecharge1pp_inst0pp.dat</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>rchrecharge5pp_inst0pp.dat.tpl</td>
+      <td>rchrecharge1pp_inst0pp.dat</td>
       <td>4</td>
     </tr>
   </tbody>
@@ -914,6 +1001,14 @@ And the same for time-varying recharge parameters
 ```python
 rpar = par.loc[par.parnme.apply(lambda x: "rch" in x and "tcn" in x),:]
 par.loc[rpar.index,"cycle"] = rpar.parnme.apply(lambda x: int(x.split("tcn")[0].split("_")[-1])-1)
+
+
+rgrpar = par.loc[par.parnme.apply(lambda x: "rch" in x and "gr" in x),:]
+par.loc[rgrpar.index,"cycle"] = rgrpar.parnme.apply(lambda x: int(x.split("gr")[0].split("rchrecharge")[-1])-1)
+
+
+rpppar = par.loc[par.parnme.apply(lambda x: "rch" in x and "pp" in x),:]
+par.loc[rpppar.index,"cycle"] = rpppar.parnme.apply(lambda x: int(x.split("pp")[0].split("rchrecharge")[-1])-1)
 
 ```
 
@@ -1096,21 +1191,21 @@ pst.model_input_data.tail()
   </thead>
   <tbody>
     <tr>
-      <th>192</th>
+      <th>148</th>
+      <td>sfrcondcn_inst0_constant.csv.tpl</td>
+      <td>mult\sfrcondcn_inst0_constant.csv</td>
+      <td>-1.0</td>
+    </tr>
+    <tr>
+      <th>149</th>
+      <td>sfrgr_inst0_grid.csv.tpl</td>
+      <td>mult\sfrgr_inst0_grid.csv</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>150</th>
       <td>freyberg6.ic_strt_layer1.txt.tpl</td>
       <td>org\freyberg6.ic_strt_layer1.txt</td>
-      <td>-1.0</td>
-    </tr>
-    <tr>
-      <th>193</th>
-      <td>freyberg6.ic_strt_layer2.txt.tpl</td>
-      <td>org\freyberg6.ic_strt_layer2.txt</td>
-      <td>-1.0</td>
-    </tr>
-    <tr>
-      <th>194</th>
-      <td>freyberg6.ic_strt_layer3.txt.tpl</td>
-      <td>org\freyberg6.ic_strt_layer3.txt</td>
       <td>-1.0</td>
     </tr>
     <tr>
@@ -1131,7 +1226,7 @@ pst.model_input_data.tail()
 
 
 
-Since `perlen` needs to change over cycles, we a way to tell PESTPP-DA to change it.  We could setup separate parameters and template for each cycle (e.g. `perlen_0`,`perlen_1`,`perlen_2`, etc, for cycle 0,1,2, etc), but this is cumbersome.  Instead, we can use a parameter cycle table to specific the value of the `perlen` parameter for each cycle (only fixed parameters can be treated this way...):
+Since `perlen` needs to change over cycles (month to month), we a way to tell PESTPP-DA to change it.  We could setup separate parameters and template for each cycle (e.g. `perlen_0`,`perlen_1`,`perlen_2`, etc, for cycle 0,1,2, etc), but this is cumbersome.  Instead, we can use a parameter cycle table to specific the value of the `perlen` parameter for each cycle (only fixed parameters can be treated this way...):
 
 
 ```python
@@ -1337,7 +1432,9 @@ df.T.to_csv(os.path.join(t_d,"par_cycle_table.csv"))
 pst.pestpp_options["da_parameter_cycle_table"] = "par_cycle_table.csv"
 ```
 
-Now for the observation data - yuck!  In the existing PEST interface, we include simulated GW level values in all active cells as observations, but then we also used the MF6 head obs process to make it easier for us to get the obs v sim process setup.  Here, we will ditch the MF6 head obs process and just rely on the arrays of simulated GW levels.  These important outputs will serve two roles: outputs to compare with data for assimilation (at specific locations in space and time) and also as dynamic states that will be linked to the initial head parameters - this is where things will get really exciting...
+### Observation data
+
+Now for the observation data - yuck!  In the existing PEST interface, we include simulated GW level values in all active cells as observations, but then we also used the MF6 head obs process to make it easier for us to get the obs v sim process setup.  Here, we will ditch the MF6 head obs process and just rely on the arrays of simulated GW levels - these will be included in every cycle.  The arrays of simulated groundwater level in every active model cell will serve two roles: outputs to compare with data for assimilation (at specific locations in space and time) and also as dynamic states that will be linked to the initial head parameters - this is where things will get really exciting...
 
 
 ```python
@@ -1399,7 +1496,7 @@ obs
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</td>
-      <td>34.190167</td>
+      <td>34.720563</td>
       <td>0.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -1414,7 +1511,7 @@ obs
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</td>
-      <td>34.178076</td>
+      <td>34.722037</td>
       <td>0.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -1429,7 +1526,7 @@ obs
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</td>
-      <td>34.203032</td>
+      <td>34.714429</td>
       <td>0.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -1444,7 +1541,7 @@ obs
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</td>
-      <td>34.274843</td>
+      <td>34.782017</td>
       <td>0.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -1459,7 +1556,7 @@ obs
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</td>
-      <td>34.345650</td>
+      <td>34.841318</td>
       <td>0.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -1487,12 +1584,12 @@ obs
       <td>...</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4322.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4322.5</td>
-      <td>0.005765</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4322.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4322.5</td>
+      <td>-0.927476</td>
       <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</td>
-      <td>hdsvd</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hdstd</td>
       <td>lst</td>
       <td>trgw-0-9-1</td>
       <td>4322.5</td>
@@ -1502,12 +1599,12 @@ obs
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4352.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4352.5</td>
-      <td>0.005441</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4352.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4352.5</td>
+      <td>-1.116548</td>
       <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</td>
-      <td>hdsvd</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hdstd</td>
       <td>lst</td>
       <td>trgw-0-9-1</td>
       <td>4352.5</td>
@@ -1517,12 +1614,12 @@ obs
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:4383.5</td>
-      <td>0.005251</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4383.5</td>
+      <td>-1.159104</td>
       <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</td>
-      <td>hdsvd</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hdstd</td>
       <td>lst</td>
       <td>trgw-0-9-1</td>
       <td>4383.5</td>
@@ -1534,7 +1631,7 @@ obs
     <tr>
       <th>part_status</th>
       <td>part_status</td>
-      <td>3.000000</td>
+      <td>5.000000</td>
       <td>0.0</td>
       <td>part</td>
       <td>NaN</td>
@@ -1549,7 +1646,7 @@ obs
     <tr>
       <th>part_time</th>
       <td>part_time</td>
-      <td>583999.484800</td>
+      <td>36377.040060</td>
       <td>0.0</td>
       <td>part</td>
       <td>NaN</td>
@@ -1563,7 +1660,7 @@ obs
     </tr>
   </tbody>
 </table>
-<p>62227 rows × 12 columns</p>
+<p>21252 rows × 12 columns</p>
 </div>
 
 
@@ -1625,38 +1722,142 @@ pst.model_output_data
       <td>hdslay1_t11.txt</td>
     </tr>
     <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
+      <th>5</th>
+      <td>hdslay1_t12.txt.ins</td>
+      <td>hdslay1_t12.txt</td>
     </tr>
     <tr>
-      <th>78</th>
+      <th>6</th>
+      <td>hdslay1_t13.txt.ins</td>
+      <td>hdslay1_t13.txt</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>hdslay1_t14.txt.ins</td>
+      <td>hdslay1_t14.txt</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>hdslay1_t15.txt.ins</td>
+      <td>hdslay1_t15.txt</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>hdslay1_t16.txt.ins</td>
+      <td>hdslay1_t16.txt</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>hdslay1_t17.txt.ins</td>
+      <td>hdslay1_t17.txt</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>hdslay1_t18.txt.ins</td>
+      <td>hdslay1_t18.txt</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>hdslay1_t19.txt.ins</td>
+      <td>hdslay1_t19.txt</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>hdslay1_t2.txt.ins</td>
+      <td>hdslay1_t2.txt</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>hdslay1_t20.txt.ins</td>
+      <td>hdslay1_t20.txt</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>hdslay1_t21.txt.ins</td>
+      <td>hdslay1_t21.txt</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>hdslay1_t22.txt.ins</td>
+      <td>hdslay1_t22.txt</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>hdslay1_t23.txt.ins</td>
+      <td>hdslay1_t23.txt</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>hdslay1_t24.txt.ins</td>
+      <td>hdslay1_t24.txt</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>hdslay1_t25.txt.ins</td>
+      <td>hdslay1_t25.txt</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>hdslay1_t3.txt.ins</td>
+      <td>hdslay1_t3.txt</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>hdslay1_t4.txt.ins</td>
+      <td>hdslay1_t4.txt</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>hdslay1_t5.txt.ins</td>
+      <td>hdslay1_t5.txt</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>hdslay1_t6.txt.ins</td>
+      <td>hdslay1_t6.txt</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>hdslay1_t7.txt.ins</td>
+      <td>hdslay1_t7.txt</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>hdslay1_t8.txt.ins</td>
+      <td>hdslay1_t8.txt</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>hdslay1_t9.txt.ins</td>
+      <td>hdslay1_t9.txt</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>inc.csv.ins</td>
+      <td>inc.csv</td>
+    </tr>
+    <tr>
+      <th>28</th>
       <td>cum.csv.ins</td>
       <td>cum.csv</td>
     </tr>
     <tr>
-      <th>79</th>
+      <th>29</th>
       <td>sfr.tdiff.csv.ins</td>
       <td>sfr.tdiff.csv</td>
     </tr>
     <tr>
-      <th>80</th>
+      <th>30</th>
       <td>heads.tdiff.csv.ins</td>
       <td>heads.tdiff.csv</td>
     </tr>
     <tr>
-      <th>81</th>
-      <td>heads.vdiff.csv.ins</td>
-      <td>heads.vdiff.csv</td>
-    </tr>
-    <tr>
-      <th>82</th>
+      <th>31</th>
       <td>.\freyberg_mp.mpend.ins</td>
       <td>.\freyberg_mp.mpend</td>
     </tr>
   </tbody>
 </table>
-<p>83 rows × 2 columns</p>
 </div>
 
 
@@ -1723,9 +1924,9 @@ pst.drop_observations(os.path.join(t_d,"freyberg_mp.mpend.ins"),pst_path=".")
   </thead>
   <tbody>
     <tr>
-      <th>part_time</th>
-      <td>part_time</td>
-      <td>583999.4848</td>
+      <th>part_status</th>
+      <td>part_status</td>
+      <td>5.00000</td>
       <td>0.0</td>
       <td>part</td>
       <td>NaN</td>
@@ -1738,9 +1939,9 @@ pst.drop_observations(os.path.join(t_d,"freyberg_mp.mpend.ins"),pst_path=".")
       <td>NaN</td>
     </tr>
     <tr>
-      <th>part_status</th>
-      <td>part_status</td>
-      <td>3.0000</td>
+      <th>part_time</th>
+      <td>part_time</td>
+      <td>36377.04006</td>
       <td>0.0</td>
       <td>part</td>
       <td>NaN</td>
@@ -1820,75 +2021,75 @@ pst.drop_observations(os.path.join(t_d,"sfr.tdiff.csv.ins"),pst_path=".")
   </thead>
   <tbody>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4169.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:4169.5</td>
-      <td>845.752032</td>
-      <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>gage-1</td>
-      <td>4169.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3987.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3987.5</td>
-      <td>377.369968</td>
-      <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>headwater</td>
-      <td>3987.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:3773.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:3773.5</td>
-      <td>842.029821</td>
+      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4018.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:4018.5</td>
+      <td>-2160.085439</td>
       <td>0.01</td>
       <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>gage-1</td>
-      <td>3773.5</td>
+      <td>4018.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>1.0</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:3896.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:3896.5</td>
-      <td>298.651545</td>
+      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3804.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3804.5</td>
+      <td>-347.353250</td>
       <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
+      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
       <td>sfrtd</td>
       <td>lst</td>
-      <td>tailwater</td>
-      <td>3896.5</td>
+      <td>headwater</td>
+      <td>3804.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4199.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4199.5</td>
-      <td>60.565373</td>
+      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3926.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3926.5</td>
+      <td>557.480002</td>
       <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
+      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
       <td>sfrtd</td>
       <td>lst</td>
-      <td>tailwater</td>
-      <td>4199.5</td>
+      <td>headwater</td>
+      <td>3926.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4138.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:4138.5</td>
+      <td>-454.629985</td>
+      <td>0.00</td>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>gage-1</td>
+      <td>4138.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:headwater_time:4291.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:headwater_time:4291.5</td>
+      <td>805.532276</td>
+      <td>0.00</td>
+      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>headwater</td>
+      <td>4291.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -1910,60 +2111,30 @@ pst.drop_observations(os.path.join(t_d,"sfr.tdiff.csv.ins"),pst_path=".")
       <td>...</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4230.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4230.5</td>
-      <td>223.737212</td>
+      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3652.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3652.5</td>
+      <td>0.000000</td>
+      <td>0.00</td>
+      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>headwater</td>
+      <td>3652.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4261.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4261.5</td>
+      <td>538.042324</td>
       <td>0.00</td>
       <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>tailwater</td>
-      <td>4230.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:3957.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:3957.5</td>
-      <td>-370.470970</td>
-      <td>0.01</td>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>gage-1</td>
-      <td>3957.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:4049.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:4049.5</td>
-      <td>-70.344875</td>
-      <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>headwater</td>
-      <td>4049.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3957.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3957.5</td>
-      <td>504.114353</td>
-      <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>headwater</td>
-      <td>3957.5</td>
+      <td>4261.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -1972,7 +2143,7 @@ pst.drop_observations(os.path.join(t_d,"sfr.tdiff.csv.ins"),pst_path=".")
     <tr>
       <th>oname:sfrtd_otype:lst_usecol:gage-1_time:3804.5</th>
       <td>oname:sfrtd_otype:lst_usecol:gage-1_time:3804.5</td>
-      <td>1090.165816</td>
+      <td>514.960796</td>
       <td>0.01</td>
       <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
       <td>sfrtd</td>
@@ -1984,6 +2155,36 @@ pst.drop_observations(os.path.join(t_d,"sfr.tdiff.csv.ins"),pst_path=".")
       <td>NaN</td>
       <td>1.0</td>
     </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4352.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4352.5</td>
+      <td>1021.663615</td>
+      <td>0.00</td>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>tailwater</td>
+      <td>4352.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3865.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3865.5</td>
+      <td>-40.312374</td>
+      <td>0.00</td>
+      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>headwater</td>
+      <td>3865.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
   </tbody>
 </table>
 <p>75 rows × 12 columns</p>
@@ -1994,11 +2195,9 @@ pst.drop_observations(os.path.join(t_d,"sfr.tdiff.csv.ins"),pst_path=".")
 
 ```python
 pst.drop_observations(os.path.join(t_d,"heads.tdiff.csv.ins"),pst_path=".")
-pst.drop_observations(os.path.join(t_d,"heads.vdiff.csv.ins"),pst_path=".")
 ```
 
-    650 obs dropped from instruction file freyberg6_da_template\heads.tdiff.csv.ins
-    325 obs dropped from instruction file freyberg6_da_template\heads.vdiff.csv.ins
+    325 obs dropped from instruction file freyberg6_da_template\heads.tdiff.csv.ins
     
 
 
@@ -2053,75 +2252,75 @@ pst.drop_observations(os.path.join(t_d,"heads.vdiff.csv.ins"),pst_path=".")
   </thead>
   <tbody>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-29-15_time:4199.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-29-15_time:4199.5</td>
-      <td>-0.034342</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-21-10_time:4018.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-21-10_time:4018.5</td>
+      <td>-0.743434</td>
       <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-29-15</td>
-      <td>hdsvd</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-21-10</td>
+      <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-29-15</td>
-      <td>4199.5</td>
+      <td>trgw-0-21-10</td>
+      <td>4018.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-29-15_time:4261.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-29-15_time:4261.5</td>
-      <td>-0.012459</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-21-10_time:4108.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-21-10_time:4108.5</td>
+      <td>-0.445958</td>
       <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-29-15</td>
-      <td>hdsvd</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-21-10</td>
+      <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-29-15</td>
-      <td>4261.5</td>
+      <td>trgw-0-21-10</td>
+      <td>4108.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-34-10_time:3712.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-34-10_time:3712.5</td>
-      <td>0.006580</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:4230.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:4230.5</td>
+      <td>-0.030578</td>
       <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-34-10</td>
-      <td>hdsvd</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-3-8</td>
+      <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-34-10</td>
-      <td>3712.5</td>
+      <td>trgw-0-3-8</td>
+      <td>4230.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-34-10_time:3743.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-34-10_time:3743.5</td>
-      <td>0.007652</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-33-7_time:4291.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-33-7_time:4291.5</td>
+      <td>-0.832051</td>
       <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-34-10</td>
-      <td>hdsvd</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-33-7</td>
+      <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-34-10</td>
-      <td>3743.5</td>
+      <td>trgw-0-33-7</td>
+      <td>4291.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:3773.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1_time:3773.5</td>
-      <td>0.007117</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-21-10_time:3957.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-21-10_time:3957.5</td>
+      <td>-0.536478</td>
       <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-9-1</td>
-      <td>hdsvd</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-21-10</td>
+      <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-9-1</td>
-      <td>3773.5</td>
+      <td>trgw-0-21-10</td>
+      <td>3957.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -2143,59 +2342,14 @@ pst.drop_observations(os.path.join(t_d,"heads.vdiff.csv.ins"),pst_path=".")
       <td>...</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-34-10_time:3926.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-34-10_time:3926.5</td>
-      <td>0.004009</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-15-16_time:3834.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-15-16_time:3834.5</td>
+      <td>0.117569</td>
       <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-34-10</td>
-      <td>hdsvd</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-15-16</td>
+      <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-34-10</td>
-      <td>3926.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-22-15_time:4352.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-22-15_time:4352.5</td>
-      <td>-0.024070</td>
-      <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-22-15</td>
-      <td>hdsvd</td>
-      <td>lst</td>
-      <td>trgw-0-22-15</td>
-      <td>4352.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3683.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3683.5</td>
-      <td>0.028698</td>
-      <td>100.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8</td>
-      <td>hdsvd</td>
-      <td>lst</td>
-      <td>trgw-0-3-8</td>
-      <td>3683.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-22-15_time:3834.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-22-15_time:3834.5</td>
-      <td>-0.039959</td>
-      <td>0.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-22-15</td>
-      <td>hdsvd</td>
-      <td>lst</td>
-      <td>trgw-0-22-15</td>
+      <td>trgw-0-15-16</td>
       <td>3834.5</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -2203,19 +2357,64 @@ pst.drop_observations(os.path.join(t_d,"heads.vdiff.csv.ins"),pst_path=".")
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3926.5</th>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8_time:3926.5</td>
-      <td>-0.029573</td>
-      <td>100.0</td>
-      <td>oname:hdsvd_otype:lst_usecol:trgw-0-3-8</td>
-      <td>hdsvd</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4322.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4322.5</td>
+      <td>-0.927476</td>
+      <td>0.0</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-3-8</td>
-      <td>3926.5</td>
+      <td>trgw-0-9-1</td>
+      <td>4322.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>1.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-2-9_time:4108.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-2-9_time:4108.5</td>
+      <td>-0.135465</td>
+      <td>0.0</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-2-9</td>
+      <td>hdstd</td>
+      <td>lst</td>
+      <td>trgw-0-2-9</td>
+      <td>4108.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-29-15_time:4138.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-29-15_time:4138.5</td>
+      <td>-0.067201</td>
+      <td>0.0</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-29-15</td>
+      <td>hdstd</td>
+      <td>lst</td>
+      <td>trgw-0-29-15</td>
+      <td>4138.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:3865.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:3865.5</td>
+      <td>0.439176</td>
+      <td>0.0</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1</td>
+      <td>hdstd</td>
+      <td>lst</td>
+      <td>trgw-0-9-1</td>
+      <td>3865.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
   </tbody>
 </table>
@@ -2233,7 +2432,7 @@ hdf = pst.drop_observations(os.path.join(t_d,"heads.csv.ins"),pst_path=".")
 #sdf = pst.drop_observations(os.path.join(t_d,"sfr.csv.ins"),pst_path=".")
 ```
 
-    650 obs dropped from instruction file freyberg6_da_template\heads.csv.ins
+    325 obs dropped from instruction file freyberg6_da_template\heads.csv.ins
     
 
 
@@ -2298,38 +2497,122 @@ pst.model_output_data
       <td>hdslay1_t12.txt</td>
     </tr>
     <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
+      <th>6</th>
+      <td>hdslay1_t13.txt.ins</td>
+      <td>hdslay1_t13.txt</td>
     </tr>
     <tr>
-      <th>74</th>
-      <td>hdslay3_t7.txt.ins</td>
-      <td>hdslay3_t7.txt</td>
+      <th>7</th>
+      <td>hdslay1_t14.txt.ins</td>
+      <td>hdslay1_t14.txt</td>
     </tr>
     <tr>
-      <th>75</th>
-      <td>hdslay3_t8.txt.ins</td>
-      <td>hdslay3_t8.txt</td>
+      <th>8</th>
+      <td>hdslay1_t15.txt.ins</td>
+      <td>hdslay1_t15.txt</td>
     </tr>
     <tr>
-      <th>76</th>
-      <td>hdslay3_t9.txt.ins</td>
-      <td>hdslay3_t9.txt</td>
+      <th>9</th>
+      <td>hdslay1_t16.txt.ins</td>
+      <td>hdslay1_t16.txt</td>
     </tr>
     <tr>
-      <th>77</th>
+      <th>10</th>
+      <td>hdslay1_t17.txt.ins</td>
+      <td>hdslay1_t17.txt</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>hdslay1_t18.txt.ins</td>
+      <td>hdslay1_t18.txt</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>hdslay1_t19.txt.ins</td>
+      <td>hdslay1_t19.txt</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>hdslay1_t2.txt.ins</td>
+      <td>hdslay1_t2.txt</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>hdslay1_t20.txt.ins</td>
+      <td>hdslay1_t20.txt</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>hdslay1_t21.txt.ins</td>
+      <td>hdslay1_t21.txt</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>hdslay1_t22.txt.ins</td>
+      <td>hdslay1_t22.txt</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>hdslay1_t23.txt.ins</td>
+      <td>hdslay1_t23.txt</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>hdslay1_t24.txt.ins</td>
+      <td>hdslay1_t24.txt</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>hdslay1_t25.txt.ins</td>
+      <td>hdslay1_t25.txt</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>hdslay1_t3.txt.ins</td>
+      <td>hdslay1_t3.txt</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>hdslay1_t4.txt.ins</td>
+      <td>hdslay1_t4.txt</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>hdslay1_t5.txt.ins</td>
+      <td>hdslay1_t5.txt</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>hdslay1_t6.txt.ins</td>
+      <td>hdslay1_t6.txt</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>hdslay1_t7.txt.ins</td>
+      <td>hdslay1_t7.txt</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>hdslay1_t8.txt.ins</td>
+      <td>hdslay1_t8.txt</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>hdslay1_t9.txt.ins</td>
+      <td>hdslay1_t9.txt</td>
+    </tr>
+    <tr>
+      <th>27</th>
       <td>inc.csv.ins</td>
       <td>inc.csv</td>
     </tr>
     <tr>
-      <th>78</th>
+      <th>28</th>
       <td>cum.csv.ins</td>
       <td>cum.csv</td>
     </tr>
   </tbody>
 </table>
-<p>78 rows × 2 columns</p>
 </div>
 
 
@@ -2409,104 +2692,6 @@ assert sfrdf is not None
     dropping: hdslay1_t8.txt.ins
     800 obs dropped from instruction file freyberg6_da_template\hdslay1_t9.txt.ins
     dropping: hdslay1_t9.txt.ins
-    not dropping: hdslay2_t1.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t10.txt.ins
-    dropping: hdslay2_t10.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t11.txt.ins
-    dropping: hdslay2_t11.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t12.txt.ins
-    dropping: hdslay2_t12.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t13.txt.ins
-    dropping: hdslay2_t13.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t14.txt.ins
-    dropping: hdslay2_t14.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t15.txt.ins
-    dropping: hdslay2_t15.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t16.txt.ins
-    dropping: hdslay2_t16.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t17.txt.ins
-    dropping: hdslay2_t17.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t18.txt.ins
-    dropping: hdslay2_t18.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t19.txt.ins
-    dropping: hdslay2_t19.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t2.txt.ins
-    dropping: hdslay2_t2.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t20.txt.ins
-    dropping: hdslay2_t20.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t21.txt.ins
-    dropping: hdslay2_t21.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t22.txt.ins
-    dropping: hdslay2_t22.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t23.txt.ins
-    dropping: hdslay2_t23.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t24.txt.ins
-    dropping: hdslay2_t24.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t25.txt.ins
-    dropping: hdslay2_t25.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t3.txt.ins
-    dropping: hdslay2_t3.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t4.txt.ins
-    dropping: hdslay2_t4.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t5.txt.ins
-    dropping: hdslay2_t5.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t6.txt.ins
-    dropping: hdslay2_t6.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t7.txt.ins
-    dropping: hdslay2_t7.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t8.txt.ins
-    dropping: hdslay2_t8.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay2_t9.txt.ins
-    dropping: hdslay2_t9.txt.ins
-    not dropping: hdslay3_t1.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t10.txt.ins
-    dropping: hdslay3_t10.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t11.txt.ins
-    dropping: hdslay3_t11.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t12.txt.ins
-    dropping: hdslay3_t12.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t13.txt.ins
-    dropping: hdslay3_t13.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t14.txt.ins
-    dropping: hdslay3_t14.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t15.txt.ins
-    dropping: hdslay3_t15.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t16.txt.ins
-    dropping: hdslay3_t16.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t17.txt.ins
-    dropping: hdslay3_t17.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t18.txt.ins
-    dropping: hdslay3_t18.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t19.txt.ins
-    dropping: hdslay3_t19.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t2.txt.ins
-    dropping: hdslay3_t2.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t20.txt.ins
-    dropping: hdslay3_t20.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t21.txt.ins
-    dropping: hdslay3_t21.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t22.txt.ins
-    dropping: hdslay3_t22.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t23.txt.ins
-    dropping: hdslay3_t23.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t24.txt.ins
-    dropping: hdslay3_t24.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t25.txt.ins
-    dropping: hdslay3_t25.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t3.txt.ins
-    dropping: hdslay3_t3.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t4.txt.ins
-    dropping: hdslay3_t4.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t5.txt.ins
-    dropping: hdslay3_t5.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t6.txt.ins
-    dropping: hdslay3_t6.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t7.txt.ins
-    dropping: hdslay3_t7.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t8.txt.ins
-    dropping: hdslay3_t8.txt.ins
-    800 obs dropped from instruction file freyberg6_da_template\hdslay3_t9.txt.ins
-    dropping: hdslay3_t9.txt.ins
     225 obs dropped from instruction file freyberg6_da_template\inc.csv.ins
     9 obs added from instruction file freyberg6_da_template\.\inc.csv.ins
     225 obs dropped from instruction file freyberg6_da_template\cum.csv.ins
@@ -2521,7 +2706,7 @@ assert sfrdf is not None
 
 
 
-    ['hdslay1_t1.txt', 'hdslay2_t1.txt', 'hdslay3_t1.txt']
+    ['hdslay1_t1.txt']
 
 
 
@@ -2562,16 +2747,6 @@ pst.model_output_data
       <td>hdslay1_t1.txt</td>
     </tr>
     <tr>
-      <th>27</th>
-      <td>hdslay2_t1.txt.ins</td>
-      <td>hdslay2_t1.txt</td>
-    </tr>
-    <tr>
-      <th>52</th>
-      <td>hdslay3_t1.txt.ins</td>
-      <td>hdslay3_t1.txt</td>
-    </tr>
-    <tr>
       <th>.\sfr.csv.ins</th>
       <td>.\sfr.csv.ins</td>
       <td>.\sfr.csv</td>
@@ -2591,6 +2766,8 @@ pst.model_output_data
 </div>
 
 
+
+### Assigning observation values and weights
 
 Time to work out a mapping from the MF6 head obs data (that have the actual head observations and weight we want) to the array based GW level observations.  We will again use a special set of PESTPP-DA specific options to help us here.  Since the observed value of GW level and the weights change through time (e.g. across cycles) but we are recording the array-based GW level observations every cycle, we need a way to tell PESTPP-DA to use specific `obsval`s and `weight`s for a given cycle.  `da_observation_cycle_table` and `da_weight_cycle_table` to the rescue!
 
@@ -2615,10 +2792,7 @@ sites
     array(['trgw-0-13-10', 'trgw-0-15-16', 'trgw-0-2-15', 'trgw-0-2-9',
            'trgw-0-21-10', 'trgw-0-22-15', 'trgw-0-24-4', 'trgw-0-26-6',
            'trgw-0-29-15', 'trgw-0-3-8', 'trgw-0-33-7', 'trgw-0-34-10',
-           'trgw-0-9-1', 'trgw-2-13-10', 'trgw-2-15-16', 'trgw-2-2-15',
-           'trgw-2-2-9', 'trgw-2-21-10', 'trgw-2-22-15', 'trgw-2-24-4',
-           'trgw-2-26-6', 'trgw-2-29-15', 'trgw-2-3-8', 'trgw-2-33-7',
-           'trgw-2-34-10', 'trgw-2-9-1'], dtype=object)
+           'trgw-0-9-1'], dtype=object)
 
 
 
@@ -2667,19 +2841,6 @@ for site in sites:
     oname:hdslay1_t1_otype:arr_i:33_j:7
     oname:hdslay1_t1_otype:arr_i:34_j:10
     oname:hdslay1_t1_otype:arr_i:9_j:1
-    oname:hdslay3_t1_otype:arr_i:13_j:10
-    oname:hdslay3_t1_otype:arr_i:15_j:16
-    oname:hdslay3_t1_otype:arr_i:2_j:15
-    oname:hdslay3_t1_otype:arr_i:2_j:9
-    oname:hdslay3_t1_otype:arr_i:21_j:10
-    oname:hdslay3_t1_otype:arr_i:22_j:15
-    oname:hdslay3_t1_otype:arr_i:24_j:4
-    oname:hdslay3_t1_otype:arr_i:26_j:6
-    oname:hdslay3_t1_otype:arr_i:29_j:15
-    oname:hdslay3_t1_otype:arr_i:3_j:8
-    oname:hdslay3_t1_otype:arr_i:33_j:7
-    oname:hdslay3_t1_otype:arr_i:34_j:10
-    oname:hdslay3_t1_otype:arr_i:9_j:1
     
 
 Same for the SFR "gage-1" observations
@@ -2724,35 +2885,29 @@ odata
 
 
 
-    {'oname:hdslay1_t1_otype:arr_i:26_j:6': array([34.64401284, 34.55417855, 34.63951738, 34.79799406, 34.92316856,
-            35.0804532 , 35.12298786, 35.11143536, 34.98346193, 34.80007573,
-            34.51338982, 34.40557368, 34.35630664, 34.35998071, 34.43775967,
-            34.6127413 , 34.78599495, 34.92919168, 34.97556532, 34.98548115,
-            34.91409599, 34.72213818, 34.55599691, 34.38654068, 34.27659649]),
-     'oname:hdslay1_t1_otype:arr_i:3_j:8': array([34.57174738, 34.58024082, 34.55952273, 34.61496256, 34.65134148,
-            34.76128283, 34.78827913, 34.82060015, 34.78993691, 34.69760476,
-            34.69114137, 34.62222203, 34.57216813, 34.50866346, 34.50346713,
-            34.56958992, 34.60113449, 34.68088019, 34.72984612, 34.75531127,
-            34.71573532, 34.67921814, 34.60283652, 34.60053219, 34.51060353]),
-     'oname:hdslay3_t1_otype:arr_i:26_j:6': array([34.56549551, 34.56663841, 34.63688816, 34.79590895, 34.92812757,
-            35.03681128, 35.10354503, 35.12136373, 35.01306747, 34.75767713,
-            34.49140978, 34.40133231, 34.33919818, 34.33882667, 34.47976782,
-            34.60365861, 34.73421213, 34.8951266 , 35.02124038, 34.99486661,
-            34.93362477, 34.73630864, 34.55899385, 34.36437442, 34.340205  ]),
-     'oname:hdslay3_t1_otype:arr_i:3_j:8': array([34.57998451, 34.5515424 , 34.53473414, 34.67630406, 34.66700792,
-            34.76317135, 34.79316777, 34.81747467, 34.76665706, 34.72717728,
-            34.6828193 , 34.63977708, 34.55981371, 34.54642867, 34.48552957,
-            34.55163166, 34.63383379, 34.64655334, 34.72426798, 34.77080219,
-            34.70107751, 34.68861779, 34.64658789, 34.58091824, 34.54353048]),
-     'oname:sfr_otype:lst_usecol:gage-1': array([1998.42556366, 1914.07443813, 2047.80383267, 2538.18528081,
-            2840.45538436, 3088.59137928, 3244.63127124, 2933.98309136,
-            2592.89159622, 2006.87241144, 1627.95459359, 1492.09814392,
-            1417.8828934 , 1608.66642246, 1867.78673662, 2206.52911895,
-            2550.21262216, 2844.1775956 , 2971.34060367, 2753.93542131,
-            2454.78493742, 2051.61964221, 1708.83548765, 1512.80823647,
-            1419.77513167])}
+    {'oname:hdslay1_t1_otype:arr_i:26_j:6': array([34.85266621, 34.79508519, 34.76839828, 34.89693726, 34.97987351,
+            34.95782867, 35.01930664, 34.93563189, 34.76749495, 34.59683386,
+            34.34610512, 34.20600796, 34.0807814 , 34.1319264 , 34.21931528,
+            34.33516994, 34.53828482, 34.63167485, 34.64222257, 34.54562015,
+            34.46935381, 34.28721548, 34.05158553, 33.8496649 , 33.81025681]),
+     'oname:hdslay1_t1_otype:arr_i:3_j:8': array([35.05613184, 35.04774219, 35.06953776, 35.1296111 , 35.16466914,
+            35.23916615, 35.29873836, 35.26420091, 35.17177402, 35.01036854,
+            34.79731074, 34.66022605, 34.55017155, 34.52936089, 34.55307522,
+            34.67838205, 34.85302826, 34.91684005, 34.99503288, 35.02555393,
+            34.92663628, 34.81903577, 34.64861095, 34.51785681, 34.42095203]),
+     'oname:sfr_otype:lst_usecol:gage-1': array([3809.88011262, 3867.95158596, 3757.72433431, 3988.28192738,
+            4135.60808168, 4324.84090912, 4321.1695285 , 4124.84432369,
+            3660.93881161, 2991.02391267, 2327.72560983, 1854.84513457,
+            1649.79467379, 1914.57930911, 2311.93589031, 2851.08992099,
+            3355.25012762, 3717.19319928, 3591.84699766, 3453.27403062,
+            2963.42384147, 2433.01148705, 1768.50260134, 1409.6414088 ,
+            1169.05683022])}
 
 
+
+### Buidling the observation and weight cycle tables
+
+Since we have observations at the same spatial locations across cycles, but we have only one "observation" (and there for `obsval` and `weight`) for that location in the control file.  So we can use the pestpp-da specific options: the observation and weight cycle table.
 
 Form the obs cycle table as a dataframe:
 
@@ -2786,14 +2941,10 @@ df
       <th></th>
       <th>oname:hdslay1_t1_otype:arr_i:26_j:6</th>
       <th>oname:hdslay1_t1_otype:arr_i:3_j:8</th>
-      <th>oname:hdslay3_t1_otype:arr_i:26_j:6</th>
-      <th>oname:hdslay3_t1_otype:arr_i:3_j:8</th>
       <th>oname:sfr_otype:lst_usecol:gage-1</th>
     </tr>
     <tr>
       <th>cycle</th>
-      <th></th>
-      <th></th>
       <th></th>
       <th></th>
       <th></th>
@@ -2802,203 +2953,153 @@ df
   <tbody>
     <tr>
       <th>0</th>
-      <td>34.644013</td>
-      <td>34.571747</td>
-      <td>34.565496</td>
-      <td>34.579985</td>
-      <td>1998.425564</td>
+      <td>34.852666</td>
+      <td>35.056132</td>
+      <td>3809.880113</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>34.554179</td>
-      <td>34.580241</td>
-      <td>34.566638</td>
-      <td>34.551542</td>
-      <td>1914.074438</td>
+      <td>34.795085</td>
+      <td>35.047742</td>
+      <td>3867.951586</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>34.639517</td>
-      <td>34.559523</td>
-      <td>34.636888</td>
-      <td>34.534734</td>
-      <td>2047.803833</td>
+      <td>34.768398</td>
+      <td>35.069538</td>
+      <td>3757.724334</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>34.797994</td>
-      <td>34.614963</td>
-      <td>34.795909</td>
-      <td>34.676304</td>
-      <td>2538.185281</td>
+      <td>34.896937</td>
+      <td>35.129611</td>
+      <td>3988.281927</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>34.923169</td>
-      <td>34.651341</td>
-      <td>34.928128</td>
-      <td>34.667008</td>
-      <td>2840.455384</td>
+      <td>34.979874</td>
+      <td>35.164669</td>
+      <td>4135.608082</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>35.080453</td>
-      <td>34.761283</td>
-      <td>35.036811</td>
-      <td>34.763171</td>
-      <td>3088.591379</td>
+      <td>34.957829</td>
+      <td>35.239166</td>
+      <td>4324.840909</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>35.122988</td>
-      <td>34.788279</td>
-      <td>35.103545</td>
-      <td>34.793168</td>
-      <td>3244.631271</td>
+      <td>35.019307</td>
+      <td>35.298738</td>
+      <td>4321.169528</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>35.111435</td>
-      <td>34.820600</td>
-      <td>35.121364</td>
-      <td>34.817475</td>
-      <td>2933.983091</td>
+      <td>34.935632</td>
+      <td>35.264201</td>
+      <td>4124.844324</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>34.983462</td>
-      <td>34.789937</td>
-      <td>35.013067</td>
-      <td>34.766657</td>
-      <td>2592.891596</td>
+      <td>34.767495</td>
+      <td>35.171774</td>
+      <td>3660.938812</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>34.800076</td>
-      <td>34.697605</td>
-      <td>34.757677</td>
-      <td>34.727177</td>
-      <td>2006.872411</td>
+      <td>34.596834</td>
+      <td>35.010369</td>
+      <td>2991.023913</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>34.513390</td>
-      <td>34.691141</td>
-      <td>34.491410</td>
-      <td>34.682819</td>
-      <td>1627.954594</td>
+      <td>34.346105</td>
+      <td>34.797311</td>
+      <td>2327.725610</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>34.405574</td>
-      <td>34.622222</td>
-      <td>34.401332</td>
-      <td>34.639777</td>
-      <td>1492.098144</td>
+      <td>34.206008</td>
+      <td>34.660226</td>
+      <td>1854.845135</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>34.356307</td>
-      <td>34.572168</td>
-      <td>34.339198</td>
-      <td>34.559814</td>
-      <td>1417.882893</td>
+      <td>34.080781</td>
+      <td>34.550172</td>
+      <td>1649.794674</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>34.359981</td>
-      <td>34.508663</td>
-      <td>34.338827</td>
-      <td>34.546429</td>
-      <td>1608.666422</td>
+      <td>34.131926</td>
+      <td>34.529361</td>
+      <td>1914.579309</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>34.437760</td>
-      <td>34.503467</td>
-      <td>34.479768</td>
-      <td>34.485530</td>
-      <td>1867.786737</td>
+      <td>34.219315</td>
+      <td>34.553075</td>
+      <td>2311.935890</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>34.612741</td>
-      <td>34.569590</td>
-      <td>34.603659</td>
-      <td>34.551632</td>
-      <td>2206.529119</td>
+      <td>34.335170</td>
+      <td>34.678382</td>
+      <td>2851.089921</td>
     </tr>
     <tr>
       <th>16</th>
-      <td>34.785995</td>
-      <td>34.601134</td>
-      <td>34.734212</td>
-      <td>34.633834</td>
-      <td>2550.212622</td>
+      <td>34.538285</td>
+      <td>34.853028</td>
+      <td>3355.250128</td>
     </tr>
     <tr>
       <th>17</th>
-      <td>34.929192</td>
-      <td>34.680880</td>
-      <td>34.895127</td>
-      <td>34.646553</td>
-      <td>2844.177596</td>
+      <td>34.631675</td>
+      <td>34.916840</td>
+      <td>3717.193199</td>
     </tr>
     <tr>
       <th>18</th>
-      <td>34.975565</td>
-      <td>34.729846</td>
-      <td>35.021240</td>
-      <td>34.724268</td>
-      <td>2971.340604</td>
+      <td>34.642223</td>
+      <td>34.995033</td>
+      <td>3591.846998</td>
     </tr>
     <tr>
       <th>19</th>
-      <td>34.985481</td>
-      <td>34.755311</td>
-      <td>34.994867</td>
-      <td>34.770802</td>
-      <td>2753.935421</td>
+      <td>34.545620</td>
+      <td>35.025554</td>
+      <td>3453.274031</td>
     </tr>
     <tr>
       <th>20</th>
-      <td>34.914096</td>
-      <td>34.715735</td>
-      <td>34.933625</td>
-      <td>34.701078</td>
-      <td>2454.784937</td>
+      <td>34.469354</td>
+      <td>34.926636</td>
+      <td>2963.423841</td>
     </tr>
     <tr>
       <th>21</th>
-      <td>34.722138</td>
-      <td>34.679218</td>
-      <td>34.736309</td>
-      <td>34.688618</td>
-      <td>2051.619642</td>
+      <td>34.287215</td>
+      <td>34.819036</td>
+      <td>2433.011487</td>
     </tr>
     <tr>
       <th>22</th>
-      <td>34.555997</td>
-      <td>34.602837</td>
-      <td>34.558994</td>
-      <td>34.646588</td>
-      <td>1708.835488</td>
+      <td>34.051586</td>
+      <td>34.648611</td>
+      <td>1768.502601</td>
     </tr>
     <tr>
       <th>23</th>
-      <td>34.386541</td>
-      <td>34.600532</td>
-      <td>34.364374</td>
-      <td>34.580918</td>
-      <td>1512.808236</td>
+      <td>33.849665</td>
+      <td>34.517857</td>
+      <td>1409.641409</td>
     </tr>
     <tr>
       <th>24</th>
-      <td>34.276596</td>
-      <td>34.510604</td>
-      <td>34.340205</td>
-      <td>34.543530</td>
-      <td>1419.775132</td>
+      <td>33.810257</td>
+      <td>34.420952</td>
+      <td>1169.056830</td>
     </tr>
   </tbody>
 </table>
@@ -3033,9 +3134,7 @@ df
 
     oname:hdslay1_t1_otype:arr_i:26_j:6    120.000000
     oname:hdslay1_t1_otype:arr_i:3_j:8     120.000000
-    oname:hdslay3_t1_otype:arr_i:26_j:6    120.000000
-    oname:hdslay3_t1_otype:arr_i:3_j:8     120.000000
-    oname:sfr_otype:lst_usecol:gage-1        0.056033
+    oname:sfr_otype:lst_usecol:gage-1        0.039046
     dtype: float64
     
 
@@ -3062,14 +3161,10 @@ df
       <th></th>
       <th>oname:hdslay1_t1_otype:arr_i:26_j:6</th>
       <th>oname:hdslay1_t1_otype:arr_i:3_j:8</th>
-      <th>oname:hdslay3_t1_otype:arr_i:26_j:6</th>
-      <th>oname:hdslay3_t1_otype:arr_i:3_j:8</th>
       <th>oname:sfr_otype:lst_usecol:gage-1</th>
     </tr>
     <tr>
       <th>cycle</th>
-      <th></th>
-      <th></th>
       <th></th>
       <th></th>
       <th></th>
@@ -3080,110 +3175,82 @@ df
       <th>0</th>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>0.000000</td>
     </tr>
     <tr>
       <th>1</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>10.0</td>
-      <td>10.0</td>
-      <td>0.005224</td>
+      <td>0.002585</td>
     </tr>
     <tr>
       <th>2</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>10.0</td>
-      <td>10.0</td>
-      <td>0.004883</td>
+      <td>0.002661</td>
     </tr>
     <tr>
       <th>3</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>10.0</td>
-      <td>10.0</td>
-      <td>0.003940</td>
+      <td>0.002507</td>
     </tr>
     <tr>
       <th>4</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>10.0</td>
-      <td>10.0</td>
-      <td>0.003521</td>
+      <td>0.002418</td>
     </tr>
     <tr>
       <th>5</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>10.0</td>
-      <td>10.0</td>
-      <td>0.003238</td>
+      <td>0.002312</td>
     </tr>
     <tr>
       <th>6</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>10.0</td>
-      <td>10.0</td>
-      <td>0.003082</td>
+      <td>0.002314</td>
     </tr>
     <tr>
       <th>7</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>10.0</td>
-      <td>10.0</td>
-      <td>0.003408</td>
+      <td>0.002424</td>
     </tr>
     <tr>
       <th>8</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>10.0</td>
-      <td>10.0</td>
-      <td>0.003857</td>
+      <td>0.002732</td>
     </tr>
     <tr>
       <th>9</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>10.0</td>
-      <td>10.0</td>
-      <td>0.004983</td>
+      <td>0.003343</td>
     </tr>
     <tr>
       <th>10</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>10.0</td>
-      <td>10.0</td>
-      <td>0.006143</td>
+      <td>0.004296</td>
     </tr>
     <tr>
       <th>11</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>10.0</td>
-      <td>10.0</td>
-      <td>0.006702</td>
+      <td>0.005391</td>
     </tr>
     <tr>
       <th>12</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>10.0</td>
-      <td>10.0</td>
-      <td>0.007053</td>
+      <td>0.006061</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -3192,14 +3259,10 @@ df
       <th>14</th>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>0.000000</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -3208,14 +3271,10 @@ df
       <th>16</th>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>0.000000</td>
     </tr>
     <tr>
       <th>17</th>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -3224,14 +3283,10 @@ df
       <th>18</th>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>0.000000</td>
     </tr>
     <tr>
       <th>19</th>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -3240,14 +3295,10 @@ df
       <th>20</th>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>0.000000</td>
     </tr>
     <tr>
       <th>21</th>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -3256,22 +3307,16 @@ df
       <th>22</th>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>0.000000</td>
     </tr>
     <tr>
       <th>23</th>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>0.000000</td>
     </tr>
     <tr>
       <th>24</th>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -3293,7 +3338,7 @@ df.to_csv(os.path.join(t_d,"alldata.csv"))
 
 ### The state mapping between pars and obs
 
-Ok, for our next trick...
+Ok, now for our next trick...
 
 We need to tell PESTPP-DA that we want to use dynamic states.  This is tricky concept for us "batch" people, but conceptually, these states allow PESTPP-DA to coherently advance the model in time.  Just like MF6 would take the final simulated GW levels at the end of stress period and set them as the starting heads for the next stress, so too must PESTPP-DA. Otherwise, there would be no temporal coherence in the simulated results.  What is exciting about this is that PESTPP-DA also has the opportunity to "estimate" the start heads for each cycle, along with the other parameters.  Algorithmically, PESTPP-DA sees these "states" just as any other parameter to estimate for a given cycle.  Conceptually, treating the initial states for each cycle as uncertain and therefore adjustable, is one way to explicitly acknowledge that the model is "imperfect" and therefore the initial conditions for each cycle are "imperfect" e.g. uncertain!  How cool!
 
@@ -3372,7 +3417,7 @@ obs.loc[hdsobs.obsnme,:]
     <tr>
       <th>oname:hdslay1_t1_otype:arr_i:0_j:0</th>
       <td>oname:hdslay1_t1_otype:arr_i:0_j:0</td>
-      <td>3.500016e+01</td>
+      <td>3.643619e+01</td>
       <td>0</td>
       <td>hdslay1_t1</td>
       <td>hdslay1</td>
@@ -3389,7 +3434,7 @@ obs.loc[hdsobs.obsnme,:]
     <tr>
       <th>oname:hdslay1_t1_otype:arr_i:0_j:1</th>
       <td>oname:hdslay1_t1_otype:arr_i:0_j:1</td>
-      <td>3.499182e+01</td>
+      <td>3.641381e+01</td>
       <td>0</td>
       <td>hdslay1_t1</td>
       <td>hdslay1</td>
@@ -3406,7 +3451,7 @@ obs.loc[hdsobs.obsnme,:]
     <tr>
       <th>oname:hdslay1_t1_otype:arr_i:0_j:10</th>
       <td>oname:hdslay1_t1_otype:arr_i:0_j:10</td>
-      <td>3.466480e+01</td>
+      <td>3.547531e+01</td>
       <td>0</td>
       <td>hdslay1_t1</td>
       <td>hdslay1</td>
@@ -3423,7 +3468,7 @@ obs.loc[hdsobs.obsnme,:]
     <tr>
       <th>oname:hdslay1_t1_otype:arr_i:0_j:11</th>
       <td>oname:hdslay1_t1_otype:arr_i:0_j:11</td>
-      <td>3.461760e+01</td>
+      <td>3.532646e+01</td>
       <td>0</td>
       <td>hdslay1_t1</td>
       <td>hdslay1</td>
@@ -3440,7 +3485,7 @@ obs.loc[hdsobs.obsnme,:]
     <tr>
       <th>oname:hdslay1_t1_otype:arr_i:0_j:12</th>
       <td>oname:hdslay1_t1_otype:arr_i:0_j:12</td>
-      <td>3.456958e+01</td>
+      <td>3.517048e+01</td>
       <td>0</td>
       <td>hdslay1_t1</td>
       <td>hdslay1</td>
@@ -3472,12 +3517,12 @@ obs.loc[hdsobs.obsnme,:]
       <td>...</td>
     </tr>
     <tr>
-      <th>oname:hdslay3_t1_otype:arr_i:9_j:5</th>
-      <td>oname:hdslay3_t1_otype:arr_i:9_j:5</td>
+      <th>oname:hdslay1_t1_otype:arr_i:9_j:5</th>
+      <td>oname:hdslay1_t1_otype:arr_i:9_j:5</td>
       <td>1.000000e+30</td>
       <td>0</td>
-      <td>hdslay3_t1</td>
-      <td>hdslay3</td>
+      <td>hdslay1_t1</td>
+      <td>hdslay1</td>
       <td>arr</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -3489,12 +3534,12 @@ obs.loc[hdsobs.obsnme,:]
       <td></td>
     </tr>
     <tr>
-      <th>oname:hdslay3_t1_otype:arr_i:9_j:6</th>
-      <td>oname:hdslay3_t1_otype:arr_i:9_j:6</td>
+      <th>oname:hdslay1_t1_otype:arr_i:9_j:6</th>
+      <td>oname:hdslay1_t1_otype:arr_i:9_j:6</td>
       <td>1.000000e+30</td>
       <td>0</td>
-      <td>hdslay3_t1</td>
-      <td>hdslay3</td>
+      <td>hdslay1_t1</td>
+      <td>hdslay1</td>
       <td>arr</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -3506,12 +3551,12 @@ obs.loc[hdsobs.obsnme,:]
       <td></td>
     </tr>
     <tr>
-      <th>oname:hdslay3_t1_otype:arr_i:9_j:7</th>
-      <td>oname:hdslay3_t1_otype:arr_i:9_j:7</td>
+      <th>oname:hdslay1_t1_otype:arr_i:9_j:7</th>
+      <td>oname:hdslay1_t1_otype:arr_i:9_j:7</td>
       <td>1.000000e+30</td>
       <td>0</td>
-      <td>hdslay3_t1</td>
-      <td>hdslay3</td>
+      <td>hdslay1_t1</td>
+      <td>hdslay1</td>
       <td>arr</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -3523,12 +3568,12 @@ obs.loc[hdsobs.obsnme,:]
       <td></td>
     </tr>
     <tr>
-      <th>oname:hdslay3_t1_otype:arr_i:9_j:8</th>
-      <td>oname:hdslay3_t1_otype:arr_i:9_j:8</td>
-      <td>3.450352e+01</td>
+      <th>oname:hdslay1_t1_otype:arr_i:9_j:8</th>
+      <td>oname:hdslay1_t1_otype:arr_i:9_j:8</td>
+      <td>3.520035e+01</td>
       <td>0</td>
-      <td>hdslay3_t1</td>
-      <td>hdslay3</td>
+      <td>hdslay1_t1</td>
+      <td>hdslay1</td>
       <td>arr</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -3537,15 +3582,15 @@ obs.loc[hdsobs.obsnme,:]
       <td>NaN</td>
       <td>NaN</td>
       <td>-1</td>
-      <td>pname:icstrtlayer3_inst:0_ptype:gr_pstyle:d_i:9_j:8_x:2125.00_y:7625.00_zone:1</td>
+      <td>pname:icstrtlayer1_inst:0_ptype:gr_pstyle:d_i:9_j:8_x:2125.00_y:7625.00_zone:1</td>
     </tr>
     <tr>
-      <th>oname:hdslay3_t1_otype:arr_i:9_j:9</th>
-      <td>oname:hdslay3_t1_otype:arr_i:9_j:9</td>
-      <td>3.447937e+01</td>
+      <th>oname:hdslay1_t1_otype:arr_i:9_j:9</th>
+      <td>oname:hdslay1_t1_otype:arr_i:9_j:9</td>
+      <td>3.513403e+01</td>
       <td>0</td>
-      <td>hdslay3_t1</td>
-      <td>hdslay3</td>
+      <td>hdslay1_t1</td>
+      <td>hdslay1</td>
       <td>arr</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -3554,11 +3599,11 @@ obs.loc[hdsobs.obsnme,:]
       <td>NaN</td>
       <td>NaN</td>
       <td>-1</td>
-      <td>pname:icstrtlayer3_inst:0_ptype:gr_pstyle:d_i:9_j:9_x:2375.00_y:7625.00_zone:1</td>
+      <td>pname:icstrtlayer1_inst:0_ptype:gr_pstyle:d_i:9_j:9_x:2375.00_y:7625.00_zone:1</td>
     </tr>
   </tbody>
 </table>
-<p>2400 rows × 14 columns</p>
+<p>800 rows × 14 columns</p>
 </div>
 
 
@@ -3662,18 +3707,18 @@ new_df
     </tr>
     <tr>
       <th>3</th>
-      <td>org\freyberg6.npf_k_layer2.txt</td>
-      <td>freyberg6.npf_k_layer2.txt</td>
+      <td>org\freyberg6.npf_k33_layer1.txt</td>
+      <td>freyberg6.npf_k33_layer1.txt</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>free</td>
       <td>NaN</td>
       <td>0</td>
-      <td>100</td>
-      <td>0.01</td>
+      <td>1000.0</td>
+      <td>0.0001</td>
       <td>m</td>
-      <td>mult\npfklayer2gr_inst0_grid.csv</td>
-      <td>npfklayer2gr_inst0_grid.csv.zone</td>
+      <td>mult\npfk33layer1gr_inst0_grid.csv</td>
+      <td>npfk33layer1gr_inst0_grid.csv.zone</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -3683,18 +3728,18 @@ new_df
     </tr>
     <tr>
       <th>5</th>
-      <td>org\freyberg6.npf_k_layer2.txt</td>
-      <td>freyberg6.npf_k_layer2.txt</td>
+      <td>org\freyberg6.npf_k33_layer1.txt</td>
+      <td>freyberg6.npf_k33_layer1.txt</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>free</td>
       <td>NaN</td>
       <td>0</td>
-      <td>100</td>
-      <td>0.01</td>
+      <td>1000.0</td>
+      <td>0.0001</td>
       <td>m</td>
-      <td>mult\npfklayer2cn_inst0_constant.csv</td>
-      <td>npfklayer2cn_inst0_constant.csv.zone</td>
+      <td>mult\npfk33layer1cn_inst0_constant.csv</td>
+      <td>npfk33layer1cn_inst0_constant.csv.zone</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -3704,18 +3749,18 @@ new_df
     </tr>
     <tr>
       <th>6</th>
-      <td>org\freyberg6.npf_k_layer3.txt</td>
-      <td>freyberg6.npf_k_layer3.txt</td>
+      <td>org\freyberg6.sto_sy_layer1.txt</td>
+      <td>freyberg6.sto_sy_layer1.txt</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>free</td>
       <td>NaN</td>
       <td>0</td>
-      <td>100</td>
+      <td>0.4</td>
       <td>0.01</td>
       <td>m</td>
-      <td>mult\npfklayer3gr_inst0_grid.csv</td>
-      <td>npfklayer3gr_inst0_grid.csv.zone</td>
+      <td>mult\stosylayer1gr_inst0_grid.csv</td>
+      <td>stosylayer1gr_inst0_grid.csv.zone</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -3724,28 +3769,343 @@ new_df
       <td>False</td>
     </tr>
     <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
+      <th>8</th>
+      <td>org\freyberg6.sto_sy_layer1.txt</td>
+      <td>freyberg6.sto_sy_layer1.txt</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>free</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0.4</td>
+      <td>0.01</td>
+      <td>m</td>
+      <td>mult\stosylayer1cn_inst0_constant.csv</td>
+      <td>stosylayer1cn_inst0_constant.csv.zone</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
     </tr>
     <tr>
-      <th>166</th>
+      <th>9</th>
+      <td>org\freyberg_mp.ne_layer1.txt</td>
+      <td>freyberg_mp.ne_layer1.txt</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>free</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0.4</td>
+      <td>0.01</td>
+      <td>m</td>
+      <td>mult\nelayer1gr_inst0_grid.csv</td>
+      <td>nelayer1gr_inst0_grid.csv.zone</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>org\freyberg_mp.ne_layer1.txt</td>
+      <td>freyberg_mp.ne_layer1.txt</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>free</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0.4</td>
+      <td>0.01</td>
+      <td>m</td>
+      <td>mult\nelayer1cn_inst0_constant.csv</td>
+      <td>nelayer1cn_inst0_constant.csv.zone</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>org\freyberg_mp.ne_layer2.txt</td>
+      <td>freyberg_mp.ne_layer2.txt</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>free</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0.4</td>
+      <td>0.01</td>
+      <td>m</td>
+      <td>mult\nelayer2gr_inst0_grid.csv</td>
+      <td>nelayer2gr_inst0_grid.csv.zone</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>org\freyberg_mp.ne_layer2.txt</td>
+      <td>freyberg_mp.ne_layer2.txt</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>free</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0.4</td>
+      <td>0.01</td>
+      <td>m</td>
+      <td>mult\nelayer2cn_inst0_constant.csv</td>
+      <td>nelayer2cn_inst0_constant.csv.zone</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>org\freyberg_mp.ne_layer3.txt</td>
+      <td>freyberg_mp.ne_layer3.txt</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>free</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0.4</td>
+      <td>0.01</td>
+      <td>m</td>
+      <td>mult\nelayer3gr_inst0_grid.csv</td>
+      <td>nelayer3gr_inst0_grid.csv.zone</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>org\freyberg_mp.ne_layer3.txt</td>
+      <td>freyberg_mp.ne_layer3.txt</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>free</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0.4</td>
+      <td>0.01</td>
+      <td>m</td>
+      <td>mult\nelayer3cn_inst0_constant.csv</td>
+      <td>nelayer3cn_inst0_constant.csv.zone</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>org\freyberg6.rch_recharge_1.txt</td>
+      <td>freyberg6.rch_recharge_1.txt</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>free</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0.001</td>
+      <td>0</td>
+      <td>m</td>
+      <td>mult\rchrecharge1gr_inst0_grid.csv</td>
+      <td>rchrecharge1gr_inst0_grid.csv.zone</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>68</th>
+      <td>org\freyberg6.rch_recharge_1.txt</td>
+      <td>freyberg6.rch_recharge_1.txt</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>free</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0.001</td>
+      <td>0</td>
+      <td>m</td>
+      <td>mult\rch_recharge_1tcn_inst0_constant.csv</td>
+      <td>rch_recharge_1tcn_inst0_constant.csv.zone</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>93</th>
+      <td>org\freyberg6.ghb_stress_period_data_1.txt</td>
+      <td>freyberg6.ghb_stress_period_data_1.txt</td>
+      <td>[4]</td>
+      <td>[0, 1, 2]</td>
+      <td>free</td>
+      <td></td>
+      <td>0</td>
+      <td>[100.0]</td>
+      <td>[0.01]</td>
+      <td>m</td>
+      <td>mult\ghbcondgr_inst0_grid.csv</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>94</th>
+      <td>org\freyberg6.ghb_stress_period_data_1.txt</td>
+      <td>freyberg6.ghb_stress_period_data_1.txt</td>
+      <td>[4]</td>
+      <td>[0, 1, 2]</td>
+      <td>free</td>
+      <td></td>
+      <td>0</td>
+      <td>[100.0]</td>
+      <td>[0.01]</td>
+      <td>m</td>
+      <td>mult\ghbcondcn_inst0_constant.csv</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>95</th>
+      <td>org\freyberg6.ghb_stress_period_data_1.txt</td>
+      <td>freyberg6.ghb_stress_period_data_1.txt</td>
+      <td>[3]</td>
+      <td>[0, 1, 2]</td>
+      <td>free</td>
+      <td></td>
+      <td>0</td>
+      <td>[42.0]</td>
+      <td>[32.5]</td>
+      <td>a</td>
+      <td>mult\ghbheadgr_inst0_grid.csv</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>96</th>
+      <td>org\freyberg6.ghb_stress_period_data_1.txt</td>
+      <td>freyberg6.ghb_stress_period_data_1.txt</td>
+      <td>[3]</td>
+      <td>[0, 1, 2]</td>
+      <td>free</td>
+      <td></td>
+      <td>0</td>
+      <td>[42.0]</td>
+      <td>[32.5]</td>
+      <td>a</td>
+      <td>mult\ghbheadcn_inst0_constant.csv</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>97</th>
+      <td>org\freyberg6.wel_stress_period_data_1.txt</td>
+      <td>freyberg6.wel_stress_period_data_1.txt</td>
+      <td>[3]</td>
+      <td>[0, 1, 2]</td>
+      <td>free</td>
+      <td></td>
+      <td>0</td>
+      <td>[1e+30]</td>
+      <td>[-1e+30]</td>
+      <td>m</td>
+      <td>mult\welcst_inst0_constant.csv</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>98</th>
+      <td>org\freyberg6.wel_stress_period_data_1.txt</td>
+      <td>freyberg6.wel_stress_period_data_1.txt</td>
+      <td>[3]</td>
+      <td>[0, 1, 2]</td>
+      <td>free</td>
+      <td></td>
+      <td>0</td>
+      <td>[1e+30]</td>
+      <td>[-1e+30]</td>
+      <td>m</td>
+      <td>mult\welgrd_inst0_grid.csv</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>147</th>
+      <td>org\freyberg6.sfr_packagedata.txt</td>
+      <td>freyberg6.sfr_packagedata.txt</td>
+      <td>[9]</td>
+      <td>[0, 2, 3]</td>
+      <td>free</td>
+      <td></td>
+      <td>0</td>
+      <td>[100.0]</td>
+      <td>[0.001]</td>
+      <td>m</td>
+      <td>mult\sfrcondgr_inst0_grid.csv</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>148</th>
       <td>org\freyberg6.sfr_packagedata.txt</td>
       <td>freyberg6.sfr_packagedata.txt</td>
       <td>[9]</td>
@@ -3766,7 +4126,7 @@ new_df
       <td>False</td>
     </tr>
     <tr>
-      <th>167</th>
+      <th>149</th>
       <td>org\freyberg6.sfr_perioddata_1.txt</td>
       <td>freyberg6.sfr_perioddata_1.txt</td>
       <td>[2]</td>
@@ -3787,7 +4147,7 @@ new_df
       <td>False</td>
     </tr>
     <tr>
-      <th>192</th>
+      <th>150</th>
       <td>org\freyberg6.ic_strt_layer1.txt</td>
       <td>freyberg6.ic_strt_layer1.txt</td>
       <td>NaN</td>
@@ -3807,51 +4167,8 @@ new_df
       <td>NaN</td>
       <td>False</td>
     </tr>
-    <tr>
-      <th>193</th>
-      <td>org\freyberg6.ic_strt_layer2.txt</td>
-      <td>freyberg6.ic_strt_layer2.txt</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>free</td>
-      <td>NaN</td>
-      <td>0</td>
-      <td>1e+30</td>
-      <td>-1e+30</td>
-      <td>d</td>
-      <td>NaN</td>
-      <td>freyberg6.ic_strt_layer2.txt.zone</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>194</th>
-      <td>org\freyberg6.ic_strt_layer3.txt</td>
-      <td>freyberg6.ic_strt_layer3.txt</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>free</td>
-      <td>NaN</td>
-      <td>0</td>
-      <td>1e+30</td>
-      <td>-1e+30</td>
-      <td>d</td>
-      <td>NaN</td>
-      <td>freyberg6.ic_strt_layer3.txt.zone</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-    </tr>
   </tbody>
 </table>
-<p>62 rows × 18 columns</p>
 </div>
 
 
@@ -3914,7 +4231,7 @@ df.loc[sfr.index]
   </thead>
   <tbody>
     <tr>
-      <th>167</th>
+      <th>149</th>
       <td>org\freyberg6.sfr_perioddata_1.txt</td>
       <td>freyberg6.sfr_perioddata_1.txt</td>
       <td>[2]</td>
@@ -3934,534 +4251,6 @@ df.loc[sfr.index]
       <td>NaN</td>
       <td>False</td>
       <td>0</td>
-    </tr>
-    <tr>
-      <th>168</th>
-      <td>org\freyberg6.sfr_perioddata_2.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst1_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>169</th>
-      <td>org\freyberg6.sfr_perioddata_3.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst2_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>170</th>
-      <td>org\freyberg6.sfr_perioddata_4.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst3_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>171</th>
-      <td>org\freyberg6.sfr_perioddata_5.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst4_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>172</th>
-      <td>org\freyberg6.sfr_perioddata_6.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst5_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>173</th>
-      <td>org\freyberg6.sfr_perioddata_7.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst6_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>174</th>
-      <td>org\freyberg6.sfr_perioddata_8.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst7_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>7</td>
-    </tr>
-    <tr>
-      <th>175</th>
-      <td>org\freyberg6.sfr_perioddata_9.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst8_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>8</td>
-    </tr>
-    <tr>
-      <th>176</th>
-      <td>org\freyberg6.sfr_perioddata_10.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst9_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>9</td>
-    </tr>
-    <tr>
-      <th>177</th>
-      <td>org\freyberg6.sfr_perioddata_11.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst10_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>10</td>
-    </tr>
-    <tr>
-      <th>178</th>
-      <td>org\freyberg6.sfr_perioddata_12.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst11_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>11</td>
-    </tr>
-    <tr>
-      <th>179</th>
-      <td>org\freyberg6.sfr_perioddata_13.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst12_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>12</td>
-    </tr>
-    <tr>
-      <th>180</th>
-      <td>org\freyberg6.sfr_perioddata_14.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst13_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>13</td>
-    </tr>
-    <tr>
-      <th>181</th>
-      <td>org\freyberg6.sfr_perioddata_15.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst14_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>14</td>
-    </tr>
-    <tr>
-      <th>182</th>
-      <td>org\freyberg6.sfr_perioddata_16.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst15_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>15</td>
-    </tr>
-    <tr>
-      <th>183</th>
-      <td>org\freyberg6.sfr_perioddata_17.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst16_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>16</td>
-    </tr>
-    <tr>
-      <th>184</th>
-      <td>org\freyberg6.sfr_perioddata_18.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst17_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>17</td>
-    </tr>
-    <tr>
-      <th>185</th>
-      <td>org\freyberg6.sfr_perioddata_19.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst18_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>18</td>
-    </tr>
-    <tr>
-      <th>186</th>
-      <td>org\freyberg6.sfr_perioddata_20.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst19_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>19</td>
-    </tr>
-    <tr>
-      <th>187</th>
-      <td>org\freyberg6.sfr_perioddata_21.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst20_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>20</td>
-    </tr>
-    <tr>
-      <th>188</th>
-      <td>org\freyberg6.sfr_perioddata_22.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst21_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>21</td>
-    </tr>
-    <tr>
-      <th>189</th>
-      <td>org\freyberg6.sfr_perioddata_23.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst22_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>22</td>
-    </tr>
-    <tr>
-      <th>190</th>
-      <td>org\freyberg6.sfr_perioddata_24.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst23_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>23</td>
-    </tr>
-    <tr>
-      <th>191</th>
-      <td>org\freyberg6.sfr_perioddata_25.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>[2]</td>
-      <td>[0]</td>
-      <td>free</td>
-      <td></td>
-      <td>0</td>
-      <td>[1e+30]</td>
-      <td>[-1e+30]</td>
-      <td>m</td>
-      <td>mult\sfrgr_inst24_grid.csv</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>False</td>
-      <td>24</td>
     </tr>
   </tbody>
 </table>
@@ -4532,7 +4321,7 @@ df.loc[wel.index]
   </thead>
   <tbody>
     <tr>
-      <th>115</th>
+      <th>97</th>
       <td>org\freyberg6.wel_stress_period_data_1.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4554,7 +4343,7 @@ df.loc[wel.index]
       <td>0</td>
     </tr>
     <tr>
-      <th>116</th>
+      <th>98</th>
       <td>org\freyberg6.wel_stress_period_data_1.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4576,7 +4365,7 @@ df.loc[wel.index]
       <td>0</td>
     </tr>
     <tr>
-      <th>117</th>
+      <th>99</th>
       <td>org\freyberg6.wel_stress_period_data_2.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4598,7 +4387,7 @@ df.loc[wel.index]
       <td>1</td>
     </tr>
     <tr>
-      <th>118</th>
+      <th>100</th>
       <td>org\freyberg6.wel_stress_period_data_2.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4620,7 +4409,7 @@ df.loc[wel.index]
       <td>1</td>
     </tr>
     <tr>
-      <th>119</th>
+      <th>101</th>
       <td>org\freyberg6.wel_stress_period_data_3.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4642,7 +4431,7 @@ df.loc[wel.index]
       <td>2</td>
     </tr>
     <tr>
-      <th>120</th>
+      <th>102</th>
       <td>org\freyberg6.wel_stress_period_data_3.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4664,7 +4453,7 @@ df.loc[wel.index]
       <td>2</td>
     </tr>
     <tr>
-      <th>121</th>
+      <th>103</th>
       <td>org\freyberg6.wel_stress_period_data_4.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4686,7 +4475,7 @@ df.loc[wel.index]
       <td>3</td>
     </tr>
     <tr>
-      <th>122</th>
+      <th>104</th>
       <td>org\freyberg6.wel_stress_period_data_4.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4708,7 +4497,7 @@ df.loc[wel.index]
       <td>3</td>
     </tr>
     <tr>
-      <th>123</th>
+      <th>105</th>
       <td>org\freyberg6.wel_stress_period_data_5.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4730,7 +4519,7 @@ df.loc[wel.index]
       <td>4</td>
     </tr>
     <tr>
-      <th>124</th>
+      <th>106</th>
       <td>org\freyberg6.wel_stress_period_data_5.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4752,7 +4541,7 @@ df.loc[wel.index]
       <td>4</td>
     </tr>
     <tr>
-      <th>125</th>
+      <th>107</th>
       <td>org\freyberg6.wel_stress_period_data_6.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4774,7 +4563,7 @@ df.loc[wel.index]
       <td>5</td>
     </tr>
     <tr>
-      <th>126</th>
+      <th>108</th>
       <td>org\freyberg6.wel_stress_period_data_6.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4796,7 +4585,7 @@ df.loc[wel.index]
       <td>5</td>
     </tr>
     <tr>
-      <th>127</th>
+      <th>109</th>
       <td>org\freyberg6.wel_stress_period_data_7.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4818,7 +4607,7 @@ df.loc[wel.index]
       <td>6</td>
     </tr>
     <tr>
-      <th>128</th>
+      <th>110</th>
       <td>org\freyberg6.wel_stress_period_data_7.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4840,7 +4629,7 @@ df.loc[wel.index]
       <td>6</td>
     </tr>
     <tr>
-      <th>129</th>
+      <th>111</th>
       <td>org\freyberg6.wel_stress_period_data_8.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4862,7 +4651,7 @@ df.loc[wel.index]
       <td>7</td>
     </tr>
     <tr>
-      <th>130</th>
+      <th>112</th>
       <td>org\freyberg6.wel_stress_period_data_8.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4884,7 +4673,7 @@ df.loc[wel.index]
       <td>7</td>
     </tr>
     <tr>
-      <th>131</th>
+      <th>113</th>
       <td>org\freyberg6.wel_stress_period_data_9.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4906,7 +4695,7 @@ df.loc[wel.index]
       <td>8</td>
     </tr>
     <tr>
-      <th>132</th>
+      <th>114</th>
       <td>org\freyberg6.wel_stress_period_data_9.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4928,7 +4717,7 @@ df.loc[wel.index]
       <td>8</td>
     </tr>
     <tr>
-      <th>133</th>
+      <th>115</th>
       <td>org\freyberg6.wel_stress_period_data_10.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4950,7 +4739,7 @@ df.loc[wel.index]
       <td>9</td>
     </tr>
     <tr>
-      <th>134</th>
+      <th>116</th>
       <td>org\freyberg6.wel_stress_period_data_10.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4972,7 +4761,7 @@ df.loc[wel.index]
       <td>9</td>
     </tr>
     <tr>
-      <th>135</th>
+      <th>117</th>
       <td>org\freyberg6.wel_stress_period_data_11.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -4994,7 +4783,7 @@ df.loc[wel.index]
       <td>10</td>
     </tr>
     <tr>
-      <th>136</th>
+      <th>118</th>
       <td>org\freyberg6.wel_stress_period_data_11.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5016,7 +4805,7 @@ df.loc[wel.index]
       <td>10</td>
     </tr>
     <tr>
-      <th>137</th>
+      <th>119</th>
       <td>org\freyberg6.wel_stress_period_data_12.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5038,7 +4827,7 @@ df.loc[wel.index]
       <td>11</td>
     </tr>
     <tr>
-      <th>138</th>
+      <th>120</th>
       <td>org\freyberg6.wel_stress_period_data_12.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5060,7 +4849,7 @@ df.loc[wel.index]
       <td>11</td>
     </tr>
     <tr>
-      <th>139</th>
+      <th>121</th>
       <td>org\freyberg6.wel_stress_period_data_13.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5082,7 +4871,7 @@ df.loc[wel.index]
       <td>12</td>
     </tr>
     <tr>
-      <th>140</th>
+      <th>122</th>
       <td>org\freyberg6.wel_stress_period_data_13.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5104,7 +4893,7 @@ df.loc[wel.index]
       <td>12</td>
     </tr>
     <tr>
-      <th>141</th>
+      <th>123</th>
       <td>org\freyberg6.wel_stress_period_data_14.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5126,7 +4915,7 @@ df.loc[wel.index]
       <td>13</td>
     </tr>
     <tr>
-      <th>142</th>
+      <th>124</th>
       <td>org\freyberg6.wel_stress_period_data_14.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5148,7 +4937,7 @@ df.loc[wel.index]
       <td>13</td>
     </tr>
     <tr>
-      <th>143</th>
+      <th>125</th>
       <td>org\freyberg6.wel_stress_period_data_15.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5170,7 +4959,7 @@ df.loc[wel.index]
       <td>14</td>
     </tr>
     <tr>
-      <th>144</th>
+      <th>126</th>
       <td>org\freyberg6.wel_stress_period_data_15.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5192,7 +4981,7 @@ df.loc[wel.index]
       <td>14</td>
     </tr>
     <tr>
-      <th>145</th>
+      <th>127</th>
       <td>org\freyberg6.wel_stress_period_data_16.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5214,7 +5003,7 @@ df.loc[wel.index]
       <td>15</td>
     </tr>
     <tr>
-      <th>146</th>
+      <th>128</th>
       <td>org\freyberg6.wel_stress_period_data_16.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5236,7 +5025,7 @@ df.loc[wel.index]
       <td>15</td>
     </tr>
     <tr>
-      <th>147</th>
+      <th>129</th>
       <td>org\freyberg6.wel_stress_period_data_17.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5258,7 +5047,7 @@ df.loc[wel.index]
       <td>16</td>
     </tr>
     <tr>
-      <th>148</th>
+      <th>130</th>
       <td>org\freyberg6.wel_stress_period_data_17.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5280,7 +5069,7 @@ df.loc[wel.index]
       <td>16</td>
     </tr>
     <tr>
-      <th>149</th>
+      <th>131</th>
       <td>org\freyberg6.wel_stress_period_data_18.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5302,7 +5091,7 @@ df.loc[wel.index]
       <td>17</td>
     </tr>
     <tr>
-      <th>150</th>
+      <th>132</th>
       <td>org\freyberg6.wel_stress_period_data_18.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5324,7 +5113,7 @@ df.loc[wel.index]
       <td>17</td>
     </tr>
     <tr>
-      <th>151</th>
+      <th>133</th>
       <td>org\freyberg6.wel_stress_period_data_19.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5346,7 +5135,7 @@ df.loc[wel.index]
       <td>18</td>
     </tr>
     <tr>
-      <th>152</th>
+      <th>134</th>
       <td>org\freyberg6.wel_stress_period_data_19.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5368,7 +5157,7 @@ df.loc[wel.index]
       <td>18</td>
     </tr>
     <tr>
-      <th>153</th>
+      <th>135</th>
       <td>org\freyberg6.wel_stress_period_data_20.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5390,7 +5179,7 @@ df.loc[wel.index]
       <td>19</td>
     </tr>
     <tr>
-      <th>154</th>
+      <th>136</th>
       <td>org\freyberg6.wel_stress_period_data_20.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5412,7 +5201,7 @@ df.loc[wel.index]
       <td>19</td>
     </tr>
     <tr>
-      <th>155</th>
+      <th>137</th>
       <td>org\freyberg6.wel_stress_period_data_21.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5434,7 +5223,7 @@ df.loc[wel.index]
       <td>20</td>
     </tr>
     <tr>
-      <th>156</th>
+      <th>138</th>
       <td>org\freyberg6.wel_stress_period_data_21.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5456,7 +5245,7 @@ df.loc[wel.index]
       <td>20</td>
     </tr>
     <tr>
-      <th>157</th>
+      <th>139</th>
       <td>org\freyberg6.wel_stress_period_data_22.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5478,7 +5267,7 @@ df.loc[wel.index]
       <td>21</td>
     </tr>
     <tr>
-      <th>158</th>
+      <th>140</th>
       <td>org\freyberg6.wel_stress_period_data_22.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5500,7 +5289,7 @@ df.loc[wel.index]
       <td>21</td>
     </tr>
     <tr>
-      <th>159</th>
+      <th>141</th>
       <td>org\freyberg6.wel_stress_period_data_23.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5522,7 +5311,7 @@ df.loc[wel.index]
       <td>22</td>
     </tr>
     <tr>
-      <th>160</th>
+      <th>142</th>
       <td>org\freyberg6.wel_stress_period_data_23.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5544,7 +5333,7 @@ df.loc[wel.index]
       <td>22</td>
     </tr>
     <tr>
-      <th>161</th>
+      <th>143</th>
       <td>org\freyberg6.wel_stress_period_data_24.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5566,7 +5355,7 @@ df.loc[wel.index]
       <td>23</td>
     </tr>
     <tr>
-      <th>162</th>
+      <th>144</th>
       <td>org\freyberg6.wel_stress_period_data_24.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5588,7 +5377,7 @@ df.loc[wel.index]
       <td>23</td>
     </tr>
     <tr>
-      <th>163</th>
+      <th>145</th>
       <td>org\freyberg6.wel_stress_period_data_25.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5610,7 +5399,7 @@ df.loc[wel.index]
       <td>24</td>
     </tr>
     <tr>
-      <th>164</th>
+      <th>146</th>
       <td>org\freyberg6.wel_stress_period_data_25.txt</td>
       <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>[3]</td>
@@ -5670,31 +5459,31 @@ df.loc[df.cycle!=-1,["org_file","model_file","cycle"]]
   </thead>
   <tbody>
     <tr>
-      <th>36</th>
+      <th>18</th>
       <td>org\freyberg6.rch_recharge_1.txt</td>
       <td>freyberg6.rch_recharge_1.txt</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>37</th>
+      <th>19</th>
       <td>org\freyberg6.rch_recharge_1.txt</td>
       <td>freyberg6.rch_recharge_1.txt</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>38</th>
+      <th>20</th>
       <td>org\freyberg6.rch_recharge_2.txt</td>
       <td>freyberg6.rch_recharge_1.txt</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>39</th>
+      <th>21</th>
       <td>org\freyberg6.rch_recharge_2.txt</td>
       <td>freyberg6.rch_recharge_1.txt</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>40</th>
+      <th>22</th>
       <td>org\freyberg6.rch_recharge_3.txt</td>
       <td>freyberg6.rch_recharge_1.txt</td>
       <td>2</td>
@@ -5706,38 +5495,38 @@ df.loc[df.cycle!=-1,["org_file","model_file","cycle"]]
       <td>...</td>
     </tr>
     <tr>
-      <th>187</th>
-      <td>org\freyberg6.sfr_perioddata_21.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>20</td>
-    </tr>
-    <tr>
-      <th>188</th>
-      <td>org\freyberg6.sfr_perioddata_22.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>21</td>
-    </tr>
-    <tr>
-      <th>189</th>
-      <td>org\freyberg6.sfr_perioddata_23.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
-      <td>22</td>
-    </tr>
-    <tr>
-      <th>190</th>
-      <td>org\freyberg6.sfr_perioddata_24.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
+      <th>143</th>
+      <td>org\freyberg6.wel_stress_period_data_24.txt</td>
+      <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>23</td>
     </tr>
     <tr>
-      <th>191</th>
-      <td>org\freyberg6.sfr_perioddata_25.txt</td>
-      <td>freyberg6.sfr_perioddata_1.txt</td>
+      <th>144</th>
+      <td>org\freyberg6.wel_stress_period_data_24.txt</td>
+      <td>freyberg6.wel_stress_period_data_1.txt</td>
+      <td>23</td>
+    </tr>
+    <tr>
+      <th>145</th>
+      <td>org\freyberg6.wel_stress_period_data_25.txt</td>
+      <td>freyberg6.wel_stress_period_data_1.txt</td>
       <td>24</td>
+    </tr>
+    <tr>
+      <th>146</th>
+      <td>org\freyberg6.wel_stress_period_data_25.txt</td>
+      <td>freyberg6.wel_stress_period_data_1.txt</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>149</th>
+      <td>org\freyberg6.sfr_perioddata_1.txt</td>
+      <td>freyberg6.sfr_perioddata_1.txt</td>
+      <td>0</td>
     </tr>
   </tbody>
 </table>
-<p>150 rows × 3 columns</p>
+<p>126 rows × 3 columns</p>
 </div>
 
 
@@ -5779,10 +5568,186 @@ pst.write(os.path.join(t_d,"freyberg_mf6.pst"),version=2)
 pyemu.os_utils.run("pestpp-da freyberg_mf6.pst",cwd=t_d)
 ```
 
-    noptmax:0, npar_adj:29653, nnz_obs:5
+    noptmax:0, npar_adj:23786, nnz_obs:3
     
 
 Wow, that takes a lot longer...this is the price of sequential estimation...
+
+
+```python
+files = [f for f in os.listdir(t_d) if ".base.obs.csv" in f]
+files.sort()
+print(files)
+pr_oes = {int(f.split(".")[1]):pd.read_csv(os.path.join(t_d,f),index_col=0) for f in files[:-1]}
+
+```
+
+    ['freyberg_mf6.0.base.obs.csv', 'freyberg_mf6.1.base.obs.csv', 'freyberg_mf6.10.base.obs.csv', 'freyberg_mf6.11.base.obs.csv', 'freyberg_mf6.12.base.obs.csv', 'freyberg_mf6.13.base.obs.csv', 'freyberg_mf6.14.base.obs.csv', 'freyberg_mf6.15.base.obs.csv', 'freyberg_mf6.16.base.obs.csv', 'freyberg_mf6.17.base.obs.csv', 'freyberg_mf6.18.base.obs.csv', 'freyberg_mf6.19.base.obs.csv', 'freyberg_mf6.2.base.obs.csv', 'freyberg_mf6.20.base.obs.csv', 'freyberg_mf6.21.base.obs.csv', 'freyberg_mf6.22.base.obs.csv', 'freyberg_mf6.23.base.obs.csv', 'freyberg_mf6.24.base.obs.csv', 'freyberg_mf6.3.base.obs.csv', 'freyberg_mf6.4.base.obs.csv', 'freyberg_mf6.5.base.obs.csv', 'freyberg_mf6.6.base.obs.csv', 'freyberg_mf6.7.base.obs.csv', 'freyberg_mf6.8.base.obs.csv', 'freyberg_mf6.9.base.obs.csv', 'freyberg_mf6.base.obs.csv']
+    
+
+
+```python
+otab = pd.read_csv(os.path.join(t_d,"obs_cycle_table.csv"),index_col=0)
+wtab = pd.read_csv(os.path.join(t_d,"weight_cycle_table.csv"),index_col=0)
+ad_df = pd.read_csv(os.path.join(t_d,"alldata.csv"),index_col=0)
+```
+
+
+```python
+obs = pst.observation_data
+nzobs = obs.loc[pst.nnz_obs_names,:]
+nzobs
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>obsnme</th>
+      <th>obsval</th>
+      <th>weight</th>
+      <th>obgnme</th>
+      <th>oname</th>
+      <th>otype</th>
+      <th>usecol</th>
+      <th>time</th>
+      <th>i</th>
+      <th>j</th>
+      <th>totim</th>
+      <th>observed</th>
+      <th>cycle</th>
+      <th>state_par_link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>oname:hdslay1_t1_otype:arr_i:26_j:6</th>
+      <td>oname:hdslay1_t1_otype:arr_i:26_j:6</td>
+      <td>35.06628</td>
+      <td>1</td>
+      <td>hdslay1_t1</td>
+      <td>hdslay1</td>
+      <td>arr</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>26</td>
+      <td>6</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>-1</td>
+      <td>pname:icstrtlayer1_inst:0_ptype:gr_pstyle:d_i:26_j:6_x:1625.00_y:3375.00_zone:1</td>
+    </tr>
+    <tr>
+      <th>oname:hdslay1_t1_otype:arr_i:3_j:8</th>
+      <td>oname:hdslay1_t1_otype:arr_i:3_j:8</td>
+      <td>35.71549</td>
+      <td>1</td>
+      <td>hdslay1_t1</td>
+      <td>hdslay1</td>
+      <td>arr</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>8</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>-1</td>
+      <td>pname:icstrtlayer1_inst:0_ptype:gr_pstyle:d_i:3_j:8_x:2125.00_y:9125.00_zone:1</td>
+    </tr>
+    <tr>
+      <th>oname:sfr_otype:lst_usecol:gage-1</th>
+      <td>oname:sfr_otype:lst_usecol:gage-1</td>
+      <td>4065.54321</td>
+      <td>1</td>
+      <td>obgnme</td>
+      <td>sfr</td>
+      <td>lst</td>
+      <td>gage-1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>-1</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+
+```
+
+
+```python
+for o in pst.nnz_obs_names:
+    fig,axes = plt.subplots(1,1,figsize=(10,3))
+    axes=[axes]
+    for kper,oe in pr_oes.items():
+        axes[0].scatter([kper]*oe.shape[0],oe.loc[:,o].values,marker=".",c="0.5",alpha=0.5)
+
+    ovals = otab.loc[o,:].values
+    wvals = wtab.loc[o,:].values
+    ylim = axes[0].get_ylim()
+
+ 
+    xlim = axes[0].get_xlim()
+
+    ovals[wvals==0] = np.nan
+    axes[0].scatter(otab.columns.values,ovals,marker='^',c='r')
+    oval_lim = (np.nanmin(ovals),np.nanmax(ovals))
+    d = [ylim, (np.nanmin(ovals),np.nanmax(ovals))]
+    ylim =  min(d, key = lambda t: t[1])[0], max(d, key = lambda t: t[1])[-1]
+    axes[0].set_ylim(ylim)
+    axes[0].set_xlim(xlim)
+    axes[0].set_title("A) prior only: "+o,loc="left")
+    axes[0].set_xlabel("kper")
+
+    
+    avals = ad_df.loc[:,o]
+    axes[0].scatter(ad_df.index.values,avals,marker='.',c='r')
+
+    plt.tight_layout()
+```
+
+
+    
+![png](freyberg_da_prep_files/freyberg_da_prep_95_0.png)
+    
+
+
+
+    
+![png](freyberg_da_prep_files/freyberg_da_prep_95_1.png)
+    
+
+
+
+    
+![png](freyberg_da_prep_files/freyberg_da_prep_95_2.png)
+    
+
 
 
 ```python
