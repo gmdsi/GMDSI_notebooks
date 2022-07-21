@@ -21,7 +21,6 @@ def prep_forecasts(pst):
         
     ess_obs_data = {}
     for site in pred_data.index.unique().values:
-        #print(site)
         site_obs_data = pred_data.loc[site,:].copy()
         if isinstance(site_obs_data, pd.Series):
             site_obs_data.loc["site"] = site_obs_data.index.values
@@ -32,8 +31,6 @@ def prep_forecasts(pst):
             sm_site_obs_data = sm.reindex(model_times,method="nearest")
         #ess_obs_data.append(pd.DataFrame9sm_site_obs_data)
         ess_obs_data[site] = sm_site_obs_data
-        
-
     obs_data = pd.DataFrame(ess_obs_data)
 
     obs = pst.observation_data
