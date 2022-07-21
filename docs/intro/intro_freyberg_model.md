@@ -27,7 +27,7 @@ The forecast of interest was the head if the river channel was lined (e.g. condu
 
 There are interesting insights in the paper, but perhaps the most interesting is illustrated by the figure below: just because a model is good at fitting measurement data, does not mean it is good at making a prediction!
 
-<img src=".\intro_to_freyberg_model_files\cal_pred.png" style="float: center; width: 75%;  margin-bottom: 0.5em;">
+<img src=".\intro_freyberg_model_files\cal_pred.png" style="float: center; width: 75%;  margin-bottom: 0.5em;">
 
 
 You can read the original paper here:
@@ -41,7 +41,7 @@ And more recently, the same exercise was revisited in a contemporary context:
 
 ## The Modified-Freyberg Model
 
-Using a synthetic model allows us to know the "truth". It also allows us to design it to be fast-running. Both usefull characteristics for a tutorial model. For the current set of tutorials we will be using a variant of the Freyberg model. This is similar to the model described in the PEST++ documentation:
+Using a synthetic model allows us to know the "truth". It also allows us to design it to be fast-running. Both usefull characteristics for a tutorial model. For the current set of tutorials we will be using a variant of the Freyberg model. It is also similar to the model described in the PEST++ documentation:
 > White, J.T., Hunt, R.J., Fienen, M.N., and Doherty, J.E., 2020, Approaches to Highly Parameterized > Inversion: PEST++ Version 5, a Software Suite for Parameter Estimation, Uncertainty Analysis, Management > Optimization and Sensitivity Analysis: U.S. Geological Survey Techniques and Methods 7C26, 52 p., https://> doi.org/10.3133/tm7C26.
 
 Some of the parameterisation and selected observation data are different. We also include additional particle tracking simulated using MODPATH7. 
@@ -66,7 +66,7 @@ import flopy
 
 ```python
 # folder containing original model files
-org_ws = os.path.join('..', '..', 'models', 'freyberg_mf6')
+org_ws = os.path.join('..', '..', 'models', 'monthly_model_files_1lyr_newstress')
 
 # set a new workspace folder to avoid breaking things by mistake
 sim_ws = os.path.join('freyberg_mf6')
@@ -137,15 +137,10 @@ mm.plot_inactive()
 # you can plot BC cells using the plot_bc() 
 mm.plot_bc('ghb')
 mm.plot_bc('sfr')
-
-# Plot wells in layer 3
-mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=2)
 mm.plot_bc('wel');
 ```
 
-Take a quick look at everyone's favourite parameter, hydraulic conductivity (K). Values in the plot below show K in layer 1. If you check each layer (by changing the mflay value), you will see different initial values in each. 
-
-Layer 3 is the most permeable. Layer 2 has low permeabilities. Layer 1 is somewhere in between. 
+Take a quick look at everyone's favourite parameter, hydraulic conductivity (K):
 
 
 ```python
@@ -166,7 +161,7 @@ Surface topography and the bottom elevation are not uniform (see plots below). T
 gwf.dis.top.plot(colorbar=True, masked_values=[-1049.99])
 
 # plot bottom of bottom layer
-gwf.dis.botm.plot(colorbar=True, mflay=2);
+gwf.dis.botm.plot(colorbar=True);
 ```
 
 ### Time Discretisation
@@ -224,11 +219,9 @@ Simulated groundwater levels are recorded in the "heads.csv" file. Several monit
 
 The sites for which "measured data" are available are named:
  - TRGW-0-26-6
- - TRGW-2-26-6
  - TRGW-0-3-8
- - TRGW-2-3-8
 
-The site naming convention is: "TRGW-layer-row-column". Thus, the four sites listed above pertain to two observation locations, with measurments from both the top and bottom layers. 
+The site naming convention is: "TRGW-layer-row-column".
 
 
 ```python
@@ -236,18 +229,18 @@ hds_obs = pd.read_csv(os.path.join(sim_ws, 'heads.csv'))
 hds_obs.head()
 ```
 
-Let's make a quick plot of time series of simulated groundwater levels from both layers at a single location:
+Let's make a quick plot of time series of simulated groundwater levels at both measured sites:
 
 
 ```python
-for site in ['TRGW-0-26-6','TRGW-2-26-6']:
+for site in ['TRGW-0-26-6','TRGW-0-3-8']:
     fig,ax=plt.subplots(1,1)
     obs_data.plot(y=site, ax=ax, label='measured')
     hds_obs.plot(x='time', y=site, ax=ax, label='modelled')
     ax.set_title(site);
 ```
 
-Whilst we are at it, lets just make a plot of the spatial distribution of simulated heads in the upper layer. (Heads in the other layers are very similar.)
+Whilst we are at it, lets just make a plot of the spatial distribution of simulated heads:
 
 
 ```python

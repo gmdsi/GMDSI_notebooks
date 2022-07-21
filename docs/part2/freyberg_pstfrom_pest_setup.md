@@ -28,7 +28,7 @@ During this tutorial we are going to construct a PEST dataset. Amongst other thi
 First, let's get our model files and sort out some admin.
 
 
-### 1. Admin & Organize Folders
+### Admin & Organize Folders
 First some admin. Load the dependencies and organize model folders. 
 
 
@@ -43,16 +43,15 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt;
-
+# for this course we use locally stored version of pyemu and flopy to avoid version conflicts
 sys.path.insert(0,os.path.join("..", "..", "dependencies"))
 import pyemu
 import flopy
 assert "dependencies" in flopy.__file__
 assert "dependencies" in pyemu.__file__
+# herebedragons.py contains a series of utility functions that help us manage the tutorial repository
 sys.path.insert(0,"..")
 import herebedragons as hbd
-
-
 ```
 
 We will be calling a few external programs throughout this tutorial. Namely, MODFLOW 6 and PESTPP-GLM. For the purposes of the tutorial(s), we have included executables in the tutorial repository. They are in the `bin` folder, organized by operating system and will programmatically copied into the working dirs as needed. 
@@ -247,7 +246,7 @@ pyemu.os_utils.run(r'mp7 freyberg_mp.mpsim', cwd=tmp_d)
       loading ims package freyberg6...
     
 
-### 2. Spatial Reference
+### Spatial Reference
 Now we can instantiate a `SpatialReference`. This will later be passed to `PstFrom` to assist with spatially locating parameters (e.g. pilot points and/or cell-by-cell parameters).  You can also use the flopy `modelgrid` class instance that is attached to the simulation, but `SpatialReference` is cleaner and faster for structured grids...
 
 
@@ -268,7 +267,7 @@ sr
 
 
 
-### 3. Instantiate PstFrom
+### Instantiate PstFrom
 
 Now we can start to construct the PEST(++) interface by instantiating a `PstFrom` class instance. There are a few things that we need to specify up front:
 
@@ -276,9 +275,7 @@ Now we can start to construct the PEST(++) interface by instantiating a `PstFrom
  - **template folder**: this is a folder in which the PEST dataset will be constructed - this folder will hold the model files plus all of the files needed to run PEST(++). This folder/dataset will form the template for subsequent deployment of PEST(++).
  - **longnames**: for backwards compatibility with PEST and PEST_HP (i.e. non-PEST++ versions), which have upper limits to parameter/obsveration names (PEST++ does not). Setting this value to False is only recommended if required. 
  - Whether the model is `zero based` or not.
- - (optional) the **spatial reference**, as previously discussed. This is only requried if using `pyEMU` to define parameter spatial correlation. Alternatively, you can define these yourself or use utilities available in the PEST-suite. 
-
-
+ - (optional) the **spatial reference**, as previously discussed. This is only required if using `pyEMU` to define parameter spatial correlation. Alternatively, you can define these yourself or use utilities available in the PEST-suite. 
 
 
 ```python
@@ -429,13 +426,13 @@ os.listdir(template_ws)
 
 So we see that when `PstFrom` is instantiated, it starts by copying the `original_d` to the `new_d`.  sweet as!
 
-### 4. Observations
+### Observations
 
 We now have a `PstFrom` instance assigned to the variable `pf`. For now it is only an empty container to which we can start adding "observations", "parameters" and other bits and bobs.
 
 Lets start with observations because they are easier. `MODFLOW6` makes life even easier by recording observations in nicely organized .csv files. Isn't that a peach!
 
-#### 4.1 Freyberg Recap
+#### Freyberg Recap
 As you may recall from the "*intro to Freyberg*" tutorial, the model is configured to record time series of head at observation wells, and flux at three locations along the river. These are recorded in external .csv files named `heads.csv` and `sfr.csv`, respectively. You should be able to see these files in the model folder.
 
 Recall that each .csv houses records of observation time-series. Outputs are recorded for each simulated stress-period. The model starts with a single steady-state stress-period, followed by 24 monthly transient stress-periods. The steady-state and first 12 transient stress-periods simulate the history-matching period. The last 12 transient stress periods simulate future conditions (i.e. the prediction period).
@@ -598,13 +595,13 @@ df.head()
 
 
 
-As you can see, there are many columns, one for each observation site. Conveniently, * *cough* * they are named according to the cell layer, row and column. Note that at every site, there is an observation in both the top and bottom layer (0_ and 2_). We will make use of this later to create "secondary observations" of head differences between layers...but let's not get distracted.
+As you can see, there are many columns, one for each observation site. Conveniently, * *cough* * they are named according to the cell layer, row and column. 
 
 The values in the *.csv* file were generated by running the model. (***IMPORTANT!***) However, `PstFrom` assumes that values in this file are the *target* observation values, and they will be used to populate the PEST(++) dataset.  This lets the user quickly verify that the `PstFrom` process reproduces the same model output files - an important thing to test!
 
 Now, you can and should change the observation values later on for the quantities that correspond to actual observation data.  This is the standard workflow when using `PstFrom` because it allows users to separate the PEST interface setup from the always-important process of setting observation values and weights. We address this part of the workflow in a separate tutorial.
 
-#### 4.1. Adding Observations
+#### Adding Observations
 
 First, we will use the `PstFrom.add_observations()` method to add observations to our `pf` object. This method can use ***list-type*** files, where the data are organized in column/tabular format with one or more index columns and one or more data columns.  This method can also use ***array-type*** files, where the data are organized in a 2-D array structure (we will see this one later...)
 
@@ -813,7 +810,7 @@ sfr_df = pf.add_observations("sfr.csv", # the model output file to read
 
 We also want to add observations of particle travel time and status. Unfortuantely the file written by MODPATH7 is not easily injestible by `PstFrom`. So we are going to need to "manually" construct an instruction file. We could add that now with the `PstFrom.add_observations_from_ins()` method, but we will wait and  add these after constructing the `Pst` object - soon!
 
-### 5. Parameters
+### Parameters
 
 The `PstFrom.add_parameters()` method reads model input files and adds parameters to the PEST(++) dataset. Parameterisation can be configured in several ways. 
 
@@ -822,13 +819,13 @@ The `PstFrom.add_parameters()` method reads model input files and adds parameter
  - parameter values can be setup as "direct", "multiplier" or "addend". This means the "parameter value" which PEST(++) sees can be (1) the same value the model sees, (2) a multiplier on the value in the existing/original model input file, or (3) a value which is added to the value in the existing/original model input file. This is very nifty and allows for some pretty advanced parameterization schemes by allowing mixtures of different types of parameters. `PstFrom` is designed to preferentially use parameters setup as multipliers (that is the default parameter type). This let us preserve the existing model inputs and treat them as the mean of the prior parameter distribution. Once again, relevant pre-processing scripts are automatically added to the "model run" script (discussed later) so that the multiplicative and additive parameterization process is not something the user has to worry about.
 
 
-#### 5.1. Freyberg Recap
+#### Freyberg Recap
 
-As discussed, all model inputs are stored in external files. Some are arrays. Others are lists. Recall that our model has 3 layers. It is transient. Hydraulic properties (Kh, Kv, Ss, Sy) vary in space. Recharge varies over both space and time. We have GHBs, SFR and WEL boundary conditions. GHB parameters are constant over time, but vary spatially. SFR inflow varies over time. Pumping rates of individual wells are uncertain in space and and time.
+As discussed, all model inputs are stored in external files. Some are arrays. Others are lists. Recall that our model has 1 layer. It is transient. Hydraulic properties (Kh, Kv, Ss, Sy) vary in space. Recharge varies over both space and time. We have GHBs, SFR and WEL boundary conditions. GHB parameters are constant over time, but vary spatially. SFR inflow varies over time. Pumping rates of individual wells are uncertain in space and and time.
 
 All of these have some degree of spatial and/or temporal correlation.
 
-#### 5.2. Geostatistical Structures
+#### Geostatistical Structures
 
 Parameter correlation plays a role in (1) regularization when giving preference to the emergence of patterns of spatial heterogeneity and (2) when specifying the prior parameter probability distribution (which is what regularization is enforcing!). Since we are all sophisticated and recognize the importance of expressing spatial and temporal uncertainty (e.g. heterogeneity) in the model inputs (and the corresponding spatial correlation in those uncertain inputs), let's use geostatistics to express uncertainty. To do that we need to define "geostatistical structures". 
 
@@ -869,11 +866,11 @@ v_time = pyemu.geostats.ExpVario(contribution=1.0, #sill
 temporal_gs = pyemu.geostats.GeoStruct(variograms=v_time, transform='none') 
 ```
 
-#### 5.3. Add Parameters
+#### Add Parameters
 
 Let's start by adding parameters of hydraulic properties that vary in space (but not time) and which are housed in array-type files (e.g. Kh, Kv, Ss, Sy). We will start by demonstrating step-by-step for Kh.
 
-First, find all the external array files that contain Kh values. In our case, these are the files with "npf_k_" in the file name. As you can see below, there is one file for each model layer. 
+First, find all the external array files that contain Kh values. In our case, these are the files with "npf_k_" in the file name.
 
 
 ```python
@@ -895,7 +892,7 @@ However, because we are working with parameter `multipliers`, we will need to sp
  
 Since we are using sets of multipliers, it is important to make sure we keep the resulting model input arrays within the range of realistic values.
 
-#### 5.3.1. Array Files
+#### Array Files
 
 We will first demonstrate steb-by-step for `freyberg6.npf_k_layer1.txt`. We will start with grid scale parameters. These are multipliers assigned to each individual value in the array.
 
@@ -903,7 +900,7 @@ We start by getting the idomain array. As our model has inactive cells, this hel
 
 
 ```python
-# as IDOMIAN is the same in all layers, we can use any layer
+# get the IIDOMAIN array; in our case we only have one layer
 ib = gwf.dis.idomain.array[0]
 plt.imshow(ib)
 ```
@@ -911,7 +908,7 @@ plt.imshow(ib)
 
 
 
-    <matplotlib.image.AxesImage at 0x2b18473e3d0>
+    <matplotlib.image.AxesImage at 0x26550159490>
 
 
 
@@ -979,8 +976,8 @@ df_gr.head()
       <th>parubnd</th>
       <th>parlbnd</th>
       <th>parchglim</th>
-      <th>offset</th>
       <th>scale</th>
+      <th>offset</th>
       <th>dercom</th>
     </tr>
   </thead>
@@ -1001,8 +998,8 @@ df_gr.head()
       <td>5.0</td>
       <td>0.2</td>
       <td>factor</td>
-      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1</td>
     </tr>
     <tr>
@@ -1021,8 +1018,8 @@ df_gr.head()
       <td>5.0</td>
       <td>0.2</td>
       <td>factor</td>
-      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1</td>
     </tr>
     <tr>
@@ -1041,8 +1038,8 @@ df_gr.head()
       <td>5.0</td>
       <td>0.2</td>
       <td>factor</td>
-      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1</td>
     </tr>
     <tr>
@@ -1061,8 +1058,8 @@ df_gr.head()
       <td>5.0</td>
       <td>0.2</td>
       <td>factor</td>
-      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1</td>
     </tr>
     <tr>
@@ -1081,8 +1078,8 @@ df_gr.head()
       <td>5.0</td>
       <td>0.2</td>
       <td>factor</td>
-      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1</td>
     </tr>
   </tbody>
@@ -1143,7 +1140,7 @@ df_pp = pf.add_parameters(f,
     starting 7
     starting 8
     starting 9
-    took 3.79733 seconds
+    took 3.790933 seconds
     
 
 
@@ -1157,7 +1154,7 @@ ax.scatter(df_pp.x,df_pp.y)
 
 
 
-    <matplotlib.collections.PathCollection at 0x2b184a85fa0>
+    <matplotlib.collections.PathCollection at 0x265504b3250>
 
 
 
@@ -1200,7 +1197,7 @@ Now we see three template files have been created:
 
 Feel free to navigate to the `template_ws` and inspect these files.
 
-Let's do that for Kh in the other layers. We are going to be doing this a few times, so lets write a function.
+We are going to be repeating this for each parameter type, so lets write a function.
 
 
 ```python
@@ -1243,7 +1240,7 @@ def add_mult_pars(f, lb=0.2, ub=5.0, ulb=0.01, uub=100, add_coarse=True):
     return
 ```
 
-Well...hot damn, wasn't that easy? Let's speed through the other array parameter files.
+Let's speed through the other array parameter files.
 
 
 ```python
@@ -1318,7 +1315,7 @@ len([f for f in os.listdir(template_ws) if f.endswith(".tpl")])
 
 Boom!  We just conquered property parameterization in a big way!
 
-#### 5.3.2. Spatial and Temporal Correlation
+#### Spatial and Temporal Correlation
 
 Now, you may be thinking "shouldn't recharge have temporal correlation as well?". 
 
@@ -1397,7 +1394,7 @@ len([f for f in os.listdir(template_ws) if f.endswith(".tpl")])
 
 
 
-Then, we will asign an additional `constant` multiplier parameter for each recharge stress-period file (so, a single multiplier for all recharge paramaters for each stress period). We will specify temporal correlation for these `constant` multipliers. These will all have the same parameter group name, as discussed above. 
+Then, we will asign an additional `constant` multiplier parameter for each recharge stress-period file (so, a single multiplier for all recharge parameters for each stress period). We will specify temporal correlation for these `constant` multipliers. These will all have the same parameter group name, as discussed above. 
 
 
 ```python
@@ -1417,7 +1414,9 @@ for f in files:
                     geostruct=temporal_gs)
 ```
 
-### 5.3.3. List Files
+Sweet! Done!
+
+### List Files
 
 Adding parameters from list-type files follows similar principles. As with observation files, they must be tabular. Certain columns are specified as index columns and are used to populate parameter names, as well as provide the parameters' spatial location. Other columns are specified as containing parameter values. 
 
@@ -1425,7 +1424,7 @@ Parameters can be `grid` or `constant`. As before, values can be assigned `direc
 
 We will demonstrate for the boundary-condition input files. 
 
-Starting off with GHBs. Let's inspect the folder. As you can see, there is a single input file (GHB parameters are assumed to not vary over time).
+Starting off with GHBs. Let's inspect the folder. As you can see, there is a single input file (here we assume GHB parameters do not vary over time).
 
 
 ```python
@@ -1622,8 +1621,8 @@ pf.add_parameters(f,
       <th>parubnd</th>
       <th>parlbnd</th>
       <th>parchglim</th>
-      <th>offset</th>
       <th>scale</th>
+      <th>offset</th>
       <th>dercom</th>
     </tr>
   </thead>
@@ -1641,8 +1640,8 @@ pf.add_parameters(f,
       <td>10.0</td>
       <td>0.1</td>
       <td>factor</td>
-      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1</td>
     </tr>
   </tbody>
@@ -1862,22 +1861,18 @@ for f in files:
                       pargp=base,par_name_base=base,upper_bound=50,
                      lower_bound=15,zone_array=ib,transform="none")
     print(df.shape)
-
-
 ```
 
     (706, 17)
     
 
-### 6. The Forward Run Script
+### The Forward Run Script
 
 OK! So, we almost have all the base building blocks for a PEST(++) dataset. We have some (1) observations and some (2) parameters. We are still missing (3) the "forward run" script. Recall that in the PEST world, the "model" is not just the numerical model (e.g. MODFLOW). Instead it is a composite of the numerical model (or models) and pre- and post-processing steps, encapsulated in a "forward run" script which can be called from the command line. This command line instruction is what PEST(++) sees as "the model". During execution, PEST(++) writes values to parameter files, runs "the model", and then reads values from the observation files.
 
 `PstFrom` automates the generation of such a script when constructing the PEST control file. The script is written to file named `forward_run.py`. It is written in Python (this is not a PEST(++) requirement, merely a convenience...we are working in Python after all...). 
 
 How about we see that in action? Magic time! Let's create the PEST control file.
-
-
 
 
 ```python
@@ -1945,7 +1940,7 @@ That's pretty amazing. But as we just saw, we still need to add commands to actu
 
 Next we will demonstrate how to specify the system commands and add Python functions as processing steps.
 
-#### 6.2. Sys Commands
+#### Sys Commands
 
 Let's start by adding a command line instruction. These are stored as a list in `PstFrom.mod_sys_cmds`, which is currently empty. 
 
@@ -2032,13 +2027,13 @@ _ = [print(line.rstrip()) for line in open(os.path.join(template_ws,"forward_run
     
     
 
-#### 6.3. Extra pre- and post-processing functions
+#### Extra pre- and post-processing functions
 
-You will also certainly need to include some additional processing steps.  These are supported thru the `PstFrom.pre_py_cmds` and `PstFrom.post_py_cmds`, which are lists for pre and post model run python commands and `PstFrom.pre_sys_cmds` and `PstFrom.post_sys_cmds`, which are lists for pre and post model run system commands (these are wrapped in `pyemu.os_utils.run()`.  
+You will also certainly need to include some additional processing steps.  These are supported through the `PstFrom.pre_py_cmds` and `PstFrom.post_py_cmds`, which are lists for pre and post model run python commands and `PstFrom.pre_sys_cmds` and `PstFrom.post_sys_cmds`, which are lists for pre and post model run system commands (these are wrapped in `pyemu.os_utils.run()`.  
 
-But what if your additional steps are actually an entire python function? Well, we got that too! `PstFrom.add_py_function()`. This method allows you to get functions from another (pre-prepared) python source file and add them to the `forward_run.py` script. We will deonstrate this to post-process secondary model observations after each run.
+But what if your additional steps are actually an entire python function? Well, we got that too! `PstFrom.add_py_function()`. This method allows you to get functions from another (pre-prepared) python source file and add them to the `forward_run.py` script. We will demonstrate this to post-process model observations after each run.
 
-Now lets see this py-sauce in action: we are going to add a little post-processing function to extract the final simulated water level for all model cells for the last stress period from the MF6 binary headsave file and save them to ASCII format so that PEST(++) can read them with instruction files.  And, while we are at it, lets also extract the global water budget info from the MF6 listing file and store it in dataframes - these are ususally good numbers to watch!  We will need the simulated water level arrays later for sequential data assimilation (wouldnt it be nice if MF6 supported the writing of ASCII format head arrays?).  Anyway, this function is stored in the "helpers.py" script..
+Now lets see this py-sauce in action: we are going to add a little post-processing function to extract the final simulated water level for all model cells for the last stress period from the MF6 binary headsave file and save them to ASCII format so that PEST(++) can read them with instruction files.  And, while we are at it, lets also extract the global water budget info from the MF6 listing file and store it in dataframes - these are ususally good numbers to watch!  We will need the simulated water level arrays later for sequential data assimilation (wouldnt it be nice if MF6 supported the writing of ASCII format head arrays?).  Anyway, this function is stored in the "helpers.py" script which you can find in the tutorial folder.
 
 
 ```python
@@ -2106,17 +2101,15 @@ for f in ["inc.csv","cum.csv"]:
 
 Crushed it!
 
-
-
-#### 6.3.1. Secondary Observations
+#### Secondary Observations
 
 Often it is usefull to include "secondary model outcomes" as observations. These can be important components in a history-matching dataset to tease out specific aspects of system behaviour (e.g. head differences between aquifer layers to inform vertical permeabilities). Or they may be simple summaries of modelled outputs which are of interest for a prediction (e.g. minimum simulated head over a given period).
 
-If you inspect the tutorial folder you will find a file named `helpers.py`. This is a python source file which we have prepared for you. (Open it to see how it is organized.) It contains a function named `process_secondary_obs()`. This function reads the model output .csv files, processes them and writes a series of new observation .csv files. These new files contain (1) the temporal-differences between head and SFR observations, and (2) the difference in heads between the top and bottom layers at each observation point. The new .csv files are named `heads.tdiff.csv`,`sfr.tdiff.csv` and `heads.vdiff.csv` respectively.
+If you inspect the tutorial folder you will find a file named `helpers.py`. This is a python source file which we have prepared for you. (Open it to see how it is organized.) It contains a function named `process_secondary_obs()`. This function reads the model output .csv files, processes them and writes a series of new observation .csv files. These new files contain the temporal-differences between head and SFR observations. The new .csv files are named `heads.tdiff.csv`and `sfr.tdiff.csv`, respectively.
 
 First, lets load the function here and run it so you can see what happens. (And to make sure that the observation files are in the template folder!) 
 
-Run the next cell, then inspect the template folder. You should see three new csv files. These are the new secondary observations calculated by the post-processing function.
+Run the next cell, then inspect the template folder. You should see several new csv files. These are the new secondary observations calculated by the post-processing function.
 
 
 ```python
@@ -2234,16 +2227,6 @@ _ = [print(line.rstrip()) for line in open(os.path.join(template_ws,"forward_run
         # write the tdiff observation csv's
         write_tdif_obs('heads.csv', 'heads.tdiff.csv', ws)
         write_tdif_obs('sfr.csv', 'sfr.tdiff.csv', ws)
-    
-        #write the vdiff obs csv
-        # this is frought with the potential for bugs, but oh well...
-        df = pd.read_csv(os.path.join(ws,'heads.csv'), index_col='time')
-        df.sort_index(axis=1, inplace=True)
-        dh = df.loc[:, [i for i in df.columns if i.startswith('TRGW-0-')]]
-        dh2 = df.loc[:, df.columns.map(lambda x: x.startswith('TRGW-2-'))]
-        if dh2.shape[1] > 0:
-            dh = dh - dh2.values
-            dh.to_csv(os.path.join(ws,'heads.vdiff.csv'))
     
         print('Secondary observation files processed.')
         return
@@ -2594,7 +2577,7 @@ obs
 
 
 
-### 7. After Building the Control File
+### After Building the Control File
 
 At this point, we can do some additional modifications that would typically be done that are problem specific.  Here we can tweak the setup, specifying things such as observation weights, parameter bounds, transforms, control data, etc.
 
@@ -2604,7 +2587,7 @@ For the current case, the main thing we haven't addressed are the observations f
 
 We will do so now.
 
-#### 7.1. Add Observations from INS files
+#### Add Observations from INS files
 
 Recall that we wish to include observations of particle end time and status. As mentioned earlier, MP7 output files are not ina nicely organized tabular format - so we need to construct a custom instruction file. We will do this now:
 
@@ -2616,7 +2599,6 @@ ins_file = out_file + ".ins"
 with open(os.path.join(template_ws, ins_file),'w') as f:
     f.write("pif ~\n")
     f.write("l7 w w w w !part_status! w w !part_time!\n")
-
 ```
 
 Now add these observations to the `Pst`:
@@ -2707,7 +2689,7 @@ obs.iloc[-2:]
 
 
 
-#### 7.2. Parameters with Zero as Intial Value
+#### Parameters with Zero as Intial Value
 
 Recall that we assigned additive parameters to the GHB heads. Our initial parameter values for these parameter types were set as 0 (zero). This creates a wee bit of trouble when calculating derivatives. There are a couple of ways we could get around it. One way is to add an "offset" to the parameter intial values and to the parmaeter bounds. Another is to use "absolute" increment types (INCTYP). See the PEST manual or PEST++ user guides for descriptions of increment types. 
 
@@ -3118,9 +3100,9 @@ par.loc[par_names].head()
 
 
 
-#### 7.4. Forecasts
+#### Forecasts
 
-For most models there is a forecast/prediction that someone needs. Rather than waiting until the end of the project, the forecast should be entered into your thinking and workflow __right at the beginning__.  Here we do this explicitly by monitoring the forecasts as "observations" in the control file.  This way, for every PEST(++) analysis we do, we can watch what is happening to the forecasts - #winning **
+For most models there is a forecast/prediction that someone needs. Rather than waiting until the end of the project, the forecast should be entered into your thinking and workflow __right at the beginning__.  Here we do this explicitly by monitoring the forecasts as "observations" in the control file.  This way, for every PEST(++) analysis we do, we can watch what is happening to the forecasts - #winning
 
 The optional PEST++ `++forecasts` control variable allows us to provide the names of one or more observations featured in the “observation data” section of the PEST control file; these are treated as predictions in FOSM predictive uncertainty analysis by PESTPP-GLM. It is also a convenient way to keep track of "forecast" observations (makes post-processing a wee bit easier later on).
 
@@ -3264,7 +3246,7 @@ We will just set this optional pest++ argument because it will trigger certain a
 pst.pestpp_options['forecasts'] = forecasts
 ```
 
-#### 7.5. Re-write the Control File!
+### Re-write the Control File!
 
 Make sure to re-**write** the PEST control file. But beware, if you re-**build** the `Pst`, all these changes will be lost.
 
@@ -3324,7 +3306,7 @@ iobj.total_phi
 
  Sweet! Zero. All is well.
 
-### 8. Prior Parameter Covariance Matrix
+### Prior Parameter Covariance Matrix
 
 One the major reasons `PstFrom` was built is to help with building the Prior - both covariance matrix and ensemble - with geostatical correlation.  Remember all that business above related to geostatical structures and correlations?  This is where is pays off.
 
@@ -3347,7 +3329,7 @@ if pf.pst.npar < 35000:  #if you have more than about 35K pars, the cov matrix b
 
 
     
-![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_142_0.png)
+![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_143_0.png)
     
 
 
@@ -3783,6 +3765,6 @@ plt.tight_layout()
 
 
     
-![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_153_0.png)
+![png](freyberg_pstfrom_pest_setup_files/freyberg_pstfrom_pest_setup_154_0.png)
     
 

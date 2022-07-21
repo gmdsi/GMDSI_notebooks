@@ -246,7 +246,7 @@ Feel free to uncomment the previous cell and see what happens. This can be usefu
 
 Now, this plot does not look particularily pretty...but we aren't here for pretty, we are here for results! What are we concerned with? Whether the range of ensemble simulated outcomes form the prior covers the measured values. Recall that plots on the left are 1to1 plots and on the right the residuals ar edisplayed.  In both cases, a grey line represents the range of simulated values for a given observation
 
-In plots on the right, each grey line should interesect the 1-to-1 line. In the plots on the right, each grey line should intersect the "zero-residual" line. 
+In plots on the left, each grey line should interesect the 1-to-1 line. In the plots on the right, each grey line should intersect the "zero-residual" line. 
 
 
 ```python
@@ -463,7 +463,7 @@ The workflow above demonstrated how to use `pestpp-swp` to undertake a "sweep" o
 
 The same can be accomplished with `pestpp-ies` by assigning the `NOPTMAX` control variable to -1 and either providing `pestpp-ies` with a predefined parameter ensebmle (the same as we did for `pestpp-swp`) or by providing the parameter covariance matrix and allowing `pestpp-ies` to sample from the prior itself.
 
-The next few cells do something slightly different. Here we will use `pestpp-ies` to undertake prior MC, but assuming to correlation between parameters. Here, prior parameter uncertainty is diagonal and determined solely based on the parameter bounds in the PEST control file. 
+The next few cells do something slightly different. Here we will use `pestpp-ies` to undertake prior MC, but assuming no correlation between parameters. Here, prior parameter uncertainty is diagonal and determined solely based on the parameter bounds in the PEST control file. 
 
 First set some `pest++` options and re-write the control file.
 
@@ -488,9 +488,7 @@ pyemu.os_utils.start_workers(t_d,"pestpp-ies","freyberg_diagprior.pst",
                             master_dir=m_d)
 ```
 
-Now read in the results. Let's just look at the forecasts. (Feel free to repeat the plots we did above if you wish to compare them.)
-
-So, what do you think? Did ignoring parameter covariance make our forecasts more or less robust? It seems like our prior is failing to capture some of the "true" values now. This highlights the role of connectivity and "hydraulic structures" in some groundwater predictions and the importance of having a well constructed prior. 
+Now read in the results. Let's just look at the forecasts. (Feel free to repeat the plots we did above if you wish to compare them.
 
 
 ```python
@@ -555,8 +553,3 @@ for forecast in pst.forecast_names:
 ![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_53_4.png)
     
 
-
-
-```python
-
-```

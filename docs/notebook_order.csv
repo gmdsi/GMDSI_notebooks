@@ -1,5 +1,5 @@
 title,file,nav_order,parent,folder
-Intro to Freyberg,freyberg_intro_model.md,1,Introductions to Selected Topics,intro
+Intro to Freyberg,intro_freyberg_model.md,1,Introductions to Selected Topics,intro
 Intro to Regression,intro_to_regression.md,2,Introductions to Selected Topics,intro
 Intro to pyEMU,intro_to_pyemu.md,3,Introductions to Selected Topics,intro
 Intro to Geostatistics,intro_to_geostatistics.md,4,Introductions to Selected Topics,intro

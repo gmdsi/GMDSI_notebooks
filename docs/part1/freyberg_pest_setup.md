@@ -14,15 +14,15 @@ Recall that, for all its sophistication, automated parameter estimation software
 
 Here is a flow chart of manual trial-and-error history matching from *Applied Groundwater Modeling (2nd edition)* by Anderson et al. (2015): 
 
-<img src="figs\Fig9.1_manual_t&e.png" style="float: center">
+<img src="freyberg_pest_setup_files\Fig9.1_manual_t&e.png" style="float: center">
 
 Compare this to the full overdetermined parameter estimation flow chart:
 
-<img src="figs\Fig9.9_full_overdetermined_PE_flowchart.png" style="float: center">
+<img src="freyberg_pest_setup_files\Fig9.9_full_overdetermined_PE_flowchart.png" style="float: center">
 
 To be more specific, in the blue box in Figure 9.9 above there are certain steps that occur before and after each forward model run that PEST does.  They exactly equate to what a manual trial-and-error calibration does, but PEST does it for you! Here are the steps that happen:
 
-<img src="figs\Fig9.8_PE_flowchart.png" style="float: center">
+<img src="freyberg_pest_setup_files\Fig9.8_PE_flowchart.png" style="float: center">
 
 ### 1. The PEST Input Dataset
 
@@ -369,7 +369,7 @@ As mentioned in the PESTCHEK warning, the control file we gave you has `NOPTMAX=
 
 Now __change `NOPTMAX` to a value = 20__ (`NOPTMAX` is the first number listed in the 9th line of the PEST control file).  You can see its location below, taken from Appendix 1 from SIR 2010-5169 we will be handing out:
 
-<img src="figs\2010-5169_Appendix1_PST_file.png" style="float: center">
+<img src="freyberg_pest_setup_files\2010-5169_Appendix1_PST_file.png" style="float: center">
 
 The full listing of the PEST control file and a description of each variable is in Appendix 1. __*However, most of these you never will need to touch - the defaults are fine!*__  NOPTMAX, however, is one that you will routinely touch. 
 
