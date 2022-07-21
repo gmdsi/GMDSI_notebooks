@@ -1,17 +1,13 @@
-# Oh hello! Is it me you are looking for? 
-# This script runs the tutorial notebooks and does some tidying up around the place.
-# Functions herein are accessed by some notebooks when they are run
-
 import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
 import os
 import shutil
 import platform
-import pandas as pd 
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import zipfile
-
+import shutil
 import pyemu
 import flopy
 
@@ -246,6 +242,7 @@ def clean_pst4pestchek(pstfile, par):
         for pyemu-written control files. Could be better."""
     with open(pstfile, 'r') as f:
         lines = f.readlines()
+    lines = [i.replace('point         1\n', 'point\n') for i in lines ]    
     lines = [i.replace('0.0000000000E+00      1          \n', '0.0000000000E+00      \n') if any(i.startswith(xs) for xs in par['parnme']) else i for i in lines ]
     with open(pstfile, 'w') as f:
         for line in lines:
@@ -256,34 +253,10 @@ def clean_pst4pestchek(pstfile, par):
 def prep_pest(tmp_d):
     """Prepares the PEST setup for part 1 of the tutorials.
         Used by the freyberg_pest_setup notebook."""
-    # get the necessary executables; OS agnostic
-    #bin_dir = os.path.join('..','..','bin')
-    #if "window" in platform.platform().lower():
-    #    exe_files = [f for f in os.listdir(bin_dir) if f.endswith('exe')]
-    #else:
-    #    exe_files = [f for f in os.listdir(bin_dir) if not f.endswith('exe')]
-    # remove existing folder if it already exists
-    if os.path.exists(tmp_d):
-        shutil.rmtree(tmp_d)
-    # make the folder
-    #os.mkdir(tmp_d)
-    # copy executables across
-    #for exe_file in exe_files:
-    #    shutil.copy2(os.path.join(bin_dir, exe_file),os.path.join(tmp_d,exe_file))
-    org_d = os.path.join('..', '..', 'models', 'freyberg_mf6')
-    shutil.copytree(org_d,tmp_d)
-    prep_bins(tmp_d)
-    # folder containing original model files
     
-    # copy files across to the temp folder
-    #for f in os.listdir(org_d):
-    #    shutil.copy2(os.path.join(org_d,f), os.path.join(tmp_d,f))
+    pyemu.os_utils.run('mf6', cwd=tmp_d)
+    pyemu.os_utils.run(r'mp7 freyberg_mp.mpsim', cwd=tmp_d)
 
-    # geat meas values
-    for csv in ['heads.csv', 'sfr.csv']:
-        df = pd.read_csv(os.path.join('..', '..', 'models', 'freyberg_mf6_truth',csv),
-                        index_col=0)
-        df.to_csv(os.path.join(tmp_d,csv.replace('.meas','')))
     # load simulation
     sim = flopy.mf6.MFSimulation.load(sim_ws=tmp_d,load_only=['DIS'], verbosity_level=0)
     # load flow model
@@ -327,30 +300,81 @@ def prep_pest(tmp_d):
     pst.try_parse_name_metadata()
     #tidy up
     par=pst.parameter_data
-    par.loc[par['parnme'].str.startswith('hk'), ['parlbnd','parval1','parubnd', 'pargp']] = 0.05, 5, 50, 'hk'
+    par.loc[par['parnme'].str.startswith('hk'), ['parlbnd','parval1','parubnd', 'pargp']] = 0.05, 5, 500, 'hk'
     par.loc['rch0', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.5, 1, 2, 'fixed', 'rch'
     par.loc['rch1', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.5, 1, 2, 'fixed', 'rch'
     obs=pst.observation_data
     obs['weight'] = 0
-    obs.loc[:,"time"] = obs.obsnme.apply(lambda x: float(x.split(':')[1]))
-    obs.loc[obs['obsnme'].str.startswith('gage'), 'obgnme'] = 'flux'
-    obs.loc[obs['obsnme'].str.startswith('headwater'), 'obgnme'] = 'flux'
-    obs.loc[obs['obsnme'].str.startswith('tailwater'), 'obgnme'] = 'flux'
-    obs.loc[obs['obsnme'].str.startswith('trgw'), 'obgnme'] = 'hds'
-    obs.loc[obs.apply(lambda x: x.obgnme=="hds" and x.time > 3652.5 and x.time <=4018.5,axis=1), 'weight'] = 1/0.1
+    obs.loc[:,"time"] = obs.obsnme.apply(lambda x: float(x.split(':')[-1]))
+    obs.loc[:,"obgnme"] = obs.obsnme.apply(lambda x: x.split(':')[0])
 
     pst.model_command = 'mf6'
     pst.control_data.noptmax=0
-
     pst.pestpp_options['forecasts'] = ['headwater:4383.5','tailwater:4383.5', 'trgw-0-9-1:4383.5']
 
+    ###-- Set OBSERVATION DATA AND WEIGHTS --###
+    # geat meas values
+    shutil.copy2(os.path.join('..', '..', 'models', 'daily_freyberg_mf6_truth','obs_data.csv'),
+                            os.path.join(tmp_d, 'obs_data.csv'))
+    obs_data = pd.read_csv(os.path.join(tmp_d, 'obs_data.csv'))
+    obs_data.site = obs_data.site.str.lower()
+    obs_data.set_index('site', inplace=True)
+    
+    # restructure the obsevration data 
+    obs_sites = obs_data.index.unique().tolist()
+    model_times = pst.observation_data.time.dropna().astype(float).unique()
+    ess_obs_data = {}
+    for site in obs_sites:
+        #print(site)
+        site_obs_data = obs_data.loc[site,:].copy()
+        if isinstance(site_obs_data, pd.Series):
+            site_obs_data.loc["site"] = site_obs_data.index.values
+        if isinstance(site_obs_data, pd.DataFrame):
+            site_obs_data.loc[:,"site"] = site_obs_data.index.values
+            site_obs_data.index = site_obs_data.time
+            sm = site_obs_data.value.rolling(window=20,center=True,min_periods=1).mean()
+            sm_site_obs_data = sm.reindex(model_times,method="nearest")
+        #ess_obs_data.append(pd.DataFrame9sm_site_obs_data)
+        ess_obs_data[site] = sm_site_obs_data
+    ess_obs_data = pd.DataFrame(ess_obs_data)
+        
+    ## set the obs values
+    obs_names = pst.observation_data.obsnme.tolist()
+    obs_data = ess_obs_data.copy()
+    # for checking
+    org_nnzobs = pst.nnz_obs
+    org_nobs = pst.nobs
+    # empyt list to keep track of misssing observation names
+    missing=[]
+    for col in obs_data.columns:
+        # get obs list sufix for each column of data
+        obs_sufix = obs_data.index.map(lambda x: col.lower()+f':{x}' ).values
+        for string, oval, time in zip(obs_sufix, obs_data.loc[:,col].values, obs_data.index.values):
+            # get a list of obsnames
+            obsnme = [ks for ks in obs_names if string in ks] 
+            # assign the obsvals
+            obs.loc[obsnme,"obsval"] = oval
+            # assign a generic weight
+            if time > 3652.5 and time <=4018.5:
+                obs.loc[obsnme,"weight"] = 1.0
+    # checks
+    assert org_nobs-pst.nobs==0, 'oh oh, new observations.'
+    assert len(missing)==0, f'The following obs are missing:\n{missing}'
+
+    # set weights
+    obs = pst.observation_data
+    #obs.loc[obs.obgnme.str.startswith('gage-1'), 'weight'] = 1/ abs(0.1 *obs.loc[obs.obgnme.str.startswith('gage-1')].obsval)
+    obs.loc[obs.obgnme.str.startswith('gage-1'), 'weight'] = 0
+    obs.loc[obs.obgnme.str.startswith('trgw-0-26-6 '), 'weight'] = 1/ 0.1
+
+    # write and run pst check
     pstfile = os.path.join(tmp_d,'freyberg.pst')
     pst.write(pstfile)
-
     clean_pst4pestchek(pstfile, par)
     #pyemu.utils.run(f'pestchek {os.path.basename(pstfile)}', cwd=tmp_d)
+    print(f'written pest control file: {pstfile}')
 
-    return print(f'written pest control file: {pstfile}')
+    return pst
 
 
 def plot_freyberg(tmp_d):
@@ -380,26 +404,21 @@ def plot_freyberg(tmp_d):
     # you can plot BC cells using the plot_bc() 
     mm.plot_bc('ghb')
     mm.plot_bc('sfr')
+    mm.plot_bc('wel')
 
-    # Plot wells in layer 3
-    mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=2)
-    #arr = mm.plot_array(hds[0], masked_values=[1e30], cmap='Blues')
-    #cb = plt.colorbar(arr, shrink=0.5)
     levels=np.linspace(np.nanmin(hds), np.nanmax(hds), 10)
     ca = mm.contour_array(hds, masked_values=[1e30], levels=levels, colors='blue', linestyles ='dashed', linewidths=1)
     plt.clabel(ca, fmt='%.1f', colors='k', fontsize=8)
 
-    mm.plot_bc('wel')
     ax.scatter(obsxy['x'],obsxy['y'], marker='x', c='k',)
     plt.draw()
     ax.set_yticklabels(labels=ax.get_xticklabels(), rotation=90)
 
-
+    # plo crossection
     ax = fig.add_subplot(1, 2, 2, aspect=200)
     mm = flopy.plot.PlotCrossSection(model=gwf, ax=ax, line={'row':26})
     arr = mm.plot_array(hds, masked_values=[1e30], cmap='Blues')
     cb = plt.colorbar(arr, shrink=0.25, )
-
     mm.plot_grid()
     mm.plot_inactive()
     mm.plot_bc('ghb')
@@ -408,7 +427,7 @@ def plot_freyberg(tmp_d):
     ax.set_ylim(0,45)
     ax.set_ylabel('elevation (m)')
     ax.set_xlabel('x-axis (m)')
-    ax.set_title('cross-section; row:30');
+    ax.set_title('cross-section; row:26');
     return 
 
 
