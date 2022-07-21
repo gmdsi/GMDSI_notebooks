@@ -52,6 +52,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt;
+plt.rcParams.update({'font.size': 10})
 
 import shutil 
 import scipy.stats as stats
@@ -65,10 +66,6 @@ assert "dependencies" in flopy.__file__
 assert "dependencies" in pyemu.__file__
 sys.path.insert(0,"..")
 import herebedragons as hbd
-
-
-
-plt.rcParams.update({'font.size': 10})
 ```
 
 We are going to make use of the outcomes of the "freyberg_glm_1" tutorial, in which we ran `PEST++GLM` to calculate the Jacobian matrix prior to calibration. If you ran the notebook yourself, they should be recorded in the folder named "master_glm_1".
@@ -135,7 +132,7 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x14bc59412b0>
+    <matplotlib.colorbar.Colorbar at 0x276067bf580>
 
 
 
@@ -186,7 +183,7 @@ sc
 
 
 
-    <pyemu.sc.Schur at 0x14bc67767c0>
+    <pyemu.sc.Schur at 0x27607c243a0>
 
 
 
@@ -257,7 +254,7 @@ sc.posterior_parameter
 
 
 
-    <pyemu.mat.mat_handler.Cov at 0x14bc57db7f0>
+    <pyemu.mat.mat_handler.Cov at 0x27607890dc0>
 
 
 
@@ -298,14 +295,14 @@ sc.posterior_parameter.to_dataframe().sort_index().sort_index(axis=1).iloc[0:3,0
   <tbody>
     <tr>
       <th>pname:ghbcondcn_inst:0_ptype:cn_usecol:4_pstyle:m</th>
-      <td>0.103256</td>
-      <td>0.013934</td>
+      <td>0.103242</td>
+      <td>0.013972</td>
       <td>0.000000</td>
     </tr>
     <tr>
       <th>pname:ghbheadcn_inst:0_ptype:cn_usecol:3_pstyle:a</th>
-      <td>0.013934</td>
-      <td>0.365437</td>
+      <td>0.013972</td>
+      <td>0.365300</td>
       <td>0.000000</td>
     </tr>
     <tr>
@@ -333,7 +330,7 @@ plt.colorbar(c)
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x14bc62de700>
+    <matplotlib.colorbar.Colorbar at 0x27607baa490>
 
 
 
@@ -382,31 +379,31 @@ par_sum.head()
       <th>pname:rch_recharge_1tcn_inst:0_ptype:cn_pstyle:m</th>
       <td>0.006323</td>
       <td>0.000014</td>
-      <td>99.779224</td>
+      <td>99.785789</td>
     </tr>
     <tr>
       <th>pname:welcst_inst:12_ptype:cn_usecol:3_pstyle:m</th>
       <td>0.040275</td>
-      <td>0.004612</td>
-      <td>88.549712</td>
+      <td>0.004673</td>
+      <td>88.396548</td>
     </tr>
     <tr>
       <th>pname:stosylayer1cn_inst:0_ptype:cn_pstyle:m</th>
       <td>0.054284</td>
-      <td>0.009224</td>
-      <td>83.007933</td>
+      <td>0.009236</td>
+      <td>82.985301</td>
     </tr>
     <tr>
       <th>pname:npfklayer1cn_inst:0_ptype:cn_pstyle:m</th>
       <td>0.054284</td>
-      <td>0.009262</td>
-      <td>82.937428</td>
+      <td>0.009266</td>
+      <td>82.931418</td>
     </tr>
     <tr>
       <th>pname:welcst_inst:11_ptype:cn_usecol:3_pstyle:m</th>
       <td>0.040275</td>
-      <td>0.008908</td>
-      <td>77.882104</td>
+      <td>0.008933</td>
+      <td>77.819816</td>
     </tr>
   </tbody>
 </table>
@@ -559,7 +556,7 @@ When working with spatially ditributed parameters, it can be informative to map 
 
 ```python
 # choose a pilot point parmaeter group
-pargp = 'npfklayer3pp'
+pargp = 'npfklayer1pp'
 ```
 
 
@@ -585,6 +582,7 @@ mm.plot_grid(alpha=0.5)
 mm.plot_inactive()
 mm.plot_bc('ghb')
 mm.plot_bc('sfr')
+mm.plot_bc('wel')
 
 # plot ppoints and % unc reduction
 pp_x = [gwf.modelgrid.xcellcenters[r-1,c-1] for r,c in hk_pars.loc[:,["i","j"]].values]
@@ -597,16 +595,18 @@ obs_ij = list(set([tuple(i.split('-')[-2:]) for i in pst.nnz_obs_groups if 'trgw
 obs_x = [gwf.modelgrid.xcellcenters[int(i)-1,int(j)-1] for i,j in obs_ij]
 obs_y = [gwf.modelgrid.ycellcenters[int(i)-1,int(j)-1] for i,j in obs_ij]
 ax.scatter(obs_x,obs_y,marker='x', c='red', s=50)
-
-
-# Plot wells
-mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
-mm.plot_bc('wel');
 ```
 
 
+
+
+    <matplotlib.collections.PathCollection at 0x27611c0e5b0>
+
+
+
+
     
-![png](freyberg_fosm_and_dataworth_files/freyberg_fosm_and_dataworth_47_0.png)
+![png](freyberg_fosm_and_dataworth_files/freyberg_fosm_and_dataworth_47_1.png)
     
 
 
@@ -672,26 +672,26 @@ df
     <tr>
       <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
       <td>1.590060e+05</td>
-      <td>7.454419e+04</td>
-      <td>53.118626</td>
+      <td>7.456406e+04</td>
+      <td>53.106126</td>
     </tr>
     <tr>
       <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
       <td>2.186878e+05</td>
-      <td>7.525733e+04</td>
-      <td>65.586858</td>
+      <td>7.526190e+04</td>
+      <td>65.584769</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
       <td>1.835477e+00</td>
-      <td>1.200979e-01</td>
-      <td>93.456855</td>
+      <td>1.201097e-01</td>
+      <td>93.456212</td>
     </tr>
     <tr>
       <th>part_time</th>
       <td>2.370646e+09</td>
-      <td>2.238014e+09</td>
-      <td>5.594795</td>
+      <td>2.238355e+09</td>
+      <td>5.580404</td>
     </tr>
   </tbody>
 </table>
@@ -768,38 +768,38 @@ par_contrib.head()
   <tbody>
     <tr>
       <th>base</th>
-      <td>74544.185170</td>
-      <td>75257.326284</td>
-      <td>0.120098</td>
-      <td>2.238014e+09</td>
+      <td>74564.060309</td>
+      <td>75261.895446</td>
+      <td>0.120110</td>
+      <td>2.238355e+09</td>
     </tr>
     <tr>
       <th>ghbcondcn</th>
-      <td>74273.294416</td>
-      <td>75248.620049</td>
-      <td>0.119996</td>
-      <td>2.237215e+09</td>
+      <td>74293.030784</td>
+      <td>75253.060155</td>
+      <td>0.120007</td>
+      <td>2.237560e+09</td>
     </tr>
     <tr>
       <th>ghbheadcn</th>
-      <td>57776.719024</td>
-      <td>75257.096830</td>
-      <td>0.120002</td>
-      <td>2.235594e+09</td>
+      <td>57793.889540</td>
+      <td>75261.703661</td>
+      <td>0.120012</td>
+      <td>2.235937e+09</td>
     </tr>
     <tr>
       <th>nelayer1cn</th>
-      <td>74544.185170</td>
-      <td>75257.326284</td>
-      <td>0.120098</td>
-      <td>1.316141e+09</td>
+      <td>74564.060309</td>
+      <td>75261.895446</td>
+      <td>0.120110</td>
+      <td>1.316482e+09</td>
     </tr>
     <tr>
       <th>nelayer1pp</th>
-      <td>74544.185170</td>
-      <td>75257.326284</td>
-      <td>0.120098</td>
-      <td>1.823212e+09</td>
+      <td>74564.060309</td>
+      <td>75261.895446</td>
+      <td>0.120110</td>
+      <td>1.823553e+09</td>
     </tr>
   </tbody>
 </table>
@@ -853,31 +853,31 @@ par_contrib.sort_index().head()
     </tr>
     <tr>
       <th>ghbcondcn</th>
-      <td>3.633962e-01</td>
-      <td>1.156862e-02</td>
-      <td>8.520421e-02</td>
-      <td>0.035695</td>
+      <td>3.634855e-01</td>
+      <td>1.173940e-02</td>
+      <td>8.518864e-02</td>
+      <td>0.035502</td>
     </tr>
     <tr>
       <th>ghbheadcn</th>
-      <td>2.249333e+01</td>
-      <td>3.048921e-04</td>
-      <td>8.022239e-02</td>
-      <td>0.108102</td>
+      <td>2.249096e+01</td>
+      <td>2.548242e-04</td>
+      <td>8.128505e-02</td>
+      <td>0.107995</td>
     </tr>
     <tr>
       <th>nelayer1cn</th>
-      <td>1.952119e-14</td>
-      <td>5.800863e-14</td>
-      <td>-6.933236e-14</td>
-      <td>41.191544</td>
+      <td>-1.951599e-14</td>
+      <td>1.933504e-14</td>
+      <td>6.932555e-14</td>
+      <td>41.185266</td>
     </tr>
     <tr>
       <th>nelayer1pp</th>
-      <td>-1.952119e-14</td>
-      <td>0.000000e+00</td>
-      <td>-6.702128e-13</td>
-      <td>18.534378</td>
+      <td>5.854797e-14</td>
+      <td>-7.734015e-14</td>
+      <td>-6.701469e-13</td>
+      <td>18.531553</td>
     </tr>
   </tbody>
 </table>
@@ -966,38 +966,38 @@ df_worth.head()
   <tbody>
     <tr>
       <th>base</th>
-      <td>74544.185170</td>
-      <td>75257.326284</td>
-      <td>0.120098</td>
-      <td>2.238014e+09</td>
+      <td>74564.060309</td>
+      <td>75261.895446</td>
+      <td>0.120110</td>
+      <td>2.238355e+09</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5</th>
-      <td>74557.725709</td>
-      <td>75277.163729</td>
-      <td>0.120099</td>
-      <td>2.238095e+09</td>
+      <td>74577.111341</td>
+      <td>75281.719125</td>
+      <td>0.120110</td>
+      <td>2.238437e+09</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5</th>
-      <td>74559.787726</td>
-      <td>75265.039572</td>
-      <td>0.120098</td>
-      <td>2.238036e+09</td>
+      <td>74579.512666</td>
+      <td>75269.617395</td>
+      <td>0.120110</td>
+      <td>2.238377e+09</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5</th>
-      <td>74567.060864</td>
-      <td>75272.941352</td>
-      <td>0.120107</td>
-      <td>2.238022e+09</td>
+      <td>74587.314025</td>
+      <td>75277.826171</td>
+      <td>0.120119</td>
+      <td>2.238363e+09</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5</th>
-      <td>74561.581681</td>
-      <td>75273.228215</td>
-      <td>0.120125</td>
-      <td>2.238084e+09</td>
+      <td>74581.783518</td>
+      <td>75278.085669</td>
+      <td>0.120137</td>
+      <td>2.238427e+09</td>
     </tr>
   </tbody>
 </table>
@@ -1056,38 +1056,38 @@ dw_rm.head()
   <tbody>
     <tr>
       <th>base</th>
-      <td>74544.185170</td>
-      <td>75257.326284</td>
-      <td>0.120098</td>
-      <td>2.238014e+09</td>
+      <td>74564.060309</td>
+      <td>75261.895446</td>
+      <td>0.120110</td>
+      <td>2.238355e+09</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6</th>
-      <td>83600.457029</td>
-      <td>77813.243776</td>
-      <td>0.121309</td>
-      <td>2.243541e+09</td>
+      <td>83589.504148</td>
+      <td>77813.435433</td>
+      <td>0.121344</td>
+      <td>2.243945e+09</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-3-8</th>
-      <td>74791.563648</td>
-      <td>76840.518883</td>
-      <td>0.356047</td>
-      <td>2.239789e+09</td>
+      <td>74814.551572</td>
+      <td>76838.918712</td>
+      <td>0.355927</td>
+      <td>2.240089e+09</td>
     </tr>
     <tr>
       <th>oname:hdstd_otype:lst_usecol:trgw-0-26-6</th>
-      <td>75861.873953</td>
-      <td>76294.769289</td>
-      <td>0.126410</td>
-      <td>2.264246e+09</td>
+      <td>75860.192095</td>
+      <td>76292.567044</td>
+      <td>0.126385</td>
+      <td>2.264338e+09</td>
     </tr>
     <tr>
       <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8</th>
-      <td>75132.235138</td>
-      <td>76350.503153</td>
-      <td>0.133162</td>
-      <td>2.242958e+09</td>
+      <td>75156.235726</td>
+      <td>76359.742146</td>
+      <td>0.133194</td>
+      <td>2.243300e+09</td>
     </tr>
   </tbody>
 </table>
@@ -1095,9 +1095,9 @@ dw_rm.head()
 
 
 
-The `base` row contains the results of the Schur's complement calculation using all observations (so the forecast unceratainty assuming all observation data is used for calibration). Subsequently, there  is a row for each non-zero obsevration group. Each row lists forecast uncertainties calculated assuming that the observation group was __not__ used for history matching. 
+The `base` row contains the results of the Schur's complement calculation using all observations (so the forecast uncertainty assuming all observation data is used for calibration). Subsequently, there  is a row for each non-zero observation group. Each row lists forecast uncertainties calculated assuming that the observation group was __not__ used for history matching. 
 
-We can normalize the importance of each row to the base case (i.e. the lowest uncertainty, or maximum uncertainty reduction), provinding a easy to interpret metric of importance. We can then quickly identify which observation/observation grouping are important for reducing forecast uncertainty:
+We can normalize the importance of each row to the base case (i.e. the lowest uncertainty, or maximum uncertainty reduction), providing a easy to interpret metric of importance. We can then quickly identify which observation/observation grouping are important for reducing forecast uncertainty:
 
 
 ```python
@@ -1144,31 +1144,31 @@ dw_rm.head()
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6</th>
-      <td>12.148864</td>
-      <td>3.396237</td>
-      <td>1.008373</td>
-      <td>0.246969</td>
+      <td>12.104282</td>
+      <td>3.390215</td>
+      <td>1.027570</td>
+      <td>0.249742</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-3-8</th>
-      <td>0.331855</td>
-      <td>2.103706</td>
-      <td>196.463833</td>
-      <td>0.079337</td>
+      <td>0.335941</td>
+      <td>2.095381</td>
+      <td>196.334551</td>
+      <td>0.077461</td>
     </tr>
     <tr>
       <th>oname:hdstd_otype:lst_usecol:trgw-0-26-6</th>
-      <td>1.767661</td>
-      <td>1.378528</td>
-      <td>5.256185</td>
-      <td>1.172123</td>
+      <td>1.738280</td>
+      <td>1.369447</td>
+      <td>5.224538</td>
+      <td>1.160814</td>
     </tr>
     <tr>
       <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8</th>
-      <td>0.788861</td>
-      <td>1.452585</td>
-      <td>10.877873</td>
-      <td>0.220929</td>
+      <td>0.794183</td>
+      <td>1.458702</td>
+      <td>10.893610</td>
+      <td>0.220935</td>
     </tr>
   </tbody>
 </table>
@@ -1239,9 +1239,9 @@ This is where things get really cool. As previously mentioned, the equations on 
 
 Recall from the "pstfrom_pest_setup" tutorial that we included the simulated head in every cell at the end of every stress period as observations in our PEST dataset. (We included a function to extract these values from the MODFLOW6 generated outputs as part of the model forward run.) We have been "carrying" these zero-weighted observations all this time and thus obtained sensitivities for these observations when calcualiting the Jacobian (see the "freyberg_glm_1" tutorial). If we now assume some value of measurement noise (a non-zero weight in the control file), we can run a hypothetical "calibration" analysis using Schur complement. 
 
-Cell-by-cell head observations are in the observation groups with names that start with `hdslay1`, `hdslay2` and `hdslay3`. Now, we could look at the data worth at each location at the end of each stress period. But, beware! Calculaling the Schur complement for all potential observation types and locations can take quite some time! You may need to sample from all availables outputs to speed things up.  
+Cell-by-cell head observations are in the observation groups with names that start with `hdslay1`. Now, we could look at the data worth at each location at the end of each stress period. But, beware! Calculaling the Schur complement for all potential observation types and locations can take quite some time! You may need to sample from all availables outputs to speed things up.  
 
-For the sake of this tutorial, let's focus on `hdslay3` groups: cell-by-cell heads in the bottom layer 3. Instead of evaluating the worth of observations at distinct times, let's look at the value of having *time series* of observations at each location. To do so we group head observations from each stress period at the same well and assess the worth of having this "group" of observations.
+Instead of evaluating the worth of observations at each distinct time, let's look at the value of having *time series* of observations at each location. To do so we group head observations from each stress period at the same cell and assess the worth of having this "group" of observations.
 
 As we did previously, start by creating a dictionary of observations at each model cell:
 
@@ -1268,7 +1268,6 @@ new_obs_dict={}
 for ij in obs_new.ij.unique():
     names = obs_new.loc[obs_new.ij==ij, 'obsnme'].tolist()
     new_obs_dict[ij] = names
-
 ```
 
 Now we repeat the analysis above with the new dictionary of potential new observations using the `get_added_obs_importance()` method.
@@ -1304,7 +1303,7 @@ df_worth_new= sc.get_added_obs_importance(base_obslist=sc.pst.nnz_obs_names,
 print("took:",datetime.now() - start)
 ```
 
-    took: 0:01:14.133255
+    took: 0:00:39.887416
     
 
 As before, `get_added_obs_importance()` returns a dataframe with a column for each forecast, and a row for each potential new observation:
@@ -1344,38 +1343,38 @@ df_worth_new.head()
   <tbody>
     <tr>
       <th>base</th>
-      <td>74544.185170</td>
-      <td>75257.326284</td>
-      <td>0.120098</td>
-      <td>2.238014e+09</td>
+      <td>74564.060309</td>
+      <td>75261.895446</td>
+      <td>0.120110</td>
+      <td>2.238355e+09</td>
     </tr>
     <tr>
       <th>i:0_j:0</th>
-      <td>73720.274051</td>
-      <td>74604.671732</td>
-      <td>0.086097</td>
-      <td>2.232469e+09</td>
+      <td>73741.519283</td>
+      <td>74609.993683</td>
+      <td>0.086100</td>
+      <td>2.232768e+09</td>
     </tr>
     <tr>
       <th>i:0_j:1</th>
-      <td>73715.234223</td>
-      <td>74596.580066</td>
-      <td>0.087085</td>
-      <td>2.232677e+09</td>
+      <td>73736.529492</td>
+      <td>74601.896643</td>
+      <td>0.087089</td>
+      <td>2.232978e+09</td>
     </tr>
     <tr>
       <th>i:0_j:10</th>
-      <td>73219.410735</td>
-      <td>73980.416663</td>
-      <td>0.116369</td>
-      <td>2.231049e+09</td>
+      <td>73241.120677</td>
+      <td>73986.543216</td>
+      <td>0.116377</td>
+      <td>2.231369e+09</td>
     </tr>
     <tr>
       <th>i:0_j:11</th>
-      <td>73188.697950</td>
-      <td>73809.322516</td>
-      <td>0.117496</td>
-      <td>2.230403e+09</td>
+      <td>73209.938182</td>
+      <td>73815.449856</td>
+      <td>0.117506</td>
+      <td>2.230725e+09</td>
     </tr>
   </tbody>
 </table>
@@ -1446,50 +1445,50 @@ df_worth_new_plot.head()
   <tbody>
     <tr>
       <th>i:0_j:0</th>
-      <td>1.105265</td>
-      <td>0.867231</td>
-      <td>28.311088</td>
-      <td>0.247728</td>
+      <td>1.103133</td>
+      <td>0.866178</td>
+      <td>28.315398</td>
+      <td>0.249578</td>
       <td>i:0_j:0</td>
       <td>0</td>
       <td>0</td>
     </tr>
     <tr>
       <th>i:0_j:1</th>
-      <td>1.112026</td>
-      <td>0.877983</td>
-      <td>27.488120</td>
-      <td>0.238451</td>
+      <td>1.109825</td>
+      <td>0.876936</td>
+      <td>27.492417</td>
+      <td>0.240213</td>
       <td>i:0_j:1</td>
       <td>0</td>
       <td>1</td>
     </tr>
     <tr>
       <th>i:0_j:10</th>
-      <td>1.777167</td>
-      <td>1.696725</td>
-      <td>3.104876</td>
-      <td>0.311183</td>
+      <td>1.774232</td>
+      <td>1.694552</td>
+      <td>3.107676</td>
+      <td>0.312102</td>
       <td>i:0_j:10</td>
       <td>0</td>
       <td>10</td>
     </tr>
     <tr>
       <th>i:0_j:11</th>
-      <td>1.818367</td>
-      <td>1.924070</td>
-      <td>2.166126</td>
-      <td>0.340051</td>
+      <td>1.816052</td>
+      <td>1.921883</td>
+      <td>2.167981</td>
+      <td>0.340864</td>
       <td>i:0_j:11</td>
       <td>0</td>
       <td>11</td>
     </tr>
     <tr>
       <th>i:0_j:12</th>
-      <td>1.801007</td>
-      <td>2.109504</td>
-      <td>1.610365</td>
-      <td>0.361516</td>
+      <td>1.799438</td>
+      <td>2.107376</td>
+      <td>1.611491</td>
+      <td>0.362202</td>
       <td>i:0_j:12</td>
       <td>0</td>
       <td>12</td>
@@ -1628,7 +1627,7 @@ next_most_df = sc.next_most_important_added_obs(forecast=forecast_name,
 print("took:",datetime.now() - start)
 ```
 
-    took: 0:06:00.268748
+    took: 0:03:19.459217
     
 
 
@@ -1667,37 +1666,37 @@ next_most_df
     <tr>
       <th>i:16_j:2</th>
       <td>i:16_j:2</td>
-      <td>2.006684e+09</td>
-      <td>10.336393</td>
-      <td>10.336393</td>
+      <td>2.006696e+09</td>
+      <td>10.349523</td>
+      <td>10.349523</td>
     </tr>
     <tr>
       <th>i:24_j:4</th>
       <td>i:24_j:4</td>
-      <td>1.887479e+09</td>
-      <td>5.940408</td>
-      <td>15.662777</td>
+      <td>1.887603e+09</td>
+      <td>5.934746</td>
+      <td>15.670051</td>
     </tr>
     <tr>
       <th>i:16_j:3</th>
       <td>i:16_j:3</td>
-      <td>1.841797e+09</td>
-      <td>2.420265</td>
-      <td>17.703961</td>
+      <td>1.841856e+09</td>
+      <td>2.423582</td>
+      <td>17.713857</td>
     </tr>
     <tr>
       <th>i:29_j:6</th>
       <td>i:29_j:6</td>
-      <td>1.812735e+09</td>
-      <td>1.577887</td>
-      <td>19.002500</td>
+      <td>1.812827e+09</td>
+      <td>1.576080</td>
+      <td>19.010752</td>
     </tr>
     <tr>
       <th>i:15_j:2</th>
       <td>i:15_j:2</td>
-      <td>1.793659e+09</td>
-      <td>1.052343</td>
-      <td>19.854872</td>
+      <td>1.793722e+09</td>
+      <td>1.053887</td>
+      <td>19.864288</td>
     </tr>
   </tbody>
 </table>

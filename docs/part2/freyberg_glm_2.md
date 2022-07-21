@@ -225,7 +225,7 @@ Unfortunately, the large computational savings gained from SVD-assisted inversio
 
 For moderately to highly nonlinear models, super parameter redefinition may be required every few iterations. With intermittent super parameter redefinition, model run savings accrued through SVD-assisted inversion may still be considerable; however, they will not be as great as for a linear model where re-computation of a full Jacobian matrix is never required.
 
-In PEST++GLM, the `n_iter_base` and `n_iter_super` pestpp options determine the number of sequential base and super parameter iterations, respectively. Choosing values for these variables will be case specific and may require some trial and error. Relatively linear problems may work well a single base iteration. Non liner problems will likley benefit from fewer super iterations, interspersed with base iterations. Ideal values may also depend on the maximum number of super parameters (discussed further on).
+In PEST++GLM, the `n_iter_base` and `n_iter_super` pestpp options determine the number of sequential base and super parameter iterations, respectively. Choosing values for these variables will be case specific and may require some trial and error. Relatively linear problems may work well a single base iteration. Non linear problems will likley benefit from fewer super iterations, interspersed with base iterations. Ideal values may also depend on the maximum number of super parameters (discussed further on).
 
 For our case we have found that a single base parameter iteration, followed by a few super iterations is sufficient. 
 
@@ -253,21 +253,10 @@ First create a linear analysis object.  We will use `ErrVar`  derived type, whic
 la = pyemu.ErrVar(jco=os.path.join(t_d, "freyberg_pp.jcb"), 
                     parcov=os.path.join(t_d,"glm_prior.cov"))
 print(la.jco.shape) #without the omitted parameter or the prior info
-la.forecast_names
 ```
 
     (21248, 245)
     
-
-
-
-
-    ['oname:sfr_otype:lst_usecol:tailwater_time:4383.5',
-     'oname:sfr_otype:lst_usecol:headwater_time:4383.5',
-     'oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5',
-     'part_time']
-
-
 
 We can inspect the singular spectrum of $\mathbf{Q}^{\frac{1}{2}}\mathbf{J}$, where $\mathbf{Q}$ is the cofactor matrix and $\mathbf{J}$ is the jacobian:
 
@@ -276,7 +265,7 @@ We can inspect the singular spectrum of $\mathbf{Q}^{\frac{1}{2}}\mathbf{J}$, wh
 s = la.qhalfx.s
 ```
 
-If we plot the singular spectrum, we can see that it decays rapidly (note the y-axis is log-scaled). We can really only support about 65 right singular vectors even though we have several hundred adjustable parameters. Should we be using mre super-parameters than that then? Doing so runs the risk of overfitting. Overfitting leads to bias. Bias leads to suffering...
+If we plot the singular spectrum, we can see that it decays rapidly (note the y-axis is log-scaled). We can really only support about `max_sing_val` right singular vectors even though we have several hundred adjustable parameters. Should we be using mre super-parameters than that then? Doing so runs the risk of overfitting. Overfitting leads to bias. Bias leads to suffering...
 
 
 ```python
@@ -333,9 +322,9 @@ pst.pestpp_options['parcov']
 
 
 
-PEST++GLM calculates a posterior parameter covariance matrix at the end of each iteration. Each covariance matrix is recorded in an extenral file. PEST++GLM also provides summaries of prior and posterior parameter uncertainties (means, standard deviations and bounds) for each iteration.
+PEST++GLM calculates a posterior parameter covariance matrix at the end of each iteration. Each covariance matrix is recorded in an external file. PEST++GLM also provides summaries of prior and posterior parameter uncertainties (means, standard deviations and bounds) for each iteration.
 
-If any observations are listed as forecasts (in the `forecast()` variable), PEST++GLM will also undertake predicitve uncertainty analysis. By default, if no forecasts are provided, PEST++GLM will assume all zero-weighted observations are forecasts - so it is usually a good idea to specify forecasts explicitly (if you have many many zero-weighted obsevrations FOSM can cost some computation time). Recall that we specifed several observations as forecasts:
+If any observations are listed as forecasts (in the `forecast()` variable), PEST++GLM will also undertake predictive uncertainty analysis. By default, if no forecasts are provided, PEST++GLM will assume all zero-weighted observations are forecasts - so it is usually a good idea to specify forecasts explicitly (if you have many many zero-weighted obsevrations FOSM can cost some computation time). Recall that we specified several observations as forecasts:
 
 
 ```python
@@ -349,7 +338,7 @@ pst.pestpp_options['forecasts']
 
 
 
-FOSM implemented by PEST++GLM assumes that the standard deviation of measurement noise associated with each observation is proportional current observation residual. This accounts for the model's ability to reproduce an obsevration. Effectively, it assumes that the residual is a measure of measurement noise + model error. Thus, observation weights used during FOSM are calcualted as the inverse of the residual. Note that this "residual weight" never increases weights beyond those which are specified in the control file! The assumption is that weighs in the control file represent the inverse of measurment noise standard deviation - and it would be illogical to decrease noise beyond this level. 
+FOSM implemented by PEST++GLM assumes that the standard deviation of measurement noise associated with each observation is proportional to current observation residual. This accounts for the model's ability to reproduce an observation. Effectively, it assumes that the residual is a measure of measurement noise + model error. Thus, observation weights used during FOSM are calculated as the inverse of the residual. Note that this "residual weight" never increases weights beyond those which are specified in the control file! The assumption is that weighs in the control file represent the inverse of measurment noise standard deviation - and it would be illogical to decrease noise beyond this level. 
 
 It is important to keep this in mind. If observation weights in the control file do **not** represent measurement noise, then it may be preferable to not use PEST++GLM to undertake FOSM during parameter estimation. In our case, weights represent the inverse of measurment standard deviations - so we are all good!
 
@@ -441,7 +430,7 @@ pst.phi
 
 
 
-    44.98457706481814
+    47.79859025261253
 
 
 
@@ -452,7 +441,7 @@ Recall that observations are weighted according to the inverse of measurment noi
 print(f"Phi: {pst.phi} \nNumber of non-zero obs: {pst.nnz_obs}")
 ```
 
-    Phi: 44.98457706481814 
+    Phi: 47.79859025261253 
     Number of non-zero obs: 72
     
 
@@ -541,8 +530,8 @@ df_obj.head()
     <tr>
       <th>0</th>
       <td>0</td>
-      <td>1132.7100</td>
-      <td>1132.7100</td>
+      <td>13061.7000</td>
+      <td>13061.7000</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -554,9 +543,9 @@ df_obj.head()
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>128.57200</td>
+      <td>206.7330</td>
       <td>0</td>
-      <td>92.97660</td>
+      <td>148.43200</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -565,8 +554,8 @@ df_obj.head()
     <tr>
       <th>1</th>
       <td>11</td>
-      <td>229.3270</td>
-      <td>229.3270</td>
+      <td>656.9730</td>
+      <td>656.9730</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -578,9 +567,9 @@ df_obj.head()
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>19.19010</td>
+      <td>445.1770</td>
       <td>0</td>
-      <td>27.31780</td>
+      <td>98.41460</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -589,8 +578,8 @@ df_obj.head()
     <tr>
       <th>2</th>
       <td>61</td>
-      <td>50.5469</td>
-      <td>50.5469</td>
+      <td>47.7986</td>
+      <td>47.7986</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -602,9 +591,9 @@ df_obj.head()
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>4.65402</td>
+      <td>27.5609</td>
       <td>0</td>
-      <td>6.56466</td>
+      <td>5.72848</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -613,8 +602,8 @@ df_obj.head()
     <tr>
       <th>3</th>
       <td>111</td>
-      <td>44.9846</td>
-      <td>44.9846</td>
+      <td>118.3940</td>
+      <td>118.3940</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -626,9 +615,9 @@ df_obj.head()
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>9.74367</td>
+      <td>27.3603</td>
       <td>0</td>
-      <td>6.52797</td>
+      <td>17.45060</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -717,45 +706,45 @@ pst.res.head()
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
-      <td>34.720563</td>
-      <td>34.606945</td>
-      <td>0.113618</td>
+      <td>35.870909</td>
+      <td>36.420135</td>
+      <td>-0.549226</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
-      <td>34.722037</td>
-      <td>34.603903</td>
-      <td>0.118133</td>
+      <td>35.791150</td>
+      <td>36.294485</td>
+      <td>-0.503335</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
-      <td>34.714429</td>
-      <td>34.632920</td>
-      <td>0.081509</td>
+      <td>35.784015</td>
+      <td>36.277202</td>
+      <td>-0.493186</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
-      <td>34.782017</td>
-      <td>34.674624</td>
-      <td>0.107392</td>
+      <td>35.818347</td>
+      <td>36.328078</td>
+      <td>-0.509731</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
-      <td>34.841318</td>
-      <td>34.709359</td>
-      <td>0.131960</td>
+      <td>35.884582</td>
+      <td>36.412482</td>
+      <td>-0.527899</td>
       <td>0.0</td>
     </tr>
   </tbody>
@@ -876,123 +865,123 @@ oe.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>34.5658</td>
-      <td>34.5491</td>
-      <td>34.6170</td>
-      <td>34.6275</td>
-      <td>34.6369</td>
-      <td>34.6675</td>
-      <td>34.6935</td>
-      <td>34.6219</td>
-      <td>34.5075</td>
-      <td>34.3759</td>
+      <td>36.3796</td>
+      <td>36.2651</td>
+      <td>36.2221</td>
+      <td>36.2353</td>
+      <td>36.3013</td>
+      <td>36.3894</td>
+      <td>36.4878</td>
+      <td>36.4227</td>
+      <td>36.2736</td>
+      <td>36.0851</td>
       <td>...</td>
-      <td>-0.174247</td>
-      <td>-0.183912</td>
-      <td>-0.286721</td>
-      <td>-0.416190</td>
-      <td>-0.574808</td>
-      <td>-0.716813</td>
-      <td>-0.800129</td>
-      <td>-0.756522</td>
+      <td>0.317252</td>
+      <td>0.342115</td>
+      <td>0.269281</td>
+      <td>0.135337</td>
+      <td>-0.021468</td>
+      <td>-0.189139</td>
+      <td>-0.324796</td>
+      <td>-0.382808</td>
       <td>5</td>
-      <td>109238.0</td>
+      <td>222851.0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>34.6788</td>
-      <td>34.6724</td>
-      <td>34.7032</td>
-      <td>34.7365</td>
-      <td>34.8034</td>
-      <td>34.8209</td>
-      <td>34.8087</td>
-      <td>34.7427</td>
-      <td>34.5951</td>
-      <td>34.4368</td>
+      <td>36.8739</td>
+      <td>36.7338</td>
+      <td>36.7396</td>
+      <td>36.7981</td>
+      <td>36.8933</td>
+      <td>37.0025</td>
+      <td>37.0336</td>
+      <td>36.9469</td>
+      <td>36.7490</td>
+      <td>36.5025</td>
       <td>...</td>
-      <td>-0.444303</td>
-      <td>-0.450600</td>
-      <td>-0.527780</td>
-      <td>-0.645964</td>
-      <td>-0.784631</td>
-      <td>-0.924906</td>
-      <td>-1.031560</td>
-      <td>-1.038010</td>
+      <td>0.112141</td>
+      <td>0.084943</td>
+      <td>0.044979</td>
+      <td>-0.162401</td>
+      <td>-0.399399</td>
+      <td>-0.644954</td>
+      <td>-0.825335</td>
+      <td>-0.904149</td>
       <td>5</td>
-      <td>27697.9</td>
+      <td>49490.6</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>34.6872</td>
-      <td>34.6811</td>
-      <td>34.7187</td>
-      <td>34.7187</td>
-      <td>34.7481</td>
-      <td>34.7982</td>
-      <td>34.8003</td>
-      <td>34.7419</td>
-      <td>34.6521</td>
-      <td>34.4820</td>
+      <td>36.8321</td>
+      <td>36.7919</td>
+      <td>36.7847</td>
+      <td>36.8238</td>
+      <td>36.8996</td>
+      <td>36.9714</td>
+      <td>37.0006</td>
+      <td>36.9317</td>
+      <td>36.8216</td>
+      <td>36.6193</td>
       <td>...</td>
-      <td>-0.317830</td>
-      <td>-0.304507</td>
-      <td>-0.419309</td>
-      <td>-0.567078</td>
-      <td>-0.725442</td>
-      <td>-0.873906</td>
-      <td>-0.965150</td>
-      <td>-0.955786</td>
+      <td>0.455377</td>
+      <td>0.512456</td>
+      <td>0.439978</td>
+      <td>0.282058</td>
+      <td>0.089265</td>
+      <td>-0.115376</td>
+      <td>-0.272259</td>
+      <td>-0.334552</td>
       <td>5</td>
-      <td>62101.6</td>
+      <td>159596.0</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>34.8025</td>
-      <td>34.7905</td>
-      <td>34.8308</td>
-      <td>34.8794</td>
-      <td>34.9136</td>
-      <td>34.9518</td>
-      <td>34.9019</td>
-      <td>34.8590</td>
-      <td>34.7302</td>
-      <td>34.5304</td>
+      <td>36.7126</td>
+      <td>36.5110</td>
+      <td>36.4849</td>
+      <td>36.5394</td>
+      <td>36.6174</td>
+      <td>36.7140</td>
+      <td>36.8055</td>
+      <td>36.7205</td>
+      <td>36.5493</td>
+      <td>36.2799</td>
       <td>...</td>
-      <td>-0.395528</td>
-      <td>-0.375856</td>
-      <td>-0.422554</td>
-      <td>-0.513051</td>
-      <td>-0.638089</td>
-      <td>-0.772675</td>
-      <td>-0.875100</td>
-      <td>-0.919789</td>
+      <td>0.079958</td>
+      <td>0.033099</td>
+      <td>-0.049624</td>
+      <td>-0.246669</td>
+      <td>-0.464928</td>
+      <td>-0.693805</td>
+      <td>-0.869428</td>
+      <td>-0.894001</td>
       <td>5</td>
-      <td>40540.2</td>
+      <td>114285.0</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>34.7114</td>
-      <td>34.7245</td>
-      <td>34.7607</td>
-      <td>34.8822</td>
-      <td>34.8998</td>
-      <td>34.9432</td>
-      <td>34.9049</td>
-      <td>34.8510</td>
-      <td>34.7180</td>
-      <td>34.5235</td>
+      <td>36.4516</td>
+      <td>36.3152</td>
+      <td>36.3038</td>
+      <td>36.3754</td>
+      <td>36.4958</td>
+      <td>36.6144</td>
+      <td>36.7244</td>
+      <td>36.6701</td>
+      <td>36.4928</td>
+      <td>36.1727</td>
       <td>...</td>
-      <td>-0.229453</td>
-      <td>-0.216106</td>
-      <td>-0.299691</td>
-      <td>-0.402041</td>
-      <td>-0.526137</td>
-      <td>-0.641154</td>
-      <td>-0.713122</td>
-      <td>-0.724800</td>
+      <td>0.318807</td>
+      <td>0.398570</td>
+      <td>0.370773</td>
+      <td>0.264358</td>
+      <td>0.127420</td>
+      <td>-0.024509</td>
+      <td>-0.147014</td>
+      <td>-0.178043</td>
       <td>5</td>
-      <td>83868.5</td>
+      <td>211444.0</td>
     </tr>
   </tbody>
 </table>
@@ -1155,9 +1144,7 @@ pst.get_adj_pars_at_bounds()
 
 
 
-    (['pname:rch_recharge_13tcn_inst:0_ptype:cn_pstyle:m'],
-     ['pname:rch_recharge_7tcn_inst:0_ptype:cn_pstyle:m',
-      'pname:rch_recharge_8tcn_inst:0_ptype:cn_pstyle:m'])
+    (['pname:rch_recharge_13tcn_inst:0_ptype:cn_pstyle:m'], [])
 
 
 
@@ -1221,10 +1208,10 @@ f_df
       <td>1.3548</td>
       <td>32.8502</td>
       <td>38.2694</td>
-      <td>34.4288</td>
-      <td>0.350009</td>
-      <td>33.7288</td>
-      <td>35.1289</td>
+      <td>39.1139</td>
+      <td>0.353508</td>
+      <td>38.4069</td>
+      <td>39.8209</td>
     </tr>
     <tr>
       <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
@@ -1232,10 +1219,10 @@ f_df
       <td>467.6410</td>
       <td>-1062.4700</td>
       <td>808.0890</td>
-      <td>-112.0640</td>
-      <td>274.703000</td>
-      <td>-661.4690</td>
-      <td>437.3420</td>
+      <td>-719.2990</td>
+      <td>274.946000</td>
+      <td>-1269.1900</td>
+      <td>-169.4080</td>
     </tr>
     <tr>
       <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
@@ -1243,10 +1230,10 @@ f_df
       <td>398.7560</td>
       <td>-704.6000</td>
       <td>890.4220</td>
-      <td>-102.0130</td>
-      <td>273.360000</td>
-      <td>-648.7330</td>
-      <td>444.7080</td>
+      <td>-369.0800</td>
+      <td>274.225000</td>
+      <td>-917.5300</td>
+      <td>179.3710</td>
     </tr>
     <tr>
       <th>part_time</th>
@@ -1254,10 +1241,10 @@ f_df
       <td>48689.3000</td>
       <td>1979.8600</td>
       <td>196737.0000</td>
-      <td>80508.8000</td>
-      <td>47339.400000</td>
-      <td>-14169.9000</td>
-      <td>175188.0000</td>
+      <td>117996.0000</td>
+      <td>47419.500000</td>
+      <td>23157.3000</td>
+      <td>212835.0000</td>
     </tr>
   </tbody>
 </table>
@@ -1324,14 +1311,4 @@ Does the FOSM posterior (blue-shaded area) overlap the Monte Carlo posterior (bl
 
 Because we are working with a synthetic case for which we know the truth, we can also assess whether forecast posteriors include the true value. Naturally, this would not be possible for a real-world case. Do each of the red lines fall within the FOSM (blue shaded area) and Monte Carlo (blue column) posteriors? If so, then technically uncertainty analysis has not failed. #winning. If not, then it has failed. #major bad times.
 
-In this case we have done a pretty good job. We seem to have avoided underestimating uncertainty, even for the difficult null-space dependent forecasts. Counterintuitively, we did so by _not_ getting a really good fit with with measured data. Only _as good_ a fit as is reasonable given the information content therein. Of course, in the real-world we wouldn't be able to assess whether uncertainty analysis had failed. The somewhat irrealistic parameter patterns (all those bullseyes in the calibrated K field), the fact that several parameters are at their bounds and that the posterior parameter ensemble does not cover observed values are all red-flags. They suggest the potential emergence of bias and parameters taking on compensatory roles.  A modeller might wish to revisti their model and parameterisation to resolve the source of some of this structural error. Or, omitting clairbation entirely might provide a more conservative and robust forecast.We will return to these concepts during the PEST++IES tutorial notebooks.
-
-
-```python
-
-```
-
-
-```python
-
-```
+In this case we have done a pretty good job. We seem to have avoided underestimating uncertainty, even for the difficult null-space dependent forecasts. Counterintuitively, we did so by _not_ getting a really good fit with with measured data. Only _as good_ a fit as is reasonable given the information content therein. 
