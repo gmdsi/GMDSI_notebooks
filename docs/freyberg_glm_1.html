@@ -14608,7 +14608,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="1.-Admin">1. Admin<a class="anchor-link" href="#1.-Admin">&#182;</a></h3><p>Start off with the usual loading of dependencies and preparing model and PEST files. We will be continuing to work with the modified-Freyberg model (see "intro to model" notebook), and the high-dimensional PEST dataset prepared in the "pstfrom pest setup" and "obs and weights" notebooks.</p>
+<h3 id="Admin">Admin<a class="anchor-link" href="#Admin">&#182;</a></h3><p>Start off with the usual loading of dependencies and preparing model and PEST files. We will be continuing to work with the modified-Freyberg model (see "intro to model" notebook), and the high-dimensional PEST dataset prepared in the "pstfrom pest setup" and "obs and weights" notebooks.</p>
 <p>For the purposes of this notebook, you do not require familiarity with previous notebooks (but it helps...).</p>
 <p>Simply run the next few cells by pressing <code>shift+enter</code>.</p>
 
@@ -14733,7 +14733,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="2.-Inspect-the-PEST-Dataset">2. Inspect the PEST Dataset<a class="anchor-link" href="#2.-Inspect-the-PEST-Dataset">&#182;</a></h3>
+<h3 id="Inspect-the-PEST-Dataset">Inspect the PEST Dataset<a class="anchor-link" href="#Inspect-the-PEST-Dataset">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -15082,7 +15082,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>4.7310210999999995</pre>
+<pre>4.250553700000001</pre>
 </div>
 
 </div>
@@ -15177,7 +15177,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Number of hours to fill a jacobian:3.1258907745722224
+<pre>Number of hours to fill a jacobian:2.8084352863388897
 </pre>
 </div>
 </div>
@@ -15205,7 +15205,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="3.-Good-Bye-High-Dimensional-Parameterisation!">3. Good-Bye High-Dimensional Parameterisation!<a class="anchor-link" href="#3.-Good-Bye-High-Dimensional-Parameterisation!">&#182;</a></h3><p>As previously discussed, the computational cost of conventional model calibration (attained through
+<h3 id="Good-Bye-High-Dimensional-Parameterisation!">Good-Bye High-Dimensional Parameterisation!<a class="anchor-link" href="#Good-Bye-High-Dimensional-Parameterisation!">&#182;</a></h3><p>As previously discussed, the computational cost of conventional model calibration (attained through
 adjustment of a single parameter field using partial derivatives calculated using finite parameter
 differences) increases with the number of adjustable parameters. This imposes pragmatic limits on the number of adjustable parameters we can have.</p>
 <p>We are limited by compute power (e.g. how many parallel model runs can we deploy) and how long each model takes to run. At the end of the day, it will be project time and cost constraints that will pose hard limits on what is acceptible.</p>
@@ -15499,7 +15499,7 @@ differences) increases with the number of adjustable parameters. This imposes pr
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Number of hours to fill a jacobian:0.03219722693055556
+<pre>Number of hours to fill a jacobian:0.028927379347222233
 </pre>
 </div>
 </div>
@@ -15595,7 +15595,7 @@ differences) increases with the number of adjustable parameters. This imposes pr
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="4.-Run-PEST++GLM">4. Run PEST++GLM<a class="anchor-link" href="#4.-Run-PEST++GLM">&#182;</a></h3><p>Alright! Let's run this thing!</p>
+<h3 id="Run-PEST++GLM">Run PEST++GLM<a class="anchor-link" href="#Run-PEST++GLM">&#182;</a></h3><p>Alright! Let's run this thing!</p>
 <p>As we saw in the "freyberg prior monte carlo" notebook, we can use <code>pyemu</code> to deploy PEST in parallel.</p>
 <p>To speed up the process, you will want to distribute the workload across as many parallel agents as possible. Normally, you will want to use the same number of agents (or less) as you have available CPU cores. Most personal computers (i.e. desktops or laptops) these days have between 4 and 10 cores. Servers or HPCs may have many more cores than this. Another limitation to keep in mind is the read/write speed of your machines disk (e.g. your hard drive). PEST and the model software are going to be reading and writting lots of files. This often slows things down if agents are competing for the same resources to read/write to disk. (It also wears through SSD drives...)</p>
 <p>The first thing we will do is specify the number of agents we are going to use.</p>
@@ -15627,7 +15627,7 @@ differences) increases with the number of adjustable parameters. This imposes pr
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Then specify the folder in which the PEST manager will run and record outcomes. It should be different form the <code>t_d</code> folder.</p>
+<p>Then specify the folder in which the PEST manager will run and record outcomes. It should be different from the <code>t_d</code> folder.</p>
 
 </div>
 </div>
