@@ -30,7 +30,7 @@ nb_dir = "intro_to_regression"
 nb_file = "intro_to_regression.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "freyberg_intro_to_model"
+nb_dir = "intro_to_freyberg_model"
 nb_file = "freyberg_intro_model.ipynb"
 run_nb(nb_file, nb_dir)
 
