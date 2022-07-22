@@ -264,7 +264,7 @@ def prep_pest(tmp_d):
 
     # make hk pars tpl
     for lay in range(nlay):
-        filename = f'freyberg6.npf_k_layer{lay+1}.tpl'
+        filename = f'freyberg6.npf_k_layer{lay+1}.txt.tpl'
         with open(os.path.join(tmp_d,filename),'w') as f:
             f.write("ptf ~\n")
             for i in range(nrow):
@@ -287,7 +287,7 @@ def prep_pest(tmp_d):
 
     # build lists of tpl, in, ins, and out files
     tpl_files = [os.path.join(tmp_d, f) for f in os.listdir(tmp_d) if f.endswith(".tpl")]
-    in_files = [f.replace(".tpl",".txt") for f in tpl_files]
+    in_files = [f.replace(".tpl","") for f in tpl_files]
     ins_files = [os.path.join(tmp_d, f) for f in os.listdir(tmp_d) if f.endswith(".ins")]
     out_files = [f.replace(".ins","") for f in ins_files]
 
