@@ -10,7 +10,7 @@ math: mathjax3
 
 Sequential state-parameter estimation is a whole new beast for the PEST world.  Every other tool in PEST and PEST++ operate on the concept of "batch" estimation, where the model is run forward for the full simulation period and PEST(++) simply calls the model and reads the results.  In sequential estimation, PESTPP-DA takes control of the advancing of simulation time.  This opens up some powerful new analyses but requires us to heavily modify the PEST interface and model itself.  This horrible notebook does that...
 
-### 1. The modified Freyberg PEST dataset
+### The modified Freyberg PEST dataset
 
 The modified Freyberg model is introduced in another tutorial notebook (see "freyberg intro to model"). The current notebook picks up following the "freyberg psfrom pest setup" notebook, in which a high-dimensional PEST dataset was constructed using `pyemu.PstFrom`. You may also wish to go through the "intro to pyemu" notebook beforehand.
 
@@ -1496,7 +1496,7 @@ obs
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</td>
-      <td>34.720563</td>
+      <td>35.870909</td>
       <td>0.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -1511,7 +1511,7 @@ obs
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</td>
-      <td>34.722037</td>
+      <td>35.791150</td>
       <td>0.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -1526,7 +1526,7 @@ obs
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</td>
-      <td>34.714429</td>
+      <td>35.784015</td>
       <td>0.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -1541,7 +1541,7 @@ obs
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</td>
-      <td>34.782017</td>
+      <td>35.818347</td>
       <td>0.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -1556,7 +1556,7 @@ obs
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</td>
-      <td>34.841318</td>
+      <td>35.884582</td>
       <td>0.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
       <td>hds</td>
@@ -1646,7 +1646,7 @@ obs
     <tr>
       <th>part_time</th>
       <td>part_time</td>
-      <td>36377.040060</td>
+      <td>31272.297940</td>
       <td>0.0</td>
       <td>part</td>
       <td>NaN</td>
@@ -1941,7 +1941,7 @@ pst.drop_observations(os.path.join(t_d,"freyberg_mp.mpend.ins"),pst_path=".")
     <tr>
       <th>part_time</th>
       <td>part_time</td>
-      <td>36377.04006</td>
+      <td>31272.29794</td>
       <td>0.0</td>
       <td>part</td>
       <td>NaN</td>
@@ -2021,75 +2021,75 @@ pst.drop_observations(os.path.join(t_d,"sfr.tdiff.csv.ins"),pst_path=".")
   </thead>
   <tbody>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4018.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:4018.5</td>
-      <td>-2160.085439</td>
+      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:3773.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:3773.5</td>
+      <td>-50.925005</td>
       <td>0.01</td>
       <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>gage-1</td>
-      <td>4018.5</td>
+      <td>3773.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>1.0</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3804.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3804.5</td>
-      <td>-347.353250</td>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4018.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4018.5</td>
+      <td>736.290668</td>
       <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
       <td>sfrtd</td>
       <td>lst</td>
-      <td>headwater</td>
-      <td>3804.5</td>
+      <td>tailwater</td>
+      <td>4018.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3926.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3926.5</td>
-      <td>557.480002</td>
-      <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>headwater</td>
-      <td>3926.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4138.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:4138.5</td>
-      <td>-454.629985</td>
+      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:3652.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:3652.5</td>
+      <td>0.000000</td>
       <td>0.00</td>
       <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>gage-1</td>
-      <td>4138.5</td>
+      <td>3652.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:4291.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:4291.5</td>
-      <td>805.532276</td>
+      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3712.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3712.5</td>
+      <td>-6.567037</td>
       <td>0.00</td>
       <td>oname:sfrtd_otype:lst_usecol:headwater</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>headwater</td>
-      <td>4291.5</td>
+      <td>3712.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:3743.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:3743.5</td>
+      <td>-165.738748</td>
+      <td>0.00</td>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>tailwater</td>
+      <td>3743.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -2111,75 +2111,75 @@ pst.drop_observations(os.path.join(t_d,"sfr.tdiff.csv.ins"),pst_path=".")
       <td>...</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3652.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3652.5</td>
-      <td>0.000000</td>
+      <th>oname:sfrtd_otype:lst_usecol:headwater_time:4018.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:headwater_time:4018.5</td>
+      <td>902.200972</td>
       <td>0.00</td>
       <td>oname:sfrtd_otype:lst_usecol:headwater</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>headwater</td>
-      <td>3652.5</td>
+      <td>4018.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4261.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4261.5</td>
-      <td>538.042324</td>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4322.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4322.5</td>
+      <td>941.046049</td>
       <td>0.00</td>
       <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>tailwater</td>
-      <td>4261.5</td>
+      <td>4322.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:3804.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:3804.5</td>
-      <td>514.960796</td>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:3896.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:3896.5</td>
+      <td>214.280986</td>
+      <td>0.00</td>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>tailwater</td>
+      <td>3896.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4018.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:4018.5</td>
+      <td>-936.573081</td>
       <td>0.01</td>
       <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>gage-1</td>
-      <td>3804.5</td>
+      <td>4018.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>1.0</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4352.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4352.5</td>
-      <td>1021.663615</td>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4169.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4169.5</td>
+      <td>86.478368</td>
       <td>0.00</td>
       <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>tailwater</td>
-      <td>4352.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3865.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3865.5</td>
-      <td>-40.312374</td>
-      <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>headwater</td>
-      <td>3865.5</td>
+      <td>4169.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -2252,44 +2252,29 @@ pst.drop_observations(os.path.join(t_d,"heads.tdiff.csv.ins"),pst_path=".")
   </thead>
   <tbody>
     <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-21-10_time:4018.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-21-10_time:4018.5</td>
-      <td>-0.743434</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-29-15_time:3865.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-29-15_time:3865.5</td>
+      <td>0.022906</td>
       <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-21-10</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-29-15</td>
       <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-21-10</td>
-      <td>4018.5</td>
+      <td>trgw-0-29-15</td>
+      <td>3865.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-21-10_time:4108.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-21-10_time:4108.5</td>
-      <td>-0.445958</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-34-10_time:4230.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-34-10_time:4230.5</td>
+      <td>-0.334930</td>
       <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-21-10</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-34-10</td>
       <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-21-10</td>
-      <td>4108.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:4230.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:4230.5</td>
-      <td>-0.030578</td>
-      <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-3-8</td>
-      <td>hdstd</td>
-      <td>lst</td>
-      <td>trgw-0-3-8</td>
+      <td>trgw-0-34-10</td>
       <td>4230.5</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -2297,14 +2282,14 @@ pst.drop_observations(os.path.join(t_d,"heads.tdiff.csv.ins"),pst_path=".")
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-33-7_time:4291.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-33-7_time:4291.5</td>
-      <td>-0.832051</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:4291.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:4291.5</td>
+      <td>-0.199251</td>
       <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-33-7</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-3-8</td>
       <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-33-7</td>
+      <td>trgw-0-3-8</td>
       <td>4291.5</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -2312,15 +2297,30 @@ pst.drop_observations(os.path.join(t_d,"heads.tdiff.csv.ins"),pst_path=".")
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-21-10_time:3957.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-21-10_time:3957.5</td>
-      <td>-0.536478</td>
-      <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-21-10</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3683.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3683.5</td>
+      <td>-0.207377</td>
+      <td>20.0</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-26-6</td>
       <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-21-10</td>
-      <td>3957.5</td>
+      <td>trgw-0-26-6</td>
+      <td>3683.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-2-15_time:4322.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-2-15_time:4322.5</td>
+      <td>-0.315267</td>
+      <td>0.0</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-2-15</td>
+      <td>hdstd</td>
+      <td>lst</td>
+      <td>trgw-0-2-15</td>
+      <td>4322.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -2342,75 +2342,75 @@ pst.drop_observations(os.path.join(t_d,"heads.tdiff.csv.ins"),pst_path=".")
       <td>...</td>
     </tr>
     <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-15-16_time:3834.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-15-16_time:3834.5</td>
-      <td>0.117569</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-13-10_time:4291.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-13-10_time:4291.5</td>
+      <td>-0.524994</td>
+      <td>0.0</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-13-10</td>
+      <td>hdstd</td>
+      <td>lst</td>
+      <td>trgw-0-13-10</td>
+      <td>4291.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-21-10_time:4230.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-21-10_time:4230.5</td>
+      <td>-0.408575</td>
+      <td>0.0</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-21-10</td>
+      <td>hdstd</td>
+      <td>lst</td>
+      <td>trgw-0-21-10</td>
+      <td>4230.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-13-10_time:3804.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-13-10_time:3804.5</td>
+      <td>0.244996</td>
+      <td>0.0</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-13-10</td>
+      <td>hdstd</td>
+      <td>lst</td>
+      <td>trgw-0-13-10</td>
+      <td>3804.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-15-16_time:4291.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-15-16_time:4291.5</td>
+      <td>-0.367521</td>
       <td>0.0</td>
       <td>oname:hdstd_otype:lst_usecol:trgw-0-15-16</td>
       <td>hdstd</td>
       <td>lst</td>
       <td>trgw-0-15-16</td>
-      <td>3834.5</td>
+      <td>4291.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4322.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4322.5</td>
-      <td>-0.927476</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-33-7_time:4291.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-33-7_time:4291.5</td>
+      <td>-0.832051</td>
       <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-33-7</td>
       <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-9-1</td>
-      <td>4322.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-2-9_time:4108.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-2-9_time:4108.5</td>
-      <td>-0.135465</td>
-      <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-2-9</td>
-      <td>hdstd</td>
-      <td>lst</td>
-      <td>trgw-0-2-9</td>
-      <td>4108.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-29-15_time:4138.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-29-15_time:4138.5</td>
-      <td>-0.067201</td>
-      <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-29-15</td>
-      <td>hdstd</td>
-      <td>lst</td>
-      <td>trgw-0-29-15</td>
-      <td>4138.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:3865.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:3865.5</td>
-      <td>0.439176</td>
-      <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1</td>
-      <td>hdstd</td>
-      <td>lst</td>
-      <td>trgw-0-9-1</td>
-      <td>3865.5</td>
+      <td>trgw-0-33-7</td>
+      <td>4291.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -2885,23 +2885,23 @@ odata
 
 
 
-    {'oname:hdslay1_t1_otype:arr_i:26_j:6': array([34.85266621, 34.79508519, 34.76839828, 34.89693726, 34.97987351,
-            34.95782867, 35.01930664, 34.93563189, 34.76749495, 34.59683386,
-            34.34610512, 34.20600796, 34.0807814 , 34.1319264 , 34.21931528,
-            34.33516994, 34.53828482, 34.63167485, 34.64222257, 34.54562015,
-            34.46935381, 34.28721548, 34.05158553, 33.8496649 , 33.81025681]),
-     'oname:hdslay1_t1_otype:arr_i:3_j:8': array([35.05613184, 35.04774219, 35.06953776, 35.1296111 , 35.16466914,
-            35.23916615, 35.29873836, 35.26420091, 35.17177402, 35.01036854,
-            34.79731074, 34.66022605, 34.55017155, 34.52936089, 34.55307522,
-            34.67838205, 34.85302826, 34.91684005, 34.99503288, 35.02555393,
-            34.92663628, 34.81903577, 34.64861095, 34.51785681, 34.42095203]),
-     'oname:sfr_otype:lst_usecol:gage-1': array([3809.88011262, 3867.95158596, 3757.72433431, 3988.28192738,
-            4135.60808168, 4324.84090912, 4321.1695285 , 4124.84432369,
-            3660.93881161, 2991.02391267, 2327.72560983, 1854.84513457,
-            1649.79467379, 1914.57930911, 2311.93589031, 2851.08992099,
-            3355.25012762, 3717.19319928, 3591.84699766, 3453.27403062,
-            2963.42384147, 2433.01148705, 1768.50260134, 1409.6414088 ,
-            1169.05683022])}
+    {'oname:hdslay1_t1_otype:arr_i:26_j:6': array([37.37579735, 37.16842   , 37.11648902, 37.18288989, 37.2833259 ,
+            37.27437069, 37.32503752, 37.30045718, 37.19973692, 36.96003489,
+            36.62773169, 36.38546166, 36.15639389, 36.05551502, 35.9824022 ,
+            35.90634064, 36.00712317, 36.09014604, 36.21793727, 36.27164531,
+            36.14572625, 35.76941979, 35.3847477 , 35.05523616, 34.83315186]),
+     'oname:hdslay1_t1_otype:arr_i:3_j:8': array([38.03089161, 38.00653921, 38.04337371, 38.11740414, 38.18983354,
+            38.31031867, 38.41870941, 38.40334492, 38.33715027, 38.17189276,
+            37.93310723, 37.76423918, 37.60864426, 37.5570131 , 37.55944374,
+            37.66604557, 37.82963659, 37.89926704, 38.00474126, 38.05612211,
+            37.96052079, 37.83164058, 37.6172957 , 37.43898054, 37.29323628]),
+     'oname:sfr_otype:lst_usecol:gage-1': array([2943.23871013, 2815.37750875, 2749.121657  , 2816.79763997,
+            2892.31370464, 3023.24777662, 3034.11784435, 2982.12739629,
+            2910.84597621, 2648.80056779, 2428.73248953, 2204.18333133,
+            2006.66562883, 2077.4457815 , 2136.33542386, 2302.3991308 ,
+            2504.02806217, 2714.29060409, 2729.00883514, 2763.70167476,
+            2553.33891424, 2319.10035891, 2032.23075637, 1866.93845011,
+            1627.58049053])}
 
 
 
@@ -2953,153 +2953,153 @@ df
   <tbody>
     <tr>
       <th>0</th>
-      <td>34.852666</td>
-      <td>35.056132</td>
-      <td>3809.880113</td>
+      <td>37.375797</td>
+      <td>38.030892</td>
+      <td>2943.238710</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>34.795085</td>
-      <td>35.047742</td>
-      <td>3867.951586</td>
+      <td>37.168420</td>
+      <td>38.006539</td>
+      <td>2815.377509</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>34.768398</td>
-      <td>35.069538</td>
-      <td>3757.724334</td>
+      <td>37.116489</td>
+      <td>38.043374</td>
+      <td>2749.121657</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>34.896937</td>
-      <td>35.129611</td>
-      <td>3988.281927</td>
+      <td>37.182890</td>
+      <td>38.117404</td>
+      <td>2816.797640</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>34.979874</td>
-      <td>35.164669</td>
-      <td>4135.608082</td>
+      <td>37.283326</td>
+      <td>38.189834</td>
+      <td>2892.313705</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>34.957829</td>
-      <td>35.239166</td>
-      <td>4324.840909</td>
+      <td>37.274371</td>
+      <td>38.310319</td>
+      <td>3023.247777</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>35.019307</td>
-      <td>35.298738</td>
-      <td>4321.169528</td>
+      <td>37.325038</td>
+      <td>38.418709</td>
+      <td>3034.117844</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>34.935632</td>
-      <td>35.264201</td>
-      <td>4124.844324</td>
+      <td>37.300457</td>
+      <td>38.403345</td>
+      <td>2982.127396</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>34.767495</td>
-      <td>35.171774</td>
-      <td>3660.938812</td>
+      <td>37.199737</td>
+      <td>38.337150</td>
+      <td>2910.845976</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>34.596834</td>
-      <td>35.010369</td>
-      <td>2991.023913</td>
+      <td>36.960035</td>
+      <td>38.171893</td>
+      <td>2648.800568</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>34.346105</td>
-      <td>34.797311</td>
-      <td>2327.725610</td>
+      <td>36.627732</td>
+      <td>37.933107</td>
+      <td>2428.732490</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>34.206008</td>
-      <td>34.660226</td>
-      <td>1854.845135</td>
+      <td>36.385462</td>
+      <td>37.764239</td>
+      <td>2204.183331</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>34.080781</td>
-      <td>34.550172</td>
-      <td>1649.794674</td>
+      <td>36.156394</td>
+      <td>37.608644</td>
+      <td>2006.665629</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>34.131926</td>
-      <td>34.529361</td>
-      <td>1914.579309</td>
+      <td>36.055515</td>
+      <td>37.557013</td>
+      <td>2077.445781</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>34.219315</td>
-      <td>34.553075</td>
-      <td>2311.935890</td>
+      <td>35.982402</td>
+      <td>37.559444</td>
+      <td>2136.335424</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>34.335170</td>
-      <td>34.678382</td>
-      <td>2851.089921</td>
+      <td>35.906341</td>
+      <td>37.666046</td>
+      <td>2302.399131</td>
     </tr>
     <tr>
       <th>16</th>
-      <td>34.538285</td>
-      <td>34.853028</td>
-      <td>3355.250128</td>
+      <td>36.007123</td>
+      <td>37.829637</td>
+      <td>2504.028062</td>
     </tr>
     <tr>
       <th>17</th>
-      <td>34.631675</td>
-      <td>34.916840</td>
-      <td>3717.193199</td>
+      <td>36.090146</td>
+      <td>37.899267</td>
+      <td>2714.290604</td>
     </tr>
     <tr>
       <th>18</th>
-      <td>34.642223</td>
-      <td>34.995033</td>
-      <td>3591.846998</td>
+      <td>36.217937</td>
+      <td>38.004741</td>
+      <td>2729.008835</td>
     </tr>
     <tr>
       <th>19</th>
-      <td>34.545620</td>
-      <td>35.025554</td>
-      <td>3453.274031</td>
+      <td>36.271645</td>
+      <td>38.056122</td>
+      <td>2763.701675</td>
     </tr>
     <tr>
       <th>20</th>
-      <td>34.469354</td>
-      <td>34.926636</td>
-      <td>2963.423841</td>
+      <td>36.145726</td>
+      <td>37.960521</td>
+      <td>2553.338914</td>
     </tr>
     <tr>
       <th>21</th>
-      <td>34.287215</td>
-      <td>34.819036</td>
-      <td>2433.011487</td>
+      <td>35.769420</td>
+      <td>37.831641</td>
+      <td>2319.100359</td>
     </tr>
     <tr>
       <th>22</th>
-      <td>34.051586</td>
-      <td>34.648611</td>
-      <td>1768.502601</td>
+      <td>35.384748</td>
+      <td>37.617296</td>
+      <td>2032.230756</td>
     </tr>
     <tr>
       <th>23</th>
-      <td>33.849665</td>
-      <td>34.517857</td>
-      <td>1409.641409</td>
+      <td>35.055236</td>
+      <td>37.438981</td>
+      <td>1866.938450</td>
     </tr>
     <tr>
       <th>24</th>
-      <td>33.810257</td>
-      <td>34.420952</td>
-      <td>1169.056830</td>
+      <td>34.833152</td>
+      <td>37.293236</td>
+      <td>1627.580491</td>
     </tr>
   </tbody>
 </table>
@@ -3134,7 +3134,7 @@ df
 
     oname:hdslay1_t1_otype:arr_i:26_j:6    120.000000
     oname:hdslay1_t1_otype:arr_i:3_j:8     120.000000
-    oname:sfr_otype:lst_usecol:gage-1        0.039046
+    oname:sfr_otype:lst_usecol:gage-1        0.045002
     dtype: float64
     
 
@@ -3181,73 +3181,73 @@ df
       <th>1</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>0.002585</td>
+      <td>0.003552</td>
     </tr>
     <tr>
       <th>2</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>0.002661</td>
+      <td>0.003638</td>
     </tr>
     <tr>
       <th>3</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>0.002507</td>
+      <td>0.003550</td>
     </tr>
     <tr>
       <th>4</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>0.002418</td>
+      <td>0.003457</td>
     </tr>
     <tr>
       <th>5</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>0.002312</td>
+      <td>0.003308</td>
     </tr>
     <tr>
       <th>6</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>0.002314</td>
+      <td>0.003296</td>
     </tr>
     <tr>
       <th>7</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>0.002424</td>
+      <td>0.003353</td>
     </tr>
     <tr>
       <th>8</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>0.002732</td>
+      <td>0.003435</td>
     </tr>
     <tr>
       <th>9</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>0.003343</td>
+      <td>0.003775</td>
     </tr>
     <tr>
       <th>10</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>0.004296</td>
+      <td>0.004117</td>
     </tr>
     <tr>
       <th>11</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>0.005391</td>
+      <td>0.004537</td>
     </tr>
     <tr>
       <th>12</th>
       <td>10.0</td>
       <td>10.0</td>
-      <td>0.006061</td>
+      <td>0.004983</td>
     </tr>
     <tr>
       <th>13</th>
@@ -5748,8 +5748,3 @@ for o in pst.nnz_obs_names:
 ![png](freyberg_da_prep_files/freyberg_da_prep_95_2.png)
     
 
-
-
-```python
-
-```

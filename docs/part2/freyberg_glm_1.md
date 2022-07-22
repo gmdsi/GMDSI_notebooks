@@ -29,7 +29,7 @@ Uses to which a Jacobian matrix may be put include the following:
     - the effects of model defects.
 
 
-### 1. Admin
+### Admin
 
 Start off with the usual loading of dependencies and preparing model and PEST files. We will be continuing to work with the modified-Freyberg model (see "intro to model" notebook), and the high-dimensional PEST dataset prepared in the "pstfrom pest setup" and "obs and weights" notebooks. 
 
@@ -90,7 +90,7 @@ shutil.copytree(org_t_d,t_d)
 pst_path = os.path.join(t_d, 'freyberg_mf6.pst')
 ```
 
-### 2. Inspect the PEST Dataset
+### Inspect the PEST Dataset
 
 OK. We can now get started.
 
@@ -296,7 +296,7 @@ elapsed
 
 
 
-    4.7310210999999995
+    4.250553700000001
 
 
 
@@ -323,12 +323,12 @@ number_of_cpu_cores = psutil.cpu_count(logical=False)
 print(f'Number of hours to fill a jacobian:{pst.npar_adj * elapsed / 60/60 / number_of_cpu_cores}')
 ```
 
-    Number of hours to fill a jacobian:3.1258907745722224
+    Number of hours to fill a jacobian:2.8084352863388897
     
 
 Unless you have many many CPU's at hand, that's still going to be pretty long despite the relatively fast model.
 
-### 3. Good-Bye High-Dimensional Parameterisation!
+### Good-Bye High-Dimensional Parameterisation!
 
 As previously discussed, the computational cost of conventional model calibration (attained through
 adjustment of a single parameter field using partial derivatives calculated using finite parameter
@@ -421,7 +421,7 @@ OK, let's check that estimate of run time again...hmm...a bit more manageable. O
 print(f'Number of hours to fill a jacobian:{pst.npar_adj * elapsed / 60/60 / number_of_cpu_cores}')
 ```
 
-    Number of hours to fill a jacobian:0.03219722693055556
+    Number of hours to fill a jacobian:0.028927379347222233
     
 
 OK, if we are happy (#sadface) with the number of parameters, we can move on.
@@ -443,7 +443,7 @@ pst.write(os.path.join(t_d,"freyberg_pp.pst"))
     noptmax:-1, npar_adj:245, nnz_obs:72
     
 
-### 4. Run PEST++GLM
+### Run PEST++GLM
 
 Alright! Let's run this thing!
 
@@ -462,7 +462,7 @@ You must specify the number which is adequate for ***your*** machine! Make sure 
 num_workers = psutil.cpu_count(logical=False) # update according to your available resources!
 ```
 
-Then specify the folder in which the PEST manager will run and record outcomes. It should be different form the `t_d` folder. 
+Then specify the folder in which the PEST manager will run and record outcomes. It should be different from the `t_d` folder. 
 
 
 ```python

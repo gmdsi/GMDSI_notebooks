@@ -1188,7 +1188,7 @@ fig = plot_tseries_ensembles(pr_oe, pt_oe_tloc,noise, onames=["hds","sfr"])
     
 
 
-What's happend with our ever important forecasts? Looks like we fared a bit better...but...still failing to capture all of the true values with the posterior. Not ideal.
+What's happend with our ever important forecasts? 
 
 
 ```python
@@ -1296,7 +1296,7 @@ hobs.head()
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5</td>
-      <td>34.795085</td>
+      <td>37.168420</td>
       <td>10.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6</td>
       <td>hds</td>
@@ -1314,7 +1314,7 @@ hobs.head()
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5</td>
-      <td>34.768398</td>
+      <td>37.116489</td>
       <td>10.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6</td>
       <td>hds</td>
@@ -1332,7 +1332,7 @@ hobs.head()
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5</td>
-      <td>34.896937</td>
+      <td>37.182890</td>
       <td>10.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6</td>
       <td>hds</td>
@@ -1350,7 +1350,7 @@ hobs.head()
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5</td>
-      <td>34.979874</td>
+      <td>37.283326</td>
       <td>10.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6</td>
       <td>hds</td>
@@ -1368,7 +1368,7 @@ hobs.head()
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3804.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3804.5</td>
-      <td>34.957829</td>
+      <td>37.274371</td>
       <td>10.0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-26-6</td>
       <td>hds</td>
@@ -1661,7 +1661,7 @@ spatial_loc.loc[:, [i for i in spatial_loc.columns if ':ne' in i]].sum().sum()
 
 
 
-Right then. Rebuild the `Matrix` from teh dataframe, write it to an external file and update the relevatn PEST++ option:
+Right then. Rebuild the `Matrix` from the dataframe, write it to an external file and update the relevant PEST++ option:
 
 
 ```python
@@ -1749,7 +1749,7 @@ fig = plot_tseries_ensembles(pr_oe, pt_oe_sloc,noise, onames=["hds","sfr"])
     
 
 
-And the ever important foreacasts...meh...a bit less variance here and there, but we are still failing to capture the truth for some forecasts. 
+And the ever important foreacasts. Again, a bit more variance in the null-space dependent forecasts (i.e. particle travel time).
 
 
 ```python
@@ -1838,24 +1838,4 @@ fig = plot_forecast_hist_compare(pt_oe=pt_oe_autoloc,
 
 Thus far we have implemented localization, a strategy to tackle spurious parameter-to-observation correlation. In doing so we reduce the potential for "ensemble colapse", a fancy term that means an "underestimate of forecast uncertainty caused by artificial parameter-to-observation relations". This solves history-matching induced through using ensemble based methods, but it does not solve a (the?) core issue - trying to "perfectly" fit data with an imperfect model will induce bias. 
 
-Now, as we have seen, for some forecasts this is not a huge problem (these are data-driven forecasts, which are well informed by available observation data). For others, it is (these are the forecasts which are influenced by parameter combinations in the null space, that are not informed by observation data). But when undertaking modelling in the real world, we will rarely know where our forecast lies on that spectrum (probably somewhere in the middle...).  So, if we do need to undertake history matching for uncertainty reduction, we still need a strategy which keeps us from inducing bias. The next tutorial introduces two: automated prior data conflict resolution and a total error covariance workflow.
-
-
-```python
-
-```
-
-
-```python
-
-```
-
-
-```python
-
-```
-
-
-```python
-
-```
+Now, as we have seen, for some forecasts this is not a huge problem (these are data-driven forecasts, which are well informed by available observation data). For others, it is (these are the forecasts which are influenced by parameter combinations in the null space, that are not informed by observation data). But when undertaking modelling in the real world, we will rarely know where our forecast lies on that spectrum (probably somewhere in the middle...).  So, better safe than sorry.

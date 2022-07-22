@@ -240,7 +240,7 @@ pst.phi
 
 
 
-    1132.7129982842657
+    13061.65612483826
 
 
 
@@ -487,7 +487,7 @@ if pt_oe.shape[0] == 0:
     print("filtered out all posterior realization #sad")
 ```
 
-    reducing posterior ensemble from 37 to 35 realizations
+    reducing posterior ensemble from 34 to 33 realizations
     
 
 
@@ -607,7 +607,7 @@ _ = ax.set_xlabel("$log_{10}\phi$")
 
     <>:4: DeprecationWarning: invalid escape sequence \p
     <>:4: DeprecationWarning: invalid escape sequence \p
-    C:\Users\hugm0001\AppData\Local\Temp\ipykernel_10880\3857584947.py:4: DeprecationWarning: invalid escape sequence \p
+    C:\Users\hugm0001\AppData\Local\Temp\ipykernel_7552\3857584947.py:4: DeprecationWarning: invalid escape sequence \p
     
 
 
@@ -633,8 +633,6 @@ fig = plot_tseries_ensembles(pr_oe, pt_oe_iter,noise, onames=["hds","sfr"])
 
 Finaly, let's see what has happened to the forecasts. The next cell will plot the forecast histograms from the current "posterior" (right column of plots), alongside those from the previous attempt (left column of plots)
 
-So that's alot better..but still not perfect. What have we done? We've accepted "more uncertainty" for a reduced propensity of inducing forecast bias. Now...we did better...but still failed. Perhaps if we had more realizations we would have gotten a wider sample of the posterior? But even if we hadn't failed to capture the truth, in the real-world how would we know? So...should we just stick with prior? (Assuming the prior is adequately described...) Feeling depressed yet? Worry not, in our next tutorial we will introduce some coping strategies. 
-
 
 ```python
 fig = plot_forecast_hist_compare(pt_oe=pt_oe_iter,pr_oe=pr_oe,
@@ -648,7 +646,7 @@ fig = plot_forecast_hist_compare(pt_oe=pt_oe_iter,pr_oe=pr_oe,
     
 
 
-Interesting!  So we see empirically that accepting a higher level of misfit with historic observations yields an improved forecast skill!  WAT?!  And if this is the case for this simple model, what does that imply for real-world analyses?!
+Interesting! That's a bit better. What have we done? We've accepted "more uncertainty" for a reduced propensity of inducing forecast bias. Perhaps if we had more realizations we would have gotten a wider sample of the posterior? But even if we hadn't failed to capture the truth, in the real-world how would we know? So...should we just stick with prior? (Assuming the prior is adequately described...) Feeling depressed yet? Worry not, in our next tutorial we will introduce some coping strategies. 
 
 In summary, we have learnt:
  - How to configure and run PESTPP-IES

@@ -17,16 +17,6 @@ def process_secondary_obs(ws='.'):
     write_tdif_obs('heads.csv', 'heads.tdiff.csv', ws)
     write_tdif_obs('sfr.csv', 'sfr.tdiff.csv', ws)
 
-    #write the vdiff obs csv
-    # this is frought with the potential for bugs, but oh well...
-    df = pd.read_csv(os.path.join(ws,'heads.csv'), index_col='time')
-    df.sort_index(axis=1, inplace=True)
-    dh = df.loc[:, [i for i in df.columns if i.startswith('TRGW-0-')]]
-    dh2 = df.loc[:, df.columns.map(lambda x: x.startswith('TRGW-2-'))]
-    if dh2.shape[1] > 0:
-        dh = dh - dh2.values
-        dh.to_csv(os.path.join(ws,'heads.vdiff.csv'))
-
     print('Secondary observation files processed.')
     return 
 

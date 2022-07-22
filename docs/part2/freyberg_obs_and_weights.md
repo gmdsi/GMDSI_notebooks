@@ -16,7 +16,7 @@ In most history matching contexts a “multicomponent” objective function is r
 
 **Observation Grouping** 
 
-Using a multicomponent approach can extract as much information from an observation dataset as possible and transfer this information to estimated parameters. When constructing a PEST dataset, it is often usefull (and convenient) to group observations by type. This makes it easier to customize objective function design and track the flow of information from data to parameters (and subsequently to predictions). Ideally, each observation grouping should illuminate and constrain parameter estimation related to a separate aspect of the system beiong modelled (Doherty and Hunt, 2010). For example, absolute values of heads may inform parameters that control horizontal flow patterns, whilst vertical diferences between heads in different aquifers may inform parameters that control vertical flow patterns. 
+Using a multicomponent approach can extract as much information from an observation dataset as possible and transfer this information to estimated parameters. When constructing a PEST dataset, it is often usefull (and convenient) to group observations by type. This makes it easier to customize objective function design and track the flow of information from data to parameters (and subsequently to predictions). Ideally, each observation grouping should illuminate and constrain parameter estimation related to a separate aspect of the system being modelled (Doherty and Hunt, 2010). For example, absolute values of heads may inform parameters that control horizontal flow patterns, whilst vertical diferences between heads in different aquifers may inform parameters that control vertical flow patterns. 
 
 **Observation Weighting**
 
@@ -32,7 +32,7 @@ The PEST Book (Doherty, 2015) and the USGS published report "A Guide to Using PE
 
 ### Recap: the modified-Freyberg PEST dataset
 
-The modified Freyberg model is introduced in another tutorial notebook (see "freyberg intro to model"). The current notebook picks up following the "psfrom pest setup" notebook, in which a high-dimensional PEST dataset was constructed using `pyemu.PstFrom`. You may also wish to go through the "intro to pyemu" notebook beforehand.
+The modified Freyberg model is introduced in another tutorial notebook (see "intro to freyberg model"). The current notebook picks up following the "psfrom pest setup" notebook, in which a high-dimensional PEST dataset was constructed using `pyemu.PstFrom`. You may also wish to go through the "intro to pyemu" notebook beforehand.
 
 We will now address assigning observation target values from "measured" data and observation weighting prior to history matching. 
 
@@ -40,7 +40,6 @@ Recall from the "pstfrom pest setup" notebook that we included several observati
  - head time-series
  - river gage time-series
  - temporal differences between both heads and gage time-series
- - vertical head differences
 
 We also included many observations of model outputs for which we do not have measured data. We kept these to make it easier to keep track of model outputs (this becomes a necessity when working with ensembles). We also included observations of "forecasts", i.e. model outputs of management interest.
 
@@ -334,27 +333,27 @@ obs_data.iloc[:5]
     <tr>
       <th>GAGE-1</th>
       <td>3652.5</td>
-      <td>4393.623174</td>
+      <td>3405.652701</td>
     </tr>
     <tr>
       <th>GAGE-1</th>
       <td>3653.5</td>
-      <td>3209.950982</td>
+      <td>2461.823847</td>
     </tr>
     <tr>
       <th>GAGE-1</th>
       <td>3654.5</td>
-      <td>4378.326547</td>
+      <td>3439.303917</td>
     </tr>
     <tr>
       <th>GAGE-1</th>
       <td>3655.5</td>
-      <td>4093.781759</td>
+      <td>3197.206746</td>
     </tr>
     <tr>
       <th>GAGE-1</th>
       <td>3656.5</td>
-      <td>3417.487795</td>
+      <td>2625.301281</td>
     </tr>
   </tbody>
 </table>
@@ -398,11 +397,11 @@ es_obs_data.shape
 
 
 
-Right then...let's plot our down-sampled measurment data and  compare it to the original high-frequency time series.
+Right then...let's plot our down-sampled measurement data and compare it to the original high-frequency time series.
 
-The next cell generates plots for each time series of measured data. Blue lines are the original high-frequency data. The marked red line is the down-sampled data. What do you think? Does sampeling to the "closest date" capture the behaviour of the time series? Doesn't look too good...It does not seem to capture the general trend very well.
+The next cell generates plots for each time series of measured data. Blue lines are the original high-frequency data. The marked red line is the down-sampled data. What do you think? Does sampling to the "closest date" capture the behaviour of the time series? Doesn't look too good...It does not seem to capture the general trend very well.
 
-Let's try somethign else instead.
+Let's try something else instead.
 
 
 ```python
@@ -567,43 +566,43 @@ ess_obs_data.head()
   <tbody>
     <tr>
       <th>3652.5</th>
-      <td>3809.880113</td>
-      <td>34.852666</td>
-      <td>34.811553</td>
-      <td>35.056132</td>
-      <td>35.011778</td>
+      <td>2943.238710</td>
+      <td>37.375797</td>
+      <td>37.328170</td>
+      <td>38.030892</td>
+      <td>37.987255</td>
     </tr>
     <tr>
       <th>3683.5</th>
-      <td>3867.951586</td>
-      <td>34.795085</td>
-      <td>34.798380</td>
-      <td>35.047742</td>
-      <td>35.027667</td>
+      <td>2815.377509</td>
+      <td>37.168420</td>
+      <td>37.166850</td>
+      <td>38.006539</td>
+      <td>37.987231</td>
     </tr>
     <tr>
       <th>3712.5</th>
-      <td>3757.724334</td>
-      <td>34.768398</td>
-      <td>34.780762</td>
-      <td>35.069538</td>
-      <td>35.087313</td>
+      <td>2749.121657</td>
+      <td>37.116489</td>
+      <td>37.129417</td>
+      <td>38.043374</td>
+      <td>38.061927</td>
     </tr>
     <tr>
       <th>3743.5</th>
-      <td>3988.281927</td>
-      <td>34.896937</td>
-      <td>34.840917</td>
-      <td>35.129611</td>
-      <td>35.123838</td>
+      <td>2816.797640</td>
+      <td>37.182890</td>
+      <td>37.123293</td>
+      <td>38.117404</td>
+      <td>38.112189</td>
     </tr>
     <tr>
       <th>3773.5</th>
-      <td>4135.608082</td>
-      <td>34.979874</td>
-      <td>34.896721</td>
-      <td>35.164669</td>
-      <td>35.187964</td>
+      <td>2892.313705</td>
+      <td>37.283326</td>
+      <td>37.204181</td>
+      <td>38.189834</td>
+      <td>38.213681</td>
     </tr>
   </tbody>
 </table>
@@ -654,10 +653,7 @@ def update_pst_obsvals(obs_names, obs_data):
         print('Number of nonzero obs:' ,pst.nnz_obs)  
     else:
         raise ValueError('The following obs are missing:\n',missing)
-    
     return
-
-
 ```
 
 
@@ -713,7 +709,7 @@ pst.observation_data.oname.unique()
 
 
 
-So that has sorted out the absolute observation groups. But remember the 'sfrtd', 'hdstd', 'hdsvd' observation groups? Yeah thats right, we also added in a bunch of other "secondary observations" (the time difference between obsevrations and vertical differences between heads measured at the same location) as well as postprocessing functions to get them from model outputs. We need to get target values for these observations into our control file as well!
+So that has sorted out the absolute observation groups. But remember the 'sfrtd' and 'hdstd' observation groups? Yeah thats right, we also added in a bunch of other "secondary observations" (the time difference between obsevrations) as well as postprocessing functions to get them from model outputs. We need to get target values for these observations into our control file as well!
 
 Let's start by calculating the secondary values from the absolute measured values. In our case, the easiest is to populate the model output files with measured values and then call our postprocessing function.
 
@@ -822,7 +818,7 @@ obs_srf = update_obs_csv(os.path.join(t_d,"sfr.csv"))
 obs_hds = update_obs_csv(os.path.join(t_d,"heads.csv"))
 ```
 
-OK...now we can run the postprocessing function to update the "tdiff" and "vdiff" model output csv's. Copy across the `helpers.py` we used during the `PstFrom` tutorial. Then import it and run the `process_secondary_obs()` function.
+OK...now we can run the postprocessing function to update the "tdiff" model output csv's. Copy across the `helpers.py` we used during the `PstFrom` tutorial. Then import it and run the `process_secondary_obs()` function.
 
 
 ```python
@@ -1183,7 +1179,7 @@ pst.observation_data.loc[pst.forecast_names]
     <tr>
       <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
       <td>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</td>
-      <td>-514.965935</td>
+      <td>-351.718301</td>
       <td>0</td>
       <td>oname:sfr_otype:lst_usecol:tailwater</td>
       <td>sfr</td>
@@ -1197,7 +1193,7 @@ pst.observation_data.loc[pst.forecast_names]
     <tr>
       <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
       <td>oname:sfr_otype:lst_usecol:headwater_time:4383.5</td>
-      <td>-179.032036</td>
+      <td>-773.978497</td>
       <td>0</td>
       <td>oname:sfr_otype:lst_usecol:headwater</td>
       <td>sfr</td>
@@ -1211,7 +1207,7 @@ pst.observation_data.loc[pst.forecast_names]
     <tr>
       <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
       <td>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</td>
-      <td>34.615595</td>
+      <td>38.473157</td>
       <td>0</td>
       <td>oname:hds_otype:lst_usecol:trgw-0-9-1</td>
       <td>hds</td>
@@ -1225,7 +1221,7 @@ pst.observation_data.loc[pst.forecast_names]
     <tr>
       <th>part_time</th>
       <td>part_time</td>
-      <td>36377.040060</td>
+      <td>31272.297940</td>
       <td>0</td>
       <td>part</td>
       <td>NaN</td>
@@ -1289,7 +1285,7 @@ pst.phi
 
 
 
-    15269939.507824449
+    9513266.304471832
 
 
 
@@ -1347,9 +1343,9 @@ pst.phi_components
      'oname:hds_otype:lst_usecol:trgw-0-21-10': 0.0,
      'oname:hds_otype:lst_usecol:trgw-0-22-15': 0.0,
      'oname:hds_otype:lst_usecol:trgw-0-24-4': 0.0,
-     'oname:hds_otype:lst_usecol:trgw-0-26-6': 0.6231192129925701,
+     'oname:hds_otype:lst_usecol:trgw-0-26-6': 54.95274591172016,
      'oname:hds_otype:lst_usecol:trgw-0-29-15': 0.0,
-     'oname:hds_otype:lst_usecol:trgw-0-3-8': 6.3484099263888245,
+     'oname:hds_otype:lst_usecol:trgw-0-3-8': 67.12253910751676,
      'oname:hds_otype:lst_usecol:trgw-0-33-7': 0.0,
      'oname:hds_otype:lst_usecol:trgw-0-34-10': 0.0,
      'oname:hds_otype:lst_usecol:trgw-0-9-1': 0.0,
@@ -1360,9 +1356,9 @@ pst.phi_components
      'oname:hdstd_otype:lst_usecol:trgw-0-21-10': 0.0,
      'oname:hdstd_otype:lst_usecol:trgw-0-22-15': 0.0,
      'oname:hdstd_otype:lst_usecol:trgw-0-24-4': 0.0,
-     'oname:hdstd_otype:lst_usecol:trgw-0-26-6': 0.3214311394287347,
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6': 0.5168319762473883,
      'oname:hdstd_otype:lst_usecol:trgw-0-29-15': 0.0,
-     'oname:hdstd_otype:lst_usecol:trgw-0-3-8': 0.23244156646962105,
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8': 0.3710811605129268,
      'oname:hdstd_otype:lst_usecol:trgw-0-33-7': 0.0,
      'oname:hdstd_otype:lst_usecol:trgw-0-34-10': 0.0,
      'oname:hdstd_otype:lst_usecol:trgw-0-9-1': 0.0,
@@ -1374,10 +1370,10 @@ pst.phi_components
      'oname:inc_otype:lst_usecol:sto-sy': 0.0,
      'oname:inc_otype:lst_usecol:total': 0.0,
      'oname:inc_otype:lst_usecol:wel': 0.0,
-     'oname:sfr_otype:lst_usecol:gage-1': 14537208.306794439,
+     'oname:sfr_otype:lst_usecol:gage-1': 5503840.48715329,
      'oname:sfr_otype:lst_usecol:headwater': 0.0,
      'oname:sfr_otype:lst_usecol:tailwater': 0.0,
-     'oname:sfrtd_otype:lst_usecol:gage-1': 732723.6756281655,
+     'oname:sfrtd_otype:lst_usecol:gage-1': 4009302.854120385,
      'oname:sfrtd_otype:lst_usecol:headwater': 0.0,
      'oname:sfrtd_otype:lst_usecol:tailwater': 0.0,
      'part': 0.0}
@@ -1387,7 +1383,7 @@ pst.phi_components
 
 Unfortunately, in this case we have too many observation groups to easily display (we assigned each individual time series to its own observation group; this is a default setting in `pyemu.PstFrom`). 
 
-So let's use `Pandas` to make help us sumamrize this information (note: `pyemu.plot_utils.res_phi_pie()` does the same thing, but it looks a bit ugly because of the large number of observation groups). To make it easier, we are going to just look at the nonzero observation groups:
+So let's use `Pandas` to help us sumamrize this information (note: `pyemu.plot_utils.res_phi_pie()` does the same thing, but it looks a bit ugly because of the large number of observation groups). To make it easier, we are going to just look at the nonzero observation groups:
 
 
 ```python
@@ -1398,12 +1394,12 @@ nnz_phi_components
 
 
 
-    {'oname:hds_otype:lst_usecol:trgw-0-26-6': 0.6231192129925701,
-     'oname:hds_otype:lst_usecol:trgw-0-3-8': 6.3484099263888245,
-     'oname:sfr_otype:lst_usecol:gage-1': 14537208.306794439,
-     'oname:sfrtd_otype:lst_usecol:gage-1': 732723.6756281655,
-     'oname:hdstd_otype:lst_usecol:trgw-0-26-6': 0.3214311394287347,
-     'oname:hdstd_otype:lst_usecol:trgw-0-3-8': 0.23244156646962105}
+    {'oname:hds_otype:lst_usecol:trgw-0-26-6': 54.95274591172016,
+     'oname:hds_otype:lst_usecol:trgw-0-3-8': 67.12253910751676,
+     'oname:sfr_otype:lst_usecol:gage-1': 5503840.48715329,
+     'oname:sfrtd_otype:lst_usecol:gage-1': 4009302.854120385,
+     'oname:hdstd_otype:lst_usecol:trgw-0-26-6': 0.5168319762473883,
+     'oname:hdstd_otype:lst_usecol:trgw-0-3-8': 0.3710811605129268}
 
 
 
@@ -1522,9 +1518,11 @@ def plot_obs_ts(pst, oe, obsgrps=pst.nnz_obs_groups):
         nz_obs_meas = res.loc[(res['group']==nz_group) & res['weight']!=0]
 
         fig,ax = plt.subplots(1,1,figsize=(10,2))
-        
+        # plot ensemble of time series of measured + noise
         [ax.plot(nz_obs_group.time, oe.loc[r, nz_obs_group.obsnme] ,color="r",lw=0.3) for r in oe.index]
+        # plot simulated time series
         ax.plot(nz_obs_group.time,nz_obs_group.obsval,"b")
+        # plot measured time series
         ax.plot(nz_obs_meas.time, nz_obs_meas.modelled, 'k', linestyle='--')
         ax.set_title(nz_group)
     plt.show()
@@ -1602,7 +1600,7 @@ print('Current phi:', pst.phi)
 ```
 
     Target phi: 72
-    Current phi: 1132.7129982842712
+    Current phi: 13061.656124838262
     
 
 Right, so we have or observation weights sorted out. Let's just make a quick check of how model outputs and measured values compare by looking at a 1to1 plot for each observation group:
@@ -1632,13 +1630,13 @@ plt.show()
 
 ### Autocorrelated Transient Noise
 
-(Sounds like a pretty cool name for a rock n'roll band...) 
+(Sounds like a pretty cool name for a band...) 
 
-Lastly, not so common, let's also generate our observation covariance matrix. Often this step is omitted, in particular if the observation weights in the `* observation data` section reflect observation uncertainty. Here we will implement it expressly so as to demonstrate how to add autocorrelated transient noise! When is the last time you saw that in the wild?
+Lastly, not so common, let's also generate our observation covariance matrix. Often this step is omitted,  if the observation weights in the `* observation data` section reflect observation uncertainty. Here we will implement it expressly so as to demonstrate how to add autocorrelated transient noise! When is the last time you saw that in the wild?
 
 First let us start by generating a covariance matrix, using the weights recorded in the `pst.observation_data` section. This is accomplished with `pyemu.Cov.from_observation_data()`. This will generate a covariance matrix for **all** observations in the control file, even the zero-weighted ones. 
 
-However, we are only interested in keep the non-zero weighted observations. We can use `pyemu` convenient Matrix manipulation functions to `.get()` the covariance matrix rows/columns that we are interested in.
+However, we are only interested in keeping the non-zero weighted observations. We can use `pyemu` convenient Matrix manipulation functions to `.get()` the covariance matrix rows/columns that we are interested in.
 
 
 ```python
@@ -1846,7 +1844,7 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x1779dfcf550>
+    <matplotlib.colorbar.Colorbar at 0x13843b77e80>
 
 
 
@@ -1871,7 +1869,7 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x1779cac7850>
+    <matplotlib.colorbar.Colorbar at 0x138425d8160>
 
 
 
@@ -1898,7 +1896,7 @@ cov = v.covariance_matrix(x,y,names=names)
 
 Then, scale the values in the generic covariance matrix to reflect the observation uncertainties and take a peek.
 
-And there you have it, off-diagonal elements are no longer zero and show greater correlation between uncertainties of observation which happen closer together (it looks a bit wonky because parameter names are not ordered acording to time).
+And there you have it, off-diagonal elements are no longer zero and show greater correlation between uncertainties of observation which happen closer together.
 
 
 ```python
@@ -1918,7 +1916,7 @@ plt.colorbar();
     
 
 
-Now implement to that to loop over all the non-zero time series observation groups:
+Now implement that to loop over all the non-zero time series observation groups:
 
 
 ```python

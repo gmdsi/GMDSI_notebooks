@@ -14603,7 +14603,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="1.-Admin-&amp;-Organize-Folders">1. Admin &amp; Organize Folders<a class="anchor-link" href="#1.-Admin-&amp;-Organize-Folders">&#182;</a></h3><p>First some admin. Load the dependencies and organize model folders.</p>
+<h3 id="Admin-&amp;-Organize-Folders">Admin &amp; Organize Folders<a class="anchor-link" href="#Admin-&amp;-Organize-Folders">&#182;</a></h3><p>First some admin. Load the dependencies and organize model folders.</p>
 
 </div>
 </div>
@@ -14626,12 +14626,13 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span><span class="p">;</span>
-
+<span class="c1"># for this course we use locally stored version of pyemu and flopy to avoid version conflicts</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;dependencies&quot;</span><span class="p">))</span>
 <span class="kn">import</span> <span class="nn">pyemu</span>
 <span class="kn">import</span> <span class="nn">flopy</span>
 <span class="k">assert</span> <span class="s2">&quot;dependencies&quot;</span> <span class="ow">in</span> <span class="n">flopy</span><span class="o">.</span><span class="vm">__file__</span>
 <span class="k">assert</span> <span class="s2">&quot;dependencies&quot;</span> <span class="ow">in</span> <span class="n">pyemu</span><span class="o">.</span><span class="vm">__file__</span>
+<span class="c1"># herebedragons.py contains a series of utility functions that help us manage the tutorial repository</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">herebedragons</span> <span class="k">as</span> <span class="nn">hbd</span>
 </pre></div>
@@ -14943,7 +14944,7 @@ INFORMATION: maxbound in (&#39;gwf6&#39;, &#39;ghb&#39;, &#39;dimensions&#39;) c
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="2.-Spatial-Reference">2. Spatial Reference<a class="anchor-link" href="#2.-Spatial-Reference">&#182;</a></h3><p>Now we can instantiate a <code>SpatialReference</code>. This will later be passed to <code>PstFrom</code> to assist with spatially locating parameters (e.g. pilot points and/or cell-by-cell parameters).  You can also use the flopy <code>modelgrid</code> class instance that is attached to the simulation, but <code>SpatialReference</code> is cleaner and faster for structured grids...</p>
+<h3 id="Spatial-Reference">Spatial Reference<a class="anchor-link" href="#Spatial-Reference">&#182;</a></h3><p>Now we can instantiate a <code>SpatialReference</code>. This will later be passed to <code>PstFrom</code> to assist with spatially locating parameters (e.g. pilot points and/or cell-by-cell parameters).  You can also use the flopy <code>modelgrid</code> class instance that is attached to the simulation, but <code>SpatialReference</code> is cleaner and faster for structured grids...</p>
 
 </div>
 </div>
@@ -15011,13 +15012,13 @@ INFORMATION: maxbound in (&#39;gwf6&#39;, &#39;ghb&#39;, &#39;dimensions&#39;) c
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="3.-Instantiate-PstFrom">3. Instantiate PstFrom<a class="anchor-link" href="#3.-Instantiate-PstFrom">&#182;</a></h3><p>Now we can start to construct the PEST(++) interface by instantiating a <code>PstFrom</code> class instance. There are a few things that we need to specify up front:</p>
+<h3 id="Instantiate-PstFrom">Instantiate PstFrom<a class="anchor-link" href="#Instantiate-PstFrom">&#182;</a></h3><p>Now we can start to construct the PEST(++) interface by instantiating a <code>PstFrom</code> class instance. There are a few things that we need to specify up front:</p>
 <ul>
 <li>the folder in which we currently have model files (e.g. <code>tmp_d</code>). PstFrom will copy all the files from this directory into a new "template" folder.</li>
 <li><strong>template folder</strong>: this is a folder in which the PEST dataset will be constructed - this folder will hold the model files plus all of the files needed to run PEST(++). This folder/dataset will form the template for subsequent deployment of PEST(++).</li>
 <li><strong>longnames</strong>: for backwards compatibility with PEST and PEST_HP (i.e. non-PEST++ versions), which have upper limits to parameter/obsveration names (PEST++ does not). Setting this value to False is only recommended if required. </li>
 <li>Whether the model is <code>zero based</code> or not.</li>
-<li>(optional) the <strong>spatial reference</strong>, as previously discussed. This is only requried if using <code>pyEMU</code> to define parameter spatial correlation. Alternatively, you can define these yourself or use utilities available in the PEST-suite. </li>
+<li>(optional) the <strong>spatial reference</strong>, as previously discussed. This is only required if using <code>pyEMU</code> to define parameter spatial correlation. Alternatively, you can define these yourself or use utilities available in the PEST-suite. </li>
 </ul>
 
 </div>
@@ -15229,9 +15230,9 @@ INFORMATION: maxbound in (&#39;gwf6&#39;, &#39;ghb&#39;, &#39;dimensions&#39;) c
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="4.-Observations">4. Observations<a class="anchor-link" href="#4.-Observations">&#182;</a></h3><p>We now have a <code>PstFrom</code> instance assigned to the variable <code>pf</code>. For now it is only an empty container to which we can start adding "observations", "parameters" and other bits and bobs.</p>
+<h3 id="Observations">Observations<a class="anchor-link" href="#Observations">&#182;</a></h3><p>We now have a <code>PstFrom</code> instance assigned to the variable <code>pf</code>. For now it is only an empty container to which we can start adding "observations", "parameters" and other bits and bobs.</p>
 <p>Lets start with observations because they are easier. <code>MODFLOW6</code> makes life even easier by recording observations in nicely organized .csv files. Isn't that a peach!</p>
-<h4 id="4.1-Freyberg-Recap">4.1 Freyberg Recap<a class="anchor-link" href="#4.1-Freyberg-Recap">&#182;</a></h4><p>As you may recall from the "<em>intro to Freyberg</em>" tutorial, the model is configured to record time series of head at observation wells, and flux at three locations along the river. These are recorded in external .csv files named <code>heads.csv</code> and <code>sfr.csv</code>, respectively. You should be able to see these files in the model folder.</p>
+<h4 id="Freyberg-Recap">Freyberg Recap<a class="anchor-link" href="#Freyberg-Recap">&#182;</a></h4><p>As you may recall from the "<em>intro to Freyberg</em>" tutorial, the model is configured to record time series of head at observation wells, and flux at three locations along the river. These are recorded in external .csv files named <code>heads.csv</code> and <code>sfr.csv</code>, respectively. You should be able to see these files in the model folder.</p>
 <p>Recall that each .csv houses records of observation time-series. Outputs are recorded for each simulated stress-period. The model starts with a single steady-state stress-period, followed by 24 monthly transient stress-periods. The steady-state and first 12 transient stress-periods simulate the history-matching period. The last 12 transient stress periods simulate future conditions (i.e. the prediction period).</p>
 
 </div>
@@ -15471,7 +15472,7 @@ INFORMATION: maxbound in (&#39;gwf6&#39;, &#39;ghb&#39;, &#39;dimensions&#39;) c
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>As you can see, there are many columns, one for each observation site. Conveniently, <em> </em>cough<em> </em> they are named according to the cell layer, row and column. Note that at every site, there is an observation in both the top and bottom layer (0<em> and 2</em>). We will make use of this later to create "secondary observations" of head differences between layers...but let's not get distracted.</p>
+<p>As you can see, there are many columns, one for each observation site. Conveniently, <em> </em>cough<em> </em> they are named according to the cell layer, row and column.</p>
 <p>The values in the <em>.csv</em> file were generated by running the model. (<strong><em>IMPORTANT!</em></strong>) However, <code>PstFrom</code> assumes that values in this file are the <em>target</em> observation values, and they will be used to populate the PEST(++) dataset.  This lets the user quickly verify that the <code>PstFrom</code> process reproduces the same model output files - an important thing to test!</p>
 <p>Now, you can and should change the observation values later on for the quantities that correspond to actual observation data.  This is the standard workflow when using <code>PstFrom</code> because it allows users to separate the PEST interface setup from the always-important process of setting observation values and weights. We address this part of the workflow in a separate tutorial.</p>
 
@@ -15485,7 +15486,7 @@ INFORMATION: maxbound in (&#39;gwf6&#39;, &#39;ghb&#39;, &#39;dimensions&#39;) c
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="4.1.-Adding-Observations">4.1. Adding Observations<a class="anchor-link" href="#4.1.-Adding-Observations">&#182;</a></h4><p>First, we will use the <code>PstFrom.add_observations()</code> method to add observations to our <code>pf</code> object. This method can use <strong><em>list-type</em></strong> files, where the data are organized in column/tabular format with one or more index columns and one or more data columns.  This method can also use <strong><em>array-type</em></strong> files, where the data are organized in a 2-D array structure (we will see this one later...)</p>
+<h4 id="Adding-Observations">Adding Observations<a class="anchor-link" href="#Adding-Observations">&#182;</a></h4><p>First, we will use the <code>PstFrom.add_observations()</code> method to add observations to our <code>pf</code> object. This method can use <strong><em>list-type</em></strong> files, where the data are organized in column/tabular format with one or more index columns and one or more data columns.  This method can also use <strong><em>array-type</em></strong> files, where the data are organized in a 2-D array structure (we will see this one later...)</p>
 <p>We are going to tell <code>pf</code> which columns of this file contain observations. Values in these columns will be assigned to <em>observation values</em>.</p>
 <p>We can also inform it if there is an index column (or columns). Values in this column will be included in the <em>observation names</em>.</p>
 <p>We could also specify which rows to include as observations. But observations are free...so why not keep them all!</p>
@@ -15843,15 +15844,15 @@ INFORMATION: maxbound in (&#39;gwf6&#39;, &#39;ghb&#39;, &#39;dimensions&#39;) c
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="5.-Parameters">5. Parameters<a class="anchor-link" href="#5.-Parameters">&#182;</a></h3><p>The <code>PstFrom.add_parameters()</code> method reads model input files and adds parameters to the PEST(++) dataset. Parameterisation can be configured in several ways.</p>
+<h3 id="Parameters">Parameters<a class="anchor-link" href="#Parameters">&#182;</a></h3><p>The <code>PstFrom.add_parameters()</code> method reads model input files and adds parameters to the PEST(++) dataset. Parameterisation can be configured in several ways.</p>
 <ul>
 <li>model input files can be in array or list format;</li>
 <li>parameters can be setup as different "types". Each value in model input files can (1) each be a separate parameter ("grid" scale parameters), (2) be grouped into "zones" or (3) all be treated as a single parameter ("constant" type). Alteratvely, (4) parameters can be assigned to pilot points, from which individual parameter values are subsequently interpolated. <code>PstFrom</code> adds the relevant pre-processing steps to assign paramter values directly into the "model run" script.</li>
 <li>parameter values can be setup as "direct", "multiplier" or "addend". This means the "parameter value" which PEST(++) sees can be (1) the same value the model sees, (2) a multiplier on the value in the existing/original model input file, or (3) a value which is added to the value in the existing/original model input file. This is very nifty and allows for some pretty advanced parameterization schemes by allowing mixtures of different types of parameters. <code>PstFrom</code> is designed to preferentially use parameters setup as multipliers (that is the default parameter type). This let us preserve the existing model inputs and treat them as the mean of the prior parameter distribution. Once again, relevant pre-processing scripts are automatically added to the "model run" script (discussed later) so that the multiplicative and additive parameterization process is not something the user has to worry about.</li>
 </ul>
-<h4 id="5.1.-Freyberg-Recap">5.1. Freyberg Recap<a class="anchor-link" href="#5.1.-Freyberg-Recap">&#182;</a></h4><p>As discussed, all model inputs are stored in external files. Some are arrays. Others are lists. Recall that our model has 3 layers. It is transient. Hydraulic properties (Kh, Kv, Ss, Sy) vary in space. Recharge varies over both space and time. We have GHBs, SFR and WEL boundary conditions. GHB parameters are constant over time, but vary spatially. SFR inflow varies over time. Pumping rates of individual wells are uncertain in space and and time.</p>
+<h4 id="Freyberg-Recap">Freyberg Recap<a class="anchor-link" href="#Freyberg-Recap">&#182;</a></h4><p>As discussed, all model inputs are stored in external files. Some are arrays. Others are lists. Recall that our model has 1 layer. It is transient. Hydraulic properties (Kh, Kv, Ss, Sy) vary in space. Recharge varies over both space and time. We have GHBs, SFR and WEL boundary conditions. GHB parameters are constant over time, but vary spatially. SFR inflow varies over time. Pumping rates of individual wells are uncertain in space and and time.</p>
 <p>All of these have some degree of spatial and/or temporal correlation.</p>
-<h4 id="5.2.-Geostatistical-Structures">5.2. Geostatistical Structures<a class="anchor-link" href="#5.2.-Geostatistical-Structures">&#182;</a></h4><p>Parameter correlation plays a role in (1) regularization when giving preference to the emergence of patterns of spatial heterogeneity and (2) when specifying the prior parameter probability distribution (which is what regularization is enforcing!). Since we are all sophisticated and recognize the importance of expressing spatial and temporal uncertainty (e.g. heterogeneity) in the model inputs (and the corresponding spatial correlation in those uncertain inputs), let's use geostatistics to express uncertainty. To do that we need to define "geostatistical structures".</p>
+<h4 id="Geostatistical-Structures">Geostatistical Structures<a class="anchor-link" href="#Geostatistical-Structures">&#182;</a></h4><p>Parameter correlation plays a role in (1) regularization when giving preference to the emergence of patterns of spatial heterogeneity and (2) when specifying the prior parameter probability distribution (which is what regularization is enforcing!). Since we are all sophisticated and recognize the importance of expressing spatial and temporal uncertainty (e.g. heterogeneity) in the model inputs (and the corresponding spatial correlation in those uncertain inputs), let's use geostatistics to express uncertainty. To do that we need to define "geostatistical structures".</p>
 <p>For the sake of this tutorial, let's assume that heterogeneity in all spatially distributed parameters share the same statistical characteristics. Likewise for temporally varying parameters. We will therefore only  construct two geostatisitcal structures.</p>
 
 </div>
@@ -15945,8 +15946,8 @@ jp-needs-light-background
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="5.3.-Add-Parameters">5.3. Add Parameters<a class="anchor-link" href="#5.3.-Add-Parameters">&#182;</a></h4><p>Let's start by adding parameters of hydraulic properties that vary in space (but not time) and which are housed in array-type files (e.g. Kh, Kv, Ss, Sy). We will start by demonstrating step-by-step for Kh.</p>
-<p>First, find all the external array files that contain Kh values. In our case, these are the files with "npf<em>k</em>" in the file name. As you can see below, there is one file for each model layer.</p>
+<h4 id="Add-Parameters">Add Parameters<a class="anchor-link" href="#Add-Parameters">&#182;</a></h4><p>Let's start by adding parameters of hydraulic properties that vary in space (but not time) and which are housed in array-type files (e.g. Kh, Kv, Ss, Sy). We will start by demonstrating step-by-step for Kh.</p>
+<p>First, find all the external array files that contain Kh values. In our case, these are the files with "npf<em>k</em>" in the file name.</p>
 
 </div>
 </div>
@@ -16007,7 +16008,7 @@ jp-needs-light-background
 <li><code>ult_ubound</code> and <code>ult_lbound</code> are bounds that are applied at runtime to the resulting (multiplied out) model input array that MODFLOW reads. </li>
 </ul>
 <p>Since we are using sets of multipliers, it is important to make sure we keep the resulting model input arrays within the range of realistic values.</p>
-<h4 id="5.3.1.-Array-Files">5.3.1. Array Files<a class="anchor-link" href="#5.3.1.-Array-Files">&#182;</a></h4><p>We will first demonstrate steb-by-step for <code>freyberg6.npf_k_layer1.txt</code>. We will start with grid scale parameters. These are multipliers assigned to each individual value in the array.</p>
+<h4 id="Array-Files">Array Files<a class="anchor-link" href="#Array-Files">&#182;</a></h4><p>We will first demonstrate steb-by-step for <code>freyberg6.npf_k_layer1.txt</code>. We will start with grid scale parameters. These are multipliers assigned to each individual value in the array.</p>
 <p>We start by getting the idomain array. As our model has inactive cells, this helps us avoid adding unncessary parameters. It is also required later when generating pilot points.</p>
 
 </div>
@@ -16021,7 +16022,7 @@ jp-needs-light-background
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># as IDOMIAN is the same in all layers, we can use any layer</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># get the IIDOMAIN array; in our case we only have one layer</span>
 <span class="n">ib</span> <span class="o">=</span> <span class="n">gwf</span><span class="o">.</span><span class="n">dis</span><span class="o">.</span><span class="n">idomain</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ib</span><span class="p">)</span>
 </pre></div>
@@ -16047,7 +16048,7 @@ jp-needs-light-background
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>&lt;matplotlib.image.AxesImage at 0x2b18473e3d0&gt;</pre>
+<pre>&lt;matplotlib.image.AxesImage at 0x26550159490&gt;</pre>
 </div>
 
 </div>
@@ -16177,8 +16178,8 @@ jp-needs-light-background
       <th>parubnd</th>
       <th>parlbnd</th>
       <th>parchglim</th>
-      <th>offset</th>
       <th>scale</th>
+      <th>offset</th>
       <th>dercom</th>
     </tr>
   </thead>
@@ -16199,8 +16200,8 @@ jp-needs-light-background
       <td>5.0</td>
       <td>0.2</td>
       <td>factor</td>
-      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1</td>
     </tr>
     <tr>
@@ -16219,8 +16220,8 @@ jp-needs-light-background
       <td>5.0</td>
       <td>0.2</td>
       <td>factor</td>
-      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1</td>
     </tr>
     <tr>
@@ -16239,8 +16240,8 @@ jp-needs-light-background
       <td>5.0</td>
       <td>0.2</td>
       <td>factor</td>
-      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1</td>
     </tr>
     <tr>
@@ -16259,8 +16260,8 @@ jp-needs-light-background
       <td>5.0</td>
       <td>0.2</td>
       <td>factor</td>
-      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1</td>
     </tr>
     <tr>
@@ -16279,8 +16280,8 @@ jp-needs-light-background
       <td>5.0</td>
       <td>0.2</td>
       <td>factor</td>
-      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1</td>
     </tr>
   </tbody>
@@ -16428,7 +16429,7 @@ starting 6
 starting 7
 starting 8
 starting 9
-took 3.79733 seconds
+took 3.790933 seconds
 </pre>
 </div>
 </div>
@@ -16472,7 +16473,7 @@ took 3.79733 seconds
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>&lt;matplotlib.collections.PathCollection at 0x2b184a85fa0&gt;</pre>
+<pre>&lt;matplotlib.collections.PathCollection at 0x265504b3250&gt;</pre>
 </div>
 
 </div>
@@ -16610,7 +16611,7 @@ jp-needs-light-background
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Let's do that for Kh in the other layers. We are going to be doing this a few times, so lets write a function.</p>
+<p>We are going to be repeating this for each parameter type, so lets write a function.</p>
 
 </div>
 </div>
@@ -16674,7 +16675,7 @@ jp-needs-light-background
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Well...hot damn, wasn't that easy? Let's speed through the other array parameter files.</p>
+<p>Let's speed through the other array parameter files.</p>
 
 </div>
 </div>
@@ -16837,7 +16838,7 @@ jp-needs-light-background
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="5.3.2.-Spatial-and-Temporal-Correlation">5.3.2. Spatial and Temporal Correlation<a class="anchor-link" href="#5.3.2.-Spatial-and-Temporal-Correlation">&#182;</a></h4><p>Now, you may be thinking "shouldn't recharge have temporal correlation as well?".</p>
+<h4 id="Spatial-and-Temporal-Correlation">Spatial and Temporal Correlation<a class="anchor-link" href="#Spatial-and-Temporal-Correlation">&#182;</a></h4><p>Now, you may be thinking "shouldn't recharge have temporal correlation as well?".</p>
 <p>Damn straight it should. Now, this requires a little trickery because native handling in spatiotemporal correlation is hard to do.  So what we are going to do is split this correlation into two setup of multiplier parameters.  One set of parameters will be constant in space but vary (and be correlated) in time.  The other set of multiplier parameters will be constant in time but vary (and be correlated) in space.  Since both of these sets of parameters are multipliers, we implicitly represent the concept that recharge is uncertain and correlated in both space and time.  Easy as!</p>
 <p>First we need to construct a container of stress period datetimes. (This relies on specifying the start_datetime argument when instantiating <code>PstFrom</code>.) These datetime values will specify the postion of parameters on the time-axis.</p>
 
@@ -17014,7 +17015,7 @@ jp-needs-light-background
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Then, we will asign an additional <code>constant</code> multiplier parameter for each recharge stress-period file (so, a single multiplier for all recharge paramaters for each stress period). We will specify temporal correlation for these <code>constant</code> multipliers. These will all have the same parameter group name, as discussed above.</p>
+<p>Then, we will asign an additional <code>constant</code> multiplier parameter for each recharge stress-period file (so, a single multiplier for all recharge parameters for each stress period). We will specify temporal correlation for these <code>constant</code> multipliers. These will all have the same parameter group name, as discussed above.</p>
 
 </div>
 </div>
@@ -17055,10 +17056,22 @@ jp-needs-light-background
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="5.3.3.-List-Files">5.3.3. List Files<a class="anchor-link" href="#5.3.3.-List-Files">&#182;</a></h3><p>Adding parameters from list-type files follows similar principles. As with observation files, they must be tabular. Certain columns are specified as index columns and are used to populate parameter names, as well as provide the parameters' spatial location. Other columns are specified as containing parameter values.</p>
+<p>Sweet! Done!</p>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="List-Files">List Files<a class="anchor-link" href="#List-Files">&#182;</a></h3><p>Adding parameters from list-type files follows similar principles. As with observation files, they must be tabular. Certain columns are specified as index columns and are used to populate parameter names, as well as provide the parameters' spatial location. Other columns are specified as containing parameter values.</p>
 <p>Parameters can be <code>grid</code> or <code>constant</code>. As before, values can be assigned <code>directly</code>, as <code>multipliers</code> or as <code>additives</code>.</p>
 <p>We will demonstrate for the boundary-condition input files.</p>
-<p>Starting off with GHBs. Let's inspect the folder. As you can see, there is a single input file (GHB parameters are assumed to not vary over time).</p>
+<p>Starting off with GHBs. Let's inspect the folder. As you can see, there is a single input file (here we assume GHB parameters do not vary over time).</p>
 
 </div>
 </div>
@@ -17378,8 +17391,8 @@ jp-needs-light-background
       <th>parubnd</th>
       <th>parlbnd</th>
       <th>parchglim</th>
-      <th>offset</th>
       <th>scale</th>
+      <th>offset</th>
       <th>dercom</th>
     </tr>
   </thead>
@@ -17397,8 +17410,8 @@ jp-needs-light-background
       <td>10.0</td>
       <td>0.1</td>
       <td>factor</td>
-      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1</td>
     </tr>
   </tbody>
@@ -17765,7 +17778,7 @@ jp-needs-light-background
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="6.-The-Forward-Run-Script">6. The Forward Run Script<a class="anchor-link" href="#6.-The-Forward-Run-Script">&#182;</a></h3><p>OK! So, we almost have all the base building blocks for a PEST(++) dataset. We have some (1) observations and some (2) parameters. We are still missing (3) the "forward run" script. Recall that in the PEST world, the "model" is not just the numerical model (e.g. MODFLOW). Instead it is a composite of the numerical model (or models) and pre- and post-processing steps, encapsulated in a "forward run" script which can be called from the command line. This command line instruction is what PEST(++) sees as "the model". During execution, PEST(++) writes values to parameter files, runs "the model", and then reads values from the observation files.</p>
+<h3 id="The-Forward-Run-Script">The Forward Run Script<a class="anchor-link" href="#The-Forward-Run-Script">&#182;</a></h3><p>OK! So, we almost have all the base building blocks for a PEST(++) dataset. We have some (1) observations and some (2) parameters. We are still missing (3) the "forward run" script. Recall that in the PEST world, the "model" is not just the numerical model (e.g. MODFLOW). Instead it is a composite of the numerical model (or models) and pre- and post-processing steps, encapsulated in a "forward run" script which can be called from the command line. This command line instruction is what PEST(++) sees as "the model". During execution, PEST(++) writes values to parameter files, runs "the model", and then reads values from the observation files.</p>
 <p><code>PstFrom</code> automates the generation of such a script when constructing the PEST control file. The script is written to file named <code>forward_run.py</code>. It is written in Python (this is not a PEST(++) requirement, merely a convenience...we are working in Python after all...).</p>
 <p>How about we see that in action? Magic time! Let's create the PEST control file.</p>
 
@@ -17954,7 +17967,7 @@ if __name__ == &#39;__main__&#39;:
 <p>That's pretty amazing. But as we just saw, we still need to add commands to actualy run the model.</p>
 <p><code>PstFrom</code> allows you to pass a list of system commands which will be executed in sequence. It also has methods for including Python functions that run before or after the system commands. These make pre-/post-processing a piece of cake. In fact, we have already started to add to it. Remember all of the multiplier and additive parameters we setup? These all require pre-processing steps to convert the PEST-generated multipliers into model input values. <code>PstFrom</code> will automatically add these functions to the <code>forward_run.py</code> script. Nifty, hey?</p>
 <p>Next we will demonstrate how to specify the system commands and add Python functions as processing steps.</p>
-<h4 id="6.2.-Sys-Commands">6.2. Sys Commands<a class="anchor-link" href="#6.2.-Sys-Commands">&#182;</a></h4><p>Let's start by adding a command line instruction. These are stored as a list in <code>PstFrom.mod_sys_cmds</code>, which is currently empty.</p>
+<h4 id="Sys-Commands">Sys Commands<a class="anchor-link" href="#Sys-Commands">&#182;</a></h4><p>Let's start by adding a command line instruction. These are stored as a list in <code>PstFrom.mod_sys_cmds</code>, which is currently empty.</p>
 
 </div>
 </div>
@@ -18195,8 +18208,8 @@ if __name__ == &#39;__main__&#39;:
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="6.3.-Extra-pre--and-post-processing-functions">6.3. Extra pre- and post-processing functions<a class="anchor-link" href="#6.3.-Extra-pre--and-post-processing-functions">&#182;</a></h4><p>You will also certainly need to include some additional processing steps.  These are supported thru the <code>PstFrom.pre_py_cmds</code> and <code>PstFrom.post_py_cmds</code>, which are lists for pre and post model run python commands and <code>PstFrom.pre_sys_cmds</code> and <code>PstFrom.post_sys_cmds</code>, which are lists for pre and post model run system commands (these are wrapped in <code>pyemu.os_utils.run()</code>.</p>
-<p>But what if your additional steps are actually an entire python function? Well, we got that too! <code>PstFrom.add_py_function()</code>. This method allows you to get functions from another (pre-prepared) python source file and add them to the <code>forward_run.py</code> script. We will deonstrate this to post-process secondary model observations after each run.</p>
+<h4 id="Extra-pre--and-post-processing-functions">Extra pre- and post-processing functions<a class="anchor-link" href="#Extra-pre--and-post-processing-functions">&#182;</a></h4><p>You will also certainly need to include some additional processing steps.  These are supported through the <code>PstFrom.pre_py_cmds</code> and <code>PstFrom.post_py_cmds</code>, which are lists for pre and post model run python commands and <code>PstFrom.pre_sys_cmds</code> and <code>PstFrom.post_sys_cmds</code>, which are lists for pre and post model run system commands (these are wrapped in <code>pyemu.os_utils.run()</code>.</p>
+<p>But what if your additional steps are actually an entire python function? Well, we got that too! <code>PstFrom.add_py_function()</code>. This method allows you to get functions from another (pre-prepared) python source file and add them to the <code>forward_run.py</code> script. We will demonstrate this to post-process model observations after each run.</p>
 
 </div>
 </div>
@@ -18208,7 +18221,7 @@ if __name__ == &#39;__main__&#39;:
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Now lets see this py-sauce in action: we are going to add a little post-processing function to extract the final simulated water level for all model cells for the last stress period from the MF6 binary headsave file and save them to ASCII format so that PEST(++) can read them with instruction files.  And, while we are at it, lets also extract the global water budget info from the MF6 listing file and store it in dataframes - these are ususally good numbers to watch!  We will need the simulated water level arrays later for sequential data assimilation (wouldnt it be nice if MF6 supported the writing of ASCII format head arrays?).  Anyway, this function is stored in the "helpers.py" script..</p>
+<p>Now lets see this py-sauce in action: we are going to add a little post-processing function to extract the final simulated water level for all model cells for the last stress period from the MF6 binary headsave file and save them to ASCII format so that PEST(++) can read them with instruction files.  And, while we are at it, lets also extract the global water budget info from the MF6 listing file and store it in dataframes - these are ususally good numbers to watch!  We will need the simulated water level arrays later for sequential data assimilation (wouldnt it be nice if MF6 supported the writing of ASCII format head arrays?).  Anyway, this function is stored in the "helpers.py" script which you can find in the tutorial folder.</p>
 
 </div>
 </div>
@@ -18379,10 +18392,10 @@ if __name__ == &#39;__main__&#39;:
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="6.3.1.-Secondary-Observations">6.3.1. Secondary Observations<a class="anchor-link" href="#6.3.1.-Secondary-Observations">&#182;</a></h4><p>Often it is usefull to include "secondary model outcomes" as observations. These can be important components in a history-matching dataset to tease out specific aspects of system behaviour (e.g. head differences between aquifer layers to inform vertical permeabilities). Or they may be simple summaries of modelled outputs which are of interest for a prediction (e.g. minimum simulated head over a given period).</p>
-<p>If you inspect the tutorial folder you will find a file named <code>helpers.py</code>. This is a python source file which we have prepared for you. (Open it to see how it is organized.) It contains a function named <code>process_secondary_obs()</code>. This function reads the model output .csv files, processes them and writes a series of new observation .csv files. These new files contain (1) the temporal-differences between head and SFR observations, and (2) the difference in heads between the top and bottom layers at each observation point. The new .csv files are named <code>heads.tdiff.csv</code>,<code>sfr.tdiff.csv</code> and <code>heads.vdiff.csv</code> respectively.</p>
+<h4 id="Secondary-Observations">Secondary Observations<a class="anchor-link" href="#Secondary-Observations">&#182;</a></h4><p>Often it is usefull to include "secondary model outcomes" as observations. These can be important components in a history-matching dataset to tease out specific aspects of system behaviour (e.g. head differences between aquifer layers to inform vertical permeabilities). Or they may be simple summaries of modelled outputs which are of interest for a prediction (e.g. minimum simulated head over a given period).</p>
+<p>If you inspect the tutorial folder you will find a file named <code>helpers.py</code>. This is a python source file which we have prepared for you. (Open it to see how it is organized.) It contains a function named <code>process_secondary_obs()</code>. This function reads the model output .csv files, processes them and writes a series of new observation .csv files. These new files contain the temporal-differences between head and SFR observations. The new .csv files are named <code>heads.tdiff.csv</code>and <code>sfr.tdiff.csv</code>, respectively.</p>
 <p>First, lets load the function here and run it so you can see what happens. (And to make sure that the observation files are in the template folder!)</p>
-<p>Run the next cell, then inspect the template folder. You should see three new csv files. These are the new secondary observations calculated by the post-processing function.</p>
+<p>Run the next cell, then inspect the template folder. You should see several new csv files. These are the new secondary observations calculated by the post-processing function.</p>
 
 </div>
 </div>
@@ -18669,16 +18682,6 @@ def process_secondary_obs(ws=&#39;.&#39;):
     # write the tdiff observation csv&#39;s
     write_tdif_obs(&#39;heads.csv&#39;, &#39;heads.tdiff.csv&#39;, ws)
     write_tdif_obs(&#39;sfr.csv&#39;, &#39;sfr.tdiff.csv&#39;, ws)
-
-    #write the vdiff obs csv
-    # this is frought with the potential for bugs, but oh well...
-    df = pd.read_csv(os.path.join(ws,&#39;heads.csv&#39;), index_col=&#39;time&#39;)
-    df.sort_index(axis=1, inplace=True)
-    dh = df.loc[:, [i for i in df.columns if i.startswith(&#39;TRGW-0-&#39;)]]
-    dh2 = df.loc[:, df.columns.map(lambda x: x.startswith(&#39;TRGW-2-&#39;))]
-    if dh2.shape[1] &gt; 0:
-        dh = dh - dh2.values
-        dh.to_csv(os.path.join(ws,&#39;heads.vdiff.csv&#39;))
 
     print(&#39;Secondary observation files processed.&#39;)
     return
@@ -19080,7 +19083,7 @@ if __name__ == &#39;__main__&#39;:
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="7.-After-Building-the-Control-File">7. After Building the Control File<a class="anchor-link" href="#7.-After-Building-the-Control-File">&#182;</a></h3><p>At this point, we can do some additional modifications that would typically be done that are problem specific.  Here we can tweak the setup, specifying things such as observation weights, parameter bounds, transforms, control data, etc.</p>
+<h3 id="After-Building-the-Control-File">After Building the Control File<a class="anchor-link" href="#After-Building-the-Control-File">&#182;</a></h3><p>At this point, we can do some additional modifications that would typically be done that are problem specific.  Here we can tweak the setup, specifying things such as observation weights, parameter bounds, transforms, control data, etc.</p>
 <p>Note that any modifications made after calling <code>PstFrom.build_pst()</code> will only exist in memory - you need to call <code>pf.pst.write()</code> to record these changes to the control file on disk.  Also note that if you call <code>PstFrom.build_pst()</code> after making some changes, these changes will be lost.</p>
 <p>For the current case, the main thing we haven't addressed are the observations from custom *.ins files,  observation weights, parameter group INCTYP's and forecasts.</p>
 <p>We will do so now.</p>
@@ -19095,7 +19098,7 @@ if __name__ == &#39;__main__&#39;:
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="7.1.-Add-Observations-from-INS-files">7.1. Add Observations from INS files<a class="anchor-link" href="#7.1.-Add-Observations-from-INS-files">&#182;</a></h4><p>Recall that we wish to include observations of particle end time and status. As mentioned earlier, MP7 output files are not ina nicely organized tabular format - so we need to construct a custom instruction file. We will do this now:</p>
+<h4 id="Add-Observations-from-INS-files">Add Observations from INS files<a class="anchor-link" href="#Add-Observations-from-INS-files">&#182;</a></h4><p>Recall that we wish to include observations of particle end time and status. As mentioned earlier, MP7 output files are not ina nicely organized tabular format - so we need to construct a custom instruction file. We will do this now:</p>
 
 </div>
 </div>
@@ -19263,7 +19266,7 @@ if __name__ == &#39;__main__&#39;:
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="7.2.-Parameters-with-Zero-as-Intial-Value">7.2. Parameters with Zero as Intial Value<a class="anchor-link" href="#7.2.-Parameters-with-Zero-as-Intial-Value">&#182;</a></h4><p>Recall that we assigned additive parameters to the GHB heads. Our initial parameter values for these parameter types were set as 0 (zero). This creates a wee bit of trouble when calculating derivatives. There are a couple of ways we could get around it. One way is to add an "offset" to the parameter intial values and to the parmaeter bounds. Another is to use "absolute" increment types (INCTYP). See the PEST manual or PEST++ user guides for descriptions of increment types.</p>
+<h4 id="Parameters-with-Zero-as-Intial-Value">Parameters with Zero as Intial Value<a class="anchor-link" href="#Parameters-with-Zero-as-Intial-Value">&#182;</a></h4><p>Recall that we assigned additive parameters to the GHB heads. Our initial parameter values for these parameter types were set as 0 (zero). This creates a wee bit of trouble when calculating derivatives. There are a couple of ways we could get around it. One way is to add an "offset" to the parameter intial values and to the parmaeter bounds. Another is to use "absolute" increment types (INCTYP). See the PEST manual or PEST++ user guides for descriptions of increment types.</p>
 <p>We will apply both here.</p>
 <p>We will assign INCTYP as 'absolute'. We will leave DERINC as 0.01 (the default). It is a reasonable value in this case.</p>
 
@@ -19786,7 +19789,7 @@ if __name__ == &#39;__main__&#39;:
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="7.4.-Forecasts">7.4. Forecasts<a class="anchor-link" href="#7.4.-Forecasts">&#182;</a></h4><p>For most models there is a forecast/prediction that someone needs. Rather than waiting until the end of the project, the forecast should be entered into your thinking and workflow <strong>right at the beginning</strong>.  Here we do this explicitly by monitoring the forecasts as "observations" in the control file.  This way, for every PEST(++) analysis we do, we can watch what is happening to the forecasts - #winning **</p>
+<h4 id="Forecasts">Forecasts<a class="anchor-link" href="#Forecasts">&#182;</a></h4><p>For most models there is a forecast/prediction that someone needs. Rather than waiting until the end of the project, the forecast should be entered into your thinking and workflow <strong>right at the beginning</strong>.  Here we do this explicitly by monitoring the forecasts as "observations" in the control file.  This way, for every PEST(++) analysis we do, we can watch what is happening to the forecasts - #winning</p>
 <p>The optional PEST++ <code>++forecasts</code> control variable allows us to provide the names of one or more observations featured in the “observation data” section of the PEST control file; these are treated as predictions in FOSM predictive uncertainty analysis by PESTPP-GLM. It is also a convenient way to keep track of "forecast" observations (makes post-processing a wee bit easier later on).</p>
 <p>Recall that, for our synthetic case we are interested in forecasting:</p>
 <ul>
@@ -20016,7 +20019,7 @@ if __name__ == &#39;__main__&#39;:
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="7.5.-Re-write-the-Control-File!">7.5. Re-write the Control File!<a class="anchor-link" href="#7.5.-Re-write-the-Control-File!">&#182;</a></h4>
+<h3 id="Re-write-the-Control-File!">Re-write the Control File!<a class="anchor-link" href="#Re-write-the-Control-File!">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -20232,7 +20235,7 @@ Name: total_phi, dtype: int64</pre>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="8.-Prior-Parameter-Covariance-Matrix">8. Prior Parameter Covariance Matrix<a class="anchor-link" href="#8.-Prior-Parameter-Covariance-Matrix">&#182;</a></h3><p>One the major reasons <code>PstFrom</code> was built is to help with building the Prior - both covariance matrix and ensemble - with geostatical correlation.  Remember all that business above related to geostatical structures and correlations?  This is where is pays off.</p>
+<h3 id="Prior-Parameter-Covariance-Matrix">Prior Parameter Covariance Matrix<a class="anchor-link" href="#Prior-Parameter-Covariance-Matrix">&#182;</a></h3><p>One the major reasons <code>PstFrom</code> was built is to help with building the Prior - both covariance matrix and ensemble - with geostatical correlation.  Remember all that business above related to geostatical structures and correlations?  This is where is pays off.</p>
 <p>Let's see how this works.  For cases with less than about 30,000 parameters, we can actually generate and visualize the prior parameter covariance matrix.  If you have more parameters, this matrix may not fit in memory.  But, not to worry, <code>PstFrom</code> has some trickery to help generate the geostatistical prior ensemble.</p>
 
 </div>
