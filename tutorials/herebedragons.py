@@ -11,13 +11,14 @@ import shutil
 import pyemu
 import flopy
 
-def prep_forecasts(pst):
+def prep_forecasts(pst, model_times=False):
     pred_csv = os.path.join('..', '..', 'models', 'daily_freyberg_mf6_truth',"pred_data.csv")
     assert os.path.exists(pred_csv)
     pred_data = pd.read_csv(pred_csv)
     pred_data.set_index('site', inplace=True)
-
-    model_times = [float(i) for i in pst.observation_data.time.unique()]
+    
+    if type(model_times) == bool:
+        model_times = [float(i) for i in pst.observation_data.time.unique()]
         
     ess_obs_data = {}
     for site in pred_data.index.unique().values:
@@ -246,6 +247,15 @@ def clean_pst4pestchek(pstfile, par):
             f.write(line)
     return
 
+def make_part_ins(tmp_d):
+    # write a really simple instruction file to read the MODPATH end point file
+    out_file = "freyberg_mp.mpend"
+    ins_file = out_file + ".ins"
+    with open(os.path.join(tmp_d, ins_file),'w') as f:
+        f.write("pif ~\n")
+        f.write("l7 w w w w w w !part_time!\n")
+    return
+
 
 def prep_pest(tmp_d):
     """Prepares the PEST setup for part 1 of the tutorials.
@@ -284,6 +294,7 @@ def prep_pest(tmp_d):
     # make ins files
     make_ins_from_csv('heads.csv', tmp_d)
     make_ins_from_csv('sfr.csv', tmp_d)
+    make_part_ins(tmp_d)
 
     # build lists of tpl, in, ins, and out files
     tpl_files = [os.path.join(tmp_d, f) for f in os.listdir(tmp_d) if f.endswith(".tpl")]
@@ -302,12 +313,16 @@ def prep_pest(tmp_d):
     par.loc['rch1', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.5, 1, 2, 'fixed', 'rch'
     obs=pst.observation_data
     obs['weight'] = 0
-    obs.loc[:,"time"] = obs.obsnme.apply(lambda x: float(x.split(':')[-1]))
+    #obs.loc[:,"time"] = obs.obsnme.apply(lambda x: float(x.split(':')[-1]))
     obs.loc[:,"obgnme"] = obs.obsnme.apply(lambda x: x.split(':')[0])
 
-    pst.model_command = 'mf6'
+    with open(os.path.join(tmp_d, 'runmodel.bat'), 'w+') as f:
+        f.write('mf6\n')
+        f.write('mp7 freyberg_mp.mpsim')
+
+    pst.model_command = 'runmodel.bat'
     pst.control_data.noptmax=0
-    pst.pestpp_options['forecasts'] = ['headwater:4383.5','tailwater:4383.5', 'trgw-0-9-1:4383.5']
+    pst.pestpp_options['forecasts'] = ['headwater:4383.5','tailwater:4383.5','trgw-0-9-1:4383.5', 'part_time']
 
     ###-- Set OBSERVATION DATA AND WEIGHTS --###
     # geat meas values
@@ -319,7 +334,7 @@ def prep_pest(tmp_d):
     
     # restructure the obsevration data 
     obs_sites = obs_data.index.unique().tolist()
-    model_times = pst.observation_data.time.dropna().astype(float).unique()
+    model_times = obs.loc[:,obs_sites[0]].astype(float)
     ess_obs_data = {}
     for site in obs_sites:
         #print(site)
@@ -363,6 +378,7 @@ def prep_pest(tmp_d):
     #obs.loc[obs.obgnme.str.startswith('gage-1'), 'weight'] = 1/ abs(0.1 *obs.loc[obs.obgnme.str.startswith('gage-1')].obsval)
     obs.loc[obs.obgnme.str.startswith('gage-1'), 'weight'] = 0
     obs.loc[obs.obgnme.str.startswith('trgw-0-26-6 '), 'weight'] = 1/ 0.1
+    prep_forecasts(pst, model_times)
 
     # write and run pst check
     pstfile = os.path.join(tmp_d,'freyberg.pst')
