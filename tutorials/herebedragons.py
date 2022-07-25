@@ -275,11 +275,18 @@ def prep_pest(tmp_d):
     # make hk pars tpl
     for lay in range(nlay):
         filename = f'freyberg6.npf_k_layer{lay+1}.txt.tpl'
-        with open(os.path.join(tmp_d,filename),'w') as f:
+        with open(os.path.join(tmp_d,filename),'w+') as f:
             f.write("ptf ~\n")
             for i in range(nrow):
                 for j in range(ncol):
                     f.write(f" ~     hk{lay+1}   ~")
+                f.write("\n")
+        filename = f'freyberg_mp.ne_layer{lay+1}.txt.tpl'
+        with open(os.path.join(tmp_d,filename),'w+') as f:
+            f.write("ptf ~\n")
+            for i in range(nrow):
+                for j in range(ncol):
+                    f.write(f" ~     ne{lay+1}   ~")
                 f.write("\n")
     # rch multiplier pars tpl
     spdfiles = [f'freyberg6.rch_recharge_{i}.txt' for i in range(14)]
@@ -311,6 +318,8 @@ def prep_pest(tmp_d):
     par.loc[par['parnme'].str.startswith('hk'), ['parlbnd','parval1','parubnd', 'pargp']] = 0.05, 5, 500, 'hk'
     par.loc['rch0', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.5, 1, 2, 'fixed', 'rch'
     par.loc['rch1', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.5, 1, 2, 'fixed', 'rch'
+    par.loc['ne1', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.005, 0.01, 0.02, 'fixed', 'porosity'
+    
     obs=pst.observation_data
     obs['weight'] = 0
     #obs.loc[:,"time"] = obs.obsnme.apply(lambda x: float(x.split(':')[-1]))
