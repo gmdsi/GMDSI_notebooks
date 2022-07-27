@@ -1,9 +1,9 @@
 title,file,nav_order,parent,folder
 Intro to Freyberg,intro_freyberg_model.md,1,Introductions to Selected Topics,intro
 Intro to Regression,intro_to_regression.md,2,Introductions to Selected Topics,intro
-Intro to pyEMU,intro_to_pyemu.md,3,Introductions to Selected Topics,intro
-Intro to Geostatistics,intro_to_geostatistics.md,4,Introductions to Selected Topics,intro
-Bayes Demo,simple_bayes_demo.md,5,Introductions to Selected Topics,intro
+Intro to Bayes,intro_to_bayes.md,3,Introductions to Selected Topics,intro
+Intro to pyEMU,intro_to_pyemu.md,4,Introductions to Selected Topics,intro
+Intro to Geostatistics,intro_to_geostatistics.md,5,Introductions to Selected Topics,intro
 Manual Trial-and-Error,freyberg_trial_and_error.md,1,"Introduction to Theory, Concepts and PEST Mechanic",part1
 PEST Basics,freyberg_pest_setup.md,2,"Introduction to Theory, Concepts and PEST Mechanic",part1
 Automated Calibration with PEST,freyberg_k.md,3,"Introduction to Theory, Concepts and PEST Mechanic",part1
