@@ -398,6 +398,92 @@ def prep_pest(tmp_d):
 
     return pst
 
+def add_ppoints(tmp_d='freyberg_mf6'):
+    pst = pyemu.Pst(os.path.join(tmp_d,'freyberg.pst'))
+    par = pst.parameter_data
+    par.loc['rch0', 'partrans'] = 'log'
+    obs = pst.observation_data
+    obs.loc[(obs.obgnme=="gage-1") & (obs['gage-1'].astype(float)<=4018.5), "weight"] = 0.05
+
+    sim = flopy.mf6.MFSimulation.load(sim_ws=tmp_d, verbosity_level=0) #modflow.Modflow.load(fs.MODEL_NAM,model_ws=working_dir,load_only=[])
+    gwf= sim.get_model()
+    ibound=gwf.dis.idomain.get_data()
+
+    sr = pyemu.helpers.SpatialReference.from_namfile(
+        os.path.join(tmp_d, "freyberg6.nam"),
+        delr=gwf.dis.delr.array, delc=gwf.dis.delc.array)
+
+    ###--construct ppoints
+    prefix_dict = {0:["hk"]} 
+    df_pp = pyemu.pp_utils.setup_pilotpoints_grid(sr=sr,  # model spatial reference
+                                                ibound=ibound, # to which cells to setup ppoints
+                                                prefix_dict=prefix_dict, #prefix to add to parameter names
+                                                pp_dir=tmp_d, 
+                                                tpl_dir=tmp_d, 
+                                                every_n_cell=5) # pilot point spacing
+    pp_file_hk = os.path.join(tmp_d,"hkpp.dat")
+    assert os.path.exists(pp_file_hk)
+    # rch ppoints
+    prefix_dict = {0:["rch"]} 
+    df_pp = pyemu.pp_utils.setup_pilotpoints_grid(sr=sr,  # model spatial reference
+                                                ibound=ibound, # to which cells to setup ppoints
+                                                prefix_dict=prefix_dict, #prefix to add to parameter names
+                                                pp_dir=tmp_d, 
+                                                tpl_dir=tmp_d, 
+                                                every_n_cell=5) # pilot point spacing
+    pp_file_rch = os.path.join(tmp_d,"rchpp.dat")
+    assert os.path.exists(pp_file_rch)
+
+    v = pyemu.geostats.ExpVario(contribution=1.0, a=2500, anisotropy=1, bearing=0)
+    gs = pyemu.geostats.GeoStruct(variograms=v,nugget=0.0)
+    ok = pyemu.geostats.OrdinaryKrige(gs,df_pp)
+    df = ok.calc_factors_grid(sr,var_filename="freyberg.k.ref", minpts_interp=1,maxpts_interp=10, )
+    ok.to_grid_factors_file(pp_file_hk+".fac")
+
+
+    hk_parval, hkub, hklb = pst.parameter_data.loc['hk1', ['parval1','parlbnd','parubnd']]
+    pst.drop_parameters(tpl_file=os.path.join(tmp_d,'freyberg6.npf_k_layer1.txt.tpl'), pst_path='.', )
+    # remove the .tpl file for tidyness
+    #os.remove(os.path.join(tmp_d,'freyberg6.npf_k_layer1.txt.tpl') )
+    par_pp = pst.add_parameters(os.path.join(tmp_d,'hkpp.dat.tpl'), pst_path='.' )
+    pst.parameter_data.loc[par_pp.parnme, ['parval1','parlbnd','parubnd', 'pargp']] = hk_parval, hkub, hklb, 'hk1'
+
+    df = ok.calc_factors_grid(sr,var_filename="freyberg.rch.ref", minpts_interp=1,maxpts_interp=10, )
+    ok.to_grid_factors_file(pp_file_rch+".fac")
+    rch_parval, rchub, rchlb = pst.parameter_data.loc['rch0', ['parval1','parlbnd','parubnd']]
+    pst.drop_parameters(tpl_file=os.path.join(tmp_d,'freyberg6.rch.tpl'), pst_path='.', )
+    par_pp = pst.add_parameters(os.path.join(tmp_d,'rchpp.dat.tpl'), pst_path='.' )
+    pst.parameter_data.loc[par_pp.parnme, ['parval1','parlbnd','parubnd', 'pargp']] = rch_parval, rchub, rchlb, 'rch0'
+    rchspd_files = [i for i in os.listdir(tmp_d) if '.rch_recharge' in i]
+    if not os.path.exists(os.path.join(tmp_d, 'org_f')):
+        os.mkdir(os.path.join(tmp_d, 'org_f'))
+    for f in rchspd_files:
+        shutil.copy(os.path.join(tmp_d, f), os.path.join(tmp_d, 'org_f', f))
+    
+    with open(os.path.join(tmp_d, "forward_run.py"),'w') as f:
+        #add imports
+        f.write("import os\nimport shutil\nimport pandas as pd\nimport numpy as np\nimport pyemu\nimport flopy\n")
+        # preprocess pilot points to grid
+        f.write("pp_file = 'hkpp.dat'\n")
+        f.write("hk_arr = pyemu.geostats.fac2real(pp_file, factors_file=pp_file+'.fac',out_file='freyberg6.npf_k_layer1.txt')\n")
+        # ...rch ppoints
+        f.write("pp_file = 'rchpp.dat'\n")
+        f.write("hk_arr = pyemu.geostats.fac2real(pp_file, factors_file=pp_file+'.fac',out_file='rch0_fac.txt')\n")
+        # multiply rch0 by recharge rates per spd
+        f.write("rch0 = np.loadtxt('rch0_fac.txt')\n")
+        f.write("files = [i for i in os.listdir('.') if '.rch_recharge' in i and int(i.split('.')[-2].split('_')[-1])<13]\n")
+        f.write("for f in files:\n")
+        f.write("    a = np.loadtxt(os.path.join('org_f',f))\n")
+        f.write("    a = a*rch0\n")
+        f.write("    np.savetxt(f, a, fmt='%1.6e')\n")
+        # run MF6 and MP7
+        f.write("pyemu.os_utils.run('mf6')\n")
+        f.write("pyemu.os_utils.run('mp7 freyberg_mp.mpsim')\n")
+    pst.model_command = ['python forward_run.py']
+    pst.write(os.path.join(tmp_d, 'freyberg_pp.pst'))
+    return print("new control file: 'freyberg_pp.pst'")
+
+
 
 def plot_freyberg(tmp_d):
     # load simulation
