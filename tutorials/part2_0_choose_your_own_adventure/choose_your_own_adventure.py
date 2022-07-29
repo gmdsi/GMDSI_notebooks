@@ -20,8 +20,6 @@ import flopy
 
 
 def setup_pst():
-
-
     # folder containing original model files
     org_d = os.path.join('..','..', 'models', 'daily_model_files_newstress')
 
@@ -587,7 +585,24 @@ def store_truth_model(truth_d):
     shutil.copy2(os.path.join(truth_d,"obs_data.csv"),os.path.join(tmp_d,"obs_data.csv"))
     shutil.copy2(os.path.join(truth_d,"pred_data.csv"),os.path.join(tmp_d,"pred_data.csv"))
 
+def store_truth_k(truth_d):
+    sim = flopy.mf6.MFSimulation.load(sim_ws=truth_d, verbosity_level=0) #modflow.Modflow.load(fs.MODEL_NAM,model_ws=working_dir,load_only=[])
+    gwf= sim.get_model()
 
+    k = gwf.npf.k.get_data()
+    top = gwf.dis.top.get_data()
+    bot = gwf.dis.botm.get_data()
+
+    thick = np.zeros_like(bot)
+    thick[gwf.dis.idomain.get_data()==0] = np.nan
+    thick[0] = top-bot[0]
+    thick[1] = bot[0]-bot[1]
+    thick[2] = bot[1]-bot[2]
+    thick[gwf.dis.idomain.get_data()==0] = np.nan
+    k_eff = (thick * k ).sum(axis=0) / thick.sum(axis=0)
+
+    np.savetxt(os.path.join('..','..', 'models', 'daily_freyberg_mf6_truth','truth_hk.txt'), k_eff)
+    return
 
 if __name__ == "__main__":
     setup_pst()
@@ -595,4 +610,5 @@ if __name__ == "__main__":
     pick_truth("master_pmc","freyberg6_template")
     prep_obs_data("truth_template")
     store_truth_model("truth_template")
+    store_truth_k("truth_template")
     
