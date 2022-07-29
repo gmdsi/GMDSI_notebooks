@@ -8,6 +8,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import zipfile
 import shutil
+import sys
+sys.path.insert(0,os.path.join("..","..","dependencies"))                               
 import pyemu
 import flopy
 
@@ -403,7 +405,7 @@ def add_ppoints(tmp_d='freyberg_mf6'):
     par = pst.parameter_data
     par.loc['rch0', 'partrans'] = 'log'
     obs = pst.observation_data
-    obs.loc[(obs.obgnme=="gage-1") & (obs['gage-1'].astype(float)<=4018.5), "weight"] = 0.05
+    obs.loc[(obs.obgnme=="gage-1") & (obs['gage-1'].astype(float)<=4018.5), "weight"] = 0.005
 
     sim = flopy.mf6.MFSimulation.load(sim_ws=tmp_d, verbosity_level=0) #modflow.Modflow.load(fs.MODEL_NAM,model_ws=working_dir,load_only=[])
     gwf= sim.get_model()
@@ -412,7 +414,29 @@ def add_ppoints(tmp_d='freyberg_mf6'):
     sr = pyemu.helpers.SpatialReference.from_namfile(
         os.path.join(tmp_d, "freyberg6.nam"),
         delr=gwf.dis.delr.array, delc=gwf.dis.delc.array)
-
+    
+    ###--add SFR params
+    with open(os.path.join(tmp_d,'freyberg6.sfr_perioddata_1.txt.tpl'),'w+') as f:
+        f.write("ptf ~\n")
+        f.write("  1  inflow   ~     strinf   ~")
+    pst.add_parameters(os.path.join(tmp_d,'freyberg6.sfr_perioddata_1.txt.tpl'), pst_path='.' )
+    par = pst.parameter_data
+    par.loc['strinf', ['parval1', 'parlbnd', 'parubnd', 'pargp']] = 500, 50, 5000, 'strinf'
+    ###--add  WEL params
+    wel_spd_files = [f for f in os.listdir(tmp_d) if '.wel_stress_period_data_' in f
+                        and int(f.split('.')[-2].split('_')[-1]) < 13
+                        and f.endswith('txt')]
+    for filename in wel_spd_files[1:12]:
+        with open(os.path.join(tmp_d, filename+'.tpl'), 'w+')as f:
+            f.write("ptf ~\n")
+        df = pd.read_csv(os.path.join(tmp_d, filename),delim_whitespace=True, header=None)
+        df.iloc[:-1, 3] = [f"~     wel{i}   ~" for i in df.iloc[:-1].index.values]
+        df.to_csv(os.path.join(tmp_d, filename+'.tpl'), index=False, header=None, sep="\t", mode='a')
+        # add parameters from tpl
+        pst.add_parameters(os.path.join(tmp_d,filename+'.tpl'), pst_path='.' )
+    par = pst.parameter_data
+    par.loc[par.pargp=='pargp','pargp', ] = 'wel'
+    par.loc[par.pargp=='wel',['parval1', 'parlbnd', 'parubnd', 'scale']] = 300, 10, 900, -1
     ###--construct ppoints
     prefix_dict = {0:["hk"]} 
     df_pp = pyemu.pp_utils.setup_pilotpoints_grid(sr=sr,  # model spatial reference
@@ -480,10 +504,30 @@ def add_ppoints(tmp_d='freyberg_mf6'):
         f.write("pyemu.os_utils.run('mf6')\n")
         f.write("pyemu.os_utils.run('mp7 freyberg_mp.mpsim')\n")
     pst.model_command = ['python forward_run.py']
+
+    pst.control_data.pestmode = "estimation"
+    pst.pestpp_options["n_iter_base"] = 1
+    pst.pestpp_options["n_iter_super"] = 3
+
     pst.write(os.path.join(tmp_d, 'freyberg_pp.pst'))
     return print("new control file: 'freyberg_pp.pst'")
 
-
+def intertive_sv_vec_plot(inpst, U):
+    from ipywidgets import interact, interactive, fixed, interact_manual
+    import ipywidgets as widgets
+    def SV_bars(SV=1,):
+        plt.figure(figsize=(13,4))
+        plt.bar(list(range(U.shape[0])),U[:,SV-1])
+        #plt.yscale('log')
+        plt.xlim([0,inpst.npar_adj+1])
+        plt.xticks(list(range(inpst.npar_adj+1)))
+        plt.title('Singular vector showing parameter contributions to singular vector #{0}'.format(SV))
+        plt.gca().set_xticklabels(inpst.parameter_data['parnme'].values, rotation=90);
+        return
+    return interact(SV_bars, SV=widgets.widgets.IntSlider(
+    value=1, min=1, max=20, step=1, description='Number SVs:',
+    disabled=False, continuous_update=True, orientation='horizontal', readout=True, readout_format='d'));
+    
 
 def plot_freyberg(tmp_d):
     # load simulation
@@ -542,7 +586,6 @@ def plot_freyberg(tmp_d):
 ####
 def prep_notebooks(rebuild_truth=True):
     """Runs notebooks, prepares model folders, etc."""
-
     # removes all the .ipynb checkpoint folders
     for cdir, cpath, cf in os.walk('.'):
         if os.path.basename(cdir).startswith('.ipynb'):
@@ -624,6 +667,87 @@ def prep_notebooks(rebuild_truth=True):
 
     return print('Notebook folders ready.')
 
+def plot_truth_k(m_d):
+
+    sim = flopy.mf6.MFSimulation.load(sim_ws=m_d, verbosity_level=0)
+    gwf= sim.get_model()
+   
+    k_truth= np.loadtxt(os.path.join('..','..', 'models', 'daily_freyberg_mf6_truth','truth_hk.txt'))
+    # downsample for model 
+    k_truth_res = k_truth[::3,::3]
+
+    fig = plt.figure(figsize=(10, 7))
+    ax = fig.add_subplot(1, 1, 1, aspect='equal')
+    mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
+
+    ca = mm.plot_array(np.log10(k_truth_res), masked_values=[1e30],)
+    cb = plt.colorbar(ca, shrink=0.5)
+    cb.ax.set_title('$Log_{10}K$')
+
+    mm.plot_grid(alpha=0.5)
+    mm.plot_inactive()
+    ax.set_title('Truth K$');
+    return gwf
+    
+def svd_enchilada(gwf, m_d):
+    from ipywidgets import interact, interactive, fixed, interact_manual
+    import ipywidgets as widgets
+
+    v = pyemu.geostats.ExpVario(1.0,a=200,anisotropy=1.0,bearing=45)
+    struct = pyemu.geostats.GeoStruct(variograms=v)
+    arr_dict = {"test":gwf.dis.idomain.get_data()[0]}
+
+    sr = pyemu.helpers.SpatialReference.from_namfile(
+                        os.path.join(m_d, "freyberg6.nam"),
+                        delr=gwf.dis.delr.array, delc=gwf.dis.delc.array)
+    bd = pyemu.helpers.kl_setup(num_eig=800,sr=sr,struct=struct,prefixes=['hk'],basis_file="basis.jco",)
+    basis = pyemu.Matrix.from_binary("basis.jco").to_dataframe().T
+    i = basis.index.map(lambda x: int(x.split('_')[-1]))
+    j = basis.index.map(lambda x: int(x[-4:]))  
+
+
+    k_truth= np.loadtxt(os.path.join('..','..', 'models', 'daily_freyberg_mf6_truth','truth_hk.txt'))
+    # downsample for model 
+    k_truth_res = k_truth[::3,::3]
+    k_truth_res[np.isnan(k_truth_res)] =0 
+
+    def plot_enchilada(eig):
+        basis_arr = np.array(basis.values)
+        flat_arr = np.atleast_2d(k_truth_res.flatten()).transpose()
+        #fig,ax = plt.subplots(ncols=2, figsize=(10,7),aspect='equal')
+        fig = plt.figure(figsize=(10, 7))
+        ax = fig.add_subplot(1, 3, 1, aspect='equal',)
+
+        arr = np.ones_like(gwf.dis.idomain.get_data()[0])
+        arr = basis.iloc[:,eig].values.reshape(arr.shape)
+        mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
+        mm.plot_array(arr)
+        mm.plot_ibound()
+        #mm = plt.imshow(arr)
+        ax.set_title('Plot of individual CV')
+
+        ax = fig.add_subplot(1, 3, 2, aspect='equal', )
+        basis_eig = basis_arr[:,:eig+1].transpose()
+        factors = np.dot(basis_eig, flat_arr).transpose()
+        factors = np.dot(factors, basis_eig).reshape(arr.shape)
+        mm2 = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
+        ca = mm2.plot_array(factors, masked_values=[1e30],)
+        mm2.plot_ibound()
+        ax.set_title('Reconstructed field')
+
+        ax = fig.add_subplot(1, 3, 3, aspect='equal',)
+        mm = flopy.plot.PlotMapView(model=gwf, ax=ax)
+        ca = mm.plot_array(k_truth_res, masked_values=[1e30],)
+        mm.plot_inactive()
+        ax.set_title('Truth $K$');
+
+        plt.suptitle('Using {0} SVs'.format(eig+1))
+        fig.tight_layout()
+
+
+    return interact(plot_enchilada, eig=widgets.IntSlider(description="eig comp:", 
+                                           continuous_update=True, value=400, max=799));
+    
 
 if __name__ == "__main__":
     #make_truth(os.path.join('..','models','freyberg_mf6_truth'))
