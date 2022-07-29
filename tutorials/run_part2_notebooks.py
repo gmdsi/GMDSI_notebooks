@@ -55,7 +55,7 @@ run_nb(nb_file, nb_dir)
 nb_file = "freyberg_ies_2_localization.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_da"
+nb_dir = "part2_7_da"
 nb_file = "freyberg_da_prep.ipynb"
 run_nb(nb_file, nb_dir)
 nb_file = "freyberg_da_run.ipynb"
