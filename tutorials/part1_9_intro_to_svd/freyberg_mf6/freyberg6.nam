@@ -1,0 +1,18 @@
+BEGIN Options
+  LIST  freyberg6.lst
+  NEWTON
+END Options
+
+BEGIN Packages
+  dis6  freyberg6.dis
+  ic6  freyberg6.ic
+  npf6  freyberg6.npf
+  sto6  freyberg6.sto
+  oc6  freyberg6.oc
+  wel6  freyberg6.wel wel
+  rch6  freyberg6.rch rch
+  ghb6  freyberg6.ghb ghb
+  sfr6  freyberg6.sfr  sfr_1
+  OBS6  freyberg6.obs  head_obs
+END Packages
+

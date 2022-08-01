@@ -1,0 +1,23 @@
+BEGIN Options
+  LENGTH_UNITS  meters
+END Options
+
+BEGIN Dimensions
+  NLAY  1
+  NROW  40
+  NCOL  20
+END Dimensions
+
+BEGIN GRIDDATA
+  delr
+    OPEN/CLOSE  'freyberg6.dis_delr.txt'  FACTOR  1.0
+  delc
+    OPEN/CLOSE  'freyberg6.dis_delc.txt'  FACTOR  1.0
+  top
+    OPEN/CLOSE  'freyberg6.dis_top.txt'  FACTOR  1.0
+  botm  
+    OPEN/CLOSE  'freyberg6.dis_botm_layer1.txt'  FACTOR  1.0
+  idomain  
+    OPEN/CLOSE  'freyberg6.dis_idomain_layer1.txt'  FACTOR  1
+END GRIDDATA
+

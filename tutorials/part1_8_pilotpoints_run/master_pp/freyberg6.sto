@@ -1,0 +1,20 @@
+BEGIN Options
+END Options
+
+BEGIN GRIDDATA
+  iconvert  LAYERED
+    OPEN/CLOSE  'freyberg6.sto_iconvert_layer1.txt'  FACTOR  1
+  ss  LAYERED
+    OPEN/CLOSE  'freyberg6.sto_ss_layer1.txt'  FACTOR  1.0
+  sy  LAYERED
+    OPEN/CLOSE  'freyberg6.sto_sy_layer1.txt'  FACTOR  1.0
+END GRIDDATA
+
+BEGIN Period  1
+  TRANSIENT
+END Period  1
+
+BEGIN Period  2
+  TRANSIENT
+END Period  2
+

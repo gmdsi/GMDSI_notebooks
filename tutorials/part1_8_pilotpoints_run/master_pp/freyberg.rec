@@ -1,0 +1,1848 @@
+             pestpp-glm 5.1.17
+
+    by The PEST++ Development Team
+
+
+
+version: 5.1.17
+binary compiled on Jun  6 2022 at 10:38:16
+
+using control file: "freyberg.pst"
+
+in directory: "C:\Users\rui2h\Documents\GitHub\GMDSI_notebooks_fork\tutorials\part1_10_pilotpoints_run\freyberg_mf6"
+on host: "DESKTOP-E0R2JQ8"
+started at 07/29/22 16:51:23
+
+Note: 3 unused lines in pest control file:
+  -->  line number 6: '2.000000E+01  -3.000000E+00   3.000000E-01   1.000000E-02        -7' 
+  -->  line number 10: '0         0         0' 
+  -->  line number 12: '1' 
+
+    This software has been approved for release by the
+    U.S.Geological Survey(USGS).Although the software has 
+    been subjected to rigorous review, the USGS reserves the
+    right to update the software as needed pursuant to further
+    analysisand review.No warranty, expressed or implied, is 
+    made by the USGS or the U.S.Government as to the
+    functionality of the softwareand related material nor shall
+    the fact of release constitute any such warranty.
+    Furthermore, the software is released on condition that
+    neither the USGS nor the U.S.Government shall be held
+    liable for any damages resulting from its authorized 
+    or unauthorized use.
+
+
+pestmode:- 
+   estimation
+
+
+Case dimensions:- 
+    Number of parameters = 4
+    Number of adjustable parameters = 2
+    Number of observations = 401
+    Number of prior estimates = 0
+
+PEST Control Information
+    relparmax = 10
+    facparmax = 10
+    facorig = 0.001
+    phiredswh = 0.1
+    noptmax = 20
+    phiredstp = 0.01
+    nphistp = 3
+    nphinored = 3
+    relparstp = 0.01
+    nrelpar = 3
+
+
+    PEST++ OPTIONS: 
+
+...general options (used in multiple tools): 
+svd_pack: redsvd
+lambda_scale_fac: 0.75,1,1.1,
+forgive_unknown_args: 0
+max_run_fail: 3
+panther_poll_interval: 1
+parameter_covariance: 
+observation_covariance: 
+hotstart_resfile: 
+overdue_resched_fac: 1.15
+overdue_giveup_fac: 100
+overdue_giveup_minutes: 1e+30
+condor_submit_file: 
+tie_by_group: 0
+par_sigma_range: 4
+enforce_tied_bounds: 0
+debug_parse_only: 0
+check_tplins: 1
+fill_tpl_zeros: 0
+tpl_force_decimal: 0
+additional_ins_delimiters: 
+random_seed: 358183147
+num_tpl_ins_threads: 1
+save_binary: 0
+ensemble_output_precision: 6
+panther_echo: 1
+panther_agent_restart_on_error: 0
+panther_agent_no_ping_timeout_secs: -1
+panther_debug_loop: 0
+debug_check_par_en_consistency: 0
+panther_agent_freeze_on_fail: 0
+panther_transfer_on_finish: 
+panther_transfer_on_fail: 
+
+...pestpp-glm specific options:
+max_n_super: 1000000
+super_eigthresh: 1e-06
+n_iter_base: 1000000
+n_iter_super: 0
+super_relparmax: 0.1
+max_super_frz_iter: 20
+max_reg_iter: 20
+lambdas: 0.1,1,10,100,1000,
+iteration_summary: 1
+der_forgive: 1
+uncertainty: 1
+forecasts: HEADWATER:4383.5,TAILWATER:4383.5,TRGW-0-9-1:4383.5,PART_TIME,
+base_jacobian: 
+glm_num_reals: 0
+jac_scale: 1
+glm_normal_form: DIAG
+glm_debug_der_fail: 0
+glm_debug_lamb_fail: 0
+glm_debug_real_fail: 0
+glm_accept_mc_phi: 0
+glm_rebase_super: 0
+glm_iter_mc: 0
+glm_high_2nd_iter_phi: 0
+
+...pestpp-swp options:
+sweep_parameter_csv_file: 
+sweep_output_csv_file: sweep_out.csv
+sweep_chunk: 500
+sweep_forgive: 0
+sweep_base_run: 0
+
+...pestpp-opt options:
+opt_objective_function: 
+opt_coin_log: 1
+opt_skip_final: 0
+opt_std_weights: 0
+opt_stack_size: 0
+opt_par_stack: 
+opt_obs_stack: 
+opt_decision_variable_groups: 
+opt_external_variable_groups: 
+opt_constraint_groups: 
+opt_risk: 0.5
+opt_iter_derinc_fac: 1
+opt_direction: 1
+opt_iter_tol: 0.001
+opt_recalc_fosm_every: 1
+opt_chance_points: SINGLE
+
+...pestpp-sqp options:
+sqp_dv_en: 
+sqp_obs_restart_en: 
+sqp_num_reals: -1
+sqp_update_hessian: 0
+sqp_scale_facs:
+  1e-05
+  0.0001
+  0.01
+  0.1
+  1
+
+...pestpp-mou options:
+mou_generator: DE
+mou_population_size: 100
+mou_dv_population_file: 
+mou_obs_population_restart_file: 
+mou_objectives: 
+mou_max_archive_size: 500
+mou_risk_objective: 0
+mou_verbose_level: 1
+mou_env_selector: NSGA
+mou_mating_selector: TOURNAMENT
+mou_crossover_prob: 0.75
+mou_mutation_prob: -999
+mou_de_f: 0.8
+mou_save_population_every: -1
+mou_pso_omega: 0.7
+mou_pso_social_const: 2
+mou_pso_cognitive: 2
+mou_population_schedule: 
+mou_simplex_reflections:10
+mou_simplex_factors: 
+ 0.5
+ 0.6
+ 0.7
+ 0.8
+mou_simplex_mutation: 0
+
+...shared pestpp-ies/pestpp-da options:
+(note: 'da' args override 'ies' args when using pestpp-da)
+ies_parameter_ensemble: 
+ies_observation_ensemble: 
+ies_weights_ensemble: 
+ies_restart_parameter_ensemble: 
+ies_restart_observation_ensemble: 
+ies_use_approximate_solution: 1
+ies_lambda_mults: 0.1,1,10,
+ies_initial_lambda: 0
+ies_use_approx: 1
+ies_subset_size: 4
+ies_reg_factor: 0
+ies_verbose_level: 0
+ies_use_prior_scaling: 0
+ies_num_reals: 50
+ies_bad_phi: 1e+300
+ies_bad_phi_sigma: 1e+300
+ies_include_base: 1
+ies_use_empirical_prior: 0
+ies_group_draws: 0
+ies_enforce_bounds: 1
+ies_localizer: 
+ies_accept_phi_fac: 1.05
+ies_lambda_inc_fac: 10
+ies_lambda_dec_fac: 0.75
+ies_save_lambda_ensembles: 0
+ies_subset_how: RANDOM
+ies_localize_how: PARAMETERS
+ies_num_threads: -1
+ies_debug_fail_subset: 0
+ies_debug_fail_remainder: 0
+ies_debug_bad_phi: 0
+ies_debug_upgrade_only: 0
+ies_debug_high_subset_phi: 0
+ies_debug_high_upgrade_phi: 0
+ies_csv_by_reals: 1
+ies_autoadaloc: 0
+ies_autoadaloc_sigma_dist: 1
+ies_enforce_chglim: 0
+ies_center_on: 
+ies_no_noise: 0
+ies_drop_conflicts: 0
+ies_save_rescov:0
+ies_pdc_sigma_distance: -1
+ies_use_mda: 0
+ies_mda_init_fac: 10
+ies_mda_dec_fac: 0.5
+ies_localization_type: LOCAL
+ies_upgrades_in_memory: 1
+ies_ordered_binary: 1
+ies_multimodal_alpha: 1
+
+pestpp-sen options: 
+gsa_method: MORRIS
+gsa_morris_pooled_obs: 0
+gsa_morris_obs_sen: 1
+gsa_morris_p: 4
+gsa_morris_r: 4
+gsa_morris_delta: 0.6666
+gsa_sobol_samples: 4
+gsa_sobol_par_dist: norm
+pestpp-da options (those not shared with pestpp-ies):
+da_parameter_cycle_table: 
+da_observation_cycle_table: 
+da_hotstart_cycle: 0
+da_stop_cycle: 1000000000
+da_use_simulated_states: 1
+da_noptmax_schedule: 
+
+
+
+Model command line(s):- 
+    runmodel.bat
+
+Model interface files:-
+    template files:
+      freyberg6.npf_k_layer1.txt.tpl
+      freyberg6.rch.tpl
+      freyberg_mp.ne_layer1.txt.tpl
+    model input files:
+      freyberg6.npf_k_layer1.txt
+      freyberg6.rch
+      freyberg_mp.ne_layer1.txt
+
+    instruction files:
+      freyberg_mp.mpend.ins
+      heads.csv.ins
+      sfr.csv.ins
+    model output files:
+      freyberg_mp.mpend
+      heads.csv
+      sfr.csv
+
+
+Parameter group information
+NAME          INCREMENT TYPE     DERIVATIVE INCREMENT    INCREMENT LOWER BOUND  FORCE CENTRAL     INCREMENT MULTIPLIER
+rch                 RELATIVE                     0.01                        0         SWITCH                        2
+hk                  RELATIVE                     0.01                        0         SWITCH                        2
+porosity            RELATIVE                     0.01                        0         SWITCH                        2
+
+
+
+Parameter information
+NAME         TRANSFORMATION        CHANGE LIMIT  INITIAL VALUE    LOWER BOUND    UPPER BOUND        GROUP          SCALE         OFFSET  DERIVATIVE COMMAND
+hk1          log                     FACTOR              5           0.05            500           hk              1              0                   1
+ne1          fixed                   FACTOR           0.01          0.005           0.02     porosity              1              0                   1
+rch0         log                     FACTOR              1            0.5              2          rch              1              0                   1
+rch1         fixed                   FACTOR              1            0.5              2          rch              1              0                   1
+
+
+
+Observation information
+NAME                                VALUE                GROUP              WEIGHT
+gage-1:3652.5                     2943.24               gage-1               0.005
+gage-1:3683.5                     2815.38               gage-1               0.005
+gage-1:3712.5                     2749.12               gage-1               0.005
+gage-1:3743.5                      2816.8               gage-1               0.005
+gage-1:3773.5                     2892.31               gage-1               0.005
+gage-1:3804.5                     3023.25               gage-1               0.005
+gage-1:3834.5                     3034.12               gage-1               0.005
+gage-1:3865.5                     2982.13               gage-1               0.005
+gage-1:3896.5                     2910.85               gage-1               0.005
+gage-1:3926.5                      2648.8               gage-1               0.005
+gage-1:3957.5                     2428.73               gage-1               0.005
+gage-1:3987.5                     2204.18               gage-1               0.005
+gage-1:4018.5                     2006.67               gage-1               0.005
+gage-1:4049.5                     2077.45               gage-1                   0
+gage-1:4077.5                     2136.34               gage-1                   0
+gage-1:4108.5                      2302.4               gage-1                   0
+gage-1:4138.5                     2504.03               gage-1                   0
+gage-1:4169.5                     2714.29               gage-1                   0
+gage-1:4199.5                     2729.01               gage-1                   0
+gage-1:4230.5                      2763.7               gage-1                   0
+gage-1:4261.5                     2553.34               gage-1                   0
+gage-1:4291.5                      2319.1               gage-1                   0
+gage-1:4322.5                     2032.23               gage-1                   0
+gage-1:4352.5                     1866.94               gage-1                   0
+gage-1:4383.5                     1627.58               gage-1                   0
+headwater:3652.5                 -1271.61            headwater                   0
+headwater:3683.5                 -1188.26            headwater                   0
+headwater:3712.5                 -1278.18            headwater                   0
+headwater:3743.5                    -1442            headwater                   0
+headwater:3773.5                 -1576.91            headwater                   0
+headwater:3804.5                 -1618.96            headwater                   0
+headwater:3834.5                 -1620.04            headwater                   0
+headwater:3865.5                 -1311.92            headwater                   0
+headwater:3896.5                 -1013.65            headwater                   0
+headwater:3926.5                 -714.129            headwater                   0
+headwater:3957.5                 -470.588            headwater                   0
+headwater:3987.5                 -348.177            headwater                   0
+headwater:4018.5                 -369.408            headwater                   0
+headwater:4049.5                 -516.742            headwater                   0
+headwater:4077.5                 -734.931            headwater                   0
+headwater:4108.5                 -994.138            headwater                   0
+headwater:4138.5                 -1192.72            headwater                   0
+headwater:4169.5                 -1280.35            headwater                   0
+headwater:4199.5                 -1281.99            headwater                   0
+headwater:4230.5                 -1028.96            headwater                   0
+headwater:4261.5                 -749.971            headwater                   0
+headwater:4291.5                 -466.077            headwater                   0
+headwater:4322.5                 -236.327            headwater                   0
+headwater:4352.5                 -129.829            headwater                   0
+headwater:4383.5                 -127.193            headwater                   0
+part_time                         31272.3            part_time                   0
+tailwater:3652.5                 -934.745            tailwater                   0
+tailwater:3683.5                 -903.583            tailwater                   0
+tailwater:3712.5                 -975.063            tailwater                   0
+tailwater:3743.5                 -1100.48            tailwater                   0
+tailwater:3773.5                  -1201.1            tailwater                   0
+tailwater:3804.5                 -1225.23            tailwater                   0
+tailwater:3834.5                 -1226.69            tailwater                   0
+tailwater:3865.5                 -962.543            tailwater                   0
+tailwater:3896.5                 -720.464            tailwater                   0
+tailwater:3926.5                 -482.627            tailwater                   0
+tailwater:3957.5                 -294.031            tailwater                   0
+tailwater:3987.5                 -192.867            tailwater                   0
+tailwater:4018.5                 -198.454            tailwater                   0
+tailwater:4049.5                 -299.749            tailwater                   0
+tailwater:4077.5                 -459.681            tailwater                   0
+tailwater:4108.5                 -650.155            tailwater                   0
+tailwater:4138.5                  -793.82            tailwater                   0
+tailwater:4169.5                 -848.267            tailwater                   0
+tailwater:4199.5                 -851.251            tailwater                   0
+tailwater:4230.5                 -624.287            tailwater                   0
+tailwater:4261.5                 -396.703            tailwater                   0
+tailwater:4291.5                 -171.134            tailwater                   0
+tailwater:4322.5                  6.30116            tailwater                   0
+tailwater:4352.5                  86.9187            tailwater                   0
+tailwater:4383.5                  92.9114            tailwater                   0
+trgw-0-13-10:3652.5               34.7974         trgw-0-13-10                   0
+trgw-0-13-10:3683.5               34.7685         trgw-0-13-10                   0
+trgw-0-13-10:3712.5               34.8212         trgw-0-13-10                   0
+trgw-0-13-10:3743.5                34.921         trgw-0-13-10                   0
+trgw-0-13-10:3773.5               35.0084         trgw-0-13-10                   0
+trgw-0-13-10:3804.5               35.0424         trgw-0-13-10                   0
+trgw-0-13-10:3834.5               34.9949         trgw-0-13-10                   0
+trgw-0-13-10:3865.5               34.8623         trgw-0-13-10                   0
+trgw-0-13-10:3896.5               34.6729         trgw-0-13-10                   0
+trgw-0-13-10:3926.5               34.4752         trgw-0-13-10                   0
+trgw-0-13-10:3957.5               34.3055         trgw-0-13-10                   0
+trgw-0-13-10:3987.5               34.2089         trgw-0-13-10                   0
+trgw-0-13-10:4018.5               34.2024         trgw-0-13-10                   0
+trgw-0-13-10:4049.5               34.2825         trgw-0-13-10                   0
+trgw-0-13-10:4077.5               34.4131         trgw-0-13-10                   0
+trgw-0-13-10:4108.5               34.5781         trgw-0-13-10                   0
+trgw-0-13-10:4138.5               34.7105         trgw-0-13-10                   0
+trgw-0-13-10:4169.5               34.7772         trgw-0-13-10                   0
+trgw-0-13-10:4199.5               34.7522         trgw-0-13-10                   0
+trgw-0-13-10:4230.5               34.6365         trgw-0-13-10                   0
+trgw-0-13-10:4261.5                 34.46         trgw-0-13-10                   0
+trgw-0-13-10:4291.5               34.2724         trgw-0-13-10                   0
+trgw-0-13-10:4322.5               34.1116         trgw-0-13-10                   0
+trgw-0-13-10:4352.5               34.0271         trgw-0-13-10                   0
+trgw-0-13-10:4383.5               34.0741         trgw-0-13-10                   0
+trgw-0-15-16:3652.5               34.3787         trgw-0-15-16                   0
+trgw-0-15-16:3683.5               34.3595         trgw-0-15-16                   0
+trgw-0-15-16:3712.5               34.3997         trgw-0-15-16                   0
+trgw-0-15-16:3743.5               34.4698         trgw-0-15-16                   0
+trgw-0-15-16:3773.5                34.526         trgw-0-15-16                   0
+trgw-0-15-16:3804.5               34.5401         trgw-0-15-16                   0
+trgw-0-15-16:3834.5               34.4963         trgw-0-15-16                   0
+trgw-0-15-16:3865.5               34.3938         trgw-0-15-16                   0
+trgw-0-15-16:3896.5               34.2578         trgw-0-15-16                   0
+trgw-0-15-16:3926.5                34.123         trgw-0-15-16                   0
+trgw-0-15-16:3957.5               34.0154         trgw-0-15-16                   0
+trgw-0-15-16:3987.5               33.9644         trgw-0-15-16                   0
+trgw-0-15-16:4018.5               33.9786         trgw-0-15-16                   0
+trgw-0-15-16:4049.5               34.0499         trgw-0-15-16                   0
+trgw-0-15-16:4077.5               34.1504         trgw-0-15-16                   0
+trgw-0-15-16:4108.5               34.2674         trgw-0-15-16                   0
+trgw-0-15-16:4138.5               34.3542         trgw-0-15-16                   0
+trgw-0-15-16:4169.5               34.3894         trgw-0-15-16                   0
+trgw-0-15-16:4199.5               34.3597         trgw-0-15-16                   0
+trgw-0-15-16:4230.5               34.2678         trgw-0-15-16                   0
+trgw-0-15-16:4261.5               34.1397         trgw-0-15-16                   0
+trgw-0-15-16:4291.5               34.0112         trgw-0-15-16                   0
+trgw-0-15-16:4322.5               33.9091         trgw-0-15-16                   0
+trgw-0-15-16:4352.5               33.8648         trgw-0-15-16                   0
+trgw-0-15-16:4383.5               33.9156         trgw-0-15-16                   0
+trgw-0-2-15:3652.5                34.6265          trgw-0-2-15                   0
+trgw-0-2-15:3683.5                34.6336          trgw-0-2-15                   0
+trgw-0-2-15:3712.5                34.6844          trgw-0-2-15                   0
+trgw-0-2-15:3743.5                34.7562          trgw-0-2-15                   0
+trgw-0-2-15:3773.5                34.8133          trgw-0-2-15                   0
+trgw-0-2-15:3804.5                34.8332          trgw-0-2-15                   0
+trgw-0-2-15:3834.5                34.8014          trgw-0-2-15                   0
+trgw-0-2-15:3865.5                34.7177          trgw-0-2-15                   0
+trgw-0-2-15:3896.5                34.6023          trgw-0-2-15                   0
+trgw-0-2-15:3926.5                34.4853          trgw-0-2-15                   0
+trgw-0-2-15:3957.5                34.3892          trgw-0-2-15                   0
+trgw-0-2-15:3987.5                34.3417          trgw-0-2-15                   0
+trgw-0-2-15:4018.5                34.3513          trgw-0-2-15                   0
+trgw-0-2-15:4049.5                34.4113          trgw-0-2-15                   0
+trgw-0-2-15:4077.5                34.4978          trgw-0-2-15                   0
+trgw-0-2-15:4108.5                34.6008          trgw-0-2-15                   0
+trgw-0-2-15:4138.5                34.6797          trgw-0-2-15                   0
+trgw-0-2-15:4169.5                34.7158          trgw-0-2-15                   0
+trgw-0-2-15:4199.5                34.6954          trgw-0-2-15                   0
+trgw-0-2-15:4230.5                34.6208          trgw-0-2-15                   0
+trgw-0-2-15:4261.5                34.5127          trgw-0-2-15                   0
+trgw-0-2-15:4291.5                34.4019          trgw-0-2-15                   0
+trgw-0-2-15:4322.5                34.3112          trgw-0-2-15                   0
+trgw-0-2-15:4352.5                34.2687          trgw-0-2-15                   0
+trgw-0-2-15:4383.5                34.3073          trgw-0-2-15                   0
+trgw-0-2-9:3652.5                 35.5947           trgw-0-2-9                   0
+trgw-0-2-9:3683.5                 35.6087           trgw-0-2-9                   0
+trgw-0-2-9:3712.5                 35.6962           trgw-0-2-9                   0
+trgw-0-2-9:3743.5                 35.8296           trgw-0-2-9                   0
+trgw-0-2-9:3773.5                 35.9488           trgw-0-2-9                   0
+trgw-0-2-9:3804.5                 36.0124           trgw-0-2-9                   0
+trgw-0-2-9:3834.5                  35.986           trgw-0-2-9                   0
+trgw-0-2-9:3865.5                 35.8617           trgw-0-2-9                   0
+trgw-0-2-9:3896.5                 35.6648           trgw-0-2-9                   0
+trgw-0-2-9:3926.5                 35.4455           trgw-0-2-9                   0
+trgw-0-2-9:3957.5                 35.2428           trgw-0-2-9                   0
+trgw-0-2-9:3987.5                 35.1149           trgw-0-2-9                   0
+trgw-0-2-9:4018.5                  35.084           trgw-0-2-9                   0
+trgw-0-2-9:4049.5                 35.1511           trgw-0-2-9                   0
+trgw-0-2-9:4077.5                 35.2813           trgw-0-2-9                   0
+trgw-0-2-9:4108.5                 35.4592           trgw-0-2-9                   0
+trgw-0-2-9:4138.5                 35.6131           trgw-0-2-9                   0
+trgw-0-2-9:4169.5                 35.7048           trgw-0-2-9                   0
+trgw-0-2-9:4199.5                 35.6996           trgw-0-2-9                   0
+trgw-0-2-9:4230.5                 35.5928           trgw-0-2-9                   0
+trgw-0-2-9:4261.5                 35.4104           trgw-0-2-9                   0
+trgw-0-2-9:4291.5                 35.2034           trgw-0-2-9                   0
+trgw-0-2-9:4322.5                 35.0123           trgw-0-2-9                   0
+trgw-0-2-9:4352.5                 34.8951           trgw-0-2-9                   0
+trgw-0-2-9:4383.5                  34.915           trgw-0-2-9                   0
+trgw-0-21-10:3652.5               34.7134         trgw-0-21-10                   0
+trgw-0-21-10:3683.5                34.679         trgw-0-21-10                   0
+trgw-0-21-10:3712.5               34.7262         trgw-0-21-10                   0
+trgw-0-21-10:3743.5               34.8228         trgw-0-21-10                   0
+trgw-0-21-10:3773.5               34.9095         trgw-0-21-10                   0
+trgw-0-21-10:3804.5               34.9439         trgw-0-21-10                   0
+trgw-0-21-10:3834.5               34.8961         trgw-0-21-10                   0
+trgw-0-21-10:3865.5               34.7605         trgw-0-21-10                   0
+trgw-0-21-10:3896.5               34.5648         trgw-0-21-10                   0
+trgw-0-21-10:3926.5               34.3579         trgw-0-21-10                   0
+trgw-0-21-10:3957.5               34.1769         trgw-0-21-10                   0
+trgw-0-21-10:3987.5               34.0284         trgw-0-21-10                   0
+trgw-0-21-10:4018.5               33.9699         trgw-0-21-10                   0
+trgw-0-21-10:4049.5               34.0115         trgw-0-21-10                   0
+trgw-0-21-10:4077.5               34.1182         trgw-0-21-10                   0
+trgw-0-21-10:4108.5               34.2674         trgw-0-21-10                   0
+trgw-0-21-10:4138.5               34.3916         trgw-0-21-10                   0
+trgw-0-21-10:4169.5               34.4538         trgw-0-21-10                   0
+trgw-0-21-10:4199.5               34.4255         trgw-0-21-10                   0
+trgw-0-21-10:4230.5               34.3048         trgw-0-21-10                   0
+trgw-0-21-10:4261.5               34.1205         trgw-0-21-10                   0
+trgw-0-21-10:4291.5               33.9225         trgw-0-21-10                   0
+trgw-0-21-10:4322.5               33.7493         trgw-0-21-10                   0
+trgw-0-21-10:4352.5               33.6528         trgw-0-21-10                   0
+trgw-0-21-10:4383.5               33.6901         trgw-0-21-10                   0
+trgw-0-22-15:3652.5               34.2396         trgw-0-22-15                   0
+trgw-0-22-15:3683.5               34.2058         trgw-0-22-15                   0
+trgw-0-22-15:3712.5               34.2405         trgw-0-22-15                   0
+trgw-0-22-15:3743.5               34.3036         trgw-0-22-15                   0
+trgw-0-22-15:3773.5               34.3548         trgw-0-22-15                   0
+trgw-0-22-15:3804.5               34.3683         trgw-0-22-15                   0
+trgw-0-22-15:3834.5               34.3301         trgw-0-22-15                   0
+trgw-0-22-15:3865.5               34.2373         trgw-0-22-15                   0
+trgw-0-22-15:3896.5               34.1133         trgw-0-22-15                   0
+trgw-0-22-15:3926.5               33.9891         trgw-0-22-15                   0
+trgw-0-22-15:3957.5               33.8881         trgw-0-22-15                   0
+trgw-0-22-15:3987.5               33.8311         trgw-0-22-15                   0
+trgw-0-22-15:4018.5               33.8305         trgw-0-22-15                   0
+trgw-0-22-15:4049.5               33.8833         trgw-0-22-15                   0
+trgw-0-22-15:4077.5                33.966         trgw-0-22-15                   0
+trgw-0-22-15:4108.5                34.066         trgw-0-22-15                   0
+trgw-0-22-15:4138.5               34.1414         trgw-0-22-15                   0
+trgw-0-22-15:4169.5               34.1722         trgw-0-22-15                   0
+trgw-0-22-15:4199.5               34.1454         trgw-0-22-15                   0
+trgw-0-22-15:4230.5               34.0617         trgw-0-22-15                   0
+trgw-0-22-15:4261.5               33.9446         trgw-0-22-15                   0
+trgw-0-22-15:4291.5               33.8258         trgw-0-22-15                   0
+trgw-0-22-15:4322.5               33.7293         trgw-0-22-15                   0
+trgw-0-22-15:4352.5               33.6846         trgw-0-22-15                   0
+trgw-0-22-15:4383.5               33.7249         trgw-0-22-15                   0
+trgw-0-24-4:3652.5                35.4528          trgw-0-24-4                   0
+trgw-0-24-4:3683.5                35.4361          trgw-0-24-4                   0
+trgw-0-24-4:3712.5                35.5007          trgw-0-24-4                   0
+trgw-0-24-4:3743.5                35.6245          trgw-0-24-4                   0
+trgw-0-24-4:3773.5                35.7446          trgw-0-24-4                   0
+trgw-0-24-4:3804.5                35.8118          trgw-0-24-4                   0
+trgw-0-24-4:3834.5                 35.783          trgw-0-24-4                   0
+trgw-0-24-4:3865.5                35.6436          trgw-0-24-4                   0
+trgw-0-24-4:3896.5                35.4171          trgw-0-24-4                   0
+trgw-0-24-4:3926.5                35.1578          trgw-0-24-4                   0
+trgw-0-24-4:3957.5                34.9082          trgw-0-24-4                   0
+trgw-0-24-4:3987.5                33.8064          trgw-0-24-4                   0
+trgw-0-24-4:4018.5                33.5264          trgw-0-24-4                   0
+trgw-0-24-4:4049.5                33.4541          trgw-0-24-4                   0
+trgw-0-24-4:4077.5                33.5077          trgw-0-24-4                   0
+trgw-0-24-4:4108.5                33.6421          trgw-0-24-4                   0
+trgw-0-24-4:4138.5                33.7779          trgw-0-24-4                   0
+trgw-0-24-4:4169.5                33.8609          trgw-0-24-4                   0
+trgw-0-24-4:4199.5                33.8438          trgw-0-24-4                   0
+trgw-0-24-4:4230.5                33.7117          trgw-0-24-4                   0
+trgw-0-24-4:4261.5                33.4876          trgw-0-24-4                   0
+trgw-0-24-4:4291.5                33.2277          trgw-0-24-4                   0
+trgw-0-24-4:4322.5                32.9765          trgw-0-24-4                   0
+trgw-0-24-4:4352.5                32.8063          trgw-0-24-4                   0
+trgw-0-24-4:4383.5                32.7921          trgw-0-24-4                   0
+trgw-0-26-6:3652.5                37.3758          trgw-0-26-6                   0
+trgw-0-26-6:3683.5                37.1684          trgw-0-26-6                   1
+trgw-0-26-6:3712.5                37.1165          trgw-0-26-6                   1
+trgw-0-26-6:3743.5                37.1829          trgw-0-26-6                   1
+trgw-0-26-6:3773.5                37.2833          trgw-0-26-6                   1
+trgw-0-26-6:3804.5                37.2744          trgw-0-26-6                   1
+trgw-0-26-6:3834.5                 37.325          trgw-0-26-6                   1
+trgw-0-26-6:3865.5                37.3005          trgw-0-26-6                   1
+trgw-0-26-6:3896.5                37.1997          trgw-0-26-6                   1
+trgw-0-26-6:3926.5                  36.96          trgw-0-26-6                   1
+trgw-0-26-6:3957.5                36.6277          trgw-0-26-6                   1
+trgw-0-26-6:3987.5                36.3855          trgw-0-26-6                   1
+trgw-0-26-6:4018.5                36.1564          trgw-0-26-6                   1
+trgw-0-26-6:4049.5                36.0555          trgw-0-26-6                   0
+trgw-0-26-6:4077.5                35.9824          trgw-0-26-6                   0
+trgw-0-26-6:4108.5                35.9063          trgw-0-26-6                   0
+trgw-0-26-6:4138.5                36.0071          trgw-0-26-6                   0
+trgw-0-26-6:4169.5                36.0901          trgw-0-26-6                   0
+trgw-0-26-6:4199.5                36.2179          trgw-0-26-6                   0
+trgw-0-26-6:4230.5                36.2716          trgw-0-26-6                   0
+trgw-0-26-6:4261.5                36.1457          trgw-0-26-6                   0
+trgw-0-26-6:4291.5                35.7694          trgw-0-26-6                   0
+trgw-0-26-6:4322.5                35.3847          trgw-0-26-6                   0
+trgw-0-26-6:4352.5                35.0552          trgw-0-26-6                   0
+trgw-0-26-6:4383.5                34.8332          trgw-0-26-6                   0
+trgw-0-29-15:3652.5               34.1662         trgw-0-29-15                   0
+trgw-0-29-15:3683.5               34.1561         trgw-0-29-15                   0
+trgw-0-29-15:3712.5               34.1951         trgw-0-29-15                   0
+trgw-0-29-15:3743.5               34.2585         trgw-0-29-15                   0
+trgw-0-29-15:3773.5               34.3086         trgw-0-29-15                   0
+trgw-0-29-15:3804.5               34.3208         trgw-0-29-15                   0
+trgw-0-29-15:3834.5               34.2819         trgw-0-29-15                   0
+trgw-0-29-15:3865.5               34.1891         trgw-0-29-15                   0
+trgw-0-29-15:3896.5               34.0665         trgw-0-29-15                   0
+trgw-0-29-15:3926.5               33.9446         trgw-0-29-15                   0
+trgw-0-29-15:3957.5               33.8463         trgw-0-29-15                   0
+trgw-0-29-15:3987.5               33.7932         trgw-0-29-15                   0
+trgw-0-29-15:4018.5               33.7953         trgw-0-29-15                   0
+trgw-0-29-15:4049.5               33.8487         trgw-0-29-15                   0
+trgw-0-29-15:4077.5               33.9301         trgw-0-29-15                   0
+trgw-0-29-15:4108.5               34.0271         trgw-0-29-15                   0
+trgw-0-29-15:4138.5                34.099         trgw-0-29-15                   0
+trgw-0-29-15:4169.5               34.1262         trgw-0-29-15                   0
+trgw-0-29-15:4199.5               34.0971         trgw-0-29-15                   0
+trgw-0-29-15:4230.5               34.0123         trgw-0-29-15                   0
+trgw-0-29-15:4261.5               33.8957         trgw-0-29-15                   0
+trgw-0-29-15:4291.5               33.7784         trgw-0-29-15                   0
+trgw-0-29-15:4322.5               33.6838         trgw-0-29-15                   0
+trgw-0-29-15:4352.5               33.6408         trgw-0-29-15                   0
+trgw-0-29-15:4383.5                33.682         trgw-0-29-15                   0
+trgw-0-3-8:3652.5                 38.0309           trgw-0-3-8                   0
+trgw-0-3-8:3683.5                 38.0065           trgw-0-3-8                   1
+trgw-0-3-8:3712.5                 38.0434           trgw-0-3-8                   1
+trgw-0-3-8:3743.5                 38.1174           trgw-0-3-8                   1
+trgw-0-3-8:3773.5                 38.1898           trgw-0-3-8                   1
+trgw-0-3-8:3804.5                 38.3103           trgw-0-3-8                   1
+trgw-0-3-8:3834.5                 38.4187           trgw-0-3-8                   1
+trgw-0-3-8:3865.5                 38.4033           trgw-0-3-8                   1
+trgw-0-3-8:3896.5                 38.3372           trgw-0-3-8                   1
+trgw-0-3-8:3926.5                 38.1719           trgw-0-3-8                   1
+trgw-0-3-8:3957.5                 37.9331           trgw-0-3-8                   1
+trgw-0-3-8:3987.5                 37.7642           trgw-0-3-8                   1
+trgw-0-3-8:4018.5                 37.6086           trgw-0-3-8                   1
+trgw-0-3-8:4049.5                  37.557           trgw-0-3-8                   0
+trgw-0-3-8:4077.5                 37.5594           trgw-0-3-8                   0
+trgw-0-3-8:4108.5                  37.666           trgw-0-3-8                   0
+trgw-0-3-8:4138.5                 37.8296           trgw-0-3-8                   0
+trgw-0-3-8:4169.5                 37.8993           trgw-0-3-8                   0
+trgw-0-3-8:4199.5                 38.0047           trgw-0-3-8                   0
+trgw-0-3-8:4230.5                 38.0561           trgw-0-3-8                   0
+trgw-0-3-8:4261.5                 37.9605           trgw-0-3-8                   0
+trgw-0-3-8:4291.5                 37.8316           trgw-0-3-8                   0
+trgw-0-3-8:4322.5                 37.6173           trgw-0-3-8                   0
+trgw-0-3-8:4352.5                  37.439           trgw-0-3-8                   0
+trgw-0-3-8:4383.5                 37.2932           trgw-0-3-8                   0
+trgw-0-33-7:3652.5                34.6362          trgw-0-33-7                   0
+trgw-0-33-7:3683.5                34.6044          trgw-0-33-7                   0
+trgw-0-33-7:3712.5                34.6541          trgw-0-33-7                   0
+trgw-0-33-7:3743.5                34.7542          trgw-0-33-7                   0
+trgw-0-33-7:3773.5                 34.844          trgw-0-33-7                   0
+trgw-0-33-7:3804.5                34.8801          trgw-0-33-7                   0
+trgw-0-33-7:3834.5                34.8317          trgw-0-33-7                   0
+trgw-0-33-7:3865.5                34.6933          trgw-0-33-7                   0
+trgw-0-33-7:3896.5                34.4937          trgw-0-33-7                   0
+trgw-0-33-7:3926.5                34.2814          trgw-0-33-7                   0
+trgw-0-33-7:3957.5                34.0933          trgw-0-33-7                   0
+trgw-0-33-7:3987.5                33.9572          trgw-0-33-7                   0
+trgw-0-33-7:4018.5                33.9016          trgw-0-33-7                   0
+trgw-0-33-7:4049.5                33.9369          trgw-0-33-7                   0
+trgw-0-33-7:4077.5                34.0356          trgw-0-33-7                   0
+trgw-0-33-7:4108.5                 34.177          trgw-0-33-7                   0
+trgw-0-33-7:4138.5                34.2956          trgw-0-33-7                   0
+trgw-0-33-7:4169.5                 34.354          trgw-0-33-7                   0
+trgw-0-33-7:4199.5                34.3223          trgw-0-33-7                   0
+trgw-0-33-7:4230.5                34.1979          trgw-0-33-7                   0
+trgw-0-33-7:4261.5                34.0084          trgw-0-33-7                   0
+trgw-0-33-7:4291.5                33.8041          trgw-0-33-7                   0
+trgw-0-33-7:4322.5                33.6233          trgw-0-33-7                   0
+trgw-0-33-7:4352.5                33.5195          trgw-0-33-7                   0
+trgw-0-33-7:4383.5                33.5512          trgw-0-33-7                   0
+trgw-0-34-10:3652.5               34.3419         trgw-0-34-10                   0
+trgw-0-34-10:3683.5               34.2851         trgw-0-34-10                   0
+trgw-0-34-10:3712.5               34.3284         trgw-0-34-10                   0
+trgw-0-34-10:3743.5               34.4161         trgw-0-34-10                   0
+trgw-0-34-10:3773.5               34.4905         trgw-0-34-10                   0
+trgw-0-34-10:3804.5               34.5138         trgw-0-34-10                   0
+trgw-0-34-10:3834.5               34.4628         trgw-0-34-10                   0
+trgw-0-34-10:3865.5                34.336         trgw-0-34-10                   0
+trgw-0-34-10:3896.5               34.1619         trgw-0-34-10                   0
+trgw-0-34-10:3926.5               33.9834         trgw-0-34-10                   0
+trgw-0-34-10:3957.5               33.8328         trgw-0-34-10                   0
+trgw-0-34-10:3987.5                33.741         trgw-0-34-10                   0
+trgw-0-34-10:4018.5               33.7236         trgw-0-34-10                   0
+trgw-0-34-10:4049.5               33.7802         trgw-0-34-10                   0
+trgw-0-34-10:4077.5               33.8825         trgw-0-34-10                   0
+trgw-0-34-10:4108.5               34.0131         trgw-0-34-10                   0
+trgw-0-34-10:4138.5                34.115         trgw-0-34-10                   0
+trgw-0-34-10:4169.5               34.1584         trgw-0-34-10                   0
+trgw-0-34-10:4199.5               34.1221         trgw-0-34-10                   0
+trgw-0-34-10:4230.5                34.007         trgw-0-34-10                   0
+trgw-0-34-10:4261.5               33.8412         trgw-0-34-10                   0
+trgw-0-34-10:4291.5               33.6693         trgw-0-34-10                   0
+trgw-0-34-10:4322.5               33.5247         trgw-0-34-10                   0
+trgw-0-34-10:4352.5               33.4508         trgw-0-34-10                   0
+trgw-0-34-10:4383.5               33.4964         trgw-0-34-10                   0
+trgw-0-9-1:3652.5                 36.7189           trgw-0-9-1                   0
+trgw-0-9-1:3683.5                 36.7321           trgw-0-9-1                   0
+trgw-0-9-1:3712.5                 36.8333           trgw-0-9-1                   0
+trgw-0-9-1:3743.5                 36.9974           trgw-0-9-1                   0
+trgw-0-9-1:3773.5                 37.1571           trgw-0-9-1                   0
+trgw-0-9-1:3804.5                 37.2645           trgw-0-9-1                   0
+trgw-0-9-1:3834.5                 37.2707           trgw-0-9-1                   0
+trgw-0-9-1:3865.5                 37.1581           trgw-0-9-1                   0
+trgw-0-9-1:3896.5                 36.9443           trgw-0-9-1                   0
+trgw-0-9-1:3926.5                 36.6819           trgw-0-9-1                   0
+trgw-0-9-1:3957.5                 36.4133           trgw-0-9-1                   0
+trgw-0-9-1:3987.5                 36.2067           trgw-0-9-1                   0
+trgw-0-9-1:4018.5                 36.0914           trgw-0-9-1                   0
+trgw-0-9-1:4049.5                 36.0872           trgw-0-9-1                   0
+trgw-0-9-1:4077.5                 36.1731           trgw-0-9-1                   0
+trgw-0-9-1:4108.5                 36.3317           trgw-0-9-1                   0
+trgw-0-9-1:4138.5                 36.4904           trgw-0-9-1                   0
+trgw-0-9-1:4169.5                 36.6006           trgw-0-9-1                   0
+trgw-0-9-1:4199.5                  36.612           trgw-0-9-1                   0
+trgw-0-9-1:4230.5                 36.5069           trgw-0-9-1                   0
+trgw-0-9-1:4261.5                 36.3021           trgw-0-9-1                   0
+trgw-0-9-1:4291.5                 36.0494           trgw-0-9-1                   0
+trgw-0-9-1:4322.5                 35.7915           trgw-0-9-1                   0
+trgw-0-9-1:4352.5                 35.6024           trgw-0-9-1                   0
+trgw-0-9-1:4383.5                 35.5598           trgw-0-9-1                   0
+
+
+
+Prior information
+
+   no prior information provided
+
+
+
+PEST SVD Information
+    maxsing = 10000000
+    eigthresh = 1e-06
+
+
+
+
+
+...loading prior parameter covariance matrix
+
+   -----    Starting pestpp-glm Iterations    ----    
+
+
+OPTIMISATION ITERATION NUMBER: 1
+
+  Iteration type: base parameter solution
+  SVD Package: RedSVD
+  Model calls so far : 0
+
+
+
+  Starting phi for this iteration                     Total : 131.8
+
+
+  Contribution to phi from observation group       "gage-1" : 102.597
+  Contribution to phi from observation group    "headwater" : 0
+  Contribution to phi from observation group    "part_time" : 0
+  Contribution to phi from observation group    "tailwater" : 0
+  Contribution to phi from observation group "trgw-0-13-10" : 0
+  Contribution to phi from observation group "trgw-0-15-16" : 0
+  Contribution to phi from observation group  "trgw-0-2-15" : 0
+  Contribution to phi from observation group   "trgw-0-2-9" : 0
+  Contribution to phi from observation group "trgw-0-21-10" : 0
+  Contribution to phi from observation group "trgw-0-22-15" : 0
+  Contribution to phi from observation group  "trgw-0-24-4" : 0
+  Contribution to phi from observation group  "trgw-0-26-6" : 18.3572
+  Contribution to phi from observation group "trgw-0-29-15" : 0
+  Contribution to phi from observation group   "trgw-0-3-8" : 10.8459
+  Contribution to phi from observation group  "trgw-0-33-7" : 0
+  Contribution to phi from observation group "trgw-0-34-10" : 0
+  Contribution to phi from observation group   "trgw-0-9-1" : 0
+  Number of terms in the jacobian equal to zero: 0 / 802 (0%)
+
+   ...calculating lambda upgrade vector: 0.1
+  computing upgrade vector (lambda = 0.1)  1 / 5             
+   ...calculating scaled lambda vector-scale factor: 0.1, 0.75
+   ...calculating lambda upgrade vector: 1
+  computing upgrade vector (lambda = 1)  2 / 5             
+   ...calculating scaled lambda vector-scale factor: 1, 0.75
+   ...calculating lambda upgrade vector: 10
+  computing upgrade vector (lambda = 10)  3 / 5             
+   ...calculating scaled lambda vector-scale factor: 10, 0.75
+   ...calculating lambda upgrade vector: 100
+  computing upgrade vector (lambda = 100)  4 / 5             
+   ...calculating scaled lambda vector-scale factor: 100, 0.75
+   ...calculating lambda upgrade vector: 1000
+  computing upgrade vector (lambda = 1000)  5 / 5             
+   ...calculating scaled lambda vector-scale factor: 1000, 0.75
+starting FOSM uncertainty analyses for iteration 0
+
+
+posterior parameter covariance matrix written to file 'freyberg.1.post.cov'
+
+current parameter uncertainty summary: 
+
+                name          prior_mean         prior_stdev   prior_lower_bound   prior_upper_bound           post_mean          post_stdev    post_lower_bound    post_upper_bound
+                 hk1             0.69897                   1            -1.30103             2.69897             0.69897           0.0466139            0.605742            0.792198
+                rch0                   0            0.150515            -0.30103             0.30103                   0          0.00931568          -0.0186314           0.0186314
+the above parameter uncertainty summary was written to file 'freyberg.0.par.usum.csv'
+
+current forecast uncertainty summary: 
+
+                name          prior_mean         prior_stdev   prior_lower_bound   prior_upper_bound           post_mean          post_stdev    post_lower_bound    post_upper_bound
+    headwater:4383.5            -397.555             438.851            -1275.26             480.147            -397.555              20.745            -439.045            -356.065
+           part_time             7076.31             3420.86             234.589               13918             7076.31             160.163             6755.98             7396.63
+    tailwater:4383.5             -90.295             372.667            -835.629             655.039             -90.295             17.4132            -125.121            -55.4686
+   trgw-0-9-1:4383.5             38.0999             10.1775             17.7448             58.4549             38.0999            0.472607             37.1546             39.0451
+Note : the above forecast uncertainty summary was written to file 'freyberg.0.pred.usum.csv'
+
+  Summary of GLM lambda upgrade runs:
+    Lambda =     0.10; Type:       normal; length = 2.18e+00;  phi =     145.7 (110.56% of starting phi)
+    Lambda =     0.10; Type:  scale(0.75); length = 1.74e+00;  phi =     63.01 (47.81% of starting phi)
+    Lambda =     1.00; Type:       normal; length = 2.17e+00;  phi =     145.1 (110.07% of starting phi)
+    Lambda =     1.00; Type:  scale(0.75); length = 1.74e+00;  phi =     63.01 (47.80% of starting phi)
+    Lambda =    10.00; Type:       normal; length = 2.15e+00;  phi =     138.5 (105.08% of starting phi)
+    Lambda =    10.00; Type:  scale(0.75); length = 1.72e+00;  phi =     62.57 (47.47% of starting phi)
+    Lambda =   100.00; Type:       normal; length = 1.91e+00;  phi =     87.36 (66.28% of starting phi)
+    Lambda =   100.00; Type:  scale(0.75); length = 1.52e+00;  phi =     64.97 (49.29% of starting phi)
+    Lambda =  1000.00; Type:       normal; length = 9.18e-01;  phi =     73.53 (55.79% of starting phi)
+    Lambda =  1000.00; Type:  scale(0.75); length = 7.05e-01;  phi =     80.69 (61.22% of starting phi)
+
+  Model calls in iteration 1: 13
+  Total model calls at end of iteration 1: 13
+
+
+  Final phi for this iteration                     Total : 62.5684
+
+
+  Contribution to phi from observation group       "gage-1" : 57.4036
+  Contribution to phi from observation group    "headwater" : 0
+  Contribution to phi from observation group    "part_time" : 0
+  Contribution to phi from observation group    "tailwater" : 0
+  Contribution to phi from observation group "trgw-0-13-10" : 0
+  Contribution to phi from observation group "trgw-0-15-16" : 0
+  Contribution to phi from observation group  "trgw-0-2-15" : 0
+  Contribution to phi from observation group   "trgw-0-2-9" : 0
+  Contribution to phi from observation group "trgw-0-21-10" : 0
+  Contribution to phi from observation group "trgw-0-22-15" : 0
+  Contribution to phi from observation group  "trgw-0-24-4" : 0
+  Contribution to phi from observation group  "trgw-0-26-6" : 1.15418
+  Contribution to phi from observation group "trgw-0-29-15" : 0
+  Contribution to phi from observation group   "trgw-0-3-8" : 4.01064
+  Contribution to phi from observation group  "trgw-0-33-7" : 0
+  Contribution to phi from observation group "trgw-0-34-10" : 0
+  Contribution to phi from observation group   "trgw-0-9-1" : 0
+    Iteration 1 Parameter Upgrades (Control File Parameters) 
+      Parameter     Current       Previous       Factor       Relative
+        Name         Value         Value         Change        Change
+      ----------  ------------  ------------  ------------  ------------
+             hk1       3.28442             5       1.52234      0.343116
+             ne1          0.01          0.01             1             0
+            rch0       1.07353             1       1.07353    -0.0735338
+            rch1             1             1             1             0
+       Maximum changes in "Control File" parameters:
+         Maximum relative change = 0.343116   [hk1]
+         Maximum factor change = 1.52234   [hk1]
+
+    Iteration 1 Parameter Upgrades (Transformed Numeric Parameters) 
+      Parameter     Current       Previous       Factor       Relative
+        Name         Value         Value         Change        Change
+      ----------  ------------  ------------  ------------  ------------
+             hk1      0.516459       0.69897       1.35339      0.261114
+            rch0     0.0308157             0           N/A           N/A
+       Maximum changes in "Transformed Numeric" parameters:
+         Maximum relative change = 0.261114   [hk1]
+         Maximum factor change = 1.35339   [hk1]
+
+
+OPTIMISATION ITERATION NUMBER: 2
+
+  Iteration type: base parameter solution
+  SVD Package: RedSVD
+  Model calls so far : 13
+
+
+
+  Starting phi for this iteration                     Total : 62.5684
+
+
+  Contribution to phi from observation group       "gage-1" : 57.4036
+  Contribution to phi from observation group    "headwater" : 0
+  Contribution to phi from observation group    "part_time" : 0
+  Contribution to phi from observation group    "tailwater" : 0
+  Contribution to phi from observation group "trgw-0-13-10" : 0
+  Contribution to phi from observation group "trgw-0-15-16" : 0
+  Contribution to phi from observation group  "trgw-0-2-15" : 0
+  Contribution to phi from observation group   "trgw-0-2-9" : 0
+  Contribution to phi from observation group "trgw-0-21-10" : 0
+  Contribution to phi from observation group "trgw-0-22-15" : 0
+  Contribution to phi from observation group  "trgw-0-24-4" : 0
+  Contribution to phi from observation group  "trgw-0-26-6" : 1.15418
+  Contribution to phi from observation group "trgw-0-29-15" : 0
+  Contribution to phi from observation group   "trgw-0-3-8" : 4.01064
+  Contribution to phi from observation group  "trgw-0-33-7" : 0
+  Contribution to phi from observation group "trgw-0-34-10" : 0
+  Contribution to phi from observation group   "trgw-0-9-1" : 0
+  Number of terms in the jacobian equal to zero: 0 / 802 (0%)
+
+   ...calculating lambda upgrade vector: 0.1
+  computing upgrade vector (lambda = 0.1)  1 / 5             
+   ...calculating scaled lambda vector-scale factor: 0.1, 0.75
+   ...calculating lambda upgrade vector: 1
+  computing upgrade vector (lambda = 1)  2 / 5             
+   ...calculating scaled lambda vector-scale factor: 1, 0.75
+   ...calculating lambda upgrade vector: 10
+  computing upgrade vector (lambda = 10)  3 / 5             
+   ...calculating scaled lambda vector-scale factor: 10, 0.75
+   ...calculating lambda upgrade vector: 100
+  computing upgrade vector (lambda = 100)  4 / 5             
+   ...calculating scaled lambda vector-scale factor: 100, 0.75
+   ...calculating lambda upgrade vector: 1000
+  computing upgrade vector (lambda = 1000)  5 / 5             
+   ...calculating scaled lambda vector-scale factor: 1000, 0.75
+starting FOSM uncertainty analyses for iteration 1
+
+
+posterior parameter covariance matrix written to file 'freyberg.2.post.cov'
+
+current parameter uncertainty summary: 
+
+                name          prior_mean         prior_stdev   prior_lower_bound   prior_upper_bound           post_mean          post_stdev    post_lower_bound    post_upper_bound
+                 hk1             0.69897                   1            -1.30103             2.69897            0.516459           0.0220991            0.472261            0.560657
+                rch0                   0            0.150515            -0.30103             0.30103           0.0308157          0.00814653           0.0145227           0.0471088
+the above parameter uncertainty summary was written to file 'freyberg.1.par.usum.csv'
+
+current forecast uncertainty summary: 
+
+                name          prior_mean         prior_stdev   prior_lower_bound   prior_upper_bound           post_mean          post_stdev    post_lower_bound    post_upper_bound
+    headwater:4383.5            -397.555             201.414            -800.384              5.2736              -498.8             4.83059            -508.461            -489.139
+           part_time             7076.31             5343.51            -3610.72             17763.3             7776.63             116.029             7544.58             8008.69
+    tailwater:4383.5             -90.295             297.999            -686.292             505.703            -179.534             4.74162            -189.017            -170.051
+   trgw-0-9-1:4383.5             38.0999             11.0045             16.0909             60.1088             40.4975            0.222492             40.0526             40.9425
+Note : the above forecast uncertainty summary was written to file 'freyberg.1.pred.usum.csv'
+
+  Summary of GLM lambda upgrade runs:
+    Lambda =     0.10; Type:       normal; length = 1.19e-02;  phi =     62.25 (99.50% of starting phi)
+    Lambda =     0.10; Type:  scale(0.75); length = 8.89e-03;  phi =     62.34 (99.64% of starting phi)
+    Lambda =     1.00; Type:       normal; length = 1.19e-02;  phi =     62.25 (99.50% of starting phi)
+    Lambda =     1.00; Type:  scale(0.75); length = 8.89e-03;  phi =     62.34 (99.64% of starting phi)
+    Lambda =    10.00; Type:       normal; length = 1.18e-02;  phi =     62.25 (99.50% of starting phi)
+    Lambda =    10.00; Type:  scale(0.75); length = 8.88e-03;  phi =     62.34 (99.64% of starting phi)
+    Lambda =   100.00; Type:       normal; length = 1.17e-02;  phi =     62.25 (99.49% of starting phi)
+    Lambda =   100.00; Type:  scale(0.75); length = 8.81e-03;  phi =     62.34 (99.64% of starting phi)
+    Lambda =  1000.00; Type:       normal; length = 1.10e-02;  phi =     62.25 (99.49% of starting phi)
+    Lambda =  1000.00; Type:  scale(0.75); length = 8.27e-03;  phi =     62.35 (99.65% of starting phi)
+
+      Switching to central derivatives:
+
+  Model calls in iteration 2: 12
+  Total model calls at end of iteration 2: 25
+
+
+  Final phi for this iteration                     Total : 62.2515
+
+
+  Contribution to phi from observation group       "gage-1" : 55.6689
+  Contribution to phi from observation group    "headwater" : 0
+  Contribution to phi from observation group    "part_time" : 0
+  Contribution to phi from observation group    "tailwater" : 0
+  Contribution to phi from observation group "trgw-0-13-10" : 0
+  Contribution to phi from observation group "trgw-0-15-16" : 0
+  Contribution to phi from observation group  "trgw-0-2-15" : 0
+  Contribution to phi from observation group   "trgw-0-2-9" : 0
+  Contribution to phi from observation group "trgw-0-21-10" : 0
+  Contribution to phi from observation group "trgw-0-22-15" : 0
+  Contribution to phi from observation group  "trgw-0-24-4" : 0
+  Contribution to phi from observation group  "trgw-0-26-6" : 1.43364
+  Contribution to phi from observation group "trgw-0-29-15" : 0
+  Contribution to phi from observation group   "trgw-0-3-8" : 5.149
+  Contribution to phi from observation group  "trgw-0-33-7" : 0
+  Contribution to phi from observation group "trgw-0-34-10" : 0
+  Contribution to phi from observation group   "trgw-0-9-1" : 0
+    Iteration 2 Parameter Upgrades (Control File Parameters) 
+      Parameter     Current       Previous       Factor       Relative
+        Name         Value         Value         Change        Change
+      ----------  ------------  ------------  ------------  ------------
+             hk1       3.27688       3.28442        1.0023    0.00229564
+             ne1          0.01          0.01             1             0
+            rch0       1.08159       1.07353       1.00751   -0.00750555
+            rch1             1             1             1             0
+       Maximum changes in "Control File" parameters:
+         Maximum relative change = -0.00750555   [rch0]
+         Maximum factor change = 1.00751   [rch0]
+
+    Iteration 2 Parameter Upgrades (Transformed Numeric Parameters) 
+      Parameter     Current       Previous       Factor       Relative
+        Name         Value         Value         Change        Change
+      ----------  ------------  ------------  ------------  ------------
+             hk1      0.515461      0.516459       1.00194    0.00193264
+            rch0     0.0340632     0.0308157       1.10538     -0.105383
+       Maximum changes in "Transformed Numeric" parameters:
+         Maximum relative change = -0.105383   [rch0]
+         Maximum factor change = 1.10538   [rch0]
+
+
+OPTIMISATION ITERATION NUMBER: 3
+
+  Iteration type: base parameter solution
+  SVD Package: RedSVD
+  Model calls so far : 25
+
+
+
+  Starting phi for this iteration                     Total : 62.2515
+
+
+  Contribution to phi from observation group       "gage-1" : 55.6689
+  Contribution to phi from observation group    "headwater" : 0
+  Contribution to phi from observation group    "part_time" : 0
+  Contribution to phi from observation group    "tailwater" : 0
+  Contribution to phi from observation group "trgw-0-13-10" : 0
+  Contribution to phi from observation group "trgw-0-15-16" : 0
+  Contribution to phi from observation group  "trgw-0-2-15" : 0
+  Contribution to phi from observation group   "trgw-0-2-9" : 0
+  Contribution to phi from observation group "trgw-0-21-10" : 0
+  Contribution to phi from observation group "trgw-0-22-15" : 0
+  Contribution to phi from observation group  "trgw-0-24-4" : 0
+  Contribution to phi from observation group  "trgw-0-26-6" : 1.43364
+  Contribution to phi from observation group "trgw-0-29-15" : 0
+  Contribution to phi from observation group   "trgw-0-3-8" : 5.149
+  Contribution to phi from observation group  "trgw-0-33-7" : 0
+  Contribution to phi from observation group "trgw-0-34-10" : 0
+  Contribution to phi from observation group   "trgw-0-9-1" : 0
+  Number of terms in the jacobian equal to zero: 0 / 802 (0%)
+
+   ...calculating lambda upgrade vector: 0.1
+  computing upgrade vector (lambda = 0.1)  1 / 5             
+   ...calculating scaled lambda vector-scale factor: 0.1, 0.75
+   ...calculating lambda upgrade vector: 1
+  computing upgrade vector (lambda = 1)  2 / 5             
+   ...calculating scaled lambda vector-scale factor: 1, 0.75
+   ...calculating lambda upgrade vector: 10
+  computing upgrade vector (lambda = 10)  3 / 5             
+   ...calculating scaled lambda vector-scale factor: 10, 0.75
+   ...calculating lambda upgrade vector: 100
+  computing upgrade vector (lambda = 100)  4 / 5             
+   ...calculating scaled lambda vector-scale factor: 100, 0.75
+   ...calculating lambda upgrade vector: 1000
+  computing upgrade vector (lambda = 1000)  5 / 5             
+   ...calculating scaled lambda vector-scale factor: 1000, 0.75
+starting FOSM uncertainty analyses for iteration 2
+
+
+posterior parameter covariance matrix written to file 'freyberg.3.post.cov'
+
+current parameter uncertainty summary: 
+
+                name          prior_mean         prior_stdev   prior_lower_bound   prior_upper_bound           post_mean          post_stdev    post_lower_bound    post_upper_bound
+                 hk1             0.69897                   1            -1.30103             2.69897            0.515461           0.0148937            0.485673            0.545248
+                rch0                   0            0.150515            -0.30103             0.30103           0.0340632          0.00922498           0.0156132           0.0525131
+the above parameter uncertainty summary was written to file 'freyberg.2.par.usum.csv'
+
+current forecast uncertainty summary: 
+
+                name          prior_mean         prior_stdev   prior_lower_bound   prior_upper_bound           post_mean          post_stdev    post_lower_bound    post_upper_bound
+    headwater:4383.5            -397.555             133.658            -664.872            -130.238            -501.464             7.63364            -516.731            -486.196
+           part_time             7076.31             5866.83            -4657.35               18810             7783.55              87.191             7609.16             7957.93
+    tailwater:4383.5             -90.295             276.151            -642.597             462.007            -181.399              3.5446            -188.488             -174.31
+   trgw-0-9-1:4383.5             38.0999             10.1481             17.8036             58.3961             40.5209            0.126598             40.2677             40.7741
+Note : the above forecast uncertainty summary was written to file 'freyberg.2.pred.usum.csv'
+
+  Summary of GLM lambda upgrade runs:
+    Lambda =     0.10; Type:       normal; length = 1.11e-01;  phi =     61.15 (98.23% of starting phi)
+    Lambda =     0.10; Type:  scale(0.75); length = 8.25e-02;  phi =     61.32 (98.50% of starting phi)
+    Lambda =     1.00; Type:       normal; length = 1.10e-01;  phi =     61.15 (98.23% of starting phi)
+    Lambda =     1.00; Type:  scale(0.75); length = 8.25e-02;  phi =     61.32 (98.50% of starting phi)
+    Lambda =    10.00; Type:       normal; length = 1.10e-01;  phi =     61.15 (98.22% of starting phi)
+    Lambda =    10.00; Type:  scale(0.75); length = 8.24e-02;  phi =     61.32 (98.50% of starting phi)
+    Lambda =   100.00; Type:       normal; length = 1.08e-01;  phi =     61.14 (98.22% of starting phi)
+    Lambda =   100.00; Type:  scale(0.75); length = 8.07e-02;  phi =     61.32 (98.50% of starting phi)
+    Lambda =  1000.00; Type:       normal; length = 9.01e-02;  phi =     61.32 (98.50% of starting phi)
+    Lambda =  1000.00; Type:  scale(0.75); length = 6.74e-02;  phi =     61.35 (98.55% of starting phi)
+
+  Model calls in iteration 3: 14
+  Total model calls at end of iteration 3: 39
+
+
+  Final phi for this iteration                     Total : 61.1443
+
+
+  Contribution to phi from observation group       "gage-1" : 55.9766
+  Contribution to phi from observation group    "headwater" : 0
+  Contribution to phi from observation group    "part_time" : 0
+  Contribution to phi from observation group    "tailwater" : 0
+  Contribution to phi from observation group "trgw-0-13-10" : 0
+  Contribution to phi from observation group "trgw-0-15-16" : 0
+  Contribution to phi from observation group  "trgw-0-2-15" : 0
+  Contribution to phi from observation group   "trgw-0-2-9" : 0
+  Contribution to phi from observation group "trgw-0-21-10" : 0
+  Contribution to phi from observation group "trgw-0-22-15" : 0
+  Contribution to phi from observation group  "trgw-0-24-4" : 0
+  Contribution to phi from observation group  "trgw-0-26-6" : 1.23282
+  Contribution to phi from observation group "trgw-0-29-15" : 0
+  Contribution to phi from observation group   "trgw-0-3-8" : 3.93486
+  Contribution to phi from observation group  "trgw-0-33-7" : 0
+  Contribution to phi from observation group "trgw-0-34-10" : 0
+  Contribution to phi from observation group   "trgw-0-9-1" : 0
+    Iteration 3 Parameter Upgrades (Control File Parameters) 
+      Parameter     Current       Previous       Factor       Relative
+        Name         Value         Value         Change        Change
+      ----------  ------------  ------------  ------------  ------------
+             hk1       3.38384       3.27688       1.03264    -0.0326391
+             ne1          0.01          0.01             1             0
+            rch0       1.09704       1.08159       1.01428     -0.014285
+            rch1             1             1             1             0
+       Maximum changes in "Control File" parameters:
+         Maximum relative change = -0.0326391   [hk1]
+         Maximum factor change = 1.03264   [hk1]
+
+    Iteration 3 Parameter Upgrades (Transformed Numeric Parameters) 
+      Parameter     Current       Previous       Factor       Relative
+        Name         Value         Value         Change        Change
+      ----------  ------------  ------------  ------------  ------------
+             hk1      0.529409      0.515461       1.02706    -0.0270603
+            rch0     0.0402231     0.0340632       1.18084      -0.18084
+       Maximum changes in "Transformed Numeric" parameters:
+         Maximum relative change = -0.18084   [rch0]
+         Maximum factor change = 1.18084   [rch0]
+
+
+OPTIMISATION ITERATION NUMBER: 4
+
+  Iteration type: base parameter solution
+  SVD Package: RedSVD
+  Model calls so far : 39
+
+
+
+  Starting phi for this iteration                     Total : 61.1443
+
+
+  Contribution to phi from observation group       "gage-1" : 55.9766
+  Contribution to phi from observation group    "headwater" : 0
+  Contribution to phi from observation group    "part_time" : 0
+  Contribution to phi from observation group    "tailwater" : 0
+  Contribution to phi from observation group "trgw-0-13-10" : 0
+  Contribution to phi from observation group "trgw-0-15-16" : 0
+  Contribution to phi from observation group  "trgw-0-2-15" : 0
+  Contribution to phi from observation group   "trgw-0-2-9" : 0
+  Contribution to phi from observation group "trgw-0-21-10" : 0
+  Contribution to phi from observation group "trgw-0-22-15" : 0
+  Contribution to phi from observation group  "trgw-0-24-4" : 0
+  Contribution to phi from observation group  "trgw-0-26-6" : 1.23282
+  Contribution to phi from observation group "trgw-0-29-15" : 0
+  Contribution to phi from observation group   "trgw-0-3-8" : 3.93486
+  Contribution to phi from observation group  "trgw-0-33-7" : 0
+  Contribution to phi from observation group "trgw-0-34-10" : 0
+  Contribution to phi from observation group   "trgw-0-9-1" : 0
+  Number of terms in the jacobian equal to zero: 0 / 802 (0%)
+
+   ...calculating lambda upgrade vector: 0.1
+  computing upgrade vector (lambda = 0.1)  1 / 5             
+   ...calculating scaled lambda vector-scale factor: 0.1, 0.75
+   ...calculating lambda upgrade vector: 1
+  computing upgrade vector (lambda = 1)  2 / 5             
+   ...calculating scaled lambda vector-scale factor: 1, 0.75
+   ...calculating lambda upgrade vector: 10
+  computing upgrade vector (lambda = 10)  3 / 5             
+   ...calculating scaled lambda vector-scale factor: 10, 0.75
+   ...calculating lambda upgrade vector: 100
+  computing upgrade vector (lambda = 100)  4 / 5             
+   ...calculating scaled lambda vector-scale factor: 100, 0.75
+   ...calculating lambda upgrade vector: 1000
+  computing upgrade vector (lambda = 1000)  5 / 5             
+   ...calculating scaled lambda vector-scale factor: 1000, 0.75
+starting FOSM uncertainty analyses for iteration 3
+
+
+posterior parameter covariance matrix written to file 'freyberg.4.post.cov'
+
+current parameter uncertainty summary: 
+
+                name          prior_mean         prior_stdev   prior_lower_bound   prior_upper_bound           post_mean          post_stdev    post_lower_bound    post_upper_bound
+                 hk1             0.69897                   1            -1.30103             2.69897            0.529409           0.0172064            0.494996            0.563822
+                rch0                   0            0.150515            -0.30103             0.30103           0.0402231           0.0100381            0.020147           0.0602993
+the above parameter uncertainty summary was written to file 'freyberg.3.par.usum.csv'
+
+current forecast uncertainty summary: 
+
+                name          prior_mean         prior_stdev   prior_lower_bound   prior_upper_bound           post_mean          post_stdev    post_lower_bound    post_upper_bound
+    headwater:4383.5            -397.555             175.382            -748.319            -46.7914            -504.905             8.86409            -522.633            -487.177
+           part_time             7076.31             5619.48            -4162.65             18315.3             7707.19             98.1468              7510.9             7903.48
+    tailwater:4383.5             -90.295             301.967            -694.228             513.638            -180.375             4.27532            -188.925            -171.824
+   trgw-0-9-1:4383.5             38.0999             10.5447             17.0104             59.1893             40.3989            0.151004             40.0969             40.7009
+Note : the above forecast uncertainty summary was written to file 'freyberg.3.pred.usum.csv'
+
+  Summary of GLM lambda upgrade runs:
+    Lambda =     0.10; Type:       normal; length = 9.17e-02;  phi =     61.85 (101.15% of starting phi)
+    Lambda =     0.10; Type:  scale(0.75); length = 6.85e-02;  phi =     61.63 (100.79% of starting phi)
+    Lambda =     1.00; Type:       normal; length = 9.16e-02;  phi =     61.85 (101.15% of starting phi)
+    Lambda =     1.00; Type:  scale(0.75); length = 6.85e-02;  phi =     61.63 (100.79% of starting phi)
+    Lambda =    10.00; Type:       normal; length = 9.14e-02;  phi =     61.84 (101.14% of starting phi)
+    Lambda =    10.00; Type:  scale(0.75); length = 6.83e-02;  phi =     61.63 (100.79% of starting phi)
+    Lambda =   100.00; Type:       normal; length = 8.92e-02;  phi =     61.82 (101.11% of starting phi)
+    Lambda =   100.00; Type:  scale(0.75); length = 6.67e-02;  phi =     61.61 (100.77% of starting phi)
+    Lambda =  1000.00; Type:       normal; length = 7.16e-02;  phi =     61.65 (100.83% of starting phi)
+    Lambda =  1000.00; Type:  scale(0.75); length = 5.36e-02;  phi =     61.44 (100.49% of starting phi)
+
+  Model calls in iteration 4: 14
+  Total model calls at end of iteration 4: 53
+
+
+  Final phi for this iteration                     Total : 61.4418
+
+
+  Contribution to phi from observation group       "gage-1" : 57.0479
+  Contribution to phi from observation group    "headwater" : 0
+  Contribution to phi from observation group    "part_time" : 0
+  Contribution to phi from observation group    "tailwater" : 0
+  Contribution to phi from observation group "trgw-0-13-10" : 0
+  Contribution to phi from observation group "trgw-0-15-16" : 0
+  Contribution to phi from observation group  "trgw-0-2-15" : 0
+  Contribution to phi from observation group   "trgw-0-2-9" : 0
+  Contribution to phi from observation group "trgw-0-21-10" : 0
+  Contribution to phi from observation group "trgw-0-22-15" : 0
+  Contribution to phi from observation group  "trgw-0-24-4" : 0
+  Contribution to phi from observation group  "trgw-0-26-6" : 1.11218
+  Contribution to phi from observation group "trgw-0-29-15" : 0
+  Contribution to phi from observation group   "trgw-0-3-8" : 3.2817
+  Contribution to phi from observation group  "trgw-0-33-7" : 0
+  Contribution to phi from observation group "trgw-0-34-10" : 0
+  Contribution to phi from observation group   "trgw-0-9-1" : 0
+    Iteration 4 Parameter Upgrades (Control File Parameters) 
+      Parameter     Current       Previous       Factor       Relative
+        Name         Value         Value         Change        Change
+      ----------  ------------  ------------  ------------  ------------
+             hk1       3.43721       3.38384       1.01577    -0.0157745
+             ne1          0.01          0.01             1             0
+            rch0       1.10186       1.09704       1.00439   -0.00439436
+            rch1             1             1             1             0
+       Maximum changes in "Control File" parameters:
+         Maximum relative change = -0.0157745   [hk1]
+         Maximum factor change = 1.01577   [hk1]
+
+    Iteration 4 Parameter Upgrades (Transformed Numeric Parameters) 
+      Parameter     Current       Previous       Factor       Relative
+        Name         Value         Value         Change        Change
+      ----------  ------------  ------------  ------------  ------------
+             hk1      0.536207      0.529409       1.01284    -0.0128395
+            rch0     0.0421274     0.0402231       1.04734    -0.0473426
+       Maximum changes in "Transformed Numeric" parameters:
+         Maximum relative change = -0.0473426   [rch0]
+         Maximum factor change = 1.04734   [rch0]
+
+
+OPTIMISATION ITERATION NUMBER: 5
+
+  Iteration type: base parameter solution
+  SVD Package: RedSVD
+  Model calls so far : 53
+
+
+
+  Starting phi for this iteration                     Total : 61.4418
+
+
+  Contribution to phi from observation group       "gage-1" : 57.0479
+  Contribution to phi from observation group    "headwater" : 0
+  Contribution to phi from observation group    "part_time" : 0
+  Contribution to phi from observation group    "tailwater" : 0
+  Contribution to phi from observation group "trgw-0-13-10" : 0
+  Contribution to phi from observation group "trgw-0-15-16" : 0
+  Contribution to phi from observation group  "trgw-0-2-15" : 0
+  Contribution to phi from observation group   "trgw-0-2-9" : 0
+  Contribution to phi from observation group "trgw-0-21-10" : 0
+  Contribution to phi from observation group "trgw-0-22-15" : 0
+  Contribution to phi from observation group  "trgw-0-24-4" : 0
+  Contribution to phi from observation group  "trgw-0-26-6" : 1.11218
+  Contribution to phi from observation group "trgw-0-29-15" : 0
+  Contribution to phi from observation group   "trgw-0-3-8" : 3.2817
+  Contribution to phi from observation group  "trgw-0-33-7" : 0
+  Contribution to phi from observation group "trgw-0-34-10" : 0
+  Contribution to phi from observation group   "trgw-0-9-1" : 0
+  Number of terms in the jacobian equal to zero: 0 / 802 (0%)
+
+   ...calculating lambda upgrade vector: 0.1
+  computing upgrade vector (lambda = 0.1)  1 / 5             
+   ...calculating scaled lambda vector-scale factor: 0.1, 0.75
+   ...calculating lambda upgrade vector: 1
+  computing upgrade vector (lambda = 1)  2 / 5             
+   ...calculating scaled lambda vector-scale factor: 1, 0.75
+   ...calculating lambda upgrade vector: 10
+  computing upgrade vector (lambda = 10)  3 / 5             
+   ...calculating scaled lambda vector-scale factor: 10, 0.75
+   ...calculating lambda upgrade vector: 100
+  computing upgrade vector (lambda = 100)  4 / 5             
+   ...calculating scaled lambda vector-scale factor: 100, 0.75
+   ...calculating lambda upgrade vector: 1000
+  computing upgrade vector (lambda = 1000)  5 / 5             
+   ...calculating scaled lambda vector-scale factor: 1000, 0.75
+starting FOSM uncertainty analyses for iteration 4
+
+
+posterior parameter covariance matrix written to file 'freyberg.5.post.cov'
+
+current parameter uncertainty summary: 
+
+                name          prior_mean         prior_stdev   prior_lower_bound   prior_upper_bound           post_mean          post_stdev    post_lower_bound    post_upper_bound
+                 hk1             0.69897                   1            -1.30103             2.69897            0.536207           0.0194277            0.497351            0.575062
+                rch0                   0            0.150515            -0.30103             0.30103           0.0421274           0.0105058           0.0211159            0.063139
+the above parameter uncertainty summary was written to file 'freyberg.4.par.usum.csv'
+
+current forecast uncertainty summary: 
+
+                name          prior_mean         prior_stdev   prior_lower_bound   prior_upper_bound           post_mean          post_stdev    post_lower_bound    post_upper_bound
+    headwater:4383.5            -397.555             212.001            -821.557             26.4462            -505.388             9.45695            -524.302            -486.474
+           part_time             7076.31             5424.64            -3772.98             17925.6             7671.04             108.299             7454.45             7887.64
+    tailwater:4383.5             -90.295             293.697            -677.688             497.099            -179.331             4.63999            -188.611            -170.051
+   trgw-0-9-1:4383.5             38.0999             10.9005             16.2989             59.9008              40.333            0.176873             39.9792             40.6867
+Note : the above forecast uncertainty summary was written to file 'freyberg.4.pred.usum.csv'
+
+  Summary of GLM lambda upgrade runs:
+    Lambda =     0.10; Type:       normal; length = 2.02e-02;  phi =      61.3 (99.77% of starting phi)
+    Lambda =     0.10; Type:  scale(0.75); length = 1.51e-02;  phi =     61.33 (99.82% of starting phi)
+    Lambda =     1.00; Type:       normal; length = 2.02e-02;  phi =      61.3 (99.77% of starting phi)
+    Lambda =     1.00; Type:  scale(0.75); length = 1.51e-02;  phi =     61.33 (99.82% of starting phi)
+    Lambda =    10.00; Type:       normal; length = 2.01e-02;  phi =      61.3 (99.77% of starting phi)
+    Lambda =    10.00; Type:  scale(0.75); length = 1.51e-02;  phi =     61.33 (99.82% of starting phi)
+    Lambda =   100.00; Type:       normal; length = 1.95e-02;  phi =      61.3 (99.78% of starting phi)
+    Lambda =   100.00; Type:  scale(0.75); length = 1.46e-02;  phi =     61.34 (99.83% of starting phi)
+    Lambda =  1000.00; Type:       normal; length = 1.48e-02;  phi =     61.33 (99.82% of starting phi)
+    Lambda =  1000.00; Type:  scale(0.75); length = 1.11e-02;  phi =     61.36 (99.86% of starting phi)
+
+  Model calls in iteration 5: 14
+  Total model calls at end of iteration 5: 67
+
+
+  Final phi for this iteration                     Total : 61.3005
+
+
+  Contribution to phi from observation group       "gage-1" : 56.7476
+  Contribution to phi from observation group    "headwater" : 0
+  Contribution to phi from observation group    "part_time" : 0
+  Contribution to phi from observation group    "tailwater" : 0
+  Contribution to phi from observation group "trgw-0-13-10" : 0
+  Contribution to phi from observation group "trgw-0-15-16" : 0
+  Contribution to phi from observation group  "trgw-0-2-15" : 0
+  Contribution to phi from observation group   "trgw-0-2-9" : 0
+  Contribution to phi from observation group "trgw-0-21-10" : 0
+  Contribution to phi from observation group "trgw-0-22-15" : 0
+  Contribution to phi from observation group  "trgw-0-24-4" : 0
+  Contribution to phi from observation group  "trgw-0-26-6" : 1.13074
+  Contribution to phi from observation group "trgw-0-29-15" : 0
+  Contribution to phi from observation group   "trgw-0-3-8" : 3.42217
+  Contribution to phi from observation group  "trgw-0-33-7" : 0
+  Contribution to phi from observation group "trgw-0-34-10" : 0
+  Contribution to phi from observation group   "trgw-0-9-1" : 0
+    Iteration 5 Parameter Upgrades (Control File Parameters) 
+      Parameter     Current       Previous       Factor       Relative
+        Name         Value         Value         Change        Change
+      ----------  ------------  ------------  ------------  ------------
+             hk1       3.41725       3.43721       1.00584    0.00580809
+             ne1          0.01          0.01             1             0
+            rch0       1.09903       1.10186       1.00258    0.00257276
+            rch1             1             1             1             0
+       Maximum changes in "Control File" parameters:
+         Maximum relative change = 0.00580809   [hk1]
+         Maximum factor change = 1.00584   [hk1]
+
+    Iteration 5 Parameter Upgrades (Transformed Numeric Parameters) 
+      Parameter     Current       Previous       Factor       Relative
+        Name         Value         Value         Change        Change
+      ----------  ------------  ------------  ------------  ------------
+             hk1      0.533677      0.536207       1.00474    0.00471791
+            rch0     0.0410086     0.0421274       1.02728     0.0265569
+       Maximum changes in "Transformed Numeric" parameters:
+         Maximum relative change = 0.0265569   [rch0]
+         Maximum factor change = 1.02728   [rch0]
+
+-----------------------------------------
+     ---   OPTIMIZATION COMPLETE   ---   
+  Reason for terminating PEST++ simulation: PHIREDSTP / NPHISTP criterion met
+  Summary of termination criteria:
+  NOPTMAX = 20 ;  NOPT at termination = 5
+  NPHINORED = 3 ;  NPHINORED at termination = 2
+  NRELPAR = 3; RELPARSTP = 0.01 ;  NRELPAR at termination = 1
+  PHIREDSTP = 0.01; NPHISTP = 3
+  NPHISTP lowest PHI's:
+        61.1443
+        61.3005
+        61.4418
+
+FINAL OPTIMISATION RESULTS
+
+  Optimal parameter values  
+
+     Parameter            
+        Name         Value
+    ------------  ------------
+    hk1                3.38384
+    ne1                   0.01
+    rch0               1.09704
+    rch1                     1
+
+
+  Observations with optimal model-simulated equivalents and residuals
+                 Name        Group             Measured             Modelled             Residual               Weight
+        gage-1:3652.5       gage-1              2943.24              2911.93              31.3041           0.00500000
+        gage-1:3683.5       gage-1              2815.38              2754.81              60.5706           0.00500000
+        gage-1:3712.5       gage-1              2749.12              2902.38             -153.260           0.00500000
+        gage-1:3743.5       gage-1              2816.80              3157.68             -340.878           0.00500000
+        gage-1:3773.5       gage-1              2892.31              3377.03             -484.714           0.00500000
+        gage-1:3804.5       gage-1              3023.25              3447.16             -423.914           0.00500000
+        gage-1:3834.5       gage-1              3034.12              3317.20             -283.078           0.00500000
+        gage-1:3865.5       gage-1              2982.13              2983.06            -0.936651           0.00500000
+        gage-1:3896.5       gage-1              2910.85              2542.44              368.403           0.00500000
+        gage-1:3926.5       gage-1              2648.80              2086.98              561.821           0.00500000
+        gage-1:3957.5       gage-1              2428.73              1716.78              711.952           0.00500000
+        gage-1:3987.5       gage-1              2204.18              1533.83              670.356           0.00500000
+        gage-1:4018.5       gage-1              2006.67              1568.12              438.550           0.00500000
+        gage-1:4049.5       gage-1              2077.45              1743.84              333.610             0.000000
+        gage-1:4077.5       gage-1              2136.34              2022.58              113.754             0.000000
+        gage-1:4108.5       gage-1              2302.40              2357.47             -55.0675             0.000000
+        gage-1:4138.5       gage-1              2504.03              2611.74             -107.715             0.000000
+        gage-1:4169.5       gage-1              2714.29              2713.40             0.890808             0.000000
+        gage-1:4199.5       gage-1              2729.01              2717.41              11.5950             0.000000
+        gage-1:4230.5       gage-1              2763.70              2333.80              429.906             0.000000
+        gage-1:4261.5       gage-1              2553.34              1935.66              617.678             0.000000
+        gage-1:4291.5       gage-1              2319.10              1533.59              785.515             0.000000
+        gage-1:4322.5       gage-1              2032.23              1207.95              824.281             0.000000
+        gage-1:4352.5       gage-1              1866.94              1051.81              815.124             0.000000
+        gage-1:4383.5       gage-1              1627.58              1180.29              447.293             0.000000
+     headwater:3652.5    headwater             -1271.61             -1409.65              138.042             0.000000
+     headwater:3683.5    headwater             -1188.26             -1302.98              114.718             0.000000
+     headwater:3712.5    headwater             -1278.18             -1380.73              102.558             0.000000
+     headwater:3743.5    headwater             -1442.00             -1524.47              82.4666             0.000000
+     headwater:3773.5    headwater             -1576.91             -1647.39              70.4848             0.000000
+     headwater:3804.5    headwater             -1618.96             -1689.24              70.2755             0.000000
+     headwater:3834.5    headwater             -1620.04             -1622.43              2.39015             0.000000
+     headwater:3865.5    headwater             -1311.92             -1443.82              131.897             0.000000
+     headwater:3896.5    headwater             -1013.65             -1200.98              187.326             0.000000
+     headwater:3926.5    headwater             -714.129             -950.398              236.269             0.000000
+     headwater:3957.5    headwater             -470.588             -744.946              274.358             0.000000
+     headwater:3987.5    headwater             -348.177             -643.748              295.571             0.000000
+     headwater:4018.5    headwater             -369.408             -664.495              295.087             0.000000
+     headwater:4049.5    headwater             -516.742             -765.114              248.372             0.000000
+     headwater:4077.5    headwater             -734.931             -923.955              189.024             0.000000
+     headwater:4108.5    headwater             -994.138             -1116.34              122.201             0.000000
+     headwater:4138.5    headwater             -1192.72             -1264.61              71.8843             0.000000
+     headwater:4169.5    headwater             -1280.35             -1329.44              49.0898             0.000000
+     headwater:4199.5    headwater             -1281.99             -1330.93              48.9438             0.000000
+     headwater:4230.5    headwater             -1028.96             -1133.42              104.459             0.000000
+     headwater:4261.5    headwater             -749.971             -917.399              167.428             0.000000
+     headwater:4291.5    headwater             -466.077             -696.898              230.821             0.000000
+     headwater:4322.5    headwater             -236.327             -516.977              280.650             0.000000
+     headwater:4352.5    headwater             -129.829             -431.128              301.299             0.000000
+     headwater:4383.5    headwater             -127.193             -504.905              377.713             0.000000
+            part_time    part_time              31272.3              7707.19              23565.1             0.000000
+     tailwater:3652.5    tailwater             -934.745             -1022.84              88.0966             0.000000
+     tailwater:3683.5    tailwater             -903.583             -971.057              67.4739             0.000000
+     tailwater:3712.5    tailwater             -975.063             -1043.43              68.3678             0.000000
+     tailwater:3743.5    tailwater             -1100.48             -1158.12              57.6326             0.000000
+     tailwater:3773.5    tailwater             -1201.10             -1256.98              55.8788             0.000000
+     tailwater:3804.5    tailwater             -1225.23             -1285.03              59.8029             0.000000
+     tailwater:3834.5    tailwater             -1226.69             -1219.09             -7.59369             0.000000
+     tailwater:3865.5    tailwater             -962.543             -1058.62              96.0732             0.000000
+     tailwater:3896.5    tailwater             -720.464             -855.933              135.470             0.000000
+     tailwater:3926.5    tailwater             -482.627             -646.237              163.610             0.000000
+     tailwater:3957.5    tailwater             -294.031             -478.314              184.283             0.000000
+     tailwater:3987.5    tailwater             -192.867             -395.780              202.913             0.000000
+     tailwater:4018.5    tailwater             -198.454             -411.091              212.637             0.000000
+     tailwater:4049.5    tailwater             -299.749             -489.195              189.446             0.000000
+     tailwater:4077.5    tailwater             -459.681             -612.939              153.258             0.000000
+     tailwater:4108.5    tailwater             -650.155             -759.320              109.166             0.000000
+     tailwater:4138.5    tailwater             -793.820             -867.801              73.9814             0.000000
+     tailwater:4169.5    tailwater             -848.267             -904.902              56.6357             0.000000
+     tailwater:4199.5    tailwater             -851.251             -907.585              56.3339             0.000000
+     tailwater:4230.5    tailwater             -624.287             -715.269              90.9827             0.000000
+     tailwater:4261.5    tailwater             -396.703             -528.355              131.652             0.000000
+     tailwater:4291.5    tailwater             -171.134             -342.533              171.399             0.000000
+     tailwater:4322.5    tailwater              6.30116             -194.033              200.335             0.000000
+     tailwater:4352.5    tailwater              86.9187             -123.061              209.979             0.000000
+     tailwater:4383.5    tailwater              92.9114             -180.375              273.286             0.000000
+  trgw-0-13-10:3652.5 trgw-0-13-10              34.7974              35.8637             -1.06630             0.000000
+  trgw-0-13-10:3683.5 trgw-0-13-10              34.7685              35.8558             -1.08735             0.000000
+  trgw-0-13-10:3712.5 trgw-0-13-10              34.8212              35.9320             -1.11078             0.000000
+  trgw-0-13-10:3743.5 trgw-0-13-10              34.9210              36.0677             -1.14670             0.000000
+  trgw-0-13-10:3773.5 trgw-0-13-10              35.0084              36.1958             -1.18744             0.000000
+  trgw-0-13-10:3804.5 trgw-0-13-10              35.0424              36.2685             -1.22616             0.000000
+  trgw-0-13-10:3834.5 trgw-0-13-10              34.9949              36.2436             -1.24867             0.000000
+  trgw-0-13-10:3865.5 trgw-0-13-10              34.8623              36.1049             -1.24264             0.000000
+  trgw-0-13-10:3896.5 trgw-0-13-10              34.6729              35.8779             -1.20495             0.000000
+  trgw-0-13-10:3926.5 trgw-0-13-10              34.4752              35.6203             -1.14516             0.000000
+  trgw-0-13-10:3957.5 trgw-0-13-10              34.3055              35.3781             -1.07260             0.000000
+  trgw-0-13-10:3987.5 trgw-0-13-10              34.2089              35.2207             -1.01184             0.000000
+  trgw-0-13-10:4018.5 trgw-0-13-10              34.2024              35.1752            -0.972742             0.000000
+  trgw-0-13-10:4049.5 trgw-0-13-10              34.2825              35.2213            -0.938783             0.000000
+  trgw-0-13-10:4077.5 trgw-0-13-10              34.4131              35.3407            -0.927679             0.000000
+  trgw-0-13-10:4108.5 trgw-0-13-10              34.5781              35.5150            -0.936925             0.000000
+  trgw-0-13-10:4138.5 trgw-0-13-10              34.7105              35.6693            -0.958810             0.000000
+  trgw-0-13-10:4169.5 trgw-0-13-10              34.7772              35.7612            -0.984025             0.000000
+  trgw-0-13-10:4199.5 trgw-0-13-10              34.7522              35.7523             -1.00010             0.000000
+  trgw-0-13-10:4230.5 trgw-0-13-10              34.6365              35.6349            -0.998435             0.000000
+  trgw-0-13-10:4261.5 trgw-0-13-10              34.4600              35.4352            -0.975196             0.000000
+  trgw-0-13-10:4291.5 trgw-0-13-10              34.2724              35.2069            -0.934519             0.000000
+  trgw-0-13-10:4322.5 trgw-0-13-10              34.1116              34.9924            -0.880786             0.000000
+  trgw-0-13-10:4352.5 trgw-0-13-10              34.0271              34.8552            -0.828123             0.000000
+  trgw-0-13-10:4383.5 trgw-0-13-10              34.0741              34.8633            -0.789184             0.000000
+  trgw-0-15-16:3652.5 trgw-0-15-16              34.3787              34.5486            -0.169815             0.000000
+  trgw-0-15-16:3683.5 trgw-0-15-16              34.3595              34.5530            -0.193466             0.000000
+  trgw-0-15-16:3712.5 trgw-0-15-16              34.3997              34.6108            -0.211056             0.000000
+  trgw-0-15-16:3743.5 trgw-0-15-16              34.4698              34.6943            -0.224495             0.000000
+  trgw-0-15-16:3773.5 trgw-0-15-16              34.5260              34.7599            -0.233875             0.000000
+  trgw-0-15-16:3804.5 trgw-0-15-16              34.5401              34.7792            -0.239107             0.000000
+  trgw-0-15-16:3834.5 trgw-0-15-16              34.4963              34.7345            -0.238225             0.000000
+  trgw-0-15-16:3865.5 trgw-0-15-16              34.3938              34.6261            -0.232296             0.000000
+  trgw-0-15-16:3896.5 trgw-0-15-16              34.2578              34.4792            -0.221454             0.000000
+  trgw-0-15-16:3926.5 trgw-0-15-16              34.1230              34.3318            -0.208818             0.000000
+  trgw-0-15-16:3957.5 trgw-0-15-16              34.0154              34.2123            -0.196860             0.000000
+  trgw-0-15-16:3987.5 trgw-0-15-16              33.9644              34.1558            -0.191416             0.000000
+  trgw-0-15-16:4018.5 trgw-0-15-16              33.9786              34.1725            -0.193966             0.000000
+  trgw-0-15-16:4049.5 trgw-0-15-16              34.0499              34.2368            -0.186812             0.000000
+  trgw-0-15-16:4077.5 trgw-0-15-16              34.1504              34.3335            -0.183171             0.000000
+  trgw-0-15-16:4108.5 trgw-0-15-16              34.2674              34.4491            -0.181728             0.000000
+  trgw-0-15-16:4138.5 trgw-0-15-16              34.3542              34.5364            -0.182176             0.000000
+  trgw-0-15-16:4169.5 trgw-0-15-16              34.3894              34.5734            -0.183922             0.000000
+  trgw-0-15-16:4199.5 trgw-0-15-16              34.3597              34.5457            -0.186005             0.000000
+  trgw-0-15-16:4230.5 trgw-0-15-16              34.2678              34.4555            -0.187675             0.000000
+  trgw-0-15-16:4261.5 trgw-0-15-16              34.1397              34.3278            -0.188090             0.000000
+  trgw-0-15-16:4291.5 trgw-0-15-16              34.0112              34.1983            -0.187040             0.000000
+  trgw-0-15-16:4322.5 trgw-0-15-16              33.9091              34.0935            -0.184431             0.000000
+  trgw-0-15-16:4352.5 trgw-0-15-16              33.8648              34.0457            -0.180840             0.000000
+  trgw-0-15-16:4383.5 trgw-0-15-16              33.9156              34.0932            -0.177599             0.000000
+   trgw-0-2-15:3652.5  trgw-0-2-15              34.6265              34.7344            -0.107891             0.000000
+   trgw-0-2-15:3683.5  trgw-0-2-15              34.6336              34.7507            -0.117167             0.000000
+   trgw-0-2-15:3712.5  trgw-0-2-15              34.6844              34.8040            -0.119632             0.000000
+   trgw-0-2-15:3743.5  trgw-0-2-15              34.7562              34.8723            -0.116137             0.000000
+   trgw-0-2-15:3773.5  trgw-0-2-15              34.8133              34.9256            -0.112302             0.000000
+   trgw-0-2-15:3804.5  trgw-0-2-15              34.8332              34.9473            -0.114054             0.000000
+   trgw-0-2-15:3834.5  trgw-0-2-15              34.8014              34.9268            -0.125396             0.000000
+   trgw-0-2-15:3865.5  trgw-0-2-15              34.7177              34.8622            -0.144479             0.000000
+   trgw-0-2-15:3896.5  trgw-0-2-15              34.6023              34.7696            -0.167331             0.000000
+   trgw-0-2-15:3926.5  trgw-0-2-15              34.4853              34.6750            -0.189673             0.000000
+   trgw-0-2-15:3957.5  trgw-0-2-15              34.3892              34.5977            -0.208504             0.000000
+   trgw-0-2-15:3987.5  trgw-0-2-15              34.3417              34.5609            -0.219150             0.000000
+   trgw-0-2-15:4018.5  trgw-0-2-15              34.3513              34.5715            -0.220195             0.000000
+   trgw-0-2-15:4049.5  trgw-0-2-15              34.4113              34.6125            -0.201217             0.000000
+   trgw-0-2-15:4077.5  trgw-0-2-15              34.4978              34.6756            -0.177771             0.000000
+   trgw-0-2-15:4108.5  trgw-0-2-15              34.6008              34.7515            -0.150663             0.000000
+   trgw-0-2-15:4138.5  trgw-0-2-15              34.6797              34.8095            -0.129761             0.000000
+   trgw-0-2-15:4169.5  trgw-0-2-15              34.7158              34.8352            -0.119449             0.000000
+   trgw-0-2-15:4199.5  trgw-0-2-15              34.6954              34.8184            -0.122982             0.000000
+   trgw-0-2-15:4230.5  trgw-0-2-15              34.6208              34.7608            -0.140038             0.000000
+   trgw-0-2-15:4261.5  trgw-0-2-15              34.5127              34.6785            -0.165795             0.000000
+   trgw-0-2-15:4291.5  trgw-0-2-15              34.4019              34.5947            -0.192830             0.000000
+   trgw-0-2-15:4322.5  trgw-0-2-15              34.3112              34.5267            -0.215508             0.000000
+   trgw-0-2-15:4352.5  trgw-0-2-15              34.2687              34.4954            -0.226759             0.000000
+   trgw-0-2-15:4383.5  trgw-0-2-15              34.3073              34.5265            -0.219189             0.000000
+    trgw-0-2-9:3652.5   trgw-0-2-9              35.5947              37.9686             -2.37392             0.000000
+    trgw-0-2-9:3683.5   trgw-0-2-9              35.6087              38.0135             -2.40483             0.000000
+    trgw-0-2-9:3712.5   trgw-0-2-9              35.6962              38.1461             -2.44996             0.000000
+    trgw-0-2-9:3743.5   trgw-0-2-9              35.8296              38.3404             -2.51080             0.000000
+    trgw-0-2-9:3773.5   trgw-0-2-9              35.9488              38.5255             -2.57669             0.000000
+    trgw-0-2-9:3804.5   trgw-0-2-9              36.0124              38.6740             -2.66159             0.000000
+    trgw-0-2-9:3834.5   trgw-0-2-9              35.9860              38.7609             -2.77487             0.000000
+    trgw-0-2-9:3865.5   trgw-0-2-9              35.8617              38.6393             -2.77752             0.000000
+    trgw-0-2-9:3896.5   trgw-0-2-9              35.6648              38.4189             -2.75406             0.000000
+    trgw-0-2-9:3926.5   trgw-0-2-9              35.4455              38.1601             -2.71465             0.000000
+    trgw-0-2-9:3957.5   trgw-0-2-9              35.2428              37.9076             -2.66487             0.000000
+    trgw-0-2-9:3987.5   trgw-0-2-9              35.1149              37.7344             -2.61952             0.000000
+    trgw-0-2-9:4018.5   trgw-0-2-9              35.0840              37.6714             -2.58741             0.000000
+    trgw-0-2-9:4049.5   trgw-0-2-9              35.1511              37.7037             -2.55264             0.000000
+    trgw-0-2-9:4077.5   trgw-0-2-9              35.2813              37.8167             -2.53542             0.000000
+    trgw-0-2-9:4108.5   trgw-0-2-9              35.4592              37.9934             -2.53417             0.000000
+    trgw-0-2-9:4138.5   trgw-0-2-9              35.6131              38.1589             -2.54574             0.000000
+    trgw-0-2-9:4169.5   trgw-0-2-9              35.7048              38.2688             -2.56400             0.000000
+    trgw-0-2-9:4199.5   trgw-0-2-9              35.6996              38.2792             -2.57955             0.000000
+    trgw-0-2-9:4230.5   trgw-0-2-9              35.5928              38.1784             -2.58562             0.000000
+    trgw-0-2-9:4261.5   trgw-0-2-9              35.4104              37.9877             -2.57727             0.000000
+    trgw-0-2-9:4291.5   trgw-0-2-9              35.2034              37.7586             -2.55517             0.000000
+    trgw-0-2-9:4322.5   trgw-0-2-9              35.0123              37.5332             -2.52088             0.000000
+    trgw-0-2-9:4352.5   trgw-0-2-9              34.8951              37.3783             -2.48319             0.000000
+    trgw-0-2-9:4383.5   trgw-0-2-9              34.9150              37.3659             -2.45091             0.000000
+  trgw-0-21-10:3652.5 trgw-0-21-10              34.7134              35.8469             -1.13358             0.000000
+  trgw-0-21-10:3683.5 trgw-0-21-10              34.6790              35.8353             -1.15625             0.000000
+  trgw-0-21-10:3712.5 trgw-0-21-10              34.7262              35.9034             -1.17721             0.000000
+  trgw-0-21-10:3743.5 trgw-0-21-10              34.8228              36.0299             -1.20708             0.000000
+  trgw-0-21-10:3773.5 trgw-0-21-10              34.9095              36.1666             -1.25705             0.000000
+  trgw-0-21-10:3804.5 trgw-0-21-10              34.9439              36.2692             -1.32529             0.000000
+  trgw-0-21-10:3834.5 trgw-0-21-10              34.8961              36.2518             -1.35568             0.000000
+  trgw-0-21-10:3865.5 trgw-0-21-10              34.7605              36.0955             -1.33507             0.000000
+  trgw-0-21-10:3896.5 trgw-0-21-10              34.5648              35.8448             -1.28001             0.000000
+  trgw-0-21-10:3926.5 trgw-0-21-10              34.3579              35.5648             -1.20696             0.000000
+  trgw-0-21-10:3957.5 trgw-0-21-10              34.1769              35.3011             -1.12421             0.000000
+  trgw-0-21-10:3987.5 trgw-0-21-10              34.0284              35.0956             -1.06726             0.000000
+  trgw-0-21-10:4018.5 trgw-0-21-10              33.9699              34.9810             -1.01107             0.000000
+  trgw-0-21-10:4049.5 trgw-0-21-10              34.0115              34.9544            -0.942873             0.000000
+  trgw-0-21-10:4077.5 trgw-0-21-10              34.1182              35.0121            -0.893933             0.000000
+  trgw-0-21-10:4108.5 trgw-0-21-10              34.2674              35.1271            -0.859640             0.000000
+  trgw-0-21-10:4138.5 trgw-0-21-10              34.3916              35.2332            -0.841620             0.000000
+  trgw-0-21-10:4169.5 trgw-0-21-10              34.4538              35.2844            -0.830555             0.000000
+  trgw-0-21-10:4199.5 trgw-0-21-10              34.4255              35.2429            -0.817398             0.000000
+  trgw-0-21-10:4230.5 trgw-0-21-10              34.3048              35.0965            -0.791747             0.000000
+  trgw-0-21-10:4261.5 trgw-0-21-10              34.1205              34.8703            -0.749781             0.000000
+  trgw-0-21-10:4291.5 trgw-0-21-10              33.9225              34.6168            -0.694266             0.000000
+  trgw-0-21-10:4322.5 trgw-0-21-10              33.7493              34.3758            -0.626512             0.000000
+  trgw-0-21-10:4352.5 trgw-0-21-10              33.6528              34.2125            -0.559618             0.000000
+  trgw-0-21-10:4383.5 trgw-0-21-10              33.6901              34.1938            -0.503636             0.000000
+  trgw-0-22-15:3652.5 trgw-0-22-15              34.2396              34.2840           -0.0444656             0.000000
+  trgw-0-22-15:3683.5 trgw-0-22-15              34.2058              34.2564           -0.0505882             0.000000
+  trgw-0-22-15:3712.5 trgw-0-22-15              34.2405              34.2881           -0.0475542             0.000000
+  trgw-0-22-15:3743.5 trgw-0-22-15              34.3036              34.3450           -0.0413350             0.000000
+  trgw-0-22-15:3773.5 trgw-0-22-15              34.3548              34.3922           -0.0374740             0.000000
+  trgw-0-22-15:3804.5 trgw-0-22-15              34.3683              34.4093           -0.0409886             0.000000
+  trgw-0-22-15:3834.5 trgw-0-22-15              34.3301              34.3807           -0.0506182             0.000000
+  trgw-0-22-15:3865.5 trgw-0-22-15              34.2373              34.3048           -0.0675001             0.000000
+  trgw-0-22-15:3896.5 trgw-0-22-15              34.1133              34.1996           -0.0863124             0.000000
+  trgw-0-22-15:3926.5 trgw-0-22-15              33.9891              34.0927            -0.103599             0.000000
+  trgw-0-22-15:3957.5 trgw-0-22-15              33.8881              34.0045            -0.116425             0.000000
+  trgw-0-22-15:3987.5 trgw-0-22-15              33.8311              33.9588            -0.127648             0.000000
+  trgw-0-22-15:4018.5 trgw-0-22-15              33.8305              33.9621            -0.131548             0.000000
+  trgw-0-22-15:4049.5 trgw-0-22-15              33.8833              33.9972            -0.113836             0.000000
+  trgw-0-22-15:4077.5 trgw-0-22-15              33.9660              34.0563           -0.0902956             0.000000
+  trgw-0-22-15:4108.5 trgw-0-22-15              34.0660              34.1284           -0.0623905             0.000000
+  trgw-0-22-15:4138.5 trgw-0-22-15              34.1414              34.1820           -0.0405544             0.000000
+  trgw-0-22-15:4169.5 trgw-0-22-15              34.1722              34.2014           -0.0292686             0.000000
+  trgw-0-22-15:4199.5 trgw-0-22-15              34.1454              34.1772           -0.0318110             0.000000
+  trgw-0-22-15:4230.5 trgw-0-22-15              34.0617              34.1086           -0.0468882             0.000000
+  trgw-0-22-15:4261.5 trgw-0-22-15              33.9446              34.0144           -0.0698550             0.000000
+  trgw-0-22-15:4291.5 trgw-0-22-15              33.8258              33.9191           -0.0933134             0.000000
+  trgw-0-22-15:4322.5 trgw-0-22-15              33.7293              33.8407            -0.111434             0.000000
+  trgw-0-22-15:4352.5 trgw-0-22-15              33.6846              33.8022            -0.117603             0.000000
+  trgw-0-22-15:4383.5 trgw-0-22-15              33.7249              33.8309            -0.105997             0.000000
+   trgw-0-24-4:3652.5  trgw-0-24-4              35.4528              38.1521             -2.69931             0.000000
+   trgw-0-24-4:3683.5  trgw-0-24-4              35.4361              38.1750             -2.73892             0.000000
+   trgw-0-24-4:3712.5  trgw-0-24-4              35.5007              38.2791             -2.77846             0.000000
+   trgw-0-24-4:3743.5  trgw-0-24-4              35.6245              38.4564             -2.83189             0.000000
+   trgw-0-24-4:3773.5  trgw-0-24-4              35.7446              39.1988             -3.45416             0.000000
+   trgw-0-24-4:3804.5  trgw-0-24-4              35.8118              39.7107             -3.89898             0.000000
+   trgw-0-24-4:3834.5  trgw-0-24-4              35.7830              39.1836             -3.40062             0.000000
+   trgw-0-24-4:3865.5  trgw-0-24-4              35.6436              38.5492             -2.90556             0.000000
+   trgw-0-24-4:3896.5  trgw-0-24-4              35.4171              38.3112             -2.89407             0.000000
+   trgw-0-24-4:3926.5  trgw-0-24-4              35.1578              38.0244             -2.86653             0.000000
+   trgw-0-24-4:3957.5  trgw-0-24-4              34.9082              37.7317             -2.82348             0.000000
+   trgw-0-24-4:3987.5  trgw-0-24-4              33.8064              35.3356             -1.52926             0.000000
+   trgw-0-24-4:4018.5  trgw-0-24-4              33.5264              34.6517             -1.12528             0.000000
+   trgw-0-24-4:4049.5  trgw-0-24-4              33.4541              34.3256            -0.871444             0.000000
+   trgw-0-24-4:4077.5  trgw-0-24-4              33.5077              34.2040            -0.696353             0.000000
+   trgw-0-24-4:4108.5  trgw-0-24-4              33.6421              34.1883            -0.546227             0.000000
+   trgw-0-24-4:4138.5  trgw-0-24-4              33.7779              34.2107            -0.432823             0.000000
+   trgw-0-24-4:4169.5  trgw-0-24-4              33.8609              34.2010            -0.340086             0.000000
+   trgw-0-24-4:4199.5  trgw-0-24-4              33.8438              34.1066            -0.262757             0.000000
+   trgw-0-24-4:4230.5  trgw-0-24-4              33.7117              33.8952            -0.183553             0.000000
+   trgw-0-24-4:4261.5  trgw-0-24-4              33.4876              33.5832           -0.0955290             0.000000
+   trgw-0-24-4:4291.5  trgw-0-24-4              33.2277              33.2246           0.00306739             0.000000
+   trgw-0-24-4:4322.5  trgw-0-24-4              32.9765              32.8572             0.119280             0.000000
+   trgw-0-24-4:4352.5  trgw-0-24-4              32.8063              32.5661             0.240155             0.000000
+   trgw-0-24-4:4383.5  trgw-0-24-4              32.7921              32.4317             0.360411             0.000000
+   trgw-0-26-6:3652.5  trgw-0-26-6              37.3758              37.0546             0.321174             0.000000
+   trgw-0-26-6:3683.5  trgw-0-26-6              37.1684              37.0042             0.164190              1.00000
+   trgw-0-26-6:3712.5  trgw-0-26-6              37.1165              37.0544            0.0620642              1.00000
+   trgw-0-26-6:3743.5  trgw-0-26-6              37.1829              37.1870          -0.00408619              1.00000
+   trgw-0-26-6:3773.5  trgw-0-26-6              37.2833              37.5089            -0.225621              1.00000
+   trgw-0-26-6:3804.5  trgw-0-26-6              37.2744              37.8841            -0.609778              1.00000
+   trgw-0-26-6:3834.5  trgw-0-26-6              37.3250              37.6931            -0.368108              1.00000
+   trgw-0-26-6:3865.5  trgw-0-26-6              37.3005              37.3663           -0.0658243              1.00000
+   trgw-0-26-6:3896.5  trgw-0-26-6              37.1997              37.0569             0.142788              1.00000
+   trgw-0-26-6:3926.5  trgw-0-26-6              36.9600              36.7339             0.226141              1.00000
+   trgw-0-26-6:3957.5  trgw-0-26-6              36.6277              36.4212             0.206523              1.00000
+   trgw-0-26-6:3987.5  trgw-0-26-6              36.3855              35.9399             0.445574              1.00000
+   trgw-0-26-6:4018.5  trgw-0-26-6              36.1564              35.5848             0.571585              1.00000
+   trgw-0-26-6:4049.5  trgw-0-26-6              36.0555              35.3853             0.670236             0.000000
+   trgw-0-26-6:4077.5  trgw-0-26-6              35.9824              35.3305             0.651905             0.000000
+   trgw-0-26-6:4108.5  trgw-0-26-6              35.9063              35.3614             0.544986             0.000000
+   trgw-0-26-6:4138.5  trgw-0-26-6              36.0071              35.4140             0.593079             0.000000
+   trgw-0-26-6:4169.5  trgw-0-26-6              36.0901              35.4278             0.662389             0.000000
+   trgw-0-26-6:4199.5  trgw-0-26-6              36.2179              35.3550             0.862907             0.000000
+   trgw-0-26-6:4230.5  trgw-0-26-6              36.2716              35.1704              1.10121             0.000000
+   trgw-0-26-6:4261.5  trgw-0-26-6              36.1457              34.8923              1.25339             0.000000
+   trgw-0-26-6:4291.5  trgw-0-26-6              35.7694              34.5736              1.19578             0.000000
+   trgw-0-26-6:4322.5  trgw-0-26-6              35.3847              34.2522              1.13257             0.000000
+   trgw-0-26-6:4352.5  trgw-0-26-6              35.0552              34.0057              1.04951             0.000000
+   trgw-0-26-6:4383.5  trgw-0-26-6              34.8332              33.9087             0.924460             0.000000
+  trgw-0-29-15:3652.5 trgw-0-29-15              34.1662              34.2251           -0.0589387             0.000000
+  trgw-0-29-15:3683.5 trgw-0-29-15              34.1561              34.2286           -0.0725207             0.000000
+  trgw-0-29-15:3712.5 trgw-0-29-15              34.1951              34.2707           -0.0756254             0.000000
+  trgw-0-29-15:3743.5 trgw-0-29-15              34.2585              34.3300           -0.0715215             0.000000
+  trgw-0-29-15:3773.5 trgw-0-29-15              34.3086              34.3773           -0.0687180             0.000000
+  trgw-0-29-15:3804.5 trgw-0-29-15              34.3208              34.3942           -0.0734617             0.000000
+  trgw-0-29-15:3834.5 trgw-0-29-15              34.2819              34.3647           -0.0828404             0.000000
+  trgw-0-29-15:3865.5 trgw-0-29-15              34.1891              34.2869           -0.0978614             0.000000
+  trgw-0-29-15:3896.5 trgw-0-29-15              34.0665              34.1798            -0.113334             0.000000
+  trgw-0-29-15:3926.5 trgw-0-29-15              33.9446              34.0716            -0.127005             0.000000
+  trgw-0-29-15:3957.5 trgw-0-29-15              33.8463              33.9831            -0.136759             0.000000
+  trgw-0-29-15:3987.5 trgw-0-29-15              33.7932              33.9387            -0.145508             0.000000
+  trgw-0-29-15:4018.5 trgw-0-29-15              33.7953              33.9449            -0.149554             0.000000
+  trgw-0-29-15:4049.5 trgw-0-29-15              33.8487              33.9833            -0.134614             0.000000
+  trgw-0-29-15:4077.5 trgw-0-29-15              33.9301              34.0452            -0.115102             0.000000
+  trgw-0-29-15:4108.5 trgw-0-29-15              34.0271              34.1194           -0.0922784             0.000000
+  trgw-0-29-15:4138.5 trgw-0-29-15              34.0990              34.1738           -0.0748194             0.000000
+  trgw-0-29-15:4169.5 trgw-0-29-15              34.1262              34.1927           -0.0665210             0.000000
+  trgw-0-29-15:4199.5 trgw-0-29-15              34.0971              34.1672           -0.0700874             0.000000
+  trgw-0-29-15:4230.5 trgw-0-29-15              34.0123              34.0964           -0.0840542             0.000000
+  trgw-0-29-15:4261.5 trgw-0-29-15              33.8957              34.0002            -0.104499             0.000000
+  trgw-0-29-15:4291.5 trgw-0-29-15              33.7784              33.9033            -0.124951             0.000000
+  trgw-0-29-15:4322.5 trgw-0-29-15              33.6838              33.8241            -0.140339             0.000000
+  trgw-0-29-15:4352.5 trgw-0-29-15              33.6408              33.7857            -0.144881             0.000000
+  trgw-0-29-15:4383.5 trgw-0-29-15              33.6820              33.8157            -0.133707             0.000000
+    trgw-0-3-8:3652.5   trgw-0-3-8              38.0309              38.3501            -0.319159             0.000000
+    trgw-0-3-8:3683.5   trgw-0-3-8              38.0065              38.3959            -0.389322              1.00000
+    trgw-0-3-8:3712.5   trgw-0-3-8              38.0434              38.5311            -0.487682              1.00000
+    trgw-0-3-8:3743.5   trgw-0-3-8              38.1174              38.7311            -0.613654              1.00000
+    trgw-0-3-8:3773.5   trgw-0-3-8              38.1898              38.9265            -0.736661              1.00000
+    trgw-0-3-8:3804.5   trgw-0-3-8              38.3103              39.1016            -0.791253              1.00000
+    trgw-0-3-8:3834.5   trgw-0-3-8              38.4187              39.2229            -0.804219              1.00000
+    trgw-0-3-8:3865.5   trgw-0-3-8              38.4033              39.0742            -0.670869              1.00000
+    trgw-0-3-8:3896.5   trgw-0-3-8              38.3372              38.8445            -0.507325              1.00000
+    trgw-0-3-8:3926.5   trgw-0-3-8              38.1719              38.5776            -0.405661              1.00000
+    trgw-0-3-8:3957.5   trgw-0-3-8              37.9331              38.3147            -0.381614              1.00000
+    trgw-0-3-8:3987.5   trgw-0-3-8              37.7642              38.1306            -0.366381              1.00000
+    trgw-0-3-8:4018.5   trgw-0-3-8              37.6086              38.0575            -0.448887              1.00000
+    trgw-0-3-8:4049.5   trgw-0-3-8              37.5570              38.0826            -0.525621             0.000000
+    trgw-0-3-8:4077.5   trgw-0-3-8              37.5594              38.1925            -0.633067             0.000000
+    trgw-0-3-8:4108.5   trgw-0-3-8              37.6660              38.3702            -0.704119             0.000000
+    trgw-0-3-8:4138.5   trgw-0-3-8              37.8296              38.5397            -0.710109             0.000000
+    trgw-0-3-8:4169.5   trgw-0-3-8              37.8993              38.6554            -0.756153             0.000000
+    trgw-0-3-8:4199.5   trgw-0-3-8              38.0047              38.6706            -0.665874             0.000000
+    trgw-0-3-8:4230.5   trgw-0-3-8              38.0561              38.5719            -0.515732             0.000000
+    trgw-0-3-8:4261.5   trgw-0-3-8              37.9605              38.3788            -0.418318             0.000000
+    trgw-0-3-8:4291.5   trgw-0-3-8              37.8316              38.1434            -0.311756             0.000000
+    trgw-0-3-8:4322.5   trgw-0-3-8              37.6173              37.9080            -0.290685             0.000000
+    trgw-0-3-8:4352.5   trgw-0-3-8              37.4390              37.7420            -0.303036             0.000000
+    trgw-0-3-8:4383.5   trgw-0-3-8              37.2932              37.7197            -0.426429             0.000000
+   trgw-0-33-7:3652.5  trgw-0-33-7              34.6362              35.8839             -1.24776             0.000000
+   trgw-0-33-7:3683.5  trgw-0-33-7              34.6044              35.8745             -1.27012             0.000000
+   trgw-0-33-7:3712.5  trgw-0-33-7              34.6541              35.9433             -1.28913             0.000000
+   trgw-0-33-7:3743.5  trgw-0-33-7              34.7542              36.0732             -1.31901             0.000000
+   trgw-0-33-7:3773.5  trgw-0-33-7              34.8440              36.2708             -1.42673             0.000000
+   trgw-0-33-7:3804.5  trgw-0-33-7              34.8801              36.4811             -1.60093             0.000000
+   trgw-0-33-7:3834.5  trgw-0-33-7              34.8317              36.3511             -1.51946             0.000000
+   trgw-0-33-7:3865.5  trgw-0-33-7              34.6933              36.1243             -1.43099             0.000000
+   trgw-0-33-7:3896.5  trgw-0-33-7              34.4937              35.8552             -1.36156             0.000000
+   trgw-0-33-7:3926.5  trgw-0-33-7              34.2814              35.5680             -1.28660             0.000000
+   trgw-0-33-7:3957.5  trgw-0-33-7              34.0933              35.2980             -1.20464             0.000000
+   trgw-0-33-7:3987.5  trgw-0-33-7              33.9572              35.1073             -1.15007             0.000000
+   trgw-0-33-7:4018.5  trgw-0-33-7              33.9016              35.0184             -1.11675             0.000000
+   trgw-0-33-7:4049.5  trgw-0-33-7              33.9369              35.0153             -1.07838             0.000000
+   trgw-0-33-7:4077.5  trgw-0-33-7              34.0356              35.0891             -1.05348             0.000000
+   trgw-0-33-7:4108.5  trgw-0-33-7              34.1770              35.2147             -1.03771             0.000000
+   trgw-0-33-7:4138.5  trgw-0-33-7              34.2956              35.3251             -1.02942             0.000000
+   trgw-0-33-7:4169.5  trgw-0-33-7              34.3540              35.3746             -1.02063             0.000000
+   trgw-0-33-7:4199.5  trgw-0-33-7              34.3223              35.3261             -1.00378             0.000000
+   trgw-0-33-7:4230.5  trgw-0-33-7              34.1979              35.1677            -0.969805             0.000000
+   trgw-0-33-7:4261.5  trgw-0-33-7              34.0084              34.9254            -0.916981             0.000000
+   trgw-0-33-7:4291.5  trgw-0-33-7              33.8041              34.6539            -0.849842             0.000000
+   trgw-0-33-7:4322.5  trgw-0-33-7              33.6233              34.3933            -0.770032             0.000000
+   trgw-0-33-7:4352.5  trgw-0-33-7              33.5195              34.2118            -0.692231             0.000000
+   trgw-0-33-7:4383.5  trgw-0-33-7              33.5512              34.1774            -0.626242             0.000000
+  trgw-0-34-10:3652.5 trgw-0-34-10              34.3419              35.0069            -0.664974             0.000000
+  trgw-0-34-10:3683.5 trgw-0-34-10              34.2851              34.9242            -0.639161             0.000000
+  trgw-0-34-10:3712.5 trgw-0-34-10              34.3284              34.9629            -0.634541             0.000000
+  trgw-0-34-10:3743.5 trgw-0-34-10              34.4161              35.0693            -0.653174             0.000000
+  trgw-0-34-10:3773.5 trgw-0-34-10              34.4905              35.1889            -0.698447             0.000000
+  trgw-0-34-10:3804.5 trgw-0-34-10              34.5138              35.2769            -0.763093             0.000000
+  trgw-0-34-10:3834.5 trgw-0-34-10              34.4628              35.2234            -0.760554             0.000000
+  trgw-0-34-10:3865.5 trgw-0-34-10              34.3360              35.0509            -0.714886             0.000000
+  trgw-0-34-10:3896.5 trgw-0-34-10              34.1619              34.8117            -0.649802             0.000000
+  trgw-0-34-10:3926.5 trgw-0-34-10              33.9834              34.5615            -0.578170             0.000000
+  trgw-0-34-10:3957.5 trgw-0-34-10              33.8328              34.3398            -0.506946             0.000000
+  trgw-0-34-10:3987.5 trgw-0-34-10              33.7410              34.2035            -0.462546             0.000000
+  trgw-0-34-10:4018.5 trgw-0-34-10              33.7236              34.1706            -0.447042             0.000000
+  trgw-0-34-10:4049.5 trgw-0-34-10              33.7802              34.2147            -0.434457             0.000000
+  trgw-0-34-10:4077.5 trgw-0-34-10              33.8825              34.3185            -0.436033             0.000000
+  trgw-0-34-10:4108.5 trgw-0-34-10              34.0131              34.4605            -0.447388             0.000000
+  trgw-0-34-10:4138.5 trgw-0-34-10              34.1150              34.5746            -0.459538             0.000000
+  trgw-0-34-10:4169.5 trgw-0-34-10              34.1584              34.6230            -0.464553             0.000000
+  trgw-0-34-10:4199.5 trgw-0-34-10              34.1221              34.5775            -0.455437             0.000000
+  trgw-0-34-10:4230.5 trgw-0-34-10              34.0070              34.4342            -0.427237             0.000000
+  trgw-0-34-10:4261.5 trgw-0-34-10              33.8412              34.2230            -0.381860             0.000000
+  trgw-0-34-10:4291.5 trgw-0-34-10              33.6693              33.9961            -0.326814             0.000000
+  trgw-0-34-10:4322.5 trgw-0-34-10              33.5247              33.7917            -0.266914             0.000000
+  trgw-0-34-10:4352.5 trgw-0-34-10              33.4508              33.6661            -0.215354             0.000000
+  trgw-0-34-10:4383.5 trgw-0-34-10              33.4964              33.6791            -0.182628             0.000000
+    trgw-0-9-1:3652.5   trgw-0-9-1              36.7189              41.2669             -4.54799             0.000000
+    trgw-0-9-1:3683.5   trgw-0-9-1              36.7321              41.3212             -4.58913             0.000000
+    trgw-0-9-1:3712.5   trgw-0-9-1              36.8333              41.4712             -4.63787             0.000000
+    trgw-0-9-1:3743.5   trgw-0-9-1              36.9974              41.6996             -4.70221             0.000000
+    trgw-0-9-1:3773.5   trgw-0-9-1              37.1571              42.4956             -5.33851             0.000000
+    trgw-0-9-1:3804.5   trgw-0-9-1              37.2645              43.6622             -6.39767             0.000000
+    trgw-0-9-1:3834.5   trgw-0-9-1              37.2707              43.1650             -5.89425             0.000000
+    trgw-0-9-1:3865.5   trgw-0-9-1              37.1581              41.9568             -4.79869             0.000000
+    trgw-0-9-1:3896.5   trgw-0-9-1              36.9443              41.7928             -4.84850             0.000000
+    trgw-0-9-1:3926.5   trgw-0-9-1              36.6819              41.5655             -4.88354             0.000000
+    trgw-0-9-1:3957.5   trgw-0-9-1              36.4133              41.3217             -4.90838             0.000000
+    trgw-0-9-1:3987.5   trgw-0-9-1              36.2067              41.1384             -4.93171             0.000000
+    trgw-0-9-1:4018.5   trgw-0-9-1              36.0914              41.0521             -4.96069             0.000000
+    trgw-0-9-1:4049.5   trgw-0-9-1              36.0872              41.0555             -4.96834             0.000000
+    trgw-0-9-1:4077.5   trgw-0-9-1              36.1731              41.1435             -4.97032             0.000000
+    trgw-0-9-1:4108.5   trgw-0-9-1              36.3317              41.2996             -4.96791             0.000000
+    trgw-0-9-1:4138.5   trgw-0-9-1              36.4904              41.4540             -4.96354             0.000000
+    trgw-0-9-1:4169.5   trgw-0-9-1              36.6006              41.5596             -4.95904             0.000000
+    trgw-0-9-1:4199.5   trgw-0-9-1              36.6120              41.5674             -4.95542             0.000000
+    trgw-0-9-1:4230.5   trgw-0-9-1              36.5069              41.4581             -4.95125             0.000000
+    trgw-0-9-1:4261.5   trgw-0-9-1              36.3021              41.2462             -4.94410             0.000000
+    trgw-0-9-1:4291.5   trgw-0-9-1              36.0494              40.9810             -4.93155             0.000000
+    trgw-0-9-1:4322.5   trgw-0-9-1              35.7915              40.7014             -4.90991             0.000000
+    trgw-0-9-1:4352.5   trgw-0-9-1              35.6024              40.4820             -4.87959             0.000000
+    trgw-0-9-1:4383.5   trgw-0-9-1              35.5598              40.3989             -4.83908             0.000000
+
+Final composite objective function 
+  Final phi                                           Total : 61.1443
+  Contribution to phi from observation group       "gage-1" : 55.9766
+  Contribution to phi from observation group    "headwater" : 0.000000
+  Contribution to phi from observation group    "part_time" : 0.000000
+  Contribution to phi from observation group    "tailwater" : 0.000000
+  Contribution to phi from observation group "trgw-0-13-10" : 0.000000
+  Contribution to phi from observation group "trgw-0-15-16" : 0.000000
+  Contribution to phi from observation group  "trgw-0-2-15" : 0.000000
+  Contribution to phi from observation group   "trgw-0-2-9" : 0.000000
+  Contribution to phi from observation group "trgw-0-21-10" : 0.000000
+  Contribution to phi from observation group "trgw-0-22-15" : 0.000000
+  Contribution to phi from observation group  "trgw-0-24-4" : 0.000000
+  Contribution to phi from observation group  "trgw-0-26-6" : 1.23282
+  Contribution to phi from observation group "trgw-0-29-15" : 0.000000
+  Contribution to phi from observation group   "trgw-0-3-8" : 3.93486
+  Contribution to phi from observation group  "trgw-0-33-7" : 0.000000
+  Contribution to phi from observation group "trgw-0-34-10" : 0.000000
+  Contribution to phi from observation group   "trgw-0-9-1" : 0.000000
+
+
+Number of forward model runs performed during optimization: 67
+
+
+
+
+-----------------------------------------------------------------------
+Note: The following uncertainty estimates were calculated using 
+      Schur's complement for linear-based conditional uncertainty 
+      propagation.  For a derivation from Bayes equation, see 
+      M. N. Fienen, J. E. Doherty, R. J. Hunt, and H. W. Reeves. 
+      2010. 'Using Prediction Uncertainty Analysis to Design 
+      Hydrologic Monitoring Networks: Example Applications 
+      from the Great Lakes Water Availability Pilot Project'. 
+      See PEST++ V3 documentation for implementation details.
+-----------------------------------------------------------------------
+
+Note: Any observations or prior information equations with a group name
+      starting with 'regul' are dropped from the Jacobian and observation
+      covariance matrices before uncertainty calculations.  Please
+      make sure that all expert knowledge is expressed in the prior 
+      parameter bounds or through a covariance matix, which can be 
+      supplied as a ++ option as '++parcov(<matrix_file_name>)',
+      where <matrix_file_name> can be an ASCII PEST-compatible matrix file (.mat) or
+      a PEST-compatible uncertainty file (.unc).
+
+starting FOSM uncertainty analyses for iteration -999
+
+
+posterior parameter covariance matrix written to file 'freyberg.post.cov'
+
+current parameter uncertainty summary: 
+
+                name          prior_mean         prior_stdev   prior_lower_bound   prior_upper_bound           post_mean          post_stdev    post_lower_bound    post_upper_bound
+                 hk1            0.698970             1.00000            -1.30103             2.69897            0.529409           0.0193696            0.490670            0.568148
+                rch0            0.000000            0.150515           -0.301030            0.301030           0.0402231           0.0103974           0.0194283           0.0610180
+the above parameter uncertainty summary was written to file 'freyberg.par.usum.csv'
+
+current forecast uncertainty summary: 
+
+                name          prior_mean         prior_stdev   prior_lower_bound   prior_upper_bound           post_mean          post_stdev    post_lower_bound    post_upper_bound
+    headwater:4383.5            -397.555             212.001            -821.557             26.4462            -504.905             9.35809            -523.621            -486.189
+           part_time             7076.31             5424.64            -3772.98             17925.6             7707.19             107.943             7491.30             7923.08
+    tailwater:4383.5            -90.2950             293.697            -677.688             497.099            -180.375             4.62540            -189.626            -171.124
+   trgw-0-9-1:4383.5             38.0999             10.9005             16.2989             59.9008             40.3989            0.176717             40.0455             40.7524
+Note : the above forecast uncertainty summary was written to file 'freyberg.pred.usum.csv'
+
+
+
+pestpp-glm analysis complete...
+started at 07/29/22 16:51:23
+finished at 07/29/22 16:52:34
+took 1.16667 minutes

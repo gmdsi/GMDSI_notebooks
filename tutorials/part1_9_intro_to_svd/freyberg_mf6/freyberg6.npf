@@ -1,0 +1,13 @@
+BEGIN Options
+  SAVE_FLOWS
+END Options
+
+BEGIN GRIDDATA
+  icelltype  LAYERED
+    OPEN/CLOSE  'freyberg6.npf_icelltype_layer1.txt'  FACTOR  1
+  k  LAYERED
+    OPEN/CLOSE  'freyberg6.npf_k_layer1.txt'  FACTOR  1.0
+  k33  LAYERED
+    OPEN/CLOSE  'freyberg6.npf_k33_layer1.txt'  FACTOR  1.0
+END GRIDDATA
+

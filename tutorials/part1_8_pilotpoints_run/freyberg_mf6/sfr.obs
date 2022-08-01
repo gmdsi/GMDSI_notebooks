@@ -1,0 +1,9 @@
+BEGIN options
+END options
+
+BEGIN continuous  FILEOUT  sfr.csv
+  headwater  SFR  headwater
+  tailwater  SFR  tailwater
+  gage-1  inflow  40.0
+END continuous  FILEOUT  sfr.csv
+
