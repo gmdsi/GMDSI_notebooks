@@ -475,7 +475,8 @@ def add_ppoints(tmp_d='freyberg_mf6'):
     df = ok.calc_factors_grid(sr,var_filename="freyberg.rch.ref", minpts_interp=1,maxpts_interp=10, )
     ok.to_grid_factors_file(pp_file_rch+".fac")
     rch_parval, rchub, rchlb = pst.parameter_data.loc['rch0', ['parval1','parlbnd','parubnd']]
-    pst.drop_parameters(tpl_file=os.path.join(tmp_d,'freyberg6.rch.tpl'), pst_path='.', )
+    pst.parameter_data.loc['rch0', 'partrans'] = 'fixed'
+    #pst.drop_parameters(tpl_file=os.path.join(tmp_d,'freyberg6.rch.tpl'), pst_path='.', )
     par_pp = pst.add_parameters(os.path.join(tmp_d,'rchpp.dat.tpl'), pst_path='.' )
     pst.parameter_data.loc[par_pp.parnme, ['parval1','parlbnd','parubnd', 'pargp']] = rch_parval, rchub, rchlb, 'rch0'
     rchspd_files = [i for i in os.listdir(tmp_d) if '.rch_recharge' in i]
@@ -686,7 +687,10 @@ def plot_truth_k(m_d):
 
     mm.plot_grid(alpha=0.5)
     mm.plot_inactive()
-    ax.set_title('Truth K$');
+    #kmin = round(np.nanmin(k_truth_res))
+    #kmax = round(np.nanmax(k_truth_res))
+    #ax.text(1.10,.9,f"max K: {kmax} m/d\nmin K: {kmin} m/d",  transform=ax.transAxes)
+    ax.set_title('Truth $K$');
     return gwf
     
 def svd_enchilada(gwf, m_d):
