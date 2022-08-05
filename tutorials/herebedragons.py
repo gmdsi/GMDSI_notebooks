@@ -318,8 +318,8 @@ def prep_pest(tmp_d):
     #tidy up
     par=pst.parameter_data
     par.loc[par['parnme'].str.startswith('hk'), ['parlbnd','parval1','parubnd', 'pargp']] = 0.05, 5, 500, 'hk'
-    par.loc['rch0', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.5, 1, 2, 'fixed', 'rch'
-    par.loc['rch1', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.5, 1, 2, 'fixed', 'rch'
+    par.loc['rch0', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.5, 1, 2, 'fixed', 'rch0'
+    par.loc['rch1', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.5, 1, 2, 'fixed', 'rch1'
     par.loc['ne1', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.005, 0.01, 0.02, 'fixed', 'porosity'
     
     obs=pst.observation_data
@@ -476,9 +476,10 @@ def add_ppoints(tmp_d='freyberg_mf6'):
     ok.to_grid_factors_file(pp_file_rch+".fac")
     rch_parval, rchub, rchlb = pst.parameter_data.loc['rch0', ['parval1','parlbnd','parubnd']]
     pst.parameter_data.loc['rch0', 'partrans'] = 'fixed'
+    pst.parameter_data.loc['rch1', 'partrans'] = 'fixed'
     #pst.drop_parameters(tpl_file=os.path.join(tmp_d,'freyberg6.rch.tpl'), pst_path='.', )
     par_pp = pst.add_parameters(os.path.join(tmp_d,'rchpp.dat.tpl'), pst_path='.' )
-    pst.parameter_data.loc[par_pp.parnme, ['parval1','parlbnd','parubnd', 'pargp']] = rch_parval, rchub, rchlb, 'rch0'
+    pst.parameter_data.loc[par_pp.parnme, ['parval1','parlbnd','parubnd', 'pargp']] = rch_parval, rchub, rchlb, 'rchpp'
     rchspd_files = [i for i in os.listdir(tmp_d) if '.rch_recharge' in i]
     if not os.path.exists(os.path.join(tmp_d, 'org_f')):
         os.mkdir(os.path.join(tmp_d, 'org_f'))
@@ -752,6 +753,35 @@ def svd_enchilada(gwf, m_d):
     return interact(plot_enchilada, eig=widgets.IntSlider(description="eig comp:", 
                                            continuous_update=True, value=400, max=799));
     
+def plot_arr2grid(ident_vals, tmp_d, title='Identifiability'):
+    sim = flopy.mf6.MFSimulation.load(sim_ws=tmp_d, verbosity_level=0) #modflow.Modflow.load(fs.MODEL_NAM,model_ws=working_dir,load_only=[])
+    gwf= sim.get_model()
+
+    sr = pyemu.helpers.SpatialReference.from_namfile(
+            os.path.join(tmp_d, "freyberg6.nam"),
+            delr=gwf.dis.delr.array, delc=gwf.dis.delc.array)
+
+    pp_file=os.path.join(tmp_d,"hkpp.dat")
+    new_ppfile = os.path.join(tmp_d,"identpp.dat")
+    df_pp = pd.read_csv(pp_file, delim_whitespace=True, header=None, names=['name','x','y','zone','parval1'])
+
+    # generate random values
+    df_pp.loc[:,"parval1"] = ident_vals
+    # save a pilot points file
+    pyemu.pp_utils.write_pp_file(new_ppfile, df_pp)
+    # interpolate the pilot point values to the grid
+    ident_arr = pyemu.geostats.fac2real(new_ppfile, factors_file=pp_file+".fac",out_file=None, )
+    fig = plt.figure(figsize=(10, 7))
+    ax = fig.add_subplot(1, 1, 1, aspect='equal')
+    mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
+    ca = mm.plot_array(ident_arr, masked_values=[1e30],)
+    cb = plt.colorbar(ca, shrink=0.5)
+    mm.plot_grid(alpha=0.5)
+    mm.plot_inactive()
+    ax.set_title(f'{title} of\n`hk1` pilot point parameters');
+    return
+
+
 
 if __name__ == "__main__":
     #make_truth(os.path.join('..','models','freyberg_mf6_truth'))
