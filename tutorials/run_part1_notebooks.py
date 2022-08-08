@@ -25,27 +25,53 @@ def run_nb(nb_file, nb_dir):
     os.chdir(cwd)
     return
 
+intro_dirs = [f.name for f in os.scandir('.') if f.is_dir() and f.name.startswith('intro_')]
+part1_dirs = [f.name for f in os.scandir('.') if f.is_dir() and f.name.startswith('part1_')]
 
-nb_dir = "intro_to_regression"
-nb_file = "intro_to_regression.ipynb"
-run_nb(nb_file, nb_dir)
+print(intro_dirs)
 
-nb_dir = "freyberg_intro_to_model"
-nb_file = "freyberg_intro_model.ipynb"
-run_nb(nb_file, nb_dir)
+for dir in intro_dirs:
+    nbfiles = [i for i in os.listdir(dir) if i.endswith('.ipynb')]
+    for nb in nbfiles:
+        run_nb(nb, dir)
 
-nb_dir = "intro_to_pyemu"
-nb_file = "intro_to_pyemu.ipynb"
-run_nb(nb_file, nb_dir)
+for dir in part1_dirs:
+    nbfiles = [i for i in os.listdir(dir) if i.endswith('.ipynb')]
+    for nb in nbfiles:
+        run_nb(nb, dir)
 
-nb_dir = "part1_pest_setup"
-nb_file = "freyberg_pest_setup.ipynb"
-run_nb(nb_file, nb_dir)
-
-nb_dir = "part1_trial_and_error"
-nb_file = "freyberg_trial_and_error.ipynb"
-run_nb(nb_file, nb_dir)
-
-nb_dir = "part1_k"
-nb_file = "freyberg_k.ipynb"
-run_nb(nb_file, nb_dir)
+#nb_dir = "intro_to_freyberg_model"
+#nb_file = "freyberg_intro_model.ipynb"
+#run_nb(nb_file, nb_dir)
+#
+#nb_dir = "intro_to_regression"
+#nb_file = "intro_to_regression.ipynb"
+#run_nb(nb_file, nb_dir)
+#
+#nb_dir = "intro_to_geostatistics"
+#nb_file = "intro_to_geostatistics.ipynb"
+#run_nb(nb_file, nb_dir)
+#
+#nb_dir = "intro_to_pyemu"
+#nb_file = "intro_to_pyemu.ipynb"
+#run_nb(nb_file, nb_dir)
+#
+#nb_dir = "part1_1_trial_and_error"
+#nb_file = "freyberg_trial_and_error.ipynb"
+#run_nb(nb_file, nb_dir)
+#
+#nb_dir = "part1_2_pest_setup"
+#nb_file = "freyberg_pest_setup.ipynb"
+#run_nb(nb_file, nb_dir)
+#
+#nb_dir = "part1_3_calibrate_k"
+#nb_file = "freyberg_k.ipynb"
+#run_nb(nb_file, nb_dir)
+#
+#nb_dir = "part1_4_calibrate_k_and_r"
+#nb_file = "freyberg_k_and_r.ipynb"
+#run_nb(nb_file, nb_dir)
+#
+#nb_dir = "part1_5_calibrate_k_r_fluxobs"
+#nb_file = "freyberg_k_r_fluxobs.ipynb"
+#run_nb(nb_file, nb_dir)

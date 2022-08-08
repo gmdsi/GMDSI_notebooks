@@ -1,11 +1,20 @@
 title,file,nav_order,parent,folder
 Intro to Freyberg,intro_freyberg_model.md,1,Introductions to Selected Topics,intro
 Intro to Regression,intro_to_regression.md,2,Introductions to Selected Topics,intro
-Intro to pyEMU,intro_to_pyemu.md,3,Introductions to Selected Topics,intro
-Intro to Geostatistics,intro_to_geostatistics.md,4,Introductions to Selected Topics,intro
+Intro to pyEMU,intro_to_pyemu.md,4,Introductions to Selected Topics,intro
+Intro to Geostatistics,intro_to_geostatistics.md,5,Introductions to Selected Topics,intro
 Manual Trial-and-Error,freyberg_trial_and_error.md,1,"Introduction to Theory, Concepts and PEST Mechanic",part1
 PEST Basics,freyberg_pest_setup.md,2,"Introduction to Theory, Concepts and PEST Mechanic",part1
 Automated Calibration with PEST,freyberg_k.md,3,"Introduction to Theory, Concepts and PEST Mechanic",part1
+Calibration with Two Parameters,freyberg_k_and_r.md,4,"Introduction to Theory, Concepts and PEST Mechanic",part1
+Multiple Observation Types,freyberg_k_r_fluxobs.md,5,"Introduction to Theory, Concepts and PEST Mechanic",part1
+GLM and the Objective Function Response Surface,freyberg_glm_response_surface.md,6,"Introduction to Theory, Concepts and PEST Mechanic",part1
+Intro to Bayes,intro_to_bayes.md,7,"Introduction to Theory, Concepts and PEST Mechanic",part1
+Intro to FOSM,intro_to_fosm.md,8,"Introduction to Theory, Concepts and PEST Mechanic",part1
+Spatial Parameterisation with Pilot Points - setup,freyberg_pilotpoints_1_setup.md,,,
+Spatial Parameterisation with Pilot Points - run,freyberg_pilotpoints_2_run.md,,,
+,,,,
+,,,,
 Constructing a High-Dimensional PEST Interface with pyEMU,freyberg_pstfrom_pest_setup.md,1,Decision Support Modelling with pyEMU and PEST++,part2
 "Observation Values, Weights and Noise",freyberg_obs_and_weights.md,2,Decision Support Modelling with pyEMU and PEST++,part2
 Prior Monte Carlo,freyberg_prior_monte_carlo.md,3,Decision Support Modelling with pyEMU and PEST++,part2

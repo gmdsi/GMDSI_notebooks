@@ -1,31 +1,29 @@
-# Oh hello! Is it me you are looking for? 
-# This script runs the tutorial notebooks and does some tidying up around the place.
-# Functions herein are accessed by some notebooks when they are run
-
 import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
 import os
 import shutil
 import platform
-import pandas as pd 
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import zipfile
-
+import shutil
+import sys
+sys.path.insert(0,os.path.join("..","..","dependencies"))                               
 import pyemu
 import flopy
 
-def prep_forecasts(pst):
+def prep_forecasts(pst, model_times=False):
     pred_csv = os.path.join('..', '..', 'models', 'daily_freyberg_mf6_truth',"pred_data.csv")
     assert os.path.exists(pred_csv)
     pred_data = pd.read_csv(pred_csv)
     pred_data.set_index('site', inplace=True)
-
-    model_times = [float(i) for i in pst.observation_data.time.unique()]
+    
+    if type(model_times) == bool:
+        model_times = [float(i) for i in pst.observation_data.time.unique()]
         
     ess_obs_data = {}
     for site in pred_data.index.unique().values:
-        #print(site)
         site_obs_data = pred_data.loc[site,:].copy()
         if isinstance(site_obs_data, pd.Series):
             site_obs_data.loc["site"] = site_obs_data.index.values
@@ -36,8 +34,6 @@ def prep_forecasts(pst):
             sm_site_obs_data = sm.reindex(model_times,method="nearest")
         #ess_obs_data.append(pd.DataFrame9sm_site_obs_data)
         ess_obs_data[site] = sm_site_obs_data
-        
-
     obs_data = pd.DataFrame(ess_obs_data)
 
     obs = pst.observation_data
@@ -246,44 +242,30 @@ def clean_pst4pestchek(pstfile, par):
         for pyemu-written control files. Could be better."""
     with open(pstfile, 'r') as f:
         lines = f.readlines()
+    lines = [i.replace('point         1\n', 'point\n') for i in lines ]    
     lines = [i.replace('0.0000000000E+00      1          \n', '0.0000000000E+00      \n') if any(i.startswith(xs) for xs in par['parnme']) else i for i in lines ]
     with open(pstfile, 'w') as f:
         for line in lines:
             f.write(line)
     return
 
+def make_part_ins(tmp_d):
+    # write a really simple instruction file to read the MODPATH end point file
+    out_file = "freyberg_mp.mpend"
+    ins_file = out_file + ".ins"
+    with open(os.path.join(tmp_d, ins_file),'w') as f:
+        f.write("pif ~\n")
+        f.write("l7 w w w w w w !part_time!\n")
+    return
+
 
 def prep_pest(tmp_d):
     """Prepares the PEST setup for part 1 of the tutorials.
         Used by the freyberg_pest_setup notebook."""
-    # get the necessary executables; OS agnostic
-    #bin_dir = os.path.join('..','..','bin')
-    #if "window" in platform.platform().lower():
-    #    exe_files = [f for f in os.listdir(bin_dir) if f.endswith('exe')]
-    #else:
-    #    exe_files = [f for f in os.listdir(bin_dir) if not f.endswith('exe')]
-    # remove existing folder if it already exists
-    if os.path.exists(tmp_d):
-        shutil.rmtree(tmp_d)
-    # make the folder
-    #os.mkdir(tmp_d)
-    # copy executables across
-    #for exe_file in exe_files:
-    #    shutil.copy2(os.path.join(bin_dir, exe_file),os.path.join(tmp_d,exe_file))
-    org_d = os.path.join('..', '..', 'models', 'freyberg_mf6')
-    shutil.copytree(org_d,tmp_d)
-    prep_bins(tmp_d)
-    # folder containing original model files
     
-    # copy files across to the temp folder
-    #for f in os.listdir(org_d):
-    #    shutil.copy2(os.path.join(org_d,f), os.path.join(tmp_d,f))
+    pyemu.os_utils.run('mf6', cwd=tmp_d)
+    pyemu.os_utils.run(r'mp7 freyberg_mp.mpsim', cwd=tmp_d)
 
-    # geat meas values
-    for csv in ['heads.csv', 'sfr.csv']:
-        df = pd.read_csv(os.path.join('..', '..', 'models', 'freyberg_mf6_truth',csv),
-                        index_col=0)
-        df.to_csv(os.path.join(tmp_d,csv.replace('.meas','')))
     # load simulation
     sim = flopy.mf6.MFSimulation.load(sim_ws=tmp_d,load_only=['DIS'], verbosity_level=0)
     # load flow model
@@ -294,12 +276,19 @@ def prep_pest(tmp_d):
 
     # make hk pars tpl
     for lay in range(nlay):
-        filename = f'freyberg6.npf_k_layer{lay+1}.tpl'
-        with open(os.path.join(tmp_d,filename),'w') as f:
+        filename = f'freyberg6.npf_k_layer{lay+1}.txt.tpl'
+        with open(os.path.join(tmp_d,filename),'w+') as f:
             f.write("ptf ~\n")
             for i in range(nrow):
                 for j in range(ncol):
                     f.write(f" ~     hk{lay+1}   ~")
+                f.write("\n")
+        filename = f'freyberg_mp.ne_layer{lay+1}.txt.tpl'
+        with open(os.path.join(tmp_d,filename),'w+') as f:
+            f.write("ptf ~\n")
+            for i in range(nrow):
+                for j in range(ncol):
+                    f.write(f" ~     ne{lay+1}   ~")
                 f.write("\n")
     # rch multiplier pars tpl
     spdfiles = [f'freyberg6.rch_recharge_{i}.txt' for i in range(14)]
@@ -314,10 +303,11 @@ def prep_pest(tmp_d):
     # make ins files
     make_ins_from_csv('heads.csv', tmp_d)
     make_ins_from_csv('sfr.csv', tmp_d)
+    make_part_ins(tmp_d)
 
     # build lists of tpl, in, ins, and out files
     tpl_files = [os.path.join(tmp_d, f) for f in os.listdir(tmp_d) if f.endswith(".tpl")]
-    in_files = [f.replace(".tpl",".txt") for f in tpl_files]
+    in_files = [f.replace(".tpl","") for f in tpl_files]
     ins_files = [os.path.join(tmp_d, f) for f in os.listdir(tmp_d) if f.endswith(".ins")]
     out_files = [f.replace(".ins","") for f in ins_files]
 
@@ -327,31 +317,220 @@ def prep_pest(tmp_d):
     pst.try_parse_name_metadata()
     #tidy up
     par=pst.parameter_data
-    par.loc[par['parnme'].str.startswith('hk'), ['parlbnd','parval1','parubnd', 'pargp']] = 0.05, 5, 50, 'hk'
-    par.loc['rch0', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.5, 1, 2, 'fixed', 'rch'
-    par.loc['rch1', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.5, 1, 2, 'fixed', 'rch'
+    par.loc[par['parnme'].str.startswith('hk'), ['parlbnd','parval1','parubnd', 'pargp']] = 0.05, 5, 500, 'hk'
+    par.loc['rch0', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.5, 1, 2, 'fixed', 'rch0'
+    par.loc['rch1', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.5, 1, 2, 'fixed', 'rch1'
+    par.loc['ne1', ['parlbnd','parval1','parubnd', 'partrans','pargp']] = 0.005, 0.01, 0.02, 'fixed', 'porosity'
+    
     obs=pst.observation_data
     obs['weight'] = 0
-    obs.loc[:,"time"] = obs.obsnme.apply(lambda x: float(x.split(':')[1]))
-    obs.loc[obs['obsnme'].str.startswith('gage'), 'obgnme'] = 'flux'
-    obs.loc[obs['obsnme'].str.startswith('headwater'), 'obgnme'] = 'flux'
-    obs.loc[obs['obsnme'].str.startswith('tailwater'), 'obgnme'] = 'flux'
-    obs.loc[obs['obsnme'].str.startswith('trgw'), 'obgnme'] = 'hds'
-    obs.loc[obs.apply(lambda x: x.obgnme=="hds" and x.time > 3652.5 and x.time <=4018.5,axis=1), 'weight'] = 1/0.1
+    #obs.loc[:,"time"] = obs.obsnme.apply(lambda x: float(x.split(':')[-1]))
+    obs.loc[:,"obgnme"] = obs.obsnme.apply(lambda x: x.split(':')[0])
+    obs.loc['part_time',"obgnme"] = 'particle'
 
-    pst.model_command = 'mf6'
+    with open(os.path.join(tmp_d, 'runmodel.bat'), 'w+') as f:
+        f.write('mf6\n')
+        f.write('mp7 freyberg_mp.mpsim')
+
+    pst.model_command = 'runmodel.bat'
     pst.control_data.noptmax=0
+    pst.pestpp_options['forecasts'] = ['headwater:4383.5','tailwater:4383.5','trgw-0-9-1:4383.5', 'part_time']
 
-    pst.pestpp_options['forecasts'] = ['headwater:4383.5','tailwater:4383.5', 'trgw-0-9-1:4383.5']
+    ###-- Set OBSERVATION DATA AND WEIGHTS --###
+    # geat meas values
+    shutil.copy2(os.path.join('..', '..', 'models', 'daily_freyberg_mf6_truth','obs_data.csv'),
+                            os.path.join(tmp_d, 'obs_data.csv'))
+    obs_data = pd.read_csv(os.path.join(tmp_d, 'obs_data.csv'))
+    obs_data.site = obs_data.site.str.lower()
+    obs_data.set_index('site', inplace=True)
+    
+    # restructure the obsevration data 
+    obs_sites = obs_data.index.unique().tolist()
+    model_times = obs.loc[:,obs_sites[0]].astype(float)
+    ess_obs_data = {}
+    for site in obs_sites:
+        #print(site)
+        site_obs_data = obs_data.loc[site,:].copy()
+        if isinstance(site_obs_data, pd.Series):
+            site_obs_data.loc["site"] = site_obs_data.index.values
+        if isinstance(site_obs_data, pd.DataFrame):
+            site_obs_data.loc[:,"site"] = site_obs_data.index.values
+            site_obs_data.index = site_obs_data.time
+            sm = site_obs_data.value.rolling(window=20,center=True,min_periods=1).mean()
+            sm_site_obs_data = sm.reindex(model_times,method="nearest")
+        #ess_obs_data.append(pd.DataFrame9sm_site_obs_data)
+        ess_obs_data[site] = sm_site_obs_data
+    ess_obs_data = pd.DataFrame(ess_obs_data)
+        
+    ## set the obs values
+    obs_names = pst.observation_data.obsnme.tolist()
+    obs_data = ess_obs_data.copy()
+    # for checking
+    org_nnzobs = pst.nnz_obs
+    org_nobs = pst.nobs
+    # empyt list to keep track of misssing observation names
+    missing=[]
+    for col in obs_data.columns:
+        # get obs list sufix for each column of data
+        obs_sufix = obs_data.index.map(lambda x: col.lower()+f':{x}' ).values
+        for string, oval, time in zip(obs_sufix, obs_data.loc[:,col].values, obs_data.index.values):
+            # get a list of obsnames
+            obsnme = [ks for ks in obs_names if string in ks] 
+            # assign the obsvals
+            obs.loc[obsnme,"obsval"] = oval
+            # assign a generic weight
+            if time > 3652.5 and time <=4018.5:
+                obs.loc[obsnme,"weight"] = 1.0
+    # checks
+    assert org_nobs-pst.nobs==0, 'oh oh, new observations.'
+    assert len(missing)==0, f'The following obs are missing:\n{missing}'
 
+    # set weights
+    obs = pst.observation_data
+    #obs.loc[obs.obgnme.str.startswith('gage-1'), 'weight'] = 1/ abs(0.1 *obs.loc[obs.obgnme.str.startswith('gage-1')].obsval)
+    obs.loc[obs.obgnme.str.startswith('gage-1'), 'weight'] = 0
+    obs.loc[obs.obgnme.str.startswith('trgw-0-26-6 '), 'weight'] = 1/ 0.1
+    prep_forecasts(pst, model_times)
+
+    # write and run pst check
     pstfile = os.path.join(tmp_d,'freyberg.pst')
     pst.write(pstfile)
-
     clean_pst4pestchek(pstfile, par)
     #pyemu.utils.run(f'pestchek {os.path.basename(pstfile)}', cwd=tmp_d)
+    print(f'written pest control file: {pstfile}')
 
-    return print(f'written pest control file: {pstfile}')
+    return pst
 
+def add_ppoints(tmp_d='freyberg_mf6'):
+    pst = pyemu.Pst(os.path.join(tmp_d,'freyberg.pst'))
+    par = pst.parameter_data
+    par.loc['rch0', 'partrans'] = 'log'
+    obs = pst.observation_data
+    obs.loc[(obs.obgnme=="gage-1") & (obs['gage-1'].astype(float)<=4018.5), "weight"] = 0.005
+
+    sim = flopy.mf6.MFSimulation.load(sim_ws=tmp_d, verbosity_level=0) #modflow.Modflow.load(fs.MODEL_NAM,model_ws=working_dir,load_only=[])
+    gwf= sim.get_model()
+    ibound=gwf.dis.idomain.get_data()
+
+    sr = pyemu.helpers.SpatialReference.from_namfile(
+        os.path.join(tmp_d, "freyberg6.nam"),
+        delr=gwf.dis.delr.array, delc=gwf.dis.delc.array)
+    
+    ###--add SFR params
+    with open(os.path.join(tmp_d,'freyberg6.sfr_perioddata_1.txt.tpl'),'w+') as f:
+        f.write("ptf ~\n")
+        f.write("  1  inflow   ~     strinf   ~")
+    pst.add_parameters(os.path.join(tmp_d,'freyberg6.sfr_perioddata_1.txt.tpl'), pst_path='.' )
+    par = pst.parameter_data
+    par.loc['strinf', ['parval1', 'parlbnd', 'parubnd', 'pargp']] = 500, 50, 5000, 'strinf'
+    ###--add  WEL params
+    wel_spd_files = [f for f in os.listdir(tmp_d) if '.wel_stress_period_data_' in f
+                        and int(f.split('.')[-2].split('_')[-1]) < 13
+                        and f.endswith('txt')]
+    for filename in wel_spd_files[1:12]:
+        with open(os.path.join(tmp_d, filename+'.tpl'), 'w+')as f:
+            f.write("ptf ~\n")
+        df = pd.read_csv(os.path.join(tmp_d, filename),delim_whitespace=True, header=None)
+        df.iloc[:-1, 3] = [f"~     wel{i}   ~" for i in df.iloc[:-1].index.values]
+        df.to_csv(os.path.join(tmp_d, filename+'.tpl'), index=False, header=None, sep="\t", mode='a')
+        # add parameters from tpl
+        pst.add_parameters(os.path.join(tmp_d,filename+'.tpl'), pst_path='.' )
+    par = pst.parameter_data
+    par.loc[par.pargp=='pargp','pargp', ] = 'wel'
+    par.loc[par.pargp=='wel',['parval1', 'parlbnd', 'parubnd', 'scale']] = 300, 10, 900, -1
+    ###--construct ppoints
+    prefix_dict = {0:["hk"]} 
+    df_pp = pyemu.pp_utils.setup_pilotpoints_grid(sr=sr,  # model spatial reference
+                                                ibound=ibound, # to which cells to setup ppoints
+                                                prefix_dict=prefix_dict, #prefix to add to parameter names
+                                                pp_dir=tmp_d, 
+                                                tpl_dir=tmp_d, 
+                                                every_n_cell=5) # pilot point spacing
+    pp_file_hk = os.path.join(tmp_d,"hkpp.dat")
+    assert os.path.exists(pp_file_hk)
+    # rch ppoints
+    prefix_dict = {0:["rch"]} 
+    df_pp = pyemu.pp_utils.setup_pilotpoints_grid(sr=sr,  # model spatial reference
+                                                ibound=ibound, # to which cells to setup ppoints
+                                                prefix_dict=prefix_dict, #prefix to add to parameter names
+                                                pp_dir=tmp_d, 
+                                                tpl_dir=tmp_d, 
+                                                every_n_cell=5) # pilot point spacing
+    pp_file_rch = os.path.join(tmp_d,"rchpp.dat")
+    assert os.path.exists(pp_file_rch)
+
+    v = pyemu.geostats.ExpVario(contribution=1.0, a=2500, anisotropy=1, bearing=0)
+    gs = pyemu.geostats.GeoStruct(variograms=v,nugget=0.0)
+    ok = pyemu.geostats.OrdinaryKrige(gs,df_pp)
+    df = ok.calc_factors_grid(sr,var_filename="freyberg.k.ref", minpts_interp=1,maxpts_interp=10, )
+    ok.to_grid_factors_file(pp_file_hk+".fac")
+
+
+    hk_parval, hkub, hklb = pst.parameter_data.loc['hk1', ['parval1','parlbnd','parubnd']]
+    pst.drop_parameters(tpl_file=os.path.join(tmp_d,'freyberg6.npf_k_layer1.txt.tpl'), pst_path='.', )
+    # remove the .tpl file for tidyness
+    #os.remove(os.path.join(tmp_d,'freyberg6.npf_k_layer1.txt.tpl') )
+    par_pp = pst.add_parameters(os.path.join(tmp_d,'hkpp.dat.tpl'), pst_path='.' )
+    pst.parameter_data.loc[par_pp.parnme, ['parval1','parlbnd','parubnd', 'pargp']] = hk_parval, hkub, hklb, 'hk1'
+
+    df = ok.calc_factors_grid(sr,var_filename="freyberg.rch.ref", minpts_interp=1,maxpts_interp=10, )
+    ok.to_grid_factors_file(pp_file_rch+".fac")
+    rch_parval, rchub, rchlb = pst.parameter_data.loc['rch0', ['parval1','parlbnd','parubnd']]
+    pst.parameter_data.loc['rch0', 'partrans'] = 'fixed'
+    pst.parameter_data.loc['rch1', 'partrans'] = 'fixed'
+    #pst.drop_parameters(tpl_file=os.path.join(tmp_d,'freyberg6.rch.tpl'), pst_path='.', )
+    par_pp = pst.add_parameters(os.path.join(tmp_d,'rchpp.dat.tpl'), pst_path='.' )
+    pst.parameter_data.loc[par_pp.parnme, ['parval1','parlbnd','parubnd', 'pargp']] = rch_parval, rchub, rchlb, 'rchpp'
+    rchspd_files = [i for i in os.listdir(tmp_d) if '.rch_recharge' in i]
+    if not os.path.exists(os.path.join(tmp_d, 'org_f')):
+        os.mkdir(os.path.join(tmp_d, 'org_f'))
+    for f in rchspd_files:
+        shutil.copy(os.path.join(tmp_d, f), os.path.join(tmp_d, 'org_f', f))
+    
+    with open(os.path.join(tmp_d, "forward_run.py"),'w') as f:
+        #add imports
+        f.write("import os\nimport shutil\nimport pandas as pd\nimport numpy as np\nimport pyemu\nimport flopy\n")
+        # preprocess pilot points to grid
+        f.write("pp_file = 'hkpp.dat'\n")
+        f.write("hk_arr = pyemu.geostats.fac2real(pp_file, factors_file=pp_file+'.fac',out_file='freyberg6.npf_k_layer1.txt')\n")
+        # ...rch ppoints
+        f.write("pp_file = 'rchpp.dat'\n")
+        f.write("hk_arr = pyemu.geostats.fac2real(pp_file, factors_file=pp_file+'.fac',out_file='rch0_fac.txt')\n")
+        # multiply rch0 by recharge rates per spd
+        f.write("rch0 = np.loadtxt('rch0_fac.txt')\n")
+        f.write("files = [i for i in os.listdir('.') if '.rch_recharge' in i and int(i.split('.')[-2].split('_')[-1])<13]\n")
+        f.write("for f in files:\n")
+        f.write("    a = np.loadtxt(os.path.join('org_f',f))\n")
+        f.write("    a = a*rch0\n")
+        f.write("    np.savetxt(f, a, fmt='%1.6e')\n")
+        # run MF6 and MP7
+        f.write("pyemu.os_utils.run('mf6')\n")
+        f.write("pyemu.os_utils.run('mp7 freyberg_mp.mpsim')\n")
+    pst.model_command = ['python forward_run.py']
+
+    pst.control_data.pestmode = "estimation"
+    pst.pestpp_options["n_iter_base"] = 1
+    pst.pestpp_options["n_iter_super"] = 3
+
+    pst.write(os.path.join(tmp_d, 'freyberg_pp.pst'))
+    return print("new control file: 'freyberg_pp.pst'")
+
+def intertive_sv_vec_plot(inpst, U):
+    from ipywidgets import interact, interactive, fixed, interact_manual
+    import ipywidgets as widgets
+    def SV_bars(SV=1,):
+        plt.figure(figsize=(13,4))
+        plt.bar(list(range(U.shape[0])),U[:,SV-1])
+        #plt.yscale('log')
+        plt.xlim([0,inpst.npar_adj+1])
+        plt.xticks(list(range(inpst.npar_adj+1)))
+        plt.title('Singular vector showing parameter contributions to singular vector #{0}'.format(SV))
+        plt.gca().set_xticklabels(inpst.parameter_data['parnme'].values, rotation=90);
+        return
+    return interact(SV_bars, SV=widgets.widgets.IntSlider(
+    value=1, min=1, max=20, step=1, description='Number SVs:',
+    disabled=False, continuous_update=True, orientation='horizontal', readout=True, readout_format='d'));
+    
 
 def plot_freyberg(tmp_d):
     # load simulation
@@ -380,26 +559,21 @@ def plot_freyberg(tmp_d):
     # you can plot BC cells using the plot_bc() 
     mm.plot_bc('ghb')
     mm.plot_bc('sfr')
+    mm.plot_bc('wel')
 
-    # Plot wells in layer 3
-    mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=2)
-    #arr = mm.plot_array(hds[0], masked_values=[1e30], cmap='Blues')
-    #cb = plt.colorbar(arr, shrink=0.5)
     levels=np.linspace(np.nanmin(hds), np.nanmax(hds), 10)
     ca = mm.contour_array(hds, masked_values=[1e30], levels=levels, colors='blue', linestyles ='dashed', linewidths=1)
     plt.clabel(ca, fmt='%.1f', colors='k', fontsize=8)
 
-    mm.plot_bc('wel')
     ax.scatter(obsxy['x'],obsxy['y'], marker='x', c='k',)
     plt.draw()
     ax.set_yticklabels(labels=ax.get_xticklabels(), rotation=90)
 
-
+    # plo crossection
     ax = fig.add_subplot(1, 2, 2, aspect=200)
     mm = flopy.plot.PlotCrossSection(model=gwf, ax=ax, line={'row':26})
     arr = mm.plot_array(hds, masked_values=[1e30], cmap='Blues')
     cb = plt.colorbar(arr, shrink=0.25, )
-
     mm.plot_grid()
     mm.plot_inactive()
     mm.plot_bc('ghb')
@@ -408,14 +582,13 @@ def plot_freyberg(tmp_d):
     ax.set_ylim(0,45)
     ax.set_ylabel('elevation (m)')
     ax.set_xlabel('x-axis (m)')
-    ax.set_title('cross-section; row:30');
+    ax.set_title('cross-section; row:26');
     return 
 
 
 ####
 def prep_notebooks(rebuild_truth=True):
     """Runs notebooks, prepares model folders, etc."""
-
     # removes all the .ipynb checkpoint folders
     for cdir, cpath, cf in os.walk('.'):
         if os.path.basename(cdir).startswith('.ipynb'):
@@ -496,6 +669,182 @@ def prep_notebooks(rebuild_truth=True):
 
 
     return print('Notebook folders ready.')
+
+def plot_truth_k(m_d):
+
+    sim = flopy.mf6.MFSimulation.load(sim_ws=m_d, verbosity_level=0)
+    gwf= sim.get_model()
+   
+    k_truth= np.loadtxt(os.path.join('..','..', 'models', 'daily_freyberg_mf6_truth','truth_hk.txt'))
+    # downsample for model 
+    k_truth_res = k_truth[::3,::3]
+
+    fig = plt.figure(figsize=(10, 7))
+    ax = fig.add_subplot(1, 1, 1, aspect='equal')
+    mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
+
+    ca = mm.plot_array(np.log10(k_truth_res), masked_values=[1e30],)
+    cb = plt.colorbar(ca, shrink=0.5)
+    cb.ax.set_title('$Log_{10}K$')
+
+    mm.plot_grid(alpha=0.5)
+    mm.plot_inactive()
+    #kmin = round(np.nanmin(k_truth_res))
+    #kmax = round(np.nanmax(k_truth_res))
+    #ax.text(1.10,.9,f"max K: {kmax} m/d\nmin K: {kmin} m/d",  transform=ax.transAxes)
+    ax.set_title('Truth $K$');
+    return gwf
+    
+def svd_enchilada(gwf, m_d):
+    from ipywidgets import interact, interactive, fixed, interact_manual
+    import ipywidgets as widgets
+
+    v = pyemu.geostats.ExpVario(1.0,a=200,anisotropy=1.0,bearing=45)
+    struct = pyemu.geostats.GeoStruct(variograms=v)
+    arr_dict = {"test":gwf.dis.idomain.get_data()[0]}
+
+    sr = pyemu.helpers.SpatialReference.from_namfile(
+                        os.path.join(m_d, "freyberg6.nam"),
+                        delr=gwf.dis.delr.array, delc=gwf.dis.delc.array)
+    bd = pyemu.helpers.kl_setup(num_eig=800,sr=sr,struct=struct,prefixes=['hk'],basis_file="basis.jco",)
+    basis = pyemu.Matrix.from_binary("basis.jco").to_dataframe().T
+    i = basis.index.map(lambda x: int(x.split('_')[-1]))
+    j = basis.index.map(lambda x: int(x[-4:]))  
+
+
+    k_truth= np.loadtxt(os.path.join('..','..', 'models', 'daily_freyberg_mf6_truth','truth_hk.txt'))
+    # downsample for model 
+    k_truth_res = k_truth[::3,::3]
+    k_truth_res[np.isnan(k_truth_res)] =0 
+
+    def plot_enchilada(eig):
+        basis_arr = np.array(basis.values)
+        flat_arr = np.atleast_2d(k_truth_res.flatten()).transpose()
+        #fig,ax = plt.subplots(ncols=2, figsize=(10,7),aspect='equal')
+        fig = plt.figure(figsize=(10, 7))
+        ax = fig.add_subplot(1, 3, 1, aspect='equal',)
+
+        arr = np.ones_like(gwf.dis.idomain.get_data()[0])
+        arr = basis.iloc[:,eig].values.reshape(arr.shape)
+        mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
+        mm.plot_array(arr)
+        mm.plot_ibound()
+        #mm = plt.imshow(arr)
+        ax.set_title('Plot of individual CV')
+
+        ax = fig.add_subplot(1, 3, 2, aspect='equal', )
+        basis_eig = basis_arr[:,:eig+1].transpose()
+        factors = np.dot(basis_eig, flat_arr).transpose()
+        factors = np.dot(factors, basis_eig).reshape(arr.shape)
+        mm2 = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
+        ca = mm2.plot_array(factors, masked_values=[1e30],)
+        mm2.plot_ibound()
+        ax.set_title('Reconstructed field')
+
+        ax = fig.add_subplot(1, 3, 3, aspect='equal',)
+        mm = flopy.plot.PlotMapView(model=gwf, ax=ax)
+        ca = mm.plot_array(k_truth_res, masked_values=[1e30],)
+        mm.plot_inactive()
+        ax.set_title('Truth $K$');
+
+        plt.suptitle('Using {0} SVs'.format(eig+1))
+        fig.tight_layout()
+
+
+    return interact(plot_enchilada, eig=widgets.IntSlider(description="eig comp:", 
+                                           continuous_update=True, value=400, max=799));
+    
+def plot_arr2grid(ident_vals, tmp_d, title='Identifiability'):
+    sim = flopy.mf6.MFSimulation.load(sim_ws=tmp_d, verbosity_level=0) #modflow.Modflow.load(fs.MODEL_NAM,model_ws=working_dir,load_only=[])
+    gwf= sim.get_model()
+
+    sr = pyemu.helpers.SpatialReference.from_namfile(
+            os.path.join(tmp_d, "freyberg6.nam"),
+            delr=gwf.dis.delr.array, delc=gwf.dis.delc.array)
+
+    pp_file=os.path.join(tmp_d,"hkpp.dat")
+    new_ppfile = os.path.join(tmp_d,"identpp.dat")
+    df_pp = pd.read_csv(pp_file, delim_whitespace=True, header=None, names=['name','x','y','zone','parval1'])
+
+    # generate random values
+    df_pp.loc[:,"parval1"] = ident_vals
+    # save a pilot points file
+    pyemu.pp_utils.write_pp_file(new_ppfile, df_pp)
+    # interpolate the pilot point values to the grid
+    ident_arr = pyemu.geostats.fac2real(new_ppfile, factors_file=pp_file+".fac",out_file=None, )
+
+    fig = plt.figure(figsize=(10, 7))
+    ax = fig.add_subplot(1, 1, 1, aspect='equal')
+    mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
+    ca = mm.plot_array(ident_arr, masked_values=[1e30],)
+    cb = plt.colorbar(ca, shrink=0.5)
+    mm.plot_grid(alpha=0.5)
+    mm.plot_inactive()
+    ax.set_title(f'{title}\n`hk1` pilot point parameters');
+    return
+
+
+def plot_ensemble_arr(pe, tmp_d, numreals):
+    sim = flopy.mf6.MFSimulation.load(sim_ws=tmp_d, verbosity_level=0) #modflow.Modflow.load(fs.MODEL_NAM,model_ws=working_dir,load_only=[])
+    gwf= sim.get_model()
+
+    sr = pyemu.helpers.SpatialReference.from_namfile(
+            os.path.join(tmp_d, "freyberg6.nam"),
+            delr=gwf.dis.delr.array, delc=gwf.dis.delc.array)
+
+    pp_file=os.path.join(tmp_d,"hkpp.dat")
+    new_ppfile = os.path.join(tmp_d,"identpp.dat")
+    df_pp = pd.read_csv(pp_file, delim_whitespace=True, header=None, names=['name','x','y','zone','parval1'])
+
+    fig = plt.figure(figsize=(12, 10))
+    # generate random values
+    for real in range(numreals):
+        df_pp.loc[:,"parval1"] = pe.iloc[real,:].values
+        # save a pilot points file
+        pyemu.pp_utils.write_pp_file(new_ppfile, df_pp)
+        # interpolate the pilot point values to the grid
+        ident_arr = pyemu.geostats.fac2real(new_ppfile, factors_file=pp_file+".fac",out_file=None, )
+
+        ax = fig.add_subplot(int(numreals/5)+1, 5, real+1, aspect='equal')
+        mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
+        ca = mm.plot_array(np.log10(ident_arr), masked_values=[1e30],)
+
+        plt.scatter(df_pp.x, df_pp.y, marker='x', c='k', alpha=0.5)
+        
+        mm.plot_grid(alpha=0.5)
+        mm.plot_inactive()
+        ax.set_title(real+1)
+        ax.set_yticks([])
+        ax.set_xticks([])
+
+    cb = plt.colorbar(ca, shrink=0.5)
+    fig.tight_layout()
+    return
+
+def prep_mc(tmp_d):
+    # Repeats the regul notebook
+    # load the pre-constructed pst
+    pst = pyemu.Pst(os.path.join(tmp_d,'freyberg_pp.pst'))
+
+    pyemu.helpers.zero_order_tikhonov(pst, parbounds=True)
+
+    v = pyemu.geostats.ExpVario(contribution=1.0, a=2500.0)
+    gs = pyemu.geostats.GeoStruct(variograms=v,nugget=0.0)
+    df_pp = pyemu.pp_utils.pp_tpl_to_dataframe(os.path.join(tmp_d,"hkpp.dat.tpl"))
+    cov = gs.covariance_matrix(df_pp.x, df_pp.y, df_pp.parnme)
+    pyemu.helpers.first_order_pearson_tikhonov(pst, cov, reset=False)
+
+    pst.reg_data.phimlim = pst.nnz_obs * 2
+    # when phimlim changes so should phimaccept, and is usually 5-10% higher than phimlim
+    pst.reg_data.phimaccept = 1.1 * pst.reg_data.phimlim
+
+    pst.pestpp_options.pop('n_iter_base')
+    pst.pestpp_options.pop('n_iter_super')
+
+    pst.control_data.noptmax = 20
+    pst.write(os.path.join(tmp_d, 'freyberg_reg.pst'))
+    return
+
 
 
 if __name__ == "__main__":
