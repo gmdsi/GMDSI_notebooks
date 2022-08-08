@@ -326,6 +326,7 @@ def prep_pest(tmp_d):
     obs['weight'] = 0
     #obs.loc[:,"time"] = obs.obsnme.apply(lambda x: float(x.split(':')[-1]))
     obs.loc[:,"obgnme"] = obs.obsnme.apply(lambda x: x.split(':')[0])
+    obs.loc['part_time',"obgnme"] = 'particle'
 
     with open(os.path.join(tmp_d, 'runmodel.bat'), 'w+') as f:
         f.write('mf6\n')
@@ -771,6 +772,7 @@ def plot_arr2grid(ident_vals, tmp_d, title='Identifiability'):
     pyemu.pp_utils.write_pp_file(new_ppfile, df_pp)
     # interpolate the pilot point values to the grid
     ident_arr = pyemu.geostats.fac2real(new_ppfile, factors_file=pp_file+".fac",out_file=None, )
+
     fig = plt.figure(figsize=(10, 7))
     ax = fig.add_subplot(1, 1, 1, aspect='equal')
     mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
@@ -778,7 +780,69 @@ def plot_arr2grid(ident_vals, tmp_d, title='Identifiability'):
     cb = plt.colorbar(ca, shrink=0.5)
     mm.plot_grid(alpha=0.5)
     mm.plot_inactive()
-    ax.set_title(f'{title} of\n`hk1` pilot point parameters');
+    ax.set_title(f'{title}\n`hk1` pilot point parameters');
+    return
+
+
+def plot_ensemble_arr(pe, tmp_d, numreals):
+    sim = flopy.mf6.MFSimulation.load(sim_ws=tmp_d, verbosity_level=0) #modflow.Modflow.load(fs.MODEL_NAM,model_ws=working_dir,load_only=[])
+    gwf= sim.get_model()
+
+    sr = pyemu.helpers.SpatialReference.from_namfile(
+            os.path.join(tmp_d, "freyberg6.nam"),
+            delr=gwf.dis.delr.array, delc=gwf.dis.delc.array)
+
+    pp_file=os.path.join(tmp_d,"hkpp.dat")
+    new_ppfile = os.path.join(tmp_d,"identpp.dat")
+    df_pp = pd.read_csv(pp_file, delim_whitespace=True, header=None, names=['name','x','y','zone','parval1'])
+
+    fig = plt.figure(figsize=(12, 10))
+    # generate random values
+    for real in range(numreals):
+        df_pp.loc[:,"parval1"] = pe.iloc[real,:].values
+        # save a pilot points file
+        pyemu.pp_utils.write_pp_file(new_ppfile, df_pp)
+        # interpolate the pilot point values to the grid
+        ident_arr = pyemu.geostats.fac2real(new_ppfile, factors_file=pp_file+".fac",out_file=None, )
+
+        ax = fig.add_subplot(int(numreals/5)+1, 5, real+1, aspect='equal')
+        mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
+        ca = mm.plot_array(np.log10(ident_arr), masked_values=[1e30],)
+
+        plt.scatter(df_pp.x, df_pp.y, marker='x', c='k', alpha=0.5)
+        
+        mm.plot_grid(alpha=0.5)
+        mm.plot_inactive()
+        ax.set_title(real+1)
+        ax.set_yticks([])
+        ax.set_xticks([])
+
+    cb = plt.colorbar(ca, shrink=0.5)
+    fig.tight_layout()
+    return
+
+def prep_mc(tmp_d):
+    # Repeats the regul notebook
+    # load the pre-constructed pst
+    pst = pyemu.Pst(os.path.join(tmp_d,'freyberg_pp.pst'))
+
+    pyemu.helpers.zero_order_tikhonov(pst, parbounds=True)
+
+    v = pyemu.geostats.ExpVario(contribution=1.0, a=2500.0)
+    gs = pyemu.geostats.GeoStruct(variograms=v,nugget=0.0)
+    df_pp = pyemu.pp_utils.pp_tpl_to_dataframe(os.path.join(tmp_d,"hkpp.dat.tpl"))
+    cov = gs.covariance_matrix(df_pp.x, df_pp.y, df_pp.parnme)
+    pyemu.helpers.first_order_pearson_tikhonov(pst, cov, reset=False)
+
+    pst.reg_data.phimlim = pst.nnz_obs * 2
+    # when phimlim changes so should phimaccept, and is usually 5-10% higher than phimlim
+    pst.reg_data.phimaccept = 1.1 * pst.reg_data.phimlim
+
+    pst.pestpp_options.pop('n_iter_base')
+    pst.pestpp_options.pop('n_iter_super')
+
+    pst.control_data.noptmax = 20
+    pst.write(os.path.join(tmp_d, 'freyberg_reg.pst'))
     return
 
 
