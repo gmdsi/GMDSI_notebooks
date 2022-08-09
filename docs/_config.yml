@@ -1,6 +1,6 @@
 
 remote_theme: gmdsi/just-the-docs
-
+markdown: CommonMark
 #logo: "banner_pyemu_clean.png"
 title: GMDSI Notebooks
 description: Tutorial Notebooks for Decision-Support Groundwater Modelling
