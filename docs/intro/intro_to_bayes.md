@@ -24,7 +24,7 @@ _Um, what?_ Let's use pictures to make this easier to understand.
 
 ## A Venn diagram to explore conditional probabilities
 <img src="intro_to_bayes_files/conditional_probability.png" style="float: left; width: 50%; margin-right: 1%; margin-bottom: 0.5em;">
-<p style="clear: both;">
+#<p style="clear: both;">
 
 By [Gnathan87 - Own work, CC0](https://commons.wikimedia.org/w/index.php?curid=15991401)
 
@@ -43,6 +43,7 @@ As a general rule, we can state
 $$P\left(A|B_1\right)=\frac{P\left(A\cap B_1\right)}{P\left(B_1\right)}$$
 
 or, equivalently 
+
 $$P\left(A\cap B_1\right)=P\left(A|B_1\right)P\left(B_1\right)$$
 
 So what about $P\left(A|B_2\right)$?
@@ -51,8 +52,7 @@ $$P\left(A|B_2\right)=\frac{P\left(A\cap B_2\right)}{P\left(B_2\right)}=\frac{0.
 
 ### Bayes Theorem
 
-Now we can derive Bayes' theorem because joint probabilities are symmetrical. Switching notation to 
-$\boldsymbol{\theta} \text{ and }\mathbf{d}$:
+Now we can derive Bayes' theorem because joint probabilities are symmetrical. Switching notation to $\boldsymbol{\theta} \text{ and }\mathbf{d}$:
 
 $$P\left(\boldsymbol{\theta}\cap \mathbf{d}\right)=P\left(\mathbf{d}\cap \boldsymbol{\theta}\right)$$
 
