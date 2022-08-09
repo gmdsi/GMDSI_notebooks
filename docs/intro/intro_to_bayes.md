@@ -23,7 +23,6 @@ $$P\left(\boldsymbol{\theta}|\textbf{d}\right)P\left(\textbf{d}\right)=P\left(\t
 _Um, what?_ Let's use pictures to make this easier to understand.
 
 ## A Venn diagram to explore conditional probabilities
-
 <img src="intro_to_bayes_files/conditional_probability.png" style="inline: left; width: 50%; margin-right: 1%; margin-bottom: 0.5em;">
 
 
@@ -44,7 +43,6 @@ As a general rule, we can state
 $$P\left(A|B_1\right)=\frac{P\left(A\cap B_1\right)}{P\left(B_1\right)}$$
 
 or, equivalently 
-
 $$P\left(A\cap B_1\right)=P\left(A|B_1\right)P\left(B_1\right)$$
 
 So what about $P\left(A|B_2\right)$?
@@ -53,13 +51,14 @@ $$P\left(A|B_2\right)=\frac{P\left(A\cap B_2\right)}{P\left(B_2\right)}=\frac{0.
 
 ### Bayes Theorem
 
-Now we can derive Bayes' theorem because joint probabilities are symmetrical. Switching notation to $\boldsymbol{\theta} \text{ and }\mathbf{d}$:
+Now we can derive Bayes' theorem because joint probabilities are symmetrical. Switching notation to 
+$\boldsymbol{\theta} \text{ and }\mathbf{d}$:
 
 $$P\left(\boldsymbol{\theta}\cap \mathbf{d}\right)=P\left(\mathbf{d}\cap \boldsymbol{\theta}\right)$$
 
 $$P\left(\boldsymbol{\theta}|\textbf{d}\right) P\left(\textbf{d}\right) = P\left(\textbf{d}|\boldsymbol{\theta}\right) P\left(\boldsymbol{\theta}\right)$$
 
-With the tiniest little algebra, we get Bayes' theorem:
+With the tiniest little algebra, we get Bayes' theorem -- #boom#!
 
 $$P\left(\boldsymbol{\theta}|\textbf{d}\right) = \frac{P\left(\textbf{d}|\boldsymbol{\theta}\right) P\left(\boldsymbol{\theta}\right)}{P\left(\textbf{d}\right)}$$
 
@@ -72,9 +71,7 @@ $$P\left(\boldsymbol{\theta}|\textbf{d}\right) = \frac{P\left(\textbf{d}|\boldsy
 Let's play with a concrete example, one hinging on life, death, trust, and promises kept!
 
 <img src="intro_to_bayes_files/plant.JPG" style="inline: left; width: 28%; margin-right: 1%; margin-bottom: 0em;">
-
 <img src="intro_to_bayes_files/dead_plant.JPG" style="inline: left; width: 30%; margin-right: 1%; margin-bottom: 0em;">
-
 
 
 
@@ -255,7 +252,7 @@ interact(bh.plot_posterior,
     
 
 
-    interactive(children=(inlineSlider(value=10.5, description='prior_mean', max=20.0, min=1.0, step=0.5), inlineSli…
+    interactive(children=(FloatSlider(value=10.5, description='prior_mean', max=20.0, min=1.0, step=0.5), FloatSli…
 
 
 # The mandatory "coin-flipping example" 
