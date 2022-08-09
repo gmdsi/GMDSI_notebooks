@@ -14,7 +14,7 @@ Loosely, Bayes' Theorem can be interpeted as
 
  $$P\left(\boldsymbol{\theta}|\textbf{d}\right)=\frac{P\left(\textbf{d}|\boldsymbol{\theta}\right) P\left> (\boldsymbol{\theta}\right)}{P\left(\textbf{d}\right)}$$
  
-$\boldsymbol{\theta}$  are parameters, $\mathbf{d}$ are the data and  $|$ means "conditional on".
+$\boldsymbol{\theta}$ are parameters, $\mathbf{d}$ are the data and  $|$ means "conditional on".
 
 This is really just rearranging the law of conditional probabilities:
 
@@ -62,7 +62,7 @@ $$P\left(\boldsymbol{\theta}\cap \mathbf{d}\right)=P\left(\mathbf{d}\cap \boldsy
 
 $$P\left(\boldsymbol{\theta}|\textbf{d}\right) P\left(\textbf{d}\right) = P\left(\textbf{d}|\boldsymbol{\theta}\right) P\left(\boldsymbol{\theta}\right)$$
 
- With the tiniest little algebra, we get Bayes' theorem -- #boom#!
+With the tiniest little algebra, we get Bayes' theorem -- #boom#!
 
 $$P\left(\boldsymbol{\theta}|\textbf{d}\right) = \frac{P\left(\textbf{d}|\boldsymbol{\theta}\right) P\left(\boldsymbol{\theta}\right)}{P\left(\textbf{d}\right)}$$
 
@@ -79,9 +79,9 @@ Let's play with a concrete example, one hinging on life, death, trust, and promi
 <p style="clear: both;">
 
 
- You have a plant at home, and you're going to go away for a week. If it gets watered, its probability of dying is 15%. If it doesn't get watered, it is 80% likely to die. You ask your partner to water it for you and you are 90% certain they will do it.
+You have a plant at home, and you're going to go away for a week. If it gets watered, its probability of dying is 15%. If it doesn't get watered, it is 80% likely to die. You ask your partner to water it for you and you are 90% certain they will do it.
 
- We can express this all in terms of probabilities and conditional probabilities.
+We can express this all in terms of probabilities and conditional probabilities.
 
 ### First a couple definitions:
 
@@ -140,6 +140,7 @@ print ('Probability Plant is dead = {0:.3f}'.format(PDd))
 Since we only have two discrete outcomes, the probability of the plant being alive is simply 
 
 $$P\left(d_a\right)=1-P\left(d_d\right)$$
+
 
 
 ```python
@@ -251,7 +252,7 @@ interact(bh.plot_posterior,
          prior_std=(.1, 8, .1), likeli_std=(.1, 8, 2));
 ```
 
-    d:\Workspace\hugm0001\anaconda\lib\site-packages\ipykernel\pylab\backend_inline.py:11: DeprecationWarning: `ipykernel.pylab.backend_inline` is deprecated, directly use `matplotlib_inline.backend_inline`
+    d:\Workspace\hugm0001\anaconda\envs\gmdsitut\lib\site-packages\ipykernel\pylab\backend_inline.py:10: DeprecationWarning: `ipykernel.pylab.backend_inline` is deprecated, directly use `matplotlib_inline.backend_inline`
     
 
 
@@ -268,11 +269,10 @@ We can start with an "ignorance" prior - equal probabilities of all outcomes (bo
 max_trials = 1000
 # The code below can be passed over, as it is currently not important, plus it
 # uses advanced topics we have not covered yet. 
-%matplotlib inline
-from IPython.core.pylabtools import figsize
 import numpy as np
 from matplotlib import pyplot as plt
-figsize(11, 9)
+
+fig = plt.figure(figsize=(12,9))
 
 import scipy.stats as stats
 dist = stats.beta
@@ -301,13 +301,9 @@ plt.suptitle("Bayesian updating of posterior probabilities",
 plt.tight_layout();
 ```
 
-    findfont: Font family ['sans-serif'] not found. Falling back to DejaVu Sans.
-    findfont: Generic family 'sans-serif' not found because none of the following families were found: Univers 57 Condensed
-    
-
 
     
-![png](intro_to_bayes_files/intro_to_bayes_40_1.png)
+![png](intro_to_bayes_files/intro_to_bayes_40_0.png)
     
 
 
