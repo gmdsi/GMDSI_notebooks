@@ -41,15 +41,15 @@ for d in dirs:
             os.makedirs(md_dir)
         # move new file to docs folder
         shutil.move(os.path.join(d, md_file), os.path.join(md_dir, md_file))
-        # move the figures to the docs folder
+        # copy the figures to the docs folder
         figs_dir = md_file.replace(".md", "_files")
         if os.path.exists(os.path.join(d,figs_dir)):
             org = os.path.join(d, figs_dir)
             dst = os.path.join(md_dir, figs_dir)
             if os.path.exists(dst):
                 shutil.rmtree(dst)
-            shutil.move(org, dst)
-        print('preped htmlfile: ', os.path.join(md_dir, md_file))
+            shutil.copytree(org, dst)
+        print('preped mdfile: ', os.path.join(md_dir, md_file))
 
 os.chdir(docs_dir)
 md_order = pd.read_csv("notebook_order.csv")
