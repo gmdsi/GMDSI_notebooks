@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: Intro to Bayes
+parent: Introductions to Selected Topics
+nav_order: 6
+---
+                    ---
 layout: default
 title: Intro to Bayes
 parent: Introductions to Selected Topics

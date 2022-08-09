@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: PEST++GLM - Calculating a Jacobian Matrix
+parent: Decision Support Modelling with pyEMU and PEST++
+nav_order: 4
+---
+                    ---
 layout: default
 title: PEST++GLM - Calculating a Jacobian Matrix
 parent: Decision Support Modelling with pyEMU and PEST++

@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: Intro to Geostatistics
+parent: Introductions to Selected Topics
+nav_order: 5
+---
+                    ---
 layout: default
 title: Intro to Geostatistics
 parent: Introductions to Selected Topics

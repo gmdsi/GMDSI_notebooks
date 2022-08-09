@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: Monte Carlo
+parent: Introduction to Theory, Concepts and PEST Mechanic
+nav_order: 13
+---
+                    ---
 layout: default
 title: Monte Carlo
 parent: Introduction to Theory, Concepts and PEST Mechanic

@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: Spatial Parameterisation with Pilot Points - run
+parent: Introduction to Theory, Concepts and PEST Mechanic
+nav_order: 8
+---
+                    ---
 layout: default
 title: Spatial Parameterisation with Pilot Points - run
 parent: Introduction to Theory, Concepts and PEST Mechanic

@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: Regularization
+parent: Introduction to Theory, Concepts and PEST Mechanic
+nav_order: 9
+---
+                    ---
 layout: default
 title: Regularization
 parent: Introduction to Theory, Concepts and PEST Mechanic

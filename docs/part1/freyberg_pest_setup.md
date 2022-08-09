@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: PEST Basics
+parent: Introduction to Theory, Concepts and PEST Mechanic
+nav_order: 2
+---
+                    ---
 layout: default
 title: PEST Basics
 parent: Introduction to Theory, Concepts and PEST Mechanic

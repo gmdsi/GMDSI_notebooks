@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: Intro to FOSM
+parent: Introduction to Theory, Concepts and PEST Mechanic
+nav_order: 10
+---
+                    ---
 layout: default
 title: Intro to FOSM
 parent: Introduction to Theory, Concepts and PEST Mechanic

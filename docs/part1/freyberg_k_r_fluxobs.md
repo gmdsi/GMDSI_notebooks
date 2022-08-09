@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: Multiple Observation Types
+parent: Introduction to Theory, Concepts and PEST Mechanic
+nav_order: 5
+---
+                    ---
 layout: default
 title: Multiple Observation Types
 parent: Introduction to Theory, Concepts and PEST Mechanic

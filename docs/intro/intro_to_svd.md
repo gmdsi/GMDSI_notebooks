@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: Intro to SVD
+parent: Introductions to Selected Topics
+nav_order: 7
+---
+                    ---
 layout: default
 title: Intro to SVD
 parent: Introductions to Selected Topics

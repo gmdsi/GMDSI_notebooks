@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: Intro to Freyberg
+parent: Introductions to Selected Topics
+nav_order: 1
+---
+                    ---
 layout: default
 title: Intro to Freyberg
 parent: Introductions to Selected Topics

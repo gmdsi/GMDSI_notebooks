@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: Manual Trial-and-Error
+parent: Introduction to Theory, Concepts and PEST Mechanic
+nav_order: 1
+---
+                    ---
 layout: default
 title: Manual Trial-and-Error
 parent: Introduction to Theory, Concepts and PEST Mechanic

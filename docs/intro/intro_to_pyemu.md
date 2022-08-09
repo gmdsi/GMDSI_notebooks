@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: Intro to pyEMU
+parent: Introductions to Selected Topics
+nav_order: 4
+---
+                    ---
 layout: default
 title: Intro to pyEMU
 parent: Introductions to Selected Topics

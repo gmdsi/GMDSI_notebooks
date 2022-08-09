@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: GLM and the Objective Function Response Surface
+parent: Introduction to Theory, Concepts and PEST Mechanic
+nav_order: 6
+---
+                    ---
 layout: default
 title: GLM and the Objective Function Response Surface
 parent: Introduction to Theory, Concepts and PEST Mechanic

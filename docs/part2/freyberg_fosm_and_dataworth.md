@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: FOSM and Data Worth
+parent: Decision Support Modelling with pyEMU and PEST++
+nav_order: 5
+---
+                    ---
 layout: default
 title: FOSM and Data Worth
 parent: Decision Support Modelling with pyEMU and PEST++

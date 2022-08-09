@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: Observation Values, Weights and Noise
+parent: Decision Support Modelling with pyEMU and PEST++
+nav_order: 2
+---
+                    ---
 layout: default
 title: Observation Values, Weights and Noise
 parent: Decision Support Modelling with pyEMU and PEST++

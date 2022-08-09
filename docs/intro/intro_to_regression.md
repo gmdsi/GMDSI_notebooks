@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: Intro to Regression
+parent: Introductions to Selected Topics
+nav_order: 2
+---
+                    ---
 layout: default
 title: Intro to Regression
 parent: Introductions to Selected Topics

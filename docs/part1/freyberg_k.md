@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: Automated Calibration with PEST
+parent: Introduction to Theory, Concepts and PEST Mechanic
+nav_order: 3
+---
+                    ---
 layout: default
 title: Automated Calibration with PEST
 parent: Introduction to Theory, Concepts and PEST Mechanic

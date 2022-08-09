@@ -1,4 +1,11 @@
+
 ---
+layout: default
+title: Global Sensitivity Analysis
+parent: Introduction to Theory, Concepts and PEST Mechanic
+nav_order: 12
+---
+                    ---
 layout: default
 title: Global Sensitivity Analysis
 parent: Introduction to Theory, Concepts and PEST Mechanic
