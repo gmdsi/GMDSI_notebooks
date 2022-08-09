@@ -24,7 +24,7 @@ _Um, what?_ Let's use pictures to make this easier to understand.
 
 ## A Venn diagram to explore conditional probabilities
 
-<img src="intro_to_bayes_files/conditional_probability.png" style="float: left; width: 50%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro_to_bayes_files/conditional_probability.png" style="inline: left; width: 50%; margin-right: 1%; margin-bottom: 0.5em;">
 <p style="clear: both;">
 
 By [Gnathan87 - Own work, CC0](https://commons.wikimedia.org/w/index.php?curid=15991401)
@@ -71,9 +71,9 @@ $$P\left(\boldsymbol{\theta}|\textbf{d}\right) = \frac{P\left(\textbf{d}|\boldsy
 
 Let's play with a concrete example, one hinging on life, death, trust, and promises kept!
 
-<img src="intro_to_bayes_files/plant.JPG" style="float: left; width: 28%; margin-right: 1%; margin-bottom: 0em;">
+<img src="intro_to_bayes_files/plant.JPG" style="inline: left; width: 28%; margin-right: 1%; margin-bottom: 0em;">
 
-<img src="intro_to_bayes_files/dead_plant.JPG" style="float: left; width: 30%; margin-right: 1%; margin-bottom: 0em;">
+<img src="intro_to_bayes_files/dead_plant.JPG" style="inline: left; width: 30%; margin-right: 1%; margin-bottom: 0em;">
 
 <p style="clear: both;">
 
@@ -210,7 +210,7 @@ Right then, but we are in the world of continuous variables, not simple discrete
 
 This means that we end up with probability density functions rather than discrete probabilities and the denominator on the RHS gets tricky to evaluate (the total probability). Luckily, we are mostly conncerned with finding the parameters that maximize the probability and less concerned with the probability itself.
 
-<img src="intro_to_bayes_files/Fig10.3_Bayes_figure.png" style="float: left; width: 75%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro_to_bayes_files/Fig10.3_Bayes_figure.png" style="inline: left; width: 75%; margin-right: 1%; margin-bottom: 0.5em;">
 
 
 This is a learning framework, where what we know at the end is a function of what we started with and what we _learned_ through a new experiment (model) or new information
@@ -255,7 +255,7 @@ interact(bh.plot_posterior,
     
 
 
-    interactive(children=(FloatSlider(value=10.5, description='prior_mean', max=20.0, min=1.0, step=0.5), FloatSli…
+    interactive(children=(inlineSlider(value=10.5, description='prior_mean', max=20.0, min=1.0, step=0.5), inlineSli…
 
 
 # The mandatory "coin-flipping example" 
