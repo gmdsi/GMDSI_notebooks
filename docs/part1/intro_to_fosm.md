@@ -18,10 +18,10 @@ Pages 461-465 of Anderson et al. use the PREDUNC equation of PEST to discuss an 
 
 > __Side Note__: in Part2 of this series of tutorial notebooks we demonstrate a complete FOSM and Data-worth analysis workflow using `pyemu` and PEST++. The current notebook merely aims to provide a very high level introduction to some of the concepts.
 
-<img src="intro_to_fosm_files\bayes.png" style="float: left; width: 25%; margin-right: 1%; margin-bottom: 0.5em;">
-<img src="intro_to_fosm_files\jacobi.jpg" style="float: left; width: 25%; margin-right: 1%; margin-bottom: 0.5em;">
-<img src="intro_to_fosm_files\gauss.jpg" style="float: left; width: 22%; margin-right: 1%; margin-bottom: 0.5em;">
-<img src="intro_to_fosm_files\schur.jpg" style="float: left; width: 22%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="\intro_to_fosm_files\bayes.png" style="float: left; width: 25%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="\intro_to_fosm_files\jacobi.jpg" style="float: left; width: 25%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="\intro_to_fosm_files\gauss.jpg" style="float: left; width: 22%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="\intro_to_fosm_files\schur.jpg" style="float: left; width: 22%; margin-right: 1%; margin-bottom: 0.5em;">
 <p style="clear: both;">
 
 FOSM provides approximate mathematical characterisation of prior predictive probability distributions, and of posterior parameter and predictive probability distributions. It has other uses as well. It can be used to demonstrate how the history-matching process bestows worth on data. It can also be deployed to track the flow of information from field measurements of system state to parameters, and ultimately from parameters to model predictions. 
