@@ -14,13 +14,13 @@ Loosely, Bayes' Theorem can be interpeted as
 
 $$P\left(\boldsymbol{\theta}|\textbf{d}\right)=\frac{P\left(\textbf{d}|\boldsymbol{\theta}\right) P\left> (\boldsymbol{\theta}\right)}{P\left(\textbf{d}\right)}$$
  
-$\boldsymbol{\theta}$ are parameters, $\mathbf{d}$ are the data and  $|$ means "conditional on".
+in which $\boldsymbol{\theta}$ are parameters, $\mathbf{d}$ are the data and | means "conditional on".
 
 This is really just rearranging the law of conditional probabilities:
 
 $$P\left(\boldsymbol{\theta}|\textbf{d}\right)P\left(\textbf{d}\right)=P\left(\textbf{d}|\boldsymbol{\theta}\right) P\left(\boldsymbol{\theta}\right)$$
 
-_Um, what?_ Let's use pictres to make this easier to understand.
+_Um, what?_ Let's use pictures to make this easier to understand.
 
 ## A Venn diagram to explore conditional probabilities
 <img src="intro_to_bayes_files/conditional_probability.png" style="float: left; width: 50%; margin-right: 1%; margin-bottom: 0.5em;">
@@ -47,16 +47,12 @@ $$P\left(A\cap B_1\right)=P\left(A|B_1\right)P\left(B_1\right)$$
 
 So what about $P\left(A|B_2\right)$?
 
-$$
-P\left(A|B_2\right)=\frac{P\left(A\cap B_2\right)}{P\left(B_2\right)}=\frac{0.12}{0.12+0.04}=0.75
-$$
-
+$$P\left(A|B_2\right)=\frac{P\left(A\cap B_2\right)}{P\left(B_2\right)}=\frac{0.12}{0.12+0.04}=0.75$$
 
 ### Bayes Theorem
 
 Now we can derive Bayes' theorem because joint probabilities are symmetrical. Switching notation to 
-$$\boldsymbol{\theta} \text{ and }
-\mathbf{d}$$
+$\boldsymbol{\theta} \text{ and }\mathbf{d}$:
 
 $$P\left(\boldsymbol{\theta}\cap \mathbf{d}\right)=P\left(\mathbf{d}\cap \boldsymbol{\theta}\right)$$
 
