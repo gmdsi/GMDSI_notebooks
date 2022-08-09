@@ -4,15 +4,15 @@
 
 Loosely, Bayes' Theorem can be interpeted as 
 
- $$P\left(\boldsymbol{\theta}|\textbf{d}\right)=\frac{P\left(\textbf{d}|\boldsymbol{\theta}\right) P\left> (\boldsymbol{\theta}\right)}{P\left(\textbf{d}\right)}$$
+$$P\left(\boldsymbol{\theta}|\textbf{d}\right)=\frac{P\left(\textbf{d}|\boldsymbol{\theta}\right) P\left> (\boldsymbol{\theta}\right)}{P\left(\textbf{d}\right)}$$
  
 $\boldsymbol{\theta}$ are parameters, $\mathbf{d}$ are the data and  $|$ means "conditional on".
 
 This is really just rearranging the law of conditional probabilities:
 
- $$P\left(\boldsymbol{\theta}|\textbf{d}\right)P\left(\textbf{d}\right)=P\left(\textbf{d}|\boldsymbol{\theta}\right) P\left(\boldsymbol{\theta}\right)$$
+$$P\left(\boldsymbol{\theta}|\textbf{d}\right)P\left(\textbf{d}\right)=P\left(\textbf{d}|\boldsymbol{\theta}\right) P\left(\boldsymbol{\theta}\right)$$
 
- _Um, what?_ Let's use pictres to make this easier to understand.
+_Um, what?_ Let's use pictres to make this easier to understand.
 
 ## A Venn diagram to explore conditional probabilities
 <img src="intro_to_bayes_files/conditional_probability.png" style="float: left; width: 50%; margin-right: 1%; margin-bottom: 0.5em;">
@@ -37,7 +37,7 @@ $$P\left(A|B_1\right)=\frac{P\left(A\cap B_1\right)}{P\left(B_1\right)}$$
 or, equivalently 
 $$P\left(A\cap B_1\right)=P\left(A|B_1\right)P\left(B_1\right)$$
 
- So what about $P\left(A|B_2\right)$?
+So what about $P\left(A|B_2\right)$?
 
 $$
 P\left(A|B_2\right)=\frac{P\left(A\cap B_2\right)}{P\left(B_2\right)}=\frac{0.12}{0.12+0.04}=0.75
@@ -85,9 +85,9 @@ $d_a$: plant is alive when we return
 
 $d_d$: plant is dead when we return
 
- $\mathbf{d} = [d_a,d_d]$: a vector of all possible outcomes
+$\mathbf{d} = [d_a,d_d]$: a vector of all possible outcomes
  
- $\boldsymbol{\theta} = [\theta_w,\theta_{nw}]$: a vector of all possible outcomes
+$\boldsymbol{\theta} = [\theta_w,\theta_{nw}]$: a vector of all possible outcomes
 
 Cool, so let's express what we know in probability equations:
 
@@ -293,9 +293,13 @@ plt.suptitle("Bayesian updating of posterior probabilities",
 plt.tight_layout();
 ```
 
+    findfont: Font family ['sans-serif'] not found. Falling back to DejaVu Sans.
+    findfont: Generic family 'sans-serif' not found because none of the following families were found: Univers 57 Condensed
+    
+
 
     
-![png](intro_to_bayes_files/intro_to_bayes_40_0.png)
+![png](intro_to_bayes_files/intro_to_bayes_40_1.png)
     
 
 
@@ -303,5 +307,3 @@ The posterior probabilities are represented by the curves, and our uncertainty i
 
 Notice that the plots are not always *peaked* at 0.5. There is no reason it should be: recall we assumed we did not have a prior opinion of what $p$ is. In fact, if we observe quite extreme data, say 8 flips and only 1 observed heads, our distribution would look very biased *away* from lumping around 0.5 (with no prior opinion, how confident would you feel betting on a fair coin after observing 8 tails and 1 head). As more data accumulates, we would see more and more probability being assigned at $p=0.5$, though never all of it.
 
-
-![png](intro_to_bayes_files/bayes_editorial.png)
