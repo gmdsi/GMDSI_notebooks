@@ -28,6 +28,7 @@ This is really just rearranging the law of conditional probabilities:
 
 By [Gnathan87 - Own work, CC0](https://commons.wikimedia.org/w/index.php?curid=15991401)
 
+
 What is the probability of $A$ if we know we are in $B_1$? The equation for this is:
 
 $$P\left(A|B_1\right)$$
@@ -50,6 +51,7 @@ $$
 P\left(A|B_2\right)=\frac{P\left(A\cap B_2\right)}{P\left(B_2\right)}=\frac{0.12}{0.12+0.04}=0.75
 $$
 
+
 ### Bayes Theorem
 
 Now we can derive Bayes' theorem because joint probabilities are symmetrical. Switching notation to 
@@ -63,6 +65,7 @@ $$P\left(\boldsymbol{\theta}|\textbf{d}\right) P\left(\textbf{d}\right) = P\left
  With the tiniest little algebra, we get Bayes' theorem -- #boom#!
 
 $$P\left(\boldsymbol{\theta}|\textbf{d}\right) = \frac{P\left(\textbf{d}|\boldsymbol{\theta}\right) P\left(\boldsymbol{\theta}\right)}{P\left(\textbf{d}\right)}$$
+
 
 
 # So, what does this really mean?  

@@ -28,7 +28,7 @@ def run_nb(nb_file, nb_dir):
 intro_dirs = [f.name for f in os.scandir('.') if f.is_dir() and f.name.startswith('intro_')]
 part1_dirs = [f.name for f in os.scandir('.') if f.is_dir() and f.name.startswith('part1_')]
 
-print(intro_dirs)
+
 
 for dir in intro_dirs:
     nbfiles = [i for i in os.listdir(dir) if i.endswith('.ipynb')]
