@@ -31,17 +31,18 @@ math: mathjax3
 In this and the next notebooks we'll get under the hood of SVD and see what it does.  A high-level understanding is not needed to take advantage of the power of SVD for your typical calibration parameter estimation problem ("set it and forget it").  BUT in addition to the glow of knowledge that they impart, these SVD concepts will cascade into understanding other tools such as parameter identifiability, calculation of uncertainty, and null-space Monte Carlo.  
 
 > #### We highly recommend going through:
-> - Gregory Gunderson's [Singular Value Decomposition as Simply as Possible](https://gregorygundersen.com/blog/2018/12/10/svd/#:~:text=The%20singular%20values%20referred%20to,our%20transformation%20flattens%20our%20square.). An excelent place to start to gain an intuitive understaning of SVD. 
+> - Gregory Gunderson's [Singular Value Decomposition as Simply as Possible](https://gregorygundersen.com/blog/2018/12/10/svd/#:~:text=The%20singular%20values%20referred%20to,our%20transformation%20flattens%20our%20square.). An excelent place to start to gain an intuitive understanding of SVD. 
 > -  Frank Cleary's [introduction to SVD notebook](https://gist.github.com/frankcleary/a89da479d85c98f86e31).
 
 ## Matrices
 
-Linear Algebra is the foundation of much of our maths and modeling. At the basis of this is matrices, which are containing vector information like spatial array of properties, mappings from one set of properties to another, the variability of properties.
+Linear Algebra is the foundation of much of our maths and modeling. At the basis of this is matrices, which contain vector information like spatial arrays of properties, mappings from one set of properties to another, the variability of properties.
 
  Another example of a matrix is just a photograph. It turns out, much of the information contained in a matrix is redundant. If we think of the columns of a matrix as vectors, they are orthogonal but maybe aren't quite the right basis for the infromation. What if we could find another basis, where we rotate to a more suitable set of orthogonal basis vectors and maybe even stretch them?
 
 Any matrix can be decomposed into 3 matrices:
-$$\mathbf{M}=\mathbf{U}\mathbf{S}\mathbf{V}^T$$
+
+$\mathbf{M}=\mathbf{U}\mathbf{S}\mathbf{V}^T$
 
 
 ```python
@@ -90,6 +91,12 @@ plt.imshow(photo, interpolation='nearest')
 plt.axis('off');
 ```
 
+
+    
+![png](intro_to_svd_files/intro_to_svd_7_0.png)
+    
+
+
 ### Convert to grayscale
 
 By converting to grayscale, what we are left with is a matrix of information where each pixel (e.g. a cell in rows/columns of the matrix) has a value between 0 and 255 indicating intensity. This is then just a matrix with information in it.
@@ -104,6 +111,12 @@ else:
 plt.imshow(photogray, interpolation='nearest', cmap='gray')
 plt.axis('off');
 ```
+
+
+    
+![png](intro_to_svd_files/intro_to_svd_9_0.png)
+    
+
 
 We can treat this like any matrix and perform SVD. In python, `numpy` makes this easy. (_Go through Frank Clearly's [notebooks](https://gist.github.com/frankcleary/a89da479d85c98f86e31) for details on the math behind all of this._)
 
@@ -123,6 +136,12 @@ plt.grid()
 plt.title('{0} Singular values in descending order'.format(len(sigma)));
 ```
 
+
+    
+![png](intro_to_svd_files/intro_to_svd_13_0.png)
+    
+
+
 The same thing on a $Log_{10}$ scale:
 
 
@@ -132,6 +151,12 @@ plt.grid()
 plt.title('{0} Singular values in descending order'.format(len(sigma)));
 plt.yscale('log');
 ```
+
+
+    
+![png](intro_to_svd_files/intro_to_svd_15_0.png)
+    
+
 
 Let's make a little function for using a subset of singular values to reconstitute the image:
 
@@ -168,12 +193,24 @@ Computing an approximation of the image using the first column of $\mathbf{U}$ a
 rec=recon_image(U,sigma,V,1)
 ```
 
+
+    
+![png](intro_to_svd_files/intro_to_svd_19_0.png)
+    
+
+
 But how many are "enough"? Check out the plots of singular values above. At what _number of singular values_ (x-axis) do the _singular values_ (y-axis) start to flatten out? Somewhere around 25? This  suggests that all the “action” of the matrix happens along only these few dimensions. So we should be able to reconstruct a decent approximation with only 25 pieces of information, instead of the total 350:
 
 
 ```python
 rec=recon_image(U,sigma,V,25)
 ```
+
+
+    
+![png](intro_to_svd_files/intro_to_svd_21_0.png)
+    
+
 
 Hey that's pretty good! And with a fraction of the total information.
 
@@ -203,6 +240,34 @@ hbd.prep_pest(tmp_d)
 hbd.add_ppoints(tmp_d)
 ```
 
+    ins file for heads.csv prepared.
+    ins file for sfr.csv prepared.
+    noptmax:0, npar_adj:1, nnz_obs:24
+    written pest control file: freyberg_mf6\freyberg.pst
+       could not remove start_datetime
+    1 pars added from template file .\freyberg6.sfr_perioddata_1.txt.tpl
+    6 pars added from template file .\freyberg6.wel_stress_period_data_10.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_11.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_12.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_2.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_3.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_4.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_5.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_6.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_7.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_8.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_9.txt.tpl
+    starting interp point loop for 800 points
+    took 2.056614 seconds
+    1 pars dropped from template file freyberg_mf6\freyberg6.npf_k_layer1.txt.tpl
+    29 pars added from template file .\hkpp.dat.tpl
+    starting interp point loop for 800 points
+    took 1.978677 seconds
+    29 pars added from template file .\rchpp.dat.tpl
+    noptmax:0, npar_adj:65, nnz_obs:37
+    new control file: 'freyberg_pp.pst'
+    
+
 Run PEST++GLM:
 
 
@@ -220,6 +285,9 @@ pyemu.os_utils.start_workers(tmp_d, # the folder which contains the "template" P
                             master_dir=m_d, #the manager directory
                             )
 ```
+
+    noptmax:-1, npar_adj:65, nnz_obs:37
+    
 
 ## Form up the normal equations matrix
 
@@ -243,6 +311,12 @@ plt.imshow(np.log10(abs(X )))
 plt.colorbar();
 ```
 
+
+    
+![png](intro_to_svd_files/intro_to_svd_31_0.png)
+    
+
+
 We can also get our matrix of observation noise from the weights in the PEST control file (this assumes that observation weights are the inverse of observation noise and that noise is independent):
 
 
@@ -254,15 +328,41 @@ Q
 ```
 
 
+
+
+    array([[0.005, 0.   , 0.   , ..., 0.   , 0.   , 0.   ],
+           [0.   , 0.005, 0.   , ..., 0.   , 0.   , 0.   ],
+           [0.   , 0.   , 0.005, ..., 0.   , 0.   , 0.   ],
+           ...,
+           [0.   , 0.   , 0.   , ..., 0.   , 0.   , 0.   ],
+           [0.   , 0.   , 0.   , ..., 0.   , 0.   , 0.   ],
+           [0.   , 0.   , 0.   , ..., 0.   , 0.   , 0.   ]])
+
+
+
+
 ```python
 #plt.figure(figsize=(15,15))
 plt.imshow(Q, interpolation='nearest', cmap='viridis')
 plt.colorbar()
 ```
 
+
+
+
+    <matplotlib.colorbar.Colorbar at 0x2243c5872e0>
+
+
+
+
+    
+![png](intro_to_svd_files/intro_to_svd_34_1.png)
+    
+
+
 ## Back to SVD
 
-We can now undertake SVD on the normal matrix $\mathbf{X^tQX}$.
+We can now undertake SVD on the normal matrix $\mathbf{X^{t}QX}$.
 
 
 ```python
@@ -285,12 +385,22 @@ plt.yscale('log')
 plt.grid()
 ```
 
+
+    
+![png](intro_to_svd_files/intro_to_svd_40_0.png)
+    
+
+
 If you want to get fancy, you can explore which parameters inform which singular value vector. The interactive plot below allows you to select the singular vect, and plots the parameter contributions to it:
 
 
 ```python
 hbd.intertive_sv_vec_plot(inpst, U);
 ```
+
+
+    interactive(children=(IntSlider(value=1, description='Number SVs:', max=20, min=1), Output()), _dom_classes=('…
+
 
 ### Great - finally how does this impact our calibration of a K-field?
 
@@ -300,6 +410,12 @@ The function below pulls in the "true" hydraulic conductivity fro our Freyberg m
 ```python
 gwf = hbd.plot_truth_k(m_d);
 ```
+
+
+    
+![png](intro_to_svd_files/intro_to_svd_45_0.png)
+    
+
 
 ## Now reconstruct the K field
 
@@ -312,4 +428,16 @@ Play with the slider in the figure below. As you move it to the right, more sing
 
 ```python
 hbd.svd_enchilada(gwf, m_d);
+```
+
+       could not remove start_datetime
+    
+
+
+    interactive(children=(IntSlider(value=400, description='eig comp:', max=799), Output()), _dom_classes=('widget…
+
+
+
+```python
+
 ```

@@ -14,7 +14,7 @@ Loosely, Bayes' Theorem can be interpeted as
 
  $$P\left(\boldsymbol{\theta}|\textbf{d}\right)=\frac{P\left(\textbf{d}|\boldsymbol{\theta}\right) P\left> (\boldsymbol{\theta}\right)}{P\left(\textbf{d}\right)}$$
  
- $\boldsymbol{\theta}$  are parameters, $\mathbf{d}$ are the data and  $|$ means "conditional on".
+$\boldsymbol{\theta}$  are parameters, $\mathbf{d}$ are the data and  $|$ means "conditional on".
 
 This is really just rearranging the law of conditional probabilities:
 
@@ -25,7 +25,8 @@ This is really just rearranging the law of conditional probabilities:
 ## A Venn diagram to explore conditional probabilities
 <img src=".\intro_to_bayes_files\conditional_probability.png" style="float: left; width: 50%; margin-right: 1%; margin-bottom: 0.5em;">
 <p style="clear: both;">
-By Gnathan87 - Own work, CC0, https://commons.wikimedia.org/w/index.php?curid=15991401
+
+By [Gnathan87 - Own work, CC0](https://commons.wikimedia.org/w/index.php?curid=15991401)
 
 What is the probability of $A$ if we know we are in $B_1$? The equation for this is:
 
@@ -68,13 +69,12 @@ $$P\left(\boldsymbol{\theta}|\textbf{d}\right) = \frac{P\left(\textbf{d}|\boldsy
 
 ## A practical example
 
- Let's play with a concrete example, one hinging on life, death, trust, and promises kept!
+Let's play with a concrete example, one hinging on life, death, trust, and promises kept!
 
-
- 
 <img src=".\intro_to_bayes_files\plant.JPG" style="float: left; width: 28%; margin-right: 1%; margin-bottom: 0em;">
 <img src=".\intro_to_bayes_files\dead_plant.JPG" style="float: left; width: 30%; margin-right: 1%; margin-bottom: 0em;">
 <p style="clear: both;">
+
 
  You have a plant at home, and you're going to go away for a week. If it gets watered, its probability of dying is 15%. If it doesn't get watered, it is 80% likely to die. You ask your partner to water it for you and you are 90% certain they will do it.
 
@@ -94,7 +94,7 @@ $d_d$: plant is dead when we return
  
  $\boldsymbol{\theta} = [\theta_w,\theta_{nw}]$: a vector of all possible outcomes
 
-Cool, so let's express what we know in probability equations
+Cool, so let's express what we know in probability equations:
 
 $$P\left(d_d | \theta_w\right)=0.15$$
 $$P\left(d_d | \theta_{nw}\right)=0.8$$
@@ -103,17 +103,19 @@ $$P\left(\theta_{nw}\right)=0.1$$
 
 
 
-And we can assign these as python variables to get our maths groove on
+And we can assign these as python variables to get our maths groove on:
 
 
 ```python
+
 PDd_thw = 0.15
 PDd_thnw = 0.8
 Prior_thw = 0.9
 Prior_thnw = 0.1
+
 ```
 
-Now we can ask questions like, "what is the probability the plant is dead"
+Now we can ask questions like, "what is the probability the plant is dead?"
 
 To calculate, we add up all the conditional probablities like this:
 
@@ -123,9 +125,14 @@ $$P\left(d_d\right) = P\left(d_d|\theta_w\right)P\left(\theta_w\right) + P\left(
 
 
 ```python
+
 PDd = PDd_thw*Prior_thw + PDd_thnw*Prior_thnw
 print ('Probability Plant is dead = {0:.3f}'.format(PDd))
+
 ```
+
+    Probability Plant is dead = 0.215
+    
 
 Since we only have two discrete outcomes, the probability of the plant being alive is simply 
 
@@ -136,6 +143,9 @@ $$P\left(d_a\right)=1-P\left(d_d\right)$$
 PDa = 1-PDd
 print ('Probability Plant is alive = {0:.3f}'.format(PDa))
 ```
+
+    Probability Plant is alive = 0.785
+    
 
 Great! So we can incorporate all the possible arrangements of events to determine likely outcomes. But....what we are _really_ interested in is what we learn with partial information. This is where household harmony can be made or broken!
 
@@ -157,6 +167,10 @@ print ("Probability that partner failed to water the plant")
 print("having seen it's dead is {0:.3f}".format(PthnwDd))
 ```
 
+    Probability that partner failed to water the plant
+    having seen it's dead is 0.372
+    
+
 Alternatively, we can see the converse: How likely did our partner water the plant given that it's alive?
 
 $$P\left(\theta_w | d_a\right) = \frac{P\left(d_a | \theta_w\right) P\left(\theta_w\right)}{P\left(d_a\right)}$$
@@ -168,6 +182,10 @@ print ("Probability that partner did water the plant")
 print ("having seen it's alive is {0:.3f}".format(PthwDa))
 ```
 
+    Probability that partner did water the plant
+    having seen it's alive is 0.975
+    
+
 How likely did our partner forget, given that we see it's alive?
 
 $$P\left(\theta_{nw} | d_a\right) = \frac{P\left(d_a | \theta_{nw}\right) P\left(\theta_{nw}\right)}{P\left(d_a\right)}$$
@@ -178,6 +196,10 @@ PthnwDa = (1-PDd_thnw) * Prior_thnw/ PDa
 print ("Probability that partner forgot to water the plant")
 print("having seen it's alive is {0:.3f}".format(PthnwDa))
 ```
+
+    Probability that partner forgot to water the plant
+    having seen it's alive is 0.025
+    
 
 ### Continuous variables
 
@@ -192,7 +214,9 @@ This is a learning framework, where what we know at the end is a function of wha
 
 $$\underbrace{P(\boldsymbol{\theta}|\textbf{d})}_{\substack{\text{posterior} \\ \text{pdf}}} \propto \underbrace{\mathcal{L}( \boldsymbol{\theta}| \textbf{d})}_{\substack{\text{likelihood} \\ \text{function}}} \underbrace{P(\boldsymbol{\theta})}_{\substack{\text{prior } \\ \text{pdf}}} $$
 
+
 $$\underbrace{P(\boldsymbol{\theta}|\textbf{d})}_{\substack{\text{what we} \\ \text{know now}}} \propto \underbrace{\mathcal{L}(\boldsymbol{\theta} | \textbf{d})}_{\substack{\text{what we} \\ \text{learned}}} \underbrace{P(\boldsymbol{\theta})}_{\substack{\text{what we} \\ \text{knew}}} $$
+
 
 ## Let's look at an interactive example of how distributions behave
 
@@ -207,12 +231,29 @@ from ipywidgets import interact
 bh.plot_posterior(prior_mean=10, prior_std=11, likeli_mean = 25, likeli_std=5);
 ```
 
+    findfont: Font family ['sans-serif'] not found. Falling back to DejaVu Sans.
+    findfont: Generic family 'sans-serif' not found because none of the following families were found: Univers 57 Condensed
+    
+
+
+    
+![png](intro_to_bayes_files/intro_to_bayes_37_1.png)
+    
+
+
 
 ```python
 interact(bh.plot_posterior,
          prior_mean=(1, 20., .5), likeli_mean=(1, 20, 1), 
          prior_std=(.1, 8, .1), likeli_std=(.1, 8, 2));
 ```
+
+    d:\Workspace\hugm0001\anaconda\lib\site-packages\ipykernel\pylab\backend_inline.py:11: DeprecationWarning: `ipykernel.pylab.backend_inline` is deprecated, directly use `matplotlib_inline.backend_inline`
+    
+
+
+    interactive(children=(FloatSlider(value=10.5, description='prior_mean', max=20.0, min=1.0, step=0.5), FloatSli…
+
 
 # The mandatory "coin-flipping example" 
 > _Borrowed from **Bayesian Methods for Hackers**. The full Github repository is available [here](https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers)_
@@ -256,6 +297,16 @@ plt.suptitle("Bayesian updating of posterior probabilities",
              fontsize=14)
 plt.tight_layout();
 ```
+
+    findfont: Font family ['sans-serif'] not found. Falling back to DejaVu Sans.
+    findfont: Generic family 'sans-serif' not found because none of the following families were found: Univers 57 Condensed
+    
+
+
+    
+![png](intro_to_bayes_files/intro_to_bayes_40_1.png)
+    
+
 
 The posterior probabilities are represented by the curves, and our uncertainty is proportional to the width of the curve. As the plot above shows, as we start to observe data our posterior probabilities start to shift and move around. Eventually, as we observe more and more data (coin-flips), our probabilities will tighten closer and closer around the true value of $p=0.5$ (marked by a dashed line). 
 
