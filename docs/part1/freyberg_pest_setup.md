@@ -24,7 +24,7 @@ To be more specific, in the blue box in Figure 9.9 above there are certain steps
 
 <img src="freyberg_pest_setup_files\Fig9.8_PE_flowchart.png" style="float: center">
 
-### 1. The PEST Input Dataset
+## The PEST Input Dataset
 
 PEST and PEST++ are called "universal" inverse codes because they can be bolted on the outside of any model.  Well, that is, any model they can talk to and run, which means the model needs to meet these two criteria:
 
@@ -50,7 +50,7 @@ datasets of varying complexity. In many cases, PEST setup achieved in this way i
 However, no GUI is able to cater for every conceivable history-matching context. Hence there are
 many contexts in which a user may need to construct their own PEST input dataset. Doing so in a programatic environment makes this process automatable, replicable and much less painfull. `pyEMU` provides a `python` based interface that facilitates PEST-based workflows.  In this tutorial we will start by construting some of the PEST dataset "manually" so that you become familiar with what goes on in the background. Then, we will begin to introduce the use of `pyEMU`. Other tutorials provide general overview to `pyEMU` (see the "intro to pyemu" notebook) and demonstrate how to build a high-dimensional PEST interface from scratch (see the "freyberg pstfrom pest setup" notebook). But we are getting ahead of ourselves - we will get to those notebooks further along in the course.
 
-### 1.2. Additional Resources
+### Additional Resources
 
 Providing details on all of the functionality and intricacies of PEST and PEST++ in a single tutorial is not feasible. Here we introduce you to the basics. The following are usefull resources for further reading:
 
@@ -60,13 +60,13 @@ Providing details on all of the functionality and intricacies of PEST and PEST++
 - PEST tutorials: https://pesthomepage.org/tutorials
 - The PEST++ user manual: https://github.com/usgs/pestpp/tree/master/documentation
 
-### 1.3. Tutorial Objectives
+### Tutorial Objectives
 
 1. During this tutorial we'll spend time on "the plumbing" that allows PEST to manipulate model input and output files (shown in the 1st and 3rd box in Figure 9.8).  
 2. And - we'll run PEST++!
 3. And we'll see how to include forecasts in our PEST runs
 
-### 1.4. Admin
+### Admin
 
 We have provided some pre-cooked PEST dataset files, wrpaped around the modeified Freyberg model. The functions in the next cell import required dependencies and prepare a folder for you. This folder contains the model files and a preliminary PEST setup. Run the cells, then inspect the new folder named "pest_files" which has been created in your tutorial directory. (Just press shift-enter to run the cells). 
 
@@ -89,8 +89,6 @@ assert "dependencies" in flopy.__file__
 assert "dependencies" in pyemu.__file__
 sys.path.insert(0,"..")
 import herebedragons as hbd
-
-
 ```
 
 
@@ -106,10 +104,49 @@ hbd.prep_deps(tmp_d)
 hbd.prep_pest(tmp_d)
 ```
 
-### 1.5. Reminder - the modified-Freyberg model
+
+    ---------------------------------------------------------------------------
+
+    FileNotFoundError                         Traceback (most recent call last)
+
+    Input In [2], in <cell line: 5>()
+          2 tmp_d = os.path.join('pest_files')
+          4 # get executables
+    ----> 5 hbd.prep_bins(tmp_d)
+          6 # get dependency folders
+          7 hbd.prep_deps(tmp_d)
+    
+
+    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\..\herebedragons.py:97, in prep_bins(dest_path)
+         95 if os.path.exists(os.path.join(dest_path,f)):
+         96     os.remove(os.path.join(dest_path,f))
+    ---> 97 shutil.copy2(os.path.join(bin_path,f),os.path.join(dest_path,f))
+    
+
+    File D:\Workspace\hugm0001\anaconda\lib\shutil.py:435, in copy2(src, dst, follow_symlinks)
+        433 if os.path.isdir(dst):
+        434     dst = os.path.join(dst, os.path.basename(src))
+    --> 435 copyfile(src, dst, follow_symlinks=follow_symlinks)
+        436 copystat(src, dst, follow_symlinks=follow_symlinks)
+        437 return dst
+    
+
+    File D:\Workspace\hugm0001\anaconda\lib\shutil.py:264, in copyfile(src, dst, follow_symlinks)
+        262     os.symlink(os.readlink(src), dst)
+        263 else:
+    --> 264     with open(src, 'rb') as fsrc, open(dst, 'wb') as fdst:
+        265         # macOS
+        266         if _HAS_FCOPYFILE:
+        267             try:
+    
+
+    FileNotFoundError: [Errno 2] No such file or directory: 'pest_files\\inschek.exe'
+
+
+### Reminder - the modified-Freyberg model
 Just a quick reminder of what the model looks like and what we are doing. 
 
-It is a 3D model, with three layers. A river runs north-south, represented with the SFR package (green cells in the figure). On the southern border there is a GHB (cyan cells). No-flow cells are shown in black. Pumping wells are placed in the bottom layer (red cells). 
+It is a 1-layer model. A river runs north-south, represented with the SFR package (green cells in the figure). On the southern border there is a GHB (cyan cells). No-flow cells are shown in black. Pumping wells are placed in the red cells. 
 
 Time-series of measured heads are available at the locations marked with black X's. River flux is also measured at three locations (headwater, tailwater and gage; not displayed).
 
@@ -122,12 +159,80 @@ A subsequent twelve transient stress periods representing a period in the future
 hbd.plot_freyberg(tmp_d)
 ```
 
+
+    ---------------------------------------------------------------------------
+
+    FileNotFoundError                         Traceback (most recent call last)
+
+    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\..\..\dependencies\flopy\mf6\mfpackage.py:2460, in MFPackage.load(self, strict)
+       2459 try:
+    -> 2460     fd_input_file = open(
+       2461         datautil.clean_filename(self.get_file_path()), "r"
+       2462     )
+       2463 except OSError as e:
+    
+
+    FileNotFoundError: [Errno 2] No such file or directory: 'D:\\Workspace\\hugm0001\\github\\GMDSI_notebooks_fork\\tutorials\\part1_2_pest_setup\\pest_files\\mfsim.nam'
+
+    
+    During handling of the above exception, another exception occurred:
+    
+
+    MFDataException                           Traceback (most recent call last)
+
+    Input In [3], in <cell line: 1>()
+    ----> 1 hbd.plot_freyberg(tmp_d)
+    
+
+    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\..\herebedragons.py:537, in plot_freyberg(tmp_d)
+        535 def plot_freyberg(tmp_d):
+        536     # load simulation
+    --> 537     sim = flopy.mf6.MFSimulation.load(sim_ws=tmp_d, verbosity_level=0)
+        538     # load flow model
+        539     gwf = sim.get_model()
+    
+
+    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\..\..\dependencies\flopy\mf6\modflow\mfsimulation.py:670, in MFSimulation.load(cls, sim_name, version, exe_name, sim_ws, strict, verbosity_level, load_only, verify_data, write_headers)
+        668 if verbosity_level.value >= VerbosityLevel.normal.value:
+        669     print("  loading simulation name file...")
+    --> 670 instance.name_file.load(strict)
+        672 # load TDIS file
+        673 tdis_pkg = f"tdis{mfstructure.MFStructure().get_version_string()}"
+    
+
+    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\..\..\dependencies\flopy\mf6\mfpackage.py:2469, in MFPackage.load(self, strict)
+       2465         message = "File {} of type {} could not be opened.".format(
+       2466             self.get_file_path(), self.package_type
+       2467         )
+       2468         type_, value_, traceback_ = sys.exc_info()
+    -> 2469         raise MFDataException(
+       2470             self.model_name,
+       2471             self.package_name,
+       2472             self.path,
+       2473             "loading package file",
+       2474             None,
+       2475             inspect.stack()[0][3],
+       2476             type_,
+       2477             value_,
+       2478             traceback_,
+       2479             message,
+       2480             self._simulation_data.debug,
+       2481         )
+       2483 try:
+       2484     self._load_blocks(fd_input_file, strict)
+    
+
+    MFDataException: An error occurred in package "None". The error occurred while loading package file in the "load" method.
+    Additional Information:
+    (1) File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\pest_files\mfsim.nam of type nam could not be opened.
+
+
 In the previous tutorial on manual trial-and-error, we "manually" changed parameter values to get a good fit with measured data. We want PEST to this for us instead. To do so, we need to provide PEST with conduits that change a model input file and that extract model outputs after the model has been run. 
 
-**In this tutorial you do not *have* to get your hands dirty. However, we recomend you do. We provide all the necessary files to advance through the tutorial without any user-input. However, getting to grips with how files are constructed and the inner-workings of PEST is often insightfull. Throught the notebook we will provide instructions to read and edit files manualy (yes, yes...we know...we will get back to good old python in due course). This will require the use of a text editor software. Generic text editors (e.g notepad on Windows) are sufficent, but you will benefit from more versatile software such as Notepad++, UltraEdit, etc. There are many free options available online.**
+**In this tutorial you do not *have* to get your hands dirty. However, we recomend you do. We provide all the necessary files to advance through the tutorial without any user-input. However, getting to grips with how files are constructed and the inner-workings of PEST is often insightfull. Throught the notebook we will provide instructions to read and edit files manually (yes, yes...we know...we will get back to good old python in due course). This will require the use of a text editor software. Generic text editors (e.g notepad on Windows) are sufficent, but you will benefit from more versatile software such as Notepad++, UltraEdit, etc. There are many free options available online.**
 
 
-### 2. Template Files
+### Template Files
 
 Template files are used to create model input. Template files simply replace parameter numerical values with a code variable, named in the PEST Control File.
 
@@ -165,7 +270,7 @@ The first file name in each row is a template file. The second is the correspond
 >**Note**: 
 The PEST manual explains more detail about how you can control the writing of model input (e.g. scientific notation, double precision, etc.); see http://www.pesthomepage.org/Downloads.php to get the most recent version of the manual.
 
-### 2.2. Checking a template file with the `TEMPCHEK` utility
+### Checking a template file with the `TEMPCHEK` utility
 
 Let's check to see if this template file is correct using TEMPCHEK.  
 
@@ -191,7 +296,7 @@ Open up a command line in the `pest_files` folder and run TEMPCHEK. You'll see:
 
 Run `TEMPCHEK` __on the template file listed in  `freyberg.pst`__ and open the associated output file listed.  Although you could have seen this on a quick look at the template file, the TEMPCHEK output file is useful when you have many parameters. It will also notify you of any problems with the template file.
 
-### 2.3. Make your own TPL file
+### Make your own TPL file
 
 Test your understanding. Construct your own template file and check it with TEMPCHEK.
 
@@ -216,7 +321,7 @@ Open the PEST control file `freyberg.pst` in a text editor and find the Instruct
 
 Open one of these instruction file and model output file pairs in a text editor and inspect them. As you can see, the model output files are CSVs. With the exception of the first column, the values in each row and column of the CSV are observations. 
 
-### 3.1. Rules for constructing INS Files 
+### Rules for constructing INS Files 
 
  * The first line on an .ins file must be "`pif ~`" where "`~`" is a "marker delimiter"--a symbol that can be used to identify text to search for.  It is expected on this first line but it's not always used.
  * The scripting options are extensive but particular. Some options on how to navigate to the numerical data you want to read are:
@@ -307,7 +412,7 @@ Take a moment to explore the `freyberg.pst` control file. You will find all the 
 
 The `* model command line` section provides the command that PEST uses to run the model. Usually this would be a command to run a batch file or script. Here we have simply used the command to run MODFLOW6. You can see for yourself if it works by opening a command line in the "pest_files" folder, typing `mf6` and pressing `<enter>`. (This should run the model once.) 
 
-### 4.1. Check the control file with PESTCHEK
+### Check the control file with PESTCHEK
 
 Just like TEMPCHEK and INSCHEK, we also have a handy utility that we run on our PEST setup before pulling the trigger. 
 
@@ -333,7 +438,7 @@ You should see something like:
 
 If no errors are highlighted, let's go ahead and run PEST!
 
-### 4.2. Run PEST from Command Line
+### Run PEST from Command Line
 
 From the command line run __`pestpp-glm freyberg.pst`__ (Windows) or __`./pestpp-glm freyberg.pst`__ (Mac).
 
@@ -392,7 +497,8 @@ Check the `freyberg.rec` file again. What has changed? Try searching for "Final 
 
 What about the best-fit parameters? There should be a file named `freyberg.par`. Open it in a text editor. These are the best parameter values which PEST has managed obtain. Note that all parameters in that were in the control data `* parameter data` section are listed here. However, only the "hk" parameter values have changed because all the others were specified as "fixed". How do these values compare to what you achieved through manual trial-and-error calibration? 
 
-### 5. Moving into the 21st Century - thinking about forecast uncertainty 
+# Moving into the 21st Century
+## Thinking about forecast uncertainty 
 
 Recall that in your freyberg_trial_and_error tutorial we were looking at the fit between the model and historical data, but also at a "forecast" of river flow. This forecast was in fact the observation named "headwater:732.0" (the simulated headwater during the last model stress-period). 
 
@@ -400,7 +506,7 @@ If there is __*one thing*__ we want you to take away from this class it is this:
 
 **For most models there is a forecast/prediction that someone needs. Rather than waiting until the end of the project, the forecast should be entered into your thinking and workflow __right at the beginning__.**
 
-Open up `freberg.pst` in a text editor and look in the observation section. Find entry for the "headwater:732.0" observation. Note that the observation **weight** is zero. So, although we have included this "observatio" in the dataset, it does not in fact contribute to the objective function (it does not affect calibration). This is a nifty trick - it means we can put in forecasts __and__ hypothetical observations even if we don't have measured values for them! More on this coming up so stay tuned!   
+Open up `freberg.pst` in a text editor and look in the observation section. Find entry for the "headwater:732.0" observation. Note that the observation **weight** is zero. So, although we have included this "observation" in the dataset, it does not in fact contribute to the objective function (it does not affect calibration). This is a nifty trick - it means we can put in forecasts __and__ hypothetical observations even if we don't have measured values for them! More on this coming up so stay tuned!   
 
 But wait a minute - how does PEST know we have a forecast and not a calibration data point? PEST++ made this very easy - simply add the forecasts as observations and list them in a ++forecasts section in the PEST control `.pst` file.  Find the `++forecasts` command. The `++` at the beginning means this input will ___only be seen by PEST++___; if you use PEST it will be ignored. 
 
@@ -410,13 +516,3 @@ Let's open `freyberg.rec` in a text editor and look at the forecast uncertainty 
 To recap:  you just added a forecast and got an estimate of the uncertainty by simply adding one line to the PEST++ control file!
 
 __Note:__ other PEST++ specific input options can be found at https://github.com/usgs/pestpp/documentation/pestpp_users_manual.md.  During this course we will touch on the most commonly used ones. 
-
-
-```python
-
-```
-
-
-```python
-
-```
