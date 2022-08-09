@@ -14,7 +14,7 @@ Loosely, Bayes' Theorem can be interpeted as
 
 $$P\left(\boldsymbol{\theta}|\textbf{d}\right)=\frac{P\left(\textbf{d}|\boldsymbol{\theta}\right) P\left> (\boldsymbol{\theta}\right)}{P\left(\textbf{d}\right)}$$
  
-in which $\boldsymbol{\theta}$ are parameters, $\mathbf{d}$ are the data and | means "conditional on".
+in which $\boldsymbol{\theta}$ are parameters and $\mathbf{d}$ are the data.
 
 This is really just rearranging the law of conditional probabilities:
 
@@ -237,7 +237,7 @@ bh.plot_posterior(prior_mean=10, prior_std=11, likeli_mean = 25, likeli_std=5);
 
 
     
-![png](intro_to_bayes_files/intro_to_bayes_37_1.png)
+![png](intro_to_bayes_files/intro_to_bayes_38_1.png)
     
 
 
@@ -303,7 +303,7 @@ plt.tight_layout();
 
 
     
-![png](intro_to_bayes_files/intro_to_bayes_40_1.png)
+![png](intro_to_bayes_files/intro_to_bayes_41_1.png)
     
 
 
