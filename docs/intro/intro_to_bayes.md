@@ -1,3 +1,11 @@
+---
+layout: default
+title: Intro to Bayes
+parent: Introductions to Selected Topics
+nav_order: 6
+math: mathjax3
+---
+
 # Bayes' Theorem
 > ### _"When the facts change, I change my mind. What do you do, sir?"_
 > --John Maynard Keynes
