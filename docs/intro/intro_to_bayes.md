@@ -24,7 +24,7 @@ _Um, what?_ Let's use pictures to make this easier to understand.
 
 ## A Venn diagram to explore conditional probabilities
 <img src="intro_to_bayes_files/conditional_probability.png" style="float: left; width: 50%; margin-right: 1%; margin-bottom: 0.5em;">
-#<p style="clear: both;">
+
 
 By [Gnathan87 - Own work, CC0](https://commons.wikimedia.org/w/index.php?curid=15991401)
 
@@ -72,7 +72,7 @@ Let's play with a concrete example, one hinging on life, death, trust, and promi
 
 <img src="intro_to_bayes_files/plant.JPG" style="float: left; width: 28%; margin-right: 1%; margin-bottom: 0em;">
 <img src="intro_to_bayes_files/dead_plant.JPG" style="float: left; width: 30%; margin-right: 1%; margin-bottom: 0em;">
-<p style="clear: both;">
+
 
 
 You have a plant at home, and you're going to go away for a week. If it gets watered, its probability of dying is 15%. If it doesn't get watered, it is 80% likely to die. You ask your partner to water it for you and you are 90% certain they will do it.
