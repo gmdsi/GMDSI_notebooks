@@ -1,11 +1,4 @@
-
 ---
-layout: default
-title: Global Sensitivity Analysis
-parent: Introduction to Theory, Concepts and PEST Mechanic
-nav_order: 12
----
-                    ---
 layout: default
 title: Global Sensitivity Analysis
 parent: Introduction to Theory, Concepts and PEST Mechanic
@@ -106,34 +99,6 @@ hbd.prep_pest(working_dir)
 hbd.add_ppoints(working_dir)
 ```
 
-    ins file for heads.csv prepared.
-    ins file for sfr.csv prepared.
-    noptmax:0, npar_adj:1, nnz_obs:24
-    written pest control file: freyberg_mf6\freyberg.pst
-       could not remove start_datetime
-    1 pars added from template file .\freyberg6.sfr_perioddata_1.txt.tpl
-    6 pars added from template file .\freyberg6.wel_stress_period_data_10.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_11.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_12.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_2.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_3.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_4.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_5.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_6.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_7.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_8.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_9.txt.tpl
-    starting interp point loop for 800 points
-    took 1.866337 seconds
-    1 pars dropped from template file freyberg_mf6\freyberg6.npf_k_layer1.txt.tpl
-    29 pars added from template file .\hkpp.dat.tpl
-    starting interp point loop for 800 points
-    took 1.791094 seconds
-    29 pars added from template file .\rchpp.dat.tpl
-    noptmax:0, npar_adj:65, nnz_obs:37
-    new control file: 'freyberg_pp.pst'
-    
-
 ### Load the `pst` control file
 
 Let's double check what parameters we have in this version of the model using `pyemu` (you can just look in the PEST control file too.).
@@ -158,9 +123,6 @@ par.loc[:, 'partrans'] = 'log'
 # rewrite the contorl file!
 pst.write(os.path.join(working_dir,pst_name))
 ```
-
-    noptmax:0, npar_adj:68, nnz_obs:37
-    
 
 # Global Sensitivity
 
@@ -213,92 +175,10 @@ df.head()
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>n_samples</th>
-      <th>sen_mean</th>
-      <th>sen_mean_abs</th>
-      <th>sen_std_dev</th>
-    </tr>
-    <tr>
-      <th>parameter_name</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>ne1</th>
-      <td>4</td>
-      <td>0.000</td>
-      <td>0.000</td>
-      <td>0.000</td>
-    </tr>
-    <tr>
-      <th>rch0</th>
-      <td>4</td>
-      <td>19940.300</td>
-      <td>19940.300</td>
-      <td>11627.100</td>
-    </tr>
-    <tr>
-      <th>rch1</th>
-      <td>4</td>
-      <td>0.000</td>
-      <td>0.000</td>
-      <td>0.000</td>
-    </tr>
-    <tr>
-      <th>strinf</th>
-      <td>4</td>
-      <td>-18237.300</td>
-      <td>18237.300</td>
-      <td>13368.100</td>
-    </tr>
-    <tr>
-      <th>wel2</th>
-      <td>4</td>
-      <td>112.845</td>
-      <td>363.817</td>
-      <td>444.704</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
 ```python
 df.loc[:,["sen_mean_abs","sen_std_dev"]].plot(kind="bar", figsize=(13,4))
 plt.yscale('log');
 ```
-
-
-    
-![png](freyberg_2_global_sensitivity_files/freyberg_2_global_sensitivity_17_0.png)
-    
-
 
 Where mean absolute sensitivity ($μ*$) - blue bars - is large, shows that the parameter is sensitive across parameter space. The parameters `rch0` and `strinf` stand out. This is logical, as it is reasonable that they both have a singificant control on the systems' water budget (reminder: these parameters are global recharge and stream inflow rates). 
 
@@ -335,30 +215,6 @@ for forecast in pst.forecast_names:
     plt.title(forecast)
     plt.yscale('log');
 ```
-
-
-    
-![png](freyberg_2_global_sensitivity_files/freyberg_2_global_sensitivity_22_0.png)
-    
-
-
-
-    
-![png](freyberg_2_global_sensitivity_files/freyberg_2_global_sensitivity_22_1.png)
-    
-
-
-
-    
-![png](freyberg_2_global_sensitivity_files/freyberg_2_global_sensitivity_22_2.png)
-    
-
-
-
-    
-![png](freyberg_2_global_sensitivity_files/freyberg_2_global_sensitivity_22_3.png)
-    
-
 
 As you can see, different forecasts are sensitive to different parameters. Note, for example, that the `part_time` (particle travel time) forecast is sensitive to `ne1` (porostity) parameters, however none of the other forecasts are. Almost all forecasts are sensitive to recharge (`rch0` and `rch1`), and so on. By ranking sensitivities in this fashion, we can identify which parameters to focus on to reduce forecast uncertainty. We can also identify parameters which can be omitted (or "simplified"), if they have little or no effect on the forecast of interest (e.g. porosity on the `headwater` forecast).
 

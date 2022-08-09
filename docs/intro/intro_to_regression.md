@@ -1,11 +1,4 @@
-
 ---
-layout: default
-title: Intro to Regression
-parent: Introductions to Selected Topics
-nav_order: 2
----
-                    ---
 layout: default
 title: Intro to Regression
 parent: Introductions to Selected Topics
@@ -56,12 +49,6 @@ Orange dots are observations of reality. They represent what we can measure. For
 rh.plot_truth(xplot,x,y_data, poly_func)
 ```
 
-
-    
-![png](intro_to_regression_files/intro_to_regression_5_0.png)
-    
-
-
 ## Build a Model
 
 We are going to construct a model with which we hope to explain the "measured" data. The intention is to use this model to subsequently make a prediction.
@@ -81,12 +68,6 @@ model = np.poly1d([a, b, c])
 
 rh.plot_truth(xplot,x,y_data, poly_func, model)
 ```
-
-
-    
-![png](intro_to_regression_files/intro_to_regression_7_0.png)
-    
-
 
 ## Measure Model-to-Measurement Fit 
 
@@ -122,12 +103,6 @@ plt.legend();
 ```
 
 
-    
-![png](intro_to_regression_files/intro_to_regression_9_0.png)
-    
-
-
-
 **Weights**, $w_{hi}$, are applied to this residual to increase or decrease the contribution of individual observations to the total objective function. Ideally weights are assigned to give greater relevance to observations that have less noise, or are less uncertain. In practice, weighting strategies usually need to be more nuanced and will often reflect a quantitative measure of a modellers judgment as to which observations are most relevant to inform parameter that affect the prediction of interest. For the purposes of this tutorial, we will assume uniform weights and these will play no further role herein.
 
 So! Residuals are calculated, multiplied by a weight to adjust their relative contributions, then squared to make all residuals positive. Finally all residuals are summed to determine the value of the **objective function** ($\Phi$). Below we implement the equation described previously as a function. 
@@ -144,9 +119,6 @@ phi_0 = calc_sse([a,b], x, y_data)
 print('Phi =',phi_0)
 ```
 
-    Phi = 1495.0154221535531
-    
-
 **History-Matching** is achieved by minimizing the value of this objective function. **Calibration** is achieved by finding the *unique* solution which minimizes the objective function.
 
 ## The Response Surface
@@ -160,12 +132,6 @@ The function `rh.plot_sse()` calculates and plots $\Phi$ for a range of values o
 a,b = rh.plot_sse(polypars, x, y_data)
 ```
 
-
-    
-![png](intro_to_regression_files/intro_to_regression_14_0.png)
-    
-
-
 Or, since `python` is slick, we can make a contour plot. From this plot we can see that $a$ and $b$ are not independent. The value of $b$ that provides the "best fit" depends on what value of $a$ is considered, and vice versa. 
 
 However, there is a "best fit". That is the point on this (two-dimensional) surface at which $\Phi$ is smallest. (Finding that point is the goal of calibration.) This is easy to visualize for a two-dimensional problem. As we move into higher dimensions, things get a bit more challenging. However, the concepts are similar. 
@@ -174,12 +140,6 @@ However, there is a "best fit". That is the point on this (two-dimensional) surf
 ```python
 A, B, SSE_AB = rh.contour_sse(a, b, x, y_data)
 ```
-
-
-    
-![png](intro_to_regression_files/intro_to_regression_16_0.png)
-    
-
 
 ## Fit a Polynomial Function
 
@@ -199,13 +159,6 @@ y_fit_pars_best = [*sol.x,0]
 y_fit_pars_best
 ```
 
-
-
-
-    [-0.286385264416572, 0.9603812888937198, 0]
-
-
-
 As we can see, $\Phi$ is reduced:
 
 
@@ -219,11 +172,6 @@ print(f'Minimum Phi: {phi_calib}')
 print(f'% of initial Phi: {round(100*phi_calib/phi_0, 2)} %')
 ```
 
-    Initial Phi: 1495.0154221535531
-    Minimum Phi: 571.6124271421686
-    % of initial Phi: 38.23 %
-    
-
 And if we plot modelled values with the best fit parameters:
 
 
@@ -235,12 +183,6 @@ calib_model = np.poly1d(y_fit_pars_best)
 rh.plot_truth(xplot,x,y_data, poly_func, calib_model)
 ```
 
-
-    
-![png](intro_to_regression_files/intro_to_regression_22_0.png)
-    
-
-
 So how well did we do? Let's compare the "true" values of $a$ and $b$ with the "best fit" values.
 
 
@@ -248,10 +190,6 @@ So how well did we do? Let's compare the "true" values of $a$ and $b$ with the "
 print('True parameters are:              a={0:.4f}, b={1:.4f}, c={2}'.format(*polypars))
 print('The best-estimate parameters are: a={0:.4f}, b={1:.4f}, c={2}'.format(*y_fit_pars_best))
 ```
-
-    True parameters are:              a=-0.2503, b=0.8312, c=0.0
-    The best-estimate parameters are: a=-0.2864, b=0.9604, c=0
-    
 
 ## The Jacobian (or Sensitivity) Matrix
 
@@ -274,12 +212,6 @@ These provide information on how "sensitive" observations are to parameter chang
 rh.plot_jacobian(sol)
 ```
 
-
-    
-![png](intro_to_regression_files/intro_to_regression_26_0.png)
-    
-
-
 ## Make a Prediction
 
 Now let us use our model to make a prediction. Because we also know the "truth" we can compare our model prediction to the true value. The function `rh.plot_prediction()` plots the "truth", the data and the model simulated values. Values of the "sum of squared error" (SSE) for the calibration data and the prediction are also shown.
@@ -292,12 +224,6 @@ As you can see, even though the model has the same degrees as the truth (i.e. th
 ```python
 rh.plot_prediction(x, y_data, poly_func, np.poly1d(y_fit_pars_best))    
 ```
-
-
-    
-![png](intro_to_regression_files/intro_to_regression_28_0.png)
-    
-
 
 ## Over/Underfitting
 
@@ -322,10 +248,6 @@ As you increase the number of parameters, you should note that $R^2$ improves (i
 rh.plot_widget(x,y_data, y_fit_pars_best, poly_func)
 ```
 
-
-    interactive(children=(IntSlider(value=2, description='cdegree', max=30, min=1), Output()), _dom_classes=('widg…
-
-
 So as you can see, increasing parameters to improve the fit does not mean that the prediction is better. But reducing them does not necessarily help either. 
 
 The two plots below illustrate this. Both plots illustrate how model error changes with the number of adjustable parameters. The blue line plots error in regard to historical data. The red line plots error in regard to the prediction. 
@@ -343,21 +265,9 @@ rh.plot_error_tradeoff(x, y_data, poly_func)
 ```
 
 
-    
-![png](intro_to_regression_files/intro_to_regression_32_0.png)
-    
-
-
-
 ```python
 rh.plot_error_tradeoff_fine(x, y_data, poly_func)
 ```
-
-
-    
-![png](intro_to_regression_files/intro_to_regression_33_0.png)
-    
-
 
 ## Final Remarks
 

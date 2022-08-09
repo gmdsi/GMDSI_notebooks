@@ -1,11 +1,4 @@
-
 ---
-layout: default
-title: GLM and the Objective Function Response Surface
-parent: Introduction to Theory, Concepts and PEST Mechanic
-nav_order: 6
----
-                    ---
 layout: default
 title: GLM and the Objective Function Response Surface
 parent: Introduction to Theory, Concepts and PEST Mechanic
@@ -56,9 +49,6 @@ plt.rcParams['font.size'] = 10
 pyemu.plot_utils.font =10
 ```
 
-    D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_6_glm_response_surface\response_surface.py:89: DeprecationWarning: invalid escape sequence \P
-    
-
 
 ```python
 # folder containing original model files
@@ -82,12 +72,6 @@ else:
     hbd.prep_pest(tmp_d)
 ```
 
-    ins file for heads.csv prepared.
-    ins file for sfr.csv prepared.
-    noptmax:0, npar_adj:1, nnz_obs:24
-    written pest control file: freyberg_mf6\freyberg.pst
-    
-
 ### Reminder - the modified-Freyberg model
 Just a quick reminder of what the model looks like and what we are doing. 
 
@@ -104,12 +88,6 @@ A subsequent twelve transient stress periods representing a period in the future
 hbd.plot_freyberg(tmp_d)
 ```
 
-
-    
-![png](freyberg_glm_response_surface_files/freyberg_glm_response_surface_5_0.png)
-    
-
-
 ### The PEST Control File
 
 You may  wish to explore the `freyberg_mf6` folder which has been created in the tutorial directory. In it you will find a PEST control file named `freyberg.pst`.
@@ -123,128 +101,10 @@ pst.par_names
 ```
 
 
-
-
-    ['hk1', 'ne1', 'rch0', 'rch1']
-
-
-
-
 ```python
 par = pst.parameter_data
 par
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>parnme</th>
-      <th>partrans</th>
-      <th>parchglim</th>
-      <th>parval1</th>
-      <th>parlbnd</th>
-      <th>parubnd</th>
-      <th>pargp</th>
-      <th>scale</th>
-      <th>offset</th>
-      <th>extra</th>
-      <th>dercom</th>
-    </tr>
-    <tr>
-      <th>parnme</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>hk1</th>
-      <td>hk1</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>5.00</td>
-      <td>0.050</td>
-      <td>500.00</td>
-      <td>hk</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>NaN</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>ne1</th>
-      <td>ne1</td>
-      <td>fixed</td>
-      <td>factor</td>
-      <td>0.01</td>
-      <td>0.005</td>
-      <td>0.02</td>
-      <td>porosity</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>NaN</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>rch0</th>
-      <td>rch0</td>
-      <td>fixed</td>
-      <td>factor</td>
-      <td>1.00</td>
-      <td>0.500</td>
-      <td>2.00</td>
-      <td>rch0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>NaN</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>rch1</th>
-      <td>rch1</td>
-      <td>fixed</td>
-      <td>factor</td>
-      <td>1.00</td>
-      <td>0.500</td>
-      <td>2.00</td>
-      <td>rch1</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>NaN</td>
-      <td>1.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 We shall explore the effect of having two adjustable parameters: `hk1` and `rch0`. As we saw previsouly, these two parameters are correlated. If we use only head observations for calibration we are unable to achive a unique solution. 
 
@@ -264,9 +124,6 @@ Re-write the control file:
 pst.write(os.path.join(tmp_d, 'freyberg.pst'))
 ```
 
-    noptmax:0, npar_adj:2, nnz_obs:24
-    
-
 The `response_surface.py` file in the tutorial folder contains a few functions to run PEST++SWP and make plots. These run PEST++SWP a few hundred times for a combination of `hk1` and `rch0` values.
 
 
@@ -277,9 +134,6 @@ else:
     resurf.run_respsurf(par_names=['hk1','rch0'])
 ```
 
-    noptmax:0, npar_adj:2, nnz_obs:24
-    
-
 Make a plot of the response surface for `hk1` (x-axis) and `rch0` (y-axis). The colored contours indicate the objective function value for each combination of these two parameters. 
 
 As you can see, a long eliptical "valley" of optimal values is formed (grey zone). Parameter combinations in this zone all result in equivlent levels of "good fit".
@@ -288,12 +142,6 @@ As you can see, a long eliptical "valley" of optimal values is formed (grey zone
 ```python
 fig, ax, resp_surf = resurf.plot_response_surface(cmap='jet', figsize=(7,7)) #maxresp=1e3,
 ```
-
-
-    
-![png](freyberg_glm_response_surface_files/freyberg_glm_response_surface_16_0.png)
-    
-
 
 ### Add Flux Observations
 
@@ -320,9 +168,6 @@ Re-write the ocntrol file.
 pst.write(os.path.join(tmp_d, 'freyberg.pst'))
 ```
 
-    noptmax:0, npar_adj:2, nnz_obs:36
-    
-
 Run PEST++SWP again to recalcualte the response surface.
 
 
@@ -333,21 +178,12 @@ else:
     resurf.run_respsurf(par_names=['hk1','rch0'])
 ```
 
-    noptmax:0, npar_adj:2, nnz_obs:36
-    
-
 And plot it up again. Now we see the objective function surface funneling down to a single point. We have achieved a unique solution.
 
 
 ```python
 fig, ax, resp_surf = resurf.plot_response_surface(cmap='jet', figsize=(7,7)) #maxresp=1e3,
 ```
-
-
-    
-![png](freyberg_glm_response_surface_files/freyberg_glm_response_surface_25_0.png)
-    
-
 
 # Understanding Lambda's
 
@@ -396,9 +232,6 @@ if runflag==True:
     pyemu.os_utils.run('pestpp-glm freyberg.nolam.pst', cwd=tmp_d)
 ```
 
-    noptmax:250, npar_adj:2, nnz_obs:36
-    
-
 Plot the response surface:
 
 
@@ -406,12 +239,6 @@ Plot the response surface:
 fig, ax, resp_surf = resurf.plot_response_surface(cmap='jet', figsize=(7,7)) #maxresp=1e3,
 pars, obfun = resurf.add_trajectory_to_plot(fig, ax, 'No Lambda', pst_name='freyberg.nolam.pst')
 ```
-
-
-    
-![png](freyberg_glm_response_surface_files/freyberg_glm_response_surface_34_0.png)
-    
-
 
 ### Moderate Lambda
 
@@ -427,20 +254,11 @@ if runflag==True:
     pyemu.os_utils.run('pestpp-glm freyberg.lam700.pst', cwd=tmp_d)
 ```
 
-    noptmax:250, npar_adj:2, nnz_obs:36
-    
-
 
 ```python
 fig, ax, resp_surf = resurf.plot_response_surface(cmap='jet', figsize=(7,7)) #maxresp=1e3,
 pars, obfun = resurf.add_trajectory_to_plot(fig, ax, 'Lambda:700', pst_name='freyberg.lam700.pst')
 ```
-
-
-    
-![png](freyberg_glm_response_surface_files/freyberg_glm_response_surface_37_0.png)
-    
-
 
 ### Large Lambda
 
@@ -456,20 +274,11 @@ if runflag==True:
     pyemu.os_utils.run('pestpp-glm freyberg.lam7000.pst', cwd=tmp_d)
 ```
 
-    noptmax:250, npar_adj:2, nnz_obs:36
-    
-
 
 ```python
 fig, ax, resp_surf = resurf.plot_response_surface(cmap='jet', figsize=(7,7)) #maxresp=1e3,
 pars, obfun = resurf.add_trajectory_to_plot(fig, ax, 'Lambda:7000', pst_name='freyberg.lam7000.pst')
 ```
-
-
-    
-![png](freyberg_glm_response_surface_files/freyberg_glm_response_surface_40_0.png)
-    
-
 
 ### Normal PEST(++) Behaviour
 
@@ -487,17 +296,8 @@ if runflag==True:
     pyemu.os_utils.run('pestpp-glm freyberg.pst', cwd=tmp_d)
 ```
 
-    noptmax:250, npar_adj:2, nnz_obs:36
-    
-
 
 ```python
 fig, ax, resp_surf = resurf.plot_response_surface(cmap='jet', figsize=(7,7)) #maxresp=1e3,
 pars, obfun = resurf.add_trajectory_to_plot(fig, ax, 'Lambda:upgrade', pst_name='freyberg.pst')
 ```
-
-
-    
-![png](freyberg_glm_response_surface_files/freyberg_glm_response_surface_43_0.png)
-    
-

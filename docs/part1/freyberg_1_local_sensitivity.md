@@ -1,11 +1,4 @@
-
 ---
-layout: default
-title: Local Sensitivity and Identifiability
-parent: Introduction to Theory, Concepts and PEST Mechanic
-nav_order: 11
----
-                    ---
 layout: default
 title: Local Sensitivity and Identifiability
 parent: Introduction to Theory, Concepts and PEST Mechanic
@@ -98,34 +91,6 @@ hbd.prep_pest(working_dir)
 hbd.add_ppoints(working_dir)
 ```
 
-    ins file for heads.csv prepared.
-    ins file for sfr.csv prepared.
-    noptmax:0, npar_adj:1, nnz_obs:24
-    written pest control file: freyberg_mf6\freyberg.pst
-       could not remove start_datetime
-    1 pars added from template file .\freyberg6.sfr_perioddata_1.txt.tpl
-    6 pars added from template file .\freyberg6.wel_stress_period_data_10.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_11.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_12.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_2.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_3.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_4.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_5.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_6.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_7.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_8.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_9.txt.tpl
-    starting interp point loop for 800 points
-    took 2.00632 seconds
-    1 pars dropped from template file freyberg_mf6\freyberg6.npf_k_layer1.txt.tpl
-    29 pars added from template file .\hkpp.dat.tpl
-    starting interp point loop for 800 points
-    took 1.866999 seconds
-    29 pars added from template file .\rchpp.dat.tpl
-    noptmax:0, npar_adj:65, nnz_obs:37
-    new control file: 'freyberg_pp.pst'
-    
-
 ### Load the `pst` control file
 
 Let's double check what parameters we have in this version of the model using `pyemu` (you can just look in the PEST control file too.).
@@ -139,13 +104,6 @@ pst = pyemu.Pst(os.path.join(working_dir,pst_name))
 pst.par_groups
 ```
 
-
-
-
-    ['porosity', 'rch0', 'rch1', 'strinf', 'wel', 'hk1', 'rchpp']
-
-
-
 Which are adjustable?
 
 
@@ -153,13 +111,6 @@ Which are adjustable?
 # what adjustable parameter groups?
 pst.adj_par_groups
 ```
-
-
-
-
-    ['strinf', 'wel', 'hk1', 'rchpp']
-
-
 
 We have adjustable parameters that control SFR inflow rates, well pumping rates, hydraulic conductivity and recharge rates. Recall that by setting a parameter as "fixed" we are stating that we know it perfectly (should we though...?). Currently fixed parameters include porosity and future recharge.
 
@@ -174,13 +125,6 @@ par.loc[:, 'partrans'] = 'log'
 pst.adj_par_groups
 ```
 
-
-
-
-    ['porosity', 'rch0', 'rch1', 'strinf', 'wel', 'hk1', 'rchpp']
-
-
-
 ## Calculate the Jacobian
 
 First Let's calculate a single Jacobian by changing the NOPTMAX = -2.  This will need npar+1 runs. The Jacobian matrix we get is the local-scale sensitivity information
@@ -192,9 +136,6 @@ pst.control_data.noptmax = -2
 # rewrite the contorl file!
 pst.write(os.path.join(working_dir,pst_name))
 ```
-
-    noptmax:-2, npar_adj:68, nnz_obs:37
-    
 
 
 ```python
@@ -225,178 +166,6 @@ jco_df = jco_df.loc[pst.nnz_obs_names,:]
 jco_df.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>ne1</th>
-      <th>rch0</th>
-      <th>rch1</th>
-      <th>strinf</th>
-      <th>wel5</th>
-      <th>wel2</th>
-      <th>wel4</th>
-      <th>wel3</th>
-      <th>wel0</th>
-      <th>wel1</th>
-      <th>...</th>
-      <th>rch_i:37_j:17_zone:1.0</th>
-      <th>rch_i:22_j:2_zone:1.0</th>
-      <th>rch_i:32_j:12_zone:1.0</th>
-      <th>rch_i:32_j:17_zone:1.0</th>
-      <th>rch_i:7_j:17_zone:1.0</th>
-      <th>rch_i:27_j:12_zone:1.0</th>
-      <th>rch_i:12_j:2_zone:1.0</th>
-      <th>rch_i:12_j:17_zone:1.0</th>
-      <th>rch_i:22_j:17_zone:1.0</th>
-      <th>rch_i:22_j:7_zone:1.0</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>gage-1:3652.5</th>
-      <td>0.0</td>
-      <td>5841.205981</td>
-      <td>0.0</td>
-      <td>1120.270879</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>...</td>
-      <td>125.884552</td>
-      <td>161.600024</td>
-      <td>201.639433</td>
-      <td>220.487806</td>
-      <td>233.832423</td>
-      <td>227.072405</td>
-      <td>173.196462</td>
-      <td>240.762708</td>
-      <td>244.005433</td>
-      <td>201.792497</td>
-    </tr>
-    <tr>
-      <th>gage-1:3683.5</th>
-      <td>0.0</td>
-      <td>6435.657399</td>
-      <td>0.0</td>
-      <td>1144.361274</td>
-      <td>-120.824878</td>
-      <td>-243.792499</td>
-      <td>-15.308866</td>
-      <td>-63.328247</td>
-      <td>-241.879117</td>
-      <td>-167.669361</td>
-      <td>...</td>
-      <td>138.164313</td>
-      <td>169.644583</td>
-      <td>217.386450</td>
-      <td>240.753192</td>
-      <td>271.628364</td>
-      <td>245.759428</td>
-      <td>187.093069</td>
-      <td>275.172028</td>
-      <td>270.870655</td>
-      <td>214.076948</td>
-    </tr>
-    <tr>
-      <th>gage-1:3712.5</th>
-      <td>0.0</td>
-      <td>7097.077428</td>
-      <td>0.0</td>
-      <td>1149.171568</td>
-      <td>-208.255099</td>
-      <td>-361.950602</td>
-      <td>-42.397402</td>
-      <td>-134.286346</td>
-      <td>-372.891340</td>
-      <td>-283.110736</td>
-      <td>...</td>
-      <td>165.451984</td>
-      <td>172.678297</td>
-      <td>248.666346</td>
-      <td>282.870630</td>
-      <td>313.073017</td>
-      <td>278.008231</td>
-      <td>191.520864</td>
-      <td>317.577241</td>
-      <td>313.980250</td>
-      <td>225.208509</td>
-    </tr>
-    <tr>
-      <th>gage-1:3743.5</th>
-      <td>0.0</td>
-      <td>7932.862636</td>
-      <td>0.0</td>
-      <td>1152.525457</td>
-      <td>-269.555554</td>
-      <td>-434.848044</td>
-      <td>-77.830036</td>
-      <td>-201.182368</td>
-      <td>-455.575631</td>
-      <td>-365.438861</td>
-      <td>...</td>
-      <td>195.140729</td>
-      <td>177.606059</td>
-      <td>285.656487</td>
-      <td>331.992336</td>
-      <td>363.746072</td>
-      <td>317.089581</td>
-      <td>197.967518</td>
-      <td>369.250280</td>
-      <td>365.943920</td>
-      <td>243.734795</td>
-    </tr>
-    <tr>
-      <th>gage-1:3773.5</th>
-      <td>0.0</td>
-      <td>8593.599442</td>
-      <td>0.0</td>
-      <td>1153.402937</td>
-      <td>-310.231299</td>
-      <td>-483.416828</td>
-      <td>-113.758463</td>
-      <td>-255.387502</td>
-      <td>-509.916327</td>
-      <td>-424.120710</td>
-      <td>...</td>
-      <td>213.084043</td>
-      <td>183.785408</td>
-      <td>311.643036</td>
-      <td>364.964156</td>
-      <td>400.851338</td>
-      <td>345.761227</td>
-      <td>205.032819</td>
-      <td>406.855466</td>
-      <td>402.892808</td>
-      <td>263.589079</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 68 columns</p>
-</div>
-
-
-
 We can see that some parameters (e.g. `rch0`) have a large effect on the observations used for calibration.  The future recharge (`rch1`) has no effect on the calibration observations, but that makes sense as none of the calibration observations are in that future stress period!
 
 ## How about Composite Scaled Sensitivities
@@ -422,12 +191,6 @@ css_df.sort_values(by='pest_css', ascending=False).plot(kind='bar', figsize=(13,
 plt.yscale('log')
 ```
 
-
-    
-![png](freyberg_1_local_sensitivity_files/freyberg_1_local_sensitivity_17_0.png)
-    
-
-
 Note that the reltive ranks of the `hk` parameters agree between the two...but no so for the `rchpp` ilot point parameters, nor the `rch0` parameter. According to `pest_css` the `rch0` is the most sensitive. Not so for the `hill_css`.  Why might this be?
 
 > hint: what is the initial value of `rch0`?  What is the log of that initial value?  
@@ -445,12 +208,6 @@ ax = css_df['pest_css'].sort_values(ascending=False).plot(kind='bar')
 ax.set_yscale('log')
 ```
 
-
-    
-![png](freyberg_1_local_sensitivity_files/freyberg_1_local_sensitivity_20_0.png)
-    
-
-
 ## So how do these parameter sensitivities affect the forecasts?  
 
 Recall that the sensitivity is calculated by differencing the two model outputs, so any model output can have a sensitivity calculated even if we don't have a measured value.  So, because we included the forecasts as observations we have sensitivities for them in our Jacobian matrix.  Let's use `pyemu` to pull just these forecasts!
@@ -460,75 +217,6 @@ Recall that the sensitivity is calculated by differencing the two model outputs,
 jco_fore_df = sc.forecasts.to_dataframe()
 jco_fore_df.head()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>headwater:4383.5</th>
-      <th>tailwater:4383.5</th>
-      <th>trgw-0-9-1:4383.5</th>
-      <th>part_time</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>ne1</th>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>10743.664245</td>
-    </tr>
-    <tr>
-      <th>rch0</th>
-      <td>-915.373459</td>
-      <td>-564.544215</td>
-      <td>5.340906</td>
-      <td>-1046.833537</td>
-    </tr>
-    <tr>
-      <th>rch1</th>
-      <td>-2091.812821</td>
-      <td>-1539.075668</td>
-      <td>5.172705</td>
-      <td>-401.726184</td>
-    </tr>
-    <tr>
-      <th>strinf</th>
-      <td>2.990537</td>
-      <td>8.439942</td>
-      <td>0.030474</td>
-      <td>-18.054907</td>
-    </tr>
-    <tr>
-      <th>wel5</th>
-      <td>10.105829</td>
-      <td>21.877808</td>
-      <td>-0.043456</td>
-      <td>-47.648042</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 Note that porosity is 0.0, except for the travel time forecast (`part_time`), which makes sense.  
 
@@ -544,178 +232,6 @@ covar = pyemu.Cov(sc.xtqx.x, names=sc.xtqx.row_names)
 covar.df().head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>ne1</th>
-      <th>rch0</th>
-      <th>rch1</th>
-      <th>strinf</th>
-      <th>wel5</th>
-      <th>wel2</th>
-      <th>wel4</th>
-      <th>wel3</th>
-      <th>wel0</th>
-      <th>wel1</th>
-      <th>...</th>
-      <th>rch_i:37_j:17_zone:1.0</th>
-      <th>rch_i:22_j:2_zone:1.0</th>
-      <th>rch_i:32_j:12_zone:1.0</th>
-      <th>rch_i:32_j:17_zone:1.0</th>
-      <th>rch_i:7_j:17_zone:1.0</th>
-      <th>rch_i:27_j:12_zone:1.0</th>
-      <th>rch_i:12_j:2_zone:1.0</th>
-      <th>rch_i:12_j:17_zone:1.0</th>
-      <th>rch_i:22_j:17_zone:1.0</th>
-      <th>rch_i:22_j:7_zone:1.0</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>ne1</th>
-      <td>0.0</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-      <td>...</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-      <td>0.000000e+00</td>
-    </tr>
-    <tr>
-      <th>rch0</th>
-      <td>0.0</td>
-      <td>1.719625e+04</td>
-      <td>1.810695e-52</td>
-      <td>2.555628e+03</td>
-      <td>-6.783684e+02</td>
-      <td>-1.028452e+03</td>
-      <td>-4.222311e+02</td>
-      <td>-6.724618e+02</td>
-      <td>-1.073359e+03</td>
-      <td>-9.430636e+02</td>
-      <td>...</td>
-      <td>3.315653e+02</td>
-      <td>4.933025e+02</td>
-      <td>5.495180e+02</td>
-      <td>5.877640e+02</td>
-      <td>6.801790e+02</td>
-      <td>6.323330e+02</td>
-      <td>5.296213e+02</td>
-      <td>6.840297e+02</td>
-      <td>6.696531e+02</td>
-      <td>5.962216e+02</td>
-    </tr>
-    <tr>
-      <th>rch1</th>
-      <td>0.0</td>
-      <td>1.810695e-52</td>
-      <td>3.310813e-52</td>
-      <td>5.616738e-53</td>
-      <td>-5.715799e-54</td>
-      <td>-6.630929e-54</td>
-      <td>-1.285323e-53</td>
-      <td>-1.127573e-53</td>
-      <td>-6.368659e-54</td>
-      <td>-9.227413e-54</td>
-      <td>...</td>
-      <td>6.944860e-55</td>
-      <td>1.010563e-53</td>
-      <td>2.977386e-54</td>
-      <td>1.425093e-54</td>
-      <td>2.578004e-54</td>
-      <td>3.848684e-54</td>
-      <td>1.210124e-53</td>
-      <td>2.348003e-54</td>
-      <td>2.032613e-54</td>
-      <td>6.703012e-54</td>
-    </tr>
-    <tr>
-      <th>strinf</th>
-      <td>0.0</td>
-      <td>2.555628e+03</td>
-      <td>5.616738e-53</td>
-      <td>4.244482e+02</td>
-      <td>-1.107656e+02</td>
-      <td>-1.681681e+02</td>
-      <td>-6.071951e+01</td>
-      <td>-1.053190e+02</td>
-      <td>-1.758415e+02</td>
-      <td>-1.547466e+02</td>
-      <td>...</td>
-      <td>5.017724e+01</td>
-      <td>6.979899e+01</td>
-      <td>8.267088e+01</td>
-      <td>8.932119e+01</td>
-      <td>1.034567e+02</td>
-      <td>9.466655e+01</td>
-      <td>7.606745e+01</td>
-      <td>1.045795e+02</td>
-      <td>1.022535e+02</td>
-      <td>8.792567e+01</td>
-    </tr>
-    <tr>
-      <th>wel5</th>
-      <td>0.0</td>
-      <td>-6.783684e+02</td>
-      <td>-5.715799e-54</td>
-      <td>-1.107656e+02</td>
-      <td>3.373046e+01</td>
-      <td>5.037216e+01</td>
-      <td>2.104357e+01</td>
-      <td>3.380922e+01</td>
-      <td>5.249801e+01</td>
-      <td>4.679896e+01</td>
-      <td>...</td>
-      <td>-1.262280e+01</td>
-      <td>-1.980311e+01</td>
-      <td>-2.154104e+01</td>
-      <td>-2.270078e+01</td>
-      <td>-2.663027e+01</td>
-      <td>-2.491497e+01</td>
-      <td>-2.082368e+01</td>
-      <td>-2.688474e+01</td>
-      <td>-2.623598e+01</td>
-      <td>-2.420650e+01</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 68 columns</p>
-</div>
-
-
-
 For covariance, very small numbers reflect that the parameter doesn't covary with another.  (Does it make sense that `rch1` does not covary with other parameters?)
 
 
@@ -727,19 +243,6 @@ R = covar.to_pearson()
 plt.imshow(R.df(), interpolation='nearest', cmap='viridis')
 plt.colorbar()
 ```
-
-
-
-
-    <matplotlib.colorbar.Colorbar at 0x2377d202d60>
-
-
-
-
-    
-![png](freyberg_1_local_sensitivity_files/freyberg_1_local_sensitivity_28_1.png)
-    
-
 
 As expected, the parameters are correlated perfectly to themselves (1.0 along the yellow diagonal) buth they also can have appreciable correlation to each other, both positively and negatively.
 
@@ -753,27 +256,6 @@ cpar = 'hk_i:12_j:12_zone:1.0'
 R.df().loc[cpar][np.abs(R.df().loc[cpar])>.5]
 ```
 
-
-
-
-    hk_i:2_j:2_zone:1.0     -0.560843
-    hk_i:17_j:17_zone:1.0    0.520214
-    hk_i:2_j:12_zone:1.0     0.959114
-    hk_i:17_j:2_zone:1.0     0.593429
-    hk_i:7_j:12_zone:1.0     0.968990
-    hk_i:7_j:17_zone:1.0     0.973001
-    hk_i:12_j:17_zone:1.0    0.728918
-    hk_i:7_j:7_zone:1.0      0.940472
-    hk_i:17_j:12_zone:1.0    0.737877
-    hk_i:27_j:2_zone:1.0     0.747418
-    hk_i:2_j:7_zone:1.0      0.933603
-    hk_i:2_j:17_zone:1.0     0.988199
-    hk_i:12_j:12_zone:1.0    1.000000
-    hk_i:12_j:2_zone:1.0     0.902478
-    Name: hk_i:12_j:12_zone:1.0, dtype: float64
-
-
-
 Saying parameters are correlated is really saying that when a parameter changes it has a similar effect on the observations as the other parameter(s). So in this case that means that when `hk_i:12_j:12_zone:1.0` increases it has a similar effect on observations as increasing `hk_i:2_j:12_zone:1.0`.  If we add a new observation type (or less powerfully, an observation at a new location) we can break the correlation.  And we've seen this:  adding a flux observation broke the correlation between R and K!
 
 We can use this `pyemu` picture to interrogate the correlation - here we say plot this but cut out all that correlations under 0.5.  Play with this by putting other numbers between 0.3 and 1.0 and re-run the block below.
@@ -785,12 +267,6 @@ R_plot[np.abs(R_plot)>0.5] = np.nan
 plt.imshow(R_plot, interpolation='nearest', cmap='viridis')
 plt.colorbar();
 ```
-
-
-    
-![png](freyberg_1_local_sensitivity_files/freyberg_1_local_sensitivity_33_0.png)
-    
-
 
 In practice, correlation >0.95 or so becomes a problem for obtainning a unique solution to the parameter estimation problem. (A problem which can be avoided with regularization.)
 
@@ -814,13 +290,6 @@ We can get a dataframe of identifiability for any singular value cutoff (`singul
 pst.nnz_obs
 ```
 
-
-
-
-    37
-
-
-
 Try playing around with `singular_value` in the cell below:
 
 
@@ -831,178 +300,6 @@ id_df = ev.get_identifiability_dataframe(singular_value=singular_value).sort_val
 id_df.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>right_sing_vec_1</th>
-      <th>right_sing_vec_2</th>
-      <th>right_sing_vec_3</th>
-      <th>right_sing_vec_4</th>
-      <th>right_sing_vec_5</th>
-      <th>right_sing_vec_6</th>
-      <th>right_sing_vec_7</th>
-      <th>right_sing_vec_8</th>
-      <th>right_sing_vec_9</th>
-      <th>right_sing_vec_10</th>
-      <th>...</th>
-      <th>right_sing_vec_29</th>
-      <th>right_sing_vec_30</th>
-      <th>right_sing_vec_31</th>
-      <th>right_sing_vec_32</th>
-      <th>right_sing_vec_33</th>
-      <th>right_sing_vec_34</th>
-      <th>right_sing_vec_35</th>
-      <th>right_sing_vec_36</th>
-      <th>right_sing_vec_37</th>
-      <th>ident</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>rch0</th>
-      <td>0.932378</td>
-      <td>1.316588e-02</td>
-      <td>0.005903</td>
-      <td>0.007991</td>
-      <td>0.000812</td>
-      <td>0.000609</td>
-      <td>0.000015</td>
-      <td>0.026758</td>
-      <td>0.001542</td>
-      <td>0.000247</td>
-      <td>...</td>
-      <td>0.000013</td>
-      <td>0.000011</td>
-      <td>0.000008</td>
-      <td>0.000003</td>
-      <td>0.000012</td>
-      <td>0.000002</td>
-      <td>0.000003</td>
-      <td>0.000025</td>
-      <td>0.000004</td>
-      <td>0.999948</td>
-    </tr>
-    <tr>
-      <th>strinf</th>
-      <td>0.020741</td>
-      <td>2.305790e-01</td>
-      <td>0.006274</td>
-      <td>0.109774</td>
-      <td>0.540635</td>
-      <td>0.001327</td>
-      <td>0.017827</td>
-      <td>0.013370</td>
-      <td>0.004200</td>
-      <td>0.018371</td>
-      <td>...</td>
-      <td>0.000947</td>
-      <td>0.000005</td>
-      <td>0.001093</td>
-      <td>0.000014</td>
-      <td>0.000115</td>
-      <td>0.000149</td>
-      <td>0.001975</td>
-      <td>0.000619</td>
-      <td>0.000213</td>
-      <td>0.995883</td>
-    </tr>
-    <tr>
-      <th>wel4</th>
-      <td>0.000564</td>
-      <td>6.897222e-07</td>
-      <td>0.148021</td>
-      <td>0.048598</td>
-      <td>0.000400</td>
-      <td>0.362244</td>
-      <td>0.001291</td>
-      <td>0.044568</td>
-      <td>0.015191</td>
-      <td>0.017385</td>
-      <td>...</td>
-      <td>0.001077</td>
-      <td>0.003035</td>
-      <td>0.009988</td>
-      <td>0.000156</td>
-      <td>0.002629</td>
-      <td>0.001476</td>
-      <td>0.007095</td>
-      <td>0.000423</td>
-      <td>0.000477</td>
-      <td>0.980654</td>
-    </tr>
-    <tr>
-      <th>rch_i:2_j:7_zone:1.0</th>
-      <td>0.001488</td>
-      <td>4.154581e-02</td>
-      <td>0.002563</td>
-      <td>0.063259</td>
-      <td>0.000684</td>
-      <td>0.003269</td>
-      <td>0.361813</td>
-      <td>0.015770</td>
-      <td>0.014034</td>
-      <td>0.027443</td>
-      <td>...</td>
-      <td>0.000753</td>
-      <td>0.052757</td>
-      <td>0.002842</td>
-      <td>0.006321</td>
-      <td>0.000134</td>
-      <td>0.000472</td>
-      <td>0.000382</td>
-      <td>0.000110</td>
-      <td>0.010224</td>
-      <td>0.978340</td>
-    </tr>
-    <tr>
-      <th>wel1</th>
-      <td>0.002835</td>
-      <td>3.365628e-02</td>
-      <td>0.081648</td>
-      <td>0.057850</td>
-      <td>0.059161</td>
-      <td>0.016663</td>
-      <td>0.020086</td>
-      <td>0.110854</td>
-      <td>0.019189</td>
-      <td>0.068539</td>
-      <td>...</td>
-      <td>0.010471</td>
-      <td>0.004439</td>
-      <td>0.003617</td>
-      <td>0.001581</td>
-      <td>0.000712</td>
-      <td>0.003628</td>
-      <td>0.012728</td>
-      <td>0.000625</td>
-      <td>0.001983</td>
-      <td>0.963268</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 38 columns</p>
-</div>
-
-
-
 It's easy to  visualize parameter _identifiability_  as stacked bar charts. Here we are looking at the identifiability with `singular_value` number of singular vectors:
 
 
@@ -1010,24 +307,12 @@ It's easy to  visualize parameter _identifiability_  as stacked bar charts. Here
 id = pyemu.plot_utils.plot_id_bar(id_df, figsize=(14,4))
 ```
 
-
-    
-![png](freyberg_1_local_sensitivity_files/freyberg_1_local_sensitivity_43_0.png)
-    
-
-
 However, it can be more meaningful to look at a singular value cutoff:
 
 
 ```python
 id = pyemu.plot_utils.plot_id_bar(id_df, nsv=10, figsize=(14,4))
 ```
-
-
-    
-![png](freyberg_1_local_sensitivity_files/freyberg_1_local_sensitivity_45_0.png)
-    
-
 
 # Display Spatially
 
@@ -1048,15 +333,6 @@ ident_vals = id_df.loc[ hkpp_parnames, 'ident'].values
 hbd.plot_arr2grid(ident_vals, working_dir)
 ```
 
-       could not remove start_datetime
-    
-
-
-    
-![png](freyberg_1_local_sensitivity_files/freyberg_1_local_sensitivity_48_1.png)
-    
-
-
 We can do the same for sensitivity:
 
 
@@ -1066,15 +342,6 @@ css_hk = css_df.loc[ hkpp_parnames, 'pest_css'].values
 # use the conveninec function to interpolate to and then plot on the model grid
 hbd.plot_arr2grid(css_hk, working_dir, title='Sensitivity')
 ```
-
-       could not remove start_datetime
-    
-
-
-    
-![png](freyberg_1_local_sensitivity_files/freyberg_1_local_sensitivity_50_1.png)
-    
-
 
 # So what?
 

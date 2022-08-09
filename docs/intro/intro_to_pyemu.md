@@ -1,11 +1,4 @@
-
 ---
-layout: default
-title: Intro to pyEMU
-parent: Introductions to Selected Topics
-nav_order: 4
----
-                    ---
 layout: default
 title: Intro to pyEMU
 parent: Introductions to Selected Topics
@@ -76,131 +69,6 @@ For example, the `* parameter data` section can be accessed by calling `pst.para
 pst.parameter_data.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>parnme</th>
-      <th>partrans</th>
-      <th>parchglim</th>
-      <th>parval1</th>
-      <th>parlbnd</th>
-      <th>parubnd</th>
-      <th>pargp</th>
-      <th>scale</th>
-      <th>offset</th>
-      <th>dercom</th>
-      <th>extra</th>
-    </tr>
-    <tr>
-      <th>parnme</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>hk00</th>
-      <td>hk00</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>5.0</td>
-      <td>0.5</td>
-      <td>50.0</td>
-      <td>hk</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>hk01</th>
-      <td>hk01</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>5.0</td>
-      <td>0.5</td>
-      <td>50.0</td>
-      <td>hk</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>hk02</th>
-      <td>hk02</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>5.0</td>
-      <td>0.5</td>
-      <td>50.0</td>
-      <td>hk</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>hk03</th>
-      <td>hk03</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>5.0</td>
-      <td>0.5</td>
-      <td>50.0</td>
-      <td>hk</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>hk04</th>
-      <td>hk04</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>5.0</td>
-      <td>0.5</td>
-      <td>50.0</td>
-      <td>hk</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>NaN</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
 The same for `* observation data`:
 
 
@@ -208,104 +76,12 @@ The same for `* observation data`:
 pst.observation_data.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>obsnme</th>
-      <th>obsval</th>
-      <th>weight</th>
-      <th>obgnme</th>
-      <th>extra</th>
-    </tr>
-    <tr>
-      <th>obsnme</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>c001cr03c10_19700102</th>
-      <td>c001cr03c10_19700102</td>
-      <td>26.661526</td>
-      <td>5.0</td>
-      <td>calhead</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>c001cr03c16_19700102</th>
-      <td>c001cr03c16_19700102</td>
-      <td>23.460564</td>
-      <td>5.0</td>
-      <td>calhead</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>c001cr04c09_19700102</th>
-      <td>c001cr04c09_19700102</td>
-      <td>28.513522</td>
-      <td>5.0</td>
-      <td>calhead</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>c001cr10c02_19700102</th>
-      <td>c001cr10c02_19700102</td>
-      <td>30.741689</td>
-      <td>5.0</td>
-      <td>calhead</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>c001cr14c11_19700102</th>
-      <td>c001cr14c11_19700102</td>
-      <td>25.871208</td>
-      <td>5.0</td>
-      <td>calhead</td>
-      <td>NaN</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
 You can access, slice and edit `pst.parameter_data` or `pst.observation_data` just as you would a DataFrame. You can add columns, these will not be writen to the control file. `pyemu` is clever like that.
 
 
 ```python
 pst.parameter_data.columns
 ```
-
-
-
-
-    Index(['parnme', 'partrans', 'parchglim', 'parval1', 'parlbnd', 'parubnd',
-           'pargp', 'scale', 'offset', 'dercom', 'extra'],
-          dtype='object')
-
-
 
 It's best not to mess around with parameter names (`parnme`). If you do, you will need to make sure that the corresponding names appear in a `.tpl` file. (The same applies for observation names and `.ins` files.) 
 
@@ -320,103 +96,6 @@ pst.parameter_data['parval1'] = 1.1
 # the pandas .loc method makes for easy slicing and dicing
 pst.parameter_data.iloc[:3,:] 
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>parnme</th>
-      <th>partrans</th>
-      <th>parchglim</th>
-      <th>parval1</th>
-      <th>parlbnd</th>
-      <th>parubnd</th>
-      <th>pargp</th>
-      <th>scale</th>
-      <th>offset</th>
-      <th>dercom</th>
-      <th>extra</th>
-    </tr>
-    <tr>
-      <th>parnme</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>hk00</th>
-      <td>hk00</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.1</td>
-      <td>0.5</td>
-      <td>50.0</td>
-      <td>hk</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>hk01</th>
-      <td>hk01</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.1</td>
-      <td>0.5</td>
-      <td>50.0</td>
-      <td>hk</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>hk02</th>
-      <td>hk02</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.1</td>
-      <td>0.5</td>
-      <td>50.0</td>
-      <td>hk</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>NaN</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 ### Control Data Section
 
@@ -437,68 +116,6 @@ We can inspect all control data values using the `pst.control_data.formatted_val
 pst.control_data.formatted_values
 ```
 
-
-
-
-    name
-    rstfle                        restart
-    pestmode               regularization
-    npar                               48
-    nobs                             1013
-    npargp                              6
-    nprior                            422
-    nobsgp                             26
-    maxcompdim                          0
-    ntplfle                             6
-    ninsfle                             5
-    precis                         single
-    dpoint                          point
-    numcom                              1
-    jacfile                             0
-    messfile                            0
-    obsreref                   noobsreref
-    rlambda1                 2.000000E+01
-    rlamfac                 -3.000000E+00
-    phiratsuf                3.000000E-01
-    phiredlam                1.000000E-02
-    numlam                             -7
-    jacupdate                         999
-    lamforgive                 lamforgive
-    derforgive               noderforgive
-    relparmax                1.000000E+01
-    facparmax                1.000000E+01
-    facorig                  1.000000E-03
-    iboundstick                         0
-    upvecbend                           0
-    phiredswh                1.000000E-01
-    noptswitch                          1
-    splitswh                 1.100000E+00
-    doaui                           noaui
-    dosenreuse                 nosenreuse
-    boundscale               noboundscale
-    noptmax                             0
-    phiredstp                1.000000E-02
-    nphistp                             3
-    nphinored                           3
-    relparstp                1.000000E-02
-    nrelpar                             3
-    phistopthresh            0.000000E+00
-    lastrun                             1
-    phiabandon              -1.000000E+00
-    icov                                0
-    icor                                0
-    ieig                                0
-    ires                                0
-    jcosave                       jcosave
-    verboserec                 verboserec
-    jcosaveitn                 jcosaveitn
-    reisaveitn                 reisaveitn
-    parsaveitn                 parsaveitn
-    parsaverun               noparsaverun
-    dtype: object
-
-
-
 ### PEST++ Options
 
 PEST++ options are stored in a dictionary in which the `keys` are the PEST++ Control Variable name (see the PEST++ user manual for names of these variables and their descriptions). Values must be asigned according to what PEST++ expects as input.
@@ -510,18 +127,6 @@ You can access the existing PEST++ options like so:
 pst.pestpp_options
 ```
 
-
-
-
-    {'n_iter_base': '-1',
-     'lambda_scale_fac': '1.0',
-     'n_iter_super': '3',
-     'lambdas': '0.1,1.0,10.0',
-     'forecasts': 'travel_time,fa_headwaters_0001,c001fr16c17_19791231,c001fr05c04_19791231',
-     'upgrade_augment': 'false'}
-
-
-
 You can change the values of existing control variables like so:
 
 
@@ -532,19 +137,6 @@ pst.pestpp_options['ies_parameter_ensemble'] = 'dummy_ies_par_ensemble.csv'
 # check the dictionary again
 pst.pestpp_options
 ```
-
-
-
-
-    {'n_iter_base': '-1',
-     'lambda_scale_fac': '1.0',
-     'n_iter_super': '3',
-     'lambdas': '0.1,1.0,10.0',
-     'forecasts': 'travel_time,fa_headwaters_0001,c001fr16c17_19791231,c001fr05c04_19791231',
-     'upgrade_augment': 'false',
-     'ies_parameter_ensemble': 'dummy_ies_par_ensemble.csv'}
-
-
 
 Or add new PEST++ variables like so:
 
@@ -564,21 +156,6 @@ pst.pestpp_options['da_use_simulated_states'] = True
 pst.pestpp_options
 ```
 
-
-
-
-    {'n_iter_base': '-1',
-     'lambda_scale_fac': '1.0',
-     'n_iter_super': '3',
-     'lambdas': [0.1, 1, 10, 100, 1000],
-     'forecasts': 'travel_time,fa_headwaters_0001,c001fr16c17_19791231,c001fr05c04_19791231',
-     'upgrade_augment': 'false',
-     'ies_parameter_ensemble': 'dummy_ies_par_ensemble.csv',
-     'ies_num_reals': 50,
-     'da_use_simulated_states': True}
-
-
-
 ### Writing the .pst control file
 
 All of these edits are kept in memory untill explicitly written to a .pst file. This is accomplished with the `Pst.write()` method.
@@ -592,28 +169,15 @@ You can specify the version by passing the relevant argument. Run the cells belo
 pst.write(os.path.join(f_d, 'temp.pst'), version=1)
 ```
 
-    noptmax:0, npar_adj:48, nnz_obs:14
-    
-
 
 ```python
 pst.write(os.path.join(f_d, "temp_v2.pst"), version=2)
 ```
 
-    noptmax:0, npar_adj:48, nnz_obs:14
-    
-
 
 ```python
 [f for f in os.listdir(f_d) if f.endswith('.pst')]
 ```
-
-
-
-
-    ['freyberg_pp.pst', 'temp.pst', 'temp_v2.pst', 'test.pst', 'test2.pst']
-
-
 
 ### Adding Parameters/Observations from .tpl/.ins files
 
@@ -639,75 +203,6 @@ Adding the parameters from "special_pars.dat.tpl" to the control file is a simpl
 pst.add_parameters(tpl_filename, pst_path=".") #pst_path is the relative path from the control file to the .tp file
 ```
 
-    2 pars added from template file .\special_pars.dat.tpl
-    
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>parnme</th>
-      <th>partrans</th>
-      <th>parchglim</th>
-      <th>parval1</th>
-      <th>parlbnd</th>
-      <th>parubnd</th>
-      <th>pargp</th>
-      <th>scale</th>
-      <th>offset</th>
-      <th>dercom</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>special_par1</th>
-      <td>special_par1</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>1.100000e-10</td>
-      <td>1.100000e+10</td>
-      <td>pargp</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>special_par2</th>
-      <td>special_par2</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>1.100000e-10</td>
-      <td>1.100000e+10</td>
-      <td>pargp</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
 You can then adjust parameter data details:
 
 
@@ -720,75 +215,6 @@ par.loc[par['pargp'] == 'pargp', ['parlbnd', 'parubnd']] = 0.1, 10
 
 par.loc[par['pargp'] == 'pargp']
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>parnme</th>
-      <th>partrans</th>
-      <th>parchglim</th>
-      <th>parval1</th>
-      <th>parlbnd</th>
-      <th>parubnd</th>
-      <th>pargp</th>
-      <th>scale</th>
-      <th>offset</th>
-      <th>dercom</th>
-      <th>extra</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>special_par1</th>
-      <td>special_par1</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>0.1</td>
-      <td>10.0</td>
-      <td>pargp</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>special_par2</th>
-      <td>special_par2</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>0.1</td>
-      <td>10.0</td>
-      <td>pargp</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>NaN</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 ### Tying Parameters
 
@@ -803,75 +229,6 @@ par.loc[par['pargp'] == 'pargp']
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>parnme</th>
-      <th>partrans</th>
-      <th>parchglim</th>
-      <th>parval1</th>
-      <th>parlbnd</th>
-      <th>parubnd</th>
-      <th>pargp</th>
-      <th>scale</th>
-      <th>offset</th>
-      <th>dercom</th>
-      <th>extra</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>special_par1</th>
-      <td>special_par1</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>0.1</td>
-      <td>10.0</td>
-      <td>pargp</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>special_par2</th>
-      <td>special_par2</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>0.1</td>
-      <td>10.0</td>
-      <td>pargp</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>NaN</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
 ```python
 # set the partrans for "special_par2" as "tied"
 par.loc['special_par2', 'partrans'] = 'tied'
@@ -882,48 +239,6 @@ par.loc['special_par2', 'partied'] = 'special_par1'
 # display for comparison; see partrans and partied columns
 par.loc[par['pargp'] == 'pargp', ['partrans', 'partied']]
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>partrans</th>
-      <th>partied</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>special_par1</th>
-      <td>log</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>special_par2</th>
-      <td>tied</td>
-      <td>special_par1</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 ## Utilities
 
@@ -940,37 +255,16 @@ pst.nnz_obs_groups[:5]
 ```
 
 
-
-
-    ['calhead', 'calflux']
-
-
-
-
 ```python
 # number of non-zero observations and adjustable parmaeters
 pst.nnz_obs, pst.npar_adj
 ```
 
 
-
-
-    (14, 49)
-
-
-
-
 ```python
 # adjustble parameter group names
 pst.adj_par_groups[:5]
 ```
-
-
-
-
-    ['hk', 'porosity', 'rch', 'sfr', 'w0']
-
-
 
 You can write a parameter or observation summary table wth the `Pst.write_par_symmary_table()` and `Pst.write_obs_symmary_table()` methods, respectively. Quite usefull when preparing those pesky reports. 
 
@@ -982,373 +276,9 @@ pst.write_par_summary_table()
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>type</th>
-      <th>transform</th>
-      <th>count</th>
-      <th>initial value</th>
-      <th>lower bound</th>
-      <th>upper bound</th>
-      <th>standard deviation</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>hk</th>
-      <td>hk</td>
-      <td>log</td>
-      <td>32</td>
-      <td>0.0413927</td>
-      <td>-0.30103</td>
-      <td>1.69897</td>
-      <td>0.5</td>
-    </tr>
-    <tr>
-      <th>pargp</th>
-      <td>pargp</td>
-      <td>mixed</td>
-      <td>2</td>
-      <td>0 to     1</td>
-      <td>-1 to   0.1</td>
-      <td>1 to    10</td>
-      <td>0.5 to 2.475</td>
-    </tr>
-    <tr>
-      <th>porosity</th>
-      <td>porosity</td>
-      <td>log</td>
-      <td>1</td>
-      <td>0.0413927</td>
-      <td>-2.30103</td>
-      <td>-1.69897</td>
-      <td>0.150515</td>
-    </tr>
-    <tr>
-      <th>rch</th>
-      <td>rch</td>
-      <td>log</td>
-      <td>2</td>
-      <td>0.0413927</td>
-      <td>-0.60206 to -0.30103</td>
-      <td>0.30103 to 0.477121</td>
-      <td>0.150515 to 0.269795</td>
-    </tr>
-    <tr>
-      <th>sfr</th>
-      <td>sfr</td>
-      <td>log</td>
-      <td>1</td>
-      <td>0.0413927</td>
-      <td>-2</td>
-      <td>1</td>
-      <td>0.75</td>
-    </tr>
-    <tr>
-      <th>w0</th>
-      <td>w0</td>
-      <td>log</td>
-      <td>6</td>
-      <td>0.0413927</td>
-      <td>-0.30103</td>
-      <td>0.30103</td>
-      <td>0.150515</td>
-    </tr>
-    <tr>
-      <th>w1</th>
-      <td>w1</td>
-      <td>log</td>
-      <td>6</td>
-      <td>0.0413927</td>
-      <td>-1</td>
-      <td>1</td>
-      <td>0.5</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
 ```python
 pst.write_obs_summary_table()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>group</th>
-      <th>value</th>
-      <th>non-zero weight</th>
-      <th>zero weight</th>
-      <th>weight</th>
-      <th>standard deviation</th>
-      <th>percent error</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>calflux</th>
-      <td>calflux</td>
-      <td>3242.6</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0.05</td>
-      <td>20</td>
-      <td>0.616789</td>
-    </tr>
-    <tr>
-      <th>calhead</th>
-      <td>calhead</td>
-      <td>15.7487 to 30.7417</td>
-      <td>13</td>
-      <td>0</td>
-      <td>5</td>
-      <td>0.2</td>
-      <td>0.650582 to 1.26995</td>
-    </tr>
-    <tr>
-      <th>flaqx</th>
-      <td>flaqx</td>
-      <td>-895.43 to 252.98</td>
-      <td>0</td>
-      <td>122</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>flout</th>
-      <td>flout</td>
-      <td>0 to 7229.3</td>
-      <td>0</td>
-      <td>122</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>flx_constan</th>
-      <td>flx_constan</td>
-      <td>-860.052 to -490.431</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>flx_in-out</th>
-      <td>flx_in-out</td>
-      <td>-2.9966 to 1.3086</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>flx_percent</th>
-      <td>flx_percent</td>
-      <td>-0.05 to  0.02</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>flx_recharg</th>
-      <td>flx_recharg</td>
-      <td>3475 to 6004.8</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>flx_storage</th>
-      <td>flx_storage</td>
-      <td>0 to 1578.27</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>flx_stream_</th>
-      <td>flx_stream_</td>
-      <td>-3242.62 to -603.149</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>flx_total</th>
-      <td>flx_total</td>
-      <td>-2.99658 to 1.30859</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>flx_wells</th>
-      <td>flx_wells</td>
-      <td>-2381.4 to -1905.12</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>forecast</th>
-      <td>forecast</td>
-      <td>-242.577 to 26272.5</td>
-      <td>0</td>
-      <td>4</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>pothead</th>
-      <td>pothead</td>
-      <td>11.4 to 31.6052</td>
-      <td>0</td>
-      <td>703</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>vol_constan</th>
-      <td>vol_constan</td>
-      <td>-2.70556E+06 to -860.052</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>vol_in-out</th>
-      <td>vol_in-out</td>
-      <td>-2.9966 to  4774</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>vol_percent</th>
-      <td>vol_percent</td>
-      <td>-0.05 to  0.02</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>vol_recharg</th>
-      <td>vol_recharg</td>
-      <td>6004.8 to 1.26932E+07</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>vol_storage</th>
-      <td>vol_storage</td>
-      <td>0 to 5.7607E+06</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>vol_stream_</th>
-      <td>vol_stream_</td>
-      <td>-7.0472E+06 to -3242.62</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>vol_total</th>
-      <td>vol_total</td>
-      <td>-2.99658 to  4774</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-    <tr>
-      <th>vol_wells</th>
-      <td>vol_wells</td>
-      <td>-8.6964E+06 to -1905.12</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NA</td>
-      <td>NA</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 ### Phi and residuals
 
@@ -1366,96 +296,6 @@ Inspect it by running the cell bellow. As you can see, the DataFrame lists all o
 pst.res.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>name</th>
-      <th>group</th>
-      <th>measured</th>
-      <th>modelled</th>
-      <th>residual</th>
-      <th>weight</th>
-    </tr>
-    <tr>
-      <th>name</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>c001cr03c10_19700102</th>
-      <td>c001cr03c10_19700102</td>
-      <td>calhead</td>
-      <td>26.661526</td>
-      <td>28.013775</td>
-      <td>-1.352249</td>
-      <td>5.0</td>
-    </tr>
-    <tr>
-      <th>c001cr03c16_19700102</th>
-      <td>c001cr03c16_19700102</td>
-      <td>calhead</td>
-      <td>23.460564</td>
-      <td>24.444290</td>
-      <td>-0.983726</td>
-      <td>5.0</td>
-    </tr>
-    <tr>
-      <th>c001cr04c09_19700102</th>
-      <td>c001cr04c09_19700102</td>
-      <td>calhead</td>
-      <td>28.513522</td>
-      <td>28.513071</td>
-      <td>0.000451</td>
-      <td>5.0</td>
-    </tr>
-    <tr>
-      <th>c001cr10c02_19700102</th>
-      <td>c001cr10c02_19700102</td>
-      <td>calhead</td>
-      <td>30.741689</td>
-      <td>31.881250</td>
-      <td>-1.139561</td>
-      <td>5.0</td>
-    </tr>
-    <tr>
-      <th>c001cr14c11_19700102</th>
-      <td>c001cr14c11_19700102</td>
-      <td>calhead</td>
-      <td>25.871208</td>
-      <td>25.444475</td>
-      <td>0.426733</td>
-      <td>5.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
 A somewhat clunky (and meaningless) look at everyones favourite "good fit" plot:
 
 
@@ -1463,38 +303,12 @@ A somewhat clunky (and meaningless) look at everyones favourite "good fit" plot:
 pst.res.plot.scatter('measured', 'modelled')
 ```
 
-
-
-
-    <AxesSubplot:xlabel='measured', ylabel='modelled'>
-
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_47_1.png)
-    
-
-
 Or a clunky look at the residuals for selected observations:
 
 
 ```python
 pst.res.iloc[:10].loc[:, 'residual'].plot(kind='bar')
 ```
-
-
-
-
-    <AxesSubplot:xlabel='name'>
-
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_49_1.png)
-    
-
 
 There are built in routines for some common plots. These can be called with the `Pst.plot()` method and specifying the `kind` argument. For example, a 1to1 plot for each observation group: 
 
@@ -1504,16 +318,6 @@ There are built in routines for some common plots. These can be called with the 
 pst.plot(kind='1to1');
 ```
 
-
-    <Figure size 576x756 with 0 Axes>
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_51_1.png)
-    
-
-
 The weighted sum of square residuals (Phi) is also stored in the respective `Pst` attribute. 
 
 
@@ -1521,13 +325,6 @@ The weighted sum of square residuals (Phi) is also stored in the respective `Pst
 # the value of the objective function
 pst.phi
 ```
-
-
-
-
-    412.55703718999166
-
-
 
 We can access the components of the objective function as a dictionary. These allow us to breakdown the contributions to Phi from each observation group:
 
@@ -1537,46 +334,12 @@ We can access the components of the objective function as a dictionary. These al
 pst.phi_components
 ```
 
-
-
-
-    {'calflux': 0.6560999999999854,
-     'calhead': 411.9009371899917,
-     'flaqx': 0.0,
-     'flout': 0.0,
-     'flx_constan': 0.0,
-     'flx_in-out': 0.0,
-     'flx_percent': 0.0,
-     'flx_recharg': 0.0,
-     'flx_storage': 0.0,
-     'flx_stream_': 0.0,
-     'flx_total': 0.0,
-     'flx_wells': 0.0,
-     'forecast': 0.0,
-     'pothead': 0.0,
-     'vol_constan': 0.0,
-     'vol_in-out': 0.0,
-     'vol_percent': 0.0,
-     'vol_recharg': 0.0,
-     'vol_storage': 0.0,
-     'vol_stream_': 0.0,
-     'vol_total': 0.0,
-     'vol_wells': 0.0}
-
-
-
 They can also be displayed with a plot, like so:
 
 
 ```python
 pst.plot(kind="phi_pie");
 ```
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_57_0.png)
-    
-
 
 These values can be recalculated for different observation weights by simply changing the weights in the `pst.observation_data`. No need to re-run PEST!
 
@@ -1589,34 +352,6 @@ obs['weight'] = 1.0
 # check the phi contributions again; compare to vaues displayed above
 pst.phi_components
 ```
-
-
-
-
-    {'calflux': 262.4399999999941,
-     'calhead': 16.476037487599665,
-     'flaqx': 1833954.6605177554,
-     'flout': 197878154.4605563,
-     'flx_constan': 676008.59199331,
-     'flx_in-out': 1891.6393557325607,
-     'flx_percent': 0.3906,
-     'flx_recharg': 13715682.302664,
-     'flx_storage': 1790807.6099523597,
-     'flx_stream_': 4606580.736118089,
-     'flx_total': 1891.6432934656098,
-     'flx_wells': 9002.21440000002,
-     'forecast': 35650091.62401858,
-     'pothead': 331.3388554798862,
-     'vol_constan': 4632350392780.079,
-     'vol_in-out': 2194665563.259239,
-     'vol_percent': 0.40590000000000004,
-     'vol_recharg': 181050529666933.2,
-     'vol_storage': 47716024806972.54,
-     'vol_stream_': 18909905120606.703,
-     'vol_total': 2194665563.2629757,
-     'vol_wells': 27052.21440000002}
-
-
 
 ## Adjusting Weights for "Visibility"
 
@@ -1649,34 +384,6 @@ Let's get started.
 pst.phi_components
 ```
 
-
-
-
-    {'calflux': 262.4399999999941,
-     'calhead': 16.476037487599665,
-     'flaqx': 1833954.6605177554,
-     'flout': 197878154.4605563,
-     'flx_constan': 676008.59199331,
-     'flx_in-out': 1891.6393557325607,
-     'flx_percent': 0.3906,
-     'flx_recharg': 13715682.302664,
-     'flx_storage': 1790807.6099523597,
-     'flx_stream_': 4606580.736118089,
-     'flx_total': 1891.6432934656098,
-     'flx_wells': 9002.21440000002,
-     'forecast': 35650091.62401858,
-     'pothead': 331.3388554798862,
-     'vol_constan': 4632350392780.079,
-     'vol_in-out': 2194665563.259239,
-     'vol_percent': 0.40590000000000004,
-     'vol_recharg': 181050529666933.2,
-     'vol_storage': 47716024806972.54,
-     'vol_stream_': 18909905120606.703,
-     'vol_total': 2194665563.2629757,
-     'vol_wells': 27052.21440000002}
-
-
-
 Now, let's create the dictionary of non-zero weighted observation groups. We will specify that we want each group to contribute a value of 100 to the objective function. (Why 100? No particular reason. Could just as easily be 1000. Or 578. Doesn't really matter. 100 is a nice round number though.)
 
 
@@ -1684,34 +391,6 @@ Now, let's create the dictionary of non-zero weighted observation groups. We wil
 balanced_groups = {grp:100 for grp in pst.nnz_obs_groups}
 balanced_groups
 ```
-
-
-
-
-    {'calhead': 100,
-     'forecast': 100,
-     'pothead': 100,
-     'flaqx': 100,
-     'flx_constan': 100,
-     'flx_in-out': 100,
-     'flx_percent': 100,
-     'flx_recharg': 100,
-     'flx_storage': 100,
-     'flx_stream_': 100,
-     'flx_total': 100,
-     'flx_wells': 100,
-     'flout': 100,
-     'calflux': 100,
-     'vol_constan': 100,
-     'vol_in-out': 100,
-     'vol_percent': 100,
-     'vol_recharg': 100,
-     'vol_storage': 100,
-     'vol_stream_': 100,
-     'vol_total': 100,
-     'vol_wells': 100}
-
-
 
 Now we can simply pass this dictionary as an argument:
 
@@ -1730,44 +409,10 @@ pst.phi_components
 ```
 
 
-
-
-    {'calflux': 100.0,
-     'calhead': 100.00000000000001,
-     'flaqx': 100.00000000000003,
-     'flout': 99.99999999999999,
-     'flx_constan': 100.0,
-     'flx_in-out': 100.00000000000001,
-     'flx_percent': 99.99999999999999,
-     'flx_recharg': 99.99999999999997,
-     'flx_storage': 100.0,
-     'flx_stream_': 100.00000000000001,
-     'flx_total': 100.00000000000001,
-     'flx_wells': 100.0,
-     'forecast': 100.00000000000003,
-     'pothead': 100.00000000000001,
-     'vol_constan': 100.00000000000001,
-     'vol_in-out': 100.0,
-     'vol_percent': 99.99999999999999,
-     'vol_recharg': 100.00000000000001,
-     'vol_storage': 100.00000000000001,
-     'vol_stream_': 99.99999999999997,
-     'vol_total': 100.00000000000003,
-     'vol_wells': 100.00000000000001}
-
-
-
-
 ```python
 # comapre this plot to the one we generated earlier; this one is much more balanced
 pst.plot(kind="phi_pie");
 ```
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_68_0.png)
-    
-
 
 ### Discrepancy based weight adjustment
 
@@ -1786,25 +431,11 @@ pst.phi, pst.nnz_obs
 ```
 
 
-
-
-    (2200.0, 1013)
-
-
-
-
 ```python
 pst.adjust_weights_discrepancy(original_ceiling=True) # default
 # check the resulting phi
 pst.phi
 ```
-
-
-
-
-    211.53558969631914
-
-
 
 So we were expecting Phi to be equal to `nnz_obs` (number of non zero observations). This did not happen due to the `original_ceiling` argument being set to `True` (which is the default value).
 
@@ -1850,19 +481,6 @@ gs = pyemu.geostats.GeoStruct(variograms=[v], transform='log')
 gs.plot()
 ```
 
-
-
-
-    <AxesSubplot:xlabel='distance', ylabel='$\\gamma$'>
-
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_77_1.png)
-    
-
-
 Using the geostatistical structure (or a variogram), a covariance matrix describing the statistical relationship between spatialy distributed parameters can be constructed. These covariance matrices are used (1) to describe prior parameter probability distributions, and (2) specifying the weights of prior information equations as a regularisation device. 
 
 For example, let's create a covariance matrix for a set of pilot point parameters from the `gs` structure. This requires a list of X and Y coordinates. Let's make use of the coordinates from a pilot points file in the `f_d` folder.
@@ -1874,81 +492,6 @@ First, read the pilot points file to get X and Y values:
 df = pyemu.pp_utils.pp_tpl_to_dataframe(os.path.join(f_d,"hkpp.dat.tpl"))
 df.head()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>name</th>
-      <th>x</th>
-      <th>y</th>
-      <th>zone</th>
-      <th>parnme</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>pp_0000</td>
-      <td>625.0</td>
-      <td>9375.0</td>
-      <td>1</td>
-      <td>hk00</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>pp_0001</td>
-      <td>1625.0</td>
-      <td>9375.0</td>
-      <td>1</td>
-      <td>hk01</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>pp_0002</td>
-      <td>2625.0</td>
-      <td>9375.0</td>
-      <td>1</td>
-      <td>hk02</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>pp_0003</td>
-      <td>3625.0</td>
-      <td>9375.0</td>
-      <td>1</td>
-      <td>hk03</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>pp_0004</td>
-      <td>625.0</td>
-      <td>8375.0</td>
-      <td>1</td>
-      <td>hk04</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 Now simply pass the respective values from the pilot points file as arguments to `gs.covariance_matrix()`. Conveniently, we can also take the parameter names from the pilot point file. This returns a `pyemu.Cov` object (which we will discuss later). The same can be complished with a single variogram (e.g. `v.covariance_matrix()`)
 
@@ -1963,19 +506,6 @@ cov = gs.covariance_matrix(x=df.x, y=df.y, names=df.parnme)
 c = plt.imshow(cov.x)
 plt.colorbar(c)
 ```
-
-
-
-
-    <matplotlib.colorbar.Colorbar at 0x137e27ddd60>
-
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_82_1.png)
-    
-
 
 We can do the same thing for a 1-D sequence (think time-series), to get a covariance matrix for parameters distributed in time:
 
@@ -1993,19 +523,6 @@ exp_vario = pyemu.geostats.ExpVario(contribution=1.0,
 cov_t = exp_vario.covariance_matrix(times,y,names)
 plt.imshow(cov_t.x)
 ```
-
-
-
-
-    <matplotlib.image.AxesImage at 0x137e297a2b0>
-
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_84_1.png)
-    
-
 
 ## Prior Information Equations
 
@@ -2042,96 +559,6 @@ pst.prior_information.head()
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>pilbl</th>
-      <th>equation</th>
-      <th>weight</th>
-      <th>obgnme</th>
-      <th>extra</th>
-      <th>names</th>
-    </tr>
-    <tr>
-      <th>pilbl</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>rch_0</th>
-      <td>rch_0</td>
-      <td>1.0 * log(rch_0) = 0.000000E+00</td>
-      <td>1.660964</td>
-      <td>regulrch</td>
-      <td>NaN</td>
-      <td>[rch_0]</td>
-    </tr>
-    <tr>
-      <th>rch_1</th>
-      <td>rch_1</td>
-      <td>1.0 * log(rch_1) = 0.000000E+00</td>
-      <td>0.926628</td>
-      <td>regulrch</td>
-      <td>NaN</td>
-      <td>[rch_1]</td>
-    </tr>
-    <tr>
-      <th>w0_r09_c16</th>
-      <td>w0_r09_c16</td>
-      <td>1.0 * log(w0_r09_c16) = 0.000000E+00</td>
-      <td>1.660964</td>
-      <td>regulw0</td>
-      <td>NaN</td>
-      <td>[w0_r09_c16]</td>
-    </tr>
-    <tr>
-      <th>w0_r11_c13</th>
-      <td>w0_r11_c13</td>
-      <td>1.0 * log(w0_r11_c13) = 0.000000E+00</td>
-      <td>1.660964</td>
-      <td>regulw0</td>
-      <td>NaN</td>
-      <td>[w0_r11_c13]</td>
-    </tr>
-    <tr>
-      <th>w0_r20_c14</th>
-      <td>w0_r20_c14</td>
-      <td>1.0 * log(w0_r20_c14) = 0.000000E+00</td>
-      <td>1.660964</td>
-      <td>regulw0</td>
-      <td>NaN</td>
-      <td>[w0_r20_c14]</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
 ```python
 # use pyemu to apply preferred value (aka zero order Tikhonov) to all adjustable parameter groups
 pyemu.helpers.zero_order_tikhonov(pst,
@@ -2146,82 +573,6 @@ Now, as you can see below, prior information equations have been added for all a
 pst.prior_information.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>pilbl</th>
-      <th>equation</th>
-      <th>obgnme</th>
-      <th>weight</th>
-    </tr>
-    <tr>
-      <th>pilbl</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>hk00</th>
-      <td>hk00</td>
-      <td>1.0 * log(hk00) =   4.139269E-02</td>
-      <td>regulhk</td>
-      <td>0.5</td>
-    </tr>
-    <tr>
-      <th>hk01</th>
-      <td>hk01</td>
-      <td>1.0 * log(hk01) =   4.139269E-02</td>
-      <td>regulhk</td>
-      <td>0.5</td>
-    </tr>
-    <tr>
-      <th>hk02</th>
-      <td>hk02</td>
-      <td>1.0 * log(hk02) =   4.139269E-02</td>
-      <td>regulhk</td>
-      <td>0.5</td>
-    </tr>
-    <tr>
-      <th>hk03</th>
-      <td>hk03</td>
-      <td>1.0 * log(hk03) =   4.139269E-02</td>
-      <td>regulhk</td>
-      <td>0.5</td>
-    </tr>
-    <tr>
-      <th>hk04</th>
-      <td>hk04</td>
-      <td>1.0 * log(hk04) =   4.139269E-02</td>
-      <td>regulhk</td>
-      <td>0.5</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
 ### Preferred difference or First Order Pearson Tikhonov
 
 We may wish (almost certaintly) to express a preference for similarity between parameters. For example, hydraulic properties of two points close together are more likley to be similar to each other, than two points which are far apart. We describe this relationship using geostatistics, encapsulated in a covariance matrix.
@@ -2234,19 +585,6 @@ Let's use the `cov` covariance matrix we constructed earlier for the set of pilo
 # a reminder
 plt.imshow(cov.x)
 ```
-
-
-
-
-    <matplotlib.image.AxesImage at 0x137e2b016a0>
-
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_92_1.png)
-    
-
 
 Now, we can assign prior information equations for preferred difference. Note that the preferred difference = 0, which means our preferred difference regularization is really a preferred *homogeneity* condition! If observation data doesn't say otherwise, parameters which are close together should be similar to each other.
 
@@ -2261,91 +599,11 @@ pyemu.helpers.first_order_pearson_tikhonov(pst,
                                             abs_drop_tol=0.01) # drop pi eqs that have small weight
 ```
 
-    getting CC matrix
-    processing
-    
-
 
 ```python
 # note the additional number of prior information equations
 pst.prior_information.tail()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>pilbl</th>
-      <th>equation</th>
-      <th>obgnme</th>
-      <th>weight</th>
-    </tr>
-    <tr>
-      <th>pilbl</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>pcc_398</th>
-      <td>pcc_398</td>
-      <td>1.0 * log(hk28) - 1.0 * log(hk30) = 0.0</td>
-      <td>regul_cc</td>
-      <td>0.243117</td>
-    </tr>
-    <tr>
-      <th>pcc_399</th>
-      <td>pcc_399</td>
-      <td>1.0 * log(hk28) - 1.0 * log(hk31) = 0.0</td>
-      <td>regul_cc</td>
-      <td>0.367879</td>
-    </tr>
-    <tr>
-      <th>pcc_400</th>
-      <td>pcc_400</td>
-      <td>1.0 * log(hk29) - 1.0 * log(hk30) = 0.0</td>
-      <td>regul_cc</td>
-      <td>0.367879</td>
-    </tr>
-    <tr>
-      <th>pcc_401</th>
-      <td>pcc_401</td>
-      <td>1.0 * log(hk29) - 1.0 * log(hk31) = 0.0</td>
-      <td>regul_cc</td>
-      <td>0.135335</td>
-    </tr>
-    <tr>
-      <th>pcc_402</th>
-      <td>pcc_402</td>
-      <td>1.0 * log(hk30) - 1.0 * log(hk31) = 0.0</td>
-      <td>regul_cc</td>
-      <td>0.367879</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 ### Custom Prior Information Equations
 
@@ -2362,93 +620,6 @@ par.loc[par['pargp']=='pargp']
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>parnme</th>
-      <th>partrans</th>
-      <th>parchglim</th>
-      <th>parval1</th>
-      <th>parlbnd</th>
-      <th>parubnd</th>
-      <th>pargp</th>
-      <th>scale</th>
-      <th>offset</th>
-      <th>dercom</th>
-      <th>extra</th>
-      <th>partied</th>
-    </tr>
-    <tr>
-      <th>parnme</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>special_par1</th>
-      <td>special_par1</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>0.1</td>
-      <td>10.0</td>
-      <td>pargp</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>special_par2</th>
-      <td>special_par2</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>0.1</td>
-      <td>10.0</td>
-      <td>pargp</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>NaN</td>
-      <td>special_par1</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
 ```python
 pst.add_pi_equation(
                     par_names=['special_par1', 'special_par2'], # list of parameter names included on the left hand side of the equation
@@ -2463,54 +634,6 @@ pst.add_pi_equation(
 pst.prior_information.iloc[-1:]
 
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>pilbl</th>
-      <th>equation</th>
-      <th>obgnme</th>
-      <th>weight</th>
-    </tr>
-    <tr>
-      <th>pilbl</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>new_pi_eq</th>
-      <td>new_pi_eq</td>
-      <td>1.0 * log(special_par1)  + 0.5 * log(special_par2)  = 0.0</td>
-      <td>regul_special</td>
-      <td>1.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 ## Matrices
 
@@ -2537,27 +660,12 @@ As you can see below, the `Cov` object retains the parameter names as row and co
 parcov.row_names[:5], parcov.col_names[:5], 
 ```
 
-
-
-
-    (['hk00', 'hk01', 'hk02', 'hk03', 'hk04'],
-     ['hk00', 'hk01', 'hk02', 'hk03', 'hk04'])
-
-
-
 We can check if the matrix is diagonal with the `.isdiagonal` attribute. 
 
 
 ```python
 parcov.isdiagonal
 ```
-
-
-
-
-    True
-
-
 
 How about the `cov` covariance matrix we generated earlier for spatialy correlated parameters?
 
@@ -2568,75 +676,12 @@ Recall that, a matrix is "diagonal" when all the entries off the diagonal are ze
 cov.isdiagonal
 ```
 
-
-
-
-    False
-
-
-
 The values of the matrix are accessed in the `.x` attribute:
 
 
 ```python
 parcov.x
 ```
-
-
-
-
-    array([[0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.02265476],
-           [0.02265476],
-           [0.07278951],
-           [0.5625    ],
-           [0.02265476],
-           [0.02265476],
-           [0.02265476],
-           [0.02265476],
-           [0.02265476],
-           [0.02265476],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ],
-           [0.25      ]])
-
-
 
 Note that `parcov.x` is 1-dimensional. Again, this is because `parcov` is "diagonal". So `.x` only returns the diagonal entries. On the other hand, `cov.x` is 2-dimensional:
 
@@ -2645,32 +690,12 @@ Note that `parcov.x` is 1-dimensional. Again, this is because `parcov` is "diago
 parcov.x.shape, cov.x.shape
 ```
 
-
-
-
-    ((50, 1), (32, 32))
-
-
-
 You can access the full 2-dimensional matrix with the `.as_2d` attribute (see all the off-diagonals are zero):
 
 
 ```python
 parcov.as_2d
 ```
-
-
-
-
-    array([[0.25, 0.  , 0.  , ..., 0.  , 0.  , 0.  ],
-           [0.  , 0.25, 0.  , ..., 0.  , 0.  , 0.  ],
-           [0.  , 0.  , 0.25, ..., 0.  , 0.  , 0.  ],
-           ...,
-           [0.  , 0.  , 0.  , ..., 0.25, 0.  , 0.  ],
-           [0.  , 0.  , 0.  , ..., 0.  , 0.25, 0.  ],
-           [0.  , 0.  , 0.  , ..., 0.  , 0.  , 0.25]])
-
-
 
 It may be easier to visualize this in a plot. Because `parcov` has many parameters it may be hard to see. So let's first use the `get()` method to get a submatrix. We can use this method to extract specific row and column names. We will get the same pilot point parameters that are in the `cov` matrix to compare.
 
@@ -2693,19 +718,6 @@ c = ax2.imshow(0.25 * cov.as_2d) #scaled to parameter unc
 plt.colorbar(c, ax=ax2, shrink=0.3)
 ```
 
-
-
-
-    <matplotlib.colorbar.Colorbar at 0x137e2dcb820>
-
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_114_1.png)
-    
-
-
 The singular values are the diagonal entries of the matrix, arranged in descending order. These can be accessed with the `.s` attribute. This still returns a `Matrix` object (technically a vector). Values in the matrix can be accessed in the same fashion as described above.
 
 
@@ -2717,57 +729,12 @@ cov_singular_values = cov.s
 cov_singular_values.x
 ```
 
-
-
-
-    array([[3.84246373],
-           [3.11801744],
-           [2.21074436],
-           [2.00413864],
-           [1.72163322],
-           [1.51391351],
-           [1.3345163 ],
-           [1.09049222],
-           [1.04993872],
-           [0.96437719],
-           [0.88954002],
-           [0.85212326],
-           [0.83819113],
-           [0.75506983],
-           [0.71132262],
-           [0.67704189],
-           [0.6521505 ],
-           [0.61622523],
-           [0.60499669],
-           [0.58513388],
-           [0.57262865],
-           [0.55759783],
-           [0.5400864 ],
-           [0.53382647],
-           [0.51849182],
-           [0.50579968],
-           [0.48740815],
-           [0.4747049 ],
-           [0.46405699],
-           [0.45251911],
-           [0.43717383],
-           [0.42367577]])
-
-
-
 "Right singular vectors" are obtained with `.v` attribute:
 
 
 ```python
 cov.v
 ```
-
-
-
-
-    <pyemu.mat.mat_handler.Matrix at 0x137e28052b0>
-
-
 
 Matrices can be written to, and read from, external files. These can be ASCII or binary type files. As you saw above, we can access numpy arrays with the `.as_2d` attribute. They can also be converted to a Pandas Dataframe.
 
@@ -2776,178 +743,6 @@ Matrices can be written to, and read from, external files. These can be ASCII or
 covdf = cov.to_dataframe()
 covdf.head()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>hk00</th>
-      <th>hk01</th>
-      <th>hk02</th>
-      <th>hk03</th>
-      <th>hk04</th>
-      <th>hk05</th>
-      <th>hk06</th>
-      <th>hk07</th>
-      <th>hk08</th>
-      <th>hk09</th>
-      <th>...</th>
-      <th>hk22</th>
-      <th>hk23</th>
-      <th>hk24</th>
-      <th>hk25</th>
-      <th>hk26</th>
-      <th>hk27</th>
-      <th>hk28</th>
-      <th>hk29</th>
-      <th>hk30</th>
-      <th>hk31</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>hk00</th>
-      <td>1.000000</td>
-      <td>0.367879</td>
-      <td>0.135335</td>
-      <td>0.049787</td>
-      <td>0.367879</td>
-      <td>0.243117</td>
-      <td>0.106878</td>
-      <td>0.042329</td>
-      <td>0.135335</td>
-      <td>0.059106</td>
-      <td>...</td>
-      <td>0.002282</td>
-      <td>0.001792</td>
-      <td>0.001221</td>
-      <td>0.000912</td>
-      <td>0.000849</td>
-      <td>0.000689</td>
-      <td>0.000493</td>
-      <td>0.000315</td>
-      <td>0.000262</td>
-      <td>0.000195</td>
-    </tr>
-    <tr>
-      <th>hk01</th>
-      <td>0.367879</td>
-      <td>1.000000</td>
-      <td>0.367879</td>
-      <td>0.135335</td>
-      <td>0.243117</td>
-      <td>0.367879</td>
-      <td>0.243117</td>
-      <td>0.106878</td>
-      <td>0.106878</td>
-      <td>0.106878</td>
-      <td>...</td>
-      <td>0.002479</td>
-      <td>0.002282</td>
-      <td>0.001792</td>
-      <td>0.000849</td>
-      <td>0.000912</td>
-      <td>0.000849</td>
-      <td>0.000689</td>
-      <td>0.000335</td>
-      <td>0.000315</td>
-      <td>0.000262</td>
-    </tr>
-    <tr>
-      <th>hk02</th>
-      <td>0.135335</td>
-      <td>0.367879</td>
-      <td>1.000000</td>
-      <td>0.367879</td>
-      <td>0.106878</td>
-      <td>0.243117</td>
-      <td>0.367879</td>
-      <td>0.243117</td>
-      <td>0.059106</td>
-      <td>0.135335</td>
-      <td>...</td>
-      <td>0.002282</td>
-      <td>0.002479</td>
-      <td>0.002282</td>
-      <td>0.000689</td>
-      <td>0.000849</td>
-      <td>0.000912</td>
-      <td>0.000849</td>
-      <td>0.000315</td>
-      <td>0.000335</td>
-      <td>0.000315</td>
-    </tr>
-    <tr>
-      <th>hk03</th>
-      <td>0.049787</td>
-      <td>0.135335</td>
-      <td>0.367879</td>
-      <td>1.000000</td>
-      <td>0.042329</td>
-      <td>0.106878</td>
-      <td>0.243117</td>
-      <td>0.367879</td>
-      <td>0.027172</td>
-      <td>0.106878</td>
-      <td>...</td>
-      <td>0.001792</td>
-      <td>0.002282</td>
-      <td>0.002479</td>
-      <td>0.000493</td>
-      <td>0.000689</td>
-      <td>0.000849</td>
-      <td>0.000912</td>
-      <td>0.000262</td>
-      <td>0.000315</td>
-      <td>0.000335</td>
-    </tr>
-    <tr>
-      <th>hk04</th>
-      <td>0.367879</td>
-      <td>0.243117</td>
-      <td>0.106878</td>
-      <td>0.042329</td>
-      <td>1.000000</td>
-      <td>0.367879</td>
-      <td>0.135335</td>
-      <td>0.049787</td>
-      <td>0.367879</td>
-      <td>0.106878</td>
-      <td>...</td>
-      <td>0.006103</td>
-      <td>0.004584</td>
-      <td>0.002935</td>
-      <td>0.002479</td>
-      <td>0.002282</td>
-      <td>0.001792</td>
-      <td>0.001221</td>
-      <td>0.000849</td>
-      <td>0.000689</td>
-      <td>0.000493</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 32 columns</p>
-</div>
-
-
 
 
 ```python
@@ -2976,13 +771,6 @@ jco = pyemu.Jco.from_binary(os.path.join(f_d,"freyberg_pp.jcb"))
 jco.shape
 ```
 
-
-
-
-    (1435, 48)
-
-
-
 ## Linear Analysis or FOSM
 
 FOSM stands for "First Order, Second Moment". You may also see this referred to as "linear analysis" (e.g. in PEST documentation). We will delve into FOSM in more detail in another tutorial. Here we merely provide a brief introduction.
@@ -3005,178 +793,6 @@ The prior parameter covariance matrix is stored in the `.parcov` attribute:
 sc.parcov.to_dataframe().head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>hk00</th>
-      <th>hk01</th>
-      <th>hk02</th>
-      <th>hk03</th>
-      <th>hk04</th>
-      <th>hk05</th>
-      <th>hk06</th>
-      <th>hk07</th>
-      <th>hk08</th>
-      <th>hk09</th>
-      <th>...</th>
-      <th>w0_r20_c14</th>
-      <th>w0_r26_c10</th>
-      <th>w0_r29_c06</th>
-      <th>w0_r34_c12</th>
-      <th>w1_r09_c16</th>
-      <th>w1_r11_c13</th>
-      <th>w1_r20_c14</th>
-      <th>w1_r26_c10</th>
-      <th>w1_r29_c06</th>
-      <th>w1_r34_c12</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>hk00</th>
-      <td>0.25</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>hk01</th>
-      <td>0.00</td>
-      <td>0.25</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>hk02</th>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.25</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>hk03</th>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.25</td>
-      <td>0.00</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>hk04</th>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.25</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 48 columns</p>
-</div>
-
-
-
 The same for the observation noise covariance matrix:
 
 
@@ -3184,356 +800,12 @@ The same for the observation noise covariance matrix:
 sc.obscov.to_dataframe().head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>c001cr03c10_19700102</th>
-      <th>c001cr03c16_19700102</th>
-      <th>c001cr04c09_19700102</th>
-      <th>c001cr10c02_19700102</th>
-      <th>c001cr14c11_19700102</th>
-      <th>c001cr16c17_19700102</th>
-      <th>c001cr22c11_19700102</th>
-      <th>c001cr23c16_19700102</th>
-      <th>c001cr25c05_19700102</th>
-      <th>c001cr27c07_19700102</th>
-      <th>...</th>
-      <th>vol_storage_19800101</th>
-      <th>vol_stream__19700102</th>
-      <th>vol_stream__19791231</th>
-      <th>vol_stream__19800101</th>
-      <th>vol_total_19700102</th>
-      <th>vol_total_19791231</th>
-      <th>vol_total_19800101</th>
-      <th>vol_wells_19700102</th>
-      <th>vol_wells_19791231</th>
-      <th>vol_wells_19800101</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>c001cr03c10_19700102</th>
-      <td>0.04</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>c001cr03c16_19700102</th>
-      <td>0.00</td>
-      <td>0.04</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>c001cr04c09_19700102</th>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.04</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>c001cr10c02_19700102</th>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.04</td>
-      <td>0.00</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>c001cr14c11_19700102</th>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.04</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 1009 columns</p>
-</div>
-
-
-
 The **posterior** parameter covariance matrix is calculated and stored in the `.posterior_parameter` attribute:
 
 
 ```python
 sc.posterior_parameter.to_dataframe().head()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>hk00</th>
-      <th>hk01</th>
-      <th>hk02</th>
-      <th>hk03</th>
-      <th>hk04</th>
-      <th>hk05</th>
-      <th>hk06</th>
-      <th>hk07</th>
-      <th>hk08</th>
-      <th>hk09</th>
-      <th>...</th>
-      <th>w0_r20_c14</th>
-      <th>w0_r26_c10</th>
-      <th>w0_r29_c06</th>
-      <th>w0_r34_c12</th>
-      <th>w1_r09_c16</th>
-      <th>w1_r11_c13</th>
-      <th>w1_r20_c14</th>
-      <th>w1_r26_c10</th>
-      <th>w1_r29_c06</th>
-      <th>w1_r34_c12</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>hk00</th>
-      <td>0.244830</td>
-      <td>-0.008895</td>
-      <td>0.007299</td>
-      <td>0.002543</td>
-      <td>-0.017660</td>
-      <td>-0.015716</td>
-      <td>0.005581</td>
-      <td>0.001553</td>
-      <td>-0.007468</td>
-      <td>0.000299</td>
-      <td>...</td>
-      <td>1.072802e-52</td>
-      <td>4.651382e-53</td>
-      <td>3.983267e-53</td>
-      <td>4.501561e-53</td>
-      <td>3.255734e-55</td>
-      <td>1.572642e-55</td>
-      <td>3.965351e-56</td>
-      <td>1.380231e-56</td>
-      <td>1.345158e-56</td>
-      <td>-2.440006e-55</td>
-    </tr>
-    <tr>
-      <th>hk01</th>
-      <td>-0.008895</td>
-      <td>0.206416</td>
-      <td>0.009244</td>
-      <td>0.036372</td>
-      <td>-0.026315</td>
-      <td>-0.040258</td>
-      <td>-0.019464</td>
-      <td>0.004447</td>
-      <td>-0.012274</td>
-      <td>-0.008885</td>
-      <td>...</td>
-      <td>-2.849370e-52</td>
-      <td>1.774938e-53</td>
-      <td>2.074674e-53</td>
-      <td>-1.602939e-52</td>
-      <td>-5.513671e-55</td>
-      <td>-2.928261e-55</td>
-      <td>-5.005879e-55</td>
-      <td>-1.632710e-55</td>
-      <td>-1.644243e-55</td>
-      <td>-5.936551e-55</td>
-    </tr>
-    <tr>
-      <th>hk02</th>
-      <td>0.007299</td>
-      <td>0.009244</td>
-      <td>0.175363</td>
-      <td>-0.063715</td>
-      <td>0.019540</td>
-      <td>-0.007084</td>
-      <td>-0.065003</td>
-      <td>-0.048744</td>
-      <td>0.005867</td>
-      <td>-0.028997</td>
-      <td>...</td>
-      <td>-1.505624e-51</td>
-      <td>-4.791185e-52</td>
-      <td>-4.094703e-52</td>
-      <td>-9.587598e-52</td>
-      <td>-1.616659e-54</td>
-      <td>-8.162026e-55</td>
-      <td>-9.029515e-55</td>
-      <td>-2.927028e-55</td>
-      <td>-2.931907e-55</td>
-      <td>1.202457e-54</td>
-    </tr>
-    <tr>
-      <th>hk03</th>
-      <td>0.002543</td>
-      <td>0.036372</td>
-      <td>-0.063715</td>
-      <td>0.144853</td>
-      <td>0.001094</td>
-      <td>0.005050</td>
-      <td>-0.018862</td>
-      <td>-0.055774</td>
-      <td>0.000824</td>
-      <td>-0.015184</td>
-      <td>...</td>
-      <td>-1.755048e-51</td>
-      <td>-2.653509e-52</td>
-      <td>-2.037283e-52</td>
-      <td>-6.910555e-52</td>
-      <td>-5.010778e-54</td>
-      <td>-2.508259e-54</td>
-      <td>-2.062730e-54</td>
-      <td>-6.824379e-55</td>
-      <td>-6.826708e-55</td>
-      <td>1.371760e-55</td>
-    </tr>
-    <tr>
-      <th>hk04</th>
-      <td>-0.017660</td>
-      <td>-0.026315</td>
-      <td>0.019540</td>
-      <td>0.001094</td>
-      <td>0.186267</td>
-      <td>-0.062307</td>
-      <td>0.014820</td>
-      <td>0.006380</td>
-      <td>-0.028052</td>
-      <td>-0.001403</td>
-      <td>...</td>
-      <td>8.766563e-52</td>
-      <td>2.036783e-52</td>
-      <td>1.653814e-52</td>
-      <td>3.207171e-52</td>
-      <td>2.682204e-54</td>
-      <td>1.328847e-54</td>
-      <td>8.331458e-55</td>
-      <td>2.757943e-55</td>
-      <td>2.745622e-55</td>
-      <td>-7.101447e-55</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 48 columns</p>
-</div>
-
-
 
 Let's record the prior and posterior coavariance matrix to external files (we will use these later):
 
@@ -3554,152 +826,16 @@ sc.forecast_names
 ```
 
 
-
-
-    ['travel_time',
-     'fa_headwaters_0001',
-     'c001fr16c17_19791231',
-     'c001fr05c04_19791231']
-
-
-
-
 ```python
 # forecast sensitivity vectors stores as `Matrix` objects:
 sc.forecasts.to_dataframe().head()
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>travel_time</th>
-      <th>fa_headwaters_0001</th>
-      <th>c001fr16c17_19791231</th>
-      <th>c001fr05c04_19791231</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>hk00</th>
-      <td>356.367939</td>
-      <td>-7.405048</td>
-      <td>0.000463</td>
-      <td>-0.292268</td>
-    </tr>
-    <tr>
-      <th>hk01</th>
-      <td>597.032671</td>
-      <td>-28.231777</td>
-      <td>0.002083</td>
-      <td>-1.266727</td>
-    </tr>
-    <tr>
-      <th>hk02</th>
-      <td>812.241332</td>
-      <td>-37.950877</td>
-      <td>-0.000926</td>
-      <td>-1.252610</td>
-    </tr>
-    <tr>
-      <th>hk03</th>
-      <td>738.191231</td>
-      <td>-27.537541</td>
-      <td>-0.006248</td>
-      <td>-0.964508</td>
-    </tr>
-    <tr>
-      <th>hk04</th>
-      <td>719.677223</td>
-      <td>-32.628453</td>
-      <td>0.000926</td>
-      <td>-0.301987</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
 ```python
 # summary of forecast prior and posterior uncertainty
 sc.get_forecast_summary()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>prior_var</th>
-      <th>post_var</th>
-      <th>percent_reduction</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>travel_time</th>
-      <td>6.851805e+08</td>
-      <td>4.490640e+08</td>
-      <td>34.460481</td>
-    </tr>
-    <tr>
-      <th>fa_headwaters_0001</th>
-      <td>8.430109e+05</td>
-      <td>6.322101e+05</td>
-      <td>25.005708</td>
-    </tr>
-    <tr>
-      <th>c001fr16c17_19791231</th>
-      <td>1.889666e-01</td>
-      <td>8.349993e-02</td>
-      <td>55.812338</td>
-    </tr>
-    <tr>
-      <th>c001fr05c04_19791231</th>
-      <td>6.836951e+00</td>
-      <td>1.270466e+00</td>
-      <td>81.417657</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 `pyemu` makes FOSM easy to undertake. It has lot's of usefull functionality. We will not go into further detail here. See the "intro to fosm" tutorial for a deeper dive.
 
@@ -3744,178 +880,6 @@ Because the Ensemble is stored as a DataFrame, we can easily access it. Each row
 pe.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>hk00</th>
-      <th>hk01</th>
-      <th>hk02</th>
-      <th>hk03</th>
-      <th>hk04</th>
-      <th>hk05</th>
-      <th>hk06</th>
-      <th>hk07</th>
-      <th>hk08</th>
-      <th>hk09</th>
-      <th>...</th>
-      <th>w0_r20_c14</th>
-      <th>w0_r26_c10</th>
-      <th>w0_r29_c06</th>
-      <th>w0_r34_c12</th>
-      <th>w1_r09_c16</th>
-      <th>w1_r11_c13</th>
-      <th>w1_r20_c14</th>
-      <th>w1_r26_c10</th>
-      <th>w1_r29_c06</th>
-      <th>w1_r34_c12</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>4.282251</td>
-      <td>0.515513</td>
-      <td>7.223507</td>
-      <td>6.598328</td>
-      <td>3.976811</td>
-      <td>13.535871</td>
-      <td>0.270134</td>
-      <td>7.083131</td>
-      <td>2.048404</td>
-      <td>3.683788</td>
-      <td>...</td>
-      <td>0.903788</td>
-      <td>1.025566</td>
-      <td>1.312461</td>
-      <td>0.872655</td>
-      <td>0.811879</td>
-      <td>0.436411</td>
-      <td>2.242973</td>
-      <td>0.355375</td>
-      <td>0.966883</td>
-      <td>2.134213</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>2.976066</td>
-      <td>1.180545</td>
-      <td>3.497429</td>
-      <td>45.684562</td>
-      <td>1.567815</td>
-      <td>6.020359</td>
-      <td>14.559707</td>
-      <td>2.636632</td>
-      <td>3.726345</td>
-      <td>38.282455</td>
-      <td>...</td>
-      <td>0.685774</td>
-      <td>1.883592</td>
-      <td>1.395199</td>
-      <td>1.267102</td>
-      <td>1.833112</td>
-      <td>1.181557</td>
-      <td>6.275507</td>
-      <td>0.620140</td>
-      <td>1.077183</td>
-      <td>0.150306</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>29.317058</td>
-      <td>3.487239</td>
-      <td>8.351074</td>
-      <td>4.415397</td>
-      <td>3.004822</td>
-      <td>16.145483</td>
-      <td>5.971614</td>
-      <td>2.112364</td>
-      <td>2.379113</td>
-      <td>1.515109</td>
-      <td>...</td>
-      <td>1.791839</td>
-      <td>0.998246</td>
-      <td>0.967017</td>
-      <td>1.484172</td>
-      <td>0.654332</td>
-      <td>2.742581</td>
-      <td>3.145955</td>
-      <td>3.422599</td>
-      <td>1.326742</td>
-      <td>0.286130</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>1.709065</td>
-      <td>1.389110</td>
-      <td>3.479177</td>
-      <td>12.573553</td>
-      <td>10.966852</td>
-      <td>22.722124</td>
-      <td>5.297299</td>
-      <td>1.799255</td>
-      <td>31.481663</td>
-      <td>8.067702</td>
-      <td>...</td>
-      <td>0.832192</td>
-      <td>1.092288</td>
-      <td>1.183589</td>
-      <td>0.568519</td>
-      <td>0.420843</td>
-      <td>0.675903</td>
-      <td>3.503355</td>
-      <td>1.133376</td>
-      <td>4.211715</td>
-      <td>0.850177</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>9.302456</td>
-      <td>4.684586</td>
-      <td>41.817348</td>
-      <td>2.917515</td>
-      <td>6.320494</td>
-      <td>3.794088</td>
-      <td>3.437952</td>
-      <td>6.623821</td>
-      <td>2.016632</td>
-      <td>4.290341</td>
-      <td>...</td>
-      <td>1.186924</td>
-      <td>1.037061</td>
-      <td>0.960814</td>
-      <td>0.604084</td>
-      <td>0.187716</td>
-      <td>0.803481</td>
-      <td>0.965624</td>
-      <td>2.498882</td>
-      <td>0.637866</td>
-      <td>4.123936</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 48 columns</p>
-</div>
-
-
-
 Let's plot a histogram of values generated for one of the parameters:
 
 
@@ -3925,32 +889,12 @@ plt.xlabel('$log_{10}$ parameter value')
 plt.ylabel('number of realisations')
 ```
 
-
-
-
-    Text(0, 0.5, 'number of realisations')
-
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_150_1.png)
-    
-
-
 We can see that this parameter has a "log" shape distribution, as expected based on it's `partrans` entry in the control file:
 
 
 ```python
 par.loc["rch_0","partrans"]
 ```
-
-
-
-
-    'log'
-
-
 
 Let's see its histogram in log space then:
 
@@ -3962,44 +906,15 @@ plt.ylabel('number of realisations')
 ```
 
 
-
-
-    Text(0, 0.5, 'number of realisations')
-
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_154_1.png)
-    
-
-
-
 ```python
 # chekc the parmeter bounds; do any of the histogram bnis fall above/below the upper/lower bound value?
 par.loc['rch_0', ['parlbnd','parubnd']]
 ```
 
 
-
-
-    parlbnd    0.5
-    parubnd    2.0
-    Name: rch_0, dtype: object
-
-
-
-
 ```python
 pe.loc[:,"rch_0"].min(),pe.loc[:,"rch_0"].max()
 ```
-
-
-
-
-    (0.3857808566579352, 2.5465607610049568)
-
-
 
 As you can see, parameter bounds may be violated when drawing the ensemble because gaussian distributions are continuous. The `.enforce()` method goes through it and makes sure that bounds are respected. It does this by assigning the bound value to any parameter values which exceed the bound.  Conceptaully this results in a "truncated gaussian distribution"
 
@@ -4016,19 +931,6 @@ plt.xlabel('parameter value')
 plt.ylabel('number of realisations')
 ```
 
-
-
-
-    Text(0, 0.5, 'number of realisations')
-
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_158_1.png)
-    
-
-
 There are also built in functions to automate plotting of ensembles:
 
 
@@ -4043,16 +945,6 @@ pe.plot(bins=10,
         plot_cols=plot_cols, # specifyes which columns to plot
         filename=None, )     # external filename to record plot
 ```
-
-
-    <Figure size 576x756 with 0 Axes>
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_160_1.png)
-    
-
 
 You can record an ensemble to external files (.csv or binary).  Note the `.to_binary()` method saves the ensemble into the same extended compressed sparse storage file format as the jacobian matrix (".jcb") and the extension of the file is used to determine its type in PEST++.
 
@@ -4083,19 +975,6 @@ c = plt.imshow(x)
 plt.colorbar(c)
 ```
 
-
-
-
-    <matplotlib.colorbar.Colorbar at 0x137e77b3f10>
-
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_166_1.png)
-    
-
-
 and a reminder of what the initial parameter covariance matrix looked like (the one used to generate the ensemble):
 
 
@@ -4104,19 +983,6 @@ x = prior_cov.as_2d.copy()
 x[x<1.0e-2] = np.NaN
 plt.imshow(x)
 ```
-
-
-
-
-    <matplotlib.image.AxesImage at 0x137e78386a0>
-
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_168_1.png)
-    
-
 
 So we can see that with 200 realizations, we can recover the diagonal pretty well, but we have some "spurious" covariances in the off diagonals...
 
@@ -4138,14 +1004,6 @@ pe_post = pyemu.ParameterEnsemble.from_gaussian_draw(pst=pst,
 pe_post.enforce()
 ```
 
-    drawing from group hk
-    drawing from group porosity
-    drawing from group rch
-    drawing from group sfr
-    drawing from group w0
-    drawing from group w1
-    
-
 
 ```python
 # comapre the prior and the posterior
@@ -4154,19 +1012,6 @@ pe_post.loc[:, 'rch_0'].hist(alpha=0.5,color="b")
 #pe_post.loc[:, 'hk00'].plot(kind="hist",bins=20,ax=ax,alpha=0.5)
 ```
 
-
-
-
-    <AxesSubplot:>
-
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_172_1.png)
-    
-
-
 We see that the uncertainty in the recharge parameter `rch_0` has decreased substantially from prior (grey) to posterior (blue)
 
 
@@ -4174,35 +1019,6 @@ We see that the uncertainty in the recharge parameter `rch_0` has decreased subs
 # plots the change between two ensembles
 pyemu.plot_utils.ensemble_change_summary(pe, pe_post, pst)
 ```
-
-    return type uncaught, losing Ensemble type, returning DataFrame
-    return type uncaught, losing Ensemble type, returning DataFrame
-    
-
-
-
-
-    [<Figure size 576x756 with 0 Axes>,
-     <Figure size 576x756 with 8 Axes>,
-     <Figure size 576x756 with 8 Axes>]
-
-
-
-
-    <Figure size 576x756 with 0 Axes>
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_174_3.png)
-    
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_174_4.png)
-    
-
 
 Or for comparing histograms from several ensembles. (Can also be used for observation ensembles; see additional method arguments):
 
@@ -4213,15 +1029,5 @@ pyemu.plot_utils.ensemble_helper(ensemble={"0.5":pe, "b":pe_post,},
                                      plot_cols=plot_cols,
                                      )
 ```
-
-
-    <Figure size 576x756 with 0 Axes>
-
-
-
-    
-![png](intro_to_pyemu_files/intro_to_pyemu_176_1.png)
-    
-
 
 This is just a basic introduction in to handling ensembles in pyemu, we will see more later...

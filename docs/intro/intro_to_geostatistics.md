@@ -1,11 +1,4 @@
-
 ---
-layout: default
-title: Intro to Geostatistics
-parent: Introductions to Selected Topics
-nav_order: 5
----
-                    ---
 layout: default
 title: Intro to Geostatistics
 parent: Introductions to Selected Topics
@@ -59,13 +52,6 @@ Let's cook up a quick random field and explore the spatial structure.
 X,Y,Z,v,gs,sample_df = gh.data_cooker()
 ```
 
-    Initializing a variogram model
-    Making the domain
-    Initializing covariance model
-    Drawing from the Geostatistical Model
-    SpecSim.initialize() summary: full_delx X full_dely: 2162 X 2162
-    
-
 ### Visualize the Field
 Pretend (key word!) that this is a hydraulic conductivity field. What do you think? Any _autocorrelation_ here? 
 Note how values spread _continuously_. Points which are close together have similar values. They are not _entirely_ random.
@@ -74,12 +60,6 @@ Note how values spread _continuously_. Points which are close together have simi
 ```python
 gh.grid_plot(X,Y,Z);
 ```
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_6_0.png)
-    
-
 
 ### Link to the Real-World
 
@@ -91,12 +71,6 @@ In practice, we would typically only know the values at a few points (and probab
 ```python
 gh.field_scatterplot(sample_df.x,sample_df.y,sample_df.z);
 ```
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_8_0.png)
-    
-
 
 ## Main Assumptions:
    1. The values are second order stationary (the mean and variance are relatively constant) 
@@ -111,12 +85,6 @@ x=np.linspace(70,130,100)
 plt.plot(x,sps.norm.pdf(x, np.mean(Z),np.std(Z))*len(Z.ravel()));
 ```
 
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_10_0.png)
-    
-
-
 What about our sample?
 
 
@@ -125,19 +93,6 @@ plt.hist(sample_df.z, bins=50)
 x=np.linspace(70,130,100)
 plt.plot(x,sps.norm.pdf(x, np.mean(sample_df.z),np.std(sample_df.z))*len(sample_df.z))
 ```
-
-
-
-
-    [<matplotlib.lines.Line2D at 0x1aa5c82bc70>]
-
-
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_12_1.png)
-    
-
 
 Purity is commendable, but in practice we are going to violate some of these assumptions for sure. 
 
@@ -157,12 +112,6 @@ If we plot these up we get something called a cloud plot showing $\hat\gamma$ fo
 h,gam,ax=gh.plot_empirical_variogram(sample_df.x,sample_df.y,sample_df.z,0)
 ```
 
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_16_0.png)
-    
-
-
 This is pretty messy, so typically it is evaluated in bins, and usually only over half the total possible distance
 
 
@@ -170,24 +119,12 @@ This is pretty messy, so typically it is evaluated in bins, and usually only ove
 h,gam,ax=gh.plot_empirical_variogram(sample_df.x,sample_df.y,sample_df.z,50)
 ```
 
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_18_0.png)
-    
-
-
 Also note that this was assuming perfect observations. What if there was ~10% noise?
 
 
 ```python
 h,gam,ax=gh.plot_empirical_variogram(sample_df.x,sample_df.y,sample_df.z_noisy,30)
 ```
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_20_0.png)
-    
-
 
 Geostatistics is making the assumption that you can model the variability of this field using a variogram. The variogram is closely related to covariance. We take advantage of a few assumptions to come up with a few functional forms that should characterize this behavior.
 
@@ -238,24 +175,12 @@ plt.grid()
 ```
 
 
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_28_0.png)
-    
-
-
-
 ```python
 Q= gs.covariance_matrix(X.ravel(), Y.ravel(), names=[str(i) for i in range(len(Y.ravel()))])
 plt.figure(figsize=(6,6))
 plt.imshow(Q.x)
 plt.colorbar();
 ```
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_29_0.png)
-    
-
 
 ### _Exponential_
 
@@ -270,24 +195,12 @@ plt.grid();
 ```
 
 
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_31_0.png)
-    
-
-
-
 ```python
 Q= gs.covariance_matrix(X.ravel(), Y.ravel(), names=[str(i) for i in range(len(Y.ravel()))])
 plt.figure(figsize=(6,6))
 plt.imshow(Q.x)
 plt.colorbar();
 ```
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_32_0.png)
-    
-
 
 ### _Gaussian_
 
@@ -302,24 +215,12 @@ plt.grid();
 ```
 
 
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_34_0.png)
-    
-
-
-
 ```python
 Q= gs.covariance_matrix(X.ravel(), Y.ravel(), names=[str(i) for i in range(len(Y.ravel()))])
 plt.figure(figsize=(6,6))
 plt.imshow(Q.x)
 plt.colorbar();
 ```
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_35_0.png)
-    
-
 
 ## Interpolating from Sparse Data
 So how do we go from a sample of measurments (i.e. our 50 points, sampled frmo the field at the start of the notebook) and generate a continuous filed? If we fit an appropriate model ($\gamma$) to the empirical variogram ($\hat\gamma$), we can use that structure for interpolation from sparse data.
@@ -338,12 +239,6 @@ gs_fit.plot(ax=ax);
 ```
 
 
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_37_0.png)
-    
-
-
-
 ```python
 Q = gs_fit.covariance_matrix(X.ravel(), Y.ravel(), names=[str(i) for i in range(len(Y.ravel()))])
 ```
@@ -354,12 +249,6 @@ plt.figure(figsize=(6,6))
 plt.imshow(Q.x)
 plt.colorbar();
 ```
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_39_0.png)
-    
-
 
 Now we can perform Kriging to interpolate using this variogram and our "sample data". First make an Ordinary Kriging object:
 
@@ -373,89 +262,6 @@ k = pyemu.geostats.OrdinaryKrige(gs_fit,sample_df)
 sample_df.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>x</th>
-      <th>y</th>
-      <th>z</th>
-      <th>z_noisy</th>
-      <th>name</th>
-    </tr>
-    <tr>
-      <th>name</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>p0</th>
-      <td>287.116655</td>
-      <td>699.455696</td>
-      <td>85.372835</td>
-      <td>83.771018</td>
-      <td>p0</td>
-    </tr>
-    <tr>
-      <th>p1</th>
-      <td>253.732612</td>
-      <td>910.336327</td>
-      <td>82.353507</td>
-      <td>96.801400</td>
-      <td>p1</td>
-    </tr>
-    <tr>
-      <th>p2</th>
-      <td>274.886538</td>
-      <td>167.553939</td>
-      <td>82.260247</td>
-      <td>82.146898</td>
-      <td>p2</td>
-    </tr>
-    <tr>
-      <th>p3</th>
-      <td>32.513697</td>
-      <td>966.814451</td>
-      <td>81.683278</td>
-      <td>79.377728</td>
-      <td>p3</td>
-    </tr>
-    <tr>
-      <th>p4</th>
-      <td>565.624540</td>
-      <td>767.730971</td>
-      <td>83.725429</td>
-      <td>85.923798</td>
-      <td>p4</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
 Next we need to calculate factors (we only do this once - takes a few seconds)
 
 
@@ -463,97 +269,12 @@ Next we need to calculate factors (we only do this once - takes a few seconds)
 kfactors = k.calc_factors(X.ravel(),Y.ravel())
 ```
 
-    starting interp point loop for 2500 points
-    took 5.955451 seconds
-    
-
 It's easiest to think of these factors as weights on surrounding point to calculate a weighted average of the surrounding values. The weight is a function of the distance - points father away have smaller weights.
 
 
 ```python
 kfactors.head()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>x</th>
-      <th>y</th>
-      <th>idist</th>
-      <th>inames</th>
-      <th>ifacts</th>
-      <th>err_var</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1.000000</td>
-      <td>1.0</td>
-      <td>[184.7051991534765, 207.40971945627004, 386.50730584099625, 491.60458345801544, 580.295266631326...</td>
-      <td>[p38, p20, p40, p37, p36, p33, p10, p35, p18, p0, p43]</td>
-      <td>[0.4327770142438521, 0.3417529484244285, 0.004059230296319384, 0.04778912246916971, 0.0501610806...</td>
-      <td>2.767218</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>21.387755</td>
-      <td>1.0</td>
-      <td>[169.14795023838278, 187.0266048520901, 370.70802497724264, 471.21711009351276, 575.554567272516...</td>
-      <td>[p38, p20, p40, p37, p36, p33, p10, p35, p18, p0, p43]</td>
-      <td>[0.43604287579758993, 0.36167431286832813, 0.0020604545233822214, 0.04483723075668418, 0.0440368...</td>
-      <td>2.574679</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>41.775510</td>
-      <td>1.0</td>
-      <td>[154.71706002108814, 166.64462558472334, 450.82966221072473, 571.5022698624969, 650.332363132082...</td>
-      <td>[p38, p20, p37, p36, p33, p35, p18, p10, p0, p43]</td>
-      <td>[0.43557284599104173, 0.3857123856407392, 0.041766258070064934, 0.03765454657692189, 0.022814952...</td>
-      <td>2.374874</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>62.163265</td>
-      <td>1.0</td>
-      <td>[141.7569376414895, 146.264256283779, 430.4422434303959, 568.1531044744195, 630.8486277459325, 6...</td>
-      <td>[p38, p20, p37, p36, p33, p35, p18, p10, p43, p0]</td>
-      <td>[0.42882967662347826, 0.41442810902652116, 0.038478280336504585, 0.03109342162082103, 0.02008586...</td>
-      <td>2.169980</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>82.551020</td>
-      <td>1.0</td>
-      <td>[125.8862788886181, 130.70581927985793, 410.0548580933408, 565.5195636810955, 645.0133254748288,...</td>
-      <td>[p20, p38, p37, p36, p35, p18, p10, p43, p30]</td>
-      <td>[0.4523516266403694, 0.41636993457552113, 0.03176622888874157, 0.02508944553343011, 0.0014195050...</td>
-      <td>2.009520</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 Now interpolate from our sampled points to a grid:
 
@@ -569,28 +290,9 @@ ax.plot(sample_df.x,sample_df.y, 'ko');
 ```
 
 
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_49_0.png)
-    
-
-
-
 ```python
 gh.grid_plot(X,Y,Z,title='truth', vlims=[72,92])
 ```
-
-
-
-
-    <AxesSubplot:>
-
-
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_50_1.png)
-    
-
 
 
 ```python
@@ -599,22 +301,10 @@ ax.plot(sample_df.x,sample_df.y, 'ko');
 ```
 
 
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_51_0.png)
-    
-
-
-
 ```python
 ax=gh.grid_plot(X,Y,np.abs(Z-Z_interp), title='Actual Differences')
 ax.plot(sample_df.x,sample_df.y, 'yo');
 ```
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_52_0.png)
-    
-
 
 ## What if our data were noisy?
 
@@ -633,24 +323,12 @@ gs_fit.plot(ax=ax);
 ```
 
 
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_54_0.png)
-    
-
-
-
 ```python
 Q = gs_fit.covariance_matrix(X.ravel(), Y.ravel(), names=[str(i) for i in range(len(Y.ravel()))])
 plt.figure(figsize=(6,6))
 plt.imshow(Q.x)
 plt.colorbar();
 ```
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_55_0.png)
-    
-
 
 Again make the Kriging Object and the factors and interpolate
 
@@ -661,10 +339,6 @@ kfactors = k.calc_factors(X.ravel(),Y.ravel())
 Z_interp = gh.geostat_interpolate(X,Y,k.interp_data, sample_df)
 ```
 
-    starting interp point loop for 2500 points
-    took 5.975461 seconds
-    
-
 
 ```python
 ax=gh.grid_plot(X,Y,Z_interp, vlims=[72,92], title='reconstruction')
@@ -672,28 +346,9 @@ ax.plot(sample_df.x,sample_df.y, 'ko')
 ```
 
 
-
-
-    [<matplotlib.lines.Line2D at 0x1aa5bce5460>]
-
-
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_58_1.png)
-    
-
-
-
 ```python
 gh.grid_plot(X,Y,Z, vlims=[72,92],title='truth');
 ```
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_59_0.png)
-    
-
 
 
 ```python
@@ -702,29 +357,10 @@ ax.plot(sample_df.x,sample_df.y, 'ko');
 ```
 
 
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_60_0.png)
-    
-
-
-
 ```python
 ax=gh.grid_plot(X,Y,np.abs(Z-Z_interp), title='Actual Differences')
 ax.plot(sample_df.x,sample_df.y, 'yo')
 ```
-
-
-
-
-    [<matplotlib.lines.Line2D at 0x1aa5b1e86a0>]
-
-
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_61_1.png)
-    
-
 
 ### Spectral simulation
 
@@ -740,15 +376,6 @@ ss = pyemu.geostats.SpecSim2d(np.ones(100),np.ones(100),gs)
 plt.imshow(ss.draw_arrays()[0]);
 ```
 
-    SpecSim.initialize() summary: full_delx X full_dely: 116 X 116
-    
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_63_1.png)
-    
-
-
 
 ```python
 ev = pyemu.geostats.ExpVario(1.0,5)
@@ -757,15 +384,6 @@ ss = pyemu.geostats.SpecSim2d(np.ones(100),np.ones(100),gs)
 plt.imshow(ss.draw_arrays()[0]);
 ```
 
-    SpecSim.initialize() summary: full_delx X full_dely: 132 X 132
-    
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_64_1.png)
-    
-
-
 
 ```python
 ev = pyemu.geostats.ExpVario(1.0,500)
@@ -773,15 +391,6 @@ gs = pyemu.geostats.GeoStruct(variograms=ev)
 ss = pyemu.geostats.SpecSim2d(np.ones(100),np.ones(100),gs)
 plt.imshow(ss.draw_arrays()[0]);
 ```
-
-    SpecSim.initialize() summary: full_delx X full_dely: 3108 X 3108
-    
-
-
-    
-![png](intro_to_geostatistics_files/intro_to_geostatistics_65_1.png)
-    
-
 
 # Further resources and information
 1. These concepts are used for pilot point interpolation in PEST:

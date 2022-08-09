@@ -1,11 +1,4 @@
-
 ---
-layout: default
-title: Regularization
-parent: Introduction to Theory, Concepts and PEST Mechanic
-nav_order: 9
----
-                    ---
 layout: default
 title: Regularization
 parent: Introduction to Theory, Concepts and PEST Mechanic
@@ -205,34 +198,6 @@ hbd.prep_pest(tmp_d)
 hbd.add_ppoints(tmp_d)
 ```
 
-    ins file for heads.csv prepared.
-    ins file for sfr.csv prepared.
-    noptmax:0, npar_adj:1, nnz_obs:24
-    written pest control file: freyberg_mf6\freyberg.pst
-       could not remove start_datetime
-    1 pars added from template file .\freyberg6.sfr_perioddata_1.txt.tpl
-    6 pars added from template file .\freyberg6.wel_stress_period_data_10.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_11.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_12.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_2.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_3.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_4.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_5.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_6.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_7.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_8.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_9.txt.tpl
-    starting interp point loop for 800 points
-    took 1.787743 seconds
-    1 pars dropped from template file freyberg_mf6\freyberg6.npf_k_layer1.txt.tpl
-    29 pars added from template file .\hkpp.dat.tpl
-    starting interp point loop for 800 points
-    took 1.776238 seconds
-    29 pars added from template file .\rchpp.dat.tpl
-    noptmax:0, npar_adj:65, nnz_obs:37
-    new control file: 'freyberg_pp.pst'
-    
-
 
 ```python
 # load the pre-constructed pst
@@ -242,9 +207,6 @@ pst.control_data.noptmax=0
 pst.write(os.path.join(tmp_d,'freyberg_pp.pst'))
 pyemu.os_utils.run('pestpp-glm freyberg_pp.pst', cwd=tmp_d)
 ```
-
-    noptmax:0, npar_adj:65, nnz_obs:37
-    
 
 ## Tikhnov regularization as "prior information"
 
@@ -268,38 +230,6 @@ You can check the `prior_information` section of the control file like so:
 pst.prior_information
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>pilbl</th>
-      <th>obgnme</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
-</div>
-
-
-
 As you see, it is empty. Let's add preferred value regularization:
 
 
@@ -315,110 +245,6 @@ Boom!
 # make a table of the regularization equations 
 pst.prior_information.sample(10)
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>pilbl</th>
-      <th>equation</th>
-      <th>obgnme</th>
-      <th>weight</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>42</th>
-      <td>rch_i:12_j:2_zone:1.0</td>
-      <td>1.0 * log(rch_i:12_j:2_zone:1.0) =   0.000000E+00</td>
-      <td>regulrchpp</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>wel2</td>
-      <td>1.0 * log(wel2) =   2.477121E+00</td>
-      <td>regulwel</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>wel3</td>
-      <td>1.0 * log(wel3) =   2.477121E+00</td>
-      <td>regulwel</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>28</th>
-      <td>hk_i:2_j:7_zone:1.0</td>
-      <td>1.0 * log(hk_i:2_j:7_zone:1.0) =   6.989700E-01</td>
-      <td>regulhk1</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>30</th>
-      <td>hk_i:22_j:17_zone:1.0</td>
-      <td>1.0 * log(hk_i:22_j:17_zone:1.0) =   6.989700E-01</td>
-      <td>regulhk1</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>51</th>
-      <td>rch_i:2_j:12_zone:1.0</td>
-      <td>1.0 * log(rch_i:2_j:12_zone:1.0) =   0.000000E+00</td>
-      <td>regulrchpp</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>64</th>
-      <td>rch_i:22_j:12_zone:1.0</td>
-      <td>1.0 * log(rch_i:22_j:12_zone:1.0) =   0.000000E+00</td>
-      <td>regulrchpp</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>wel0</td>
-      <td>1.0 * log(wel0) =   2.477121E+00</td>
-      <td>regulwel</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>hk_i:2_j:2_zone:1.0</td>
-      <td>1.0 * log(hk_i:2_j:2_zone:1.0) =   6.989700E-01</td>
-      <td>regulhk1</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>16</th>
-      <td>hk_i:2_j:12_zone:1.0</td>
-      <td>1.0 * log(hk_i:2_j:12_zone:1.0) =   6.989700E-01</td>
-      <td>regulhk1</td>
-      <td>1.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 Note the "regul_" prefix added to the parameter group name (check the `obgnme` column) - that is how we tell PEST to track the deviations from preferred conditions separately as a Tikhonov regularization.
 
@@ -447,117 +273,6 @@ pyemu.helpers.zero_order_tikhonov(pst, parbounds=True)
 pst.prior_information.sample(10)
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>pilbl</th>
-      <th>equation</th>
-      <th>obgnme</th>
-      <th>weight</th>
-    </tr>
-    <tr>
-      <th>pilbl</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>rch_i:22_j:12_zone:1.0</th>
-      <td>rch_i:22_j:12_zone:1.0</td>
-      <td>1.0 * log(rch_i:22_j:12_zone:1.0) =   0.000000E+00</td>
-      <td>regulrchpp</td>
-      <td>1.660964</td>
-    </tr>
-    <tr>
-      <th>rch_i:12_j:12_zone:1.0</th>
-      <td>rch_i:12_j:12_zone:1.0</td>
-      <td>1.0 * log(rch_i:12_j:12_zone:1.0) =   0.000000E+00</td>
-      <td>regulrchpp</td>
-      <td>1.660964</td>
-    </tr>
-    <tr>
-      <th>hk_i:27_j:2_zone:1.0</th>
-      <td>hk_i:27_j:2_zone:1.0</td>
-      <td>1.0 * log(hk_i:27_j:2_zone:1.0) =   6.989700E-01</td>
-      <td>regulhk1</td>
-      <td>0.250000</td>
-    </tr>
-    <tr>
-      <th>rch_i:27_j:12_zone:1.0</th>
-      <td>rch_i:27_j:12_zone:1.0</td>
-      <td>1.0 * log(rch_i:27_j:12_zone:1.0) =   0.000000E+00</td>
-      <td>regulrchpp</td>
-      <td>1.660964</td>
-    </tr>
-    <tr>
-      <th>hk_i:22_j:2_zone:1.0</th>
-      <td>hk_i:22_j:2_zone:1.0</td>
-      <td>1.0 * log(hk_i:22_j:2_zone:1.0) =   6.989700E-01</td>
-      <td>regulhk1</td>
-      <td>0.250000</td>
-    </tr>
-    <tr>
-      <th>hk_i:37_j:7_zone:1.0</th>
-      <td>hk_i:37_j:7_zone:1.0</td>
-      <td>1.0 * log(hk_i:37_j:7_zone:1.0) =   6.989700E-01</td>
-      <td>regulhk1</td>
-      <td>0.250000</td>
-    </tr>
-    <tr>
-      <th>rch_i:7_j:2_zone:1.0</th>
-      <td>rch_i:7_j:2_zone:1.0</td>
-      <td>1.0 * log(rch_i:7_j:2_zone:1.0) =   0.000000E+00</td>
-      <td>regulrchpp</td>
-      <td>1.660964</td>
-    </tr>
-    <tr>
-      <th>wel4</th>
-      <td>wel4</td>
-      <td>1.0 * log(wel4) =   2.477121E+00</td>
-      <td>regulwel</td>
-      <td>0.511707</td>
-    </tr>
-    <tr>
-      <th>wel2</th>
-      <td>wel2</td>
-      <td>1.0 * log(wel2) =   2.477121E+00</td>
-      <td>regulwel</td>
-      <td>0.511707</td>
-    </tr>
-    <tr>
-      <th>hk_i:22_j:12_zone:1.0</th>
-      <td>hk_i:22_j:12_zone:1.0</td>
-      <td>1.0 * log(hk_i:22_j:12_zone:1.0) =   6.989700E-01</td>
-      <td>regulhk1</td>
-      <td>0.250000</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
 Now we are given more strength for keeping recharge near its initial value...good! This way, all else being equal, PEST(++) will "prefer" to change `hk` before it changes `rch`.
 
 ### So what about preferred difference regularization?  
@@ -581,12 +296,6 @@ ax.grid()
 ax.set_ylim(0,2.0);
 ```
 
-
-    
-![png](intro_to_regularization_files/intro_to_regularization_28_0.png)
-    
-
-
 Now we need to know where the pilot points are.  For this case, we can get this from the pilot point template file:
 
 
@@ -595,81 +304,6 @@ Now we need to know where the pilot points are.  For this case, we can get this 
 df_pp = pyemu.pp_utils.pp_tpl_to_dataframe(os.path.join(tmp_d,"hkpp.dat.tpl"))
 df_pp.head()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>name</th>
-      <th>x</th>
-      <th>y</th>
-      <th>zone</th>
-      <th>parnme</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>pp_0000</td>
-      <td>625.0</td>
-      <td>9375.0</td>
-      <td>1.0</td>
-      <td>hk_i:2_j:2_zone:1.0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>pp_0001</td>
-      <td>1875.0</td>
-      <td>9375.0</td>
-      <td>1.0</td>
-      <td>hk_i:2_j:7_zone:1.0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>pp_0002</td>
-      <td>3125.0</td>
-      <td>9375.0</td>
-      <td>1.0</td>
-      <td>hk_i:2_j:12_zone:1.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>pp_0003</td>
-      <td>4375.0</td>
-      <td>9375.0</td>
-      <td>1.0</td>
-      <td>hk_i:2_j:17_zone:1.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>pp_0004</td>
-      <td>625.0</td>
-      <td>8125.0</td>
-      <td>1.0</td>
-      <td>hk_i:7_j:2_zone:1.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 Now let's build a covariance matrix for our pilot point parameters from the geostatistical structure:
 
@@ -686,178 +320,6 @@ Take a peek at the covariance matrix we just constructed:
 cov.to_dataframe().head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>hk_i:2_j:2_zone:1.0</th>
-      <th>hk_i:2_j:7_zone:1.0</th>
-      <th>hk_i:2_j:12_zone:1.0</th>
-      <th>hk_i:2_j:17_zone:1.0</th>
-      <th>hk_i:7_j:2_zone:1.0</th>
-      <th>hk_i:7_j:7_zone:1.0</th>
-      <th>hk_i:7_j:12_zone:1.0</th>
-      <th>hk_i:7_j:17_zone:1.0</th>
-      <th>hk_i:12_j:2_zone:1.0</th>
-      <th>hk_i:12_j:12_zone:1.0</th>
-      <th>...</th>
-      <th>hk_i:27_j:7_zone:1.0</th>
-      <th>hk_i:27_j:12_zone:1.0</th>
-      <th>hk_i:27_j:17_zone:1.0</th>
-      <th>hk_i:32_j:2_zone:1.0</th>
-      <th>hk_i:32_j:7_zone:1.0</th>
-      <th>hk_i:32_j:12_zone:1.0</th>
-      <th>hk_i:32_j:17_zone:1.0</th>
-      <th>hk_i:37_j:7_zone:1.0</th>
-      <th>hk_i:37_j:12_zone:1.0</th>
-      <th>hk_i:37_j:17_zone:1.0</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>hk_i:2_j:2_zone:1.0</th>
-      <td>1.000000</td>
-      <td>0.606531</td>
-      <td>0.367879</td>
-      <td>0.223130</td>
-      <td>0.606531</td>
-      <td>0.493069</td>
-      <td>0.326922</td>
-      <td>0.205741</td>
-      <td>0.367879</td>
-      <td>0.243117</td>
-      <td>...</td>
-      <td>0.078120</td>
-      <td>0.067706</td>
-      <td>0.054178</td>
-      <td>0.049787</td>
-      <td>0.047769</td>
-      <td>0.042329</td>
-      <td>0.034941</td>
-      <td>0.029143</td>
-      <td>0.026251</td>
-      <td>0.022195</td>
-    </tr>
-    <tr>
-      <th>hk_i:2_j:7_zone:1.0</th>
-      <td>0.606531</td>
-      <td>1.000000</td>
-      <td>0.606531</td>
-      <td>0.367879</td>
-      <td>0.493069</td>
-      <td>0.606531</td>
-      <td>0.493069</td>
-      <td>0.326922</td>
-      <td>0.326922</td>
-      <td>0.326922</td>
-      <td>...</td>
-      <td>0.082085</td>
-      <td>0.078120</td>
-      <td>0.067706</td>
-      <td>0.047769</td>
-      <td>0.049787</td>
-      <td>0.047769</td>
-      <td>0.042329</td>
-      <td>0.030197</td>
-      <td>0.029143</td>
-      <td>0.026251</td>
-    </tr>
-    <tr>
-      <th>hk_i:2_j:12_zone:1.0</th>
-      <td>0.367879</td>
-      <td>0.606531</td>
-      <td>1.000000</td>
-      <td>0.606531</td>
-      <td>0.326922</td>
-      <td>0.493069</td>
-      <td>0.606531</td>
-      <td>0.493069</td>
-      <td>0.243117</td>
-      <td>0.367879</td>
-      <td>...</td>
-      <td>0.078120</td>
-      <td>0.082085</td>
-      <td>0.078120</td>
-      <td>0.042329</td>
-      <td>0.047769</td>
-      <td>0.049787</td>
-      <td>0.047769</td>
-      <td>0.029143</td>
-      <td>0.030197</td>
-      <td>0.029143</td>
-    </tr>
-    <tr>
-      <th>hk_i:2_j:17_zone:1.0</th>
-      <td>0.223130</td>
-      <td>0.367879</td>
-      <td>0.606531</td>
-      <td>1.000000</td>
-      <td>0.205741</td>
-      <td>0.326922</td>
-      <td>0.493069</td>
-      <td>0.606531</td>
-      <td>0.164841</td>
-      <td>0.326922</td>
-      <td>...</td>
-      <td>0.067706</td>
-      <td>0.078120</td>
-      <td>0.082085</td>
-      <td>0.034941</td>
-      <td>0.042329</td>
-      <td>0.047769</td>
-      <td>0.049787</td>
-      <td>0.026251</td>
-      <td>0.029143</td>
-      <td>0.030197</td>
-    </tr>
-    <tr>
-      <th>hk_i:7_j:2_zone:1.0</th>
-      <td>0.606531</td>
-      <td>0.493069</td>
-      <td>0.326922</td>
-      <td>0.205741</td>
-      <td>1.000000</td>
-      <td>0.606531</td>
-      <td>0.367879</td>
-      <td>0.223130</td>
-      <td>0.606531</td>
-      <td>0.326922</td>
-      <td>...</td>
-      <td>0.127256</td>
-      <td>0.106878</td>
-      <td>0.082085</td>
-      <td>0.082085</td>
-      <td>0.078120</td>
-      <td>0.067706</td>
-      <td>0.054178</td>
-      <td>0.047769</td>
-      <td>0.042329</td>
-      <td>0.034941</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 29 columns</p>
-</div>
-
-
-
 It is now a simple matter of passing this matrix to `pyemu.helpers.first_order_pearson_tikhonov()`:
 
 
@@ -867,10 +329,6 @@ It is now a simple matter of passing this matrix to `pyemu.helpers.first_order_p
 pyemu.helpers.first_order_pearson_tikhonov(pst, cov, reset=False)
 ```
 
-    getting CC matrix
-    processing
-    
-
 Check out the new 1prior_information` equations. Note how they now reflect the _difference_ between two parameters should equal zero.
 
 
@@ -878,117 +336,6 @@ Check out the new 1prior_information` equations. Note how they now reflect the _
 # check out the new regularization equations out
 pst.prior_information.tail(10)
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>pilbl</th>
-      <th>equation</th>
-      <th>obgnme</th>
-      <th>weight</th>
-    </tr>
-    <tr>
-      <th>pilbl</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>pcc_462</th>
-      <td>pcc_462</td>
-      <td>1.0 * log(hk_i:32_j:12_zone:1.0) - 1.0 * log(hk_i:32_j:17_zone:1.0) = 0.0</td>
-      <td>regul_cc</td>
-      <td>0.606531</td>
-    </tr>
-    <tr>
-      <th>pcc_463</th>
-      <td>pcc_463</td>
-      <td>1.0 * log(hk_i:32_j:12_zone:1.0) - 1.0 * log(hk_i:37_j:7_zone:1.0) = 0.0</td>
-      <td>regul_cc</td>
-      <td>0.493069</td>
-    </tr>
-    <tr>
-      <th>pcc_464</th>
-      <td>pcc_464</td>
-      <td>1.0 * log(hk_i:32_j:12_zone:1.0) - 1.0 * log(hk_i:37_j:12_zone:1.0) = 0.0</td>
-      <td>regul_cc</td>
-      <td>0.606531</td>
-    </tr>
-    <tr>
-      <th>pcc_465</th>
-      <td>pcc_465</td>
-      <td>1.0 * log(hk_i:32_j:12_zone:1.0) - 1.0 * log(hk_i:37_j:17_zone:1.0) = 0.0</td>
-      <td>regul_cc</td>
-      <td>0.493069</td>
-    </tr>
-    <tr>
-      <th>pcc_466</th>
-      <td>pcc_466</td>
-      <td>1.0 * log(hk_i:32_j:17_zone:1.0) - 1.0 * log(hk_i:37_j:7_zone:1.0) = 0.0</td>
-      <td>regul_cc</td>
-      <td>0.326922</td>
-    </tr>
-    <tr>
-      <th>pcc_467</th>
-      <td>pcc_467</td>
-      <td>1.0 * log(hk_i:32_j:17_zone:1.0) - 1.0 * log(hk_i:37_j:12_zone:1.0) = 0.0</td>
-      <td>regul_cc</td>
-      <td>0.493069</td>
-    </tr>
-    <tr>
-      <th>pcc_468</th>
-      <td>pcc_468</td>
-      <td>1.0 * log(hk_i:32_j:17_zone:1.0) - 1.0 * log(hk_i:37_j:17_zone:1.0) = 0.0</td>
-      <td>regul_cc</td>
-      <td>0.606531</td>
-    </tr>
-    <tr>
-      <th>pcc_469</th>
-      <td>pcc_469</td>
-      <td>1.0 * log(hk_i:37_j:7_zone:1.0) - 1.0 * log(hk_i:37_j:12_zone:1.0) = 0.0</td>
-      <td>regul_cc</td>
-      <td>0.606531</td>
-    </tr>
-    <tr>
-      <th>pcc_470</th>
-      <td>pcc_470</td>
-      <td>1.0 * log(hk_i:37_j:7_zone:1.0) - 1.0 * log(hk_i:37_j:17_zone:1.0) = 0.0</td>
-      <td>regul_cc</td>
-      <td>0.367879</td>
-    </tr>
-    <tr>
-      <th>pcc_471</th>
-      <td>pcc_471</td>
-      <td>1.0 * log(hk_i:37_j:12_zone:1.0) - 1.0 * log(hk_i:37_j:17_zone:1.0) = 0.0</td>
-      <td>regul_cc</td>
-      <td>0.606531</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 What happened?  
 
@@ -1006,13 +353,6 @@ And, most importantly we need to see what pyemu has for the all important regula
 pst.reg_data.phimlim
 ```
 
-
-
-
-    '1.0e-10'
-
-
-
 That is ___very low___  for a final parameter estimation.  But recall our workflow from earlier on, this value is just a "placeholder" to ignore soft knowledge and only focus on obtaining the best fit.  After the how-low-can-PEST-go run, ``phimlim`` should be set to a larger number, say the number of non-zero weighted obs (assuming that observation weights are the inverse of standard deviation of noise!).  Here we'll explore the effect of ``phimlim`` a bit.  
 
 Now, we have already undertaken an un-regularized parameter estiamtion run. Effectively that is what we did in the "freyberg pilot point run" notebook. We got a really good fit - much better than is reasonable give the uncertainty (e.g. noise) in our observation data (check the previous notebook to get the value of Phi).
@@ -1024,13 +364,6 @@ How many non-zero weighted observations do we have?
 nnz_obs = pst.nnz_obs
 nnz_obs
 ```
-
-
-
-
-    37
-
-
 
 A convenience of weighting with the inverse of the measurement uncertainty (which we have done in this case) is that it is easy to know what the ideal Phi should be: it should be equal to the number of non-zero weighted observations. 
 
@@ -1044,13 +377,6 @@ pst.reg_data.phimlim = nnz_obs
 pst.reg_data.phimlim
 ```
 
-
-
-
-    37
-
-
-
 When chaning PHIMLIM, we must also change PHIMACCEPT. This is the level of acceptable "measurement objective function". If PEST(++) achieves PHIMLIM, it will then attempt to minimize the _regularisation_ objective function, whilst maintaining the _measurment_ objective function below PHIMACCEPT.
 
 Ideally, PHIMACCEPT should be assigned 5-10% higher than PHIMLIM.
@@ -1062,13 +388,6 @@ pst.reg_data.phimaccept = 1.1 * pst.reg_data.phimlim
 pst.reg_data.phimaccept
 ```
 
-
-
-
-    40.7
-
-
-
 One last important detail! Make sure we set the `pestmode` to regularization. This should have happened by default when we used the `pyemu.helpers` to assign prior information equations.
 
 
@@ -1076,13 +395,6 @@ One last important detail! Make sure we set the `pestmode` to regularization. Th
 assert pst.control_data.pestmode == 'regularization'
 pst.control_data.pestmode
 ```
-
-
-
-
-    'regularization'
-
-
 
 ## Write and Run
 
@@ -1101,13 +413,6 @@ pst.pestpp_options.pop('n_iter_base')
 pst.pestpp_options.pop('n_iter_super')
 ```
 
-
-
-
-    '3'
-
-
-
 Write the control file again:
 
 
@@ -1115,22 +420,12 @@ Write the control file again:
 pst.write(os.path.join(tmp_d, 'freyberg_reg.pst'))
 ```
 
-    noptmax:20, npar_adj:65, nnz_obs:37
-    
-
 Remember to specify the number which is adequate for ***your*** machine! Make sure to assign an appropriate value for the following `num_workers` variable. (If you are unsure how many cores you have, you can use `psutil` to check).
 
 
 ```python
 psutil.cpu_count(logical=False)
 ```
-
-
-
-
-    10
-
-
 
 
 ```python
@@ -1161,26 +456,12 @@ pst = pyemu.Pst(os.path.join(m_d, 'freyberg_reg.pst'))
 pst.phi
 ```
 
-
-
-
-    40.152006608957834
-
-
-
 That number looks familiar...what did we assing to PHIMACCEPT again?
 
 
 ```python
 pst.reg_data.phimaccept
 ```
-
-
-
-
-    40.7
-
-
 
 Check out the Phi progress. Interesting. In this case PEST managed to get a fit better than PHIMLIM in the very first iteration (not a usual case). Measurment Phi then increases up to PHIMACCEPT. Subsequent iterations were spent reducing regularization Phi untill total Phi is lower than PHIMLIM.
 
@@ -1191,28 +472,12 @@ df_obj.plot(y=['total_phi','measurement_phi','regularization_phi'])
 plt.ylabel('total_phi');
 ```
 
-
-    
-![png](intro_to_regularization_files/intro_to_regularization_66_0.png)
-    
-
-
 What about the fits with measured values? Not perfect...but we aren't looking for a perfect fit here - we are looking for _as good a fit_ as the measured data justifies.
 
 
 ```python
 figs = pst.plot(kind="1to1");
 ```
-
-
-    <Figure size 576x756 with 0 Axes>
-
-
-
-    
-![png](intro_to_regularization_files/intro_to_regularization_68_1.png)
-    
-
 
 Let's inspect the posterior parameter uncetanties for each parameter group. 
 
@@ -1245,12 +510,6 @@ def plot_param_unc():
 plot_param_unc()
 ```
 
-
-    
-![png](intro_to_regularization_files/intro_to_regularization_71_0.png)
-    
-
-
 A lot better than before! We are no longer getting lots pf parameters at their bounds. Yay.
 
 
@@ -1264,17 +523,6 @@ pyemu.geostats.fac2real(os.path.join(m_d,"hkpp.dat"),
                         factors_file=os.path.join(m_d,"hkpp.dat.fac"),
                         out_file=os.path.join(m_d,"freyberg6.npf_k_layer1.txt"))
 ```
-
-    Updating parameter values from master_reg\freyberg_reg.par
-    parrep: updating noptmax to 0
-    
-
-
-
-
-    'master_reg\\freyberg6.npf_k_layer1.txt'
-
-
 
 
 ```python
@@ -1308,12 +556,6 @@ mm.plot_inactive()
 ax.set_title('$K$');
 ```
 
-
-    
-![png](intro_to_regularization_files/intro_to_regularization_78_0.png)
-    
-
-
 Hey! Whats this?! nearly uniform K?? Oh right...thats what we told PEST we preferred. Therefore parameter values were left alone, unless needed to improve the fit.
 
 What about recharge? Remember from the posterior parameter distributions plotted above, we see `rch` parameter values deviated from the prior the most.
@@ -1324,12 +566,6 @@ Plot recharge spatial distribution:
 ```python
 gwf.rch.plot();
 ```
-
-
-    
-![png](intro_to_regularization_files/intro_to_regularization_81_0.png)
-    
-
 
 So, although we specified that `hk` parameters were more uncertain than `rch`, information content in the observation data required changes in `rch`. Because `hk` and `rch` are correlated...only one is changed.
 
@@ -1352,12 +588,6 @@ def plot_forecast_unc():
 
 plot_forecast_unc()
 ```
-
-
-    
-![png](intro_to_regularization_files/intro_to_regularization_84_0.png)
-    
-
 
 Better...maybe? But still failing. How is this possible?!
 
@@ -1383,13 +613,6 @@ pst.reg_data.phimaccept = 1.1 * pst.reg_data.phimlim
 pst.reg_data.phimlim, pst.reg_data.phimaccept
 ```
 
-
-
-
-    (74, 81.4)
-
-
-
 Run PEST again:
 
 
@@ -1406,9 +629,6 @@ pyemu.os_utils.start_workers(tmp_d, # the folder which contains the "template" P
                             )
 ```
 
-    noptmax:20, npar_adj:65, nnz_obs:37
-    
-
 And load it back in again:
 
 
@@ -1417,25 +637,12 @@ pst = pyemu.Pst(os.path.join(m_d, 'freyberg_reg.pst'))
 pst.phi
 ```
 
-
-
-
-    73.98026622859213
-
-
-
 Now we see that parameters have not deviated as much from the intial values. Not surprising, since we set the PHIMLIM so high.
 
 
 ```python
 plot_param_unc()
 ```
-
-
-    
-![png](intro_to_regularization_files/intro_to_regularization_94_0.png)
-    
-
 
 And now the forecasts.
 
@@ -1447,9 +654,3 @@ So, what has happened here? Effectively we have traded a good fit with measured 
 ```python
 plot_forecast_unc()
 ```
-
-
-    
-![png](intro_to_regularization_files/intro_to_regularization_96_0.png)
-    
-

@@ -1,11 +1,4 @@
-
 ---
-layout: default
-title: Intro to Bayes
-parent: Introductions to Selected Topics
-nav_order: 6
----
-                    ---
 layout: default
 title: Intro to Bayes
 parent: Introductions to Selected Topics
@@ -30,7 +23,7 @@ This is really just rearranging the law of conditional probabilities:
  _Um, what?_ Let's use pictres to make this easier to understand.
 
 ## A Venn diagram to explore conditional probabilities
-<img src="intro_to_bayes_files\conditional_probability.png" style="float: left; width: 50%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src=".\intro_to_bayes_files\conditional_probability.png" style="float: left; width: 50%; margin-right: 1%; margin-bottom: 0.5em;">
 <p style="clear: both;">
 By Gnathan87 - Own work, CC0, https://commons.wikimedia.org/w/index.php?curid=15991401
 
@@ -79,8 +72,8 @@ $$P\left(\boldsymbol{\theta}|\textbf{d}\right) = \frac{P\left(\textbf{d}|\boldsy
 
 
  
-<img src="intro_to_bayes_files\plant.JPG" style="float: left; width: 28%; margin-right: 1%; margin-bottom: 0em;">
-<img src="intro_to_bayes_files\dead_plant.JPG" style="float: left; width: 30%; margin-right: 1%; margin-bottom: 0em;">
+<img src=".\intro_to_bayes_files\plant.JPG" style="float: left; width: 28%; margin-right: 1%; margin-bottom: 0em;">
+<img src=".\intro_to_bayes_files\dead_plant.JPG" style="float: left; width: 30%; margin-right: 1%; margin-bottom: 0em;">
 <p style="clear: both;">
 
  You have a plant at home, and you're going to go away for a week. If it gets watered, its probability of dying is 15%. If it doesn't get watered, it is 80% likely to die. You ask your partner to water it for you and you are 90% certain they will do it.
@@ -134,9 +127,6 @@ PDd = PDd_thw*Prior_thw + PDd_thnw*Prior_thnw
 print ('Probability Plant is dead = {0:.3f}'.format(PDd))
 ```
 
-    Probability Plant is dead = 0.215
-    
-
 Since we only have two discrete outcomes, the probability of the plant being alive is simply 
 
 $$P\left(d_a\right)=1-P\left(d_d\right)$$
@@ -146,9 +136,6 @@ $$P\left(d_a\right)=1-P\left(d_d\right)$$
 PDa = 1-PDd
 print ('Probability Plant is alive = {0:.3f}'.format(PDa))
 ```
-
-    Probability Plant is alive = 0.785
-    
 
 Great! So we can incorporate all the possible arrangements of events to determine likely outcomes. But....what we are _really_ interested in is what we learn with partial information. This is where household harmony can be made or broken!
 
@@ -170,10 +157,6 @@ print ("Probability that partner failed to water the plant")
 print("having seen it's dead is {0:.3f}".format(PthnwDd))
 ```
 
-    Probability that partner failed to water the plant
-    having seen it's dead is 0.372
-    
-
 Alternatively, we can see the converse: How likely did our partner water the plant given that it's alive?
 
 $$P\left(\theta_w | d_a\right) = \frac{P\left(d_a | \theta_w\right) P\left(\theta_w\right)}{P\left(d_a\right)}$$
@@ -184,10 +167,6 @@ PthwDa = (1-PDd_thw) * Prior_thw/ PDa
 print ("Probability that partner did water the plant")
 print ("having seen it's alive is {0:.3f}".format(PthwDa))
 ```
-
-    Probability that partner did water the plant
-    having seen it's alive is 0.975
-    
 
 How likely did our partner forget, given that we see it's alive?
 
@@ -200,17 +179,13 @@ print ("Probability that partner forgot to water the plant")
 print("having seen it's alive is {0:.3f}".format(PthnwDa))
 ```
 
-    Probability that partner forgot to water the plant
-    having seen it's alive is 0.025
-    
-
 ### Continuous variables
 
 Right then, but we are in the world of continuous variables, not simple discrete probabilities
 
 This means that we end up with probability density functions rather than discrete probabilities and the denominator on the RHS gets tricky to evaluate (the total probability). Luckily, we are mostly conncerned with finding the parameters that maximize the probability and less concerned with the probability itself.
 
-<img src="intro_to_bayes_files\Fig10.3_Bayes_figure.png" style="float: left; width: 75%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src=".\intro_to_bayes_files\Fig10.3_Bayes_figure.png" style="float: left; width: 75%; margin-right: 1%; margin-bottom: 0.5em;">
 
 
 This is a learning framework, where what we know at the end is a function of what we started with and what we _learned_ through a new experiment (model) or new information
@@ -232,29 +207,12 @@ from ipywidgets import interact
 bh.plot_posterior(prior_mean=10, prior_std=11, likeli_mean = 25, likeli_std=5);
 ```
 
-    findfont: Font family ['sans-serif'] not found. Falling back to DejaVu Sans.
-    findfont: Generic family 'sans-serif' not found because none of the following families were found: Univers 57 Condensed
-    
-
-
-    
-![png](intro_to_bayes_files/intro_to_bayes_39_1.png)
-    
-
-
 
 ```python
 interact(bh.plot_posterior,
          prior_mean=(1, 20., .5), likeli_mean=(1, 20, 1), 
          prior_std=(.1, 8, .1), likeli_std=(.1, 8, 2));
 ```
-
-    D:\Workspace\hugm0001\anaconda\lib\site-packages\ipykernel\pylab\backend_inline.py:11: DeprecationWarning: `ipykernel.pylab.backend_inline` is deprecated, directly use `matplotlib_inline.backend_inline`
-    
-
-
-    interactive(children=(FloatSlider(value=10.5, description='prior_mean', max=20.0, min=1.0, step=0.5), FloatSli…
-
 
 # The mandatory "coin-flipping example" 
 > _Borrowed from **Bayesian Methods for Hackers**. The full Github repository is available [here](https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers)_
@@ -299,20 +257,10 @@ plt.suptitle("Bayesian updating of posterior probabilities",
 plt.tight_layout();
 ```
 
-    findfont: Font family ['sans-serif'] not found. Falling back to DejaVu Sans.
-    findfont: Generic family 'sans-serif' not found because none of the following families were found: Univers 57 Condensed
-    
-
-
-    
-![png](intro_to_bayes_files/intro_to_bayes_42_1.png)
-    
-
-
 The posterior probabilities are represented by the curves, and our uncertainty is proportional to the width of the curve. As the plot above shows, as we start to observe data our posterior probabilities start to shift and move around. Eventually, as we observe more and more data (coin-flips), our probabilities will tighten closer and closer around the true value of $p=0.5$ (marked by a dashed line). 
 
 Notice that the plots are not always *peaked* at 0.5. There is no reason it should be: recall we assumed we did not have a prior opinion of what $p$ is. In fact, if we observe quite extreme data, say 8 flips and only 1 observed heads, our distribution would look very biased *away* from lumping around 0.5 (with no prior opinion, how confident would you feel betting on a fair coin after observing 8 tails and 1 head). As more data accumulates, we would see more and more probability being assigned at $p=0.5$, though never all of it.
 
 
-<img src="intro_to_bayes_files\bayes_editorial.png" style="float: left; width: 75%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src=".\intro_to_bayes_files\bayes_editorial.png" style="float: left; width: 75%; margin-right: 1%; margin-bottom: 0.5em;">
 

@@ -1,11 +1,4 @@
-
 ---
-layout: default
-title: Intro to FOSM
-parent: Introduction to Theory, Concepts and PEST Mechanic
-nav_order: 10
----
-                    ---
 layout: default
 title: Intro to FOSM
 parent: Introduction to Theory, Concepts and PEST Mechanic
@@ -25,10 +18,10 @@ Pages 461-465 of Anderson et al. use the PREDUNC equation of PEST to discuss an 
 
 > __Side Note__: in Part2 of this series of tutorial notebooks we demonstrate a complete FOSM and Data-worth analysis workflow using `pyemu` and PEST++. The current notebook merely aims to provide a very high level introduction to some of the concepts.
 
-<img src="\intro_to_fosm_files\bayes.png" style="float: left; width: 25%; margin-right: 1%; margin-bottom: 0.5em;">
-<img src="\intro_to_fosm_files\jacobi.jpg" style="float: left; width: 25%; margin-right: 1%; margin-bottom: 0.5em;">
-<img src="\intro_to_fosm_files\gauss.jpg" style="float: left; width: 22%; margin-right: 1%; margin-bottom: 0.5em;">
-<img src="\intro_to_fosm_files\schur.jpg" style="float: left; width: 22%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src=".\intro_to_fosm_files\bayes.png" style="float: left; width: 25%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src=".\intro_to_fosm_files\jacobi.jpg" style="float: left; width: 25%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src=".\intro_to_fosm_files\gauss.jpg" style="float: left; width: 22%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src=".\intro_to_fosm_files\schur.jpg" style="float: left; width: 22%; margin-right: 1%; margin-bottom: 0.5em;">
 <p style="clear: both;">
 
 FOSM provides approximate mathematical characterisation of prior predictive probability distributions, and of posterior parameter and predictive probability distributions. It has other uses as well. It can be used to demonstrate how the history-matching process bestows worth on data. It can also be deployed to track the flow of information from field measurements of system state to parameters, and ultimately from parameters to model predictions. 
@@ -64,7 +57,7 @@ We update our knowledge by comparing what we know/believe with measured/observed
 
 We can also think of this graphically, as taken from Anderson et al. (2015) in slightly different notation but the same equation and concept:
 
-<img src="intro_to_fosm_files\Fig10.3_Bayes_figure.png" style="float: center;width:500px;"/>
+<img src=".\intro _to_fosm_files\Fig10.3_Bayes_figure.png" style="float: center;width:500px;"/>
 
 The problem is, for real-world problems, the likelihood function  $\mathcal{L}(\theta | \textbf{D})$ is high-dimensional and non-parameteric, requiring non-linear (typically Monte Carlo) integration for rigorous Bayes. Unfortunatley, non-linear methods are computationaly expensive and ineficient. 
 
@@ -76,19 +69,19 @@ By assuming that:
 
 ### 1. There is an approximate linear relation between parameters and observations:
 
-<img src="intro_to_fosm_files\jacobi.jpg" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src=".\intro _to_fosm_files\jacobi.jpg" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
 
 ### <center> $\mathbf{J} \approx \text{constant}$, $\frac{\partial\text{obs}}{\partial\text{par}} \approx \text{constant}$</center>
 
 ### 2. The parameter and forecast prior and posterior distributions are approximately Gaussian:
 
-<img src="intro_to_fosm_files\gauss.jpg" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src=".\intro _to_fosm_files\gauss.jpg" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
 
 ###  <center>  $ P(\boldsymbol{\theta}|\mathbf{d}) \approx \mathcal{N}(\overline{\boldsymbol{\mu}}_{\boldsymbol{\theta}},\overline{\boldsymbol{\Sigma}}_{\boldsymbol{\theta}})$ </center>
 
 Armed with these two assumptions, from Bayes equations, one can derive the Schur complement for conditional uncertainty propogation:
 
-<img src="intro_to_fosm_files\schur.jpg" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src=".\intro _to_fosm_files\schur.jpg" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
 
 ### <center> $\underbrace{\overline{\boldsymbol{\Sigma}}_{\boldsymbol{\theta}}}_{\substack{\text{what we} \\ \text{know now}}} = \underbrace{\boldsymbol{\Sigma}_{\boldsymbol{\theta}}}_{\substack{\text{what we} \\ \text{knew}}} - \underbrace{\boldsymbol{\Sigma}_{\boldsymbol{\theta}}\bf{J}^T\left[\bf{J}\boldsymbol{\Sigma}_{\boldsymbol{\theta}}\bf{J}^T + \boldsymbol{\Sigma}_{\boldsymbol{\epsilon}}\right]^{-1}\bf{J}\boldsymbol{\Sigma}_{\boldsymbol{\theta}}}_{\text{what we learned}}$ </center>
 
@@ -102,8 +95,8 @@ Armed with these two assumptions, from Bayes equations, one can derive the Schur
 
 # But what about forecasts? 
 
-<img src="intro_to_fosm_files\jacobi.jpg" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
-<img src="intro_to_fosm_files\gauss.jpg" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src=".\intro _to_fosm_files\jacobi.jpg" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src=".\intro _to_fosm_files\gauss.jpg" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
 <p style="clear: both;"> We can use the same assumptions:
     
 - prior forecast uncertainty (variance): $\sigma^2_{s} = \mathbf{y}^T\boldsymbol{\Sigma}_{\boldsymbol{\theta}}\mathbf{y}$
@@ -121,7 +114,7 @@ __in the PEST world:__
 
 In the origingal PEST (i.e., not PEST++) documentation, FOSM is referred to as linear analysis. Implementing the various linear analyses relies a suite of utility software and a series of user-input-heavy steps, as illustrated in the figure below. 
 
-<img src="intro_to_fosm_files\workflow.png" style="float: left; width: 50%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src=".\intro _to_fosm_files\workflow.png" style="float: left; width: 50%; margin-right: 1%; margin-bottom: 0.5em;">
 
 
 
@@ -195,110 +188,6 @@ df = pd.read_csv(os.path.join(working_dir,pst_name.replace(".pst",".par.usum.csv
 df.tail()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>prior_mean</th>
-      <th>prior_stdev</th>
-      <th>prior_lower_bound</th>
-      <th>prior_upper_bound</th>
-      <th>post_mean</th>
-      <th>post_stdev</th>
-      <th>post_lower_bound</th>
-      <th>post_upper_bound</th>
-    </tr>
-    <tr>
-      <th>name</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>rch_i:22_j:7_zone:1.0</th>
-      <td>0.0</td>
-      <td>0.150515</td>
-      <td>-0.30103</td>
-      <td>0.30103</td>
-      <td>0.139262</td>
-      <td>0.149683</td>
-      <td>-0.160104</td>
-      <td>0.438628</td>
-    </tr>
-    <tr>
-      <th>rch_i:27_j:12_zone:1.0</th>
-      <td>0.0</td>
-      <td>0.150515</td>
-      <td>-0.30103</td>
-      <td>0.30103</td>
-      <td>-0.301030</td>
-      <td>0.150117</td>
-      <td>-0.601265</td>
-      <td>-0.000795</td>
-    </tr>
-    <tr>
-      <th>rch_i:2_j:17_zone:1.0</th>
-      <td>0.0</td>
-      <td>0.150515</td>
-      <td>-0.30103</td>
-      <td>0.30103</td>
-      <td>-0.301030</td>
-      <td>0.149932</td>
-      <td>-0.600894</td>
-      <td>-0.001166</td>
-    </tr>
-    <tr>
-      <th>rch_i:32_j:17_zone:1.0</th>
-      <td>0.0</td>
-      <td>0.150515</td>
-      <td>-0.30103</td>
-      <td>0.30103</td>
-      <td>-0.301030</td>
-      <td>0.149889</td>
-      <td>-0.600809</td>
-      <td>-0.001251</td>
-    </tr>
-    <tr>
-      <th>rch_i:32_j:2_zone:1.0</th>
-      <td>0.0</td>
-      <td>0.150515</td>
-      <td>-0.30103</td>
-      <td>0.30103</td>
-      <td>0.093792</td>
-      <td>0.149572</td>
-      <td>-0.205352</td>
-      <td>0.392936</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
 We can visualize this with probability distributions. In the plot below, prior parameter distributions are shown by the dashed grey lines. Posterior parameter distributions are the blue shaded areas. Each plot shows distributions for parameters in the same group:
 
 
@@ -318,12 +207,6 @@ for pargp, ax in zip(pst.adj_par_groups, axes):
     ax.set_title(pargp)
 ```
 
-
-    
-![png](intro_to_fosm_files/intro_to_fosm_26_0.png)
-    
-
-
 ### There is a similar file for forecasts:
 _casename.pred.usum.csv_
 
@@ -331,12 +214,6 @@ _casename.pred.usum.csv_
 ```python
 axes = pyemu.plot_utils.plot_summary_distributions(os.path.join(working_dir,pst_name.replace(".pst",".pred.usum.csv")),subplots=True)
 ```
-
-
-    
-![png](intro_to_fosm_files/intro_to_fosm_28_0.png)
-    
-
 
 ### Where do the prior parameter distributions come from?
 
@@ -382,13 +259,6 @@ The ``Schur`` object also found the "++forecasts()" optional pestpp argument in 
 sc.pst.pestpp_options['forecasts']
 ```
 
-
-
-
-    'headwater:4383.5,tailwater:4383.5,trgw-0-9-1:4383.5,part_time'
-
-
-
 ### The Jacobian Matrix and Forecast Sensitivity Vectors
 
 Recall that a Jacobian matrix looks at the changes in observations as a parameter is changed.  Therefore the Jacobian matrix has parameters in the columns and observations in the rows.  The bulk of the matrix is made up of the difference in  observations between a base run and a run where the parameter at the column head was perturbed (typically 1% from the base run value - controlled by the "parameter groups" info).  Now we'll plot out the Jacobian matrix as a `DataFrame`:
@@ -398,296 +268,12 @@ Recall that a Jacobian matrix looks at the changes in observations as a paramete
 sc.jco.to_dataframe().loc[sc.pst.nnz_obs_names,:].head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>strinf</th>
-      <th>wel5</th>
-      <th>wel2</th>
-      <th>wel3</th>
-      <th>wel0</th>
-      <th>wel4</th>
-      <th>wel1</th>
-      <th>hk_i:37_j:17_zone:1.0</th>
-      <th>hk_i:2_j:12_zone:1.0</th>
-      <th>hk_i:7_j:17_zone:1.0</th>
-      <th>...</th>
-      <th>rch_i:27_j:2_zone:1.0</th>
-      <th>rch_i:7_j:7_zone:1.0</th>
-      <th>rch_i:17_j:17_zone:1.0</th>
-      <th>rch_i:7_j:12_zone:1.0</th>
-      <th>rch_i:17_j:12_zone:1.0</th>
-      <th>rch_i:22_j:7_zone:1.0</th>
-      <th>rch_i:27_j:12_zone:1.0</th>
-      <th>rch_i:2_j:17_zone:1.0</th>
-      <th>rch_i:32_j:17_zone:1.0</th>
-      <th>rch_i:32_j:2_zone:1.0</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>gage-1:3652.5</th>
-      <td>2701.038074</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>-6.971740</td>
-      <td>40.977884</td>
-      <td>11.009388</td>
-      <td>...</td>
-      <td>233.676424</td>
-      <td>211.724770</td>
-      <td>123.321699</td>
-      <td>117.594619</td>
-      <td>139.492498</td>
-      <td>205.996115</td>
-      <td>111.374296</td>
-      <td>115.251205</td>
-      <td>111.504263</td>
-      <td>162.830857</td>
-    </tr>
-    <tr>
-      <th>gage-1:3683.5</th>
-      <td>2758.308084</td>
-      <td>-86.659532</td>
-      <td>-155.102373</td>
-      <td>-31.517565</td>
-      <td>-169.382321</td>
-      <td>-5.826344</td>
-      <td>-106.736092</td>
-      <td>-7.001878</td>
-      <td>43.820700</td>
-      <td>9.594664</td>
-      <td>...</td>
-      <td>250.884176</td>
-      <td>237.516400</td>
-      <td>138.562349</td>
-      <td>134.866725</td>
-      <td>154.983270</td>
-      <td>222.337450</td>
-      <td>121.609982</td>
-      <td>134.484108</td>
-      <td>121.495690</td>
-      <td>174.323931</td>
-    </tr>
-    <tr>
-      <th>gage-1:3712.5</th>
-      <td>2763.651532</td>
-      <td>-153.065906</td>
-      <td>-229.833407</td>
-      <td>-69.765689</td>
-      <td>-260.386165</td>
-      <td>-16.955436</td>
-      <td>-182.462445</td>
-      <td>-5.279506</td>
-      <td>48.268571</td>
-      <td>13.243102</td>
-      <td>...</td>
-      <td>255.074618</td>
-      <td>246.784476</td>
-      <td>158.764079</td>
-      <td>149.792602</td>
-      <td>171.531798</td>
-      <td>231.731411</td>
-      <td>136.843832</td>
-      <td>152.949590</td>
-      <td>141.695294</td>
-      <td>177.735497</td>
-    </tr>
-    <tr>
-      <th>gage-1:3743.5</th>
-      <td>2767.587759</td>
-      <td>-200.872396</td>
-      <td>-274.050449</td>
-      <td>-107.922063</td>
-      <td>-316.776331</td>
-      <td>-32.668267</td>
-      <td>-236.173369</td>
-      <td>-2.666389</td>
-      <td>56.340283</td>
-      <td>18.976361</td>
-      <td>...</td>
-      <td>262.372627</td>
-      <td>262.327398</td>
-      <td>183.524110</td>
-      <td>168.434459</td>
-      <td>192.757393</td>
-      <td>247.806710</td>
-      <td>155.281946</td>
-      <td>175.884650</td>
-      <td>165.510978</td>
-      <td>183.790415</td>
-    </tr>
-    <tr>
-      <th>gage-1:3773.5</th>
-      <td>2767.460005</td>
-      <td>-233.711911</td>
-      <td>-303.767106</td>
-      <td>-141.021466</td>
-      <td>-355.685448</td>
-      <td>-51.328687</td>
-      <td>-275.812356</td>
-      <td>-1.468689</td>
-      <td>64.846613</td>
-      <td>23.583199</td>
-      <td>...</td>
-      <td>285.028283</td>
-      <td>281.149104</td>
-      <td>202.481974</td>
-      <td>183.724911</td>
-      <td>210.789276</td>
-      <td>269.887488</td>
-      <td>169.771348</td>
-      <td>194.158371</td>
-      <td>182.279025</td>
-      <td>203.525390</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 65 columns</p>
-</div>
-
-
-
 This reports changes in observations to a change in a parameter.  We can report how  forecasts of interests change as the parameter is perturbed.  Note `pyemu` extracted the forecast rows from the Jacobian on instantiation:
 
 
 ```python
 sc.forecasts.to_dataframe()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>headwater:4383.5</th>
-      <th>tailwater:4383.5</th>
-      <th>trgw-0-9-1:4383.5</th>
-      <th>part_time</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>strinf</th>
-      <td>4.073027</td>
-      <td>14.781492</td>
-      <td>0.055031</td>
-      <td>-27.720583</td>
-    </tr>
-    <tr>
-      <th>wel5</th>
-      <td>11.195278</td>
-      <td>21.272294</td>
-      <td>-0.060499</td>
-      <td>-40.127323</td>
-    </tr>
-    <tr>
-      <th>wel2</th>
-      <td>10.333018</td>
-      <td>9.755094</td>
-      <td>-0.029345</td>
-      <td>-13.143477</td>
-    </tr>
-    <tr>
-      <th>wel3</th>
-      <td>22.048983</td>
-      <td>33.369486</td>
-      <td>-0.110435</td>
-      <td>-69.692920</td>
-    </tr>
-    <tr>
-      <th>wel0</th>
-      <td>13.286196</td>
-      <td>3.418764</td>
-      <td>-0.036648</td>
-      <td>11.879074</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>rch_i:22_j:7_zone:1.0</th>
-      <td>-34.386639</td>
-      <td>-28.170126</td>
-      <td>0.203734</td>
-      <td>1166.946035</td>
-    </tr>
-    <tr>
-      <th>rch_i:27_j:12_zone:1.0</th>
-      <td>-8.147812</td>
-      <td>-8.400744</td>
-      <td>0.047765</td>
-      <td>233.236941</td>
-    </tr>
-    <tr>
-      <th>rch_i:2_j:17_zone:1.0</th>
-      <td>-8.544833</td>
-      <td>-1.965742</td>
-      <td>0.042188</td>
-      <td>-154.946560</td>
-    </tr>
-    <tr>
-      <th>rch_i:32_j:17_zone:1.0</th>
-      <td>-1.691269</td>
-      <td>-2.295982</td>
-      <td>0.008608</td>
-      <td>42.451778</td>
-    </tr>
-    <tr>
-      <th>rch_i:32_j:2_zone:1.0</th>
-      <td>-34.747779</td>
-      <td>-34.572590</td>
-      <td>0.221170</td>
-      <td>1334.794741</td>
-    </tr>
-  </tbody>
-</table>
-<p>65 rows × 4 columns</p>
-</div>
-
-
 
 Each of these columns in a $\bf{y}$ vector used in the FOSM calculations...that's it! 
 
@@ -699,322 +285,6 @@ Because we have inherent uncertainty in the parameters, the forecasts also have 
 ```python
 sc.parcov.to_dataframe()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>strinf</th>
-      <th>wel5</th>
-      <th>wel2</th>
-      <th>wel3</th>
-      <th>wel0</th>
-      <th>wel4</th>
-      <th>wel1</th>
-      <th>hk_i:37_j:17_zone:1.0</th>
-      <th>hk_i:2_j:12_zone:1.0</th>
-      <th>hk_i:7_j:17_zone:1.0</th>
-      <th>...</th>
-      <th>rch_i:27_j:2_zone:1.0</th>
-      <th>rch_i:7_j:7_zone:1.0</th>
-      <th>rch_i:17_j:17_zone:1.0</th>
-      <th>rch_i:7_j:12_zone:1.0</th>
-      <th>rch_i:17_j:12_zone:1.0</th>
-      <th>rch_i:22_j:7_zone:1.0</th>
-      <th>rch_i:27_j:12_zone:1.0</th>
-      <th>rch_i:2_j:17_zone:1.0</th>
-      <th>rch_i:32_j:17_zone:1.0</th>
-      <th>rch_i:32_j:2_zone:1.0</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>strinf</th>
-      <td>0.25</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>wel5</th>
-      <td>0.00</td>
-      <td>0.238691</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>wel2</th>
-      <td>0.00</td>
-      <td>0.000000</td>
-      <td>0.238691</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>wel3</th>
-      <td>0.00</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.238691</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>wel0</th>
-      <td>0.00</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.238691</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>rch_i:22_j:7_zone:1.0</th>
-      <td>0.00</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.022655</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>rch_i:27_j:12_zone:1.0</th>
-      <td>0.00</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.022655</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>rch_i:2_j:17_zone:1.0</th>
-      <td>0.00</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.022655</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>rch_i:32_j:17_zone:1.0</th>
-      <td>0.00</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.022655</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>rch_i:32_j:2_zone:1.0</th>
-      <td>0.00</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.022655</td>
-    </tr>
-  </tbody>
-</table>
-<p>65 rows × 65 columns</p>
-</div>
-
-
 
 > Page 463-464 in Anderson et al. (2015) spends some time on what is shown above.  
 
@@ -1030,178 +300,6 @@ Forecast uncertainty has to take into account the noise/uncertainty in the obser
 ```python
 sc.obscov.to_dataframe().loc[sc.pst.nnz_obs_names,sc.pst.nnz_obs_names].head()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>gage-1:3652.5</th>
-      <th>gage-1:3683.5</th>
-      <th>gage-1:3712.5</th>
-      <th>gage-1:3743.5</th>
-      <th>gage-1:3773.5</th>
-      <th>gage-1:3804.5</th>
-      <th>gage-1:3834.5</th>
-      <th>gage-1:3865.5</th>
-      <th>gage-1:3896.5</th>
-      <th>gage-1:3926.5</th>
-      <th>...</th>
-      <th>trgw-0-3-8:3743.5</th>
-      <th>trgw-0-3-8:3773.5</th>
-      <th>trgw-0-3-8:3804.5</th>
-      <th>trgw-0-3-8:3834.5</th>
-      <th>trgw-0-3-8:3865.5</th>
-      <th>trgw-0-3-8:3896.5</th>
-      <th>trgw-0-3-8:3926.5</th>
-      <th>trgw-0-3-8:3957.5</th>
-      <th>trgw-0-3-8:3987.5</th>
-      <th>trgw-0-3-8:4018.5</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>gage-1:3652.5</th>
-      <td>40000.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>gage-1:3683.5</th>
-      <td>0.0</td>
-      <td>40000.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>gage-1:3712.5</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>40000.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>gage-1:3743.5</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>40000.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>gage-1:3773.5</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>40000.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 37 columns</p>
-</div>
-
-
 
 > __IMPORTANT POINT__:  How did PEST++ and pyEMU get these standard deviations shown in the diagonal?  From the *weights* that were specified for each observation in the PEST control file.
 
@@ -1224,178 +322,6 @@ The posterior parameter covariance matrix is stored as a `pyemu.Cov` object in t
 sc.posterior_parameter.to_dataframe().head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>strinf</th>
-      <th>wel5</th>
-      <th>wel2</th>
-      <th>wel3</th>
-      <th>wel0</th>
-      <th>wel4</th>
-      <th>wel1</th>
-      <th>hk_i:37_j:17_zone:1.0</th>
-      <th>hk_i:2_j:12_zone:1.0</th>
-      <th>hk_i:7_j:17_zone:1.0</th>
-      <th>...</th>
-      <th>rch_i:27_j:2_zone:1.0</th>
-      <th>rch_i:7_j:7_zone:1.0</th>
-      <th>rch_i:17_j:17_zone:1.0</th>
-      <th>rch_i:7_j:12_zone:1.0</th>
-      <th>rch_i:17_j:12_zone:1.0</th>
-      <th>rch_i:22_j:7_zone:1.0</th>
-      <th>rch_i:27_j:12_zone:1.0</th>
-      <th>rch_i:2_j:17_zone:1.0</th>
-      <th>rch_i:32_j:17_zone:1.0</th>
-      <th>rch_i:32_j:2_zone:1.0</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>strinf</th>
-      <td>0.010940</td>
-      <td>0.008234</td>
-      <td>0.011111</td>
-      <td>0.007313</td>
-      <td>0.011918</td>
-      <td>0.004468</td>
-      <td>0.009479</td>
-      <td>0.003353</td>
-      <td>-0.001766</td>
-      <td>0.002128</td>
-      <td>...</td>
-      <td>-0.001475</td>
-      <td>-0.001525</td>
-      <td>-0.000624</td>
-      <td>-0.000730</td>
-      <td>-0.000804</td>
-      <td>-0.001262</td>
-      <td>-0.000608</td>
-      <td>-0.000629</td>
-      <td>-0.000526</td>
-      <td>-0.000955</td>
-    </tr>
-    <tr>
-      <th>wel5</th>
-      <td>0.008234</td>
-      <td>0.214184</td>
-      <td>-0.022602</td>
-      <td>-0.022136</td>
-      <td>-0.027432</td>
-      <td>-0.011711</td>
-      <td>-0.026360</td>
-      <td>-0.002423</td>
-      <td>0.007728</td>
-      <td>-0.000154</td>
-      <td>...</td>
-      <td>0.000510</td>
-      <td>0.000582</td>
-      <td>0.000167</td>
-      <td>0.000203</td>
-      <td>0.000286</td>
-      <td>0.000487</td>
-      <td>0.000133</td>
-      <td>0.000170</td>
-      <td>0.000088</td>
-      <td>0.000555</td>
-    </tr>
-    <tr>
-      <th>wel2</th>
-      <td>0.011111</td>
-      <td>-0.022602</td>
-      <td>0.208566</td>
-      <td>-0.012707</td>
-      <td>-0.035823</td>
-      <td>-0.003640</td>
-      <td>-0.028150</td>
-      <td>-0.001607</td>
-      <td>0.002173</td>
-      <td>-0.000198</td>
-      <td>...</td>
-      <td>0.000872</td>
-      <td>0.000971</td>
-      <td>0.000633</td>
-      <td>0.000570</td>
-      <td>0.000677</td>
-      <td>0.000949</td>
-      <td>0.000501</td>
-      <td>0.000621</td>
-      <td>0.000528</td>
-      <td>0.000698</td>
-    </tr>
-    <tr>
-      <th>wel3</th>
-      <td>0.007313</td>
-      <td>-0.022136</td>
-      <td>-0.012707</td>
-      <td>0.202598</td>
-      <td>-0.013659</td>
-      <td>-0.028413</td>
-      <td>-0.019645</td>
-      <td>-0.005123</td>
-      <td>0.006744</td>
-      <td>-0.005997</td>
-      <td>...</td>
-      <td>-0.000178</td>
-      <td>0.000092</td>
-      <td>-0.000492</td>
-      <td>-0.000311</td>
-      <td>-0.000208</td>
-      <td>0.000080</td>
-      <td>-0.000284</td>
-      <td>-0.000481</td>
-      <td>-0.000531</td>
-      <td>0.000177</td>
-    </tr>
-    <tr>
-      <th>wel0</th>
-      <td>0.011918</td>
-      <td>-0.027432</td>
-      <td>-0.035823</td>
-      <td>-0.013659</td>
-      <td>0.194261</td>
-      <td>-0.001432</td>
-      <td>-0.036984</td>
-      <td>-0.002131</td>
-      <td>0.001014</td>
-      <td>-0.001367</td>
-      <td>...</td>
-      <td>0.001230</td>
-      <td>0.001032</td>
-      <td>0.000616</td>
-      <td>0.000566</td>
-      <td>0.000683</td>
-      <td>0.001110</td>
-      <td>0.000490</td>
-      <td>0.000618</td>
-      <td>0.000489</td>
-      <td>0.000882</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 65 columns</p>
-</div>
-
-
-
 But...is calibration worth pursuing or not? Let's explore what the notional calibration is expected to do for parameter uncertainty. We accomplish this by comparing prior and posterior parameter uncertainty. Using `.get_parameter_summary()` makes this easy:
 
 
@@ -1404,81 +330,12 @@ df = sc.get_parameter_summary()
 df.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>prior_var</th>
-      <th>post_var</th>
-      <th>percent_reduction</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>strinf</th>
-      <td>0.250000</td>
-      <td>0.010940</td>
-      <td>95.624012</td>
-    </tr>
-    <tr>
-      <th>wel5</th>
-      <td>0.238691</td>
-      <td>0.214184</td>
-      <td>10.267575</td>
-    </tr>
-    <tr>
-      <th>wel2</th>
-      <td>0.238691</td>
-      <td>0.208566</td>
-      <td>12.620913</td>
-    </tr>
-    <tr>
-      <th>wel3</th>
-      <td>0.238691</td>
-      <td>0.202598</td>
-      <td>15.121355</td>
-    </tr>
-    <tr>
-      <th>wel0</th>
-      <td>0.238691</td>
-      <td>0.194261</td>
-      <td>18.614090</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
 We can plot that up:
 
 
 ```python
 df.percent_reduction.plot(kind="bar", figsize=(15,3));
 ```
-
-
-    
-![png](intro_to_fosm_files/intro_to_fosm_50_0.png)
-    
-
 
 ### Do these results make sense?  Why are some parameters unaffected by calibration?
 
@@ -1498,13 +355,6 @@ forecasts = sc.pst.forecast_names
 forecasts
 ```
 
-
-
-
-    ['headwater:4383.5', 'tailwater:4383.5', 'trgw-0-9-1:4383.5', 'part_time']
-
-
-
 As before, `pyemu` has already done much of the heavy-lifting. We can get a summary of the forecast prior and posterior variances with `.get_forecast_summary()`:
 
 
@@ -1512,63 +362,6 @@ As before, `pyemu` has already done much of the heavy-lifting. We can get a summ
 df = sc.get_forecast_summary()
 df
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>prior_var</th>
-      <th>post_var</th>
-      <th>percent_reduction</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>headwater:4383.5</th>
-      <td>1.938842e+04</td>
-      <td>9.634608e+03</td>
-      <td>50.307421</td>
-    </tr>
-    <tr>
-      <th>tailwater:4383.5</th>
-      <td>1.776643e+04</td>
-      <td>6.239581e+03</td>
-      <td>64.879930</td>
-    </tr>
-    <tr>
-      <th>trgw-0-9-1:4383.5</th>
-      <td>1.152812e+01</td>
-      <td>3.330937e+00</td>
-      <td>71.105995</td>
-    </tr>
-    <tr>
-      <th>part_time</th>
-      <td>1.283893e+08</td>
-      <td>9.700290e+07</td>
-      <td>24.446282</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 And we can make a cheeky little plot of that. As you can see, unsurprisingly some forecasts benefit more from calibration than others. So, depending on the foreacst of interest, calibration may or may not be worthwhile...
 
@@ -1581,19 +374,6 @@ ax = df.percent_reduction.plot(kind='bar',ax=ax,grid=True)
 ax.set_ylabel("percent uncertainy\nreduction from calibration")
 ax.set_xlabel("forecast")
 ```
-
-
-
-
-    Text(0.5, 0, 'forecast')
-
-
-
-
-    
-![png](intro_to_fosm_files/intro_to_fosm_57_1.png)
-    
-
 
 ## Parameter contribution to forecast uncertainty
 
@@ -1609,75 +389,6 @@ par_contrib = sc.get_par_group_contribution()
 par_contrib.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>headwater:4383.5</th>
-      <th>tailwater:4383.5</th>
-      <th>trgw-0-9-1:4383.5</th>
-      <th>part_time</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>base</th>
-      <td>9634.608097</td>
-      <td>6239.581136</td>
-      <td>3.330937</td>
-      <td>9.700290e+07</td>
-    </tr>
-    <tr>
-      <th>hk1</th>
-      <td>518.792274</td>
-      <td>182.281668</td>
-      <td>0.019636</td>
-      <td>1.853932e+06</td>
-    </tr>
-    <tr>
-      <th>rch0</th>
-      <td>8061.537145</td>
-      <td>6046.316473</td>
-      <td>3.295668</td>
-      <td>9.572361e+07</td>
-    </tr>
-    <tr>
-      <th>strinf</th>
-      <td>9292.612485</td>
-      <td>6210.352972</td>
-      <td>3.271126</td>
-      <td>9.647711e+07</td>
-    </tr>
-    <tr>
-      <th>wel</th>
-      <td>9555.265437</td>
-      <td>6086.164194</td>
-      <td>3.324232</td>
-      <td>9.663356e+07</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
 We can see the relatve contribution by normalizing to the base case (e.g. in which no parameters/groups are perfectly known):
 
 
@@ -1686,75 +397,6 @@ base = par_contrib.loc["base",:]
 par_contrib = 100.0 * (base - par_contrib) / base
 par_contrib.sort_index().head()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>headwater:4383.5</th>
-      <th>tailwater:4383.5</th>
-      <th>trgw-0-9-1:4383.5</th>
-      <th>part_time</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>base</th>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>hk1</th>
-      <td>94.615326</td>
-      <td>97.078623</td>
-      <td>99.410498</td>
-      <td>98.088788</td>
-    </tr>
-    <tr>
-      <th>rch0</th>
-      <td>16.327296</td>
-      <td>3.097398</td>
-      <td>1.058811</td>
-      <td>1.318816</td>
-    </tr>
-    <tr>
-      <th>strinf</th>
-      <td>3.549658</td>
-      <td>0.468432</td>
-      <td>1.795606</td>
-      <td>0.542035</td>
-    </tr>
-    <tr>
-      <th>wel</th>
-      <td>0.823517</td>
-      <td>2.458770</td>
-      <td>0.201289</td>
-      <td>0.380751</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 Understanding the links between parameters and forecast uncertainties can be usefull - in particular to gain insight into the system dynamics. But we are still missing a step to understand what _observation_ data affects the forecast. It is often more straightforward to quantify how observation information imapcts forecast uncertianty so that we can explore the worth of observation data directly.
 

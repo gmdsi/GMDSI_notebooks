@@ -1,11 +1,4 @@
-
 ---
-layout: default
-title: PEST Basics
-parent: Introduction to Theory, Concepts and PEST Mechanic
-nav_order: 2
----
-                    ---
 layout: default
 title: PEST Basics
 parent: Introduction to Theory, Concepts and PEST Mechanic
@@ -111,45 +104,6 @@ hbd.prep_deps(tmp_d)
 hbd.prep_pest(tmp_d)
 ```
 
-
-    ---------------------------------------------------------------------------
-
-    FileNotFoundError                         Traceback (most recent call last)
-
-    Input In [2], in <cell line: 5>()
-          2 tmp_d = os.path.join('pest_files')
-          4 # get executables
-    ----> 5 hbd.prep_bins(tmp_d)
-          6 # get dependency folders
-          7 hbd.prep_deps(tmp_d)
-    
-
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\..\herebedragons.py:97, in prep_bins(dest_path)
-         95 if os.path.exists(os.path.join(dest_path,f)):
-         96     os.remove(os.path.join(dest_path,f))
-    ---> 97 shutil.copy2(os.path.join(bin_path,f),os.path.join(dest_path,f))
-    
-
-    File D:\Workspace\hugm0001\anaconda\lib\shutil.py:435, in copy2(src, dst, follow_symlinks)
-        433 if os.path.isdir(dst):
-        434     dst = os.path.join(dst, os.path.basename(src))
-    --> 435 copyfile(src, dst, follow_symlinks=follow_symlinks)
-        436 copystat(src, dst, follow_symlinks=follow_symlinks)
-        437 return dst
-    
-
-    File D:\Workspace\hugm0001\anaconda\lib\shutil.py:264, in copyfile(src, dst, follow_symlinks)
-        262     os.symlink(os.readlink(src), dst)
-        263 else:
-    --> 264     with open(src, 'rb') as fsrc, open(dst, 'wb') as fdst:
-        265         # macOS
-        266         if _HAS_FCOPYFILE:
-        267             try:
-    
-
-    FileNotFoundError: [Errno 2] No such file or directory: 'pest_files\\inschek.exe'
-
-
 ### Reminder - the modified-Freyberg model
 Just a quick reminder of what the model looks like and what we are doing. 
 
@@ -165,74 +119,6 @@ A subsequent twelve transient stress periods representing a period in the future
 ```python
 hbd.plot_freyberg(tmp_d)
 ```
-
-
-    ---------------------------------------------------------------------------
-
-    FileNotFoundError                         Traceback (most recent call last)
-
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\..\..\dependencies\flopy\mf6\mfpackage.py:2460, in MFPackage.load(self, strict)
-       2459 try:
-    -> 2460     fd_input_file = open(
-       2461         datautil.clean_filename(self.get_file_path()), "r"
-       2462     )
-       2463 except OSError as e:
-    
-
-    FileNotFoundError: [Errno 2] No such file or directory: 'D:\\Workspace\\hugm0001\\github\\GMDSI_notebooks_fork\\tutorials\\part1_2_pest_setup\\pest_files\\mfsim.nam'
-
-    
-    During handling of the above exception, another exception occurred:
-    
-
-    MFDataException                           Traceback (most recent call last)
-
-    Input In [3], in <cell line: 1>()
-    ----> 1 hbd.plot_freyberg(tmp_d)
-    
-
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\..\herebedragons.py:537, in plot_freyberg(tmp_d)
-        535 def plot_freyberg(tmp_d):
-        536     # load simulation
-    --> 537     sim = flopy.mf6.MFSimulation.load(sim_ws=tmp_d, verbosity_level=0)
-        538     # load flow model
-        539     gwf = sim.get_model()
-    
-
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\..\..\dependencies\flopy\mf6\modflow\mfsimulation.py:670, in MFSimulation.load(cls, sim_name, version, exe_name, sim_ws, strict, verbosity_level, load_only, verify_data, write_headers)
-        668 if verbosity_level.value >= VerbosityLevel.normal.value:
-        669     print("  loading simulation name file...")
-    --> 670 instance.name_file.load(strict)
-        672 # load TDIS file
-        673 tdis_pkg = f"tdis{mfstructure.MFStructure().get_version_string()}"
-    
-
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\..\..\dependencies\flopy\mf6\mfpackage.py:2469, in MFPackage.load(self, strict)
-       2465         message = "File {} of type {} could not be opened.".format(
-       2466             self.get_file_path(), self.package_type
-       2467         )
-       2468         type_, value_, traceback_ = sys.exc_info()
-    -> 2469         raise MFDataException(
-       2470             self.model_name,
-       2471             self.package_name,
-       2472             self.path,
-       2473             "loading package file",
-       2474             None,
-       2475             inspect.stack()[0][3],
-       2476             type_,
-       2477             value_,
-       2478             traceback_,
-       2479             message,
-       2480             self._simulation_data.debug,
-       2481         )
-       2483 try:
-       2484     self._load_blocks(fd_input_file, strict)
-    
-
-    MFDataException: An error occurred in package "None". The error occurred while loading package file in the "load" method.
-    Additional Information:
-    (1) File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\pest_files\mfsim.nam of type nam could not be opened.
-
 
 In the previous tutorial on manual trial-and-error, we "manually" changed parameter values to get a good fit with measured data. We want PEST to this for us instead. To do so, we need to provide PEST with conduits that change a model input file and that extract model outputs after the model has been run. 
 
