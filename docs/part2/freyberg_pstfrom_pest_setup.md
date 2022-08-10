@@ -908,7 +908,7 @@ plt.imshow(ib)
 
 
 
-    <matplotlib.image.AxesImage at 0x26550159490>
+    <matplotlib.image.AxesImage at 0x28d7425afd0>
 
 
 
@@ -975,10 +975,10 @@ df_gr.head()
       <th>partrans</th>
       <th>parubnd</th>
       <th>parlbnd</th>
-      <th>parchglim</th>
       <th>scale</th>
-      <th>offset</th>
       <th>dercom</th>
+      <th>parchglim</th>
+      <th>offset</th>
     </tr>
   </thead>
   <tbody>
@@ -997,10 +997,10 @@ df_gr.head()
       <td>log</td>
       <td>5.0</td>
       <td>0.2</td>
-      <td>factor</td>
       <td>1.0</td>
-      <td>0.0</td>
       <td>1</td>
+      <td>factor</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:1_x:375.00_y:9875.00_zone:1</th>
@@ -1017,10 +1017,10 @@ df_gr.head()
       <td>log</td>
       <td>5.0</td>
       <td>0.2</td>
-      <td>factor</td>
       <td>1.0</td>
-      <td>0.0</td>
       <td>1</td>
+      <td>factor</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:2_x:625.00_y:9875.00_zone:1</th>
@@ -1037,10 +1037,10 @@ df_gr.head()
       <td>log</td>
       <td>5.0</td>
       <td>0.2</td>
-      <td>factor</td>
       <td>1.0</td>
-      <td>0.0</td>
       <td>1</td>
+      <td>factor</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:3_x:875.00_y:9875.00_zone:1</th>
@@ -1057,10 +1057,10 @@ df_gr.head()
       <td>log</td>
       <td>5.0</td>
       <td>0.2</td>
-      <td>factor</td>
       <td>1.0</td>
-      <td>0.0</td>
       <td>1</td>
+      <td>factor</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:4_x:1125.00_y:9875.00_zone:1</th>
@@ -1077,10 +1077,10 @@ df_gr.head()
       <td>log</td>
       <td>5.0</td>
       <td>0.2</td>
-      <td>factor</td>
       <td>1.0</td>
-      <td>0.0</td>
       <td>1</td>
+      <td>factor</td>
+      <td>0.0</td>
     </tr>
   </tbody>
 </table>
@@ -1140,7 +1140,7 @@ df_pp = pf.add_parameters(f,
     starting 7
     starting 8
     starting 9
-    took 3.790933 seconds
+    took 3.908677 seconds
     
 
 
@@ -1154,7 +1154,7 @@ ax.scatter(df_pp.x,df_pp.y)
 
 
 
-    <matplotlib.collections.PathCollection at 0x265504b3250>
+    <matplotlib.collections.PathCollection at 0x28d745bdbe0>
 
 
 
@@ -1620,10 +1620,10 @@ pf.add_parameters(f,
       <th>partrans</th>
       <th>parubnd</th>
       <th>parlbnd</th>
-      <th>parchglim</th>
       <th>scale</th>
-      <th>offset</th>
       <th>dercom</th>
+      <th>parchglim</th>
+      <th>offset</th>
     </tr>
   </thead>
   <tbody>
@@ -1639,10 +1639,10 @@ pf.add_parameters(f,
       <td>log</td>
       <td>10.0</td>
       <td>0.1</td>
-      <td>factor</td>
       <td>1.0</td>
-      <td>0.0</td>
       <td>1</td>
+      <td>factor</td>
+      <td>0.0</td>
     </tr>
   </tbody>
 </table>

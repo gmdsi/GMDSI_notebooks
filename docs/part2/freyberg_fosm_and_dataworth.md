@@ -132,7 +132,7 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x276067bf580>
+    <matplotlib.colorbar.Colorbar at 0x1f667967eb0>
 
 
 
@@ -183,7 +183,7 @@ sc
 
 
 
-    <pyemu.sc.Schur at 0x27607c243a0>
+    <pyemu.sc.Schur at 0x1f664661f70>
 
 
 
@@ -254,7 +254,7 @@ sc.posterior_parameter
 
 
 
-    <pyemu.mat.mat_handler.Cov at 0x27607890dc0>
+    <pyemu.mat.mat_handler.Cov at 0x1f664a18df0>
 
 
 
@@ -330,7 +330,7 @@ plt.colorbar(c)
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x27607baa490>
+    <matplotlib.colorbar.Colorbar at 0x1f665387c40>
 
 
 
@@ -600,7 +600,7 @@ ax.scatter(obs_x,obs_y,marker='x', c='red', s=50)
 
 
 
-    <matplotlib.collections.PathCollection at 0x27611c0e5b0>
+    <matplotlib.collections.PathCollection at 0x1f66f2bfaf0>
 
 
 
@@ -1303,7 +1303,7 @@ df_worth_new= sc.get_added_obs_importance(base_obslist=sc.pst.nnz_obs_names,
 print("took:",datetime.now() - start)
 ```
 
-    took: 0:00:39.887416
+    took: 0:00:40.218201
     
 
 As before, `get_added_obs_importance()` returns a dataframe with a column for each forecast, and a row for each potential new observation:
@@ -1627,7 +1627,7 @@ next_most_df = sc.next_most_important_added_obs(forecast=forecast_name,
 print("took:",datetime.now() - start)
 ```
 
-    took: 0:03:19.459217
+    took: 0:03:20.524800
     
 
 

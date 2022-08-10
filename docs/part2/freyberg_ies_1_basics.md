@@ -487,7 +487,7 @@ if pt_oe.shape[0] == 0:
     print("filtered out all posterior realization #sad")
 ```
 
-    reducing posterior ensemble from 34 to 33 realizations
+    reducing posterior ensemble from 41 to 38 realizations
     
 
 
@@ -607,7 +607,7 @@ _ = ax.set_xlabel("$log_{10}\phi$")
 
     <>:4: DeprecationWarning: invalid escape sequence \p
     <>:4: DeprecationWarning: invalid escape sequence \p
-    C:\Users\hugm0001\AppData\Local\Temp\ipykernel_7552\3857584947.py:4: DeprecationWarning: invalid escape sequence \p
+    C:\Users\hugm0001\AppData\Local\Temp\ipykernel_29244\3857584947.py:4: DeprecationWarning: invalid escape sequence \p
     
 
 

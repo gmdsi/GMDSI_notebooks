@@ -2021,75 +2021,75 @@ pst.drop_observations(os.path.join(t_d,"sfr.tdiff.csv.ins"),pst_path=".")
   </thead>
   <tbody>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:3773.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:3773.5</td>
-      <td>-50.925005</td>
-      <td>0.01</td>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>gage-1</td>
-      <td>3773.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4018.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4018.5</td>
-      <td>736.290668</td>
-      <td>0.00</td>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4291.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4291.5</td>
+      <td>763.611075</td>
+      <td>0.0</td>
       <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>tailwater</td>
-      <td>4018.5</td>
+      <td>4291.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:3652.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:3652.5</td>
-      <td>0.000000</td>
-      <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>gage-1</td>
-      <td>3652.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3712.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3712.5</td>
-      <td>-6.567037</td>
-      <td>0.00</td>
+      <th>oname:sfrtd_otype:lst_usecol:headwater_time:4261.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:headwater_time:4261.5</td>
+      <td>521.638114</td>
+      <td>0.0</td>
       <td>oname:sfrtd_otype:lst_usecol:headwater</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>headwater</td>
-      <td>3712.5</td>
+      <td>4261.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:3743.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:3743.5</td>
-      <td>-165.738748</td>
-      <td>0.00</td>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:3896.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:3896.5</td>
+      <td>214.280986</td>
+      <td>0.0</td>
       <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>tailwater</td>
-      <td>3743.5</td>
+      <td>3896.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4291.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:4291.5</td>
+      <td>-624.138351</td>
+      <td>0.0</td>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>gage-1</td>
+      <td>4291.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4352.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:4352.5</td>
+      <td>-1076.300260</td>
+      <td>0.0</td>
+      <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>gage-1</td>
+      <td>4352.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -2111,75 +2111,75 @@ pst.drop_observations(os.path.join(t_d,"sfr.tdiff.csv.ins"),pst_path=".")
       <td>...</td>
     </tr>
     <tr>
-      <th>oname:sfrtd_otype:lst_usecol:headwater_time:4018.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:headwater_time:4018.5</td>
-      <td>902.200972</td>
-      <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>headwater</td>
-      <td>4018.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4322.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4322.5</td>
-      <td>941.046049</td>
-      <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>tailwater</td>
-      <td>4322.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:3896.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:3896.5</td>
-      <td>214.280986</td>
-      <td>0.00</td>
-      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>tailwater</td>
-      <td>3896.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4018.5</th>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1_time:4018.5</td>
-      <td>-936.573081</td>
-      <td>0.01</td>
-      <td>oname:sfrtd_otype:lst_usecol:gage-1</td>
-      <td>sfrtd</td>
-      <td>lst</td>
-      <td>gage-1</td>
-      <td>4018.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
       <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4169.5</th>
       <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4169.5</td>
       <td>86.478368</td>
-      <td>0.00</td>
+      <td>0.0</td>
       <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
       <td>sfrtd</td>
       <td>lst</td>
       <td>tailwater</td>
       <td>4169.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:headwater_time:3712.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:headwater_time:3712.5</td>
+      <td>-6.567037</td>
+      <td>0.0</td>
+      <td>oname:sfrtd_otype:lst_usecol:headwater</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>headwater</td>
+      <td>3712.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:3712.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:3712.5</td>
+      <td>-40.318049</td>
+      <td>0.0</td>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>tailwater</td>
+      <td>3712.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4138.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4138.5</td>
+      <td>140.925056</td>
+      <td>0.0</td>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>tailwater</td>
+      <td>4138.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:sfrtd_otype:lst_usecol:tailwater_time:4383.5</th>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater_time:4383.5</td>
+      <td>1027.656254</td>
+      <td>0.0</td>
+      <td>oname:sfrtd_otype:lst_usecol:tailwater</td>
+      <td>sfrtd</td>
+      <td>lst</td>
+      <td>tailwater</td>
+      <td>4383.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -2252,44 +2252,59 @@ pst.drop_observations(os.path.join(t_d,"heads.tdiff.csv.ins"),pst_path=".")
   </thead>
   <tbody>
     <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-29-15_time:3865.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-29-15_time:3865.5</td>
-      <td>0.022906</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-15-16_time:4352.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-15-16_time:4352.5</td>
+      <td>-0.513916</td>
       <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-29-15</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-15-16</td>
       <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-29-15</td>
-      <td>3865.5</td>
+      <td>trgw-0-15-16</td>
+      <td>4352.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-34-10_time:4230.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-34-10_time:4230.5</td>
-      <td>-0.334930</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-33-7_time:4169.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-33-7_time:4169.5</td>
+      <td>-0.282181</td>
       <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-34-10</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-33-7</td>
       <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-34-10</td>
-      <td>4230.5</td>
+      <td>trgw-0-33-7</td>
+      <td>4169.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:4291.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-3-8_time:4291.5</td>
-      <td>-0.199251</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-15-16_time:4322.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-15-16_time:4322.5</td>
+      <td>-0.469672</td>
       <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-3-8</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-15-16</td>
       <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-3-8</td>
+      <td>trgw-0-15-16</td>
+      <td>4322.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-2-9_time:4291.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-2-9_time:4291.5</td>
+      <td>-0.391259</td>
+      <td>0.0</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-2-9</td>
+      <td>hdstd</td>
+      <td>lst</td>
+      <td>trgw-0-2-9</td>
       <td>4291.5</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -2297,30 +2312,15 @@ pst.drop_observations(os.path.join(t_d,"heads.tdiff.csv.ins"),pst_path=".")
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3683.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3683.5</td>
-      <td>-0.207377</td>
-      <td>20.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-26-6</td>
-      <td>hdstd</td>
-      <td>lst</td>
-      <td>trgw-0-26-6</td>
-      <td>3683.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-2-15_time:4322.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-2-15_time:4322.5</td>
-      <td>-0.315267</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-33-7_time:3804.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-33-7_time:3804.5</td>
+      <td>0.243985</td>
       <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-2-15</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-33-7</td>
       <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-2-15</td>
-      <td>4322.5</td>
+      <td>trgw-0-33-7</td>
+      <td>3804.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -2342,75 +2342,75 @@ pst.drop_observations(os.path.join(t_d,"heads.tdiff.csv.ins"),pst_path=".")
       <td>...</td>
     </tr>
     <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-13-10_time:4291.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-13-10_time:4291.5</td>
-      <td>-0.524994</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4383.5</td>
+      <td>-1.159104</td>
       <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-13-10</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-9-1</td>
       <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-13-10</td>
-      <td>4291.5</td>
+      <td>trgw-0-9-1</td>
+      <td>4383.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-21-10_time:4230.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-21-10_time:4230.5</td>
-      <td>-0.408575</td>
-      <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-21-10</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3712.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:3712.5</td>
+      <td>-0.259308</td>
+      <td>20.0</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-26-6</td>
       <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-21-10</td>
-      <td>4230.5</td>
+      <td>trgw-0-26-6</td>
+      <td>3712.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>NaN</td>
+      <td>1.0</td>
     </tr>
     <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-13-10_time:3804.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-13-10_time:3804.5</td>
-      <td>0.244996</td>
-      <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-13-10</td>
-      <td>hdstd</td>
-      <td>lst</td>
-      <td>trgw-0-13-10</td>
-      <td>3804.5</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-15-16_time:4291.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-15-16_time:4291.5</td>
-      <td>-0.367521</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-15-16_time:3926.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-15-16_time:3926.5</td>
+      <td>-0.255721</td>
       <td>0.0</td>
       <td>oname:hdstd_otype:lst_usecol:trgw-0-15-16</td>
       <td>hdstd</td>
       <td>lst</td>
       <td>trgw-0-15-16</td>
-      <td>4291.5</td>
+      <td>3926.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-33-7_time:4291.5</th>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-33-7_time:4291.5</td>
-      <td>-0.832051</td>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-29-15_time:3652.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-29-15_time:3652.5</td>
+      <td>0.000000</td>
       <td>0.0</td>
-      <td>oname:hdstd_otype:lst_usecol:trgw-0-33-7</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-29-15</td>
       <td>hdstd</td>
       <td>lst</td>
-      <td>trgw-0-33-7</td>
-      <td>4291.5</td>
+      <td>trgw-0-29-15</td>
+      <td>3652.5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>oname:hdstd_otype:lst_usecol:trgw-0-29-15_time:3865.5</th>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-29-15_time:3865.5</td>
+      <td>0.022906</td>
+      <td>0.0</td>
+      <td>oname:hdstd_otype:lst_usecol:trgw-0-29-15</td>
+      <td>hdstd</td>
+      <td>lst</td>
+      <td>trgw-0-29-15</td>
+      <td>3865.5</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>

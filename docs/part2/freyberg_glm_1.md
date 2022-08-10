@@ -296,7 +296,7 @@ elapsed
 
 
 
-    4.250553700000001
+    4.694557400000001
 
 
 
@@ -323,7 +323,7 @@ number_of_cpu_cores = psutil.cpu_count(logical=False)
 print(f'Number of hours to fill a jacobian:{pst.npar_adj * elapsed / 60/60 / number_of_cpu_cores}')
 ```
 
-    Number of hours to fill a jacobian:2.8084352863388897
+    Number of hours to fill a jacobian:3.1017983976777783
     
 
 Unless you have many many CPU's at hand, that's still going to be pretty long despite the relatively fast model.
@@ -421,7 +421,7 @@ OK, let's check that estimate of run time again...hmm...a bit more manageable. O
 print(f'Number of hours to fill a jacobian:{pst.npar_adj * elapsed / 60/60 / number_of_cpu_cores}')
 ```
 
-    Number of hours to fill a jacobian:0.028927379347222233
+    Number of hours to fill a jacobian:0.03194907119444445
     
 
 OK, if we are happy (#sadface) with the number of parameters, we can move on.

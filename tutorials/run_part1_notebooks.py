@@ -28,17 +28,19 @@ def run_nb(nb_file, nb_dir):
 intro_dirs = [f.name for f in os.scandir('.') if f.is_dir() and f.name.startswith('intro_')]
 part1_dirs = [f.name for f in os.scandir('.') if f.is_dir() and f.name.startswith('part1_')]
 
-print(intro_dirs)
+
 
 for dir in intro_dirs:
     nbfiles = [i for i in os.listdir(dir) if i.endswith('.ipynb')]
     for nb in nbfiles:
         run_nb(nb, dir)
 
+
 for dir in part1_dirs:
     nbfiles = [i for i in os.listdir(dir) if i.endswith('.ipynb')]
     for nb in nbfiles:
         run_nb(nb, dir)
+
 
 #nb_dir = "intro_to_freyberg_model"
 #nb_file = "freyberg_intro_model.ipynb"

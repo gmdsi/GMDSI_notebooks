@@ -519,17 +519,20 @@ def intertive_sv_vec_plot(inpst, U):
     from ipywidgets import interact, interactive, fixed, interact_manual
     import ipywidgets as widgets
     def SV_bars(SV=1,):
-        plt.figure(figsize=(13,4))
+
+        plt.figure(figsize=(12,4))
         plt.bar(list(range(U.shape[0])),U[:,SV-1])
         #plt.yscale('log')
-        plt.xlim([0,inpst.npar_adj+1])
-        plt.xticks(list(range(inpst.npar_adj+1)))
+        plt.xlim([-1,inpst.npar_adj])
+        plt.xticks(list(range(inpst.npar_adj)))
         plt.title('Singular vector showing parameter contributions to singular vector #{0}'.format(SV))
-        plt.gca().set_xticklabels(inpst.parameter_data['parnme'].values, rotation=90);
+        plt.gca().set_xticklabels(inpst.adj_par_names, rotation=90, fontsize=7);
         return
     return interact(SV_bars, SV=widgets.widgets.IntSlider(
-    value=1, min=1, max=20, step=1, description='Number SVs:',
-    disabled=False, continuous_update=True, orientation='horizontal', readout=True, readout_format='d'));
+            value=1, min=1, max=20, step=1, description='Number SVs:',
+            disabled=False, continuous_update=True, orientation='horizontal', 
+            readout=True, readout_format='d'));
+
     
 
 def plot_freyberg(tmp_d):
@@ -721,7 +724,7 @@ def svd_enchilada(gwf, m_d):
         basis_arr = np.array(basis.values)
         flat_arr = np.atleast_2d(k_truth_res.flatten()).transpose()
         #fig,ax = plt.subplots(ncols=2, figsize=(10,7),aspect='equal')
-        fig = plt.figure(figsize=(10, 7))
+        fig = plt.figure(figsize=(12, 7))
         ax = fig.add_subplot(1, 3, 1, aspect='equal',)
 
         arr = np.ones_like(gwf.dis.idomain.get_data()[0])
@@ -793,17 +796,22 @@ def plot_ensemble_arr(pe, tmp_d, numreals):
             delr=gwf.dis.delr.array, delc=gwf.dis.delc.array)
 
     pp_file=os.path.join(tmp_d,"hkpp.dat")
-    new_ppfile = os.path.join(tmp_d,"identpp.dat")
-    df_pp = pd.read_csv(pp_file, delim_whitespace=True, header=None, names=['name','x','y','zone','parval1'])
+    df_pp = pyemu.pp_utils.pp_tpl_to_dataframe(os.path.join(tmp_d,"hkpp.dat.tpl"))
+    #same name order
+    df_pp.sort_values(by='parnme', inplace=True)
+    pe.sort_index(axis=1, inplace=True)
+
 
     fig = plt.figure(figsize=(12, 10))
     # generate random values
     for real in range(numreals):
         df_pp.loc[:,"parval1"] = pe.iloc[real,:].values
         # save a pilot points file
-        pyemu.pp_utils.write_pp_file(new_ppfile, df_pp)
+
+        pyemu.pp_utils.write_pp_file(pp_file, df_pp)
         # interpolate the pilot point values to the grid
-        ident_arr = pyemu.geostats.fac2real(new_ppfile, factors_file=pp_file+".fac",out_file=None, )
+        ident_arr = pyemu.geostats.fac2real(pp_file, factors_file=pp_file+".fac",out_file=None, )
+
 
         ax = fig.add_subplot(int(numreals/5)+1, 5, real+1, aspect='equal')
         mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
@@ -840,6 +848,11 @@ def prep_mc(tmp_d):
 
     pst.pestpp_options.pop('n_iter_base')
     pst.pestpp_options.pop('n_iter_super')
+
+    #update parameter data
+    par = pst.parameter_data
+    #update paramter transform
+    par.loc[:, 'partrans'] = 'log'
 
     pst.control_data.noptmax = 20
     pst.write(os.path.join(tmp_d, 'freyberg_reg.pst'))
