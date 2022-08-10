@@ -95,11 +95,11 @@ hbd.add_ppoints(working_dir)
     0 pars added from template file .\freyberg6.wel_stress_period_data_8.txt.tpl
     0 pars added from template file .\freyberg6.wel_stress_period_data_9.txt.tpl
     starting interp point loop for 800 points
-    took 1.98166 seconds
+    took 2.029215 seconds
     1 pars dropped from template file freyberg_mf6\freyberg6.npf_k_layer1.txt.tpl
     29 pars added from template file .\hkpp.dat.tpl
     starting interp point loop for 800 points
-    took 1.966758 seconds
+    took 2.012059 seconds
     29 pars added from template file .\rchpp.dat.tpl
     noptmax:0, npar_adj:65, nnz_obs:37
     new control file: 'freyberg_pp.pst'
@@ -230,23 +230,23 @@ parensemble.head()
       <th>rch0</th>
       <th>rch1</th>
       <th>strinf</th>
-      <th>wel3</th>
-      <th>wel4</th>
       <th>wel2</th>
       <th>wel1</th>
+      <th>wel4</th>
       <th>wel5</th>
       <th>wel0</th>
+      <th>wel3</th>
       <th>...</th>
-      <th>rch_i:32_j:2_zone:1.0</th>
-      <th>rch_i:17_j:12_zone:1.0</th>
-      <th>rch_i:7_j:12_zone:1.0</th>
-      <th>rch_i:27_j:17_zone:1.0</th>
-      <th>rch_i:2_j:17_zone:1.0</th>
-      <th>rch_i:17_j:2_zone:1.0</th>
-      <th>rch_i:2_j:12_zone:1.0</th>
-      <th>rch_i:32_j:17_zone:1.0</th>
+      <th>rch_i:22_j:7_zone:1.0</th>
       <th>rch_i:37_j:17_zone:1.0</th>
-      <th>rch_i:37_j:12_zone:1.0</th>
+      <th>rch_i:17_j:2_zone:1.0</th>
+      <th>rch_i:12_j:12_zone:1.0</th>
+      <th>rch_i:22_j:17_zone:1.0</th>
+      <th>rch_i:2_j:17_zone:1.0</th>
+      <th>rch_i:27_j:7_zone:1.0</th>
+      <th>rch_i:32_j:12_zone:1.0</th>
+      <th>rch_i:2_j:2_zone:1.0</th>
+      <th>rch_i:12_j:2_zone:1.0</th>
     </tr>
   </thead>
   <tbody>
@@ -390,6 +390,7 @@ hbd.plot_ensemble_arr(pe_k, working_dir, 10)
 ```
 
        could not remove start_datetime
+    return type uncaught, losing Ensemble type, returning DataFrame
     
 
 
@@ -407,12 +408,98 @@ You should be familiar with these by now:
 
 
 ```python
-v = pyemu.geostats.ExpVario(contribution=1.0,a=2500,anisotropy=1.0,bearing=0.0)
-gs = pyemu.utils.geostats.GeoStruct(variograms=[v])
-pp_tpl = os.path.join(working_dir,"hkpp.dat.tpl")
-cov = pyemu.helpers.geostatistical_prior_builder(pst=pst, struct_dict={gs:pp_tpl})
+v = pyemu.geostats.ExpVario(contribution=.25,a=3500,anisotropy=.8,bearing=1.0)
+gs = pyemu.utils.geostats.GeoStruct(variograms=v)
+```
+
+
+```python
+# get the pilot point parameter info
+df_pp = pyemu.pp_utils.pp_tpl_to_dataframe(os.path.join(working_dir,"hkpp.dat.tpl"))
+df_pp.head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>x</th>
+      <th>y</th>
+      <th>zone</th>
+      <th>parnme</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>pp_0000</td>
+      <td>625.0</td>
+      <td>9375.0</td>
+      <td>1.0</td>
+      <td>hk_i:2_j:2_zone:1.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>pp_0001</td>
+      <td>1875.0</td>
+      <td>9375.0</td>
+      <td>1.0</td>
+      <td>hk_i:2_j:7_zone:1.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>pp_0002</td>
+      <td>3125.0</td>
+      <td>9375.0</td>
+      <td>1.0</td>
+      <td>hk_i:2_j:12_zone:1.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>pp_0003</td>
+      <td>4375.0</td>
+      <td>9375.0</td>
+      <td>1.0</td>
+      <td>hk_i:2_j:17_zone:1.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>pp_0004</td>
+      <td>625.0</td>
+      <td>8125.0</td>
+      <td>1.0</td>
+      <td>hk_i:7_j:2_zone:1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+# construct the geostatistically informed covariance matrix for ppoint pars
+cov = gs.covariance_matrix(df_pp.x,df_pp.y,df_pp.parnme)
 # display
-plt.imshow(cov.to_pearson().x,interpolation="nearest")
+plt.imshow(cov.x,interpolation="nearest")
 plt.colorbar()
 cov.to_dataframe().head()
 ```
@@ -438,160 +525,190 @@ cov.to_dataframe().head()
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>ne1</th>
-      <th>rch0</th>
-      <th>rch1</th>
-      <th>strinf</th>
-      <th>wel3</th>
-      <th>wel4</th>
-      <th>wel2</th>
-      <th>wel1</th>
-      <th>wel5</th>
-      <th>wel0</th>
+      <th>hk_i:2_j:2_zone:1.0</th>
+      <th>hk_i:2_j:7_zone:1.0</th>
+      <th>hk_i:2_j:12_zone:1.0</th>
+      <th>hk_i:2_j:17_zone:1.0</th>
+      <th>hk_i:7_j:2_zone:1.0</th>
+      <th>hk_i:7_j:7_zone:1.0</th>
+      <th>hk_i:7_j:12_zone:1.0</th>
+      <th>hk_i:7_j:17_zone:1.0</th>
+      <th>hk_i:12_j:2_zone:1.0</th>
+      <th>hk_i:12_j:12_zone:1.0</th>
       <th>...</th>
-      <th>rch_i:32_j:2_zone:1.0</th>
-      <th>rch_i:17_j:12_zone:1.0</th>
-      <th>rch_i:7_j:12_zone:1.0</th>
-      <th>rch_i:27_j:17_zone:1.0</th>
-      <th>rch_i:2_j:17_zone:1.0</th>
-      <th>rch_i:17_j:2_zone:1.0</th>
-      <th>rch_i:2_j:12_zone:1.0</th>
-      <th>rch_i:32_j:17_zone:1.0</th>
-      <th>rch_i:37_j:17_zone:1.0</th>
-      <th>rch_i:37_j:12_zone:1.0</th>
+      <th>hk_i:27_j:7_zone:1.0</th>
+      <th>hk_i:27_j:12_zone:1.0</th>
+      <th>hk_i:27_j:17_zone:1.0</th>
+      <th>hk_i:32_j:2_zone:1.0</th>
+      <th>hk_i:32_j:7_zone:1.0</th>
+      <th>hk_i:32_j:12_zone:1.0</th>
+      <th>hk_i:32_j:17_zone:1.0</th>
+      <th>hk_i:37_j:7_zone:1.0</th>
+      <th>hk_i:37_j:12_zone:1.0</th>
+      <th>hk_i:37_j:17_zone:1.0</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>ne1</th>
-      <td>0.022655</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.00</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <th>hk_i:2_j:2_zone:1.0</th>
+      <td>0.250000</td>
+      <td>0.187865</td>
+      <td>0.141173</td>
+      <td>0.106085</td>
+      <td>0.174922</td>
+      <td>0.158515</td>
+      <td>0.127735</td>
+      <td>0.099030</td>
+      <td>0.122390</td>
+      <td>0.100508</td>
       <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <td>0.041073</td>
+      <td>0.038509</td>
+      <td>0.034703</td>
+      <td>0.029333</td>
+      <td>0.028846</td>
+      <td>0.027335</td>
+      <td>0.025025</td>
+      <td>0.020238</td>
+      <td>0.019327</td>
+      <td>0.017905</td>
     </tr>
     <tr>
-      <th>rch0</th>
-      <td>0.000000</td>
-      <td>0.022655</td>
-      <td>0.000000</td>
-      <td>0.00</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <th>hk_i:2_j:7_zone:1.0</th>
+      <td>0.187865</td>
+      <td>0.250000</td>
+      <td>0.187865</td>
+      <td>0.141173</td>
+      <td>0.157961</td>
+      <td>0.174922</td>
+      <td>0.158515</td>
+      <td>0.127735</td>
+      <td>0.115596</td>
+      <td>0.116078</td>
       <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <td>0.041923</td>
+      <td>0.041073</td>
+      <td>0.038509</td>
+      <td>0.028718</td>
+      <td>0.029333</td>
+      <td>0.028846</td>
+      <td>0.027335</td>
+      <td>0.020524</td>
+      <td>0.020238</td>
+      <td>0.019327</td>
     </tr>
     <tr>
-      <th>rch1</th>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.022655</td>
-      <td>0.00</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <th>hk_i:2_j:12_zone:1.0</th>
+      <td>0.141173</td>
+      <td>0.187865</td>
+      <td>0.250000</td>
+      <td>0.187865</td>
+      <td>0.127129</td>
+      <td>0.157961</td>
+      <td>0.174922</td>
+      <td>0.158515</td>
+      <td>0.099806</td>
+      <td>0.122390</td>
       <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <td>0.040891</td>
+      <td>0.041923</td>
+      <td>0.041073</td>
+      <td>0.027099</td>
+      <td>0.028718</td>
+      <td>0.029333</td>
+      <td>0.028846</td>
+      <td>0.020148</td>
+      <td>0.020524</td>
+      <td>0.020238</td>
     </tr>
     <tr>
-      <th>strinf</th>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.25</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <th>hk_i:2_j:17_zone:1.0</th>
+      <td>0.106085</td>
+      <td>0.141173</td>
+      <td>0.187865</td>
+      <td>0.250000</td>
+      <td>0.098518</td>
+      <td>0.127129</td>
+      <td>0.157961</td>
+      <td>0.174922</td>
+      <td>0.081563</td>
+      <td>0.115596</td>
       <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <td>0.038182</td>
+      <td>0.040891</td>
+      <td>0.041923</td>
+      <td>0.024714</td>
+      <td>0.027099</td>
+      <td>0.028718</td>
+      <td>0.029333</td>
+      <td>0.019158</td>
+      <td>0.020148</td>
+      <td>0.020524</td>
     </tr>
     <tr>
-      <th>wel3</th>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.00</td>
-      <td>0.238691</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <th>hk_i:7_j:2_zone:1.0</th>
+      <td>0.174922</td>
+      <td>0.157961</td>
+      <td>0.127129</td>
+      <td>0.098518</td>
+      <td>0.250000</td>
+      <td>0.187865</td>
+      <td>0.141173</td>
+      <td>0.106085</td>
+      <td>0.174922</td>
+      <td>0.127735</td>
       <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <td>0.058374</td>
+      <td>0.053897</td>
+      <td>0.047526</td>
+      <td>0.041923</td>
+      <td>0.041073</td>
+      <td>0.038509</td>
+      <td>0.034703</td>
+      <td>0.028846</td>
+      <td>0.027335</td>
+      <td>0.025025</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 68 columns</p>
+<p>5 rows × 29 columns</p>
 </div>
 
 
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_20_1.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_22_1.png)
+    
+
+
+
+```python
+cov_df = cov.to_dataframe()
+prior_cov = prior_cov.to_dataframe()
+#update values for hk ppoint parameters
+prior_cov.loc[cov_df.index.values, cov_df.columns] = cov_df.values
+# make Cov object again
+prior_cov = pyemu.Cov.from_dataframe(prior_cov)
+```
+
+
+```python
+# display
+plt.imshow(prior_cov.x,interpolation="nearest")
+plt.colorbar()
+```
+
+
+
+
+    <matplotlib.colorbar.Colorbar at 0x1df6486b250>
+
+
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_24_1.png)
     
 
 
@@ -599,7 +716,7 @@ Now re-sample using the geostatisticaly informed prior:
 
 
 ```python
-parensemble = pyemu.ParameterEnsemble.from_gaussian_draw(pst=pst, cov=cov, num_reals=500,)
+parensemble = pyemu.ParameterEnsemble.from_gaussian_draw(pst=pst, cov=prior_cov, num_reals=500,)
 # ensure that the samples respect parameter bounds in the pst control file
 parensemble.enforce()
 ```
@@ -645,23 +762,23 @@ parensemble.head()
       <th>rch0</th>
       <th>rch1</th>
       <th>strinf</th>
-      <th>wel3</th>
-      <th>wel4</th>
       <th>wel2</th>
       <th>wel1</th>
+      <th>wel4</th>
       <th>wel5</th>
       <th>wel0</th>
+      <th>wel3</th>
       <th>...</th>
-      <th>rch_i:32_j:2_zone:1.0</th>
-      <th>rch_i:17_j:12_zone:1.0</th>
-      <th>rch_i:7_j:12_zone:1.0</th>
-      <th>rch_i:27_j:17_zone:1.0</th>
-      <th>rch_i:2_j:17_zone:1.0</th>
-      <th>rch_i:17_j:2_zone:1.0</th>
-      <th>rch_i:2_j:12_zone:1.0</th>
-      <th>rch_i:32_j:17_zone:1.0</th>
+      <th>rch_i:22_j:7_zone:1.0</th>
       <th>rch_i:37_j:17_zone:1.0</th>
-      <th>rch_i:37_j:12_zone:1.0</th>
+      <th>rch_i:17_j:2_zone:1.0</th>
+      <th>rch_i:12_j:12_zone:1.0</th>
+      <th>rch_i:22_j:17_zone:1.0</th>
+      <th>rch_i:2_j:17_zone:1.0</th>
+      <th>rch_i:27_j:7_zone:1.0</th>
+      <th>rch_i:32_j:12_zone:1.0</th>
+      <th>rch_i:2_j:2_zone:1.0</th>
+      <th>rch_i:12_j:2_zone:1.0</th>
     </tr>
   </thead>
   <tbody>
@@ -792,7 +909,7 @@ parensemble.head()
 
 
 
-Now when we plot the spatialy distributed parameters (`hk1`) we can see some structure and points which are near to each other are morel ikely to be similar:
+Now when we plot the spatialy distributed parameters (`hk1`), it still doesn't look very "natural", but at least we can see some structure and points which are near to each other are more ikely to be similar:
 
 
 ```python
@@ -802,11 +919,12 @@ hbd.plot_ensemble_arr(pe_k, working_dir, 10)
 ```
 
        could not remove start_datetime
+    return type uncaught, losing Ensemble type, returning DataFrame
     
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_26_1.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_30_1.png)
     
 
 
@@ -826,7 +944,7 @@ for pname in pst.par_names[:5]:
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_28_1.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_32_1.png)
     
 
 
@@ -835,7 +953,7 @@ for pname in pst.par_names[:5]:
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_28_3.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_32_3.png)
     
 
 
@@ -844,7 +962,7 @@ for pname in pst.par_names[:5]:
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_28_5.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_32_5.png)
     
 
 
@@ -853,7 +971,7 @@ for pname in pst.par_names[:5]:
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_28_7.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_32_7.png)
     
 
 
@@ -862,7 +980,7 @@ for pname in pst.par_names[:5]:
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_28_9.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_32_9.png)
     
 
 
@@ -997,8 +1115,8 @@ pst.parameter_data.head()
       <td>NaN</td>
     </tr>
     <tr>
-      <th>wel3</th>
-      <td>wel3</td>
+      <th>wel2</th>
+      <td>wel2</td>
       <td>log</td>
       <td>factor</td>
       <td>300.00</td>
@@ -1061,8 +1179,9 @@ Alright - let's see some MC results.  For these runs, what was the Phi?
 
 ```python
 df_out = pd.read_csv(os.path.join(m_d,"sweep_out.csv"),index_col=0)
+df_out.iloc[:,:] = df_out.iloc[:,:].astype(float)
 df_out = df_out.loc[df_out.failed_flag==0,:] #drop any failed runs
-df_out = df_out.loc[~df_out.le(-2.e27).any(axis=1)] #drop extreme values
+df_out = df_out.loc[~df_out.le(-2.e10).any(axis=1)] #drop extreme values
 df_out.columns = [c.lower() for c in df_out.columns]
 df_out.head()
 ```
@@ -1138,123 +1257,123 @@ df_out.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>0</td>
-      <td>0</td>
-      <td>972.091708</td>
-      <td>972.091708</td>
       <td>0.0</td>
-      <td>785.356367</td>
+      <td>0.0</td>
+      <td>619.576222</td>
+      <td>619.576222</td>
+      <td>0.0</td>
+      <td>474.232111</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>...</td>
-      <td>36.113467</td>
-      <td>36.427207</td>
-      <td>36.668040</td>
-      <td>36.773118</td>
-      <td>36.732199</td>
-      <td>36.567800</td>
-      <td>36.342890</td>
-      <td>36.114839</td>
-      <td>35.965963</td>
-      <td>35.990751</td>
+      <td>37.466570</td>
+      <td>37.750637</td>
+      <td>37.973004</td>
+      <td>38.068521</td>
+      <td>38.020843</td>
+      <td>37.846665</td>
+      <td>37.605281</td>
+      <td>37.350871</td>
+      <td>37.168975</td>
+      <td>37.156842</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>1</td>
-      <td>0</td>
-      <td>2708.878010</td>
-      <td>2708.878010</td>
+      <td>1.0</td>
       <td>0.0</td>
-      <td>1747.154943</td>
+      <td>4634.898463</td>
+      <td>4634.898463</td>
+      <td>0.0</td>
+      <td>2769.610344</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>...</td>
-      <td>37.885889</td>
-      <td>38.079191</td>
-      <td>38.205360</td>
-      <td>38.190627</td>
-      <td>38.010547</td>
-      <td>37.701173</td>
-      <td>37.342637</td>
-      <td>36.995622</td>
-      <td>36.756957</td>
-      <td>36.724005</td>
+      <td>41.156702</td>
+      <td>41.485288</td>
+      <td>42.029705</td>
+      <td>42.690176</td>
+      <td>41.812960</td>
+      <td>41.470349</td>
+      <td>41.086245</td>
+      <td>40.710035</td>
+      <td>40.432904</td>
+      <td>40.352933</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>2</td>
-      <td>0</td>
-      <td>2990.607960</td>
-      <td>2990.607960</td>
+      <td>2.0</td>
       <td>0.0</td>
-      <td>2745.498991</td>
+      <td>2765.490874</td>
+      <td>2765.490874</td>
+      <td>0.0</td>
+      <td>2446.710514</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>...</td>
-      <td>37.724609</td>
-      <td>37.795052</td>
-      <td>37.808460</td>
-      <td>37.719394</td>
-      <td>37.507119</td>
-      <td>37.199288</td>
-      <td>36.858328</td>
-      <td>36.528502</td>
-      <td>36.291566</td>
-      <td>36.226571</td>
+      <td>37.892667</td>
+      <td>37.974050</td>
+      <td>38.000180</td>
+      <td>37.922830</td>
+      <td>37.719802</td>
+      <td>37.417057</td>
+      <td>37.076874</td>
+      <td>36.744300</td>
+      <td>36.503167</td>
+      <td>36.435266</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>3</td>
-      <td>0</td>
-      <td>852.683010</td>
-      <td>852.683010</td>
+      <td>3.0</td>
       <td>0.0</td>
-      <td>610.598194</td>
+      <td>989.876635</td>
+      <td>989.876635</td>
+      <td>0.0</td>
+      <td>793.829044</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>...</td>
-      <td>34.685825</td>
-      <td>34.751175</td>
-      <td>34.788683</td>
-      <td>34.773109</td>
-      <td>34.693298</td>
-      <td>34.560887</td>
-      <td>34.406378</td>
-      <td>34.253455</td>
-      <td>34.143631</td>
-      <td>34.119670</td>
+      <td>36.248752</td>
+      <td>36.296259</td>
+      <td>36.317630</td>
+      <td>36.286879</td>
+      <td>36.190321</td>
+      <td>36.037679</td>
+      <td>35.858439</td>
+      <td>35.673592</td>
+      <td>35.527561</td>
+      <td>35.462595</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>4</td>
-      <td>0</td>
-      <td>14500.611949</td>
-      <td>14500.611949</td>
+      <td>4.0</td>
       <td>0.0</td>
-      <td>526.205602</td>
+      <td>795.308698</td>
+      <td>795.308698</td>
+      <td>0.0</td>
+      <td>609.907811</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>...</td>
-      <td>109.352692</td>
-      <td>116.554832</td>
-      <td>113.284189</td>
-      <td>100.568306</td>
-      <td>81.560464</td>
-      <td>62.538216</td>
-      <td>49.097002</td>
-      <td>44.060903</td>
-      <td>47.810903</td>
-      <td>64.914569</td>
+      <td>52.069763</td>
+      <td>54.383517</td>
+      <td>53.807098</td>
+      <td>50.581377</td>
+      <td>46.030802</td>
+      <td>42.632138</td>
+      <td>41.985583</td>
+      <td>41.952356</td>
+      <td>41.962384</td>
+      <td>42.729573</td>
     </tr>
   </tbody>
 </table>
@@ -1283,12 +1402,12 @@ Let's plot Phi for all 500 runs:
 
 
 ```python
-df_out.phi.hist(bins=100);
+df_out.meas_phi.hist(bins=100);
 ```
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_43_0.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_47_0.png)
     
 
 
@@ -1324,7 +1443,7 @@ good_enough = df_out.loc[df_out.phi<acceptable_phi].index.values
 print("number of good enough realisations:", good_enough.shape[0])
 ```
 
-    number of good enough realisations: 42
+    number of good enough realisations: 90
     
 
 These are the run number of the 500 that met this cutoff.  Sheesh - that's very few!
@@ -1344,7 +1463,7 @@ plt.show()
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_49_0.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_53_0.png)
     
 
 
@@ -1368,31 +1487,31 @@ for parnme in pst.par_names[:5]:
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_51_0.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_55_0.png)
     
 
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_51_1.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_55_1.png)
     
 
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_51_2.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_55_2.png)
     
 
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_51_3.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_55_3.png)
     
 
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_51_4.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_55_4.png)
     
 
 
@@ -1419,25 +1538,25 @@ for forecast in pst.forecast_names:
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_53_0.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_57_0.png)
     
 
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_53_1.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_57_1.png)
     
 
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_53_2.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_57_2.png)
     
 
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_53_3.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_57_3.png)
     
 
 
@@ -1469,6 +1588,17 @@ hbd.prep_mc(working_dir)
 
 
 ```python
+%load_ext autoreload
+%autoreload 2
+```
+
+    The autoreload extension is already loaded. To reload it, use:
+      %reload_ext autoreload
+    
+
+
+```python
+#new name
 pst_name = "freyberg_reg.pst"
 ```
 
@@ -1503,7 +1633,7 @@ First instantiate a the `pyemu.Schur` object:
 ```python
 sc = pyemu.Schur(jco=os.path.join(m_d,pst_name.replace(".pst",".jcb")),
                 pst=pst,
-                parcov=cov) # geostatistically informed prior covariance matrix we built earlier
+                parcov=prior_cov) # geostatistically informed prior covariance matrix we built earlier
 ```
 
 Update the control file with the "best fit" parameters (e.g. the calibrated parameters). These values are the mean ofthe posterior parameter probability distribution.
@@ -1520,6 +1650,281 @@ Now we sample parameters from the linearized (because it is based on the linear 
 
 
 ```python
+sc.pst.parameter_data
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>parnme</th>
+      <th>partrans</th>
+      <th>parchglim</th>
+      <th>parval1</th>
+      <th>parlbnd</th>
+      <th>parubnd</th>
+      <th>pargp</th>
+      <th>scale</th>
+      <th>offset</th>
+      <th>dercom</th>
+      <th>extra</th>
+      <th>i</th>
+      <th>j</th>
+      <th>zone</th>
+    </tr>
+    <tr>
+      <th>parnme</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>ne1</th>
+      <td>ne1</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>0.01</td>
+      <td>0.005</td>
+      <td>0.02</td>
+      <td>porosity</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>rch0</th>
+      <td>rch0</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>1.00</td>
+      <td>0.500</td>
+      <td>2.00</td>
+      <td>rch0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>rch1</th>
+      <td>rch1</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>1.00</td>
+      <td>0.500</td>
+      <td>2.00</td>
+      <td>rch1</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>strinf</th>
+      <td>strinf</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>500.00</td>
+      <td>50.000</td>
+      <td>5000.00</td>
+      <td>strinf</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>wel2</th>
+      <td>wel2</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>300.00</td>
+      <td>10.000</td>
+      <td>900.00</td>
+      <td>wel</td>
+      <td>-1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>rch_i:2_j:17_zone:1.0</th>
+      <td>rch_i:2_j:17_zone:1.0</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>1.00</td>
+      <td>0.500</td>
+      <td>2.00</td>
+      <td>rchpp</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>2</td>
+      <td>17</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>rch_i:27_j:7_zone:1.0</th>
+      <td>rch_i:27_j:7_zone:1.0</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>1.00</td>
+      <td>0.500</td>
+      <td>2.00</td>
+      <td>rchpp</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>27</td>
+      <td>7</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>rch_i:32_j:12_zone:1.0</th>
+      <td>rch_i:32_j:12_zone:1.0</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>1.00</td>
+      <td>0.500</td>
+      <td>2.00</td>
+      <td>rchpp</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>32</td>
+      <td>12</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>rch_i:2_j:2_zone:1.0</th>
+      <td>rch_i:2_j:2_zone:1.0</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>1.00</td>
+      <td>0.500</td>
+      <td>2.00</td>
+      <td>rchpp</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>rch_i:12_j:2_zone:1.0</th>
+      <td>rch_i:12_j:2_zone:1.0</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>1.00</td>
+      <td>0.500</td>
+      <td>2.00</td>
+      <td>rchpp</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>12</td>
+      <td>2</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>68 rows × 14 columns</p>
+</div>
+
+
+
+
+```python
+x = abs(sc.posterior_parameter.to_pearson().x)
+x[x<0.01]=np.nan
+plt.imshow(x)
+plt.colorbar()
+```
+
+
+
+
+    <matplotlib.colorbar.Colorbar at 0x1df6a386b50>
+
+
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_72_1.png)
+    
+
+
+
+```python
 parensemble = pyemu.ParameterEnsemble.from_gaussian_draw(pst=sc.pst,
                                                         cov=sc.posterior_parameter, # posterior parameter covariance
                                                         num_reals=500,)
@@ -1533,6 +1938,25 @@ parensemble = pyemu.ParameterEnsemble.from_gaussian_draw(pst=sc.pst,
     drawing from group strinf
     drawing from group wel
     
+
+What do these look like?
+
+
+```python
+pe_k = parensemble.loc[:,parnmes].copy()
+# use the hbd convenienc function to plot several realisations
+hbd.plot_ensemble_arr(pe_k, working_dir, 10)
+```
+
+       could not remove start_datetime
+    return type uncaught, losing Ensemble type, returning DataFrame
+    
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_75_1.png)
+    
+
 
 As before, write the file for PEST++SWP:
 
@@ -1558,9 +1982,11 @@ And pull in the results, just as before:
 
 
 ```python
-df_out = pd.read_csv(os.path.join(m_d,"sweep_out.csv"),index_col=0)
+df_out = pd.read_csv(os.path.join(m_d,"sweep_out.csv"),index_col=0,)
+df_out.iloc[:,:] = df_out.iloc[:,:].astype(float)
 df_out = df_out.loc[df_out.failed_flag==0,:] #drop any failed runs
-#df_out = df_out.loc[~df_out.le(-2.e27).any(axis=1)] #drop extreme values
+df_out = df_out.loc[~df_out.le(-2.e10).any(axis=1)] #drop extreme values
+df_out = df_out.loc[df_out.meas_phi<1e10] #drop extreme values
 df_out.columns = [c.lower() for c in df_out.columns]
 df_out.head()
 ```
@@ -1636,123 +2062,123 @@ df_out.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>0</td>
-      <td>0</td>
-      <td>1.79769313486232e+308</td>
-      <td>346.365601</td>
-      <td>1.79769313486232e+308</td>
-      <td>270.154999</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>1322.291485</td>
+      <td>NaN</td>
+      <td>1222.341259</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>...</td>
-      <td>40.176058</td>
-      <td>40.363876</td>
-      <td>40.506852</td>
-      <td>40.552192</td>
-      <td>40.482102</td>
-      <td>40.309059</td>
-      <td>40.080792</td>
-      <td>39.838375</td>
-      <td>39.653813</td>
-      <td>39.605097</td>
+      <td>36.740411</td>
+      <td>36.787046</td>
+      <td>36.803979</td>
+      <td>36.761189</td>
+      <td>36.642000</td>
+      <td>36.458180</td>
+      <td>36.244836</td>
+      <td>36.026991</td>
+      <td>35.857205</td>
+      <td>35.785682</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>1</td>
-      <td>0</td>
-      <td>1.79769313486232e+308</td>
-      <td>255.853028</td>
-      <td>1.79769313486232e+308</td>
-      <td>124.205661</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>191.203343</td>
+      <td>NaN</td>
+      <td>178.238114</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>...</td>
-      <td>34.945770</td>
-      <td>35.088964</td>
-      <td>35.181000</td>
-      <td>35.176886</td>
-      <td>35.062486</td>
-      <td>34.858824</td>
-      <td>34.618053</td>
-      <td>34.382169</td>
-      <td>34.219739</td>
-      <td>34.202378</td>
+      <td>40.474222</td>
+      <td>40.373511</td>
+      <td>40.248546</td>
+      <td>40.085575</td>
+      <td>39.863805</td>
+      <td>39.596139</td>
+      <td>39.312541</td>
+      <td>39.023315</td>
+      <td>38.775840</td>
+      <td>38.600468</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>2</td>
-      <td>0</td>
-      <td>1.79769313486232e+308</td>
-      <td>480.867599</td>
-      <td>1.79769313486232e+308</td>
-      <td>364.879915</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>672.240682</td>
+      <td>NaN</td>
+      <td>627.197534</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>...</td>
-      <td>37.123164</td>
-      <td>37.199295</td>
-      <td>37.246672</td>
-      <td>37.222494</td>
-      <td>37.105652</td>
-      <td>36.907563</td>
-      <td>36.669732</td>
-      <td>36.424925</td>
-      <td>36.237601</td>
-      <td>36.174389</td>
+      <td>38.513961</td>
+      <td>39.059952</td>
+      <td>39.520749</td>
+      <td>39.787939</td>
+      <td>39.842868</td>
+      <td>39.704403</td>
+      <td>39.456068</td>
+      <td>39.184804</td>
+      <td>39.010760</td>
+      <td>39.084157</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>3</td>
-      <td>0</td>
-      <td>1.79769313486232e+308</td>
-      <td>400.522923</td>
-      <td>1.79769313486232e+308</td>
-      <td>372.469983</td>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>244.821079</td>
+      <td>NaN</td>
+      <td>215.568379</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>...</td>
-      <td>37.263096</td>
-      <td>37.261908</td>
-      <td>37.231068</td>
-      <td>37.135165</td>
-      <td>36.950648</td>
-      <td>36.692383</td>
-      <td>36.403304</td>
-      <td>36.111743</td>
-      <td>35.883148</td>
-      <td>35.777369</td>
+      <td>39.596341</td>
+      <td>39.756774</td>
+      <td>39.870106</td>
+      <td>39.887863</td>
+      <td>39.792020</td>
+      <td>39.596463</td>
+      <td>39.349100</td>
+      <td>39.088784</td>
+      <td>38.887460</td>
+      <td>38.820092</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>4</td>
-      <td>0</td>
-      <td>1.79769313486232e+308</td>
-      <td>250.427697</td>
-      <td>1.79769313486232e+308</td>
-      <td>119.698259</td>
+      <td>4.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>348.474546</td>
+      <td>NaN</td>
+      <td>267.460156</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>...</td>
-      <td>39.357333</td>
-      <td>39.525877</td>
-      <td>39.653739</td>
-      <td>39.693191</td>
-      <td>39.628110</td>
-      <td>39.470063</td>
-      <td>39.262576</td>
-      <td>39.043133</td>
-      <td>38.877147</td>
-      <td>38.835452</td>
+      <td>39.721842</td>
+      <td>40.106007</td>
+      <td>40.415270</td>
+      <td>40.559689</td>
+      <td>40.516298</td>
+      <td>40.304765</td>
+      <td>40.002072</td>
+      <td>39.680998</td>
+      <td>39.454527</td>
+      <td>39.454623</td>
     </tr>
   </tbody>
 </table>
@@ -1763,12 +2189,19 @@ df_out.head()
 
 
 ```python
-df_out.phi.hist(bins=100);
+df_out.meas_phi.hist(bins=100, )
 ```
 
 
+
+
+    <AxesSubplot:>
+
+
+
+
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_73_0.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_82_1.png)
     
 
 
@@ -1780,7 +2213,7 @@ good_enough = df_out.loc[df_out.meas_phi<acceptable_phi].index.values
 print("number of good enough realisations:", good_enough.shape[0])
 ```
 
-    number of good enough realisations: 129
+    number of good enough realisations: 197
     
 
 So sampling from the linearized posterior improves the chances of getting parameters that fit the data.
@@ -1788,13 +2221,13 @@ So sampling from the linearized posterior improves the chances of getting parame
 
 ```python
 #ax = df_out.phi.hist(alpha=0.5)
-df_out.loc[good_enough,"phi"].hist(color="g",alpha=0.5)
+df_out.loc[good_enough,"meas_phi"].hist(color="g",alpha=0.5)
 plt.show()
 ```
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_77_0.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_86_0.png)
     
 
 
@@ -1821,29 +2254,29 @@ for forecast in pst.forecast_names:
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_79_0.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_88_0.png)
     
 
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_79_1.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_88_1.png)
     
 
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_79_2.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_88_2.png)
     
 
 
 
     
-![png](freyberg_monte_carlo_files/freyberg_monte_carlo_79_3.png)
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_88_3.png)
     
 
 
-What have we learnt? Even though we are avoiding the assumptions of linearity required for FOSM, and burning a lot more silicone, this does not guarantee that the uncertianty analysis is conservative. Why? Because we are not considering relevant sources of parameter uncertainty. We are not accounting for spatial variability of porosity...boundary condition parameters (e.g. GHB, WEL and STR parameters)...temporal variability of recharge and pumping rates...and so on. 
+What have we learnt? Even though we are avoiding the assumptions of linearity required for FOSM, and burning a lot more silicone, this does not guarantee that the uncertainty analysis is conservative. Why? Because we are not considering relevant sources of parameter uncertainty. We are not accounting for spatial variability of porosity...boundary condition parameters (e.g. GHB, WEL and STR parameters)...temporal variability of recharge and pumping rates...and so on. 
 
 But we also saw that, with high-dimensional problems, these brute-force approaches to sampling the (non linear) posterior probability distribution get extremely computationaly expensive. In the past, the Null-Space Monte Carlo [(Tonkin and Doherty, 2009)](https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2007WR006678) provided an option that reduced the burden of calibration-constrained Monte Carlo. More recently, ensemble methods such as are avialble in [PEST++IES](https://github.com/usgs/pestpp/blob/master/documentation/pestpp_users_manual.md#9-pestpp-ies) provide an even more efficient option.
 

@@ -23,21 +23,21 @@ These methods can be used by themselves, but are most commonly applied together.
 ## 1. Tikhonov Regularization
 We have moved up the simplicity-complexity curve because now we have many more parameters, even more than our observations.  But have we passed the sweetspot? One way to seek a parameter field of minimum error variance is to seek a parameter field that allows the model to fit the calibration dataset, but whose values are also as close as possible to a set of “preferred parameter values”.
 
-<img src="intro_to_regularization\Hunt1998_sweetspot.png" style="float: center">
+<img src="intro_to_regularization_files/Hunt1998_sweetspot.png" style="float: center">
 
 Again, it is not simply the number of parameters that is at issue.  The better way to think of it is that we just want to avoid "living beyond our means". That is, we do not bring more parameters to bear than we have the ability to constrain.  We constrain them observations as we have seen so far, but we also know things about the system that are not hard data like measurements.  This "soft-knowledge" can also be applied to  constrain our parameters through a mechanism called __"Tikhonov regularization"__.  In this formulation of the inverse problem, we add a second term to our "best fit" metric Phi. This second term reflects the deviation from our soft-knowledge of the system, and is a penalty to our fit. Here's how it looks using the Anderson et al. (2015) formulation:
 
-<img src="intro_to_regularization\tik-reg_eq9.8.png" style="float: center">
+<img src="intro_to_regularization_files/tik-reg_eq9.8.png" style="float: center">
 
 As first term after the equal sign is our __measurement objective function__, which we've been working with all week.  The last term on the right is called the __"regularization objective function"__. These 2 terms combine to create a __total Phi__ on the left.  __Now Total Phi is what we minimize__, which means we are minimizing our observed-to-simulated residuals __AND__ the deviation from soft-knowledge.  So in this way Tikhonov regularization is a "dual-constrained minimization".  
 
 Andrey Tikhonov
-<img src="intro_to_regularization\Andrey_Tikhonov_picture.jpeg" style="float: center">
+<img src="intro_to_regularization_files/Andrey_Tikhonov_picture.jpeg" style="float: center">
 
 Anderson et al. (2015) looks a little closer at this in equation 9.9:
 
 
-<img src="intro_to_regularization\tik-reg_eq9.9.png" style="float: center">
+<img src="intro_to_regularization_files/tik-reg_eq9.9.png" style="float: center">
 
 The first term to the right of the equals sign is the measurement objective function from
 Eqn (9.6), which is calculated as the sum of squared weighted residuals, where *n* residuals,
@@ -76,7 +76,7 @@ Of these, __preferred value__ is the easiest implement, and least memory intensi
 Here are two examples from Anderson et al. (2015).  For "preferred value" __(below (a), left)__ there is no cross-talk between pilot points.  The initial parameter value of each pilot point is the preferred value.  For preferred difference __(below (a), right)__, there is a radius of influence that connects the pilot point regularization (think correlation length from geostatistics).  
 
 
-<img src="intro_to_regularization\Fig9.15a_Muffles_pp.png" style="float: center">
+<img src="intro_to_regularization_files/Fig9.15a_Muffles_pp.png" style="float: center">
 
 
 
@@ -92,7 +92,7 @@ Here are two examples from Anderson et al. (2015).  For "preferred value" __(bel
 
 For example, if the geology of a site suggests distinct units you can only apply the preferred difference to just the zone:
 
-<img src="intro_to_regularization\Fig9.15b_Kyle_Larry_pp.png" style="float: center">
+<img src="intro_to_regularization_files/Fig9.15b_Kyle_Larry_pp.png" style="float: center">
 
 
 Here's the caption from Anderson et al. (2015) for posterity:  Figure 9.15 Pilot Points. (a) Network of pilot points in a watershed-scale groundwater flow model (left); linkages between pilot points (right) used to calculate Tikhonov regularization constraints for preferred homogeneity (modified from Muffels, 2008). (b) Network of pilot points used to represent two hydraulic conductivity zones where Tikhonov regularization is applied to pilot points within the same zone (modified from Davis and Putnam, 2013).
@@ -109,14 +109,14 @@ Many people missed the importance of this variable in the original Doherty (2003
 
 The final say in trade-off between the measurement objective function and the regularization objective function is in a *user specified variable* in the PEST control file called:
 
-__<center><span style=font-size:1.5em>PHIMLIM</span></center>__
+__<center>PHIMLIM</center>__
 
 PHIMLIM is the "Target Measurement Objective Function", which means rather than finding the best fit to the observations, PEST will hit this new PHIMLIM level and  *then find the minimum of the regularization objective function* (find the parameters that most closely match the preferred conditions while still keeping the PHIMLIM target measurement objective function). 
 
 A good way to think of this is that PHIMLIM controls the trade-off between the two parts of the righthand side of the equal sign in equation 9.8 above. We can plot this tradeoff as a Pareto front between adhereing to soft-knowledge (regularization objective function) and getting a better fit (measurement objective function). That looks like:
 
 
-<img src="intro_to_regularization\Fig9.17_fit_vs_softknowledge_Pareto.png" style="float: center">
+<img src="intro_to_regularization_files/Fig9.17_fit_vs_softknowledge_Pareto.png" style="float: center">
 
 
 A __key point__ is that many points on this curve could be considered a "calibrated model", which equals good fit and reasonable parameters. Which of these we choose is based on professional judgement. Subjective, we know.
@@ -124,7 +124,7 @@ A __key point__ is that many points on this curve could be considered a "calibra
 #### Final point:  
 Here's how PHIMLIM expresses itself on the optimal parameters:
 
-<img src="intro_to_regularization\Fig9.16_PHIMLIM.png" style="float: center">
+<img src="intro_to_regularization_files/Fig9.16_PHIMLIM.png" style="float: center">
 
 So setting PHIMLIM is our primary way to control the degree of fitting, and keep us from *overfitting*.
 
@@ -428,7 +428,7 @@ $$ \sigma = \frac{parubn - parlbnd}{4}$$
 $$ weight = \frac{1}{\sigma} $$
 
 
-> __Important__. This assumes that the parameter bounds reflect prior parameter uncertainty. So not only should the initial parmaeter value be assigned carefully, but so should the parameter bounds!
+> __Important__. This assumes that the parameter bounds reflect prior parameter uncertainty. So not only should the initial parameter value be assigned carefully, but so should the parameter bounds!
 
 Let's try this again using the parameter bounds to specify prior information equation weights:
 

@@ -52,14 +52,14 @@ But we are getting ahead of ourselves, let's take this back to basics.
 
 We update our knowledge by comparing what we know/believe with measured/observed data. What we know now, is a function of what we knew before, compared to what we learned from measured data.
 
-### $\underbrace{P(\boldsymbol{\theta}|\textbf{d})}_{\substack{\text{what we} \\ \text{know now}}} \propto \underbrace{\mathcal{L}(\boldsymbol{\theta} | \textbf{d})}_{\substack{\text{what we} \\ \text{learned}}} \underbrace{P(\boldsymbol{\theta})}_{\substack{\text{what we} \\ \text{knew}}} $
+$$\underbrace{P(\boldsymbol{\theta}|\textbf{d})}_{\substack{\text{what we} \\ \text{know now}}} \propto \underbrace{\mathcal{L}(\boldsymbol{\theta} | \textbf{d})}_{\substack{\text{what we} \\ \text{learned}}} \underbrace{P(\boldsymbol{\theta})}_{\substack{\text{what we} \\ \text{knew}}}$$
 
 
 We can also think of this graphically, as taken from Anderson et al. (2015) in slightly different notation but the same equation and concept:
 
-<img src="intro _to_fosm_files/Fig10.3_Bayes_figure.png" style="float: center;width:500px;"/>
+<img src="intro _to_fosm_files/Fig10.3_Bayes_figure.png" style="inline:center;width:500px;"/>
 
-The problem is, for real-world problems, the likelihood function  $\mathcal{L}(\theta | \textbf{D})$ is high-dimensional and non-parameteric, requiring non-linear (typically Monte Carlo) integration for rigorous Bayes. Unfortunatley, non-linear methods are computationaly expensive and ineficient. 
+The problem is, for real-world problems, the likelihood function ("what we learned") is high-dimensional and non-parameteric, requiring non-linear (typically Monte Carlo) integration for rigorous Bayes. Unfortunatley, non-linear methods are computationaly expensive and ineficient as we will see in a subsequent notebook. 
 
 But, we can make some assumptions and greatly reduce computational burden. This is why we often suggest using these linear methods first before burning the silicon on the non-linear ones like Monte Carlo.  
 
@@ -180,25 +180,6 @@ Load the PEST control file:
 pst = pyemu.Pst(os.path.join(working_dir, pst_name))
 ```
 
-
-    ---------------------------------------------------------------------------
-
-    Exception                                 Traceback (most recent call last)
-
-    Input In [4], in <cell line: 1>()
-    ----> 1 pst = pyemu.Pst(os.path.join(working_dir, pst_name))
-    
-
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_10_intro_to_fosm\..\..\dependencies\pyemu\pst\pst_handler.py:119, in Pst.__init__(self, filename, load, resfile)
-        117 if load:
-        118     if not os.path.exists(filename):
-    --> 119         raise Exception("pst file not found:{0}".format(filename))
-        121     self.load(filename)
-    
-
-    Exception: pst file not found:master_pp\freyberg_pp.pst
-
-
 ### Let's look at the parameter uncertainty summary written by pestpp:
 
 PEST++GLM records a parameter uncertainty file named _casename.par.usum.csv_. It records the prior and posterior means, bounds and standard deviations.
@@ -210,88 +191,107 @@ df.tail()
 ```
 
 
-    ---------------------------------------------------------------------------
 
-    FileNotFoundError                         Traceback (most recent call last)
 
-    Input In [5], in <cell line: 1>()
-    ----> 1 df = pd.read_csv(os.path.join(working_dir,pst_name.replace(".pst",".par.usum.csv")),index_col=0)
-          2 df.tail()
-    
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-    File D:\Workspace\hugm0001\anaconda\envs\gmdsitut\lib\site-packages\pandas\util\_decorators.py:311, in deprecate_nonkeyword_arguments.<locals>.decorate.<locals>.wrapper(*args, **kwargs)
-        305 if len(args) > num_allow_args:
-        306     warnings.warn(
-        307         msg.format(arguments=arguments),
-        308         FutureWarning,
-        309         stacklevel=stacklevel,
-        310     )
-    --> 311 return func(*args, **kwargs)
-    
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
 
-    File D:\Workspace\hugm0001\anaconda\envs\gmdsitut\lib\site-packages\pandas\io\parsers\readers.py:680, in read_csv(filepath_or_buffer, sep, delimiter, header, names, index_col, usecols, squeeze, prefix, mangle_dupe_cols, dtype, engine, converters, true_values, false_values, skipinitialspace, skiprows, skipfooter, nrows, na_values, keep_default_na, na_filter, verbose, skip_blank_lines, parse_dates, infer_datetime_format, keep_date_col, date_parser, dayfirst, cache_dates, iterator, chunksize, compression, thousands, decimal, lineterminator, quotechar, quoting, doublequote, escapechar, comment, encoding, encoding_errors, dialect, error_bad_lines, warn_bad_lines, on_bad_lines, delim_whitespace, low_memory, memory_map, float_precision, storage_options)
-        665 kwds_defaults = _refine_defaults_read(
-        666     dialect,
-        667     delimiter,
-       (...)
-        676     defaults={"delimiter": ","},
-        677 )
-        678 kwds.update(kwds_defaults)
-    --> 680 return _read(filepath_or_buffer, kwds)
-    
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>prior_mean</th>
+      <th>prior_stdev</th>
+      <th>prior_lower_bound</th>
+      <th>prior_upper_bound</th>
+      <th>post_mean</th>
+      <th>post_stdev</th>
+      <th>post_lower_bound</th>
+      <th>post_upper_bound</th>
+    </tr>
+    <tr>
+      <th>name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>rch_i:17_j:2_zone:1.0</th>
+      <td>0.0</td>
+      <td>0.150515</td>
+      <td>-0.30103</td>
+      <td>0.30103</td>
+      <td>0.30103</td>
+      <td>0.149751</td>
+      <td>0.001528</td>
+      <td>0.600532</td>
+    </tr>
+    <tr>
+      <th>rch_i:17_j:12_zone:1.0</th>
+      <td>0.0</td>
+      <td>0.150515</td>
+      <td>-0.30103</td>
+      <td>0.30103</td>
+      <td>-0.30103</td>
+      <td>0.150025</td>
+      <td>-0.601081</td>
+      <td>-0.000979</td>
+    </tr>
+    <tr>
+      <th>rch_i:37_j:17_zone:1.0</th>
+      <td>0.0</td>
+      <td>0.150515</td>
+      <td>-0.30103</td>
+      <td>0.30103</td>
+      <td>-0.30103</td>
+      <td>0.150258</td>
+      <td>-0.601546</td>
+      <td>-0.000514</td>
+    </tr>
+    <tr>
+      <th>rch_i:27_j:12_zone:1.0</th>
+      <td>0.0</td>
+      <td>0.150515</td>
+      <td>-0.30103</td>
+      <td>0.30103</td>
+      <td>-0.30103</td>
+      <td>0.150081</td>
+      <td>-0.601192</td>
+      <td>-0.000868</td>
+    </tr>
+    <tr>
+      <th>rch_i:12_j:17_zone:1.0</th>
+      <td>0.0</td>
+      <td>0.150515</td>
+      <td>-0.30103</td>
+      <td>0.30103</td>
+      <td>-0.30103</td>
+      <td>0.149847</td>
+      <td>-0.600725</td>
+      <td>-0.001335</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
-    File D:\Workspace\hugm0001\anaconda\envs\gmdsitut\lib\site-packages\pandas\io\parsers\readers.py:575, in _read(filepath_or_buffer, kwds)
-        572 _validate_names(kwds.get("names", None))
-        574 # Create the parser.
-    --> 575 parser = TextFileReader(filepath_or_buffer, **kwds)
-        577 if chunksize or iterator:
-        578     return parser
-    
-
-    File D:\Workspace\hugm0001\anaconda\envs\gmdsitut\lib\site-packages\pandas\io\parsers\readers.py:933, in TextFileReader.__init__(self, f, engine, **kwds)
-        930     self.options["has_index_names"] = kwds["has_index_names"]
-        932 self.handles: IOHandles | None = None
-    --> 933 self._engine = self._make_engine(f, self.engine)
-    
-
-    File D:\Workspace\hugm0001\anaconda\envs\gmdsitut\lib\site-packages\pandas\io\parsers\readers.py:1217, in TextFileReader._make_engine(self, f, engine)
-       1213     mode = "rb"
-       1214 # error: No overload variant of "get_handle" matches argument types
-       1215 # "Union[str, PathLike[str], ReadCsvBuffer[bytes], ReadCsvBuffer[str]]"
-       1216 # , "str", "bool", "Any", "Any", "Any", "Any", "Any"
-    -> 1217 self.handles = get_handle(  # type: ignore[call-overload]
-       1218     f,
-       1219     mode,
-       1220     encoding=self.options.get("encoding", None),
-       1221     compression=self.options.get("compression", None),
-       1222     memory_map=self.options.get("memory_map", False),
-       1223     is_text=is_text,
-       1224     errors=self.options.get("encoding_errors", "strict"),
-       1225     storage_options=self.options.get("storage_options", None),
-       1226 )
-       1227 assert self.handles is not None
-       1228 f = self.handles.handle
-    
-
-    File D:\Workspace\hugm0001\anaconda\envs\gmdsitut\lib\site-packages\pandas\io\common.py:789, in get_handle(path_or_buf, mode, encoding, compression, memory_map, is_text, errors, storage_options)
-        784 elif isinstance(handle, str):
-        785     # Check whether the filename is to be opened in binary mode.
-        786     # Binary mode does not support 'encoding' and 'newline'.
-        787     if ioargs.encoding and "b" not in ioargs.mode:
-        788         # Encoding
-    --> 789         handle = open(
-        790             handle,
-        791             ioargs.mode,
-        792             encoding=ioargs.encoding,
-        793             errors=errors,
-        794             newline="",
-        795         )
-        796     else:
-        797         # Binary mode
-        798         handle = open(handle, ioargs.mode)
-    
-
-    FileNotFoundError: [Errno 2] No such file or directory: 'master_pp\\freyberg_pp.par.usum.csv'
 
 
 We can visualize this with probability distributions. In the plot below, prior parameter distributions are shown by the dashed grey lines. Posterior parameter distributions are the blue shaded areas. Each plot shows distributions for parameters in the same group:
@@ -314,17 +314,9 @@ for pargp, ax in zip(pst.adj_par_groups, axes):
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    Input In [6], in <cell line: 1>()
-    ----> 1 par = pst.parameter_data
-          2 df_paru = pd.read_csv(os.path.join(working_dir,pst_name.replace(".pst",".par.usum.csv")),index_col=0)
-          4 fig, axes=plt.subplots(1,len(pst.adj_par_groups),figsize=(15,5))
     
-
-    NameError: name 'pst' is not defined
+![png](intro_to_fosm_files/intro_to_fosm_26_0.png)
+    
 
 
 ### There is a similar file for forecasts:
@@ -336,95 +328,9 @@ axes = pyemu.plot_utils.plot_summary_distributions(os.path.join(working_dir,pst_
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    FileNotFoundError                         Traceback (most recent call last)
-
-    Input In [7], in <cell line: 1>()
-    ----> 1 axes = pyemu.plot_utils.plot_summary_distributions(os.path.join(working_dir,pst_name.replace(".pst",".pred.usum.csv")),subplots=True)
     
-
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_10_intro_to_fosm\..\..\dependencies\pyemu\plot\plot_utils.py:80, in plot_summary_distributions(df, ax, label_post, label_prior, subplots, figsize, pt_color)
-         77 import matplotlib.pyplot as plt
-         79 if isinstance(df, str):
-    ---> 80     df = pd.read_csv(df, index_col=0)
-         81 if ax is None and not subplots:
-         82     fig = plt.figure(figsize=figsize)
+![png](intro_to_fosm_files/intro_to_fosm_28_0.png)
     
-
-    File D:\Workspace\hugm0001\anaconda\envs\gmdsitut\lib\site-packages\pandas\util\_decorators.py:311, in deprecate_nonkeyword_arguments.<locals>.decorate.<locals>.wrapper(*args, **kwargs)
-        305 if len(args) > num_allow_args:
-        306     warnings.warn(
-        307         msg.format(arguments=arguments),
-        308         FutureWarning,
-        309         stacklevel=stacklevel,
-        310     )
-    --> 311 return func(*args, **kwargs)
-    
-
-    File D:\Workspace\hugm0001\anaconda\envs\gmdsitut\lib\site-packages\pandas\io\parsers\readers.py:680, in read_csv(filepath_or_buffer, sep, delimiter, header, names, index_col, usecols, squeeze, prefix, mangle_dupe_cols, dtype, engine, converters, true_values, false_values, skipinitialspace, skiprows, skipfooter, nrows, na_values, keep_default_na, na_filter, verbose, skip_blank_lines, parse_dates, infer_datetime_format, keep_date_col, date_parser, dayfirst, cache_dates, iterator, chunksize, compression, thousands, decimal, lineterminator, quotechar, quoting, doublequote, escapechar, comment, encoding, encoding_errors, dialect, error_bad_lines, warn_bad_lines, on_bad_lines, delim_whitespace, low_memory, memory_map, float_precision, storage_options)
-        665 kwds_defaults = _refine_defaults_read(
-        666     dialect,
-        667     delimiter,
-       (...)
-        676     defaults={"delimiter": ","},
-        677 )
-        678 kwds.update(kwds_defaults)
-    --> 680 return _read(filepath_or_buffer, kwds)
-    
-
-    File D:\Workspace\hugm0001\anaconda\envs\gmdsitut\lib\site-packages\pandas\io\parsers\readers.py:575, in _read(filepath_or_buffer, kwds)
-        572 _validate_names(kwds.get("names", None))
-        574 # Create the parser.
-    --> 575 parser = TextFileReader(filepath_or_buffer, **kwds)
-        577 if chunksize or iterator:
-        578     return parser
-    
-
-    File D:\Workspace\hugm0001\anaconda\envs\gmdsitut\lib\site-packages\pandas\io\parsers\readers.py:933, in TextFileReader.__init__(self, f, engine, **kwds)
-        930     self.options["has_index_names"] = kwds["has_index_names"]
-        932 self.handles: IOHandles | None = None
-    --> 933 self._engine = self._make_engine(f, self.engine)
-    
-
-    File D:\Workspace\hugm0001\anaconda\envs\gmdsitut\lib\site-packages\pandas\io\parsers\readers.py:1217, in TextFileReader._make_engine(self, f, engine)
-       1213     mode = "rb"
-       1214 # error: No overload variant of "get_handle" matches argument types
-       1215 # "Union[str, PathLike[str], ReadCsvBuffer[bytes], ReadCsvBuffer[str]]"
-       1216 # , "str", "bool", "Any", "Any", "Any", "Any", "Any"
-    -> 1217 self.handles = get_handle(  # type: ignore[call-overload]
-       1218     f,
-       1219     mode,
-       1220     encoding=self.options.get("encoding", None),
-       1221     compression=self.options.get("compression", None),
-       1222     memory_map=self.options.get("memory_map", False),
-       1223     is_text=is_text,
-       1224     errors=self.options.get("encoding_errors", "strict"),
-       1225     storage_options=self.options.get("storage_options", None),
-       1226 )
-       1227 assert self.handles is not None
-       1228 f = self.handles.handle
-    
-
-    File D:\Workspace\hugm0001\anaconda\envs\gmdsitut\lib\site-packages\pandas\io\common.py:789, in get_handle(path_or_buf, mode, encoding, compression, memory_map, is_text, errors, storage_options)
-        784 elif isinstance(handle, str):
-        785     # Check whether the filename is to be opened in binary mode.
-        786     # Binary mode does not support 'encoding' and 'newline'.
-        787     if ioargs.encoding and "b" not in ioargs.mode:
-        788         # Encoding
-    --> 789         handle = open(
-        790             handle,
-        791             ioargs.mode,
-        792             encoding=ioargs.encoding,
-        793             errors=errors,
-        794             newline="",
-        795         )
-        796     else:
-        797         # Binary mode
-        798         handle = open(handle, ioargs.mode)
-    
-
-    FileNotFoundError: [Errno 2] No such file or directory: 'master_pp\\freyberg_pp.pred.usum.csv'
 
 
 ### Where do the prior parameter distributions come from?
@@ -462,58 +368,6 @@ The ``Schur`` object is one of the primary object for FOSM in pyEMU and the only
 sc = pyemu.Schur(jco=os.path.join(working_dir,pst_name.replace(".pst",".jcb")),verbose=False)
 ```
 
-
-    ---------------------------------------------------------------------------
-
-    AssertionError                            Traceback (most recent call last)
-
-    Input In [8], in <cell line: 1>()
-    ----> 1 sc = pyemu.Schur(jco=os.path.join(working_dir,pst_name.replace(".pst",".jcb")),verbose=False)
-    
-
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_10_intro_to_fosm\..\..\dependencies\pyemu\sc.py:68, in Schur.__init__(self, jco, **kwargs)
-         66 self.__posterior_prediction = None
-         67 self.__posterior_parameter = None
-    ---> 68 super(Schur, self).__init__(jco, **kwargs)
-    
-
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_10_intro_to_fosm\..\..\dependencies\pyemu\la.py:125, in LinearAnalysis.__init__(self, jco, pst, parcov, obscov, predictions, ref_var, verbose, resfile, forecasts, sigma_range, scale_offset, **kwargs)
-        123 self.log("pre-loading base components")
-        124 if jco is not None:
-    --> 125     self.__load_jco()
-        126 if pst is not None:
-        127     self.__load_pst()
-    
-
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_10_intro_to_fosm\..\..\dependencies\pyemu\la.py:256, in LinearAnalysis.__load_jco(self)
-        254     self.__jco = self.jco_arg
-        255 elif isinstance(self.jco_arg, str):
-    --> 256     self.__jco = self.__fromfile(self.jco_arg, astype=Jco)
-        257 else:
-        258     raise Exception(
-        259         "linear_analysis.__load_jco(): jco_arg must "
-        260         + "be a matrix object or a file name: "
-        261         + str(self.jco_arg)
-        262     )
-    
-
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_10_intro_to_fosm\..\..\dependencies\pyemu\la.py:187, in LinearAnalysis.__fromfile(self, filename, astype)
-        181 def __fromfile(self, filename, astype=None):
-        182     """a private method to deduce and load a filename into a matrix object.
-        183     Uses extension: 'jco' or 'jcb': binary, 'mat','vec' or 'cov': ASCII,
-        184     'unc': pest uncertainty file.
-        185 
-        186     """
-    --> 187     assert os.path.exists(filename), (
-        188         "LinearAnalysis.__fromfile(): " + "file not found:" + filename
-        189     )
-        190     ext = filename.split(".")[-1].lower()
-        191     if ext in ["jco", "jcb"]:
-    
-
-    AssertionError: LinearAnalysis.__fromfile(): file not found:master_pp\freyberg_pp.jcb
-
-
 Now that seemed too easy, right?  Well, underhood the ``Schur`` object found the control file ("freyberg_pp.pst") and used it to build the prior parameter covariance matrix, $\boldsymbol{\Sigma}_{\theta}$, from the parameter bounds and the observation noise covariance matrix ($\boldsymbol{\Sigma}_{\epsilon}$) from the observation weights.  These are the ``Schur.parcov`` and ``Schur.obscov`` attributes.  
 
 The ``Schur`` object also found the "++forecasts()" optional pestpp argument in the control, found the associated rows in the Jacobian matrix file and extracted those rows to serve as forecast sensitivity vectors:
@@ -524,15 +378,10 @@ sc.pst.pestpp_options['forecasts']
 ```
 
 
-    ---------------------------------------------------------------------------
 
-    NameError                                 Traceback (most recent call last)
 
-    Input In [9], in <cell line: 1>()
-    ----> 1 sc.pst.pestpp_options['forecasts']
-    
+    'headwater:4383.5,tailwater:4383.5,trgw-0-9-1:4383.5,part_time'
 
-    NameError: name 'sc' is not defined
 
 
 ### The Jacobian Matrix and Forecast Sensitivity Vectors
@@ -545,15 +394,175 @@ sc.jco.to_dataframe().loc[sc.pst.nnz_obs_names,:].head()
 ```
 
 
-    ---------------------------------------------------------------------------
 
-    NameError                                 Traceback (most recent call last)
 
-    Input In [10], in <cell line: 1>()
-    ----> 1 sc.jco.to_dataframe().loc[sc.pst.nnz_obs_names,:].head()
-    
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-    NameError: name 'sc' is not defined
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>strinf</th>
+      <th>wel0</th>
+      <th>wel2</th>
+      <th>wel4</th>
+      <th>wel5</th>
+      <th>wel1</th>
+      <th>wel3</th>
+      <th>hk_i:12_j:2_zone:1.0</th>
+      <th>hk_i:32_j:12_zone:1.0</th>
+      <th>hk_i:2_j:17_zone:1.0</th>
+      <th>...</th>
+      <th>rch_i:2_j:7_zone:1.0</th>
+      <th>rch_i:2_j:17_zone:1.0</th>
+      <th>rch_i:7_j:17_zone:1.0</th>
+      <th>rch_i:22_j:12_zone:1.0</th>
+      <th>rch_i:22_j:2_zone:1.0</th>
+      <th>rch_i:17_j:2_zone:1.0</th>
+      <th>rch_i:17_j:12_zone:1.0</th>
+      <th>rch_i:37_j:17_zone:1.0</th>
+      <th>rch_i:27_j:12_zone:1.0</th>
+      <th>rch_i:12_j:17_zone:1.0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>gage-1:3652.5</th>
+      <td>2716.948265</td>
+      <td>-4.548055</td>
+      <td>-4.719683</td>
+      <td>-5.232870</td>
+      <td>-4.498392</td>
+      <td>-4.689892</td>
+      <td>-5.017089</td>
+      <td>3.445071</td>
+      <td>31.416424</td>
+      <td>15.240922</td>
+      <td>...</td>
+      <td>190.031485</td>
+      <td>115.306638</td>
+      <td>118.042265</td>
+      <td>119.114189</td>
+      <td>223.313201</td>
+      <td>231.708826</td>
+      <td>138.388709</td>
+      <td>63.774836</td>
+      <td>113.687036</td>
+      <td>121.292411</td>
+    </tr>
+    <tr>
+      <th>gage-1:3683.5</th>
+      <td>2774.639984</td>
+      <td>-181.311316</td>
+      <td>-166.978297</td>
+      <td>-10.342791</td>
+      <td>-87.590161</td>
+      <td>-110.276389</td>
+      <td>-32.921654</td>
+      <td>4.402686</td>
+      <td>32.094217</td>
+      <td>15.121772</td>
+      <td>...</td>
+      <td>221.004388</td>
+      <td>134.915061</td>
+      <td>136.592731</td>
+      <td>130.330209</td>
+      <td>238.872431</td>
+      <td>252.221559</td>
+      <td>153.398371</td>
+      <td>69.859064</td>
+      <td>123.139058</td>
+      <td>138.266282</td>
+    </tr>
+    <tr>
+      <th>gage-1:3712.5</th>
+      <td>2780.020916</td>
+      <td>-276.473740</td>
+      <td>-245.350759</td>
+      <td>-20.599377</td>
+      <td>-151.432872</td>
+      <td>-185.385447</td>
+      <td>-67.049198</td>
+      <td>4.654596</td>
+      <td>36.865047</td>
+      <td>18.845729</td>
+      <td>...</td>
+      <td>229.133526</td>
+      <td>153.496081</td>
+      <td>156.089054</td>
+      <td>145.632341</td>
+      <td>242.263018</td>
+      <td>256.949881</td>
+      <td>169.704385</td>
+      <td>83.319417</td>
+      <td>138.394319</td>
+      <td>158.253214</td>
+    </tr>
+    <tr>
+      <th>gage-1:3743.5</th>
+      <td>2783.890941</td>
+      <td>-335.620872</td>
+      <td>-291.893149</td>
+      <td>-35.153415</td>
+      <td>-197.641178</td>
+      <td>-238.817336</td>
+      <td>-101.203897</td>
+      <td>4.971822</td>
+      <td>46.180032</td>
+      <td>24.684773</td>
+      <td>...</td>
+      <td>242.111479</td>
+      <td>176.567497</td>
+      <td>180.120737</td>
+      <td>164.500045</td>
+      <td>247.881326</td>
+      <td>264.289167</td>
+      <td>190.624789</td>
+      <td>98.052362</td>
+      <td>156.877133</td>
+      <td>182.798667</td>
+    </tr>
+    <tr>
+      <th>gage-1:3773.5</th>
+      <td>2785.355604</td>
+      <td>-374.821849</td>
+      <td>-322.374110</td>
+      <td>-50.609492</td>
+      <td>-228.410582</td>
+      <td>-276.715310</td>
+      <td>-129.809297</td>
+      <td>5.299181</td>
+      <td>55.300079</td>
+      <td>29.438466</td>
+      <td>...</td>
+      <td>256.583441</td>
+      <td>194.019730</td>
+      <td>198.089350</td>
+      <td>178.866029</td>
+      <td>255.292138</td>
+      <td>272.878837</td>
+      <td>207.569112</td>
+      <td>107.102969</td>
+      <td>170.503931</td>
+      <td>201.037663</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 65 columns</p>
+</div>
+
 
 
 This reports changes in observations to a change in a parameter.  We can report how  forecasts of interests change as the parameter is perturbed.  Note `pyemu` extracted the forecast rows from the Jacobian on instantiation:
@@ -564,15 +573,115 @@ sc.forecasts.to_dataframe()
 ```
 
 
-    ---------------------------------------------------------------------------
 
-    NameError                                 Traceback (most recent call last)
 
-    Input In [11], in <cell line: 1>()
-    ----> 1 sc.forecasts.to_dataframe()
-    
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-    NameError: name 'sc' is not defined
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>headwater:4383.5</th>
+      <th>tailwater:4383.5</th>
+      <th>trgw-0-9-1:4383.5</th>
+      <th>part_time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>strinf</th>
+      <td>4.525783</td>
+      <td>15.049001</td>
+      <td>0.019712</td>
+      <td>-31.396749</td>
+    </tr>
+    <tr>
+      <th>wel0</th>
+      <td>14.641942</td>
+      <td>3.898550</td>
+      <td>-0.100690</td>
+      <td>-0.731877</td>
+    </tr>
+    <tr>
+      <th>wel2</th>
+      <td>11.608075</td>
+      <td>10.579199</td>
+      <td>-0.095968</td>
+      <td>-21.285655</td>
+    </tr>
+    <tr>
+      <th>wel4</th>
+      <td>18.162402</td>
+      <td>33.111962</td>
+      <td>-0.175127</td>
+      <td>-72.519641</td>
+    </tr>
+    <tr>
+      <th>wel5</th>
+      <td>8.105663</td>
+      <td>17.741830</td>
+      <td>-0.097510</td>
+      <td>-36.384135</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>rch_i:17_j:2_zone:1.0</th>
+      <td>-101.045614</td>
+      <td>-61.271020</td>
+      <td>0.718966</td>
+      <td>3973.941965</td>
+    </tr>
+    <tr>
+      <th>rch_i:17_j:12_zone:1.0</th>
+      <td>-11.717836</td>
+      <td>-7.108638</td>
+      <td>0.056490</td>
+      <td>52.716389</td>
+    </tr>
+    <tr>
+      <th>rch_i:37_j:17_zone:1.0</th>
+      <td>-0.778950</td>
+      <td>-1.143194</td>
+      <td>0.004321</td>
+      <td>17.939060</td>
+    </tr>
+    <tr>
+      <th>rch_i:27_j:12_zone:1.0</th>
+      <td>-7.106006</td>
+      <td>-8.015407</td>
+      <td>0.041517</td>
+      <td>183.053088</td>
+    </tr>
+    <tr>
+      <th>rch_i:12_j:17_zone:1.0</th>
+      <td>-4.895285</td>
+      <td>-1.892905</td>
+      <td>0.020423</td>
+      <td>-33.987577</td>
+    </tr>
+  </tbody>
+</table>
+<p>65 rows × 4 columns</p>
+</div>
+
 
 
 Each of these columns in a $\bf{y}$ vector used in the FOSM calculations...that's it! 
@@ -587,15 +696,319 @@ sc.parcov.to_dataframe()
 ```
 
 
-    ---------------------------------------------------------------------------
 
-    NameError                                 Traceback (most recent call last)
 
-    Input In [12], in <cell line: 1>()
-    ----> 1 sc.parcov.to_dataframe()
-    
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-    NameError: name 'sc' is not defined
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>strinf</th>
+      <th>wel0</th>
+      <th>wel2</th>
+      <th>wel4</th>
+      <th>wel5</th>
+      <th>wel1</th>
+      <th>wel3</th>
+      <th>hk_i:12_j:2_zone:1.0</th>
+      <th>hk_i:32_j:12_zone:1.0</th>
+      <th>hk_i:2_j:17_zone:1.0</th>
+      <th>...</th>
+      <th>rch_i:2_j:7_zone:1.0</th>
+      <th>rch_i:2_j:17_zone:1.0</th>
+      <th>rch_i:7_j:17_zone:1.0</th>
+      <th>rch_i:22_j:12_zone:1.0</th>
+      <th>rch_i:22_j:2_zone:1.0</th>
+      <th>rch_i:17_j:2_zone:1.0</th>
+      <th>rch_i:17_j:12_zone:1.0</th>
+      <th>rch_i:37_j:17_zone:1.0</th>
+      <th>rch_i:27_j:12_zone:1.0</th>
+      <th>rch_i:12_j:17_zone:1.0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>strinf</th>
+      <td>0.25</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>wel0</th>
+      <td>0.00</td>
+      <td>0.238691</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>wel2</th>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.238691</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>wel4</th>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.238691</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>wel5</th>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.238691</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>rch_i:17_j:2_zone:1.0</th>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.022655</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>rch_i:17_j:12_zone:1.0</th>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.022655</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>rch_i:37_j:17_zone:1.0</th>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.022655</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>rch_i:27_j:12_zone:1.0</th>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.022655</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>rch_i:12_j:17_zone:1.0</th>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.022655</td>
+    </tr>
+  </tbody>
+</table>
+<p>65 rows × 65 columns</p>
+</div>
+
 
 
 > Page 463-464 in Anderson et al. (2015) spends some time on what is shown above.  
@@ -614,15 +1027,175 @@ sc.obscov.to_dataframe().loc[sc.pst.nnz_obs_names,sc.pst.nnz_obs_names].head()
 ```
 
 
-    ---------------------------------------------------------------------------
 
-    NameError                                 Traceback (most recent call last)
 
-    Input In [13], in <cell line: 1>()
-    ----> 1 sc.obscov.to_dataframe().loc[sc.pst.nnz_obs_names,sc.pst.nnz_obs_names].head()
-    
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-    NameError: name 'sc' is not defined
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gage-1:3652.5</th>
+      <th>gage-1:3683.5</th>
+      <th>gage-1:3712.5</th>
+      <th>gage-1:3743.5</th>
+      <th>gage-1:3773.5</th>
+      <th>gage-1:3804.5</th>
+      <th>gage-1:3834.5</th>
+      <th>gage-1:3865.5</th>
+      <th>gage-1:3896.5</th>
+      <th>gage-1:3926.5</th>
+      <th>...</th>
+      <th>trgw-0-3-8:3743.5</th>
+      <th>trgw-0-3-8:3773.5</th>
+      <th>trgw-0-3-8:3804.5</th>
+      <th>trgw-0-3-8:3834.5</th>
+      <th>trgw-0-3-8:3865.5</th>
+      <th>trgw-0-3-8:3896.5</th>
+      <th>trgw-0-3-8:3926.5</th>
+      <th>trgw-0-3-8:3957.5</th>
+      <th>trgw-0-3-8:3987.5</th>
+      <th>trgw-0-3-8:4018.5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>gage-1:3652.5</th>
+      <td>40000.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>gage-1:3683.5</th>
+      <td>0.0</td>
+      <td>40000.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>gage-1:3712.5</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>40000.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>gage-1:3743.5</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>40000.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>gage-1:3773.5</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>40000.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 37 columns</p>
+</div>
+
 
 
 > __IMPORTANT POINT__:  How did PEST++ and pyEMU get these standard deviations shown in the diagonal?  From the *weights* that were specified for each observation in the PEST control file.
@@ -647,15 +1220,175 @@ sc.posterior_parameter.to_dataframe().head()
 ```
 
 
-    ---------------------------------------------------------------------------
 
-    NameError                                 Traceback (most recent call last)
 
-    Input In [14], in <cell line: 1>()
-    ----> 1 sc.posterior_parameter.to_dataframe().head()
-    
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-    NameError: name 'sc' is not defined
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>strinf</th>
+      <th>wel0</th>
+      <th>wel2</th>
+      <th>wel4</th>
+      <th>wel5</th>
+      <th>wel1</th>
+      <th>wel3</th>
+      <th>hk_i:12_j:2_zone:1.0</th>
+      <th>hk_i:32_j:12_zone:1.0</th>
+      <th>hk_i:2_j:17_zone:1.0</th>
+      <th>...</th>
+      <th>rch_i:2_j:7_zone:1.0</th>
+      <th>rch_i:2_j:17_zone:1.0</th>
+      <th>rch_i:7_j:17_zone:1.0</th>
+      <th>rch_i:22_j:12_zone:1.0</th>
+      <th>rch_i:22_j:2_zone:1.0</th>
+      <th>rch_i:17_j:2_zone:1.0</th>
+      <th>rch_i:17_j:12_zone:1.0</th>
+      <th>rch_i:37_j:17_zone:1.0</th>
+      <th>rch_i:27_j:12_zone:1.0</th>
+      <th>rch_i:12_j:17_zone:1.0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>strinf</th>
+      <td>0.006971</td>
+      <td>0.004594</td>
+      <td>0.004228</td>
+      <td>0.000588</td>
+      <td>0.002349</td>
+      <td>0.003672</td>
+      <td>0.001565</td>
+      <td>-0.001135</td>
+      <td>-0.005610</td>
+      <td>0.000060</td>
+      <td>...</td>
+      <td>-0.001500</td>
+      <td>-0.000722</td>
+      <td>-0.000726</td>
+      <td>-0.000746</td>
+      <td>-0.001539</td>
+      <td>-0.001735</td>
+      <td>-0.000883</td>
+      <td>-0.000382</td>
+      <td>-0.000699</td>
+      <td>-0.000737</td>
+    </tr>
+    <tr>
+      <th>wel0</th>
+      <td>0.004594</td>
+      <td>0.176378</td>
+      <td>-0.052375</td>
+      <td>-0.008618</td>
+      <td>-0.037732</td>
+      <td>-0.048709</td>
+      <td>-0.022273</td>
+      <td>0.001038</td>
+      <td>0.007925</td>
+      <td>-0.003280</td>
+      <td>...</td>
+      <td>0.000872</td>
+      <td>0.000442</td>
+      <td>0.000427</td>
+      <td>0.000363</td>
+      <td>0.000935</td>
+      <td>0.000851</td>
+      <td>0.000491</td>
+      <td>0.000094</td>
+      <td>0.000315</td>
+      <td>0.000409</td>
+    </tr>
+    <tr>
+      <th>wel2</th>
+      <td>0.004228</td>
+      <td>-0.052375</td>
+      <td>0.193076</td>
+      <td>-0.010004</td>
+      <td>-0.032230</td>
+      <td>-0.039082</td>
+      <td>-0.020505</td>
+      <td>0.000689</td>
+      <td>0.005073</td>
+      <td>-0.001778</td>
+      <td>...</td>
+      <td>0.000942</td>
+      <td>0.000499</td>
+      <td>0.000489</td>
+      <td>0.000407</td>
+      <td>0.000726</td>
+      <td>0.000772</td>
+      <td>0.000527</td>
+      <td>0.000167</td>
+      <td>0.000359</td>
+      <td>0.000477</td>
+    </tr>
+    <tr>
+      <th>wel4</th>
+      <td>0.000588</td>
+      <td>-0.008618</td>
+      <td>-0.010004</td>
+      <td>0.213220</td>
+      <td>-0.014696</td>
+      <td>-0.012287</td>
+      <td>-0.026425</td>
+      <td>-0.000075</td>
+      <td>-0.017551</td>
+      <td>-0.004137</td>
+      <td>...</td>
+      <td>0.000140</td>
+      <td>-0.000374</td>
+      <td>-0.000394</td>
+      <td>-0.000244</td>
+      <td>0.000513</td>
+      <td>0.000774</td>
+      <td>-0.000210</td>
+      <td>-0.000294</td>
+      <td>-0.000281</td>
+      <td>-0.000399</td>
+    </tr>
+    <tr>
+      <th>wel5</th>
+      <td>0.002349</td>
+      <td>-0.037732</td>
+      <td>-0.032230</td>
+      <td>-0.014696</td>
+      <td>0.210984</td>
+      <td>-0.032978</td>
+      <td>-0.023670</td>
+      <td>0.000649</td>
+      <td>-0.000570</td>
+      <td>-0.003115</td>
+      <td>...</td>
+      <td>0.000668</td>
+      <td>0.000037</td>
+      <td>0.000014</td>
+      <td>0.000024</td>
+      <td>0.000546</td>
+      <td>0.000647</td>
+      <td>0.000115</td>
+      <td>-0.000110</td>
+      <td>-0.000021</td>
+      <td>-0.000002</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 65 columns</p>
+</div>
+
 
 
 But...is calibration worth pursuing or not? Let's explore what the notional calibration is expected to do for parameter uncertainty. We accomplish this by comparing prior and posterior parameter uncertainty. Using `.get_parameter_summary()` makes this easy:
@@ -667,16 +1400,66 @@ df.head()
 ```
 
 
-    ---------------------------------------------------------------------------
 
-    NameError                                 Traceback (most recent call last)
 
-    Input In [15], in <cell line: 1>()
-    ----> 1 df = sc.get_parameter_summary()
-          2 df.head()
-    
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-    NameError: name 'sc' is not defined
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>prior_var</th>
+      <th>post_var</th>
+      <th>percent_reduction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>strinf</th>
+      <td>0.250000</td>
+      <td>0.006971</td>
+      <td>97.211534</td>
+    </tr>
+    <tr>
+      <th>wel0</th>
+      <td>0.238691</td>
+      <td>0.176378</td>
+      <td>26.106274</td>
+    </tr>
+    <tr>
+      <th>wel2</th>
+      <td>0.238691</td>
+      <td>0.193076</td>
+      <td>19.110462</td>
+    </tr>
+    <tr>
+      <th>wel4</th>
+      <td>0.238691</td>
+      <td>0.213220</td>
+      <td>10.671466</td>
+    </tr>
+    <tr>
+      <th>wel5</th>
+      <td>0.238691</td>
+      <td>0.210984</td>
+      <td>11.607882</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
 
 
 We can plot that up:
@@ -687,15 +1470,9 @@ df.percent_reduction.plot(kind="bar", figsize=(15,3));
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    Input In [16], in <cell line: 1>()
-    ----> 1 df.percent_reduction.plot(kind="bar", figsize=(15,3))
     
-
-    NameError: name 'df' is not defined
+![png](intro_to_fosm_files/intro_to_fosm_50_0.png)
+    
 
 
 ### Do these results make sense?  Why are some parameters unaffected by calibration?
@@ -717,16 +1494,10 @@ forecasts
 ```
 
 
-    ---------------------------------------------------------------------------
 
-    NameError                                 Traceback (most recent call last)
 
-    Input In [17], in <cell line: 1>()
-    ----> 1 forecasts = sc.pst.forecast_names
-          2 forecasts
-    
+    ['headwater:4383.5', 'tailwater:4383.5', 'trgw-0-9-1:4383.5', 'part_time']
 
-    NameError: name 'sc' is not defined
 
 
 As before, `pyemu` has already done much of the heavy-lifting. We can get a summary of the forecast prior and posterior variances with `.get_forecast_summary()`:
@@ -738,16 +1509,60 @@ df
 ```
 
 
-    ---------------------------------------------------------------------------
 
-    NameError                                 Traceback (most recent call last)
 
-    Input In [18], in <cell line: 1>()
-    ----> 1 df = sc.get_forecast_summary()
-          2 df
-    
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-    NameError: name 'sc' is not defined
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>prior_var</th>
+      <th>post_var</th>
+      <th>percent_reduction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>headwater:4383.5</th>
+      <td>1.840786e+04</td>
+      <td>1.043837e+04</td>
+      <td>43.293944</td>
+    </tr>
+    <tr>
+      <th>tailwater:4383.5</th>
+      <td>1.854221e+04</td>
+      <td>7.894541e+03</td>
+      <td>57.423952</td>
+    </tr>
+    <tr>
+      <th>trgw-0-9-1:4383.5</th>
+      <td>1.106435e+01</td>
+      <td>4.617277e+00</td>
+      <td>58.268859</td>
+    </tr>
+    <tr>
+      <th>part_time</th>
+      <td>8.931397e+07</td>
+      <td>7.014413e+07</td>
+      <td>21.463434</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
 
 
 And we can make a cheeky little plot of that. As you can see, unsurprisingly some forecasts benefit more from calibration than others. So, depending on the foreacst of interest, calibration may or may not be worthwhile...
@@ -763,19 +1578,10 @@ ax.set_xlabel("forecast")
 ```
 
 
-    ---------------------------------------------------------------------------
 
-    NameError                                 Traceback (most recent call last)
 
-    Input In [19], in <cell line: 4>()
-          2 fig = plt.figure()
-          3 ax = plt.subplot(111)
-    ----> 4 ax = df.percent_reduction.plot(kind='bar',ax=ax,grid=True)
-          5 ax.set_ylabel("percent uncertainy\nreduction from calibration")
-          6 ax.set_xlabel("forecast")
-    
+    Text(0.5, 0, 'forecast')
 
-    NameError: name 'df' is not defined
 
 
 
@@ -799,16 +1605,72 @@ par_contrib.head()
 ```
 
 
-    ---------------------------------------------------------------------------
 
-    NameError                                 Traceback (most recent call last)
 
-    Input In [20], in <cell line: 1>()
-    ----> 1 par_contrib = sc.get_par_group_contribution()
-          2 par_contrib.head()
-    
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-    NameError: name 'sc' is not defined
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>headwater:4383.5</th>
+      <th>tailwater:4383.5</th>
+      <th>trgw-0-9-1:4383.5</th>
+      <th>part_time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>base</th>
+      <td>10438.368644</td>
+      <td>7894.540701</td>
+      <td>4.617277</td>
+      <td>7.014413e+07</td>
+    </tr>
+    <tr>
+      <th>hk1</th>
+      <td>544.264823</td>
+      <td>191.279078</td>
+      <td>0.022420</td>
+      <td>1.243777e+06</td>
+    </tr>
+    <tr>
+      <th>rchpp</th>
+      <td>8897.659624</td>
+      <td>7731.591543</td>
+      <td>4.578167</td>
+      <td>6.915516e+07</td>
+    </tr>
+    <tr>
+      <th>strinf</th>
+      <td>10046.303913</td>
+      <td>7333.006237</td>
+      <td>4.490364</td>
+      <td>7.014090e+07</td>
+    </tr>
+    <tr>
+      <th>wel</th>
+      <td>10280.959926</td>
+      <td>7838.238188</td>
+      <td>4.566155</td>
+      <td>6.994418e+07</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
 
 
 We can see the relatve contribution by normalizing to the base case (e.g. in which no parameters/groups are perfectly known):
@@ -821,17 +1683,72 @@ par_contrib.sort_index().head()
 ```
 
 
-    ---------------------------------------------------------------------------
 
-    NameError                                 Traceback (most recent call last)
 
-    Input In [21], in <cell line: 1>()
-    ----> 1 base = par_contrib.loc["base",:]
-          2 par_contrib = 100.0 * (base - par_contrib) / base
-          3 par_contrib.sort_index().head()
-    
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-    NameError: name 'par_contrib' is not defined
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>headwater:4383.5</th>
+      <th>tailwater:4383.5</th>
+      <th>trgw-0-9-1:4383.5</th>
+      <th>part_time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>base</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>hk1</th>
+      <td>94.785921</td>
+      <td>97.577071</td>
+      <td>99.514439</td>
+      <td>98.226827</td>
+    </tr>
+    <tr>
+      <th>rchpp</th>
+      <td>14.760056</td>
+      <td>2.064074</td>
+      <td>0.847050</td>
+      <td>1.409910</td>
+    </tr>
+    <tr>
+      <th>strinf</th>
+      <td>3.755996</td>
+      <td>7.112947</td>
+      <td>2.748656</td>
+      <td>0.004603</td>
+    </tr>
+    <tr>
+      <th>wel</th>
+      <td>1.507982</td>
+      <td>0.713183</td>
+      <td>1.107201</td>
+      <td>0.285045</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
 
 
 Understanding the links between parameters and forecast uncertainties can be usefull - in particular to gain insight into the system dynamics. But we are still missing a step to understand what _observation_ data affects the forecast. It is often more straightforward to quantify how observation information imapcts forecast uncertianty so that we can explore the worth of observation data directly.

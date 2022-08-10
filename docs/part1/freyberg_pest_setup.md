@@ -77,7 +77,7 @@ import os
 import warnings
 warnings.filterwarnings("ignore")
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
-
+import shutil
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt;
@@ -95,7 +95,12 @@ import herebedragons as hbd
 ```python
 # the pest files folder
 tmp_d = os.path.join('pest_files')
+# folder containing original model files
+org_d = os.path.join('..', '..', 'models', 'monthly_model_files_1lyr_newstress')
 
+if os.path.exists(tmp_d):
+    shutil.rmtree(tmp_d)
+shutil.copytree(org_d,tmp_d)
 # get executables
 hbd.prep_bins(tmp_d)
 # get dependency folders
@@ -104,35 +109,17 @@ hbd.prep_deps(tmp_d)
 hbd.prep_pest(tmp_d)
 ```
 
-
-    ---------------------------------------------------------------------------
-
-    Exception                                 Traceback (most recent call last)
-
-    Input In [2], in <cell line: 9>()
-          7 hbd.prep_deps(tmp_d)
-          8 # run our convenience functions to prepare the PEST and model folder
-    ----> 9 hbd.prep_pest(tmp_d)
+    ins file for heads.csv prepared.
+    ins file for sfr.csv prepared.
+    noptmax:0, npar_adj:1, nnz_obs:24
+    written pest control file: pest_files\freyberg.pst
     
 
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\..\herebedragons.py:266, in prep_pest(tmp_d)
-        262 def prep_pest(tmp_d):
-        263     """Prepares the PEST setup for part 1 of the tutorials.
-        264         Used by the freyberg_pest_setup notebook."""
-    --> 266     pyemu.os_utils.run('mf6', cwd=tmp_d)
-        267     pyemu.os_utils.run(r'mp7 freyberg_mp.mpsim', cwd=tmp_d)
-        269     # load simulation
-    
 
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\..\..\dependencies\pyemu\utils\os_utils.py:126, in run(cmd_str, cwd, verbose)
-        124 if "window" in platform.platform().lower():
-        125     if ret_val != 0:
-    --> 126         raise Exception("run() returned non-zero: {0}".format(ret_val))
-        127 else:
-        128     estat = os.WEXITSTATUS(ret_val)
-    
 
-    Exception: run() returned non-zero: 2
+
+    <pyemu.pst.pst_handler.Pst at 0x13f02332e80>
+
 
 
 ### Reminder - the modified-Freyberg model
@@ -152,79 +139,17 @@ hbd.plot_freyberg(tmp_d)
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    FileNotFoundError                         Traceback (most recent call last)
-
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\..\..\dependencies\flopy\mf6\mfpackage.py:2460, in MFPackage.load(self, strict)
-       2459 try:
-    -> 2460     fd_input_file = open(
-       2461         datautil.clean_filename(self.get_file_path()), "r"
-       2462     )
-       2463 except OSError as e:
     
-
-    FileNotFoundError: [Errno 2] No such file or directory: 'D:\\Workspace\\hugm0001\\github\\GMDSI_notebooks_fork\\tutorials\\part1_2_pest_setup\\pest_files\\mfsim.nam'
-
+![png](freyberg_pest_setup_files/freyberg_pest_setup_4_0.png)
     
-    During handling of the above exception, another exception occurred:
-    
-
-    MFDataException                           Traceback (most recent call last)
-
-    Input In [3], in <cell line: 1>()
-    ----> 1 hbd.plot_freyberg(tmp_d)
-    
-
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\..\herebedragons.py:538, in plot_freyberg(tmp_d)
-        536 def plot_freyberg(tmp_d):
-        537     # load simulation
-    --> 538     sim = flopy.mf6.MFSimulation.load(sim_ws=tmp_d, verbosity_level=0)
-        539     # load flow model
-        540     gwf = sim.get_model()
-    
-
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\..\..\dependencies\flopy\mf6\modflow\mfsimulation.py:670, in MFSimulation.load(cls, sim_name, version, exe_name, sim_ws, strict, verbosity_level, load_only, verify_data, write_headers)
-        668 if verbosity_level.value >= VerbosityLevel.normal.value:
-        669     print("  loading simulation name file...")
-    --> 670 instance.name_file.load(strict)
-        672 # load TDIS file
-        673 tdis_pkg = f"tdis{mfstructure.MFStructure().get_version_string()}"
-    
-
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\..\..\dependencies\flopy\mf6\mfpackage.py:2469, in MFPackage.load(self, strict)
-       2465         message = "File {} of type {} could not be opened.".format(
-       2466             self.get_file_path(), self.package_type
-       2467         )
-       2468         type_, value_, traceback_ = sys.exc_info()
-    -> 2469         raise MFDataException(
-       2470             self.model_name,
-       2471             self.package_name,
-       2472             self.path,
-       2473             "loading package file",
-       2474             None,
-       2475             inspect.stack()[0][3],
-       2476             type_,
-       2477             value_,
-       2478             traceback_,
-       2479             message,
-       2480             self._simulation_data.debug,
-       2481         )
-       2483 try:
-       2484     self._load_blocks(fd_input_file, strict)
-    
-
-    MFDataException: An error occurred in package "None". The error occurred while loading package file in the "load" method.
-    Additional Information:
-    (1) File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_2_pest_setup\pest_files\mfsim.nam of type nam could not be opened.
 
 
 In the previous tutorial on manual trial-and-error, we "manually" changed parameter values to get a good fit with measured data. We want PEST to this for us instead. To do so, we need to provide PEST with conduits that change a model input file and that extract model outputs after the model has been run. 
 
-**In this tutorial you do not *have* to get your hands dirty. However, we recomend you do. We provide all the necessary files to advance through the tutorial without any user-input. However, getting to grips with how files are constructed and the inner-workings of PEST is often insightfull. Throught the notebook we will provide instructions to read and edit files manually (yes, yes...we know...we will get back to good old python in due course). This will require the use of a text editor software. Generic text editors (e.g notepad on Windows) are sufficent, but you will benefit from more versatile software such as Notepad++, UltraEdit, etc. There are many free options available online.**
+**In this tutorial you do not *have* to get your hands dirty. However, we recomend you do. We provide all the necessary files to advance through the tutorial without any user-input. However, getting to grips with how files are constructed and the inner-workings of PEST is often insightfull. Throughout the notebook we will provide instructions to read and edit files manually (yes, yes...we know...we will get back to good old python in due course). This will require the use of a text editor software. Generic text editors (e.g notepad on Windows) are sufficent, but you will benefit from more versatile software such as Notepad++, UltraEdit, etc. There are many free options available online.**
 
 
-### Template Files
+# Template Files
 
 Template files are used to create model input. Template files simply replace parameter numerical values with a code variable, named in the PEST Control File.
 
@@ -247,7 +172,7 @@ You should see four lines, each with a file name pair. They should look somethin
 
 The first file name in each row is a template file. The second is the corresponding model input file. Open up the two files named in the first row in your text editor software and compare them.
 
-### 2.1. Rules for constructing TPL Files 
+### Rules for constructing TPL Files 
 
  1. The first line of the TPL file must identify that it is a template file by listing "`ptf ~`" where "`~`" is a "parameter delimiter" that tells PEST where a parameter sits in the file. We used a tilde here, but it can be any symbol. __However__, whatever delimiter symbol is listed in the first line must be used consistently throughout that template file.
  
@@ -300,7 +225,7 @@ The easiest way to make a template file? Modify an existing input file. You can 
  6. Do a search and replace, subsituting the variable "hk1" surrounded by the delimiter you chose where appropriate
  7. Save the file and run TEMPCHEK 
 
-### 3. Instruction files
+# Instruction files
 
 Similar to the template files, the names of instruction files and which model output files they should work on are listed after all the template files in the "* model input/output" section of the PEST control file.  As you might expect with the wide range of model output file variation, creating instruction files is slightly more complicated than creating template files. There is basically an internal scripting language for reading text files of model output, extracting the output of interest, and providing it directly to PEST.
 
@@ -313,7 +238,7 @@ Open the PEST control file `freyberg.pst` in a text editor and find the Instruct
 
 Open one of these instruction file and model output file pairs in a text editor and inspect them. As you can see, the model output files are CSVs. With the exception of the first column, the values in each row and column of the CSV are observations. 
 
-### Rules for constructing INS Files 
+## Rules for constructing INS Files 
 
  * The first line on an .ins file must be "`pif ~`" where "`~`" is a "marker delimiter"--a symbol that can be used to identify text to search for.  It is expected on this first line but it's not always used.
  * The scripting options are extensive but particular. Some options on how to navigate to the numerical data you want to read are:
@@ -343,7 +268,7 @@ Open one of these instruction file and model output file pairs in a text editor 
   
 These are only a few of the most commonly used options but more options, and more detail on these, are available in the PEST manual.  
 
-### 3.2. Checking a template file with the `INSCHEK` utility
+### Checking a template file with the `INSCHEK` utility
 
 Let's check an instruction file using `INSCHEK`, a handy utility that allows us to check our instruction files without having to do a full PEST run. You can see what INSCHEK is looking for by simply typing 'INSCHEK" at the command line.  You'll see: 
 
@@ -368,13 +293,13 @@ Check the instruction files listed in `freyberg.pst` by running INSCHEK:
 
 (Note:  yes the author of PEST John Doherty knows how to spell! He could have made it INSCHECK but chose to be consistent across all his checking programs and for some, like TEMPCHEK above, proper spelling would not fit in the 8.3 filename format required at the time.  The good news is you only have one to remember - just think CHEK.)
 
-### 3.3. Make your own INS file
+###  Make your own INS file
 
 Test your understanding. Try building your own instruction file. As for TPL files, it is sometimes easiest to start by using a model output as a template.
 
 Remember to alsways check the validity of the INS file using `INSCHEK`.
 
-### 4. The Control File
+# The Control File
 
 So, the previous sections introduced the basics of how to construct TPL and INS files. This will come in handy when you need to build your own customized PEST input datasets.
 
@@ -410,7 +335,7 @@ Just like TEMPCHEK and INSCHEK, we also have a handy utility that we run on our 
 
 > **note**: always check your PEST setup with PESTCHEK! Certainly do so before complaining to the developers that something isn't working properly. 
 
-Just like TEMPCHEK and INSCHEK, you can see what PESTCHEK is looking for by simply typing `pestchek` (Windows) or `./pestchek` (Mac) at the command line.  If you did that you would see that we have to put this on the command line to check our PEST setup: __`pestchek freyberg_un.pst`__ (if Windows) or __./pestchek freyberg_un.pst__ (if Mac)
+Just like TEMPCHEK and INSCHEK, you can see what PESTCHEK is looking for by simply typing `pestchek` (Windows) or `./pestchek` (Mac) at the command line.  If you did that you would see that we have to put this on the command line to check our PEST setup: __`pestchek freyberg.pst`__ (if Windows) or __./pestchek freyberg_un.pst__ (if Mac)
 
 If errors are indicated, PEST won't run so we have to correct them. Warnings, on the other hand, highlight potentially good information about what you have specified in the control file but they don't require a change to run. However, the warnings may guide your eyes to things you are not intending so always read them too.
 
@@ -430,7 +355,9 @@ You should see something like:
 
 If no errors are highlighted, let's go ahead and run PEST!
 
-### Run PEST from Command Line
+
+
+# Run PEST from Command Line
 
 From the command line run __`pestpp-glm freyberg.pst`__ (Windows) or __`./pestpp-glm freyberg.pst`__ (Mac).
 
@@ -449,9 +376,31 @@ PEST++ should commence, run the model once and then stop (should take a ouple of
 >
 >FINAL OPTIMISATION RESULTS
 >
->  Final phi                                           Total : 16916.9
->  Contribution to phi from observation group         "flux" : 0
->  Contribution to phi from observation group          "hds" : 16916.9
+>  Final phi                                           Total : 29.2031
+>  Contribution to phi from observation group       "gage-1" : 0
+>  Contribution to phi from observation group    "headwater" : 0
+>  Contribution to phi from observation group     "particle" : 0
+>  Contribution to phi from observation group    "tailwater" : 0
+>  Contribution to phi from observation group "trgw-0-13-10" : 0
+>  Contribution to phi from observation group "trgw-0-15-16" : 0
+>  Contribution to phi from observation group  "trgw-0-2-15" : 0
+>  Contribution to phi from observation group   "trgw-0-2-9" : 0
+>  Contribution to phi from observation group "trgw-0-21-10" : 0
+>  Contribution to phi from observation group "trgw-0-22-15" : 0
+>  Contribution to phi from observation group  "trgw-0-24-4" : 0
+>  Contribution to phi from observation group  "trgw-0-26-6" : 18.3572
+>  Contribution to phi from observation group "trgw-0-29-15" : 0
+>  Contribution to phi from observation group   "trgw-0-3-8" : 10.8459
+>  Contribution to phi from observation group  "trgw-0-33-7" : 0
+>  Contribution to phi from observation group "trgw-0-34-10" : 0
+>  Contribution to phi from observation group   "trgw-0-9-1" : 0
+>
+>
+>pestpp-glm analysis complete...
+>started at 08/10/22 12:26:07
+>finished at 08/10/22 12:26:09
+>took 0.0166667 minutes
+>
 >  ```
 
 If you check the "pest_files" folder, you should see several new files. Open the one named "freyberg.rec". This is the PEST record file. It records lots of usefull information about the PEST run. 
@@ -462,7 +411,7 @@ If you scroll down to the end of the file you should see a line that says:
 
 As mentioned in the PESTCHEK warning, the control file we gave you has `NOPTMAX=0`, which means the model only is run once, and then PEST++ processes all the output and reports the objective function phi. So, not too exciting with only one run.  However, we __always__ run with `NOPTMAX=0` first to "test the plumbing" of the template and instruction files, and to see if we like the contribution of observation groups to the total objective function. If we don't like the objective function distribution we can reweight, then re-run PEST++ with `NOPTMAX=0` again. (We will demonstrate this in a subsequent tutorial.)
 
-###  4.3. Finally - let's get a best fit for this problem!
+## Finally - let's get a best fit for this problem!
 
 Now __change `NOPTMAX` to a value = 20__ (`NOPTMAX` is the first number listed in the 9th line of the PEST control file).  You can see its location below, taken from Appendix 1 from SIR 2010-5169 we will be handing out:
 
@@ -480,11 +429,27 @@ Check the `freyberg.rec` file again. What has changed? Try searching for "Final 
 
 >```
 >Final composite objective function 
->  Final phi                                           Total : 51.7655
->  Contribution to phi from observation group         "flux" : 0.000000
->  Contribution to phi from observation group          "hds" : 51.7655
+>  Final phi                                           Total : 3.40901
+>  Contribution to phi from observation group       "gage-1" : 0.000000
+>  Contribution to phi from observation group    "headwater" : 0.000000
+>  Contribution to phi from observation group     "particle" : 0.000000
+>  Contribution to phi from observation group    "tailwater" : 0.000000
+>  Contribution to phi from observation group "trgw-0-13-10" : 0.000000
+>  Contribution to phi from observation group "trgw-0-15-16" : 0.000000
+>  Contribution to phi from observation group  "trgw-0-2-15" : 0.000000
+>  Contribution to phi from observation group   "trgw-0-2-9" : 0.000000
+>  Contribution to phi from observation group "trgw-0-21-10" : 0.000000
+>  Contribution to phi from observation group "trgw-0-22-15" : 0.000000
+>  Contribution to phi from observation group  "trgw-0-24-4" : 0.000000
+>  Contribution to phi from observation group  "trgw-0-26-6" : 2.21763
+>  Contribution to phi from observation group "trgw-0-29-15" : 0.000000
+>  Contribution to phi from observation group   "trgw-0-3-8" : 1.19138
+>  Contribution to phi from observation group  "trgw-0-33-7" : 0.000000
+>  Contribution to phi from observation group "trgw-0-34-10" : 0.000000
+>  Contribution to phi from observation group   "trgw-0-9-1" : 0.000000
 >
->Number of forward model runs performed during optimization: 117
+>
+>Number of forward model runs performed during optimization: 35
 >```
 
 What about the best-fit parameters? There should be a file named `freyberg.par`. Open it in a text editor. These are the best parameter values which PEST has managed obtain. Note that all parameters in that were in the control data `* parameter data` section are listed here. However, only the "hk" parameter values have changed because all the others were specified as "fixed". How do these values compare to what you achieved through manual trial-and-error calibration? 

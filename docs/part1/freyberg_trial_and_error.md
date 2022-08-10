@@ -41,38 +41,23 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt;
-plt.rcParams.update({'font.size': 12})
 
 import shutil
+
+sys.path.insert(0,os.path.join("..", "..", "dependencies"))
+import pyemu
+import flopy
+assert "dependencies" in flopy.__file__
+assert "dependencies" in pyemu.__file__
+sys.path.insert(0,"..")
 
 import freyberg_trial_and_error as te
 #prepares some files for manunal trial and error
 te.get_model()
 ```
 
-
-    ---------------------------------------------------------------------------
-
-    ModuleNotFoundError                       Traceback (most recent call last)
-
-    Input In [1], in <cell line: 14>()
-         10 plt.rcParams.update({'font.size': 12})
-         12 import shutil
-    ---> 14 import freyberg_trial_and_error as te
-         15 #prepares some files for manunal trial and error
-         16 te.get_model()
+    model files are in: freyberg_mf6
     
-
-    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_1_trial_and_error\freyberg_trial_and_error.py:3, in <module>
-          1 import os
-          2 import sys
-    ----> 3 import flopy
-          4 import shutil
-          5 import matplotlib.pyplot as plt
-    
-
-    ModuleNotFoundError: No module named 'flopy'
-
 
 # Trial and Error
 
@@ -98,16 +83,9 @@ te.update_par(k1=1,     # K in layer 1
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    Input In [2], in <cell line: 1>()
-    ----> 1 te.update_par(k1=1,     # K in layer 1
-          2               rch_factor=0.35)
     
-
-    NameError: name 'te' is not defined
+![png](freyberg_trial_and_error_files/freyberg_trial_and_error_4_0.png)
+    
 
 
 ### Do It Yourself
@@ -123,16 +101,9 @@ te.update_par(k1=8, rch_factor=1)
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    Input In [3], in <cell line: 2>()
-          1 # change the parameter values untill you are happy with the fit
-    ----> 2 te.update_par(k1=8, rch_factor=1)
     
-
-    NameError: name 'te' is not defined
+![png](freyberg_trial_and_error_files/freyberg_trial_and_error_6_0.png)
+    
 
 
 ### Non-Uniqueness and Correlated Parameters
@@ -149,15 +120,9 @@ te.update_par(k1=4, rch_factor=1.1)
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    Input In [4], in <cell line: 1>()
-    ----> 1 te.update_par(k1=4, rch_factor=1.1)
     
-
-    NameError: name 'te' is not defined
+![png](freyberg_trial_and_error_files/freyberg_trial_and_error_8_0.png)
+    
 
 
 
@@ -166,15 +131,9 @@ te.update_par(k1=10,  rch_factor=2.0)
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    Input In [5], in <cell line: 1>()
-    ----> 1 te.update_par(k1=10,  rch_factor=2.0)
     
-
-    NameError: name 'te' is not defined
+![png](freyberg_trial_and_error_files/freyberg_trial_and_error_9_0.png)
+    
 
 
 
@@ -188,15 +147,9 @@ te.update_par(k1=4, rch_factor=1.1, sfrplot=True)
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    Input In [6], in <cell line: 1>()
-    ----> 1 te.update_par(k1=4, rch_factor=1.1, sfrplot=True)
     
-
-    NameError: name 'te' is not defined
+![png](freyberg_trial_and_error_files/freyberg_trial_and_error_11_0.png)
+    
 
 
 ### Structural Error
@@ -209,15 +162,9 @@ te.update_par(k1=4, rch_factor=1.1, sfrplot=True)
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    Input In [7], in <cell line: 1>()
-    ----> 1 te.update_par(k1=4, rch_factor=1.1, sfrplot=True)
     
-
-    NameError: name 'te' is not defined
+![png](freyberg_trial_and_error_files/freyberg_trial_and_error_13_0.png)
+    
 
 
 So...is history-matching a lie? It seems to make our model worse at making a prediction! 
