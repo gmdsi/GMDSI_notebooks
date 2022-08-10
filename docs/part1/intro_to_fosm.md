@@ -18,10 +18,10 @@ Pages 461-465 of Anderson et al. use the PREDUNC equation of PEST to discuss an 
 
 > __Side Note__: in Part2 of this series of tutorial notebooks we demonstrate a complete FOSM and Data-worth analysis workflow using `pyemu` and PEST++. The current notebook merely aims to provide a very high level introduction to some of the concepts.
 
-<img src="intro_to_fosm_files/bayes.png" style="float: left; width: 25%; margin-right: 1%; margin-bottom: 0.5em;">
-<img src="intro_to_fosm_files/jacobi.jpg" style="float: left; width: 25%; margin-right: 1%; margin-bottom: 0.5em;">
-<img src="intro_to_fosm_files/gauss.jpg" style="float: left; width: 22%; margin-right: 1%; margin-bottom: 0.5em;">
-<img src="intro_to_fosm_files/schur.jpg" style="float: left; width: 22%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro_to_fosm_files/bayes.png" style="inline: left; width: 25%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro_to_fosm_files/jacobi.jpg" style="inline: left; width: 25%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro_to_fosm_files/gauss.jpg" style="inline: left; width: 22%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro_to_fosm_files/schur.jpg" style="inline: left; width: 22%; margin-right: 1%; margin-bottom: 0.5em;">
 
 
 FOSM provides approximate mathematical characterisation of prior predictive probability distributions, and of posterior parameter and predictive probability distributions. It has other uses as well. It can be used to demonstrate how the history-matching process bestows worth on data. It can also be deployed to track the flow of information from field measurements of system state to parameters, and ultimately from parameters to model predictions. 
@@ -69,19 +69,19 @@ By assuming that:
 
 ### 1. There is an approximate linear relation between parameters and observations:
 
-<img src="intro _to_fosm_files/jacobi.jpg" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro _to_fosm_files/jacobi.jpg" style="inline: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
 
 ### <center> $\mathbf{J} \approx \text{constant}$, $\frac{\partial\text{obs}}{\partial\text{par}} \approx \text{constant}$</center>
 
 ### 2. The parameter and forecast prior and posterior distributions are approximately Gaussian:
 
-<img src="intro _to_fosm_files/gauss.jpg" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro _to_fosm_files/gauss.jpg" style="inline: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
 
 ###  <center>  $ P(\boldsymbol{\theta}|\mathbf{d}) \approx \mathcal{N}(\overline{\boldsymbol{\mu}}_{\boldsymbol{\theta}},\overline{\boldsymbol{\Sigma}}_{\boldsymbol{\theta}})$ </center>
 
 Armed with these two assumptions, from Bayes equations, one can derive the Schur complement for conditional uncertainty propogation:
 
-<img src="intro _to_fosm_files/schur.jpg" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro _to_fosm_files/schur.jpg" style="inline: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
 
 ### <center> $\underbrace{\overline{\boldsymbol{\Sigma}}_{\boldsymbol{\theta}}}_{\substack{\text{what we} \\ \text{know now}}} = \underbrace{\boldsymbol{\Sigma}_{\boldsymbol{\theta}}}_{\substack{\text{what we} \\ \text{knew}}} - \underbrace{\boldsymbol{\Sigma}_{\boldsymbol{\theta}}\bf{J}^T\left[\bf{J}\boldsymbol{\Sigma}_{\boldsymbol{\theta}}\bf{J}^T + \boldsymbol{\Sigma}_{\boldsymbol{\epsilon}}\right]^{-1}\bf{J}\boldsymbol{\Sigma}_{\boldsymbol{\theta}}}_{\text{what we learned}}$ </center>
 
@@ -95,8 +95,8 @@ Armed with these two assumptions, from Bayes equations, one can derive the Schur
 
 # But what about forecasts? 
 
-<img src="intro _to_fosm_files/jacobi.jpg" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
-<img src="intro _to_fosm_files/gauss.jpg" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro _to_fosm_files/jacobi.jpg" style="inline: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro _to_fosm_files/gauss.jpg" style="inline: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
 
 
 We can use the same assumptions:
@@ -116,7 +116,7 @@ __in the PEST world:__
 
 In the origingal PEST (i.e., not PEST++) documentation, FOSM is referred to as linear analysis. Implementing the various linear analyses relies a suite of utility software and a series of user-input-heavy steps, as illustrated in the figure below. 
 
-<img src="intro _to_fosm_files/workflow.png" style="float: left; width: 50%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro _to_fosm_files/workflow.png" style="inline: left; width: 50%; margin-right: 1%; margin-bottom: 0.5em;">
 
 
 
@@ -368,7 +368,7 @@ The ``Schur`` object is one of the primary object for FOSM in pyEMU and the only
 sc = pyemu.Schur(jco=os.path.join(working_dir,pst_name.replace(".pst",".jcb")),verbose=False)
 ```
 
-Now that seemed too easy, right?  Well, underhood the ``Schur`` object found the control file ("freyberg_pp.pst") and used it to build the prior parameter covariance matrix, $\boldsymbol{\Sigma}_{\theta}$, from the parameter bounds and the observation noise covariance matrix ($\boldsymbol{\Sigma}_{\epsilon}$) from the observation weights.  These are the ``Schur.parcov`` and ``Schur.obscov`` attributes.  
+Now that seemed too easy, right?  Well, underhood the ``Schur`` object found the control file ("freyberg_pp.pst") and used it to build the prior parameter covariance matrix, from the parameter bounds and the observation noise covariance matrix from the observation weights.  These are the ``Schur.parcov`` and ``Schur.obscov`` attributes.  
 
 The ``Schur`` object also found the "++forecasts()" optional pestpp argument in the control, found the associated rows in the Jacobian matrix file and extracted those rows to serve as forecast sensitivity vectors:
 
@@ -1210,7 +1210,7 @@ Okay, enough emphasis.  Here's the point.  When we apply FOSM using the matrices
 
 Here, we are updating parameter covariance following notional calibration as represented by the Jacobian matrix and both prior parameter and observation noise covariance matrices. 
 
-In other words, given prior parameter uncertainty (expressed by $\boldsymbol{\Sigma}_{\theta}$) and the inherent noise in measurments (expressed by $C{\epsilon}$), we calculate the expected parameter uncertainty __after__ calibration. This assumes that _calibration achieves a fit comensurate with measurement noise, parameter linearity, etc_.
+In other words, given prior parameter uncertainty and the inherent noise in measurments, we calculate the expected parameter uncertainty __after__ calibration. This assumes that _calibration achieves a fit comensurate with measurement noise, parameter linearity, etc_.
 
 The posterior parameter covariance matrix is stored as a `pyemu.Cov` object in the `sc.posterior_parameter` attribute. The diagonal of this matrix contains the posterior __variance__ for each parameter. The off-diagonals the parameter covariances. 
 
@@ -1761,7 +1761,7 @@ The worth of data is measured by their ability to reduce the uncertainties of mo
 
 ### <center> This is __Huge__. Let me say it again.<center>
 
-#### <center>  We can assess the relative worth of an observation ___without knowing the value of the observation___. </center>
+<center>  We can assess the relative worth of an observation without knowing the value of the observation. </center>
 
 
 This means that potential field measurements that correspond to one or many outputs of a model can be assessed for their worth. For example, it is possible to assess the worth of observations of head in every single model cell at every time step of a model run with a relatively small computational burden. This makes linear analysis a useful tool for designing and comparing strategies for data-collection, when data acquisition seeks to reduce the uncertainties of one or a number of decision-critical predictions. 
