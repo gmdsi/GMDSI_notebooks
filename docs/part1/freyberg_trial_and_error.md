@@ -50,6 +50,30 @@ import freyberg_trial_and_error as te
 te.get_model()
 ```
 
+
+    ---------------------------------------------------------------------------
+
+    ModuleNotFoundError                       Traceback (most recent call last)
+
+    Input In [1], in <cell line: 14>()
+         10 plt.rcParams.update({'font.size': 12})
+         12 import shutil
+    ---> 14 import freyberg_trial_and_error as te
+         15 #prepares some files for manunal trial and error
+         16 te.get_model()
+    
+
+    File D:\Workspace\hugm0001\github\GMDSI_notebooks_fork\tutorials\part1_1_trial_and_error\freyberg_trial_and_error.py:3, in <module>
+          1 import os
+          2 import sys
+    ----> 3 import flopy
+          4 import shutil
+          5 import matplotlib.pyplot as plt
+    
+
+    ModuleNotFoundError: No module named 'flopy'
+
+
 # Trial and Error
 
 The `te.update_par()` function loads the modified Freyberg model (see the "freyberg intro to model" notebook), updates parameters, runs the model and then plots simulated values against measured values.
@@ -73,6 +97,19 @@ te.update_par(k1=1,     # K in layer 1
               rch_factor=0.35) # recharge is multiplied by rch_factor
 ```
 
+
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    Input In [2], in <cell line: 1>()
+    ----> 1 te.update_par(k1=1,     # K in layer 1
+          2               rch_factor=0.35)
+    
+
+    NameError: name 'te' is not defined
+
+
 ### Do It Yourself
 
 Experiment with changing values for `k1` and `rch_factor`. See if you can achieve a good fit between measured and simulated values of head and river flow (e.g. minimize RMSE). 
@@ -84,6 +121,19 @@ Whilst you are doing so, pay attention to the forecast of river flux. Does the f
 # change the parameter values untill you are happy with the fit
 te.update_par(k1=8, rch_factor=1)
 ```
+
+
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    Input In [3], in <cell line: 2>()
+          1 # change the parameter values untill you are happy with the fit
+    ----> 2 te.update_par(k1=8, rch_factor=1)
+    
+
+    NameError: name 'te' is not defined
+
 
 ### Non-Uniqueness and Correlated Parameters
 
@@ -99,9 +149,33 @@ te.update_par(k1=4, rch_factor=1.1)
 ```
 
 
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    Input In [4], in <cell line: 1>()
+    ----> 1 te.update_par(k1=4, rch_factor=1.1)
+    
+
+    NameError: name 'te' is not defined
+
+
+
 ```python
 te.update_par(k1=10,  rch_factor=2.0)
 ```
+
+
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    Input In [5], in <cell line: 1>()
+    ----> 1 te.update_par(k1=10,  rch_factor=2.0)
+    
+
+    NameError: name 'te' is not defined
+
 
 
 One option is to use multiple types of observation data. Using heads & flows as calibration targets helps to constrain parameters which are informed by different sources of information. The same applies for secondary observations; e.g. vertical head differences for vertical conectivity and time-differences for storage or transport parameters.
@@ -113,6 +187,18 @@ See if accounting for the fit with stream gage data helps:
 te.update_par(k1=4, rch_factor=1.1, sfrplot=True)
 ```
 
+
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    Input In [6], in <cell line: 1>()
+    ----> 1 te.update_par(k1=4, rch_factor=1.1, sfrplot=True)
+    
+
+    NameError: name 'te' is not defined
+
+
 ### Structural Error
 
 Can you find a parameter combination that results in a "correct" forecast? What do the corresponding fits with observation data look like? 
@@ -121,6 +207,18 @@ Can you find a parameter combination that results in a "correct" forecast? What 
 ```python
 te.update_par(k1=4, rch_factor=1.1, sfrplot=True)
 ```
+
+
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    Input In [7], in <cell line: 1>()
+    ----> 1 te.update_par(k1=4, rch_factor=1.1, sfrplot=True)
+    
+
+    NameError: name 'te' is not defined
+
 
 So...is history-matching a lie? It seems to make our model worse at making a prediction! 
 

@@ -1,11 +1,4 @@
-
 ---
-layout: default
-title: PEST++IES - Localization
-parent: Decision Support Modelling with pyEMU and PEST++
-nav_order: 8
----
-                    ---
 layout: default
 title: PEST++IES - Localization
 parent: Decision Support Modelling with pyEMU and PEST++

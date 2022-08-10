@@ -1,11 +1,4 @@
-
 ---
-layout: default
-title: Observation Values, Weights and Noise
-parent: Decision Support Modelling with pyEMU and PEST++
-nav_order: 2
----
-                    ---
 layout: default
 title: Observation Values, Weights and Noise
 parent: Decision Support Modelling with pyEMU and PEST++
@@ -1851,7 +1844,7 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x13843b77e80>
+    <matplotlib.colorbar.Colorbar at 0x2a4c6265c40>
 
 
 
@@ -1876,7 +1869,7 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x138425d8160>
+    <matplotlib.colorbar.Colorbar at 0x2a4c60da160>
 
 
 

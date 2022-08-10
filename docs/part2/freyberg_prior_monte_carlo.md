@@ -1,11 +1,4 @@
-
 ---
-layout: default
-title: Prior Monte Carlo
-parent: Decision Support Modelling with pyEMU and PEST++
-nav_order: 3
----
-                    ---
 layout: default
 title: Prior Monte Carlo
 parent: Decision Support Modelling with pyEMU and PEST++

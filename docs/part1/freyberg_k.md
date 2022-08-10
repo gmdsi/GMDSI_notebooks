@@ -64,6 +64,19 @@ hbd.prep_deps(tmp_d)
 hbd.prep_pest(tmp_d)
 ```
 
+    ins file for heads.csv prepared.
+    ins file for sfr.csv prepared.
+    noptmax:0, npar_adj:1, nnz_obs:24
+    written pest control file: freyberg_mf6\freyberg.pst
+    
+
+
+
+
+    <pyemu.pst.pst_handler.Pst at 0x1a969411580>
+
+
+
 ### Reminder - the modified-Freyberg model
 Just a quick reminder of what the model looks like and what we are doing. 
 
@@ -79,6 +92,12 @@ A subsequent twelve transient stress periods representing a period in the future
 ```python
 hbd.plot_freyberg(tmp_d)
 ```
+
+
+    
+![png](freyberg_k_files/freyberg_k_4_0.png)
+    
+
 
 ### The PEST Control File
 
@@ -176,6 +195,9 @@ pst.control_data.noptmax = 20
 pst.write(pstfile)
 ```
 
+    noptmax:20, npar_adj:1, nnz_obs:24
+    
+
 Check the `freyberg.pst` file again in a text editor. Verify that NOPTMAX has been changed to 20?
 
 Great, let's try that again!
@@ -206,6 +228,178 @@ df_obj = pd.read_csv(os.path.join(tmp_d, "freyberg.iobj"),index_col=0)
 df_obj
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model_runs_completed</th>
+      <th>total_phi</th>
+      <th>measurement_phi</th>
+      <th>regularization_phi</th>
+      <th>gage-1</th>
+      <th>headwater</th>
+      <th>particle</th>
+      <th>tailwater</th>
+      <th>trgw-0-13-10</th>
+      <th>trgw-0-15-16</th>
+      <th>...</th>
+      <th>trgw-0-2-9</th>
+      <th>trgw-0-21-10</th>
+      <th>trgw-0-22-15</th>
+      <th>trgw-0-24-4</th>
+      <th>trgw-0-26-6</th>
+      <th>trgw-0-29-15</th>
+      <th>trgw-0-3-8</th>
+      <th>trgw-0-33-7</th>
+      <th>trgw-0-34-10</th>
+      <th>trgw-0-9-1</th>
+    </tr>
+    <tr>
+      <th>iteration</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>29.20310</td>
+      <td>29.20310</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>18.35720</td>
+      <td>0</td>
+      <td>10.845900</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>12</td>
+      <td>3.43666</td>
+      <td>3.43666</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2.46626</td>
+      <td>0</td>
+      <td>0.970404</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>23</td>
+      <td>3.41691</td>
+      <td>3.41691</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2.35484</td>
+      <td>0</td>
+      <td>1.062070</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>35</td>
+      <td>3.40901</td>
+      <td>3.40901</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2.21763</td>
+      <td>0</td>
+      <td>1.191380</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>4 rows × 21 columns</p>
+</div>
+
+
+
 So thats usefull. If we make a plot (see next cell), it becomes evident that there are diminshing returns after a certain point (for this case!).
 
 
@@ -213,6 +407,20 @@ So thats usefull. If we make a plot (see next cell), it becomes evident that the
 # plot out the dataframe that was shown as a table above
 df_obj.loc[:,["total_phi","model_runs_completed"]].plot(subplots=True)
 ```
+
+
+
+
+    array([<AxesSubplot:xlabel='iteration'>, <AxesSubplot:xlabel='iteration'>],
+          dtype=object)
+
+
+
+
+    
+![png](freyberg_k_files/freyberg_k_25_1.png)
+    
+
 
 **Termination Criteria** 
 
@@ -261,6 +469,96 @@ res_nz = pst.res.loc[pst.nnz_obs_names,:]
 res_nz.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>group</th>
+      <th>measured</th>
+      <th>modelled</th>
+      <th>residual</th>
+      <th>weight</th>
+    </tr>
+    <tr>
+      <th>name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>trgw-0-26-6:3683.5</th>
+      <td>trgw-0-26-6:3683.5</td>
+      <td>trgw-0-26-6</td>
+      <td>37.168420</td>
+      <td>36.769327</td>
+      <td>0.399093</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>trgw-0-26-6:3712.5</th>
+      <td>trgw-0-26-6:3712.5</td>
+      <td>trgw-0-26-6</td>
+      <td>37.116489</td>
+      <td>36.804511</td>
+      <td>0.311978</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>trgw-0-26-6:3743.5</th>
+      <td>trgw-0-26-6:3743.5</td>
+      <td>trgw-0-26-6</td>
+      <td>37.182890</td>
+      <td>36.913996</td>
+      <td>0.268894</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>trgw-0-26-6:3773.5</th>
+      <td>trgw-0-26-6:3773.5</td>
+      <td>trgw-0-26-6</td>
+      <td>37.283326</td>
+      <td>37.034004</td>
+      <td>0.249322</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>trgw-0-26-6:3804.5</th>
+      <td>trgw-0-26-6:3804.5</td>
+      <td>trgw-0-26-6</td>
+      <td>37.274371</td>
+      <td>37.113414</td>
+      <td>0.160957</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 We could plot these results up using common libraries. Or, use `pyemu`s built in plotting methods (see next cell).
 
 Not too shabby!  Thanks PEST++.
@@ -272,6 +570,16 @@ These plots you'll see a lot.  The left plot is a "1:1" plot that has simulated 
 # use pyemu's plot utilities to plot 1:1 line and the residuals as fxn of observation magnitude
 pyemu.plot_utils.res_1to1(pst);
 ```
+
+
+    <Figure size 576x756 with 0 Axes>
+
+
+
+    
+![png](freyberg_k_files/freyberg_k_31_1.png)
+    
+
 
 But we had a lot of other observations listed in the PEST control file.  What do they look like?
 
@@ -285,12 +593,108 @@ pst.res.head()
 ```
 
 
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>group</th>
+      <th>measured</th>
+      <th>modelled</th>
+      <th>residual</th>
+      <th>weight</th>
+    </tr>
+    <tr>
+      <th>name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>gage-1:3652.5</th>
+      <td>gage-1:3652.5</td>
+      <td>gage-1</td>
+      <td>2943.238710</td>
+      <td>2664.732233</td>
+      <td>278.506477</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>gage-1:3683.5</th>
+      <td>gage-1:3683.5</td>
+      <td>gage-1</td>
+      <td>2815.377509</td>
+      <td>2481.352657</td>
+      <td>334.024852</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>gage-1:3712.5</th>
+      <td>gage-1:3712.5</td>
+      <td>gage-1</td>
+      <td>2749.121657</td>
+      <td>2601.435926</td>
+      <td>147.685731</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>gage-1:3743.5</th>
+      <td>gage-1:3743.5</td>
+      <td>gage-1</td>
+      <td>2816.797640</td>
+      <td>2821.353726</td>
+      <td>-4.556086</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>gage-1:3773.5</th>
+      <td>gage-1:3773.5</td>
+      <td>gage-1</td>
+      <td>2892.313705</td>
+      <td>3001.715907</td>
+      <td>-109.402202</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
 ```python
 plt.scatter(pst.res.measured, pst.res.modelled)
 plt.xlabel('measured')
 plt.ylabel('modelled')
 plt.axis('square');
 ```
+
+
+    
+![png](freyberg_k_files/freyberg_k_34_0.png)
+    
+
 
 ###  Uncertainty Reduction
 
@@ -307,6 +711,66 @@ df_paru = pd.read_csv(os.path.join(tmp_d, "freyberg.par.usum.csv"),index_col=0)
 # echo out this dataframe 
 df_paru
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>prior_mean</th>
+      <th>prior_stdev</th>
+      <th>prior_lower_bound</th>
+      <th>prior_upper_bound</th>
+      <th>post_mean</th>
+      <th>post_stdev</th>
+      <th>post_lower_bound</th>
+      <th>post_upper_bound</th>
+    </tr>
+    <tr>
+      <th>name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>hk1</th>
+      <td>0.69897</td>
+      <td>1</td>
+      <td>-1.30103</td>
+      <td>2.69897</td>
+      <td>0.505884</td>
+      <td>0.029466</td>
+      <td>0.446952</td>
+      <td>0.564816</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 Recall that because we log transformed the `hk` parameters the uncertainty results are reported as logarithms in the dataframe above.  What you'll see in the MODFLOW input file is the non-log transformed `hk` value (e.g. 10^0.69897 = 5.0  for the prior mean).
 
@@ -326,6 +790,12 @@ ax = pyemu.plot_utils.plot_summary_distributions(df_paru, label_post=True, figsi
 ax.set_xlabel("$log_{10}(\\frac{L}{T})$");
 ```
 
+
+    
+![png](freyberg_k_files/freyberg_k_38_0.png)
+    
+
+
 Now let's look at changes in model forecast uncertainty, first as a table then as a plot.  These are *observations* now instead of parameters like above. PEST++GLM has recorded these in the file named `freyberg.pred.usum.csv`.
 
 
@@ -336,6 +806,99 @@ df_predu = pd.read_csv(os.path.join(tmp_d, "freyberg.pred.usum.csv"),index_col=0
 # echo out the dataframe
 df_predu
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>prior_mean</th>
+      <th>prior_stdev</th>
+      <th>prior_lower_bound</th>
+      <th>prior_upper_bound</th>
+      <th>post_mean</th>
+      <th>post_stdev</th>
+      <th>post_lower_bound</th>
+      <th>post_upper_bound</th>
+    </tr>
+    <tr>
+      <th>name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>headwater:4383.5</th>
+      <td>-397.5550</td>
+      <td>322.0680</td>
+      <td>-1041.6900</td>
+      <td>246.5800</td>
+      <td>-469.1600</td>
+      <td>9.490010</td>
+      <td>-488.1400</td>
+      <td>-450.1800</td>
+    </tr>
+    <tr>
+      <th>part_time</th>
+      <td>7076.3100</td>
+      <td>5073.3600</td>
+      <td>-3070.4100</td>
+      <td>17223.0000</td>
+      <td>7849.8100</td>
+      <td>149.491000</td>
+      <td>7550.8300</td>
+      <td>8148.7900</td>
+    </tr>
+    <tr>
+      <th>tailwater:4383.5</th>
+      <td>-90.2950</td>
+      <td>381.9170</td>
+      <td>-854.1290</td>
+      <td>673.5390</td>
+      <td>-165.2550</td>
+      <td>11.253500</td>
+      <td>-187.7620</td>
+      <td>-142.7480</td>
+    </tr>
+    <tr>
+      <th>trgw-0-9-1:4383.5</th>
+      <td>38.0999</td>
+      <td>13.3587</td>
+      <td>11.3824</td>
+      <td>64.8173</td>
+      <td>40.4225</td>
+      <td>0.393627</td>
+      <td>39.6352</td>
+      <td>41.2098</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 Same deal as above: a quick way to evaluate the ***reduction in uncertainty*** is to compare `prior_stdev` (=standard deviation of the prior=standard deviation before calibration) to `post_stdev` (=standard deviation of the posterior = standard deviation after caibration).  The amount that `post_stdev` is less than pre_stdev reflects the magnitude of the uncertainty reduction.
 
@@ -348,6 +911,12 @@ figs, axes = pyemu.plot_utils.plot_summary_distributions(df_predu,subplots=True)
 figs[0].tight_layout()
 ```
 
+
+    
+![png](freyberg_k_files/freyberg_k_42_0.png)
+    
+
+
 By comparing prior to posterior standatd deviations we can check how well calibration reduced forecast uncertainties (see bar plot in the next cell; larger value is better).
 
 
@@ -356,6 +925,19 @@ df_predu.loc[:,"percent_reduction"] = 100.0 * (1.0 - (df_predu.post_stdev / df_p
 df_predu.percent_reduction.plot.bar()
 plt.ylabel('% uncertainty reduction')
 ```
+
+
+
+
+    Text(0, 0.5, '% uncertainty reduction')
+
+
+
+
+    
+![png](freyberg_k_files/freyberg_k_44_1.png)
+    
+
 
 
 Wow! Calibration really helped huh? So we can call it a day and bill the client? Awesome, thanks very much and have a nice day!
@@ -375,6 +957,12 @@ for ax in axes:
     ax.set_ylim(0,ylim[-1])
 figs[0].tight_layout()
 ```
+
+
+    
+![png](freyberg_k_files/freyberg_k_46_0.png)
+    
+
 
 Dear oh dear....none of the forecasts are bracketed by the posterior distribution! This means that 
 

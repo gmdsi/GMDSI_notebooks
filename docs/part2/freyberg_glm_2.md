@@ -1,11 +1,4 @@
-
 ---
-layout: default
-title: PEST++GLM  - Highly-Parameterized Regularized Inversion
-parent: Decision Support Modelling with pyEMU and PEST++
-nav_order: 6
----
-                    ---
 layout: default
 title: PEST++GLM  - Highly-Parameterized Regularized Inversion
 parent: Decision Support Modelling with pyEMU and PEST++

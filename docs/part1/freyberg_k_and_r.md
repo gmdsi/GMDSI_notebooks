@@ -61,6 +61,19 @@ hbd.prep_deps(tmp_d)
 hbd.prep_pest(tmp_d)
 ```
 
+    ins file for heads.csv prepared.
+    ins file for sfr.csv prepared.
+    noptmax:0, npar_adj:1, nnz_obs:24
+    written pest control file: freyberg_mf6\freyberg.pst
+    
+
+
+
+
+    <pyemu.pst.pst_handler.Pst at 0x167fe946ac0>
+
+
+
 ### Reminder - the modified-Freyberg model
 Just a quick reminder of what the model looks like and what we are doing. 
 
@@ -76,6 +89,12 @@ A subsequent twelve transient stress periods representing a period in the future
 ```python
 hbd.plot_freyberg(tmp_d)
 ```
+
+
+    
+![png](freyberg_k_and_r_files/freyberg_k_and_r_4_0.png)
+    
+
 
 ### The PEST Control File
 
@@ -95,12 +114,26 @@ Let's check what parameters are listed in the control file:
 pst.par_names
 ```
 
+
+
+
+    ['hk1', 'ne1', 'rch0', 'rch1']
+
+
+
 Which of these are adjustable?
 
 
 ```python
 pst.adj_par_names
 ```
+
+
+
+
+    ['hk1']
+
+
 
 So only `hk1` is adjustable. We want to make `rch0` adjustable as well. (`rch0` is a factor by which mean historical recharge is multiplied.)
 
@@ -112,6 +145,117 @@ par = pst.parameter_data
 par.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>parnme</th>
+      <th>partrans</th>
+      <th>parchglim</th>
+      <th>parval1</th>
+      <th>parlbnd</th>
+      <th>parubnd</th>
+      <th>pargp</th>
+      <th>scale</th>
+      <th>offset</th>
+      <th>extra</th>
+      <th>dercom</th>
+    </tr>
+    <tr>
+      <th>parnme</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>hk1</th>
+      <td>hk1</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>5.00</td>
+      <td>0.050</td>
+      <td>500.00</td>
+      <td>hk</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>ne1</th>
+      <td>ne1</td>
+      <td>fixed</td>
+      <td>factor</td>
+      <td>0.01</td>
+      <td>0.005</td>
+      <td>0.02</td>
+      <td>porosity</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>rch0</th>
+      <td>rch0</td>
+      <td>fixed</td>
+      <td>factor</td>
+      <td>1.00</td>
+      <td>0.500</td>
+      <td>2.00</td>
+      <td>rch0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>rch1</th>
+      <td>rch1</td>
+      <td>fixed</td>
+      <td>factor</td>
+      <td>1.00</td>
+      <td>0.500</td>
+      <td>2.00</td>
+      <td>rch1</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 Change `partrans` of the `rch0` parameter to `log`:
 
 
@@ -120,12 +264,126 @@ par.loc['rch0', 'partrans'] = 'log'
 par.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>parnme</th>
+      <th>partrans</th>
+      <th>parchglim</th>
+      <th>parval1</th>
+      <th>parlbnd</th>
+      <th>parubnd</th>
+      <th>pargp</th>
+      <th>scale</th>
+      <th>offset</th>
+      <th>extra</th>
+      <th>dercom</th>
+    </tr>
+    <tr>
+      <th>parnme</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>hk1</th>
+      <td>hk1</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>5.00</td>
+      <td>0.050</td>
+      <td>500.00</td>
+      <td>hk</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>ne1</th>
+      <td>ne1</td>
+      <td>fixed</td>
+      <td>factor</td>
+      <td>0.01</td>
+      <td>0.005</td>
+      <td>0.02</td>
+      <td>porosity</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>rch0</th>
+      <td>rch0</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>1.00</td>
+      <td>0.500</td>
+      <td>2.00</td>
+      <td>rch0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>rch1</th>
+      <td>rch1</td>
+      <td>fixed</td>
+      <td>factor</td>
+      <td>1.00</td>
+      <td>0.500</td>
+      <td>2.00</td>
+      <td>rch1</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 We can now re-write the control file with the updated parameter data section:
 
 
 ```python
 pst.write(os.path.join(tmp_d, 'freyberg_k_r.pst'))
 ```
+
+    noptmax:0, npar_adj:2, nnz_obs:24
+    
 
 Run PEST once, to check everything is copacetic:
 
@@ -143,6 +401,13 @@ assert pst.phi, "Something ain't right cap'n"
 pst.phi
 ```
 
+
+
+
+    29.203134704019217
+
+
+
 Awesome, good to go. We can set `NOPTMAX` to 20 and let PEST loose. We are actualy going to do this twice. Once with `K` and `rch0` adjustable ( `freyberg_k_r.pst` ) and once with only `k` adjustable (`freyberg_k.pst`). The latter is a repeat of the previous tutorial. We will do it again just so that we can compare outcomes.
 
 
@@ -151,12 +416,18 @@ pst.control_data.noptmax = 20
 pst.write(os.path.join(tmp_d, 'freyberg_k_r.pst'))
 ```
 
+    noptmax:20, npar_adj:2, nnz_obs:24
+    
+
 
 ```python
 pst = pyemu.Pst(os.path.join(tmp_d, 'freyberg.pst'))
 pst.control_data.noptmax = 20
 pst.write(os.path.join(tmp_d, 'freyberg_k.pst'))
 ```
+
+    noptmax:20, npar_adj:1, nnz_obs:24
+    
 
 ### Run PEST
 
@@ -205,6 +476,12 @@ df_obj_k.loc[:,["total_phi","model_runs_completed"]].plot(y='total_phi', ax=ax, 
 df_obj_k_r.loc[:,["total_phi","model_runs_completed"]].plot(y='total_phi', ax=ax, label='k+r');
 ```
 
+
+    
+![png](freyberg_k_and_r_files/freyberg_k_and_r_30_0.png)
+    
+
+
 Looks like giving PEST more "flexibility" (i.e. more parmaters) allows it to get a better fit with measured data. (the Phi obtained by `k+r` is lower).
 
 ### What about the parameter uncertainties? 
@@ -218,10 +495,141 @@ df_paru_k
 ```
 
 
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>prior_mean</th>
+      <th>prior_stdev</th>
+      <th>prior_lower_bound</th>
+      <th>prior_upper_bound</th>
+      <th>post_mean</th>
+      <th>post_stdev</th>
+      <th>post_lower_bound</th>
+      <th>post_upper_bound</th>
+    </tr>
+    <tr>
+      <th>name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>hk1</th>
+      <td>0.69897</td>
+      <td>1</td>
+      <td>-1.30103</td>
+      <td>2.69897</td>
+      <td>0.505884</td>
+      <td>0.029466</td>
+      <td>0.446952</td>
+      <td>0.564816</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
 ```python
 df_paru_k_r = pd.read_csv(os.path.join(tmp_d, "freyberg_k_r.par.usum.csv"),index_col=0)
 df_paru_k_r
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>prior_mean</th>
+      <th>prior_stdev</th>
+      <th>prior_lower_bound</th>
+      <th>prior_upper_bound</th>
+      <th>post_mean</th>
+      <th>post_stdev</th>
+      <th>post_lower_bound</th>
+      <th>post_upper_bound</th>
+    </tr>
+    <tr>
+      <th>name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>hk1</th>
+      <td>0.69897</td>
+      <td>1.000000</td>
+      <td>-1.30103</td>
+      <td>2.69897</td>
+      <td>0.688363</td>
+      <td>0.144337</td>
+      <td>0.399689</td>
+      <td>0.977037</td>
+    </tr>
+    <tr>
+      <th>rch0</th>
+      <td>0.00000</td>
+      <td>0.150515</td>
+      <td>-0.30103</td>
+      <td>0.30103</td>
+      <td>0.120730</td>
+      <td>0.100419</td>
+      <td>-0.080109</td>
+      <td>0.321568</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 Hmm - Recharge prior uncertainty = 0.00000?  No, it's not 0.0 - recall that when we log-transformed this parameter, so its uncertainty is reported as logarithms.  So, 10^0 = 1, which is what we see for an initial value in the PEST control file. 
 
@@ -237,6 +645,18 @@ for pname in df_paru_concat.index:
     plt.show()
 ```
 
+
+    
+![png](freyberg_k_and_r_files/freyberg_k_and_r_35_0.png)
+    
+
+
+
+    
+![png](freyberg_k_and_r_files/freyberg_k_and_r_35_1.png)
+    
+
+
 Damn...so `hk1` uncertainty increases if we include `rch0`.  
 
 ## Forecasts
@@ -251,6 +671,12 @@ df_predu_k.loc[:,"reduction"] = 100.0 *  (1.0 - (df_predu_k.post_stdev / df_pred
 figs, axes = pyemu.plot_utils.plot_summary_distributions(df_predu_k,subplots=True)
 figs[0].tight_layout()
 ```
+
+
+    
+![png](freyberg_k_and_r_files/freyberg_k_and_r_38_0.png)
+    
+
 
 And now for the 2 parameter case (`k+r`). Let's compare it to the `k`-only run (shown in green in the plot below). Some forecast uncertainties have increased (the distribution is shorter and wider).
 
@@ -270,6 +696,12 @@ for forecast in df_predu_k_r.index:
     ax.grid()
 fig.tight_layout()
 ```
+
+
+    
+![png](freyberg_k_and_r_files/freyberg_k_and_r_40_0.png)
+    
+
 
 So...which forecasts are influenced by the ``rch_0`` parameter? The higher and narrower the peak the more certain we are - did the uncertainty decrease or increase when we added the second parameter?
 
@@ -303,6 +735,48 @@ R = cov.to_pearson()
 R.df()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>hk1</th>
+      <th>rch0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>hk1</th>
+      <td>1.000000</td>
+      <td>-0.987643</td>
+    </tr>
+    <tr>
+      <th>rch0</th>
+      <td>-0.987643</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 Wow - correlated.  Recall that Hill and Tiedeman (2007) suggest that correlation > 0.95 or so is not estimable. Even though estimating both R and K using only head observations is not possible because of this correlation, PEST++ gave you an answer.  
 
 So how did PEST++ deal with this intractable correlation? Let's check how paramter values changed throught the PEST run. Parameter values per iteration are recorded in the `freyberg_k_r.ipar` file.
@@ -313,6 +787,81 @@ ipar = pd.read_csv(os.path.join(tmp_d, 'freyberg_k_r.ipar'))
 ipar
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>iteration</th>
+      <th>hk1</th>
+      <th>ne1</th>
+      <th>rch0</th>
+      <th>rch1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>5.00000</td>
+      <td>0.01</td>
+      <td>1.00000</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>5.05697</td>
+      <td>0.01</td>
+      <td>1.30061</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>4.94950</td>
+      <td>0.01</td>
+      <td>1.33807</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>4.87936</td>
+      <td>0.01</td>
+      <td>1.32047</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>4.89034</td>
+      <td>0.01</td>
+      <td>1.32352</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 Let's check the ratio of `hk1` to `rch0`:
 
 
@@ -322,6 +871,12 @@ ipar.ratio.plot()
 plt.ylabel('rch0 / hk1')
 plt.xlabel('iteration');
 ```
+
+
+    
+![png](freyberg_k_and_r_files/freyberg_k_and_r_48_0.png)
+    
+
 
 So PEST++ found a combination of `hk1` and `rch0` that provide an "optimal" fit. It then continues to test changes in parameter values; however, it retains the ratio between these correlated parameters. As this results in no improvement of Phi, PEST halts operation (in this case afetr 3 iterations of no improvement).
 
@@ -342,6 +897,12 @@ for ax in axes:
     ax.set_ylim(0, ylim[-1])
 figs[0].tight_layout()
 ```
+
+
+    
+![png](freyberg_k_and_r_files/freyberg_k_and_r_51_0.png)
+    
+
 
 Yikes - very much missing the truth. Uncertainty analysis is still 
 ## #failing!

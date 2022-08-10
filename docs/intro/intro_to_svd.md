@@ -258,11 +258,11 @@ hbd.add_ppoints(tmp_d)
     0 pars added from template file .\freyberg6.wel_stress_period_data_8.txt.tpl
     0 pars added from template file .\freyberg6.wel_stress_period_data_9.txt.tpl
     starting interp point loop for 800 points
-    took 2.056614 seconds
+    took 1.956756 seconds
     1 pars dropped from template file freyberg_mf6\freyberg6.npf_k_layer1.txt.tpl
     29 pars added from template file .\hkpp.dat.tpl
     starting interp point loop for 800 points
-    took 1.978677 seconds
+    took 1.951971 seconds
     29 pars added from template file .\rchpp.dat.tpl
     noptmax:0, npar_adj:65, nnz_obs:37
     new control file: 'freyberg_pp.pst'
@@ -350,7 +350,7 @@ plt.colorbar()
 
 
 
-    <matplotlib.colorbar.Colorbar at 0x2243c5872e0>
+    <matplotlib.colorbar.Colorbar at 0x16150fcbe80>
 
 
 
@@ -397,6 +397,9 @@ If you want to get fancy, you can explore which parameters inform which singular
 ```python
 hbd.intertive_sv_vec_plot(inpst, U);
 ```
+
+    D:\Workspace\hugm0001\anaconda\envs\gmdsitut\lib\site-packages\ipykernel\pylab\backend_inline.py:10: DeprecationWarning: `ipykernel.pylab.backend_inline` is deprecated, directly use `matplotlib_inline.backend_inline`
+    
 
 
     interactive(children=(IntSlider(value=1, description='Number SVs:', max=20, min=1), Output()), _dom_classes=('…

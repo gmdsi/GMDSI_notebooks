@@ -77,6 +77,34 @@ hbd.prep_pest(working_dir)
 hbd.add_ppoints(working_dir)
 ```
 
+    ins file for heads.csv prepared.
+    ins file for sfr.csv prepared.
+    noptmax:0, npar_adj:1, nnz_obs:24
+    written pest control file: freyberg_mf6\freyberg.pst
+       could not remove start_datetime
+    1 pars added from template file .\freyberg6.sfr_perioddata_1.txt.tpl
+    6 pars added from template file .\freyberg6.wel_stress_period_data_10.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_11.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_12.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_2.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_3.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_4.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_5.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_6.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_7.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_8.txt.tpl
+    0 pars added from template file .\freyberg6.wel_stress_period_data_9.txt.tpl
+    starting interp point loop for 800 points
+    took 1.98166 seconds
+    1 pars dropped from template file freyberg_mf6\freyberg6.npf_k_layer1.txt.tpl
+    29 pars added from template file .\hkpp.dat.tpl
+    starting interp point loop for 800 points
+    took 1.966758 seconds
+    29 pars added from template file .\rchpp.dat.tpl
+    noptmax:0, npar_adj:65, nnz_obs:37
+    new control file: 'freyberg_pp.pst'
+    
+
 
 
 Monte Carlo uses a lots and lots of forward runs so we don't want to make the mistake of burning the silicon for a PEST control file that is not right.  Here we make doubly sure that the control file has the recharge freed (not "fixed' in the PEST control file).  
@@ -110,6 +138,9 @@ pst.write(os.path.join(working_dir,pst_name))
 pyemu.os_utils.run('pestpp-glm freyberg_pp.pst', cwd=working_dir)
 ```
 
+    noptmax:0, npar_adj:68, nnz_obs:37
+    
+
 Reload the control file:
 
 
@@ -118,9 +149,16 @@ pst = pyemu.Pst(os.path.join(working_dir,'freyberg_pp.pst'))
 pst.phi
 ```
 
+
+
+
+    131.79995788867873
+
+
+
 # Monte Carlo
 
-In it's simplest form, Monte Carlo boils down to: 1) "draw" many random samples of parameters from the prior probability distribution, 2) run the model, 3) look at the results.
+In it's simplest form, Monte Carlo boils down to: (1) "draw" many random samples of parameters from the prior probability distribution, (2) run the model, (3) look at the results.
 
 So how do we "draw", or sample, parameters? (Think "draw" as in "drawing a card from a deck"). We need to randomly sample parameter values from a range. This range is defined by the _prior parameter probability distribution_. As we did for FOSM, let's assume that the bounds in the parameter data section define the range of a Gaussian (or normal) distribution, and that the intial values define the mean. 
 
@@ -145,6 +183,12 @@ plt.imshow(x)
 plt.colorbar();
 ```
 
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_12_0.png)
+    
+
+
 OK, let's now sample 500 parameter sets from the probability distribution described by this covariance matrix and the mean values (e.g. the initial parameter values in the `pst` control file).
 
 
@@ -161,6 +205,178 @@ Here's an example of the first 5 parameter sets of our 500 created by our draw (
 parensemble.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ne1</th>
+      <th>rch0</th>
+      <th>rch1</th>
+      <th>strinf</th>
+      <th>wel3</th>
+      <th>wel4</th>
+      <th>wel2</th>
+      <th>wel1</th>
+      <th>wel5</th>
+      <th>wel0</th>
+      <th>...</th>
+      <th>rch_i:32_j:2_zone:1.0</th>
+      <th>rch_i:17_j:12_zone:1.0</th>
+      <th>rch_i:7_j:12_zone:1.0</th>
+      <th>rch_i:27_j:17_zone:1.0</th>
+      <th>rch_i:2_j:17_zone:1.0</th>
+      <th>rch_i:17_j:2_zone:1.0</th>
+      <th>rch_i:2_j:12_zone:1.0</th>
+      <th>rch_i:32_j:17_zone:1.0</th>
+      <th>rch_i:37_j:17_zone:1.0</th>
+      <th>rch_i:37_j:12_zone:1.0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.008576</td>
+      <td>0.798390</td>
+      <td>1.097442</td>
+      <td>342.933067</td>
+      <td>900.000000</td>
+      <td>95.384015</td>
+      <td>673.122041</td>
+      <td>236.651598</td>
+      <td>93.555705</td>
+      <td>258.919768</td>
+      <td>...</td>
+      <td>1.545899</td>
+      <td>0.967640</td>
+      <td>0.765540</td>
+      <td>0.879551</td>
+      <td>1.064152</td>
+      <td>1.094530</td>
+      <td>1.587063</td>
+      <td>1.764833</td>
+      <td>0.699708</td>
+      <td>0.969906</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.007612</td>
+      <td>1.908030</td>
+      <td>1.188849</td>
+      <td>594.907106</td>
+      <td>88.010442</td>
+      <td>118.664153</td>
+      <td>560.794560</td>
+      <td>900.000000</td>
+      <td>246.389133</td>
+      <td>660.090196</td>
+      <td>...</td>
+      <td>1.470901</td>
+      <td>1.380243</td>
+      <td>1.047585</td>
+      <td>0.910253</td>
+      <td>0.688392</td>
+      <td>0.921585</td>
+      <td>0.984850</td>
+      <td>1.211731</td>
+      <td>0.994265</td>
+      <td>2.000000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.009936</td>
+      <td>0.964648</td>
+      <td>0.670542</td>
+      <td>566.612120</td>
+      <td>95.205141</td>
+      <td>450.603288</td>
+      <td>468.262566</td>
+      <td>900.000000</td>
+      <td>121.221073</td>
+      <td>198.859473</td>
+      <td>...</td>
+      <td>1.504745</td>
+      <td>1.025225</td>
+      <td>0.824225</td>
+      <td>1.357629</td>
+      <td>1.061188</td>
+      <td>0.805217</td>
+      <td>1.426085</td>
+      <td>1.235177</td>
+      <td>0.720202</td>
+      <td>0.742659</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.005000</td>
+      <td>0.862611</td>
+      <td>1.291555</td>
+      <td>1949.739433</td>
+      <td>134.206943</td>
+      <td>213.220396</td>
+      <td>900.000000</td>
+      <td>900.000000</td>
+      <td>65.534174</td>
+      <td>900.000000</td>
+      <td>...</td>
+      <td>0.641770</td>
+      <td>1.531370</td>
+      <td>0.614023</td>
+      <td>1.068229</td>
+      <td>0.860114</td>
+      <td>0.942771</td>
+      <td>1.791559</td>
+      <td>1.428844</td>
+      <td>1.132330</td>
+      <td>0.736988</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.011502</td>
+      <td>1.170017</td>
+      <td>0.649204</td>
+      <td>582.673590</td>
+      <td>328.172742</td>
+      <td>56.132756</td>
+      <td>654.640273</td>
+      <td>263.797784</td>
+      <td>886.917946</td>
+      <td>301.128598</td>
+      <td>...</td>
+      <td>1.157887</td>
+      <td>0.964998</td>
+      <td>0.950426</td>
+      <td>0.952610</td>
+      <td>1.437834</td>
+      <td>0.899621</td>
+      <td>1.234873</td>
+      <td>1.145106</td>
+      <td>0.844422</td>
+      <td>0.946133</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 68 columns</p>
+</div>
+
+
+
 What does this look like in terms of spatially varying parameters? Let's just plot the hydraulic conductivity from one of these samples. (Note the log-transformed values of K):
 
 
@@ -172,6 +388,15 @@ pe_k = parensemble.loc[:,parnmes].copy()
 # use the hbd convenienc function to plot several realisations
 hbd.plot_ensemble_arr(pe_k, working_dir, 10)
 ```
+
+       could not remove start_datetime
+    
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_18_1.png)
+    
+
 
 That does not look very realistic. Do these look "right" (from a geologic stand point)? Lots of "random" variation (pilot points spatially near each other can have very different values)...not much structure...why? Because we have not specified any parameter correlation. Each pilot point is statisticaly independent. 
 
@@ -192,6 +417,184 @@ plt.colorbar()
 cov.to_dataframe().head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ne1</th>
+      <th>rch0</th>
+      <th>rch1</th>
+      <th>strinf</th>
+      <th>wel3</th>
+      <th>wel4</th>
+      <th>wel2</th>
+      <th>wel1</th>
+      <th>wel5</th>
+      <th>wel0</th>
+      <th>...</th>
+      <th>rch_i:32_j:2_zone:1.0</th>
+      <th>rch_i:17_j:12_zone:1.0</th>
+      <th>rch_i:7_j:12_zone:1.0</th>
+      <th>rch_i:27_j:17_zone:1.0</th>
+      <th>rch_i:2_j:17_zone:1.0</th>
+      <th>rch_i:17_j:2_zone:1.0</th>
+      <th>rch_i:2_j:12_zone:1.0</th>
+      <th>rch_i:32_j:17_zone:1.0</th>
+      <th>rch_i:37_j:17_zone:1.0</th>
+      <th>rch_i:37_j:12_zone:1.0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>ne1</th>
+      <td>0.022655</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>rch0</th>
+      <td>0.000000</td>
+      <td>0.022655</td>
+      <td>0.000000</td>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>rch1</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.022655</td>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>strinf</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.25</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>wel3</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.00</td>
+      <td>0.238691</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 68 columns</p>
+</div>
+
+
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_20_1.png)
+    
+
+
 Now re-sample using the geostatisticaly informed prior:
 
 
@@ -201,12 +604,193 @@ parensemble = pyemu.ParameterEnsemble.from_gaussian_draw(pst=pst, cov=cov, num_r
 parensemble.enforce()
 ```
 
+    drawing from group hk1
+    drawing from group porosity
+    drawing from group rch0
+    drawing from group rch1
+    drawing from group rchpp
+    drawing from group strinf
+    drawing from group wel
+    
+
 Here's an example of the first 5 parameter sets of our 500 created by our draw ("draw" here is like "drawing" a card
 
 
 ```python
 parensemble.head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ne1</th>
+      <th>rch0</th>
+      <th>rch1</th>
+      <th>strinf</th>
+      <th>wel3</th>
+      <th>wel4</th>
+      <th>wel2</th>
+      <th>wel1</th>
+      <th>wel5</th>
+      <th>wel0</th>
+      <th>...</th>
+      <th>rch_i:32_j:2_zone:1.0</th>
+      <th>rch_i:17_j:12_zone:1.0</th>
+      <th>rch_i:7_j:12_zone:1.0</th>
+      <th>rch_i:27_j:17_zone:1.0</th>
+      <th>rch_i:2_j:17_zone:1.0</th>
+      <th>rch_i:17_j:2_zone:1.0</th>
+      <th>rch_i:2_j:12_zone:1.0</th>
+      <th>rch_i:32_j:17_zone:1.0</th>
+      <th>rch_i:37_j:17_zone:1.0</th>
+      <th>rch_i:37_j:12_zone:1.0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.009583</td>
+      <td>0.636000</td>
+      <td>1.208663</td>
+      <td>296.866418</td>
+      <td>109.590198</td>
+      <td>143.473132</td>
+      <td>900.000000</td>
+      <td>347.261007</td>
+      <td>148.383135</td>
+      <td>90.848116</td>
+      <td>...</td>
+      <td>1.596587</td>
+      <td>0.958090</td>
+      <td>0.721037</td>
+      <td>1.729436</td>
+      <td>1.744553</td>
+      <td>0.719409</td>
+      <td>1.243979</td>
+      <td>1.195635</td>
+      <td>0.681879</td>
+      <td>1.176365</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.012451</td>
+      <td>2.000000</td>
+      <td>1.358884</td>
+      <td>401.349422</td>
+      <td>164.705488</td>
+      <td>900.000000</td>
+      <td>386.662038</td>
+      <td>76.166170</td>
+      <td>900.000000</td>
+      <td>69.328231</td>
+      <td>...</td>
+      <td>0.603213</td>
+      <td>0.772045</td>
+      <td>1.321382</td>
+      <td>0.859291</td>
+      <td>0.828841</td>
+      <td>1.282602</td>
+      <td>1.006906</td>
+      <td>0.851859</td>
+      <td>0.889863</td>
+      <td>0.998289</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.009922</td>
+      <td>1.966333</td>
+      <td>1.142492</td>
+      <td>245.576160</td>
+      <td>421.100437</td>
+      <td>110.117281</td>
+      <td>145.506390</td>
+      <td>201.207688</td>
+      <td>510.979844</td>
+      <td>900.000000</td>
+      <td>...</td>
+      <td>0.883169</td>
+      <td>1.202958</td>
+      <td>0.728151</td>
+      <td>0.934369</td>
+      <td>1.187185</td>
+      <td>1.646549</td>
+      <td>1.849163</td>
+      <td>1.266836</td>
+      <td>0.941629</td>
+      <td>0.909086</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.007218</td>
+      <td>0.588905</td>
+      <td>0.567419</td>
+      <td>626.098148</td>
+      <td>71.219612</td>
+      <td>900.000000</td>
+      <td>355.428866</td>
+      <td>227.579461</td>
+      <td>156.658614</td>
+      <td>207.097135</td>
+      <td>...</td>
+      <td>0.938810</td>
+      <td>1.209241</td>
+      <td>1.895610</td>
+      <td>1.089464</td>
+      <td>0.638541</td>
+      <td>1.510416</td>
+      <td>1.009344</td>
+      <td>0.525180</td>
+      <td>1.542154</td>
+      <td>0.908281</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.008293</td>
+      <td>0.922642</td>
+      <td>1.029767</td>
+      <td>476.002182</td>
+      <td>44.652183</td>
+      <td>795.533096</td>
+      <td>21.292506</td>
+      <td>900.000000</td>
+      <td>544.941314</td>
+      <td>826.396753</td>
+      <td>...</td>
+      <td>0.832306</td>
+      <td>1.097875</td>
+      <td>0.942772</td>
+      <td>0.916822</td>
+      <td>0.875572</td>
+      <td>0.894957</td>
+      <td>0.539972</td>
+      <td>0.687725</td>
+      <td>0.753373</td>
+      <td>0.994329</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 68 columns</p>
+</div>
+
+
 
 Now when we plot the spatialy distributed parameters (`hk1`) we can see some structure and points which are near to each other are morel ikely to be similar:
 
@@ -216,6 +800,15 @@ pe_k = parensemble.loc[:,parnmes].copy()
 # use the hbd convenienc function to plot several realisations
 hbd.plot_ensemble_arr(pe_k, working_dir, 10)
 ```
+
+       could not remove start_datetime
+    
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_26_1.png)
+    
+
 
 Let's look at some of the distributions. Note that distributions are log-normal, because parameters in the `pst` are log-transformed:
 
@@ -228,12 +821,203 @@ for pname in pst.par_names[:5]:
     plt.show()
 ```
 
+    0.005 0.02 0.01067691804894108
+    
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_28_1.png)
+    
+
+
+    0.5 2.0 1.0730318679538804
+    
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_28_3.png)
+    
+
+
+    0.5 2.0 1.0685975451074596
+    
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_28_5.png)
+    
+
+
+    50.0 5000.0 773.0894942537367
+    
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_28_7.png)
+    
+
+
+    11.121848658985792 900.0 364.8164629415672
+    
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_28_9.png)
+    
+
+
 Notice anything funny? Compare these distributions to the uper/lower bounds in the `pst.parameter_data`. There seem to be many parameters "bunched up" at the bounds. This is due to the gaussian distribution being truncated at the parameter bounds.
 
 
 ```python
 pst.parameter_data.head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>parnme</th>
+      <th>partrans</th>
+      <th>parchglim</th>
+      <th>parval1</th>
+      <th>parlbnd</th>
+      <th>parubnd</th>
+      <th>pargp</th>
+      <th>scale</th>
+      <th>offset</th>
+      <th>dercom</th>
+      <th>extra</th>
+      <th>i</th>
+      <th>j</th>
+      <th>zone</th>
+    </tr>
+    <tr>
+      <th>parnme</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>ne1</th>
+      <td>ne1</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>0.01</td>
+      <td>0.005</td>
+      <td>0.02</td>
+      <td>porosity</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>rch0</th>
+      <td>rch0</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>1.00</td>
+      <td>0.500</td>
+      <td>2.00</td>
+      <td>rch0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>rch1</th>
+      <td>rch1</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>1.00</td>
+      <td>0.500</td>
+      <td>2.00</td>
+      <td>rch1</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>strinf</th>
+      <td>strinf</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>500.00</td>
+      <td>50.000</td>
+      <td>5000.00</td>
+      <td>strinf</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>wel3</th>
+      <td>wel3</td>
+      <td>log</td>
+      <td>factor</td>
+      <td>300.00</td>
+      <td>10.000</td>
+      <td>900.00</td>
+      <td>wel</td>
+      <td>-1.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 ### Run Monte Carlo
 
@@ -283,6 +1067,202 @@ df_out.columns = [c.lower() for c in df_out.columns]
 df_out.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>input_run_id</th>
+      <th>failed_flag</th>
+      <th>phi</th>
+      <th>meas_phi</th>
+      <th>regul_phi</th>
+      <th>gage-1</th>
+      <th>headwater</th>
+      <th>particle</th>
+      <th>tailwater</th>
+      <th>trgw-0-13-10</th>
+      <th>...</th>
+      <th>trgw-0-9-1:4108.5</th>
+      <th>trgw-0-9-1:4138.5</th>
+      <th>trgw-0-9-1:4169.5</th>
+      <th>trgw-0-9-1:4199.5</th>
+      <th>trgw-0-9-1:4230.5</th>
+      <th>trgw-0-9-1:4261.5</th>
+      <th>trgw-0-9-1:4291.5</th>
+      <th>trgw-0-9-1:4322.5</th>
+      <th>trgw-0-9-1:4352.5</th>
+      <th>trgw-0-9-1:4383.5</th>
+    </tr>
+    <tr>
+      <th>run_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>972.091708</td>
+      <td>972.091708</td>
+      <td>0.0</td>
+      <td>785.356367</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>36.113467</td>
+      <td>36.427207</td>
+      <td>36.668040</td>
+      <td>36.773118</td>
+      <td>36.732199</td>
+      <td>36.567800</td>
+      <td>36.342890</td>
+      <td>36.114839</td>
+      <td>35.965963</td>
+      <td>35.990751</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>0</td>
+      <td>2708.878010</td>
+      <td>2708.878010</td>
+      <td>0.0</td>
+      <td>1747.154943</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>37.885889</td>
+      <td>38.079191</td>
+      <td>38.205360</td>
+      <td>38.190627</td>
+      <td>38.010547</td>
+      <td>37.701173</td>
+      <td>37.342637</td>
+      <td>36.995622</td>
+      <td>36.756957</td>
+      <td>36.724005</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>0</td>
+      <td>2990.607960</td>
+      <td>2990.607960</td>
+      <td>0.0</td>
+      <td>2745.498991</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>37.724609</td>
+      <td>37.795052</td>
+      <td>37.808460</td>
+      <td>37.719394</td>
+      <td>37.507119</td>
+      <td>37.199288</td>
+      <td>36.858328</td>
+      <td>36.528502</td>
+      <td>36.291566</td>
+      <td>36.226571</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>0</td>
+      <td>852.683010</td>
+      <td>852.683010</td>
+      <td>0.0</td>
+      <td>610.598194</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>34.685825</td>
+      <td>34.751175</td>
+      <td>34.788683</td>
+      <td>34.773109</td>
+      <td>34.693298</td>
+      <td>34.560887</td>
+      <td>34.406378</td>
+      <td>34.253455</td>
+      <td>34.143631</td>
+      <td>34.119670</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>0</td>
+      <td>14500.611949</td>
+      <td>14500.611949</td>
+      <td>0.0</td>
+      <td>526.205602</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>109.352692</td>
+      <td>116.554832</td>
+      <td>113.284189</td>
+      <td>100.568306</td>
+      <td>81.560464</td>
+      <td>62.538216</td>
+      <td>49.097002</td>
+      <td>44.060903</td>
+      <td>47.810903</td>
+      <td>64.914569</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 423 columns</p>
+</div>
+
+
+
 Wow, some are pretty large. What was Phi with the initial parameter values??
 
 
@@ -292,12 +1272,25 @@ pst.phi
 ```
 
 
+
+
+    131.79995788867873
+
+
+
+
 Let's plot Phi for all 500 runs:
 
 
 ```python
 df_out.phi.hist(bins=100);
 ```
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_43_0.png)
+    
+
 
 Wow, some of those models are really REALLY bad fits to the observations.  So, when we only use our prior knowledge to sample the parameters we get a bunch of models with unacceptably Phi, and we can consider them not reasonable.  Therefore, we should NOT include them in our uncertainty analysis.
 
@@ -315,6 +1308,13 @@ We started out with a Phi of:
 pst.phi
 ```
 
+
+
+
+    131.79995788867873
+
+
+
 Let's say any Phi below 2x `pst.phi` is aceptable (which is pretty poor by the way...):
 
 
@@ -323,6 +1323,9 @@ acceptable_phi = pst.phi * 2
 good_enough = df_out.loc[df_out.phi<acceptable_phi].index.values
 print("number of good enough realisations:", good_enough.shape[0])
 ```
+
+    number of good enough realisations: 42
+    
 
 These are the run number of the 500 that met this cutoff.  Sheesh - that's very few!
 
@@ -338,6 +1341,12 @@ Let's plot just these "good" ones:
 df_out.loc[good_enough,"phi"].hist(color="g",alpha=0.5)
 plt.show()
 ```
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_49_0.png)
+    
+
 
 Now the payoff - using our good runs, let's make some probablistic plots!  Here's our parameters
 
@@ -357,16 +1366,41 @@ for parnme in pst.par_names[:5]:
     plt.show()
 ```
 
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_51_0.png)
+    
+
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_51_1.png)
+    
+
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_51_2.png)
+    
+
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_51_3.png)
+    
+
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_51_4.png)
+    
+
+
 Similar to the FOSM results, the future recharge (`rch1`) and porosity (`ne1`) are not influenced by calibration. The conditioned parameter values should cover the same range as unconditioned values. 
 
 ## Let's look at the forecasts
 
 In the plots below, prior forecast distributions are shaded grey, posteriors are graded blue and the "true" value is shown as dashed black line.
-
-
-```python
-
-```
 
 
 ```python
@@ -382,6 +1416,30 @@ for forecast in pst.forecast_names:
     plt.tight_layout()
     plt.show()
 ```
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_53_0.png)
+    
+
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_53_1.png)
+    
+
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_53_2.png)
+    
+
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_53_3.png)
+    
+
 
 We see for some of the foreacsts that the prior and posterior are similar - indicating that "calibration" hasn't helped reduce forecast uncertainty. That being said, given the issues noted above for high-dimensional conditioned-MC, the very very few realisations we are using here to assess the posterior make it a bit dubious.
 
@@ -403,6 +1461,11 @@ First we need to run the calibration process to get the calibrated parameters an
 ```python
 hbd.prep_mc(working_dir)
 ```
+
+    getting CC matrix
+    processing
+    noptmax:20, npar_adj:68, nnz_obs:37
+    
 
 
 ```python
@@ -432,13 +1495,15 @@ pst = pyemu.Pst(os.path.join(m_d, pst_name))
 
 ###  ```schur``` bayesian monte carlo
 
-Here, we will swap out the prior parameter covariance matrix ($\boldsymbol{\Sigma}_{\theta}$) for the FOSM-based posterior parameter covariance matrix ($\overline{\boldsymbol{\Sigma}}_{\theta}$).  Everything else is exactly the same (sounds like a NIN song)
+Here, we will swap out the prior parameter covariance matrix ($\boldsymbol{\Sigma}_{\theta}$) for the FOSM-based posterior parameter covariance matrix ($\overline{\boldsymbol{\Sigma}}_{\theta}$).  Everything else is exactly the same (sounds like a NIN song).
+
+First instantiate a the `pyemu.Schur` object:
 
 
 ```python
 sc = pyemu.Schur(jco=os.path.join(m_d,pst_name.replace(".pst",".jcb")),
                 pst=pst,
-                parcov=cov) # geostatistically informed covariance matrix we built earlier
+                parcov=cov) # geostatistically informed prior covariance matrix we built earlier
 ```
 
 Update the control file with the "best fit" parameters (e.g. the calibrated parameters). These values are the mean ofthe posterior parameter probability distribution.
@@ -448,6 +1513,11 @@ Update the control file with the "best fit" parameters (e.g. the calibrated para
 sc.pst.parrep(os.path.join(m_d,pst_name.replace(".pst",".parb")))
 ```
 
+    parrep: updating noptmax to 0
+    
+
+Now we sample parameters from the linearized (because it is based on the linear analysis/FOSM derived posterior) posterior probability dristribution. We obtain the mean of the distribution from the calibrated parameters (the parameter values of _minimum error variance_). We obtain the variance from the posterior parameter covariance matrix ($X^{t}QX$).
+
 
 ```python
 parensemble = pyemu.ParameterEnsemble.from_gaussian_draw(pst=sc.pst,
@@ -455,15 +1525,23 @@ parensemble = pyemu.ParameterEnsemble.from_gaussian_draw(pst=sc.pst,
                                                         num_reals=500,)
 ```
 
+    drawing from group hk1
+    drawing from group porosity
+    drawing from group rch0
+    drawing from group rch1
+    drawing from group rchpp
+    drawing from group strinf
+    drawing from group wel
+    
+
+As before, write the file for PEST++SWP:
+
 
 ```python
 parensemble.to_csv(os.path.join(working_dir,"sweep_in.csv"))
 ```
 
-
-```python
-
-```
+And run again:
 
 
 ```python
@@ -476,6 +1554,8 @@ pyemu.os_utils.start_workers(working_dir, # the folder which contains the "templ
                             )
 ```
 
+And pull in the results, just as before:
+
 
 ```python
 df_out = pd.read_csv(os.path.join(m_d,"sweep_out.csv"),index_col=0)
@@ -486,14 +1566,211 @@ df_out.head()
 ```
 
 
-```python
-df_out.info()
-```
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>input_run_id</th>
+      <th>failed_flag</th>
+      <th>phi</th>
+      <th>meas_phi</th>
+      <th>regul_phi</th>
+      <th>gage-1</th>
+      <th>headwater</th>
+      <th>particle</th>
+      <th>tailwater</th>
+      <th>trgw-0-13-10</th>
+      <th>...</th>
+      <th>trgw-0-9-1:4108.5</th>
+      <th>trgw-0-9-1:4138.5</th>
+      <th>trgw-0-9-1:4169.5</th>
+      <th>trgw-0-9-1:4199.5</th>
+      <th>trgw-0-9-1:4230.5</th>
+      <th>trgw-0-9-1:4261.5</th>
+      <th>trgw-0-9-1:4291.5</th>
+      <th>trgw-0-9-1:4322.5</th>
+      <th>trgw-0-9-1:4352.5</th>
+      <th>trgw-0-9-1:4383.5</th>
+    </tr>
+    <tr>
+      <th>run_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>1.79769313486232e+308</td>
+      <td>346.365601</td>
+      <td>1.79769313486232e+308</td>
+      <td>270.154999</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>40.176058</td>
+      <td>40.363876</td>
+      <td>40.506852</td>
+      <td>40.552192</td>
+      <td>40.482102</td>
+      <td>40.309059</td>
+      <td>40.080792</td>
+      <td>39.838375</td>
+      <td>39.653813</td>
+      <td>39.605097</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>0</td>
+      <td>1.79769313486232e+308</td>
+      <td>255.853028</td>
+      <td>1.79769313486232e+308</td>
+      <td>124.205661</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>34.945770</td>
+      <td>35.088964</td>
+      <td>35.181000</td>
+      <td>35.176886</td>
+      <td>35.062486</td>
+      <td>34.858824</td>
+      <td>34.618053</td>
+      <td>34.382169</td>
+      <td>34.219739</td>
+      <td>34.202378</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>0</td>
+      <td>1.79769313486232e+308</td>
+      <td>480.867599</td>
+      <td>1.79769313486232e+308</td>
+      <td>364.879915</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>37.123164</td>
+      <td>37.199295</td>
+      <td>37.246672</td>
+      <td>37.222494</td>
+      <td>37.105652</td>
+      <td>36.907563</td>
+      <td>36.669732</td>
+      <td>36.424925</td>
+      <td>36.237601</td>
+      <td>36.174389</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>0</td>
+      <td>1.79769313486232e+308</td>
+      <td>400.522923</td>
+      <td>1.79769313486232e+308</td>
+      <td>372.469983</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>37.263096</td>
+      <td>37.261908</td>
+      <td>37.231068</td>
+      <td>37.135165</td>
+      <td>36.950648</td>
+      <td>36.692383</td>
+      <td>36.403304</td>
+      <td>36.111743</td>
+      <td>35.883148</td>
+      <td>35.777369</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>0</td>
+      <td>1.79769313486232e+308</td>
+      <td>250.427697</td>
+      <td>1.79769313486232e+308</td>
+      <td>119.698259</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>39.357333</td>
+      <td>39.525877</td>
+      <td>39.653739</td>
+      <td>39.693191</td>
+      <td>39.628110</td>
+      <td>39.470063</td>
+      <td>39.262576</td>
+      <td>39.043133</td>
+      <td>38.877147</td>
+      <td>38.835452</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 431 columns</p>
+</div>
+
+
 
 
 ```python
 df_out.phi.hist(bins=100);
 ```
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_73_0.png)
+    
+
 
 Now we see, using the same Phi threshold we obtain a larger number of "good enough" parameter sets:
 
@@ -503,6 +1780,11 @@ good_enough = df_out.loc[df_out.meas_phi<acceptable_phi].index.values
 print("number of good enough realisations:", good_enough.shape[0])
 ```
 
+    number of good enough realisations: 129
+    
+
+So sampling from the linearized posterior improves the chances of getting parameters that fit the data.
+
 
 ```python
 #ax = df_out.phi.hist(alpha=0.5)
@@ -510,9 +1792,17 @@ df_out.loc[good_enough,"phi"].hist(color="g",alpha=0.5)
 plt.show()
 ```
 
-Howevver, even so we are failing to entirely capture the truth values of all forecasts (see "part_time" forecast). So our forecast posterior is overly narrow (non-conservative). 
 
-Why? Because our uncertainty analysis is __not robust__ for all our forecasts, even with non-linear Monte Carlo. The parameterization scheme is still to coarse. ...segway to high-dimension PEST setup in PART2.
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_77_0.png)
+    
+
+
+Check the forecasts again. 
+
+So although we are getting more "good enough" parameter sets, we are still failing to entirely capture the truth values of all forecasts (see "part_time" forecast). So our forecast posterior is overly narrow (non-conservative). 
+
+Why? Because our uncertainty analysis is __not robust__ for all our forecasts, even with non-linear Monte Carlo. The parameterization scheme is still to coarse...
 
 
 ```python
@@ -530,11 +1820,31 @@ for forecast in pst.forecast_names:
 ```
 
 
-```python
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_79_0.png)
+    
 
-```
 
 
-```python
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_79_1.png)
+    
 
-```
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_79_2.png)
+    
+
+
+
+    
+![png](freyberg_monte_carlo_files/freyberg_monte_carlo_79_3.png)
+    
+
+
+What have we learnt? Even though we are avoiding the assumptions of linearity required for FOSM, and burning a lot more silicone, this does not guarantee that the uncertianty analysis is conservative. Why? Because we are not considering relevant sources of parameter uncertainty. We are not accounting for spatial variability of porosity...boundary condition parameters (e.g. GHB, WEL and STR parameters)...temporal variability of recharge and pumping rates...and so on. 
+
+But we also saw that, with high-dimensional problems, these brute-force approaches to sampling the (non linear) posterior probability distribution get extremely computationaly expensive. In the past, the Null-Space Monte Carlo [(Tonkin and Doherty, 2009)](https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2007WR006678) provided an option that reduced the burden of calibration-constrained Monte Carlo. More recently, ensemble methods such as are avialble in [PEST++IES](https://github.com/usgs/pestpp/blob/master/documentation/pestpp_users_manual.md#9-pestpp-ies) provide an even more efficient option.
+
+We cover the use of PEST++IES in Part2 of these tutorials, where we introduce workflows for a very high-dimensional prameterisation scheme. 

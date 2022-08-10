@@ -1,11 +1,4 @@
-
 ---
-layout: default
-title: PEST++DA - Sequential Data Assimilation
-parent: Decision Support Modelling with pyEMU and PEST++
-nav_order: 11
----
-                    ---
 layout: default
 title: PEST++DA - Sequential Data Assimilation
 parent: Decision Support Modelling with pyEMU and PEST++
