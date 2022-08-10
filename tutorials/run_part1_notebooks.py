@@ -35,10 +35,12 @@ for dir in intro_dirs:
     for nb in nbfiles:
         run_nb(nb, dir)
 
+
 for dir in part1_dirs:
     nbfiles = [i for i in os.listdir(dir) if i.endswith('.ipynb')]
     for nb in nbfiles:
         run_nb(nb, dir)
+
 
 #nb_dir = "intro_to_freyberg_model"
 #nb_file = "freyberg_intro_model.ipynb"

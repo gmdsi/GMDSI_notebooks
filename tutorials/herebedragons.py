@@ -519,6 +519,7 @@ def intertive_sv_vec_plot(inpst, U):
     from ipywidgets import interact, interactive, fixed, interact_manual
     import ipywidgets as widgets
     def SV_bars(SV=1,):
+
         plt.figure(figsize=(12,4))
         plt.bar(list(range(U.shape[0])),U[:,SV-1])
         #plt.yscale('log')
@@ -531,6 +532,7 @@ def intertive_sv_vec_plot(inpst, U):
             value=1, min=1, max=20, step=1, description='Number SVs:',
             disabled=False, continuous_update=True, orientation='horizontal', 
             readout=True, readout_format='d'));
+
     
 
 def plot_freyberg(tmp_d):
@@ -799,14 +801,17 @@ def plot_ensemble_arr(pe, tmp_d, numreals):
     df_pp.sort_values(by='parnme', inplace=True)
     pe.sort_index(axis=1, inplace=True)
 
+
     fig = plt.figure(figsize=(12, 10))
     # generate random values
     for real in range(numreals):
         df_pp.loc[:,"parval1"] = pe.iloc[real,:].values
         # save a pilot points file
+
         pyemu.pp_utils.write_pp_file(pp_file, df_pp)
         # interpolate the pilot point values to the grid
         ident_arr = pyemu.geostats.fac2real(pp_file, factors_file=pp_file+".fac",out_file=None, )
+
 
         ax = fig.add_subplot(int(numreals/5)+1, 5, real+1, aspect='equal')
         mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
