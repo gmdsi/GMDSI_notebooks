@@ -9,7 +9,6 @@ clear = False
 pdf = False
 html = True
 
-
 def run_nb(nb_file, nb_dir): 
     os.chdir(nb_dir)
     os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=18000 --allow-errors --inplace {0}".format(nb_file))
