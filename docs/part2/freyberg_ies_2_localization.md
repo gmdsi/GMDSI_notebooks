@@ -81,13 +81,6 @@ if os.path.exists(t_d):
 shutil.copytree(org_t_d,t_d)
 ```
 
-
-
-
-    'freyberg6_template'
-
-
-
 Load the PEST control file as a `Pst` object.
 
 
@@ -110,17 +103,6 @@ A quick reminder of the PEST++ optional control variables which have been specif
 ```python
 pst.pestpp_options
 ```
-
-
-
-
-    {'forecasts': 'oname:sfr_otype:lst_usecol:tailwater_time:4383.5,oname:sfr_otype:lst_usecol:headwater_time:4383.5,oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5,part_time',
-     'ies_num_reals': 50,
-     'ies_parameter_ensemble': 'prior_pe.jcb',
-     'ies_observation_ensemble': 'oe.csv',
-     'ies_bad_phi_sigma': 2.0}
-
-
 
 ## PEST++IES with no localization
 
@@ -217,24 +199,12 @@ And _finally_ plot them up. You should be famililar with thes plots fomr the pre
 fig = plot_tseries_ensembles(pr_oe, pt_oe,noise, onames=["hds","sfr"])
 ```
 
-
-    
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_17_0.png)
-    
-
-
 As you recall, the posterior fails to capture the truth for some forecass:
 
 
 ```python
 fig = plot_forecast_hist_compare(pt_oe=pt_oe, pr_oe=pr_oe)
 ```
-
-
-    
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_19_0.png)
-    
-
 
 Right then. Here is where things get interesting. Let's take a look at the distribution of _parameters_, comparing their prior and posterior dsitributions. This will show us where the parameter adjustment process has ..well...adjusted parameters! (And by how much).
 
@@ -274,17 +244,6 @@ pdict = group_pdict(pe_pr, pe_pt)
 pdict['npf'][:5]
 ```
 
-
-
-
-    ['pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:0_x:125.00_y:9875.00_zone:1',
-     'pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:1_x:375.00_y:9875.00_zone:1',
-     'pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:2_x:625.00_y:9875.00_zone:1',
-     'pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:3_x:875.00_y:9875.00_zone:1',
-     'pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:4_x:1125.00_y:9875.00_zone:1']
-
-
-
 We can now plot histograms for each of our parameter groupings in the `pdict` dictionary. The grey and blue bars are the prior and posterior parameter distribution, respectively. Where the blue bars have shifted away fro the grey bars marks parameters which have been updated during history matching.
 
 Now, this is a pretty coarse check. But it does allow us to pick up on parameters that are changing...but which shouldn't. Take porosity parameters for example (the panel on the second row on the right: `D)porosity`). Our observation data set is only cmposed of groundwater levels and stream gage measurments. Neither of these types of masurements contain information which should inform porosity. In other words, porosity parameters should be insensitive to history matching. However, PEST++IES has adjsuted them from their prior values. A clear sign of spurrious correlation. And if it's happening for porosity, who's to say it isn't happening for other prameters as well?
@@ -295,16 +254,6 @@ Right then, let's fix this.
 ```python
 pyemu.plot_utils.ensemble_helper({"0.5":pe_pr,"b":pe_pt},plot_cols=pdict)
 ```
-
-
-    <Figure size 576x756 with 0 Axes>
-
-
-
-    
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_27_1.png)
-    
-
 
 ## Simple Temporal Localization (and common sense)
 
@@ -333,18 +282,6 @@ obs.time = obs.time.astype(float)
 # temporal units are different in obs and par:
 par.inst.unique(), obs.time.unique()
 ```
-
-
-
-
-    (array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
-            17, 18, 19, 20, 21, 22, 23, 24]),
-     array([3652.5, 3683.5, 3712.5, 3743.5, 3773.5, 3804.5, 3834.5, 3865.5,
-            3896.5, 3926.5, 3957.5, 3987.5, 4018.5, 4049.5, 4077.5, 4108.5,
-            4138.5, 4169.5, 4199.5, 4230.5, 4261.5, 4291.5, 4322.5, 4352.5,
-            4383.5,    nan]))
-
-
 
 Inconveniently, temporal parameters in `par` were recorded with the "stress period number" (or `kper`) instead of model time (see the `par.inst` column). But the observations in `obs` were recorded wiht the model time (see the `obs.time` column). 
 
@@ -375,181 +312,9 @@ par.loc[rpar.parnme,["inst","time"]]
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>inst</th>
-      <th>time</th>
-    </tr>
-    <tr>
-      <th>parnme</th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>pname:rch_recharge_1tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>0</td>
-      <td>3652.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_2tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>1</td>
-      <td>3683.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_3tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>2</td>
-      <td>3712.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_4tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>3</td>
-      <td>3743.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_5tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>4</td>
-      <td>3773.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_6tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>5</td>
-      <td>3804.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_7tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>6</td>
-      <td>3834.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_8tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>7</td>
-      <td>3865.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_9tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>8</td>
-      <td>3896.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_10tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>9</td>
-      <td>3926.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_11tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>10</td>
-      <td>3957.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_12tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>11</td>
-      <td>3987.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_13tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>12</td>
-      <td>4018.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_14tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>13</td>
-      <td>4049.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_15tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>14</td>
-      <td>4077.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_16tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>15</td>
-      <td>4108.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_17tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>16</td>
-      <td>4138.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_18tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>17</td>
-      <td>4169.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_19tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>18</td>
-      <td>4199.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_20tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>19</td>
-      <td>4230.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_21tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>20</td>
-      <td>4261.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_22tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>21</td>
-      <td>4291.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_23tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>22</td>
-      <td>4322.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_24tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>23</td>
-      <td>4352.5</td>
-    </tr>
-    <tr>
-      <th>pname:rch_recharge_25tcn_inst:0_ptype:cn_pstyle:m</th>
-      <td>24</td>
-      <td>4383.5</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
 ```python
 times
 ```
-
-
-
-
-    array([3652.5, 3683.5, 3712.5, 3743.5, 3773.5, 3804.5, 3834.5, 3865.5,
-           3896.5, 3926.5, 3957.5, 3987.5, 4018.5, 4049.5, 4077.5, 4108.5,
-           4138.5, 4169.5, 4199.5, 4230.5, 4261.5, 4291.5, 4322.5, 4352.5,
-           4383.5,    nan])
-
-
 
 After tyding that up, let's start preparing the parameter names (or parameter group names; PEST++IES accepts either) that we are gong to use as columns in the localization matrix. 
 
@@ -607,178 +372,6 @@ loc.loc[:,:]= 0.0
 loc.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>npfklayer1gr</th>
-      <th>npfklayer1pp</th>
-      <th>npfklayer1cn</th>
-      <th>npfk33layer1gr</th>
-      <th>npfk33layer1pp</th>
-      <th>npfk33layer1cn</th>
-      <th>stosylayer1gr</th>
-      <th>stosylayer1pp</th>
-      <th>stosylayer1cn</th>
-      <th>ghbcondgr</th>
-      <th>...</th>
-      <th>pname:welcst_inst:15_ptype:cn_usecol:3_pstyle:m</th>
-      <th>pname:welcst_inst:16_ptype:cn_usecol:3_pstyle:m</th>
-      <th>pname:welcst_inst:17_ptype:cn_usecol:3_pstyle:m</th>
-      <th>pname:welcst_inst:18_ptype:cn_usecol:3_pstyle:m</th>
-      <th>pname:welcst_inst:19_ptype:cn_usecol:3_pstyle:m</th>
-      <th>pname:welcst_inst:20_ptype:cn_usecol:3_pstyle:m</th>
-      <th>pname:welcst_inst:21_ptype:cn_usecol:3_pstyle:m</th>
-      <th>pname:welcst_inst:22_ptype:cn_usecol:3_pstyle:m</th>
-      <th>pname:welcst_inst:23_ptype:cn_usecol:3_pstyle:m</th>
-      <th>pname:welcst_inst:24_ptype:cn_usecol:3_pstyle:m</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3804.5</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 75 columns</p>
-</div>
-
-
-
 OK, now we have the startings of a localization matrix. At this moment, every element is assigned a value of 0.0 (e.g. no parameter-to-observation correlation). We will now go through and assign a value of 1.0 to parameter-observation pairs for which a physically plausible relation might exist.
 
 
@@ -789,147 +382,6 @@ loc.loc[:,static_pargps] = 1.0
 # see what that looks like
 loc.loc[:,static_pargps].head()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>npfklayer1gr</th>
-      <th>npfklayer1pp</th>
-      <th>npfklayer1cn</th>
-      <th>npfk33layer1gr</th>
-      <th>npfk33layer1pp</th>
-      <th>npfk33layer1cn</th>
-      <th>stosylayer1gr</th>
-      <th>stosylayer1pp</th>
-      <th>stosylayer1cn</th>
-      <th>ghbcondgr</th>
-      <th>ghbcondcn</th>
-      <th>ghbheadgr</th>
-      <th>ghbheadcn</th>
-      <th>sfrcondgr</th>
-      <th>sfrcondcn</th>
-      <th>icstrtlayer1</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5</th>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5</th>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5</th>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5</th>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3804.5</th>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 Here comes the tricky bit - assigning localization for time-dependent parameters. We are going to say that an observation can _only_ inform parameters that are up to 180 days in the past (e.g. 180 days before the observation). 
 
@@ -953,123 +405,6 @@ loc.loc[kper_obs_names, kper_par_names].head()
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>pname:rch_recharge_8tcn_inst:0_ptype:cn_pstyle:m</th>
-      <th>pname:rch_recharge_9tcn_inst:0_ptype:cn_pstyle:m</th>
-      <th>pname:rch_recharge_10tcn_inst:0_ptype:cn_pstyle:m</th>
-      <th>pname:rch_recharge_11tcn_inst:0_ptype:cn_pstyle:m</th>
-      <th>pname:rch_recharge_12tcn_inst:0_ptype:cn_pstyle:m</th>
-      <th>pname:rch_recharge_13tcn_inst:0_ptype:cn_pstyle:m</th>
-      <th>pname:welcst_inst:7_ptype:cn_usecol:3_pstyle:m</th>
-      <th>pname:welcst_inst:8_ptype:cn_usecol:3_pstyle:m</th>
-      <th>pname:welcst_inst:9_ptype:cn_usecol:3_pstyle:m</th>
-      <th>pname:welcst_inst:10_ptype:cn_usecol:3_pstyle:m</th>
-      <th>pname:welcst_inst:11_ptype:cn_usecol:3_pstyle:m</th>
-      <th>pname:welcst_inst:12_ptype:cn_usecol:3_pstyle:m</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:4018.5</th>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-3-8_time:4018.5</th>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:sfr_otype:lst_usecol:gage-1_time:4018.5</th>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:sfrtd_otype:lst_usecol:gage-1_time:4018.5</th>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-26-6_time:4018.5</th>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
 ```python
 fig,ax = plt.subplots(1,1,figsize=(20,20))
 ax.imshow(loc.values)
@@ -1078,12 +413,6 @@ ax.set_xticklabels(loc.columns.values,rotation=90)
 ax.set_yticks(np.arange(loc.shape[0]))
 _ = ax.set_yticklabels(loc.index.values)
 ```
-
-
-    
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_48_0.png)
-    
-
 
 OK! We should be good to go. Just a quick to check to see if we messed something up:
 
@@ -1119,9 +448,6 @@ pst.pestpp_options["ies_num_reals"] = 30 # in theory, with localization we can g
 pst.write(os.path.join(t_d, 'freyberg_mf6.pst'))
 ```
 
-    noptmax:3, npar_adj:23786, nnz_obs:72
-    
-
 OK, good to go. As usual, make sure to specify the number of workers that your machine can cope with. 
 
 
@@ -1156,16 +482,6 @@ pdict = group_pdict(pe_pr_tloc, pe_pt_tloc)
 fig = pyemu.plot_utils.ensemble_helper({"0.5":pe_pr_tloc,"b":pe_pt_tloc},plot_cols=pdict)
 ```
 
-
-    <Figure size 576x756 with 0 Axes>
-
-
-
-    
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_63_1.png)
-    
-
-
 Ok!  Now we see that the porosity parameters are unchanged - just like we wanted!  Do you think this will effect the travel time forecast???
 
 Now read in the new posterior observation ensemble.
@@ -1182,24 +498,12 @@ Still getting relatively decent (although not _as_ good as before) fits  with hi
 fig = plot_tseries_ensembles(pr_oe, pt_oe_tloc,noise, onames=["hds","sfr"])
 ```
 
-
-    
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_68_0.png)
-    
-
-
 What's happend with our ever important forecasts? 
 
 
 ```python
 fig = plot_forecast_hist_compare(pt_oe=pt_oe_tloc, pr_oe=pr_oe, last_pt_oe=pt_oe, last_prior=pr_oe)
 ```
-
-
-    
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_70_0.png)
-    
-
 
 Ok, much wider posterior distributions, but that could also be from a larger posterior objective function. In any event, much improvement...
 
@@ -1236,159 +540,6 @@ hobs.loc[:,"xy"] = hobs.apply(lambda x: "{0}_{1}".format(x.x,x.y),axis=1)
 hobs.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>obsnme</th>
-      <th>obsval</th>
-      <th>weight</th>
-      <th>obgnme</th>
-      <th>oname</th>
-      <th>otype</th>
-      <th>usecol</th>
-      <th>time</th>
-      <th>i</th>
-      <th>j</th>
-      <th>totim</th>
-      <th>observed</th>
-      <th>x</th>
-      <th>y</th>
-      <th>xy</th>
-    </tr>
-    <tr>
-      <th>obsnme</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5</th>
-      <td>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3683.5</td>
-      <td>37.168420</td>
-      <td>10.0</td>
-      <td>oname:hds_otype:lst_usecol:trgw-0-26-6</td>
-      <td>hds</td>
-      <td>lst</td>
-      <td>trgw-0-26-6</td>
-      <td>3683.5</td>
-      <td>26</td>
-      <td>6</td>
-      <td>NaN</td>
-      <td>1.0</td>
-      <td>1625.0</td>
-      <td>3375.0</td>
-      <td>1625.0_3375.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5</th>
-      <td>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3712.5</td>
-      <td>37.116489</td>
-      <td>10.0</td>
-      <td>oname:hds_otype:lst_usecol:trgw-0-26-6</td>
-      <td>hds</td>
-      <td>lst</td>
-      <td>trgw-0-26-6</td>
-      <td>3712.5</td>
-      <td>26</td>
-      <td>6</td>
-      <td>NaN</td>
-      <td>1.0</td>
-      <td>1625.0</td>
-      <td>3375.0</td>
-      <td>1625.0_3375.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5</th>
-      <td>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3743.5</td>
-      <td>37.182890</td>
-      <td>10.0</td>
-      <td>oname:hds_otype:lst_usecol:trgw-0-26-6</td>
-      <td>hds</td>
-      <td>lst</td>
-      <td>trgw-0-26-6</td>
-      <td>3743.5</td>
-      <td>26</td>
-      <td>6</td>
-      <td>NaN</td>
-      <td>1.0</td>
-      <td>1625.0</td>
-      <td>3375.0</td>
-      <td>1625.0_3375.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5</th>
-      <td>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3773.5</td>
-      <td>37.283326</td>
-      <td>10.0</td>
-      <td>oname:hds_otype:lst_usecol:trgw-0-26-6</td>
-      <td>hds</td>
-      <td>lst</td>
-      <td>trgw-0-26-6</td>
-      <td>3773.5</td>
-      <td>26</td>
-      <td>6</td>
-      <td>NaN</td>
-      <td>1.0</td>
-      <td>1625.0</td>
-      <td>3375.0</td>
-      <td>1625.0_3375.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3804.5</th>
-      <td>oname:hds_otype:lst_usecol:trgw-0-26-6_time:3804.5</td>
-      <td>37.274371</td>
-      <td>10.0</td>
-      <td>oname:hds_otype:lst_usecol:trgw-0-26-6</td>
-      <td>hds</td>
-      <td>lst</td>
-      <td>trgw-0-26-6</td>
-      <td>3804.5</td>
-      <td>26</td>
-      <td>6</td>
-      <td>NaN</td>
-      <td>1.0</td>
-      <td>1625.0</td>
-      <td>3375.0</td>
-      <td>1625.0_3375.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
 We have the `x` and `y` coordinate of all grid and pilot point based parameters recorded in the `Pst` `parameter_data` section. Convenient.
 
 
@@ -1397,202 +548,6 @@ par.x=par.x.astype(float)
 par.y=par.y.astype(float)
 par.head()
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>parnme</th>
-      <th>partrans</th>
-      <th>parchglim</th>
-      <th>parval1</th>
-      <th>parlbnd</th>
-      <th>parubnd</th>
-      <th>pargp</th>
-      <th>scale</th>
-      <th>offset</th>
-      <th>dercom</th>
-      <th>...</th>
-      <th>i</th>
-      <th>j</th>
-      <th>x</th>
-      <th>y</th>
-      <th>zone</th>
-      <th>usecol</th>
-      <th>idx0</th>
-      <th>idx1</th>
-      <th>idx2</th>
-      <th>time</th>
-    </tr>
-    <tr>
-      <th>parnme</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:0_x:125.00_y:9875.00_zone:1</th>
-      <td>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:0_x:125.00_y:9875.00_zone:1</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>0.2</td>
-      <td>5.0</td>
-      <td>npfklayer1gr</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>125.0</td>
-      <td>9875.0</td>
-      <td>1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>3652.5</td>
-    </tr>
-    <tr>
-      <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:1_x:375.00_y:9875.00_zone:1</th>
-      <td>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:1_x:375.00_y:9875.00_zone:1</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>0.2</td>
-      <td>5.0</td>
-      <td>npfklayer1gr</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>...</td>
-      <td>0</td>
-      <td>1</td>
-      <td>375.0</td>
-      <td>9875.0</td>
-      <td>1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>3652.5</td>
-    </tr>
-    <tr>
-      <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:2_x:625.00_y:9875.00_zone:1</th>
-      <td>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:2_x:625.00_y:9875.00_zone:1</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>0.2</td>
-      <td>5.0</td>
-      <td>npfklayer1gr</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>...</td>
-      <td>0</td>
-      <td>2</td>
-      <td>625.0</td>
-      <td>9875.0</td>
-      <td>1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>3652.5</td>
-    </tr>
-    <tr>
-      <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:3_x:875.00_y:9875.00_zone:1</th>
-      <td>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:3_x:875.00_y:9875.00_zone:1</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>0.2</td>
-      <td>5.0</td>
-      <td>npfklayer1gr</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>...</td>
-      <td>0</td>
-      <td>3</td>
-      <td>875.0</td>
-      <td>9875.0</td>
-      <td>1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>3652.5</td>
-    </tr>
-    <tr>
-      <th>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:4_x:1125.00_y:9875.00_zone:1</th>
-      <td>pname:npfklayer1gr_inst:0_ptype:gr_pstyle:m_i:0_j:4_x:1125.00_y:9875.00_zone:1</td>
-      <td>log</td>
-      <td>factor</td>
-      <td>1.0</td>
-      <td>0.2</td>
-      <td>5.0</td>
-      <td>npfklayer1gr</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-      <td>...</td>
-      <td>0</td>
-      <td>4</td>
-      <td>1125.0</td>
-      <td>9875.0</td>
-      <td>1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>3652.5</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 24 columns</p>
-</div>
-
-
 
 First, create a `Matrix` for _all_ adjsutable parameter _names_ and non-zero observations:
 
@@ -1632,9 +587,6 @@ for xy,onames in xy_groups.items():
 
 ```
 
-    Number of observation sites: 2
-    
-
 Now we need to update that with the temporal localization we prepared earlier:
 
 
@@ -1653,13 +605,6 @@ Always good to throw in some checks to make sure we aren't missing something:
 ```python
 spatial_loc.loc[:, [i for i in spatial_loc.columns if ':ne' in i]].sum().sum()
 ```
-
-
-
-
-    0.0
-
-
 
 Right then. Rebuild the `Matrix` from the dataframe, write it to an external file and update the relevant PEST++ option:
 
@@ -1690,9 +635,6 @@ pst.write(os.path.join(t_d,"freyberg_mf6.pst"))
 m_d = os.path.join('master_ies_3')
 ```
 
-    noptmax:3, npar_adj:23786, nnz_obs:72
-    
-
 
 ```python
 pyemu.os_utils.start_workers(t_d, # the folder which contains the "template" PEST dataset
@@ -1719,16 +661,6 @@ pdict = group_pdict(pe_pr_sloc, pe_pt_sloc)
 fig = pyemu.plot_utils.ensemble_helper({"0.5":pe_pr_sloc,"b":pe_pt_sloc},plot_cols=pdict)
 ```
 
-
-    <Figure size 576x756 with 0 Axes>
-
-
-
-    
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_95_1.png)
-    
-
-
 Read in the new posterior ensemble:
 
 
@@ -1743,24 +675,12 @@ In this case, fits are similar to with the temporal localization:
 fig = plot_tseries_ensembles(pr_oe, pt_oe_sloc,noise, onames=["hds","sfr"])
 ```
 
-
-    
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_99_0.png)
-    
-
-
 And the ever important foreacasts. Again, a bit more variance in the null-space dependent forecasts (i.e. particle travel time).
 
 
 ```python
 fig = plot_forecast_hist_compare(pt_oe=pt_oe_sloc, pr_oe=pr_oe, last_pt_oe=pt_oe_tloc, last_prior=pr_oe)
 ```
-
-
-    
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_101_0.png)
-    
-
 
 ## PEST++IES with Automatic Adaptive Localization
 
@@ -1799,9 +719,6 @@ pst.write(os.path.join(t_d,"freyberg_mf6.pst"))
 m_d = os.path.join('master_ies_3')
 ```
 
-    noptmax:3, npar_adj:23786, nnz_obs:72
-    
-
 
 ```python
 pyemu.os_utils.start_workers(t_d, # the folder which contains the "template" PEST dataset
@@ -1829,12 +746,6 @@ fig = plot_forecast_hist_compare(pt_oe=pt_oe_autoloc,
                                 last_pt_oe=pt_oe_sloc, 
                                 last_prior=pr_oe)
 ```
-
-
-    
-![png](freyberg_ies_2_localization_files/freyberg_ies_2_localization_112_0.png)
-    
-
 
 Thus far we have implemented localization, a strategy to tackle spurious parameter-to-observation correlation. In doing so we reduce the potential for "ensemble colapse", a fancy term that means an "underestimate of forecast uncertainty caused by artificial parameter-to-observation relations". This solves history-matching induced through using ensemble based methods, but it does not solve a (the?) core issue - trying to "perfectly" fit data with an imperfect model will induce bias. 
 

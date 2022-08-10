@@ -62,13 +62,6 @@ if not os.path.exists(org_t_d):
 shutil.copytree(org_t_d,t_d)
 ```
 
-
-
-
-    'freyberg6_template'
-
-
-
 Load the PEST control file as a `Pst` object.
 
 
@@ -92,24 +85,10 @@ Load the prior parameter ensemble we generated previously:
 ```
 
 
-
-
-    ['obs_cov.jcb', 'obs_cov_diag.jcb', 'prior_cov.jcb', 'prior_pe.jcb']
-
-
-
-
 ```python
 pe = pyemu.ParameterEnsemble.from_binary(pst=pst,filename=os.path.join(t_d,"prior_pe.jcb"))
 pe.shape
 ```
-
-
-
-
-    (500, 23786)
-
-
 
 ### Run the Ensemble in Parallel
 
@@ -130,9 +109,6 @@ Then, re-write the PEST control file. If you open `freyberg_mf6.pst` in a text e
 pst.control_data.noptmax = 0 # this is ignored by pestpp-swp, but we can use it to do a test run below
 pst.write(os.path.join(t_d, 'freyberg_mf6.pst'))
 ```
-
-    noptmax:0, npar_adj:23786, nnz_obs:72
-    
 
 Always good to do the 'ole `noptmax=0` test:
 
@@ -198,17 +174,11 @@ obs_df = pd.read_csv(os.path.join(m_d,"sweep_out.csv"),index_col=0)
 print('number of realization in the ensemble before dropping: ' + str(obs_df.shape[0]))
 ```
 
-    number of realization in the ensemble before dropping: 500
-    
-
 
 ```python
 obs_df = obs_df.loc[obs_df.failed_flag==0,:]
 print('number of realization in the ensemble **after** dropping: ' + str(obs_df.shape[0]))
 ```
-
-    number of realization in the ensemble **after** dropping: 500
-    
 
 Are they the same? Good, that means none failed. If any had failed, this would be an opportunity to go and figure out why, by identifying the parameter realisations that failed and figuring out why they may have had trouble converging. This might lead to discovering inadequacies in the model configuration and/or parameterisation.  Better to catch them now, before spending alot of effort history matching the model... 
 
@@ -218,19 +188,6 @@ We can take a look at the distribution of Phi obtained for the ensemble. Some pr
 ```python
 obs_df.phi.hist()
 ```
-
-
-
-
-    <AxesSubplot:>
-
-
-
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_27_1.png)
-    
-
 
 More important is to inspect whether the ***distribution*** of simulated observations encompass measured values. Our first concern is to ensure that the model is ***able*** to captured observed behaviour. If measured values do not fall within the range of simualted values, this is a sign that something ain't right and we should revisit our model or prior parameter distributions.
 
@@ -255,32 +212,9 @@ len(zero_weighted_obs_groups)
 ```
 
 
-
-
-    70
-
-
-
-
 ```python
 pyemu.plot_utils.ensemble_res_1to1(obs_df, pst, skip_groups=zero_weighted_obs_groups); 
 ```
-
-
-    <Figure size 576x756 with 0 Axes>
-
-
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_33_1.png)
-    
-
-
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_33_2.png)
-    
-
 
 As we can see above, the prior covers the "measured" values (which is good).
 
@@ -294,14 +228,6 @@ obs_cov = pyemu.Cov.from_binary(os.path.join(t_d, 'obs_cov.jcb'))
 obs_plus_noise = pyemu.ObservationEnsemble.from_gaussian_draw(pst=pst, cov=obs_cov);
 ```
 
-    drawing from group oname:hds_otype:lst_usecol:trgw-0-26-6
-    drawing from group oname:hds_otype:lst_usecol:trgw-0-3-8
-    drawing from group oname:hdstd_otype:lst_usecol:trgw-0-26-6
-    drawing from group oname:hdstd_otype:lst_usecol:trgw-0-3-8
-    drawing from group oname:sfr_otype:lst_usecol:gage-1
-    drawing from group oname:sfrtd_otype:lst_usecol:gage-1
-    
-
 OK, now let's plot that again but with observation noise. 
 
 Aha! Good, not only do our ensemble of model outcomes cover the measured values, but they also entirely cover the range of measured values with noise (red shaded area in the plot below). 
@@ -313,22 +239,6 @@ pyemu.plot_utils.ensemble_res_1to1(obs_df,
                                     skip_groups=zero_weighted_obs_groups,
                                     base_ensemble=obs_plus_noise); 
 ```
-
-
-    <Figure size 576x756 with 0 Axes>
-
-
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_37_1.png)
-    
-
-
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_37_2.png)
-    
-
 
 Another, perhaps coarser, method to quickly explore outcomes is to look at histograms of observations. 
 
@@ -344,16 +254,6 @@ pyemu.plot_utils.ensemble_helper({"r":obs_plus_noise,"0.5":obs_df},
 plt.show();
 ```
 
-
-    <Figure size 576x756 with 0 Axes>
-
-
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_39_1.png)
-    
-
-
 Finally, let's plot the obs vs sim timeseries - everyone's fav!
 
 
@@ -364,15 +264,6 @@ obs = obs.loc[obs.oname.apply(lambda x: x in ["hds","sfr"])]
 obs = obs.loc[obs.obgnme.apply(lambda x: x in pst.nnz_obs_groups),:]
 obs.obgnme.unique()
 ```
-
-
-
-
-    array(['oname:hds_otype:lst_usecol:trgw-0-26-6',
-           'oname:hds_otype:lst_usecol:trgw-0-3-8',
-           'oname:sfr_otype:lst_usecol:gage-1'], dtype=object)
-
-
 
 
 ```python
@@ -391,12 +282,6 @@ for ax,og in zip(axes,ogs):
     ax.set_title(og,loc="left")
 ```
 
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_42_0.png)
-    
-
-
 ### Forecasts
 
 As usual, we bring this story back to the forecasts - after all they are why we are modelling.
@@ -405,16 +290,6 @@ As usual, we bring this story back to the forecasts - after all they are why we 
 ```python
 pst.forecast_names
 ```
-
-
-
-
-    ['oname:sfr_otype:lst_usecol:tailwater_time:4383.5',
-     'oname:sfr_otype:lst_usecol:headwater_time:4383.5',
-     'oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5',
-     'part_time']
-
-
 
 The following cell will plot the distribution of each forecast obtained by running the prior parameter ensemble. Because we are using a synthetic model, we also have the privilege of being able to plot the "truth" (in the real world we dont know the truth of course). 
 
@@ -433,30 +308,6 @@ for forecast in pst.forecast_names:
     ax.plot([fval,fval],ax.get_ylim(),"r-")
 ```
 
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_46_0.png)
-    
-
-
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_46_1.png)
-    
-
-
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_46_2.png)
-    
-
-
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_46_3.png)
-    
-
-
 ### Prior MC without Covariance
 
 The workflow above demonstrated how to use `pestpp-swp` to undertake a "sweep" of model runs. Here, we undertook prior Monte Carlo by running models with an ensemble of parameter sets sampled from the prior parameter probability distribution. 
@@ -473,9 +324,6 @@ pst.pestpp_options['ies_num_reals'] = 50
 pst.control_data.noptmax = -1
 pst.write(os.path.join(t_d,"freyberg_diagprior.pst"))
 ```
-
-    noptmax:-1, npar_adj:23786, nnz_obs:72
-    
 
 Run `pstpp-ies`. This should take about the same amount of time as `pestpp-swp` did.
 
@@ -523,33 +371,3 @@ for forecast in pst.forecast_names:
     fval = pst.observation_data.loc[forecast,"obsval"]
     ax.plot([fval,fval],ax.get_ylim(),"r-")
 ```
-
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_53_0.png)
-    
-
-
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_53_1.png)
-    
-
-
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_53_2.png)
-    
-
-
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_53_3.png)
-    
-
-
-
-    
-![png](freyberg_prior_monte_carlo_files/freyberg_prior_monte_carlo_53_4.png)
-    
-

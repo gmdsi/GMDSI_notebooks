@@ -79,13 +79,6 @@ shutil.copytree(org_t_d,t_d)
 ```
 
 
-
-
-    'freyberg6_template'
-
-
-
-
 ```python
 pst_path = os.path.join(t_d, 'freyberg_mf6.pst')
 ```
@@ -115,154 +108,6 @@ Make a quick parameter summary table as a reminder of what we have in our contro
 pst.write_par_summary_table(filename="none")
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>type</th>
-      <th>transform</th>
-      <th>count</th>
-      <th>initial value</th>
-      <th>lower bound</th>
-      <th>upper bound</th>
-      <th>standard deviation</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>ghbcondcn</th>
-      <td>ghbcondcn</td>
-      <td>log</td>
-      <td>1</td>
-      <td>0</td>
-      <td>-1</td>
-      <td>1</td>
-      <td>0.5</td>
-    </tr>
-    <tr>
-      <th>ghbcondgr</th>
-      <td>ghbcondgr</td>
-      <td>log</td>
-      <td>10</td>
-      <td>0</td>
-      <td>-1</td>
-      <td>1</td>
-      <td>0.5</td>
-    </tr>
-    <tr>
-      <th>ghbheadcn</th>
-      <td>ghbheadcn</td>
-      <td>none</td>
-      <td>1</td>
-      <td>10</td>
-      <td>8</td>
-      <td>12</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>ghbheadgr</th>
-      <td>ghbheadgr</td>
-      <td>none</td>
-      <td>10</td>
-      <td>10</td>
-      <td>8</td>
-      <td>12</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>icstrtlayer1</th>
-      <td>icstrtlayer1</td>
-      <td>none</td>
-      <td>706</td>
-      <td>32.5287 to 40.1337</td>
-      <td>15</td>
-      <td>50</td>
-      <td>8.75</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>stosylayer1cn</th>
-      <td>stosylayer1cn</td>
-      <td>log</td>
-      <td>1</td>
-      <td>0</td>
-      <td>-0.69897</td>
-      <td>0.69897</td>
-      <td>0.349485</td>
-    </tr>
-    <tr>
-      <th>stosylayer1gr</th>
-      <td>stosylayer1gr</td>
-      <td>log</td>
-      <td>706</td>
-      <td>0</td>
-      <td>-0.69897</td>
-      <td>0.69897</td>
-      <td>0.349485</td>
-    </tr>
-    <tr>
-      <th>stosylayer1pp</th>
-      <td>stosylayer1pp</td>
-      <td>log</td>
-      <td>29</td>
-      <td>0</td>
-      <td>-0.69897</td>
-      <td>0.69897</td>
-      <td>0.349485</td>
-    </tr>
-    <tr>
-      <th>welcst</th>
-      <td>welcst</td>
-      <td>log</td>
-      <td>25</td>
-      <td>0</td>
-      <td>-0.60206</td>
-      <td>0.60206</td>
-      <td>0.30103</td>
-    </tr>
-    <tr>
-      <th>welgrd</th>
-      <td>welgrd</td>
-      <td>log</td>
-      <td>175</td>
-      <td>0</td>
-      <td>-0.60206</td>
-      <td>0.60206</td>
-      <td>0.30103</td>
-    </tr>
-  </tbody>
-</table>
-<p>103 rows × 7 columns</p>
-</div>
-
-
-
 Recall that our parameterisation is quite comprehensive, with pilot points and grid based (e.g. cell-by-cell) parameters. 
 
 Let's recall how many adjustable parameters we have:
@@ -271,13 +116,6 @@ Let's recall how many adjustable parameters we have:
 ```python
 pst.npar_adj
 ```
-
-
-
-
-    23786
-
-
 
 Quite a lot! How long does the model take to run? Even if it is well under a minute, that can quickly add up. Just to illustrate, let's chekc how long it takes our forwrd run to complete:
 
@@ -293,13 +131,6 @@ elapsed = timeit.default_timer() - start_time
 elapsed
 ```
 
-
-
-
-    4.694557400000001
-
-
-
 So, very roughly, we can estimate how long it will take to fill in a Jacobian matrix. Let's assume we will be running this in parallel with as many agents as we have cores (update `number_of_cpu_cores` according to what you have at your disposal).
 
 You can check how many physical cores you have on your machine with `psutil`:
@@ -310,21 +141,11 @@ psutil.cpu_count(logical=False)
 ```
 
 
-
-
-    10
-
-
-
-
 ```python
 number_of_cpu_cores = psutil.cpu_count(logical=False)
 
 print(f'Number of hours to fill a jacobian:{pst.npar_adj * elapsed / 60/60 / number_of_cpu_cores}')
 ```
-
-    Number of hours to fill a jacobian:3.1017983976777783
-    
 
 Unless you have many many CPU's at hand, that's still going to be pretty long despite the relatively fast model.
 
@@ -353,13 +174,6 @@ par.loc[gr_pars,"partrans"] = "fixed"
 pst.npar_adj
 ```
 
-
-
-
-    1705
-
-
-
 Let's fix all recharge pilot point parameters. We will at least still have the layer-scale parameters for these.
 
 
@@ -369,13 +183,6 @@ par.loc[par['pargp'].isin(rch_pp),"partrans"] = "fixed"
 pst.npar_adj
 ```
 
-
-
-
-    980
-
-
-
 Fix all those initial head parameters...
 
 
@@ -384,13 +191,6 @@ icstrt = [i for i in pst.adj_par_groups if i.startswith('icstrt') ]
 par.loc[par['pargp'].isin(icstrt),"partrans"] = "fixed"
 pst.npar_adj
 ```
-
-
-
-
-    274
-
-
 
 And let's also fix pilot point parameters for storage, and for vertical conductivity ratio in layer 1 and 3. 
 
@@ -407,22 +207,12 @@ par.loc[par.pargp.apply(lambda x: x in fi_grps),"partrans"] = "fixed"
 pst.npar_adj
 ```
 
-
-
-
-    245
-
-
-
 OK, let's check that estimate of run time again...hmm...a bit more manageable. Of course, the cost of this has been a loss of flexibility in our parameterisation scheme. This means we are potentialy less able to fit historical data...but worse, we are also less able to capture the effect of uncertianty from these fixed parameters on model forecasts.
 
 
 ```python
 print(f'Number of hours to fill a jacobian:{pst.npar_adj * elapsed / 60/60 / number_of_cpu_cores}')
 ```
-
-    Number of hours to fill a jacobian:0.03194907119444445
-    
 
 OK, if we are happy (#sadface) with the number of parameters, we can move on.
 
@@ -439,9 +229,6 @@ We are now ready to go. Let's re-write the control file. We will record this wit
 ```python
 pst.write(os.path.join(t_d,"freyberg_pp.pst"))
 ```
-
-    noptmax:-1, npar_adj:245, nnz_obs:72
-    
 
 ### Run PEST++GLM
 
