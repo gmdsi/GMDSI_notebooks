@@ -57,7 +57,7 @@ $$\underbrace{P(\boldsymbol{\theta}|\textbf{d})}_{\substack{\text{what we} \\ \t
 
 We can also think of this graphically, as taken from Anderson et al. (2015) in slightly different notation but the same equation and concept:
 
-<img src="intro _to_fosm_files/Fig10.3_Bayes_figure.png" style="inline:center;width:500px;"/>
+<img src="intro_to_fosm_files/Fig10.3_Bayes_figure.png" style="inline:center;width:500px;"/>
 
 The problem is, for real-world problems, the likelihood function ("what we learned") is high-dimensional and non-parameteric, requiring non-linear (typically Monte Carlo) integration for rigorous Bayes. Unfortunatley, non-linear methods are computationaly expensive and ineficient as we will see in a subsequent notebook. 
 
@@ -69,19 +69,19 @@ By assuming that:
 
 ### 1. There is an approximate linear relation between parameters and observations:
 
-<img src="intro _to_fosm_files/jacobi.jpg" style="inline: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro_to_fosm_files/jacobi.jpg" style="inline: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
 
 ### <center> $\mathbf{J} \approx \text{constant}$, $\frac{\partial\text{obs}}{\partial\text{par}} \approx \text{constant}$</center>
 
 ### 2. The parameter and forecast prior and posterior distributions are approximately Gaussian:
 
-<img src="intro _to_fosm_files/gauss.jpg" style="inline: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro_to_fosm_files/gauss.jpg" style="inline: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
 
 ###  <center>  $ P(\boldsymbol{\theta}|\mathbf{d}) \approx \mathcal{N}(\overline{\boldsymbol{\mu}}_{\boldsymbol{\theta}},\overline{\boldsymbol{\Sigma}}_{\boldsymbol{\theta}})$ </center>
 
 Armed with these two assumptions, from Bayes equations, one can derive the Schur complement for conditional uncertainty propogation:
 
-<img src="intro _to_fosm_files/schur.jpg" style="inline: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro_to_fosm_files/schur.jpg" style="inline: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
 
 ### <center> $\underbrace{\overline{\boldsymbol{\Sigma}}_{\boldsymbol{\theta}}}_{\substack{\text{what we} \\ \text{know now}}} = \underbrace{\boldsymbol{\Sigma}_{\boldsymbol{\theta}}}_{\substack{\text{what we} \\ \text{knew}}} - \underbrace{\boldsymbol{\Sigma}_{\boldsymbol{\theta}}\bf{J}^T\left[\bf{J}\boldsymbol{\Sigma}_{\boldsymbol{\theta}}\bf{J}^T + \boldsymbol{\Sigma}_{\boldsymbol{\epsilon}}\right]^{-1}\bf{J}\boldsymbol{\Sigma}_{\boldsymbol{\theta}}}_{\text{what we learned}}$ </center>
 
@@ -95,8 +95,8 @@ Armed with these two assumptions, from Bayes equations, one can derive the Schur
 
 # But what about forecasts? 
 
-<img src="intro _to_fosm_files/jacobi.jpg" style="inline: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
-<img src="intro _to_fosm_files/gauss.jpg" style="inline: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro_to_fosm_files/jacobi.jpg" style="inline: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro_to_fosm_files/gauss.jpg" style="inline: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
 
 
 We can use the same assumptions:
@@ -116,7 +116,7 @@ __in the PEST world:__
 
 In the origingal PEST (i.e., not PEST++) documentation, FOSM is referred to as linear analysis. Implementing the various linear analyses relies a suite of utility software and a series of user-input-heavy steps, as illustrated in the figure below. 
 
-<img src="intro _to_fosm_files/workflow.png" style="inline: left; width: 50%; margin-right: 1%; margin-bottom: 0.5em;">
+<img src="intro_to_fosm_files/workflow.png" style="inline: left; width: 50%; margin-right: 1%; margin-bottom: 0.5em;">
 
 
 
