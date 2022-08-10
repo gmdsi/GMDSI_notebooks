@@ -25,7 +25,7 @@ You can do this in one of two ways.
 
 **Install Python and dependencies:**
  - If you have already installed Python using Anaconda, you can skip this step. If not, install [Anaconda](https://www.anaconda.com/products/individual) (or [Miniconda](https://docs.conda.io/en/latest/miniconda.html), if you prefer )
- - If you are using __Windows__: go to the start menu and open "Anaconda prompt". An anaconda command line window will open. On __Linux__ or __MacOS__, just use the stndard terminal. Navigate to the course repo folder on your machine. You can accomplish this by typing "cd *your folder path*" and pressing < enter >. Replace *your folder path* with the path to the course material folder on your computer.
+ - If you are using __Windows__: go to the start menu and open "Anaconda prompt". An anaconda command line window will open. On __Linux__ or __MacOS__, just use the standard terminal. Navigate to the course repo folder on your machine. You can accomplish this by typing "cd *your folder path*" and pressing < enter >. Replace *your folder path* with the path to the course material folder on your computer.
  - Next, type `conda env create -f environment.yml`. This will create an anaconda environment called "gmdsitut" and install the python dependencies required for this course. It may take a while. Should you wish, you can inspect the *environment.yml* file in the repo folder to see what dependecies are being installed.
 
 **Start jupyter notebook**
@@ -55,8 +55,11 @@ GLM and data worth:
 PEST++IES:
  1. freyberg_ies_1_basics.ipynb
  2. freyberg_ies_2_localization.ipynb
- 3. freyberg_ies_3_tot_error_cov.ipynb
 
 PEST++DA:
  1. freyberg_da_prep.ipynb
  2. freyberg_da_run.ipynb
+ 
+ # Acknowledgments
+ 
+These tutorials were originally developed with support from the U.S Geological Survey. Continued development and support is funded by the Groundwater Modelling Decision Support Initiative (GMDSI). GMDSI is jointly funded by BHP and Rio Tinto.
