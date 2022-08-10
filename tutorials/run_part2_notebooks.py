@@ -12,7 +12,7 @@ html = True
 
 def run_nb(nb_file, nb_dir): 
     os.chdir(nb_dir)
-    os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800 --allow-errors --inplace {0}".format(nb_file))
+    os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=18000 --allow-errors --inplace {0}".format(nb_file))
     if html:
         os.system("jupyter nbconvert --to html {0}".format(nb_file))
         md_file = nb_file.replace('.ipynb', '.html')
@@ -60,3 +60,8 @@ nb_file = "freyberg_da_prep.ipynb"
 run_nb(nb_file, nb_dir)
 nb_file = "freyberg_da_run.ipynb"
 run_nb(nb_file, nb_dir)
+
+nb_dir = "part2_8_opt"
+nb_file = "freyberg_opt_1.ipynb"
+run_nb(nb_file, nb_dir)
+
