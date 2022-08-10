@@ -794,17 +794,19 @@ def plot_ensemble_arr(pe, tmp_d, numreals):
             delr=gwf.dis.delr.array, delc=gwf.dis.delc.array)
 
     pp_file=os.path.join(tmp_d,"hkpp.dat")
-    new_ppfile = os.path.join(tmp_d,"identpp.dat")
-    df_pp = pd.read_csv(pp_file, delim_whitespace=True, header=None, names=['name','x','y','zone','parval1'])
+    df_pp = pyemu.pp_utils.pp_tpl_to_dataframe(os.path.join(tmp_d,"hkpp.dat.tpl"))
+    #same name order
+    df_pp.sort_values(by='parnme', inplace=True)
+    pe.sort_index(axis=1, inplace=True)
 
     fig = plt.figure(figsize=(12, 10))
     # generate random values
     for real in range(numreals):
         df_pp.loc[:,"parval1"] = pe.iloc[real,:].values
         # save a pilot points file
-        pyemu.pp_utils.write_pp_file(new_ppfile, df_pp)
+        pyemu.pp_utils.write_pp_file(pp_file, df_pp)
         # interpolate the pilot point values to the grid
-        ident_arr = pyemu.geostats.fac2real(new_ppfile, factors_file=pp_file+".fac",out_file=None, )
+        ident_arr = pyemu.geostats.fac2real(pp_file, factors_file=pp_file+".fac",out_file=None, )
 
         ax = fig.add_subplot(int(numreals/5)+1, 5, real+1, aspect='equal')
         mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
@@ -841,6 +843,11 @@ def prep_mc(tmp_d):
 
     pst.pestpp_options.pop('n_iter_base')
     pst.pestpp_options.pop('n_iter_super')
+
+    #update parameter data
+    par = pst.parameter_data
+    #update paramter transform
+    par.loc[:, 'partrans'] = 'log'
 
     pst.control_data.noptmax = 20
     pst.write(os.path.join(tmp_d, 'freyberg_reg.pst'))
