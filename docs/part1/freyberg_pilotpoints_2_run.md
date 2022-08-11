@@ -59,19 +59,6 @@ hbd.prep_deps(tmp_d)
 hbd.prep_pest(tmp_d)
 ```
 
-    ins file for heads.csv prepared.
-    ins file for sfr.csv prepared.
-    noptmax:0, npar_adj:1, nnz_obs:24
-    written pest control file: freyberg_mf6\freyberg.pst
-    
-
-
-
-
-    <pyemu.pst.pst_handler.Pst at 0x23ab6bc5cd0>
-
-
-
 ### Run the non-pilot point setup
 Just so we can compare; its quite quick so no worries.
 
@@ -87,9 +74,6 @@ pst_base.write(os.path.join(tmp_d, 'freyberg.pst'))
 pyemu.os_utils.run("pestpp-glm freyberg.pst", cwd=tmp_d)
 ```
 
-    noptmax:20, npar_adj:2, nnz_obs:37
-    
-
 
 ```python
 pst_base = pyemu.Pst(os.path.join(tmp_d,'freyberg.pst'))
@@ -103,13 +87,6 @@ Recall what phi we achieve usgin homogneous `hk1` and `rch0`:
 pst_base.phi
 ```
 
-
-
-
-    61.144289680170665
-
-
-
 Let's see if we can beat that.
 
 ### Now run the pilot point setup
@@ -121,30 +98,6 @@ Load the PEST control file set up with pilot point parameters:
 # convenience function that builds a new control file with pilot point parameters for hk
 hbd.add_ppoints(tmp_d)
 ```
-
-       could not remove start_datetime
-    1 pars added from template file .\freyberg6.sfr_perioddata_1.txt.tpl
-    6 pars added from template file .\freyberg6.wel_stress_period_data_10.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_11.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_12.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_2.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_3.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_4.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_5.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_6.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_7.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_8.txt.tpl
-    0 pars added from template file .\freyberg6.wel_stress_period_data_9.txt.tpl
-    starting interp point loop for 800 points
-    took 1.949872 seconds
-    1 pars dropped from template file freyberg_mf6\freyberg6.npf_k_layer1.txt.tpl
-    29 pars added from template file .\hkpp.dat.tpl
-    starting interp point loop for 800 points
-    took 1.971718 seconds
-    29 pars added from template file .\rchpp.dat.tpl
-    noptmax:20, npar_adj:65, nnz_obs:37
-    new control file: 'freyberg_pp.pst'
-    
 
 Load the control file with pilot point parameters:
 
@@ -160,13 +113,6 @@ We (the authors) have added a few more parameters in the background. These inclu
 pst.adj_par_groups
 ```
 
-
-
-
-    ['strinf', 'wel', 'hk1', 'rchpp']
-
-
-
 As usual, run once to check that it works (trust but verify!):
 
 
@@ -176,9 +122,6 @@ pst.write(os.path.join(tmp_d, 'freyberg_pp.pst'))
 
 pyemu.os_utils.run("pestpp-glm freyberg_pp.pst", cwd=tmp_d)
 ```
-
-    noptmax:0, npar_adj:65, nnz_obs:37
-    
 
 Check if it completed sucessfully:
 
@@ -202,9 +145,6 @@ Always remember to re-write the control file!
 pst.write(os.path.join(tmp_d, 'freyberg_pp.pst'))
 ```
 
-    noptmax:8, npar_adj:65, nnz_obs:37
-    
-
 OK, good to go.
 
 Now, when using derivative-based methods such as are implemented in PEST++GLM (and PEST/PEST_HP) the cost of more adjustable parameters is ...more run-time. Recall that PEST(++) needs to run the model the same number of times as there are adjustable parameters in order to fill the Jacobian matrix.
@@ -225,13 +165,6 @@ You must specify the number which is adequate for ***your*** machine! Make sure 
 ```python
 psutil.cpu_count(logical=False)
 ```
-
-
-
-
-    10
-
-
 
 
 ```python
@@ -278,26 +211,12 @@ assert pst.phi!=pst_base.phi
 pst.phi
 ```
 
-
-
-
-    4.645542987425462
-
-
-
 Sweet - we did way better! More parameters means more "flexibility" for PEST to obtain a better fit:
 
 
 ```python
 pst.phi / pst_base.phi
 ```
-
-
-
-
-    0.07597672671847278
-
-
 
 Check out the Phi progress. Not too bad. Looks like PEST could still do better if we let it carry on.
 
@@ -308,12 +227,6 @@ df_obj.total_phi.plot()
 plt.ylabel('total_phi');
 ```
 
-
-    
-![png](freyberg_pilotpoints_2_run_files/freyberg_pilotpoints_2_run_36_0.png)
-    
-
-
 What about the fits with measured values? Doing better than before, for sure. Not perfect, but pretty good.
 
  > (side note: recall we "conveniently" didn't add pilot points for recharge as well...not to mention all the other poorly known or unknowable parameter values...pumping rates, storage parameters, GHB parameters, aquifer geometry...etc, etc...perhaps we should have?)
@@ -323,29 +236,12 @@ What about the fits with measured values? Doing better than before, for sure. No
 figs = pst.plot(kind="1to1");
 ```
 
-
-    <Figure size 576x756 with 0 Axes>
-
-
-
-    
-![png](freyberg_pilotpoints_2_run_files/freyberg_pilotpoints_2_run_38_1.png)
-    
-
-
 Let's inspect the posterior parameter uncetanties for each group of pilot points (`hk1` and `rchpp`). The next cell plots the prbability distribution for each parameter in each parameter group. Recall that each pilot point is assigned a unique parmaeter, so in each plot we are displaying 30 distributions. We are also plotting the parmater upper and lower bounds as vertical dashed black lines.
 
 
 ```python
 pst.adj_par_groups
 ```
-
-
-
-
-    ['strinf', 'wel', 'hk1', 'rchpp']
-
-
 
 
 ```python
@@ -367,12 +263,6 @@ for pargp in pst.adj_par_groups:
     ax.plot([mx,mx],ax.get_ylim(),"k--")
 ```
 
-
-    
-![png](freyberg_pilotpoints_2_run_files/freyberg_pilotpoints_2_run_41_0.png)
-    
-
-
 Yikes - that doesn't look good. Lots of parameters are right up againts the bounds. (The center of the distributions is centered on the black lines.) This implies that they are taking on exteme values in order to achieve that "excelent" fit with measured data. 
 
 Is this realistic? No, not really. It often means parameters are taking on compensatory roles to make up for strucutural error or poor conceptualization.
@@ -389,17 +279,6 @@ pyemu.geostats.fac2real(os.path.join(m_d,"hkpp.dat"),
                         factors_file=os.path.join(m_d,"hkpp.dat.fac"),
                         out_file=os.path.join(m_d,"freyberg6.npf_k_layer1.txt"))
 ```
-
-    Updating parameter values from master_pp\freyberg_pp.par
-    parrep: updating noptmax to 0
-    
-
-
-
-
-    'master_pp\\freyberg6.npf_k_layer1.txt'
-
-
 
 
 ```python
@@ -431,24 +310,12 @@ mm.plot_inactive()
 ax.set_title('$K$');
 ```
 
-
-    
-![png](freyberg_pilotpoints_2_run_files/freyberg_pilotpoints_2_run_48_0.png)
-    
-
-
 How does that compare to the true values? The patterns are not very similar...and those "bulls-eyes" in the calibrated field don't look very realistic.
 
 
 ```python
 gwf = hbd.plot_truth_k(m_d)
 ```
-
-
-    
-![png](freyberg_pilotpoints_2_run_files/freyberg_pilotpoints_2_run_50_0.png)
-    
-
 
 Something is wrong... We better checkout the forecasts:
 
@@ -464,12 +331,6 @@ for ax in axes:
     ax.set_ylim(0, ylim[-1])
 figs[0].tight_layout()
 ```
-
-
-    
-![png](freyberg_pilotpoints_2_run_files/freyberg_pilotpoints_2_run_52_0.png)
-    
-
 
 Sheesh! What happened? We are still failing to capture many of our forecast "truths" in the posterior. The answer: overfitting. We specified lots of parameters, so we are able to fit the observations really well - too well.  
 
