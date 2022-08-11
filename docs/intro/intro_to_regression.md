@@ -195,7 +195,7 @@ y_fit_pars_best
 
 
 
-    [-0.2863852605887829, 0.9603812941848386, 0]
+    [-0.286385264416572, 0.9603812888937198, 0]
 
 
 
@@ -213,7 +213,7 @@ print(f'% of initial Phi: {round(100*phi_calib/phi_0, 2)} %')
 ```
 
     Initial Phi: 1495.0154221535531
-    Minimum Phi: 571.6124271421689
+    Minimum Phi: 571.6124271421686
     % of initial Phi: 38.23 %
     
 
@@ -323,9 +323,9 @@ So as you can see, increasing parameters to improve the fit does not mean that t
 
 The two plots below illustrate this. Both plots illustrate how model error changes with the number of adjustable parameters. The blue line plots error in regard to historical data. The red line plots error in regard to the prediction. 
 
-"**Data error** decreases with increasing number of parameters. However, **prediction error** increases after the ideal number of parameters is surpassed. This is deemed **overfitting**. More parameters mean the model has more flexibility to fit the measured data. But the measured data has noise! Effectively, after a certain point, we are just improving the fit by making our model very good at simulating "noise". 
+"**Data error** decreases with increasing number of parameters. However, **prediction error** increases after the ideal number of parameters is surpassed. This is deemed **overfitting**. More parameters mean the model has more flexibility to fit the measured data. But the measured data has noise! Effectively, after a certain point, we are just improving the fit by making our model very good at simulating "noise". When modeling in the real-world, we employ _regularization_ to avoid this. (Demonstrated for groundwater modelling contexts in subsequent tutorials.)
 
-**Prediction error** is minimized when we have the "correct" number of parameters (in this case, two). Using less parameters results in a worse fit with measured data, as well as greater prediction error. This is deemed **underfitting**. In this case the model does not have sufficient freedom to replicate true behaviour.
+**Prediction error** is minimized when we have the "correct" number of parameters (in this case, two). Using less parameters results in a worse fit with measured data, as well as greater prediction error. This is deemed **underfitting**. In this case the model does not have sufficient freedom to replicate true behaviour. In practice __this is the case for all groundwater models__. No model has as many parameters (i.e. level of detail) as the rel world. (That's why we are modelling in the first place...). 
 
 Using too-few parameters in a model "hard wires" in the model's inability to represent system behaviour. Using too many does not. In practice, when simulating groundwater systems, our models will never have more parameters than exist in reality. Thus, we will always be below the "true" optimal number of parameters. Overfitting in this case becomes a matter of having more adjustable parameters than measured data. During subsequent tutorials we will explore how to handle this in practice.
 
@@ -351,6 +351,14 @@ rh.plot_error_tradeoff_fine(x, y_data, poly_func)
 ![png](intro_to_regression_files/intro_to_regression_33_0.png)
     
 
+
+## Linking to Groundwater Modelling
+
+At first glance, from what we have shown above, it may appear that _over_-parameterisation leads to larger erros than _under_-parameterisation. This is because this 2-parameter example is very simple. When modelling in the real-world the number of parameters of the truth is near-infinite. In the real-world __it is impossible to have more parameters than the truth__. 
+
+In groundwater (or environmental) modelling, when we talk about overfitting, in practice we are talking about "fitting to observation noise". Fortunately, we have at our disposal techniques (i.e. regularization) to cope with this, as is discussed in subsequent tutorials. The purpose of this exercise is to demonstrate how off-the-rails things can go without expert input. 
+
+So, in practice __using more parameters is better__, as it reduces the potential for introducing structural error. But, __more parameters requires more care__. As shown above, simply throwing more parameters at a problem can lead to very wrong outcomes. __#badtimes__
 
 ## Final Remarks
 
