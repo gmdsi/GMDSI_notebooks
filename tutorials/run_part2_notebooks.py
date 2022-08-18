@@ -11,7 +11,7 @@ html = True
 
 def run_nb(nb_file, nb_dir): 
     os.chdir(nb_dir)
-    os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=18000 --allow-errors --inplace {0}".format(nb_file))
+    os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=180000 --allow-errors --inplace {0}".format(nb_file))
     if html:
         os.system("jupyter nbconvert --to html {0}".format(nb_file))
         md_file = nb_file.replace('.ipynb', '.html')
@@ -63,4 +63,19 @@ run_nb(nb_file, nb_dir)
 nb_dir = "part2_8_opt"
 nb_file = "freyberg_opt_1.ipynb"
 run_nb(nb_file, nb_dir)
+
+nb_dir = "part2_8_opt"
+nb_file = "freyberg_opt_2.ipynb"
+run_nb(nb_file, nb_dir)
+
+nb_dir = "part2_9_mou"
+nb_file = "freyberg_mou_1.ipynb"
+run_nb(nb_file, nb_dir)
+
+nb_dir = "part2_9_mou"
+nb_file = "freyberg_mou_2.ipynb"
+run_nb(nb_file, nb_dir)
+
+
+
 
