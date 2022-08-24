@@ -26,29 +26,47 @@ When undertaking decision-support modelling in practice, more rigorous, automate
 
 
 
-### 1. Admin
+### Admin
 
 In the tutorial folder there is a file named `freyberg_trial_and_error.py`. It contains a series of functions that automate changing parameters, running the model and plotting outcomes. These make use of `flopy` and other libraries. You do not need to be familiar with these functions, only to follow along with what they are doing.
 
 
 ```python
+import sys
+import os
 import warnings
 warnings.filterwarnings("ignore")
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt;
+
+import shutil
+
+sys.path.insert(0,os.path.join("..", "..", "dependencies"))
+import pyemu
+import flopy
+assert "dependencies" in flopy.__file__
+assert "dependencies" in pyemu.__file__
+sys.path.insert(0,"..")
 
 import freyberg_trial_and_error as te
 #prepares some files for manunal trial and error
 te.get_model()
 ```
 
-### 2. Trial and Error
+    model files are in: freyberg_mf6
+    
+
+# Trial and Error
 
 The `te.update_par()` function loads the modified Freyberg model (see the "freyberg intro to model" notebook), updates parameters, runs the model and then plots simulated values against measured values.
 
 The function automates updates to:
 
-- hydraulic conductivty (k) for each of the three model layers.
-- recharge. 
+- hydraulic conductivty (k)
+- recharge
 
 You can assign values of k to each layer through the respective `k1`,`k2` and `k3` arguments. You can adjust recharge by passing a value to the `rch_factor` argument. Recharge in the model is multipled by this factor. 
 
@@ -61,64 +79,99 @@ For example:
 
 ```python
 te.update_par(k1=1,     # K in layer 1
-              k2=0.1,   # K in layer 2
-              k3=1,     # K in layer 3
               rch_factor=0.35) # recharge is multiplied by rch_factor
 ```
 
-### 3. Do It Yourself
 
-Experiment with changing values for `k1`,`k2`,`k3` and `rch_factor`. See if you can achieve a good fit between measured and simulated values of head and river flow (e.g. minimize RMSE). 
+    
+![png](freyberg_trial_and_error_files/freyberg_trial_and_error_4_0.png)
+    
+
+
+### Do It Yourself
+
+Experiment with changing values for `k1` and `rch_factor`. See if you can achieve a good fit between measured and simulated values of head and river flow (e.g. minimize RMSE). 
 
 Whilst you are doing so, pay attention to the forecast of river flux. Does the forecast improve with a better fit for heads and/or SFR observations? Is it sensitive to some parameters more than others? 
 
 
 ```python
 # change the parameter values untill you are happy with the fit
-te.update_par(k1=10, k2=10, k3=10, rch_factor=1)
+te.update_par(k1=8, rch_factor=1)
 ```
 
-### 4. Non-Uniqueness and Correlated Parameters
 
-So you may have found that values of `k1`=3, `k2`=0.3 and `k3`=30 and `rch_factor`=1 provide a decent fit.
+    
+![png](freyberg_trial_and_error_files/freyberg_trial_and_error_6_0.png)
+    
 
-...but hold on! What's this? If we assign a value of 30 m/d throughout the model (i.e. `k1`=`k2`=`k3`=30), results look very similar. Oh dear.
+
+### Non-Uniqueness and Correlated Parameters
+
+So you may have found that values of `k1`=4, and `rch_factor`=1.1 provide a decent fit.
+
+...but hold on! What's this? If we assign `k1`=10,  `rch_factor`=2, results look very similar. Oh dear.
 
 So which one is correct? Well looking at the forecast...hmm...looks like neither is correct! 
 
 
 ```python
-te.update_par(k1=30, k2=30, k3=30, rch_factor=1)
+te.update_par(k1=4, rch_factor=1.1)
 ```
+
+
+    
+![png](freyberg_trial_and_error_files/freyberg_trial_and_error_8_0.png)
+    
+
 
 
 ```python
-te.update_par(k1=3, k2=0.3, k3=30, rch_factor=1)
+te.update_par(k1=10,  rch_factor=2.0)
 ```
 
-And what about when we adjust K and recharge at the same time? 
 
-> **hint:** this is particularily evident if you ignore the river flux observations and only try and fit heads. See the benefit of multiple types of observation data? Using heads & flows as calibration targets helps to constrain parameters which are informed by different sources of information. The same applies for secondary observations; e.g. vertical head differences for vertical conectivity and time-differences for storage or transport parameters.
+    
+![png](freyberg_trial_and_error_files/freyberg_trial_and_error_9_0.png)
+    
+
+
+
+One option is to use multiple types of observation data. Using heads & flows as calibration targets helps to constrain parameters which are informed by different sources of information. The same applies for secondary observations; e.g. vertical head differences for vertical conectivity and time-differences for storage or transport parameters.
+
+See if accounting for the fit with stream gage data helps:
 
 
 ```python
-te.update_par(k1=3, k2=3, k3=15, rch_factor=0.5, sfrplot=False)
+te.update_par(k1=4, rch_factor=1.1, sfrplot=True)
 ```
 
-### 5. Structural Error
+
+    
+![png](freyberg_trial_and_error_files/freyberg_trial_and_error_11_0.png)
+    
+
+
+### Structural Error
 
 Can you find a parameter combination that results in a "correct" forecast? What do the corresponding fits with observation data look like? 
 
 
 ```python
-te.update_par(k1=3, k2=0.3, k3=30, rch_factor=0.8)
+te.update_par(k1=4, rch_factor=1.1, sfrplot=True)
 ```
+
+
+    
+![png](freyberg_trial_and_error_files/freyberg_trial_and_error_13_0.png)
+    
+
 
 So...is history-matching a lie? It seems to make our model worse at making a prediction! 
 
 Well, in this case it does. This is because our model is *oversimplified*. We are introducing *structural error* by using a single parameter value for each model layer, ignoring the potential for parameter heterogeneity. We touched on this in the "intro to regression" notebook and we will revisit it again in other tutorials.
 
-### 6. Final Remarks
+## Final Remarks
 
 Hopefully after this gruelling exercise you have learnt the value (and lack-thereof) of manual trial-and-error history-matching. We have seen that:
 

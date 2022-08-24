@@ -70,13 +70,6 @@ if os.path.exists(t_d):
 shutil.copytree(org_t_d,t_d)
 ```
 
-
-
-
-    'freyberg6_template'
-
-
-
 ## Preparing for PESTPP-IES
 
 We shall start by running PESTPP-IES in standard, basic mode. 
@@ -107,13 +100,6 @@ A quick check of what PEST++ options are already in the control file:
 pst.pestpp_options
 ```
 
-
-
-
-    {'forecasts': 'oname:sfr_otype:lst_usecol:tailwater_time:4383.5,oname:sfr_otype:lst_usecol:headwater_time:4383.5,oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5,part_time'}
-
-
-
 ### Number of realisations
 As previously mentioned, an “ensemble” refers to a set of parameter fields. Each of these parameter fields is referred to as a “realisation”. In general, the larger the ensemble, the better is the history-matching performance of PESTPP-IES. In practice, the number of realisations is limited by computing resources (more realisations require more model runs per iteration). 
 
@@ -127,13 +113,6 @@ For the purposes of this tutorial, lets just use 50 realizations to speed things
 ```python
 pst.nnz_obs
 ```
-
-
-
-
-    72
-
-
 
 
 ```python
@@ -156,24 +135,10 @@ Load the prior parameter ensemble we generated previously:
 ```
 
 
-
-
-    ['obs_cov.jcb', 'obs_cov_diag.jcb', 'prior_cov.jcb', 'prior_pe.jcb']
-
-
-
-
 ```python
 pe = pyemu.ParameterEnsemble.from_binary(pst=pst,filename=os.path.join(t_d,"prior_pe.jcb"))
 pe.shape
 ```
-
-
-
-
-    (500, 23786)
-
-
 
 OK then. We need to tell PESTPP-IES which file to use. Easy enough, just assign the file name to the `ies_parameter_ensemble()` pestpp control variable:
 
@@ -200,14 +165,6 @@ oe = pyemu.ObservationEnsemble.from_gaussian_draw(pst, cov=obscov, num_reals=pe.
 oe.to_csv(os.path.join(t_d, 'oe.csv'))
 ```
 
-    drawing from group oname:hds_otype:lst_usecol:trgw-0-26-6
-    drawing from group oname:hds_otype:lst_usecol:trgw-0-3-8
-    drawing from group oname:hdstd_otype:lst_usecol:trgw-0-26-6
-    drawing from group oname:hdstd_otype:lst_usecol:trgw-0-3-8
-    drawing from group oname:sfr_otype:lst_usecol:gage-1
-    drawing from group oname:sfrtd_otype:lst_usecol:gage-1
-    
-
 And assign the relevant PEST++ control variable:
 
 
@@ -226,9 +183,6 @@ pst.write(os.path.join(t_d, 'freyberg_mf6.pst'))
 pyemu.os_utils.run("pestpp-ies freyberg_mf6.pst",cwd=t_d)
 ```
 
-    noptmax:0, npar_adj:23786, nnz_obs:72
-    
-
 If that was sucessfull, we can re-load it and just check the Phi:
 
 
@@ -236,13 +190,6 @@ If that was sucessfull, we can re-load it and just check the Phi:
 pst = pyemu.Pst(os.path.join(t_d, 'freyberg_mf6.pst'))
 pst.phi
 ```
-
-
-
-
-    13061.65612483826
-
-
 
 ### Other options that are usually a good idea
 
@@ -266,9 +213,6 @@ pst.control_data.noptmax = 3
 pst.write(os.path.join(t_d, 'freyberg_mf6.pst'))
 ```
 
-    noptmax:3, npar_adj:23786, nnz_obs:72
-    
-
 To speed up the process, you will want to distribute the workload across as many parallel agents as possible. Normally, you will want to use the same number of agents (or less) as you have available CPU cores. Most personal computers (i.e. desktops or laptops) these days have between 4 and 10 cores. Servers or HPCs may have many more cores than this. Another limitation to keep in mind is the read/write speed of your machines disk (e.g. your hard drive). PEST and the model software are going to be reading and writting lots of files. This often slows things down if agents are competing for the same resources to read/write to disk.
 
 The first thing we will do is specify the number of agents we are going to use.
@@ -283,13 +227,6 @@ You can check the number of physical cores avalable on your machine using `psuti
 ```python
 psutil.cpu_count(logical=False)
 ```
-
-
-
-
-    10
-
-
 
 
 ```python
@@ -359,12 +296,6 @@ ax.set_title(r'Measured+Noise $\Phi$')
 fig.tight_layout()
 ```
 
-
-    
-![png](freyberg_ies_1_basics_files/freyberg_ies_1_basics_42_0.png)
-    
-
-
 Whilst we are at it, why not plot a histogram of Phi from the last iteration. Good to get a depiction of how Phi is distributed across the ensemble:
 
 
@@ -373,12 +304,6 @@ plt.figure()
 phi.iloc[-1,6:].hist()
 plt.title(r'Final $\Phi$ Distribution');
 ```
-
-
-    
-![png](freyberg_ies_1_basics_files/freyberg_ies_1_basics_44_0.png)
-    
-
 
 PESTPP-IES has conveniently kept track of all our observaton data, measurement noise and the model outputs from each realization at each iteration. This now allows us to go back and look at all this information in detail should we wish to do so. We are interested in looking at (1) how model outputs compare to measured data+noise and (2) the distribution of model outps for forecast observations.
 
@@ -400,12 +325,6 @@ pr_oe.phi_vector.apply(np.log10).hist(ax=ax,fc="0.5",ec="none",alpha=0.5,density
 pt_oe.phi_vector.apply(np.log10).hist(ax=ax,fc="b",ec="none",alpha=0.5,density=False)
 _ = ax.set_xlabel("$log_{10}\\phi$")
 ```
-
-
-    
-![png](freyberg_ies_1_basics_files/freyberg_ies_1_basics_48_0.png)
-    
-
 
 Finally, what we really want to see. Let's plot timeseries of simulated versus measured observation values. We are going to do this many times in this notebook, so let's make a function:
 
@@ -457,12 +376,6 @@ Looks like we are getting an excellent fit. All the blue lines are within the sa
 fig = plot_tseries_ensembles(pr_oe, pt_oe, noise, onames=["hds","sfr"])
 ```
 
-
-    
-![png](freyberg_ies_1_basics_files/freyberg_ies_1_basics_52_0.png)
-    
-
-
 ### (Optional) Some additional filtering
 
 Often a few realizations perform particularily poorly. In such cases it can be good practice to remove them. Easy enough to do. For example, the cell below drops any realizations that did not achieve a Phi lower than the  threshold value assigned to the variable `thresh`.
@@ -487,15 +400,6 @@ if pt_oe.shape[0] == 0:
     print("filtered out all posterior realization #sad")
 ```
 
-    reducing posterior ensemble from 34 to 33 realizations
-    
-
-
-    
-![png](freyberg_ies_1_basics_files/freyberg_ies_1_basics_54_1.png)
-    
-
-
 ## Forecasts
 
 As usual, we bring this story back to the forecasts - after all they are why we are modelling. As this is a synthetic case and we know the "truth", we have benefit of being able to check the reliability of our forecast. Let's do that now.
@@ -506,16 +410,6 @@ A quick reminder of the observations that record our forecast value of interest:
 ```python
 pst.forecast_names
 ```
-
-
-
-
-    ['oname:sfr_otype:lst_usecol:tailwater_time:4383.5',
-     'oname:sfr_otype:lst_usecol:headwater_time:4383.5',
-     'oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5',
-     'part_time']
-
-
 
 Now, we are going to plot histograms of the forecast values simulated by the model using parmaeters from the (1) prior and (2) posterior ensembles. Simulated forecast values are recorded in the observation ensembles we read in earlier (as are all observations listed in the PEST contorl file).
 
@@ -568,12 +462,6 @@ Plot the forecast histograms. Grey columns are the prior. Blue columns are the p
 fig = plot_forecast_hist_compare(pt_oe=pt_oe, pr_oe=pr_oe)
 ```
 
-
-    
-![png](freyberg_ies_1_basics_files/freyberg_ies_1_basics_61_0.png)
-    
-
-
 Ruh roh!  The posterior isn't covering the correct values for some of forecasts. Major bad times. 
 
 But hold on! The prior does (nearly) cover the true values for all forecasts. So that implies there is somewhere between the prior and posterior we have now, which is optimal with respect to all forecasts. Hmmm...so this means that history matching made our prediction worse. We have incurred forecast-sensitive bias through the parameter adjustment process. How can we fit historical data so well but get the "wrong" answer for some of the forecasts?
@@ -605,17 +493,6 @@ pt_oe_iter.phi_vector.apply(np.log10).hist(ax=ax,fc="b",ec="none",alpha=0.5,dens
 _ = ax.set_xlabel("$log_{10}\phi$")
 ```
 
-    <>:4: DeprecationWarning: invalid escape sequence \p
-    <>:4: DeprecationWarning: invalid escape sequence \p
-    C:\Users\hugm0001\AppData\Local\Temp\ipykernel_7552\3857584947.py:4: DeprecationWarning: invalid escape sequence \p
-    
-
-
-    
-![png](freyberg_ies_1_basics_files/freyberg_ies_1_basics_65_1.png)
-    
-
-
 Let's take a look at those time series again. 
 
 There we go...much less satisfying. Clearly not "as good" a replica of observed behaviour. We also see more variance in the simulated equivalents (blue lines) to the observations, meaning we arent fitting the historic observations as well...basically, we have only eliminated the extreme prior realizations - we can call this "light" conditioning or "underfitting"...
@@ -625,12 +502,6 @@ There we go...much less satisfying. Clearly not "as good" a replica of observed 
 fig = plot_tseries_ensembles(pr_oe, pt_oe_iter,noise, onames=["hds","sfr"])
 ```
 
-
-    
-![png](freyberg_ies_1_basics_files/freyberg_ies_1_basics_67_0.png)
-    
-
-
 Finaly, let's see what has happened to the forecasts. The next cell will plot the forecast histograms from the current "posterior" (right column of plots), alongside those from the previous attempt (left column of plots)
 
 
@@ -639,12 +510,6 @@ fig = plot_forecast_hist_compare(pt_oe=pt_oe_iter,pr_oe=pr_oe,
                                 last_pt_oe=pt_oe,last_prior=pr_oe
                                 )
 ```
-
-
-    
-![png](freyberg_ies_1_basics_files/freyberg_ies_1_basics_69_0.png)
-    
-
 
 Interesting! That's a bit better. What have we done? We've accepted "more uncertainty" for a reduced propensity of inducing forecast bias. Perhaps if we had more realizations we would have gotten a wider sample of the posterior? But even if we hadn't failed to capture the truth, in the real-world how would we know? So...should we just stick with prior? (Assuming the prior is adequately described...) Feeling depressed yet? Worry not, in our next tutorial we will introduce some coping strategies. 
 
@@ -675,9 +540,6 @@ pyemu.os_utils.start_workers(t_d, # the folder which contains the "template" PES
                             )
 ```
 
-    noptmax:3, npar_adj:23786, nnz_obs:72
-    
-
 
 ```python
 pr_oe = pyemu.ObservationEnsemble.from_csv(pst=pst,filename=os.path.join(m_d,"freyberg_mf6.0.obs.csv"))
@@ -691,12 +553,6 @@ fig = plot_forecast_hist_compare(pt_oe=pt_oe_iter,pr_oe=pr_oe,
                                 last_pt_oe=pt_oe,last_prior=pr_oe
                                 )
 ```
-
-
-    
-![png](freyberg_ies_1_basics_files/freyberg_ies_1_basics_76_0.png)
-    
-
 
 having more realizations has two benefits:  more samples for uncertainty analysis and better resolution of the empirical first-order relations between parameters and observations.  In this case, these two combined effects have helped us (nearly) bracket the true value for each forecast - yeh!  So always use a many realizations as you can tolerate!
 
