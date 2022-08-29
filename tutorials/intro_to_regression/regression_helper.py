@@ -27,7 +27,7 @@ def data_cooker():
     poly_func = np.poly1d(polypars)
     y = poly_func(x)
     # set up a y_data vector that has been corrupted by a little noise
-    y_data = y + np.random.normal(loc=0,scale=np.abs(x*(np.abs(y[-1]-y[0]))*0.25), size=len(y))
+    y_data = y + np.random.normal(loc=0,scale=(maxx-minx)/3, size=len(y))
     return xplot,x,y_data, poly_func, polypars
 
 def parabola(a,b,x_vec):
