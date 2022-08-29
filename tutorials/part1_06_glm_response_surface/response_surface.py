@@ -86,7 +86,7 @@ def plot_response_surface(parnames=['hk1','rch0'], pstfile='freyberg.pst', WORKI
     c = ax.contour(X, Y, resp_surf,
                    levels=levels,
                    colors='k', alpha=0.5)
-    plt.title('min $\Phi$ = {0:.2f}'.format(np.nanmin(resp_surf)))
+    plt.title('min $\\Phi$ = {0:.2f}'.format(np.nanmin(resp_surf)))
     if label:
         plt.clabel(c)
     ax.set_xlim(p1_values.min(), p1_values.max())
