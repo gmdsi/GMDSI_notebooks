@@ -515,23 +515,23 @@ def add_ppoints(tmp_d='freyberg_mf6'):
     pst.write(os.path.join(tmp_d, 'freyberg_pp.pst'))
     return print("new control file: 'freyberg_pp.pst'")
 
-def intertive_sv_vec_plot(inpst, U):
+def interactive_sv_vec_plot(inpst, U):
     from ipywidgets import interact, interactive, fixed, interact_manual
     import ipywidgets as widgets
     def SV_bars(SV=1,):
-
-        plt.figure(figsize=(12,4))
+        plt.figure(figsize=(13,4))
         plt.bar(list(range(U.shape[0])),U[:,SV-1])
         #plt.yscale('log')
-        plt.xlim([-1,inpst.npar_adj])
-        plt.xticks(list(range(inpst.npar_adj)))
+        plt.xlim([0,inpst.npar_adj+1])
+        plt.xticks(list(range(inpst.npar_adj+1)))
         plt.title('Singular vector showing parameter contributions to singular vector #{0}'.format(SV))
-        plt.gca().set_xticklabels(inpst.adj_par_names, rotation=90, fontsize=7);
+        plt.gca().set_xticks(range(U.shape[0]))
+        plt.gca().set_xticklabels(
+            inpst.parameter_data.loc[inpst.parameter_data.partrans != 'fixed']['parnme'].values, rotation=90);
         return
     return interact(SV_bars, SV=widgets.widgets.IntSlider(
-            value=1, min=1, max=20, step=1, description='Number SVs:',
-            disabled=False, continuous_update=True, orientation='horizontal', 
-            readout=True, readout_format='d'));
+        value=1, min=1, max=20, step=1, description='Number SVs:',
+        disabled=False, continuous_update=True, orientation='horizontal', readout=True, readout_format='d'));
 
     
 
@@ -724,7 +724,7 @@ def svd_enchilada(gwf, m_d):
         basis_arr = np.array(basis.values)
         flat_arr = np.atleast_2d(k_truth_res.flatten()).transpose()
         #fig,ax = plt.subplots(ncols=2, figsize=(10,7),aspect='equal')
-        fig = plt.figure(figsize=(12, 7))
+        fig = plt.figure(figsize=(10, 7))
         ax = fig.add_subplot(1, 3, 1, aspect='equal',)
 
         arr = np.ones_like(gwf.dis.idomain.get_data()[0])
