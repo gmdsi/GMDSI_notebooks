@@ -1,4 +1,6 @@
 __pycache__/
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
 prior_cov.jcb
 *.log
 *.rnj
