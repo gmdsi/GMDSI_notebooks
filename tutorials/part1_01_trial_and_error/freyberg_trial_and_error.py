@@ -38,8 +38,6 @@ def get_model():
     # remove existing folder
     if os.path.exists(sim_ws):
         shutil.rmtree(sim_ws)
-    else:
-        os.mkdir(sim_ws)
 
     # copy the original model folder across
     shutil.copytree(org_ws, sim_ws)
