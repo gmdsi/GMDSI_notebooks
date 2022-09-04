@@ -24,55 +24,55 @@ def run_nb(nb_file, nb_dir):
     os.chdir(cwd)
     return
 
-nb_dir = "part2_1_pstfrom_pest_setup"
+nb_dir = "part2_01_pstfrom_pest_setup"
 nb_file = "freyberg_pstfrom_pest_setup.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_2_obs_and_weights"
+nb_dir = "part2_02_obs_and_weights"
 nb_file = "freyberg_obs_and_weights.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_3_prior_monte_carlo"
+nb_dir = "part2_03_prior_monte_carlo"
 nb_file = "freyberg_prior_monte_carlo.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_4_glm"
+nb_dir = "part2_04_glm"
 nb_file = "freyberg_glm_1.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_5_fosm_and_dataworth"
+nb_dir = "part2_05_fosm_and_dataworth"
 nb_file = "freyberg_fosm_and_dataworth.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_4_glm"
+nb_dir = "part2_04_glm"
 nb_file = "freyberg_glm_2.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_6_ies"
+nb_dir = "part2_06_ies"
 nb_file = "freyberg_ies_1_basics.ipynb"
 run_nb(nb_file, nb_dir)
 nb_file = "freyberg_ies_2_localization.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_7_da"
+nb_dir = "part2_07_da"
 nb_file = "freyberg_da_prep.ipynb"
 run_nb(nb_file, nb_dir)
 nb_file = "freyberg_da_run.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_8_opt"
+nb_dir = "part2_08_opt"
 nb_file = "freyberg_opt_1.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_8_opt"
+nb_dir = "part2_08_opt"
 nb_file = "freyberg_opt_2.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_9_mou"
+nb_dir = "part2_09_mou"
 nb_file = "freyberg_mou_1.ipynb"
 run_nb(nb_file, nb_dir)
 
-nb_dir = "part2_9_mou"
+nb_dir = "part2_09_mou"
 nb_file = "freyberg_mou_2.ipynb"
 run_nb(nb_file, nb_dir)
 
