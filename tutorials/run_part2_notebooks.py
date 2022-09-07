@@ -8,13 +8,17 @@ cwd = os.getcwd()
 clear = False
 pdf = False
 html = True
+allow_errors = True
 
 def run_nb(nb_file, nb_dir): 
     os.chdir(nb_dir)
     worker_dirs = [d for d in os.listdir(".") if os.path.isdir(d) and d.startswith("worker")]
     for worker_dir in worker_dirs:
         shutil.rmtree(worker_dir)
-    os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=180000 --allow-errors --inplace {0}".format(nb_file))
+    if allow_errors:
+        os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=180000 --allow-errors --inplace {0}".format(nb_file))
+    else:
+        os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=180000 --inplace {0}".format(nb_file))
     if html:
         os.system("jupyter nbconvert --to html {0}".format(nb_file))
         md_file = nb_file.replace('.ipynb', '.html')
