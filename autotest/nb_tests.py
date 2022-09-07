@@ -9,7 +9,7 @@ def run_nb(nb_file, nb_dir):
     assert nb_dir
     assert os.path.join(nb_dir, nb_file)
     os.chdir(nb_dir)
-    os.system(f"jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800 --allow-errors --inplace {nb_file}")    
+    os.system(f"jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800 --inplace {nb_file}")    
     os.system(f"jupyter nbconvert --ClearOutputPreprocessor.enabled=True --ClearMetadataPreprocessor.enabled=True --allow-errors --inplace {nb_file}")
     os.chdir(cwd)
     print('ran: ', nb_file)
