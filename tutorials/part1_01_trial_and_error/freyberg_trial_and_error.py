@@ -1,6 +1,6 @@
 import os
 import sys
-import flopy
+
 import shutil
 import matplotlib.pyplot as plt
 
@@ -8,9 +8,12 @@ import matplotlib.pyplot as plt
 import platform
 import numpy as np
 import pandas as pd
-import pyemu
+
 
 sys.path.append("..")
+sys.path.append("../../dependencies")
+import flopy
+import pyemu
 import herebedragons as hbd
 
 def rmse(predictions, targets):
