@@ -366,7 +366,7 @@ def setup_pst():
     pf.mod_sys_cmds.append("mp7 freyberg_mp.mpsim") #do this only once
 
 
-    shutil.copy2(os.path.join("..","part2_1_pstfrom_pest_setup","helpers.py"),"helpers.py")
+    shutil.copy2(os.path.join("..","part2_01_pstfrom_pest_setup","helpers.py"),"helpers.py")
 
     pf.add_py_function("helpers.py","extract_hds_arrays_and_list_dfs()",is_pre_cmd=False)
 

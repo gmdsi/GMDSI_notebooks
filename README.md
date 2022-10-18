@@ -59,8 +59,7 @@ PEST++MOU:
  1. freyberg_mou_1.ipynb
  2. freyberg_mou_2.ipynb
  
-
-
+IMPORTANT NOTE: When running some of these notebooks, PEST++ undertakes parallel model runs for computational efficiency. These runs are coordinated using internet communication protocols (e.g. TCP/IP). As a result, it is common (but not universal) that the first time a set of parallel runs is launched, a Windows Defender (or similar popup on other operating systems) box appears warning the user. This box can simply be closed by clicking "cancel" and then the model runs should proceed without issue.
 
 ## Installation Instructions
 
