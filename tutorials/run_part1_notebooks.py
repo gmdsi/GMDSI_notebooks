@@ -8,11 +8,15 @@ cwd = os.getcwd()
 clear = False
 pdf = False
 html = True
+allow_errors = True
 
 
 def run_nb(nb_file, nb_dir): 
     os.chdir(nb_dir)
-    os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800 --allow-errors --inplace {0}".format(nb_file))
+    if allow_errors:
+        os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800 --allow-errors --inplace {0}".format(nb_file))
+    else:
+        os.system("jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800 --inplace {0}".format(nb_file))
     if html:
         os.system("jupyter nbconvert --to html {0}".format(nb_file))
         md_file = nb_file.replace('.ipynb', '.html')
@@ -25,27 +29,18 @@ def run_nb(nb_file, nb_dir):
     os.chdir(cwd)
     return
 
+intro_dirs = [f.name for f in os.scandir('.') if f.is_dir() and f.name.startswith('part0_')]
+part1_dirs = [f.name for f in os.scandir('.') if f.is_dir() and f.name.startswith('part1_')]
 
-nb_dir = "intro_to_regression"
-nb_file = "intro_to_regression.ipynb"
-run_nb(nb_file, nb_dir)
 
-nb_dir = "freyberg_intro_to_model"
-nb_file = "freyberg_intro_model.ipynb"
-run_nb(nb_file, nb_dir)
 
-nb_dir = "intro_to_pyemu"
-nb_file = "intro_to_pyemu.ipynb"
-run_nb(nb_file, nb_dir)
+for dir in intro_dirs:
+    nbfiles = [i for i in os.listdir(dir) if i.endswith('.ipynb')]
+    for nb in nbfiles:
+        run_nb(nb, dir)
 
-nb_dir = "part1_pest_setup"
-nb_file = "freyberg_pest_setup.ipynb"
-run_nb(nb_file, nb_dir)
 
-nb_dir = "part1_trial_and_error"
-nb_file = "freyberg_trial_and_error.ipynb"
-run_nb(nb_file, nb_dir)
-
-nb_dir = "part1_k"
-nb_file = "freyberg_k.ipynb"
-run_nb(nb_file, nb_dir)
+for dir in part1_dirs:
+    nbfiles = [i for i in os.listdir(dir) if i.endswith('.ipynb')]
+    for nb in nbfiles:
+        run_nb(nb, dir)

@@ -12,7 +12,7 @@ In this notebook we will start to ease our way into using PEST++ for history-mat
 
 We will also start to gently introduce the use of `pyEMU` and programaticaly interfacing with PEST and PEST outputs. 
 
-### 1. Admin
+### Admin
 
 We have provided some pre-cooked PEST dataset files, wraped around the modified Freyberg model. This is the same dataset introduced in the "freyberg pest setup" notebook. 
 
@@ -29,6 +29,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt;
+import shutil
 
 sys.path.insert(0,os.path.join("..", "..", "dependencies"))
 import pyemu
@@ -38,13 +39,22 @@ assert "dependencies" in pyemu.__file__
 sys.path.insert(0,"..")
 import herebedragons as hbd
 
-
+plt.rcParams['font.size'] = 10
+pyemu.plot_utils.font =10
 ```
 
 
 ```python
-# the pest files folder
-tmp_d = os.path.join('freyberg_k')
+# folder containing original model files
+org_d = os.path.join('..', '..', 'models', 'monthly_model_files_1lyr_newstress')
+
+# a dir to hold a copy of the org model files
+tmp_d = os.path.join('freyberg_mf6')
+
+if os.path.exists(tmp_d):
+    shutil.rmtree(tmp_d)
+shutil.copytree(org_d,tmp_d)
+
 
 # get executables
 hbd.prep_bins(tmp_d)
@@ -54,10 +64,23 @@ hbd.prep_deps(tmp_d)
 hbd.prep_pest(tmp_d)
 ```
 
-### 2. Reminder - the modified-Freyberg model
+    ins file for heads.csv prepared.
+    ins file for sfr.csv prepared.
+    noptmax:0, npar_adj:1, nnz_obs:24
+    written pest control file: freyberg_mf6\freyberg.pst
+    
+
+
+
+
+    <pyemu.pst.pst_handler.Pst at 0x1a969411580>
+
+
+
+### Reminder - the modified-Freyberg model
 Just a quick reminder of what the model looks like and what we are doing. 
 
-It is a 3D model, with three layers. A river runs north-south, represented with the SFR package (green cells in the figure). On the southern border there is a GHB (cyan cells). No-flow cells are shown in black. Pumping wells are placed in the bottom layer (red cells). 
+It is a one-layer model. A river runs north-south, represented with the SFR package (green cells in the figure). On the southern border there is a GHB (cyan cells). No-flow cells are shown in black. Pumping wells are shown with red cells. 
 
 Time-series of measured heads are available at the locations marked with black X's. River flux is also measured at three locations (headwater, tailwater and gage; not displayed).
 
@@ -70,7 +93,13 @@ A subsequent twelve transient stress periods representing a period in the future
 hbd.plot_freyberg(tmp_d)
 ```
 
-### 3. The .pst Control File
+
+    
+![png](freyberg_k_files/freyberg_k_4_0.png)
+    
+
+
+### The PEST Control File
 
 Open the new folder named `freyberg_k` and find the file named `freyberg.pst`. Open it in a text editor. You may recognize it from the previous tutorial.
 
@@ -85,7 +114,7 @@ In the tutorial folder there is a PDF file named "Annotated_PEST_control_file_SI
 
 Here's an annotated top of the PEST control file. Check the variables highlighted in yellow to answer the above questions:
 
-<img src="figs\2010-5169_annotated_Appendix1_PST_file.png" style="float: center">
+<img src="freyberg_k_files\2010-5169_annotated_Appendix1_PST_file.png" style="float: center">
 
 Now, as we did in the previous tutorial, let's double check these files to make sure the PEST dataset does not have any errors. Run TEMPCHEK, INSCHEK and PESTCHEK on the template, instruction and control files respectively.
 
@@ -94,7 +123,7 @@ To speed things up, this time, instead of running them in a separate terminal wi
 
 ```python
 # use pyemu to run a command line, run tempchek on the tpl files listed in the control file
-pyemu.os_utils.run("tempchek freyberg6.npf_k_layer1.tpl", # the instruction passed to the command line
+pyemu.os_utils.run("tempchek freyberg6.npf_k_layer1.txt.tpl", # the instruction passed to the command line
                     cwd=tmp_d)                            # the directory in which the command is executed
 ```
 
@@ -128,7 +157,7 @@ And of course, check the control file with `PESTCHEK`:
 pyemu.os_utils.run("pestchek freyberg.pst", cwd=tmp_d)
 ```
 
-### 4. Run PEST
+### Run PEST
 
 Okay, let's run this thing. 
 
@@ -153,7 +182,7 @@ Yeah, that's right, the NOPTMAX=0 thing again.  We had that set to zero because 
 # specify the path ot the pst control file
 pstfile = os.path.join(tmp_d,'freyberg.pst')
 
-# pymu stores all things related toa PEST control file in the Pst class. 
+# pymu stores all things related to a PEST control file in the Pst class. 
 # We can instantiate a Pst object by reading an existing control file 
 pst = pyemu.Pst(pstfile)
 
@@ -165,6 +194,9 @@ pst.control_data.noptmax = 20
 # Easy enough to accomplish - write out a new pst control file
 pst.write(pstfile)
 ```
+
+    noptmax:20, npar_adj:1, nnz_obs:24
+    
 
 Check the `freyberg.pst` file again in a text editor. Verify that NOPTMAX has been changed to 20?
 
@@ -180,11 +212,11 @@ Or wait until the standard out  reports a "0" below this next block (=when the r
 pyemu.os_utils.run("pestpp-glm freyberg.pst", cwd=tmp_d)
 ```
 
-### 5. Explore Results
+### Explore Results
 
 PEST writes lots of usefull information to the `*.rec` file. It also outputs a series of other useful files. What outputs are recorded depends on which version of PEST or PEST++ is being used. Here we will use PEST++GLM. The following section will demonstrate usefull information that can be found in some of the outputs. Throughout subsequent tutorials we will address others.
 
-#### 5.1. Objective Function
+#### Objective Function
 First let's look at the measurement objective function (Phi), which is calculated using the sum of squared weighted residuals.  First we'll look at a table, then plots.
 
 
@@ -196,6 +228,178 @@ df_obj = pd.read_csv(os.path.join(tmp_d, "freyberg.iobj"),index_col=0)
 df_obj
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model_runs_completed</th>
+      <th>total_phi</th>
+      <th>measurement_phi</th>
+      <th>regularization_phi</th>
+      <th>gage-1</th>
+      <th>headwater</th>
+      <th>particle</th>
+      <th>tailwater</th>
+      <th>trgw-0-13-10</th>
+      <th>trgw-0-15-16</th>
+      <th>...</th>
+      <th>trgw-0-2-9</th>
+      <th>trgw-0-21-10</th>
+      <th>trgw-0-22-15</th>
+      <th>trgw-0-24-4</th>
+      <th>trgw-0-26-6</th>
+      <th>trgw-0-29-15</th>
+      <th>trgw-0-3-8</th>
+      <th>trgw-0-33-7</th>
+      <th>trgw-0-34-10</th>
+      <th>trgw-0-9-1</th>
+    </tr>
+    <tr>
+      <th>iteration</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>29.20310</td>
+      <td>29.20310</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>18.35720</td>
+      <td>0</td>
+      <td>10.845900</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>12</td>
+      <td>3.43666</td>
+      <td>3.43666</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2.46626</td>
+      <td>0</td>
+      <td>0.970404</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>23</td>
+      <td>3.41691</td>
+      <td>3.41691</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2.35484</td>
+      <td>0</td>
+      <td>1.062070</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>35</td>
+      <td>3.40901</td>
+      <td>3.40901</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2.21763</td>
+      <td>0</td>
+      <td>1.191380</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>4 rows × 21 columns</p>
+</div>
+
+
+
 So thats usefull. If we make a plot (see next cell), it becomes evident that there are diminshing returns after a certain point (for this case!).
 
 
@@ -203,6 +407,20 @@ So thats usefull. If we make a plot (see next cell), it becomes evident that the
 # plot out the dataframe that was shown as a table above
 df_obj.loc[:,["total_phi","model_runs_completed"]].plot(subplots=True)
 ```
+
+
+
+
+    array([<AxesSubplot:xlabel='iteration'>, <AxesSubplot:xlabel='iteration'>],
+          dtype=object)
+
+
+
+
+    
+![png](freyberg_k_files/freyberg_k_25_1.png)
+    
+
 
 **Termination Criteria** 
 
@@ -225,7 +443,7 @@ Which target group(s) matter?  How was splitting the contributions to PHI accomp
 
 For this problem, recall our objective function is calculated using this equation:
 
-<img src="figs\SOSWR_eq_AW&H2015.png" style="float: center">
+<img src="freyberg_k_files\SOSWR_eq_AW&H2015.png" style="float: center">
 
 where Phi is the "sum of squared weighted residuals" that we look to minimize, *whi* is the weight for the ith head observation; *hm* is the measured (observed) head target; *hs* is the simulated head; and n is the number of observations.  
 
@@ -233,7 +451,7 @@ If we use only heads for calibration, then PHI only reflects the sum of squared 
 
 So! We have two types of observations (heads and flux) each in their respecive observation groups (hds and flux)...but only heads are contributing to the objective function. This is because all "flux" observations have been assigned zero weight (see the `* observation data` section). They are in the control file, but they aren't doing anything for the time-being. 
 
-####  5.2. Residuals
+#### Residuals
 
 Let's evaulate our fit using the observed-simulated residuals.
 
@@ -251,6 +469,96 @@ res_nz = pst.res.loc[pst.nnz_obs_names,:]
 res_nz.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>group</th>
+      <th>measured</th>
+      <th>modelled</th>
+      <th>residual</th>
+      <th>weight</th>
+    </tr>
+    <tr>
+      <th>name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>trgw-0-26-6:3683.5</th>
+      <td>trgw-0-26-6:3683.5</td>
+      <td>trgw-0-26-6</td>
+      <td>37.168420</td>
+      <td>36.769327</td>
+      <td>0.399093</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>trgw-0-26-6:3712.5</th>
+      <td>trgw-0-26-6:3712.5</td>
+      <td>trgw-0-26-6</td>
+      <td>37.116489</td>
+      <td>36.804511</td>
+      <td>0.311978</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>trgw-0-26-6:3743.5</th>
+      <td>trgw-0-26-6:3743.5</td>
+      <td>trgw-0-26-6</td>
+      <td>37.182890</td>
+      <td>36.913996</td>
+      <td>0.268894</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>trgw-0-26-6:3773.5</th>
+      <td>trgw-0-26-6:3773.5</td>
+      <td>trgw-0-26-6</td>
+      <td>37.283326</td>
+      <td>37.034004</td>
+      <td>0.249322</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>trgw-0-26-6:3804.5</th>
+      <td>trgw-0-26-6:3804.5</td>
+      <td>trgw-0-26-6</td>
+      <td>37.274371</td>
+      <td>37.113414</td>
+      <td>0.160957</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 We could plot these results up using common libraries. Or, use `pyemu`s built in plotting methods (see next cell).
 
 Not too shabby!  Thanks PEST++.
@@ -263,9 +571,19 @@ These plots you'll see a lot.  The left plot is a "1:1" plot that has simulated 
 pyemu.plot_utils.res_1to1(pst);
 ```
 
+
+    <Figure size 576x756 with 0 Axes>
+
+
+
+    
+![png](freyberg_k_files/freyberg_k_31_1.png)
+    
+
+
 But we had a lot of other observations listed in the PEST control file.  What do they look like?
 
-> **Note**: We have used a naming convention for our observations. Each observation name starts with the site name (e.g. "gage_1"), followed by " : " and then the simulation time in days (e.g. "1.0"). So, "gage_1:1.0" refers to the observation at "gage_1" after "1.0" days (in this case, at the end of the first steady state stress period).
+> **Note**: We have used a naming convention for our observations. Each observation name starts with the site name (e.g. "gage-1"), followed by " : " and then the simulation time in days (e.g. "1.0"). So, "gage_1:1.0" refers to the observation at "gage-1" after "1.0" days (in this case, at the end of the first steady state stress period).
 
 How well did the model do at fitting river flux? Recall that only head observations have non-negative weights, so PEST was only interested in getting a good fit with heads, ignoring all other observations.
 
@@ -274,7 +592,111 @@ How well did the model do at fitting river flux? Recall that only head observati
 pst.res.head()
 ```
 
-### 6.  Uncertainty Reduction
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>group</th>
+      <th>measured</th>
+      <th>modelled</th>
+      <th>residual</th>
+      <th>weight</th>
+    </tr>
+    <tr>
+      <th>name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>gage-1:3652.5</th>
+      <td>gage-1:3652.5</td>
+      <td>gage-1</td>
+      <td>2943.238710</td>
+      <td>2664.732233</td>
+      <td>278.506477</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>gage-1:3683.5</th>
+      <td>gage-1:3683.5</td>
+      <td>gage-1</td>
+      <td>2815.377509</td>
+      <td>2481.352657</td>
+      <td>334.024852</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>gage-1:3712.5</th>
+      <td>gage-1:3712.5</td>
+      <td>gage-1</td>
+      <td>2749.121657</td>
+      <td>2601.435926</td>
+      <td>147.685731</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>gage-1:3743.5</th>
+      <td>gage-1:3743.5</td>
+      <td>gage-1</td>
+      <td>2816.797640</td>
+      <td>2821.353726</td>
+      <td>-4.556086</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>gage-1:3773.5</th>
+      <td>gage-1:3773.5</td>
+      <td>gage-1</td>
+      <td>2892.313705</td>
+      <td>3001.715907</td>
+      <td>-109.402202</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+plt.scatter(pst.res.measured, pst.res.modelled)
+plt.xlabel('measured')
+plt.ylabel('modelled')
+plt.axis('square');
+```
+
+
+    
+![png](freyberg_k_files/freyberg_k_34_0.png)
+    
+
+
+###  Uncertainty Reduction
 
 Now, let's look at what calibration has done for uncertainty reduction. First, let's look the change in uncertainty for horizontal hydraulic conductivity (`hk`) parameters.
 
@@ -290,6 +712,66 @@ df_paru = pd.read_csv(os.path.join(tmp_d, "freyberg.par.usum.csv"),index_col=0)
 df_paru
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>prior_mean</th>
+      <th>prior_stdev</th>
+      <th>prior_lower_bound</th>
+      <th>prior_upper_bound</th>
+      <th>post_mean</th>
+      <th>post_stdev</th>
+      <th>post_lower_bound</th>
+      <th>post_upper_bound</th>
+    </tr>
+    <tr>
+      <th>name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>hk1</th>
+      <td>0.69897</td>
+      <td>1</td>
+      <td>-1.30103</td>
+      <td>2.69897</td>
+      <td>0.505884</td>
+      <td>0.029466</td>
+      <td>0.446952</td>
+      <td>0.564816</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 Recall that because we log transformed the `hk` parameters the uncertainty results are reported as logarithms in the dataframe above.  What you'll see in the MODFLOW input file is the non-log transformed `hk` value (e.g. 10^0.69897 = 5.0  for the prior mean).
 
 A quick way to evaluate the ***reduction in uncertainty*** is to compare `prior_stdev` (e.g. standard deviation of the prior, or standard deviation before calibration) to `post_stdev` (e.g. standard deviation of the posterior, or standard deviation after caibration).  The amount that `post_stdev` is less than `pre_stdev` reflects the magnitude of the uncertainty reduction
@@ -298,40 +780,142 @@ Now let's plot it using `pyemu`'s plot utility.
 
 The dotted gray line represents the "prior" information as expressed by the parameter bounds in the PEST control file. (In this case, the differences between parameter bounds are taken to represent the probability distribution range.) The shaded area is the uncertainty after the calibration.
 
-Note that the prior for all three `hk` parameters is the same (hence all the grey-dashed lines are overlaid). However, after calibration the uncertainty of each parameter is different. 
+Wow! Amazing, almost no posterior uncertainty...ermm...yeah, no. That ain't right.
 
 
 ```python
 # define a set of plots called ax to have the information of our dataframe df_paru above
 ax = pyemu.plot_utils.plot_summary_distributions(df_paru, label_post=True, figsize=(7,5))
-
 # Plot it with a label 
 ax.set_xlabel("$log_{10}(\\frac{L}{T})$");
 ```
 
-Now let's look at changes in model forecast uncertainty, first as a table then as a plot.  These are *observations* now instead of parameters like above. PEST++GLM has recorded these in the file named `freyberg.pred.usum.csv`.
 
-(To make it easier to identify the forecasts of interest we used the observation group "forecast" in the PEST control file - this is not mandatory but for convenience.  What makes something a forecast as far as PEST++ is concerned is the `++forecasts` line in the PEST control file)
+    
+![png](freyberg_k_files/freyberg_k_38_0.png)
+    
+
+
+Now let's look at changes in model forecast uncertainty, first as a table then as a plot.  These are *observations* now instead of parameters like above. PEST++GLM has recorded these in the file named `freyberg.pred.usum.csv`.
 
 
 ```python
 # define a dataframe that has uses the PEST++ output file freyberg.pred.usum.csv
 # freyberg.pred.usum.csv is comma-delimited file that has the uncertainty summary for the predictions 
 df_predu = pd.read_csv(os.path.join(tmp_d, "freyberg.pred.usum.csv"),index_col=0)
-
 # echo out the dataframe
 df_predu
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>prior_mean</th>
+      <th>prior_stdev</th>
+      <th>prior_lower_bound</th>
+      <th>prior_upper_bound</th>
+      <th>post_mean</th>
+      <th>post_stdev</th>
+      <th>post_lower_bound</th>
+      <th>post_upper_bound</th>
+    </tr>
+    <tr>
+      <th>name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>headwater:4383.5</th>
+      <td>-397.5550</td>
+      <td>322.0680</td>
+      <td>-1041.6900</td>
+      <td>246.5800</td>
+      <td>-469.1600</td>
+      <td>9.490010</td>
+      <td>-488.1400</td>
+      <td>-450.1800</td>
+    </tr>
+    <tr>
+      <th>part_time</th>
+      <td>7076.3100</td>
+      <td>5073.3600</td>
+      <td>-3070.4100</td>
+      <td>17223.0000</td>
+      <td>7849.8100</td>
+      <td>149.491000</td>
+      <td>7550.8300</td>
+      <td>8148.7900</td>
+    </tr>
+    <tr>
+      <th>tailwater:4383.5</th>
+      <td>-90.2950</td>
+      <td>381.9170</td>
+      <td>-854.1290</td>
+      <td>673.5390</td>
+      <td>-165.2550</td>
+      <td>11.253500</td>
+      <td>-187.7620</td>
+      <td>-142.7480</td>
+    </tr>
+    <tr>
+      <th>trgw-0-9-1:4383.5</th>
+      <td>38.0999</td>
+      <td>13.3587</td>
+      <td>11.3824</td>
+      <td>64.8173</td>
+      <td>40.4225</td>
+      <td>0.393627</td>
+      <td>39.6352</td>
+      <td>41.2098</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 Same deal as above: a quick way to evaluate the ***reduction in uncertainty*** is to compare `prior_stdev` (=standard deviation of the prior=standard deviation before calibration) to `post_stdev` (=standard deviation of the posterior = standard deviation after caibration).  The amount that `post_stdev` is less than pre_stdev reflects the magnitude of the uncertainty reduction.
 
-As we can see in the plot below, prediction uncertainty is reduced for all forecasts. Some by quite a lot!
+As we can see in the plot below, prediction uncertainty is reduced for all forecasts. Some by quite a lot! Our calibration must have been amazing (#sarcasm)
 
 
 ```python
 # use the pyemu plotting utility to plot up the forecasts
 figs, axes = pyemu.plot_utils.plot_summary_distributions(df_predu,subplots=True)
+figs[0].tight_layout()
 ```
+
+
+    
+![png](freyberg_k_files/freyberg_k_42_0.png)
+    
+
 
 By comparing prior to posterior standatd deviations we can check how well calibration reduced forecast uncertainties (see bar plot in the next cell; larger value is better).
 
@@ -341,6 +925,19 @@ df_predu.loc[:,"percent_reduction"] = 100.0 * (1.0 - (df_predu.post_stdev / df_p
 df_predu.percent_reduction.plot.bar()
 plt.ylabel('% uncertainty reduction')
 ```
+
+
+
+
+    Text(0, 0.5, '% uncertainty reduction')
+
+
+
+
+    
+![png](freyberg_k_files/freyberg_k_44_1.png)
+    
+
 
 
 Wow! Calibration really helped huh? So we can call it a day and bill the client? Awesome, thanks very much and have a nice day!
@@ -357,19 +954,20 @@ for ax in axes:
     ylim = ax.get_ylim()
     v = pst.observation_data.loc[fname,"obsval"]
     ax.plot([v,v],ylim,"k--")
-    ax.set_ylim(ylim)
+    ax.set_ylim(0,ylim[-1])
+figs[0].tight_layout()
 ```
 
-Dear oh dear....why are some forecasts not bracketed by the posterior distribution? This means that 
 
-__uncertainty analysis has failed!__
+    
+![png](freyberg_k_files/freyberg_k_46_0.png)
+    
+
+
+Dear oh dear....none of the forecasts are bracketed by the posterior distribution! This means that 
+
+## __uncertainty analysis has failed!__
 
 In some cases the prior (the dashed grey line) encompasses the "truth" but the posterior (the blue shaded area) does not. Therefore calibration actualy made our forecasts less reliable. Why is that? How can improving a model's ability to represent the past make it *worse* at representing the future? 
 
-In other cases, neither the prior nor the posterior encompass the truth. Does this mean our model is rubish? But hold on, the "truth" was created from this same model (with different parameters). How can it be that wrong?
-
 Find out in the next episode! 
-
->hint: *under parameterisation* 
-
-

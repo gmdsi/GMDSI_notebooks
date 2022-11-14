@@ -66,13 +66,6 @@ shutil.copytree(org_t_d,t_d)
 ```
 
 
-
-
-    'freyberg6_template'
-
-
-
-
 ```python
 pst_path = os.path.join(t_d, 'freyberg_pp.pst')
 ```
@@ -102,10 +95,6 @@ if not pst.observation_data.observed.sum()>0:
 ```python
 print(f'number of observations: {pst.nnz_obs} \nnumber of parameters: {pst.npar_adj}')
 ```
-
-    number of observations: 72 
-    number of parameters: 245
-    
 
 ## Regularisation
 
@@ -209,13 +198,6 @@ shutil.copy2(os.path.join(t_d,"freyberg_pp.jcb"),
 ```
 
 
-
-
-    'freyberg6_template\\freyberg_reuse.jcb'
-
-
-
-
 ```python
 # specify file to use as the base jacobian
 pst.pestpp_options["base_jacobian"] = "freyberg_reuse.jcb"
@@ -255,9 +237,6 @@ la = pyemu.ErrVar(jco=os.path.join(t_d, "freyberg_pp.jcb"),
 print(la.jco.shape) #without the omitted parameter or the prior info
 ```
 
-    (21248, 245)
-    
-
 We can inspect the singular spectrum of $\mathbf{Q}^{\frac{1}{2}}\mathbf{J}$, where $\mathbf{Q}$ is the cofactor matrix and $\mathbf{J}$ is the jacobian:
 
 
@@ -284,15 +263,6 @@ ax.set_yscale('log')
 plt.show()
 ```
 
-    Solution space dimensions:  39
-    
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_33_1.png)
-    
-
-
 That's already a decent amount of savings in terms of run-time! Now, for each iteration instead of running the model several hundred times (i.e. the number of adjustable base parameters; see `pst.npar_adj`) we only need to run the model a few tens of times. An order of magnitude less!
 
 In practice, `max_n_super` may be further limited to reflect available computational resources - if you only have time/resources to run the modle 10 times...well then that is what you should set it at. (See the PEST Manual Part 1 for a pragmatic discussion of how to choose the number of super parameters.) 
@@ -315,13 +285,6 @@ At the end of each iteration PEST++GLM implements FOSM analysis, as long as the 
 pst.pestpp_options['parcov']
 ```
 
-
-
-
-    'glm_prior.cov'
-
-
-
 PEST++GLM calculates a posterior parameter covariance matrix at the end of each iteration. Each covariance matrix is recorded in an external file. PEST++GLM also provides summaries of prior and posterior parameter uncertainties (means, standard deviations and bounds) for each iteration.
 
 If any observations are listed as forecasts (in the `forecast()` variable), PEST++GLM will also undertake predictive uncertainty analysis. By default, if no forecasts are provided, PEST++GLM will assume all zero-weighted observations are forecasts - so it is usually a good idea to specify forecasts explicitly (if you have many many zero-weighted obsevrations FOSM can cost some computation time). Recall that we specified several observations as forecasts:
@@ -330,13 +293,6 @@ If any observations are listed as forecasts (in the `forecast()` variable), PEST
 ```python
 pst.pestpp_options['forecasts']
 ```
-
-
-
-
-    'oname:sfr_otype:lst_usecol:tailwater_time:4383.5,oname:sfr_otype:lst_usecol:headwater_time:4383.5,oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5,part_time'
-
-
 
 FOSM implemented by PEST++GLM assumes that the standard deviation of measurement noise associated with each observation is proportional to current observation residual. This accounts for the model's ability to reproduce an observation. Effectively, it assumes that the residual is a measure of measurement noise + model error. Thus, observation weights used during FOSM are calculated as the inverse of the residual. Note that this "residual weight" never increases weights beyond those which are specified in the control file! The assumption is that weighs in the control file represent the inverse of measurment noise standard deviation - and it would be illogical to decrease noise beyond this level. 
 
@@ -376,9 +332,6 @@ case = 'freyberg_pp'
 pst.write(os.path.join(t_d,f"{case}.pst"))
 ```
 
-    noptmax:3, npar_adj:245, nnz_obs:72
-    
-
 Now, deploy PEST++GLM in parallel.
 
 To speed up the process, you will want to distribute the workload across as many parallel agents as possible. Normally, you will want to use the same number of agents (or less) as you have available CPU cores. Most personal computers (i.e. desktops or laptops) these days have between 4 and 10 cores. Servers or HPCs may have many more cores than this. Another limitation to keep in mind is the read/write speed of your machines disk (e.g. your hard drive). PEST and the model software are going to be reading and writting lots of files. This often slows things down if agents are competing for the same resources to read/write to disk.
@@ -393,9 +346,6 @@ You must specify the number which is adequate for ***your*** machine! Make sure 
 ```python
 print(psutil.cpu_count(logical=False))
 ```
-
-    10
-    
 
 
 ```python
@@ -427,23 +377,12 @@ pst = pyemu.Pst(os.path.join(m_d,'freyberg_pp.pst'))
 pst.phi
 ```
 
-
-
-
-    47.79859025261253
-
-
-
 Recall that observations are weighted according to the inverse of measurment noise. Conceptualy, we hope to achieve a fit between simulated and measured values comensurate with measurment error. As we saw in the "obs and weights" tutorial, such a fit would result in a Phi equal to the number of non-zero weighted observations. Did we achieve that? No?! Shocking! (Why not, you ask? Short answer: not enough parameters.) Model-to-measurment misfit is often dominated by model error (and by "model" we also mean the parameterisation of the model) and not just measurement noise. 
 
 
 ```python
 print(f"Phi: {pst.phi} \nNumber of non-zero obs: {pst.nnz_obs}")
 ```
-
-    Phi: 47.79859025261253 
-    Number of non-zero obs: 72
-    
 
 A usefull way to track PEST's performance is to look at the evolution of Phi throughout the inversion. This is recorded in a file with the extension `*.iobj`  (e.g. `freyperg_pp.iobj`). You can read this file whilst PEST++ is working if you like. PEST++ will update the file after every iteration, thus it provides an easy way to keep an eye on the inversion progress.
 
@@ -458,178 +397,6 @@ df_obj = pd.read_csv(os.path.join(m_d, "freyberg_pp.iobj"),index_col=0)
 df_obj.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>model_runs_completed</th>
-      <th>total_phi</th>
-      <th>measurement_phi</th>
-      <th>regularization_phi</th>
-      <th>oname:hds_otype:lst_usecol:trgw-0-13-10</th>
-      <th>oname:hds_otype:lst_usecol:trgw-0-15-16</th>
-      <th>oname:hds_otype:lst_usecol:trgw-0-2-15</th>
-      <th>oname:hds_otype:lst_usecol:trgw-0-2-9</th>
-      <th>oname:hds_otype:lst_usecol:trgw-0-21-10</th>
-      <th>oname:hds_otype:lst_usecol:trgw-0-22-15</th>
-      <th>...</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-21-10</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-22-15</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-24-4</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-26-6</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-29-15</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-3-8</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-33-7</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-34-10</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1</th>
-      <th>part</th>
-    </tr>
-    <tr>
-      <th>iteration</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>13061.7000</td>
-      <td>13061.7000</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>206.7330</td>
-      <td>0</td>
-      <td>148.43200</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>11</td>
-      <td>656.9730</td>
-      <td>656.9730</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>445.1770</td>
-      <td>0</td>
-      <td>98.41460</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>61</td>
-      <td>47.7986</td>
-      <td>47.7986</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>27.5609</td>
-      <td>0</td>
-      <td>5.72848</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>111</td>
-      <td>118.3940</td>
-      <td>118.3940</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>27.3603</td>
-      <td>0</td>
-      <td>17.45060</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
-<p>4 rows × 80 columns</p>
-</div>
-
-
-
 A quick and dirty plot to see the evolution of Phi per iteration. Ideally Phi should decrease for each sucessive iteration. If this plot bounces up and down it is often a sign of trouble. When using SVD-Assist, this often occurs if the inverse problem is highy nonlinear. In such cases it may be worth experimenting with fewer sucessive super parameter iterations and/or a greater number of super parameters. Lack of convergence can also be a sign of "dirty derivatives", often due to model output files which PEST is reading being written with insufficient precision.
 
 
@@ -637,20 +404,6 @@ A quick and dirty plot to see the evolution of Phi per iteration. Ideally Phi sh
 # plot out the dataframe that was shown as a table above
 df_obj.loc[:,["total_phi","model_runs_completed"]].plot(subplots=True)
 ```
-
-
-
-
-    array([<AxesSubplot:xlabel='iteration'>, <AxesSubplot:xlabel='iteration'>],
-          dtype=object)
-
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_61_1.png)
-    
-
 
 ### Residuals
 
@@ -663,96 +416,6 @@ PEST++ stores observation residuals in a `*.rei` file. When instantiating a `Pst
 pst.res.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>name</th>
-      <th>group</th>
-      <th>measured</th>
-      <th>modelled</th>
-      <th>residual</th>
-      <th>weight</th>
-    </tr>
-    <tr>
-      <th>name</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</th>
-      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</td>
-      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
-      <td>35.870909</td>
-      <td>36.420135</td>
-      <td>-0.549226</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</th>
-      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</td>
-      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
-      <td>35.791150</td>
-      <td>36.294485</td>
-      <td>-0.503335</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</th>
-      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</td>
-      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
-      <td>35.784015</td>
-      <td>36.277202</td>
-      <td>-0.493186</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</th>
-      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</td>
-      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
-      <td>35.818347</td>
-      <td>36.328078</td>
-      <td>-0.509731</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</th>
-      <td>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</td>
-      <td>oname:hds_otype:lst_usecol:trgw-0-13-10</td>
-      <td>35.884582</td>
-      <td>36.412482</td>
-      <td>-0.527899</td>
-      <td>0.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
 And then display 1-to-1 and residual plots for each of the non-zero weighted observation groups. This is a quick way to explore how well the model is able to replicate measured data. These plots you'll see often.  The left plot is a "1:1" plot that has simulated values on the x-axis and measured values on the y-axis; a perfect fit would be all circles on the black diagonal line.  The right plot has the residual (y-axis) compared to the observation magnitude (x-axis). The closer the circle is to the black line the better the fit.  The mean residual is shown as a red line. Ideally this red line should plot on y=0. 
 
 Scroll down through the plot below. How well does the model replicate historical data? Within the range of "measurement error"? Seems good overall!
@@ -764,22 +427,6 @@ What about the residuals? are they evenly distributed around zero? If not, then 
 # use pyemu's plot utilities to plot 1:1 line and the residuals as fxn of observation magnitude
 pyemu.plot_utils.res_1to1(pst);
 ```
-
-
-    <Figure size 576x756 with 0 Axes>
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_65_1.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_65_2.png)
-    
-
 
 ### Posterior Monte Carlo 
 
@@ -794,221 +441,12 @@ oe = pyemu.ObservationEnsemble.from_dataframe(pst=pst,df=df)
 oe.head()
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3652.5</th>
-      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3683.5</th>
-      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3712.5</th>
-      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3743.5</th>
-      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3773.5</th>
-      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3804.5</th>
-      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3834.5</th>
-      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3865.5</th>
-      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3896.5</th>
-      <th>oname:hds_otype:lst_usecol:trgw-0-13-10_time:3926.5</th>
-      <th>...</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4169.5</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4199.5</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4230.5</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4261.5</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4291.5</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4322.5</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4352.5</th>
-      <th>oname:hdstd_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
-      <th>part_status</th>
-      <th>part_time</th>
-    </tr>
-    <tr>
-      <th>real_name</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>36.3796</td>
-      <td>36.2651</td>
-      <td>36.2221</td>
-      <td>36.2353</td>
-      <td>36.3013</td>
-      <td>36.3894</td>
-      <td>36.4878</td>
-      <td>36.4227</td>
-      <td>36.2736</td>
-      <td>36.0851</td>
-      <td>...</td>
-      <td>0.317252</td>
-      <td>0.342115</td>
-      <td>0.269281</td>
-      <td>0.135337</td>
-      <td>-0.021468</td>
-      <td>-0.189139</td>
-      <td>-0.324796</td>
-      <td>-0.382808</td>
-      <td>5</td>
-      <td>222851.0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>36.8739</td>
-      <td>36.7338</td>
-      <td>36.7396</td>
-      <td>36.7981</td>
-      <td>36.8933</td>
-      <td>37.0025</td>
-      <td>37.0336</td>
-      <td>36.9469</td>
-      <td>36.7490</td>
-      <td>36.5025</td>
-      <td>...</td>
-      <td>0.112141</td>
-      <td>0.084943</td>
-      <td>0.044979</td>
-      <td>-0.162401</td>
-      <td>-0.399399</td>
-      <td>-0.644954</td>
-      <td>-0.825335</td>
-      <td>-0.904149</td>
-      <td>5</td>
-      <td>49490.6</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>36.8321</td>
-      <td>36.7919</td>
-      <td>36.7847</td>
-      <td>36.8238</td>
-      <td>36.8996</td>
-      <td>36.9714</td>
-      <td>37.0006</td>
-      <td>36.9317</td>
-      <td>36.8216</td>
-      <td>36.6193</td>
-      <td>...</td>
-      <td>0.455377</td>
-      <td>0.512456</td>
-      <td>0.439978</td>
-      <td>0.282058</td>
-      <td>0.089265</td>
-      <td>-0.115376</td>
-      <td>-0.272259</td>
-      <td>-0.334552</td>
-      <td>5</td>
-      <td>159596.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>36.7126</td>
-      <td>36.5110</td>
-      <td>36.4849</td>
-      <td>36.5394</td>
-      <td>36.6174</td>
-      <td>36.7140</td>
-      <td>36.8055</td>
-      <td>36.7205</td>
-      <td>36.5493</td>
-      <td>36.2799</td>
-      <td>...</td>
-      <td>0.079958</td>
-      <td>0.033099</td>
-      <td>-0.049624</td>
-      <td>-0.246669</td>
-      <td>-0.464928</td>
-      <td>-0.693805</td>
-      <td>-0.869428</td>
-      <td>-0.894001</td>
-      <td>5</td>
-      <td>114285.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>36.4516</td>
-      <td>36.3152</td>
-      <td>36.3038</td>
-      <td>36.3754</td>
-      <td>36.4958</td>
-      <td>36.6144</td>
-      <td>36.7244</td>
-      <td>36.6701</td>
-      <td>36.4928</td>
-      <td>36.1727</td>
-      <td>...</td>
-      <td>0.318807</td>
-      <td>0.398570</td>
-      <td>0.370773</td>
-      <td>0.264358</td>
-      <td>0.127420</td>
-      <td>-0.024509</td>
-      <td>-0.147014</td>
-      <td>-0.178043</td>
-      <td>5</td>
-      <td>211444.0</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 21252 columns</p>
-</div>
-
-
-
 Let's plot a histogram of Phi achieved by this ensemble. Some have a good fit (low Phi). Others not so much. (The more linear the problem, the more likley that more will have a good fit.) So should we use all of them? Probably not.
 
 
 ```python
 oe.phi_vector.sort_values().hist()
 ```
-
-
-
-
-    <AxesSubplot:>
-
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_69_1.png)
-    
-
 
 Theoretically, as observations were weighted with the inverse of the standard deviation of measurement noise, we should accept a Phi equal to the number of nonzero observations. In practice, because of model error, we rarely reach the ideal value of Phi. For the purposes of this tutorial, we are going to arbitrarily take the 30 best realisations and use these as our "posterior ensemble".
 
@@ -1041,42 +479,6 @@ for nz_group in pst.nnz_obs_groups:
 plt.show()
 ```
 
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_73_0.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_73_1.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_73_2.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_73_3.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_73_4.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_73_5.png)
-    
-
-
 ### The Minimum Error Variance Parameter Field
 
 We have inspected the models' ability to replicate measured data. It is also a good idea to inspect how "sensible" are the obtained parameter values. A common easy check is to visualy inspect the spatial distirbution of hydrualic property parameters. One can often find unexpected insight from how parameter patterns emerge during calibration. 
@@ -1087,10 +489,6 @@ First start by updating the control file with the calibrated parameter values us
 ```python
 pst.parrep(parfile=os.path.join(m_d, 'freyberg_pp.par'))
 ```
-
-    Updating parameter values from master_glm_2\freyberg_pp.par
-    parrep: updating noptmax to 0
-    
 
 Then write the parameter values to the model input files and run the model once:
 
@@ -1118,19 +516,6 @@ gwf.npf.k.plot(colorbar=True)
 #gwf.sto.sy.plot()
 ```
 
-
-
-
-    <AxesSubplot:title={'center':'k'}>
-
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_79_1.png)
-    
-
-
 Another quick check is to look for parameters which are at their bounds. (Run the next cell.) 
 
 Some parameters are at their bounds. Along with the extreme values and blotchiness in parameter spatial distributions, this can often be a sign of either a strucutral problem with the model or an inflexible parameterisation scheme. 
@@ -1140,13 +525,6 @@ Some parameters are at their bounds. Along with the extreme values and blotchine
 # idealy, this should return an empty list
 pst.get_adj_pars_at_bounds()
 ```
-
-
-
-
-    (['pname:rch_recharge_13tcn_inst:0_ptype:cn_pstyle:m'], [])
-
-
 
 ### Forecast Uncertainty
 
@@ -1158,99 +536,6 @@ f_df = pd.read_csv(os.path.join(m_d,"freyberg_pp.pred.usum.csv"),index_col=0)
 f_df.index = f_df.index.map(str.lower)
 f_df
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>prior_mean</th>
-      <th>prior_stdev</th>
-      <th>prior_lower_bound</th>
-      <th>prior_upper_bound</th>
-      <th>post_mean</th>
-      <th>post_stdev</th>
-      <th>post_lower_bound</th>
-      <th>post_upper_bound</th>
-    </tr>
-    <tr>
-      <th>name</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>oname:hds_otype:lst_usecol:trgw-0-9-1_time:4383.5</th>
-      <td>35.5598</td>
-      <td>1.3548</td>
-      <td>32.8502</td>
-      <td>38.2694</td>
-      <td>39.1139</td>
-      <td>0.353508</td>
-      <td>38.4069</td>
-      <td>39.8209</td>
-    </tr>
-    <tr>
-      <th>oname:sfr_otype:lst_usecol:headwater_time:4383.5</th>
-      <td>-127.1930</td>
-      <td>467.6410</td>
-      <td>-1062.4700</td>
-      <td>808.0890</td>
-      <td>-719.2990</td>
-      <td>274.946000</td>
-      <td>-1269.1900</td>
-      <td>-169.4080</td>
-    </tr>
-    <tr>
-      <th>oname:sfr_otype:lst_usecol:tailwater_time:4383.5</th>
-      <td>92.9114</td>
-      <td>398.7560</td>
-      <td>-704.6000</td>
-      <td>890.4220</td>
-      <td>-369.0800</td>
-      <td>274.225000</td>
-      <td>-917.5300</td>
-      <td>179.3710</td>
-    </tr>
-    <tr>
-      <th>part_time</th>
-      <td>99358.4000</td>
-      <td>48689.3000</td>
-      <td>1979.8600</td>
-      <td>196737.0000</td>
-      <td>117996.0000</td>
-      <td>47419.500000</td>
-      <td>23157.3000</td>
-      <td>212835.0000</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
 
 Now, let's make some plots of the forecast uncertainties obtained from FOSM (e.g. linear analysis) and from FOSM-based Monte Carlo (e.g. nonlinear analyis). This let's us investigate the validity of the assumed linear relation between parameters and forecasts (the forecast sensitivity vectors). If it holds up, then the FOSM posterior should cover the Monte Carlo posterior (note that we used very few realisations for Monte Carlo, so in our case this assumption is a bit shaky). 
 
@@ -1282,30 +567,6 @@ for forecast in fnames:
     ax.set_title(forecast)
     plt.show()
 ```
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_85_0.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_85_1.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_85_2.png)
-    
-
-
-
-    
-![png](freyberg_glm_2_files/freyberg_glm_2_85_3.png)
-    
-
 
 Does the FOSM posterior (blue-shaded area) overlap the Monte Carlo posterior (blue columns) for all forecasts? If so, that's good news. It means the assumed linear parameter-forecast relation in the FOSM calculations holds true. If it does not, then the usefullness of FOSM for forecast uncertainty analysis is erroded.
 

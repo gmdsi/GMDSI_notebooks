@@ -24,7 +24,7 @@ To be more specific, in the blue box in Figure 9.9 above there are certain steps
 
 <img src="freyberg_pest_setup_files\Fig9.8_PE_flowchart.png" style="float: center">
 
-### 1. The PEST Input Dataset
+## The PEST Input Dataset
 
 PEST and PEST++ are called "universal" inverse codes because they can be bolted on the outside of any model.  Well, that is, any model they can talk to and run, which means the model needs to meet these two criteria:
 
@@ -50,7 +50,7 @@ datasets of varying complexity. In many cases, PEST setup achieved in this way i
 However, no GUI is able to cater for every conceivable history-matching context. Hence there are
 many contexts in which a user may need to construct their own PEST input dataset. Doing so in a programatic environment makes this process automatable, replicable and much less painfull. `pyEMU` provides a `python` based interface that facilitates PEST-based workflows.  In this tutorial we will start by construting some of the PEST dataset "manually" so that you become familiar with what goes on in the background. Then, we will begin to introduce the use of `pyEMU`. Other tutorials provide general overview to `pyEMU` (see the "intro to pyemu" notebook) and demonstrate how to build a high-dimensional PEST interface from scratch (see the "freyberg pstfrom pest setup" notebook). But we are getting ahead of ourselves - we will get to those notebooks further along in the course.
 
-### 1.2. Additional Resources
+### Additional Resources
 
 Providing details on all of the functionality and intricacies of PEST and PEST++ in a single tutorial is not feasible. Here we introduce you to the basics. The following are usefull resources for further reading:
 
@@ -60,13 +60,13 @@ Providing details on all of the functionality and intricacies of PEST and PEST++
 - PEST tutorials: https://pesthomepage.org/tutorials
 - The PEST++ user manual: https://github.com/usgs/pestpp/tree/master/documentation
 
-### 1.3. Tutorial Objectives
+### Tutorial Objectives
 
 1. During this tutorial we'll spend time on "the plumbing" that allows PEST to manipulate model input and output files (shown in the 1st and 3rd box in Figure 9.8).  
 2. And - we'll run PEST++!
 3. And we'll see how to include forecasts in our PEST runs
 
-### 1.4. Admin
+### Admin
 
 We have provided some pre-cooked PEST dataset files, wrpaped around the modeified Freyberg model. The functions in the next cell import required dependencies and prepare a folder for you. This folder contains the model files and a preliminary PEST setup. Run the cells, then inspect the new folder named "pest_files" which has been created in your tutorial directory. (Just press shift-enter to run the cells). 
 
@@ -77,7 +77,7 @@ import os
 import warnings
 warnings.filterwarnings("ignore")
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
-
+import shutil
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt;
@@ -89,15 +89,18 @@ assert "dependencies" in flopy.__file__
 assert "dependencies" in pyemu.__file__
 sys.path.insert(0,"..")
 import herebedragons as hbd
-
-
 ```
 
 
 ```python
 # the pest files folder
 tmp_d = os.path.join('pest_files')
+# folder containing original model files
+org_d = os.path.join('..', '..', 'models', 'monthly_model_files_1lyr_newstress')
 
+if os.path.exists(tmp_d):
+    shutil.rmtree(tmp_d)
+shutil.copytree(org_d,tmp_d)
 # get executables
 hbd.prep_bins(tmp_d)
 # get dependency folders
@@ -106,10 +109,23 @@ hbd.prep_deps(tmp_d)
 hbd.prep_pest(tmp_d)
 ```
 
-### 1.5. Reminder - the modified-Freyberg model
+    ins file for heads.csv prepared.
+    ins file for sfr.csv prepared.
+    noptmax:0, npar_adj:1, nnz_obs:24
+    written pest control file: pest_files\freyberg.pst
+    
+
+
+
+
+    <pyemu.pst.pst_handler.Pst at 0x13f02332e80>
+
+
+
+### Reminder - the modified-Freyberg model
 Just a quick reminder of what the model looks like and what we are doing. 
 
-It is a 3D model, with three layers. A river runs north-south, represented with the SFR package (green cells in the figure). On the southern border there is a GHB (cyan cells). No-flow cells are shown in black. Pumping wells are placed in the bottom layer (red cells). 
+It is a 1-layer model. A river runs north-south, represented with the SFR package (green cells in the figure). On the southern border there is a GHB (cyan cells). No-flow cells are shown in black. Pumping wells are placed in the red cells. 
 
 Time-series of measured heads are available at the locations marked with black X's. River flux is also measured at three locations (headwater, tailwater and gage; not displayed).
 
@@ -122,12 +138,18 @@ A subsequent twelve transient stress periods representing a period in the future
 hbd.plot_freyberg(tmp_d)
 ```
 
+
+    
+![png](freyberg_pest_setup_files/freyberg_pest_setup_4_0.png)
+    
+
+
 In the previous tutorial on manual trial-and-error, we "manually" changed parameter values to get a good fit with measured data. We want PEST to this for us instead. To do so, we need to provide PEST with conduits that change a model input file and that extract model outputs after the model has been run. 
 
-**In this tutorial you do not *have* to get your hands dirty. However, we recomend you do. We provide all the necessary files to advance through the tutorial without any user-input. However, getting to grips with how files are constructed and the inner-workings of PEST is often insightfull. Throught the notebook we will provide instructions to read and edit files manualy (yes, yes...we know...we will get back to good old python in due course). This will require the use of a text editor software. Generic text editors (e.g notepad on Windows) are sufficent, but you will benefit from more versatile software such as Notepad++, UltraEdit, etc. There are many free options available online.**
+**In this tutorial you do not *have* to get your hands dirty. However, we recomend you do. We provide all the necessary files to advance through the tutorial without any user-input. However, getting to grips with how files are constructed and the inner-workings of PEST is often insightfull. Throughout the notebook we will provide instructions to read and edit files manually (yes, yes...we know...we will get back to good old python in due course). This will require the use of a text editor software. Generic text editors (e.g notepad on Windows) are sufficent, but you will benefit from more versatile software such as Notepad++, UltraEdit, etc. There are many free options available online.**
 
 
-### 2. Template Files
+# Template Files
 
 Template files are used to create model input. Template files simply replace parameter numerical values with a code variable, named in the PEST Control File.
 
@@ -150,7 +172,7 @@ You should see four lines, each with a file name pair. They should look somethin
 
 The first file name in each row is a template file. The second is the corresponding model input file. Open up the two files named in the first row in your text editor software and compare them.
 
-### 2.1. Rules for constructing TPL Files 
+### Rules for constructing TPL Files 
 
  1. The first line of the TPL file must identify that it is a template file by listing "`ptf ~`" where "`~`" is a "parameter delimiter" that tells PEST where a parameter sits in the file. We used a tilde here, but it can be any symbol. __However__, whatever delimiter symbol is listed in the first line must be used consistently throughout that template file.
  
@@ -165,7 +187,7 @@ The first file name in each row is a template file. The second is the correspond
 >**Note**: 
 The PEST manual explains more detail about how you can control the writing of model input (e.g. scientific notation, double precision, etc.); see http://www.pesthomepage.org/Downloads.php to get the most recent version of the manual.
 
-### 2.2. Checking a template file with the `TEMPCHEK` utility
+### Checking a template file with the `TEMPCHEK` utility
 
 Let's check to see if this template file is correct using TEMPCHEK.  
 
@@ -191,7 +213,7 @@ Open up a command line in the `pest_files` folder and run TEMPCHEK. You'll see:
 
 Run `TEMPCHEK` __on the template file listed in  `freyberg.pst`__ and open the associated output file listed.  Although you could have seen this on a quick look at the template file, the TEMPCHEK output file is useful when you have many parameters. It will also notify you of any problems with the template file.
 
-### 2.3. Make your own TPL file
+### Make your own TPL file
 
 Test your understanding. Construct your own template file and check it with TEMPCHEK.
 
@@ -203,7 +225,7 @@ The easiest way to make a template file? Modify an existing input file. You can 
  6. Do a search and replace, subsituting the variable "hk1" surrounded by the delimiter you chose where appropriate
  7. Save the file and run TEMPCHEK 
 
-### 3. Instruction files
+# Instruction files
 
 Similar to the template files, the names of instruction files and which model output files they should work on are listed after all the template files in the "* model input/output" section of the PEST control file.  As you might expect with the wide range of model output file variation, creating instruction files is slightly more complicated than creating template files. There is basically an internal scripting language for reading text files of model output, extracting the output of interest, and providing it directly to PEST.
 
@@ -216,7 +238,7 @@ Open the PEST control file `freyberg.pst` in a text editor and find the Instruct
 
 Open one of these instruction file and model output file pairs in a text editor and inspect them. As you can see, the model output files are CSVs. With the exception of the first column, the values in each row and column of the CSV are observations. 
 
-### 3.1. Rules for constructing INS Files 
+## Rules for constructing INS Files 
 
  * The first line on an .ins file must be "`pif ~`" where "`~`" is a "marker delimiter"--a symbol that can be used to identify text to search for.  It is expected on this first line but it's not always used.
  * The scripting options are extensive but particular. Some options on how to navigate to the numerical data you want to read are:
@@ -246,7 +268,7 @@ Open one of these instruction file and model output file pairs in a text editor 
   
 These are only a few of the most commonly used options but more options, and more detail on these, are available in the PEST manual.  
 
-### 3.2. Checking a template file with the `INSCHEK` utility
+### Checking a template file with the `INSCHEK` utility
 
 Let's check an instruction file using `INSCHEK`, a handy utility that allows us to check our instruction files without having to do a full PEST run. You can see what INSCHEK is looking for by simply typing 'INSCHEK" at the command line.  You'll see: 
 
@@ -271,13 +293,13 @@ Check the instruction files listed in `freyberg.pst` by running INSCHEK:
 
 (Note:  yes the author of PEST John Doherty knows how to spell! He could have made it INSCHECK but chose to be consistent across all his checking programs and for some, like TEMPCHEK above, proper spelling would not fit in the 8.3 filename format required at the time.  The good news is you only have one to remember - just think CHEK.)
 
-### 3.3. Make your own INS file
+###  Make your own INS file
 
 Test your understanding. Try building your own instruction file. As for TPL files, it is sometimes easiest to start by using a model output as a template.
 
 Remember to alsways check the validity of the INS file using `INSCHEK`.
 
-### 4. The Control File
+# The Control File
 
 So, the previous sections introduced the basics of how to construct TPL and INS files. This will come in handy when you need to build your own customized PEST input datasets.
 
@@ -307,13 +329,13 @@ Take a moment to explore the `freyberg.pst` control file. You will find all the 
 
 The `* model command line` section provides the command that PEST uses to run the model. Usually this would be a command to run a batch file or script. Here we have simply used the command to run MODFLOW6. You can see for yourself if it works by opening a command line in the "pest_files" folder, typing `mf6` and pressing `<enter>`. (This should run the model once.) 
 
-### 4.1. Check the control file with PESTCHEK
+### Check the control file with PESTCHEK
 
 Just like TEMPCHEK and INSCHEK, we also have a handy utility that we run on our PEST setup before pulling the trigger. 
 
 > **note**: always check your PEST setup with PESTCHEK! Certainly do so before complaining to the developers that something isn't working properly. 
 
-Just like TEMPCHEK and INSCHEK, you can see what PESTCHEK is looking for by simply typing `pestchek` (Windows) or `./pestchek` (Mac) at the command line.  If you did that you would see that we have to put this on the command line to check our PEST setup: __`pestchek freyberg_un.pst`__ (if Windows) or __./pestchek freyberg_un.pst__ (if Mac)
+Just like TEMPCHEK and INSCHEK, you can see what PESTCHEK is looking for by simply typing `pestchek` (Windows) or `./pestchek` (Mac) at the command line.  If you did that you would see that we have to put this on the command line to check our PEST setup: __`pestchek freyberg.pst`__ (if Windows) or __./pestchek freyberg_un.pst__ (if Mac)
 
 If errors are indicated, PEST won't run so we have to correct them. Warnings, on the other hand, highlight potentially good information about what you have specified in the control file but they don't require a change to run. However, the warnings may guide your eyes to things you are not intending so always read them too.
 
@@ -333,7 +355,9 @@ You should see something like:
 
 If no errors are highlighted, let's go ahead and run PEST!
 
-### 4.2. Run PEST from Command Line
+
+
+# Run PEST from Command Line
 
 From the command line run __`pestpp-glm freyberg.pst`__ (Windows) or __`./pestpp-glm freyberg.pst`__ (Mac).
 
@@ -352,9 +376,31 @@ PEST++ should commence, run the model once and then stop (should take a ouple of
 >
 >FINAL OPTIMISATION RESULTS
 >
->  Final phi                                           Total : 16916.9
->  Contribution to phi from observation group         "flux" : 0
->  Contribution to phi from observation group          "hds" : 16916.9
+>  Final phi                                           Total : 29.2031
+>  Contribution to phi from observation group       "gage-1" : 0
+>  Contribution to phi from observation group    "headwater" : 0
+>  Contribution to phi from observation group     "particle" : 0
+>  Contribution to phi from observation group    "tailwater" : 0
+>  Contribution to phi from observation group "trgw-0-13-10" : 0
+>  Contribution to phi from observation group "trgw-0-15-16" : 0
+>  Contribution to phi from observation group  "trgw-0-2-15" : 0
+>  Contribution to phi from observation group   "trgw-0-2-9" : 0
+>  Contribution to phi from observation group "trgw-0-21-10" : 0
+>  Contribution to phi from observation group "trgw-0-22-15" : 0
+>  Contribution to phi from observation group  "trgw-0-24-4" : 0
+>  Contribution to phi from observation group  "trgw-0-26-6" : 18.3572
+>  Contribution to phi from observation group "trgw-0-29-15" : 0
+>  Contribution to phi from observation group   "trgw-0-3-8" : 10.8459
+>  Contribution to phi from observation group  "trgw-0-33-7" : 0
+>  Contribution to phi from observation group "trgw-0-34-10" : 0
+>  Contribution to phi from observation group   "trgw-0-9-1" : 0
+>
+>
+>pestpp-glm analysis complete...
+>started at 08/10/22 12:26:07
+>finished at 08/10/22 12:26:09
+>took 0.0166667 minutes
+>
 >  ```
 
 If you check the "pest_files" folder, you should see several new files. Open the one named "freyberg.rec". This is the PEST record file. It records lots of usefull information about the PEST run. 
@@ -365,7 +411,7 @@ If you scroll down to the end of the file you should see a line that says:
 
 As mentioned in the PESTCHEK warning, the control file we gave you has `NOPTMAX=0`, which means the model only is run once, and then PEST++ processes all the output and reports the objective function phi. So, not too exciting with only one run.  However, we __always__ run with `NOPTMAX=0` first to "test the plumbing" of the template and instruction files, and to see if we like the contribution of observation groups to the total objective function. If we don't like the objective function distribution we can reweight, then re-run PEST++ with `NOPTMAX=0` again. (We will demonstrate this in a subsequent tutorial.)
 
-###  4.3. Finally - let's get a best fit for this problem!
+## Finally - let's get a best fit for this problem!
 
 Now __change `NOPTMAX` to a value = 20__ (`NOPTMAX` is the first number listed in the 9th line of the PEST control file).  You can see its location below, taken from Appendix 1 from SIR 2010-5169 we will be handing out:
 
@@ -383,16 +429,33 @@ Check the `freyberg.rec` file again. What has changed? Try searching for "Final 
 
 >```
 >Final composite objective function 
->  Final phi                                           Total : 51.7655
->  Contribution to phi from observation group         "flux" : 0.000000
->  Contribution to phi from observation group          "hds" : 51.7655
+>  Final phi                                           Total : 3.40901
+>  Contribution to phi from observation group       "gage-1" : 0.000000
+>  Contribution to phi from observation group    "headwater" : 0.000000
+>  Contribution to phi from observation group     "particle" : 0.000000
+>  Contribution to phi from observation group    "tailwater" : 0.000000
+>  Contribution to phi from observation group "trgw-0-13-10" : 0.000000
+>  Contribution to phi from observation group "trgw-0-15-16" : 0.000000
+>  Contribution to phi from observation group  "trgw-0-2-15" : 0.000000
+>  Contribution to phi from observation group   "trgw-0-2-9" : 0.000000
+>  Contribution to phi from observation group "trgw-0-21-10" : 0.000000
+>  Contribution to phi from observation group "trgw-0-22-15" : 0.000000
+>  Contribution to phi from observation group  "trgw-0-24-4" : 0.000000
+>  Contribution to phi from observation group  "trgw-0-26-6" : 2.21763
+>  Contribution to phi from observation group "trgw-0-29-15" : 0.000000
+>  Contribution to phi from observation group   "trgw-0-3-8" : 1.19138
+>  Contribution to phi from observation group  "trgw-0-33-7" : 0.000000
+>  Contribution to phi from observation group "trgw-0-34-10" : 0.000000
+>  Contribution to phi from observation group   "trgw-0-9-1" : 0.000000
 >
->Number of forward model runs performed during optimization: 117
+>
+>Number of forward model runs performed during optimization: 35
 >```
 
 What about the best-fit parameters? There should be a file named `freyberg.par`. Open it in a text editor. These are the best parameter values which PEST has managed obtain. Note that all parameters in that were in the control data `* parameter data` section are listed here. However, only the "hk" parameter values have changed because all the others were specified as "fixed". How do these values compare to what you achieved through manual trial-and-error calibration? 
 
-### 5. Moving into the 21st Century - thinking about forecast uncertainty 
+# Moving into the 21st Century
+## Thinking about forecast uncertainty 
 
 Recall that in your freyberg_trial_and_error tutorial we were looking at the fit between the model and historical data, but also at a "forecast" of river flow. This forecast was in fact the observation named "headwater:732.0" (the simulated headwater during the last model stress-period). 
 
@@ -400,7 +463,7 @@ If there is __*one thing*__ we want you to take away from this class it is this:
 
 **For most models there is a forecast/prediction that someone needs. Rather than waiting until the end of the project, the forecast should be entered into your thinking and workflow __right at the beginning__.**
 
-Open up `freberg.pst` in a text editor and look in the observation section. Find entry for the "headwater:732.0" observation. Note that the observation **weight** is zero. So, although we have included this "observatio" in the dataset, it does not in fact contribute to the objective function (it does not affect calibration). This is a nifty trick - it means we can put in forecasts __and__ hypothetical observations even if we don't have measured values for them! More on this coming up so stay tuned!   
+Open up `freberg.pst` in a text editor and look in the observation section. Find entry for the "headwater:732.0" observation. Note that the observation **weight** is zero. So, although we have included this "observation" in the dataset, it does not in fact contribute to the objective function (it does not affect calibration). This is a nifty trick - it means we can put in forecasts __and__ hypothetical observations even if we don't have measured values for them! More on this coming up so stay tuned!   
 
 But wait a minute - how does PEST know we have a forecast and not a calibration data point? PEST++ made this very easy - simply add the forecasts as observations and list them in a ++forecasts section in the PEST control `.pst` file.  Find the `++forecasts` command. The `++` at the beginning means this input will ___only be seen by PEST++___; if you use PEST it will be ignored. 
 
@@ -410,13 +473,3 @@ Let's open `freyberg.rec` in a text editor and look at the forecast uncertainty 
 To recap:  you just added a forecast and got an estimate of the uncertainty by simply adding one line to the PEST++ control file!
 
 __Note:__ other PEST++ specific input options can be found at https://github.com/usgs/pestpp/documentation/pestpp_users_manual.md.  During this course we will touch on the most commonly used ones. 
-
-
-```python
-
-```
-
-
-```python
-
-```
