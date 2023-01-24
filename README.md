@@ -66,8 +66,8 @@ IMPORTANT NOTE: When running some of these notebooks, PEST++ undertakes parallel
 **Download the course repository:**
 
 You can do this in one of two ways. 
- - (1) (easier) Download the repo as a zip file from here: [GMDSI_notebooks](https://github.com/rhugman/GMDSI_notebooks). Unzip the folder and work from there.
- - (2) (recommended; requires familiarity with git). Install git following directions here: [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). Sign-up for a git-hub account, then clone the repo [GMDSI_notebooks](https://github.com/rhugman/GMDSI_notebooks).
+ - (1) (easier) Download the repo as a zip file from here: [GMDSI_notebooks](https://github.com/gmdsi/GMDSI_notebooks). Unzip the folder and work from there.
+ - (2) (recommended; requires familiarity with git). Install git following directions here: [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). Sign-up for a git-hub account, then clone the repo [GMDSI_notebooks](https://github.com/gmdsi/GMDSI_notebooks).
 
 **Install Python and dependencies:**
  - If you have already installed Python using Anaconda, you can skip this step. If not, install [Anaconda](https://www.anaconda.com/products/individual) (or [Miniconda](https://docs.conda.io/en/latest/miniconda.html), if you prefer )
