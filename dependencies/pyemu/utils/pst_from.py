@@ -47,13 +47,13 @@ class PstFrom(object):
     """construct high-dimensional PEST(++) interfaces with all the bells and whistles
 
     Args:
-        original_d (`str`): the path to a complete set of model input and output files
-        new_d (`str`): the path to where the model files and PEST interface files will be copied/built
+        original_d (`str` or Path): the path to a complete set of model input and output files
+        new_d (`str` or Path): the path to where the model files and PEST interface files will be copied/built
         longnames (`bool`): flag to use longer-than-PEST-likes parameter and observation names.  Default is True
         remove_existing (`bool`): flag to destroy any existing files and folders in `new_d`.  Default is False
         spatial_reference (varies): an object that faciliates geo-locating model cells based on index.  Default is None
         zero_based (`bool`): flag if the model uses zero-based indices, Default is True
-        start_datetime (`str`): a string that can be case to a datatime instance the represents the starting datetime
+        start_datetime (`str` or Timestamp): a string that can be case to a datatime instance the represents the starting datetime
             of the model
         tpl_subfolder (`str`): option to write template files to a subfolder within ``new_d``.
             Default is False (write template files to ``new_d``).
@@ -263,10 +263,16 @@ class PstFrom(object):
         if all([ij is None for ij in [i, j]]):
             return i, j
         else:
-            return (
-                self._spatial_reference.xcentergrid[i, j],
-                self._spatial_reference.ycentergrid[i, j],
-            )
+            if self._spatial_reference.grid_type=='vertex':
+                return (
+                    self._spatial_reference.xcentergrid[i, ],
+                    self._spatial_reference.ycentergrid[i, ],
+                )
+            else:
+                return (
+                    self._spatial_reference.xcentergrid[i, j],
+                    self._spatial_reference.ycentergrid[i, j],
+                )
 
     def _flopy_mg_get_xy(self, args, **kwargs):
         i, j = self.parse_kij_args(args, kwargs)
@@ -276,6 +282,8 @@ class PstFrom(object):
             if self._spatial_ref_xarray is None:
                 self._spatial_ref_xarray = self._spatial_reference.xcellcenters
                 self._spatial_ref_yarray = self._spatial_reference.ycellcenters
+            if self._spatial_reference.grid_type=='vertex':
+                return (self._spatial_ref_xarray[i, ], self._spatial_ref_yarray[i, ])
 
             return (self._spatial_ref_xarray[i, j], self._spatial_ref_yarray[i, j])
 
@@ -299,6 +307,11 @@ class PstFrom(object):
                     self.ijwarned[self.add_pars_callcount] = True
                 # assume i and j are the final two entries in index_cols
                 i, j = args[-2], args[-1]
+
+                # vertex/list based i == cell number
+                if self._spatial_reference.grid_type=='vertex':
+                    i, l = args[-1], args[-2]
+
         else:
             if not self.ijwarned[self.add_pars_callcount]:
                 self.logger.warn(
@@ -1001,15 +1014,15 @@ class PstFrom(object):
                             fp.write(storehead[key])
                             fp.flush()
                             lc += 1
-                        if lc < len(df):
-                            df.iloc[fr:].to_csv(
-                                fp,
-                                sep=",",
-                                mode="a",
-                                header=hheader,
-                                index=False,
-                                **kwargs,
-                            )
+                        # if lc < len(df):  # finish off remaining table (todo: when supporting mid-table comments...)
+                        df.iloc[fr:].to_csv(
+                            fp,
+                            sep=",",
+                            mode="a",
+                            header=hheader,
+                            index=False,
+                            **kwargs,
+                        )
                 else:
                     df.to_csv(
                         org_file,
@@ -1017,7 +1030,7 @@ class PstFrom(object):
                         sep=",",
                         header=hheader,
                     )
-                file_dict[rel_filepath] = df
+                file_dict[rel_filepath] = df.apply(pd.to_numeric, errors='ignore')  # make sure numeric (if reasonable)
                 fmt_dict[rel_filepath] = fmt
                 sep_dict[rel_filepath] = sep
                 skip_dict[rel_filepath] = skip
@@ -1121,10 +1134,11 @@ class PstFrom(object):
             `call_str` is expected to reference standalone a function
             that contains all the imports it needs or these imports
             should have been added to the forward run script through the
-            `PstFrom.py_imports` list.
+            `PstFrom.extra_py_imports` list.
 
             This function adds the `call_str` call to the forward
-            run script (either as a pre or post command). It is up to users
+            run script (either as a pre or post command or function not 
+            directly called by main). It is up to users
             to make sure `call_str` is a valid python function call
             that includes the parentheses and requisite arguments
 
@@ -1140,7 +1154,10 @@ class PstFrom(object):
                                "mult_well_function(arg1='userarg')",
                                is_pre_cmd = True)
             # add the post processor function "made_it_good" from the script file "post_processors.py"
-            pf.add_py_function("post_processors.py","make_it_good(()",is_pre_cmd=False)
+            pf.add_py_function("post_processors.py","make_it_good()",is_pre_cmd=False)
+            # add the function "another_func" from the script file "utils.py" as a
+            # function not called by main
+            pf.add_py_function("utils.py","another_func()",is_pre_cmd=None)
 
 
         """
@@ -1445,13 +1462,15 @@ class PstFrom(object):
             df, storehead, inssep = self._load_listtype_file(
                 filenames, index_cols, use_cols, fmts, seps, skip_rows
             )
+            # parse to numeric (read as dtype object to preserve mixed types)
+            df = df.apply(pd.to_numeric, errors="ignore")
             if inssep != ",":
                 inssep = seps
             else:
                 inssep = [inssep]
             # rectify df?
             # if iloc[0] are strings and index_cols are ints,
-            # can we assume that there were infact column headers?
+            #   can we assume that there were infact column headers?
             if all(isinstance(c, str) for c in df.iloc[0]) and all(
                 isinstance(a, int) for a in index_cols
             ):
@@ -1704,7 +1723,7 @@ class PstFrom(object):
         sigma_range=4.0,
         upper_bound=None,
         lower_bound=None,
-        transform="log",
+        transform=None,
         par_name_base="p",
         index_cols=None,
         use_cols=None,
@@ -1765,20 +1784,25 @@ class PstFrom(object):
                 model rows and columns to be identified and processed to x,y.
             use_cols (`list`-like or `int`): for tabular-style model input file,
                 defines the columns to be parameterised
-            use_rows (`list` of `int` or `tuple`): Setup parameters for
+            use_rows (`list` or `tuple`): Setup parameters for
                 only specific rows in list-style model input file.
-                If list of `int` -- assumed to be a row index selection (zero-based).
-                If list of `tuple` -- assumed to be selection based `index_cols` values.
-                e.g. [(3,5,6)] would attempt to set parameters where the model file
-                values for 3 `index_cols` are 3,5,6. N.B. values in tuple are actual
-                model file entry values. If no rows in the model input file match `use_rows`, parameters
+                Action is dependent on the the dimensions of use_rows.
+                If ndim(use_rows) < 2: use_rows is assumed to represent the row number, index slicer (equiv df.iloc),
+                for all passed files (after headers stripped). So use_rows=[0,3,5], will parameterise the
+                1st, 4th and 6th rows of each passed list-like file.
+                If ndim(use_rows) = 2: use_rows represent the index value to paramterise according to index_cols.
+                e.g. [(3,5,6)] or [[3,5,6]] would attempt to set parameters where the model file
+                values for 3 `index_cols` are 3,5,6. N.B. values in tuple are the actual
+                model file entry values.
+                If no rows in the model input file match `use_rows`, parameters
                 will be set up for all rows. Only valid/effective if index_cols is not None.
                 Default is None -- setup parameters for all rows.
             pargp (`str`): Parameter group to assign pars to. This is PESTs
                 pargp but is also used to gather correlated parameters set up
                 using multiple `add_parameters()` calls (e.g. temporal pars)
                 with common geostructs.
-            pp_space (`int`,`str` or `pd.DataFrame`): Spatial pilot point information.
+            pp_space (`float`, `int`,`str` or `pd.DataFrame`): Spatial pilot point information.
+                If `float` or `int`, AND `spatial_reference` is of type VertexGrid, it is the spacing in model length untis between pilot points.
                 If `int` it is the spacing in rows and cols of where to place pilot points.
                 If `pd.DataFrame`, then this arg is treated as a prefined set of pilot points
                 and in this case, the dataframe must have "name", "x", "y", and optionally "zone" columns.
@@ -1855,6 +1879,17 @@ class PstFrom(object):
         self.add_pars_callcount += 1
         self.ijwarned[self.add_pars_callcount] = False
 
+        if transform is None:
+            if par_style in ["a", "add", "addend"]:
+                transform = 'none'
+                self.logger.statement(
+                    "par_style is 'add' and transform was not passed, setting tranform to 'none'"
+                )
+            else:
+                transform = 'log'
+                self.logger.statement(
+                    "transform was not passed, setting default tranform to 'log'"
+                )
         if transform.lower().strip() not in ["none", "log", "fixed"]:
             self.logger.lraise(
                 "unrecognized transform ('{0}'), should be in ['none','log','fixed']".format(
@@ -1944,6 +1979,9 @@ class PstFrom(object):
                 self.logger.warn(
                     "-) Better to pass an appropriately " "transformed geostruct"
                 )
+        if not isinstance(self._spatial_reference,dict):
+            if self._spatial_reference.grid_type=='vertex' and zone_array is not None and len(zone_array.shape)==1:
+                zone_array = np.reshape(zone_array, (zone_array.shape[0], 1))
 
         # Get useful variables from arguments passed
         # if index_cols passed as a dictionary that maps i,j information
@@ -2172,7 +2210,7 @@ class PstFrom(object):
                     zone_array=zone_array,
                     shape=shp,
                     get_xy=self.get_xy,
-                    fill_value=1.0,
+                    fill_value=initial_value if initial_value is not None else 1.0,
                     gpname=pargp,
                     input_filename=in_fileabs,
                     par_style=par_style,
@@ -2209,6 +2247,7 @@ class PstFrom(object):
                             "OK - using spatial reference " "in parent object."
                         )
                         spatial_reference = self.spatial_reference
+                        spatial_reference_type = spatial_reference.grid_type
                     else:
                         # uhoh
                         self.logger.lraise(
@@ -2222,18 +2261,27 @@ class PstFrom(object):
                     structured = True
                     for mod_file, ar in file_dict.items():
                         orgdata = ar.shape
-                        assert orgdata[0] == spatial_reference.nrow, (
-                            "Spatial reference nrow not equal to original data nrow for\n"
-                            + os.path.join(
-                                *os.path.split(self.original_file_d)[1:], mod_file
+                        if spatial_reference_type=='vertex':
+                            assert orgdata[0] == spatial_reference.ncpl, (
+                                "Spatial reference ncpl not equal to original data ncpl for\n"
+                                + os.path.join(
+                                    *os.path.split(self.original_file_d)[1:], mod_file
+                                )
                             )
-                        )
-                        assert orgdata[1] == spatial_reference.ncol, (
-                            "Spatial reference ncol not equal to original data ncol for\n"
-                            + os.path.join(
-                                *os.path.split(self.original_file_d)[1:], mod_file
+
+                        else:
+                            assert orgdata[0] == spatial_reference.nrow, (
+                                "Spatial reference nrow not equal to original data nrow for\n"
+                                + os.path.join(
+                                    *os.path.split(self.original_file_d)[1:], mod_file
+                                )
                             )
-                        )
+                            assert orgdata[1] == spatial_reference.ncol, (
+                                "Spatial reference ncol not equal to original data ncol for\n"
+                                + os.path.join(
+                                    *os.path.split(self.original_file_d)[1:], mod_file
+                                )
+                            )
                 # (stolen from helpers.PstFromFlopyModel()._pp_prep())
                 # but only settting up one set of pps at a time
                 pnb = par_name_base[0]
@@ -2264,7 +2312,6 @@ class PstFrom(object):
                     elif isinstance(pp_space, int):
                         pass
                     elif isinstance(pp_space, str):
-
                         if pp_space.lower().strip().endswith(".csv"):
                             self.logger.statement(
                                 "trying to load pilot point location info from csv file '{0}'".format(
@@ -2443,7 +2490,6 @@ class PstFrom(object):
                         pnb,
                     )
                 df.loc[:, "pargp"] = pargp
-
                 df.set_index("parnme", drop=False, inplace=True)
                 # df includes most of the par info for par_dfs and also for
                 # relate_parfiles
@@ -2466,6 +2512,8 @@ class PstFrom(object):
                     "cov": ok_pp.point_cov_df,
                     "zn_ar": zone_array,
                     "sr": spatial_reference,
+                    "pstyle":par_style,
+                    "transform":transform
                 }
                 fac_processed = False
                 for facfile, info in self._pp_facs.items():  # check against
@@ -2474,6 +2522,9 @@ class PstFrom(object):
                         info["pp_data"].equals(pp_info_dict["pp_data"])
                         and info["cov"].equals(pp_info_dict["cov"])
                         and np.array_equal(info["zn_ar"], pp_info_dict["zn_ar"])
+                        and pp_info_dict["pstyle"] == info["pstyle"]
+                        and pp_info_dict["transform"] == info["transform"]
+
                     ):
                         if type(info["sr"]) == type(spatial_reference):
                             if isinstance(spatial_reference, dict):
@@ -2484,6 +2535,7 @@ class PstFrom(object):
 
                         fac_processed = True  # don't need to re-calc same factors
                         fac_filename = facfile  # relate to existing fac file
+                        self.logger.statement("reusing factors")
                         break
                 if not fac_processed:
                     # TODO need better way of naming sequential fac_files?
@@ -2600,9 +2652,14 @@ class PstFrom(object):
                 assert fac_filename is not None, "missing pilot-point input filename"
                 mult_dict["fac_file"] = os.path.relpath(fac_filename, self.new_d)
                 mult_dict["pp_file"] = pp_filename
-                mult_dict["pp_fill_value"] = 1.0
-                mult_dict["pp_lower_limit"] = 1.0e-10
-                mult_dict["pp_upper_limit"] = 1.0e10
+                if transform == "log":
+                    mult_dict["pp_fill_value"] = 1.0
+                    mult_dict["pp_lower_limit"] = 1.0e-30
+                    mult_dict["pp_upper_limit"] = 1.0e30
+                else:
+                    mult_dict["pp_fill_value"] = 0.0
+                    mult_dict["pp_lower_limit"] = -1.0e30
+                    mult_dict["pp_upper_limit"] = 1.0e30
             if zone_filename is not None:
                 mult_dict["zone_file"] = zone_filename
             relate_parfiles.append(mult_dict)
@@ -2615,6 +2672,8 @@ class PstFrom(object):
         df.loc[:, "partrans"] = transform
         df.loc[:, "parubnd"] = upper_bound
         df.loc[:, "parlbnd"] = lower_bound
+        if par_style != "d":
+            df.loc[:, "parval1"] = initial_value
         # df.loc[:,"tpl_filename"] = tpl_filename
 
         # store tpl --> in filename pair
@@ -2827,6 +2886,7 @@ class PstFrom(object):
             skiprows=skip,
             header=header,
             low_memory=False,
+            dtype='object'
         )
         self.logger.log(f"reading list-style file: {file_path}")
         # ensure that column ids from index_col is in input file
@@ -3057,12 +3117,10 @@ def write_list_tpl(
             par_fill_value=fill_value,
             par_style=par_style,
         )
-        if use_rows is None:
-            use_rows = df_tpl.index
-        else:
-            use_rows = _get_use_rows(
-                df_tpl, use_rows, zero_based, tpl_filename, logger=logger
-            )
+        idxs = [df.loc[:, index_cols].values.tolist() for df in dfs]
+        use_rows = _get_use_rows(
+            df_tpl, idxs, use_rows, zero_based, tpl_filename, logger=logger
+        )
         df_tpl = df_tpl.loc[use_rows, :]  # direct pars done in direct function
         # can we just slice df_tpl here
     for col in use_cols:  # corellations flagged using pargp
@@ -3132,7 +3190,7 @@ def write_list_tpl(
     )
 
     parval_cols = [c for c in df_tpl.columns if "parval1" in str(c)]
-    parval = list(df_tpl.loc[:, [pc for pc in parval_cols]].values.flatten())
+    parval = df_tpl.loc[:, parval_cols].values.flatten().tolist()
 
     if (
         par_type == "grid" and "x" in df_tpl.columns
@@ -3240,12 +3298,10 @@ def _write_direct_df_tpl(
         init_df=df,
         init_fname=in_filename,
     )
-    if use_rows is None:
-        use_rows = df_ti.index
-    else:
-        use_rows = _get_use_rows(
-            df_ti, use_rows, zero_based, tpl_filename, logger=logger
-        )
+    idxs = df.loc[:, index_cols].values.tolist()
+    use_rows = _get_use_rows(
+        df_ti, [idxs], use_rows, zero_based, tpl_filename, logger=logger
+    )
     df_ti = df_ti.loc[use_rows]
     not_rows = ~direct_tpl_df.index.isin(use_rows)
     direct_tpl_df.loc[not_rows] = df.loc[not_rows, direct_tpl_df.columns]
@@ -3259,51 +3315,45 @@ def _write_direct_df_tpl(
     return df_ti
 
 
-def _get_use_rows(df, use_rows, zero_based, fnme, logger=None):
+def _get_use_rows(tpldf, idxcolvals, use_rows, zero_based, fnme, logger=None):
     """
     private function to get use_rows index within df based on passed use_rows
     option, which could be in various forms...
     Args:
-        df:
+        tpldf:
+        idxcolvals:
         use_rows:
+        zero_based:
+        fname:
+        logger:
 
     Returns:
 
     """
-    if (
-        isinstance(use_rows, str)
-        or isinstance(use_rows, tuple)
-        or isinstance(use_rows, int)
-    ):
-        # we only 1 use_row but best in a list
+    if use_rows is None:
+        use_rows = tpldf.index
+        return use_rows
+    if np.ndim(use_rows) == 0:
         use_rows = [use_rows]
+    if np.ndim(use_rows) == 1:  # assume we have collection of int that describe iloc
+        use_rows = [idx[i] for i in use_rows for idx in idxcolvals]
     if not zero_based:  # assume passed indicies are 1 based
-        try:  # try and slice df_tpl assuming tuple of index ids passed
-            # adjust possible passed tuple.
-            use_rows = [
-                tuple([i - 1 if isinstance(i, int) else i for i in r])
-                if not isinstance(r, str)
-                else r
-                for r in use_rows
-            ]
-            # will error if use rows is just ints
-        except TypeError:
-            msg = "write_list_tpl: Assuming passed use_rows are zero-based ints!"
-            if logger is not None:
-                logger.statement(msg)
-            else:
-                warnings.warn(msg, PyemuWarning)
-            # dont need to do anything if in because should be zero-based
+        use_rows = [
+            tuple([i - 1 if isinstance(i, int) else i for i in r])
+            if not isinstance(r, str)
+            else r
+            for r in use_rows
+        ]
     orig_use_rows = use_rows
     use_rows = set(use_rows)
-    sel = df.sidx.isin(use_rows) | df.idx_strs.isin(use_rows)
+    sel = tpldf.sidx.isin(use_rows) | tpldf.idx_strs.isin(use_rows)
     if not sel.any():  # use_rows must be ints
-        inidx = list(use_rows.intersection(df.index))
-        missing = use_rows.difference(df.index)
-        use_rows = df.iloc[inidx].index.unique()
+        inidx = list(use_rows.intersection(tpldf.index))
+        missing = use_rows.difference(tpldf.index)
+        use_rows = tpldf.iloc[inidx].index.unique()
     else:
-        missing = set(use_rows).difference(df.sidx, df.idx_strs)
-        use_rows = df.loc[sel].index.unique()
+        missing = set(use_rows).difference(tpldf.sidx, tpldf.idx_strs)
+        use_rows = tpldf.loc[sel].index.unique()
     if len(missing) > 0:
         msg = (
             "write_list_tpl: Requested rows missing from parameter file, "
@@ -3323,7 +3373,7 @@ def _get_use_rows(df, use_rows, zero_based, fnme, logger=None):
             logger.warn(msg)
         else:
             warnings.warn(msg, PyemuWarning)
-        use_rows = df.index
+        use_rows = tpldf.index
     return use_rows
 
 
@@ -3573,7 +3623,7 @@ def _get_tpl_or_ins_df(
         sidx = set()
         for df in dfs:
             # looses ordering
-            didx = set(df.loc[:, index_cols].apply(lambda x: tuple(x), axis=1))
+            didx = set(df.loc[:, index_cols].apply(tuple, axis=1))
             sidx.update(didx)
     else:
         # order matters for obs
@@ -3664,7 +3714,7 @@ def write_array_tpl(
     if par_style == "d":
         if not os.path.exists(input_filename):
             raise Exception(
-                "write_grid_tpl() error: couldn't find input file "
+                "write_array_tpl() error: couldn't find input file "
                 + " {0}, which is required for 'direct' par_style".format(
                     input_filename
                 )
@@ -3687,7 +3737,7 @@ def write_array_tpl(
         org_arr = np.zeros(shape)
     else:
         raise Exception(
-            "write_grid_tpl() error: unrecognized 'par_style' {0} ".format(par_style)
+            "write_array_tpl() error: unrecognized 'par_style' {0} ".format(par_style)
             + "should be 'd','a', or 'm'"
         )
 
