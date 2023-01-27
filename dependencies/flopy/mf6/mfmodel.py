@@ -75,7 +75,7 @@ class MFModel(PackageContainer, ModelInterface):
         modelname="model",
         model_nam_file=None,
         version="mf6",
-        exe_name="mf6.exe",
+        exe_name="mf6",
         add_to_simulation=True,
         structure=None,
         model_rel_path=".",
@@ -146,7 +146,10 @@ class MFModel(PackageContainer, ModelInterface):
             raise FlopyException(excpt_str)
 
         self.name_file = package_obj(
-            self, filename=self.model_nam_file, pname=self.name
+            self,
+            filename=self.model_nam_file,
+            pname=self.name,
+            _internal_package=True,
         )
 
     def __init_subclass__(cls):
@@ -459,6 +462,8 @@ class MFModel(PackageContainer, ModelInterface):
                 xoff=self._modelgrid.xoffset,
                 yoff=self._modelgrid.yoffset,
                 angrot=self._modelgrid.angrot,
+                iac=dis.iac,
+                ja=dis.ja,
             )
         elif self.get_grid_type() == DiscretizationType.DISL:
             dis = self.get_package("disl")
@@ -686,7 +691,7 @@ class MFModel(PackageContainer, ModelInterface):
         model_nam_file="modflowtest.nam",
         mtype="gwf",
         version="mf6",
-        exe_name="mf6.exe",
+        exe_name="mf6",
         strict=True,
         model_rel_path=".",
         load_only=None,
@@ -865,7 +870,7 @@ class MFModel(PackageContainer, ModelInterface):
         --------
 
         >>> import flopy
-        >>> sim = flopy.mf6.MFSimulation.load("name", "mf6", "mf6.exe", ".")
+        >>> sim = flopy.mf6.MFSimulation.load("name", "mf6", "mf6", ".")
         >>> model = sim.get_model()
         >>> inspect_list = [(2, 3, 2), (0, 4, 2), (0, 2, 4)]
         >>> out_file = os.path.join("temp", "inspect_AdvGW_tidal.csv")
@@ -1642,7 +1647,10 @@ class MFModel(PackageContainer, ModelInterface):
             package.package_type
         )
         if add_to_package_list and path in self._package_paths:
-            if not package_struct.multi_package_support:
+            if (
+                package_struct is not None
+                and not package_struct.multi_package_support
+            ):
                 # package of this type already exists, replace it
                 self.remove_package(package.package_type)
                 if (
@@ -1683,6 +1691,15 @@ class MFModel(PackageContainer, ModelInterface):
         self._package_paths[path] = 1
 
         if package.package_type.lower() == "nam":
+            if not package.internal_package:
+                excpt_str = (
+                    "Unable to register nam file.  Do not create your own nam "
+                    "files.  Nam files are automatically created and managed "
+                    "for you by FloPy."
+                )
+                print(excpt_str)
+                raise FlopyException(excpt_str)
+
             return path, self.structure.name_file_struct_obj
 
         package_extension = package.package_type
@@ -1851,6 +1868,7 @@ class MFModel(PackageContainer, ModelInterface):
             pname=dict_package_name,
             loading_package=True,
             parent_file=parent_package,
+            _internal_package=True,
         )
         try:
             package.load(strict)
@@ -1863,6 +1881,7 @@ class MFModel(PackageContainer, ModelInterface):
                 pname=dict_package_name,
                 loading_package=True,
                 parent_file=parent_package,
+                _internal_package=True,
             )
             package.load(strict)
 
