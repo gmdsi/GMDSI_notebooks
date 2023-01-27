@@ -22,7 +22,7 @@ The notebooks in the `tutorial` folder are organized in three main parts:
  - part 2: this part expands largely into ensemble-based parameter estimation and uncertainty analysis methods using PEST++. Advanced topics include management optimization and sequential data assimilation.
 
 **To run the Part 0 notebooks**
-The part 0 notebooks can be run in any order and do not depend on each other. We recommend, in particular, the first 3 topics as background for the rest of the tutorials, but the remaining part 0 notebooks stand alone for more theoretical basis for topics covered later.
+The part 0 notebooks can be run in any order and do not depend on each other. We recommend, in particular, the first 3 topics as background for the rest of the tutorials, but the remaining part 0 notebooks stand alone for more theoretical basis and a reference for topics covered later.
 
 **To run the Part 1 notebooks**
 The part 1 notebooks can also be run in any order and do not depend on each other.
