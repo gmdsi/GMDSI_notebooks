@@ -11,6 +11,7 @@ from .la import LinearAnalysis
 from .sc import Schur
 from .ev import ErrVar
 from .en import Ensemble, ParameterEnsemble, ObservationEnsemble
+from .eds import EnDS
 
 # from .mc import MonteCarlo
 # from .inf import Influence
@@ -30,6 +31,7 @@ from .plot import plot_utils
 from .logger import Logger
 
 from .prototypes import *
+from .legacy import *
 
 from ._version import get_versions
 

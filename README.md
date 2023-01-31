@@ -17,12 +17,12 @@ Familiarity with git would be a bonus, but not fundamental.
 
 ## Organization of the Tutorial Notebooks
 The notebooks in the `tutorial` folder are organized in three main parts:
- - part 0: this is introductory background material that can be referred to for more detail on special topics. This includes the synthetic "freyberg" model used throughout the exercises, the `pyemu` python package that is used to interface with PEST++, and some of the mathematical concepts that come up throughout the tutorial notebooks
+ - part 0: this is introductory background material that can be referred to for more detail on special topics. This includes the synthetic "freyberg" model used throughout the exercises, the `pyemu` python package that is used to interface with PEST++, and some of the mathematical concepts that come up throughout the tutorial notebooks. Note that the `part1_02_pest_setup/freyberg_pest_setup.ipynb` notebook provides valuable context that will help with understanding the `pyemu` introduction.
  - part 1: this part covers the Gauss-Levenberg Marquardt approach to parameter estimation and associated uncertainty analysis. This was the foundation of the PEST software for multiple decades and the theory continues to resonate through newer techniques
  - part 2: this part expands largely into ensemble-based parameter estimation and uncertainty analysis methods using PEST++. Advanced topics include management optimization and sequential data assimilation.
 
 **To run the Part 0 notebooks**
-The part 0 notebooks can be run in any order and do not depend on each other. We recommend, in particular, the first 3 topics as background for the rest of the tutorials, but the remaining part 0 notebooks stand alone for more theoretical basis for topics covered later.
+The part 0 notebooks can be run in any order and do not depend on each other. We recommend, in particular, the first 3 topics as background for the rest of the tutorials, but the remaining part 0 notebooks stand alone for more theoretical basis and a reference for topics covered later.
 
 **To run the Part 1 notebooks**
 The part 1 notebooks can also be run in any order and do not depend on each other.
@@ -30,34 +30,34 @@ The part 1 notebooks can also be run in any order and do not depend on each othe
 **To run the Part 2 notebooks**
 
 If you are going to go through the Part2 notebooks, you will need to run them in the following order:
- 1. freyberg_pstfrom_pest_setup.ipynb
- 2. freyberg_obs_and_weights.ipynb
+ 1. part2_01_pstfrom_pest_setup/freyberg_pstfrom_pest_setup.ipynb
+ 2. part2_02_obs_and_weights/freyberg_obs_and_weights.ipynb
 
 From here you can optionally run each of the following sequences:
 
 Prior Monte Carlo:
- 1. freyberg_prior_monte_carlo.ipynb
+ 1. part2_03_prior_monte_carlo/freyberg_prior_monte_carlo.ipynb
 
 GLM and data worth:
- 1. freyberg_glm_1.ipynb
- 2. freyberg_fosm_and_dataworth.ipynb
- 3. freyberg_glm_2.ipynb
+ 1. part2_04_glm/freyberg_glm_1.ipynb
+ 2. part2_05_fosm_and_dataworth/freyberg_fosm_and_dataworth.ipynb
+ 3. part2_04_glm/freyberg_glm_2.ipynb
 
 PEST++IES:
- 1. freyberg_ies_1_basics.ipynb
- 2. freyberg_ies_2_localization.ipynb
+ 1. part2_06_ies/freyberg_ies_1_basics.ipynb
+ 2. part2_06_ies/freyberg_ies_2_localization.ipynb
 
 PEST++DA:
- 1. freyberg_da_prep.ipynb
- 2. freyberg_da_run.ipynb
+ 1. part2_07_da/freyberg_da_prep.ipynb
+ 2. part2_07_da/freyberg_da_run.ipynb
 
 PEST++OPT: 
- 1. freyberg_opt_1.ipynb
- 2. freyberg_opt_2.ipynb
+ 1. part2_08_opt/freyberg_opt_1.ipynb
+ 2. part2_08_opt/freyberg_opt_2.ipynb
 
 PEST++MOU: 
- 1. freyberg_mou_1.ipynb
- 2. freyberg_mou_2.ipynb
+ 1. part2_09_mou/freyberg_mou_1.ipynb
+ 2. part2_09_mou/freyberg_mou_2.ipynb
  
 IMPORTANT NOTE: When running some of these notebooks, PEST++ undertakes parallel model runs for computational efficiency. These runs are coordinated using internet communication protocols (e.g. TCP/IP). As a result, it is common (but not universal) that the first time a set of parallel runs is launched, a Windows Defender (or similar popup on other operating systems) box appears warning the user. This box can simply be closed by clicking "cancel" and then the model runs should proceed without issue.
 
@@ -66,8 +66,8 @@ IMPORTANT NOTE: When running some of these notebooks, PEST++ undertakes parallel
 **Download the course repository:**
 
 You can do this in one of two ways. 
- - (1) (easier) Download the repo as a zip file from here: [GMDSI_notebooks](https://github.com/rhugman/GMDSI_notebooks). Unzip the folder and work from there.
- - (2) (recommended; requires familiarity with git). Install git following directions here: [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). Sign-up for a git-hub account, then clone the repo [GMDSI_notebooks](https://github.com/rhugman/GMDSI_notebooks).
+ - (1) (easier) Download the repo as a zip file from here: [GMDSI_notebooks](https://github.com/gmdsi/GMDSI_notebooks). Unzip the folder and work from there.
+ - (2) (recommended; requires familiarity with git). Install git following directions here: [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). Sign-up for a git-hub account, then clone the repo [GMDSI_notebooks](https://github.com/gmdsi/GMDSI_notebooks).
 
 **Install Python and dependencies:**
  - If you have already installed Python using Anaconda, you can skip this step. If not, install [Anaconda](https://www.anaconda.com/products/individual) (or [Miniconda](https://docs.conda.io/en/latest/miniconda.html), if you prefer )
@@ -84,4 +84,8 @@ A jupyter notebook instance should start within the course repo flder. Using the
  
  # Acknowledgments
  
-These tutorials were originally developed with support from the U.S Geological Survey. Continued development and support is funded by the Groundwater Modelling Decision Support Initiative (GMDSI). GMDSI is jointly funded by BHP and Rio Tinto.
+These tutorials were originally developed with support from the U.S Geological Survey (USGS) and support from USGS continues. Continued development and support is funded by the Groundwater Modelling Decision Support Initiative (GMDSI). GMDSI is jointly funded by BHP and Rio Tinto.
+
+# Reference
+To reference this material, please use the following:
+Hugman, R., White, J.T., Fienen, M.N., and Hunt, R.J., 2022, Parameter Estimation, Uncertainty Analysis, and Optimization with the PEST++ Family of codes: Tutorial Jupyter Notebooks: U.S. Geological Survey data release, https://doi.org/10.5066/P901F9G0.

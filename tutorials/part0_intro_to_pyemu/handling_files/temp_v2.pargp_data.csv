@@ -1,0 +1,7 @@
+pargpnme,inctyp,derinc,derinclb,forcen,derincmul,dermthd,splitthresh,splitreldiff,splitaction,extra
+hk,relative,0.01,0.0,switch,2.0,parabolic,1.0000000000e-05,5.0000000000e-01,smaller,
+w0,relative,0.01,0.0,switch,2.0,parabolic,1.0000000000e-05,5.0000000000e-01,smaller,
+w1,relative,0.01,0.0,switch,2.0,parabolic,1.0000000000e-05,5.0000000000e-01,smaller,
+rch,relative,0.01,0.0,switch,2.0,parabolic,1.0000000000e-05,5.0000000000e-01,smaller,
+porosity,relative,0.01,0.0,switch,2.0,parabolic,1.0000000000e-05,5.0000000000e-01,smaller,
+sfr,relative,0.01,0.0,switch,2.0,parabolic,1.0000000000e-05,5.0000000000e-01,smaller,

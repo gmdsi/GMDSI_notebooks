@@ -1,0 +1,6 @@
+pest_file,model_file
+flux.dat.ins,flux.dat
+freyberg.hyd.bin.dat.ins,freyberg.hyd.bin.dat
+freyberg.sfo.processed.ins,freyberg.sfo.processed
+freyberg.travel.ins,freyberg.travel
+vol.dat.ins,vol.dat

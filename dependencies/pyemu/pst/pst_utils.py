@@ -53,7 +53,7 @@ pst_config["par_dtype"] = np.dtype(
         ("pargp", "U20"),
         ("scale", np.float64),
         ("offset", np.float64),
-        ("dercom", np.int64),
+        ("dercom", int),
     ]
 )
 pst_config["par_fieldnames"] = (
@@ -253,8 +253,12 @@ def read_resfile(resfile):
             header = line.lower().strip().split()
             break
     res_df = pd.read_csv(
-        f, header=None, names=header, sep=r"\s+", converters=converters
+        f, header=None, names=header, sep=r"\s+", converters=converters, 
+        usecols=header #on_bad_lines='skip'
     )
+    # strip the "Cov.", "Mat." and "na" strings that PEST records in the *.res file; make float
+    float_cols = [x for x in res_df.columns if x not in ['name','group']]
+    res_df[float_cols] = res_df[float_cols].replace(['Cov.', 'Mat.', 'na'], np.nan).astype(float)
     res_df.index = res_df.name
     f.close()
     return res_df
@@ -649,11 +653,13 @@ def _populate_dataframe(index, columns, default_dict, dtype):
         This function is called as part of constructing a generic Pst instance
 
     """
-    new_df = pd.DataFrame(index=index, columns=columns)
-    for fieldname, dt in zip(columns, dtype.descr):
-        default = default_dict[fieldname]
-        new_df.loc[:, fieldname] = default
-        new_df.loc[:, fieldname] = new_df.loc[:, fieldname].astype(dt[1])
+    new_df = pd.concat(
+        [pd.Series(default_dict[fieldname],
+                   index=index,
+                   name=fieldname).astype(dt[1])
+         for fieldname, dt in zip(columns, dtype.descr)],
+        axis=1
+    )
     return new_df
 
 
@@ -1460,7 +1466,8 @@ class InstructionFile(object):
                         break
                 # copy a version of line commas replaced
                 # (to support comma sep strings)
-                rline = line.replace(",", " ")
+                rline = line.replace(",", " ").replace("\t","")
+
                 cursor_pos = line.index(mstr) + len(mstr)
 
             # line advance
@@ -1497,7 +1504,7 @@ class InstructionFile(object):
                         )
                     )
                 # step over current value
-                cursor_pos = rline.find(" ", cursor_pos)
+                cursor_pos = rline.replace("\t"," ").find(" ", cursor_pos)
                 # now find position of next entry
                 cursor_pos = rline.find(raw[1], cursor_pos)
                 # raw[1]
@@ -1808,3 +1815,46 @@ def process_output_files(pst, pst_path="."):
     series = pd.concat(series)
     # print(series)
     return series
+
+
+def check_interface(pst,pst_path=".",warn=False):
+    """check that the tpl and ins file entries are in
+    sync with the control file entries
+
+    Args:
+        pst (`pyemu.Pst`): control file instance
+        pst_path (`str`): the path from where python is running to the control file
+        warn (`bool`): flag to treat errors as warnings
+
+    """
+
+    tpl_pnames = set()
+    for tpl_file in pst.model_input_data.pest_file:
+        names = parse_tpl_file(os.path.join(pst_path,tpl_file))
+        tpl_pnames.update(set(names))
+    pst_pnames = set(pst.par_names)
+    diff = tpl_pnames - pst_pnames
+    mess = ""
+    if len(diff) > 0:
+        mess += "\nthe following par names are not in the ctrl file but are in the tpl files: "+",".join(diff)+"\n\n"
+    diff = pst_pnames - tpl_pnames
+    if len(diff) > 0:
+        mess += "\nthe following par names are not in the tpl files but are in the ctrl file: " + ",".join(diff) + "\n\n"
+    ins_onames = set()
+    for ins_file in pst.model_output_data.pest_file:
+        i = InstructionFile(os.path.join(pst_path,ins_file))
+        ins_onames.update(i.obs_name_set)
+    pst_onames = set(pst.obs_names)
+    diff = ins_onames - pst_onames
+    if len(diff) > 0:
+        mess += "\nthe following obs names are not in the ctrl file but are in the ins files: " + ",".join(
+            diff) + "\n\n"
+    diff = pst_onames - ins_onames
+    if len(diff) > 0:
+        mess += "\nthe following ons names are not in the ins files but are in the ctrl file: " + ",".join(
+            diff) + "\n\n"
+    if len(mess) > 0:
+        if warn:
+            warnings.warn(mess,PyemuWarning)
+        else:
+            raise Exception(mess)

@@ -322,6 +322,8 @@ class Ensemble(object):
 
         if "index_col" not in kwargs:
             kwargs["index_col"] = 0
+        if "low_memory" not in kwargs:
+            kwargs["low_memory"] = False
         df = pd.read_csv(filename, *args, **kwargs)
         return cls(pst=pst, df=df)
 
@@ -464,7 +466,7 @@ class Ensemble(object):
             if fill:
                 for i, v in enumerate(mean_values.values):
                     reals[:, i] = v
-            cov_map = {n: i for n, i in zip(cov.row_names, np.arange(cov.shape[0]))}
+            #cov_map = {n: i for n, i in zip(cov.row_names, np.arange(cov.shape[0]))}
             mv_map = {
                 n: i for n, i in zip(mean_values.index, np.arange(mean_values.shape[0]))
             }
@@ -767,6 +769,8 @@ class ObservationEnsemble(Ensemble):
             cov = pyemu.Cov.from_observation_data(pst)
         obs = pst.observation_data
         mean_values = obs.obsval.copy()
+        if len(pst.nnz_obs_names) == 0:
+            warnings.warn("ObservationEnsemble.from_gaussian_draw(): all zero weights",PyemuWarning)
         # only draw for non-zero weights, get a new cov
         if not fill:
             nz_cov = cov.get(pst.nnz_obs_names)
@@ -932,6 +936,8 @@ class ParameterEnsemble(Ensemble):
         li = par.partrans == "log"
         mean_values = par.parval1.copy()
         mean_values.loc[li] = mean_values.loc[li].apply(np.log10)
+        if len(pst.adj_par_names) == 0:
+            warnings.warn("ParameterEnsemble.from_gaussian_draw(): no adj pars", PyemuWarning)
         grouper = None
         if not cov.isdiagonal and by_groups:
             adj_par = par.loc[pst.adj_par_names, :]
@@ -1059,6 +1065,8 @@ class ParameterEnsemble(Ensemble):
         arr = np.empty((num_reals, len(ub)))
         arr[:, :] = np.NaN
         adj_par_names = set(pst.adj_par_names)
+        if len(adj_par_names) == 0:
+            warnings.warn("ParameterEnsemble.from_uniform_draw(): no adj pars",PyemuWarning)
         for i, pname in enumerate(pst.parameter_data.parnme):
             # print(pname,lb[pname],ub[pname])
             if pname in adj_par_names:

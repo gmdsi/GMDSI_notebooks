@@ -4,6 +4,7 @@ import errno
 import inspect
 import os
 import sys
+from re import S
 
 import numpy as np
 
@@ -1298,6 +1299,7 @@ class MFBlock:
                 and dataset.enabled
             ):
                 file_path = f"{base_name}_{dataset.structure.name}.txt"
+                replace_existing_external = False
                 if external_data_folder is not None:
                     # get simulation root path
                     root_path = self._simulation_data.mfpath.get_sim_path()
@@ -1316,9 +1318,10 @@ class MFBlock:
                         # create new external data folder
                         os.makedirs(full_path)
                     file_path = os.path.join(external_data_folder, file_path)
+                    replace_existing_external = True
                 dataset.store_as_external_file(
                     file_path,
-                    replace_existing_external=False,
+                    replace_existing_external=replace_existing_external,
                     check_data=check_data,
                 )
 
@@ -1582,15 +1585,21 @@ class MFPackage(PackageContainer, PackageInterface):
         loading_package=False,
         **kwargs,
     ):
+        parent_file = kwargs.pop("parent_file", None)
         if isinstance(parent, MFPackage):
             self.model_or_sim = parent.model_or_sim
             self.parent_file = parent
-        elif "parent_file" in kwargs:
+        elif parent_file is not None:
             self.model_or_sim = parent
-            self.parent_file = kwargs["parent_file"]
+            self.parent_file = parent_file
         else:
             self.model_or_sim = parent
             self.parent_file = None
+        _internal_package = kwargs.pop("_internal_package", False)
+        if _internal_package:
+            self.internal_package = True
+        else:
+            self.internal_package = False
         self._data_list = []
         self._package_type = package_type
         if self.model_or_sim.type == "Model" and package_type.lower() != "nam":
@@ -1717,14 +1726,28 @@ class MFPackage(PackageContainer, PackageInterface):
         self.bc_color = "black"
         self.__inattr = False
         self._child_package_groups = {}
+        child_builder_call = kwargs.pop("child_builder_call", None)
         if (
             self.parent_file is not None
-            and "child_builder_call" not in kwargs
+            and child_builder_call is None
             and package_type in self.parent_file._child_package_groups
         ):
             # initialize as part of the parent's child package group
             chld_pkg_grp = self.parent_file._child_package_groups[package_type]
             chld_pkg_grp.init_package(self, self._filename)
+
+        # remove any remaining valid kwargs
+        key_list = list(kwargs.keys())
+        for key in key_list:
+            if "filerecord" in key and hasattr(self, f"{key}"):
+                kwargs.pop(f"{key}")
+        # check for extraneous kwargs
+        if len(kwargs) > 0:
+            kwargs_str = ", ".join(kwargs.keys())
+            excpt_str = (
+                f'Extraneous kwargs "{kwargs_str}" provided to MFPackage.'
+            )
+            raise FlopyException(excpt_str)
 
     def __init_subclass__(cls):
         """Register package type"""
@@ -1858,11 +1881,132 @@ class MFPackage(PackageContainer, PackageInterface):
                     return
         super()._add_package(package, path)
 
+    def _get_aux_data(self, aux_names):
+        if hasattr(self, "stress_period_data"):
+            spd = self.stress_period_data.get_data()
+            if 0 in spd and aux_names[0][1] in spd[0].dtype.names:
+                return spd
+        if hasattr(self, "packagedata"):
+            pd = self.packagedata.get_data()
+            if aux_names[0][1] in pd.dtype.names:
+                return pd
+        if hasattr(self, "perioddata"):
+            spd = self.perioddata.get_data()
+            if 0 in spd and aux_names[0][1] in spd[0].dtype.names:
+                return spd
+        if hasattr(self, "aux"):
+            return self.aux.get_data()
+        return None
+
+    def _boundnames_active(self):
+        if hasattr(self, "boundnames"):
+            if self.boundnames.get_data():
+                return True
+        return False
+
     def check(self, f=None, verbose=True, level=1, checktype=None):
         """Data check, returns True on success."""
         if checktype is None:
             checktype = mf6check
-        return super().check(f, verbose, level, checktype)
+        # do general checks
+        chk = super().check(f, verbose, level, checktype)
+
+        # do mf6 specific checks
+        if hasattr(self, "auxiliary"):
+            # auxiliary variable check
+            # check if auxiliary variables are defined
+            aux_names = self.auxiliary.get_data()
+            if aux_names is not None and len(aux_names[0]) > 1:
+                num_aux_names = len(aux_names[0]) - 1
+                # check for stress period data
+                aux_data = self._get_aux_data(aux_names)
+                if aux_data is not None and len(aux_data) > 0:
+                    # make sure the check object exists
+                    if chk is None:
+                        chk = self._get_check(f, verbose, level, checktype)
+                    if isinstance(aux_data, dict):
+                        aux_datasets = list(aux_data.values())
+                    else:
+                        aux_datasets = [aux_data]
+                    dataset_type = "unknown"
+                    for dataset in aux_datasets:
+                        if isinstance(dataset, np.recarray):
+                            dataset_type = "recarray"
+                            break
+                        elif isinstance(dataset, np.ndarray):
+                            dataset_type = "ndarray"
+                            break
+                    # if aux data is in a list
+                    if dataset_type == "recarray":
+                        # check for time series data
+                        time_series_name_dict = {}
+                        if hasattr(self, "ts") and hasattr(
+                            self.ts, "time_series_namerecord"
+                        ):
+                            # build dictionary of time series data variables
+                            ts_nr = self.ts.time_series_namerecord.get_data()
+                            if ts_nr is not None:
+                                for item in ts_nr:
+                                    if len(item) > 0 and item[0] is not None:
+                                        time_series_name_dict[item[0]] = True
+                        # auxiliary variables are last unless boundnames
+                        # defined, then second to last
+                        if self._boundnames_active():
+                            offset = 1
+                        else:
+                            offset = 0
+
+                        # loop through stress period datasets with aux data
+                        for data in aux_datasets:
+                            if isinstance(data, np.recarray):
+                                for row in data:
+                                    row_size = len(row)
+                                    aux_start_loc = (
+                                        row_size - num_aux_names - offset
+                                    )
+                                    # loop through auxiliary variables
+                                    for idx, var in enumerate(aux_names):
+                                        # get index of current aux variable
+                                        data_index = aux_start_loc + idx
+                                        # verify auxiliary value is either
+                                        # numeric or time series variable
+                                        if (
+                                            not datautil.DatumUtil.is_float(
+                                                row[data_index]
+                                            )
+                                            and not row[data_index]
+                                            in time_series_name_dict
+                                        ):
+                                            desc = (
+                                                f"Invalid non-numeric "
+                                                f"value "
+                                                f"'{row[data_index]}' "
+                                                f"in auxiliary data."
+                                            )
+                                            chk._add_to_summary(
+                                                "Error",
+                                                desc=desc,
+                                                package=self.package_name,
+                                            )
+                    # else if stress period data is arrays
+                    elif dataset_type == "ndarray":
+                        # loop through auxiliary stress period datasets
+                        for data in aux_datasets:
+                            # verify auxiliary value is either numeric or time
+                            # array series variable
+                            if isinstance(data, np.ndarray):
+                                val = np.isnan(np.sum(data))
+                                if val:
+                                    desc = (
+                                        f"One or more nan values were "
+                                        f"found in auxiliary data."
+                                    )
+                                    chk._add_to_summary(
+                                        "Warning",
+                                        desc=desc,
+                                        package=self.package_name,
+                                    )
+        return chk
 
     def _get_nan_exclusion_list(self):
         excl_list = []
@@ -2022,7 +2166,13 @@ class MFPackage(PackageContainer, PackageInterface):
                                 data = None
                             if data is not None:
                                 new_size = len(dataset.get_data())
-                        if size_def.get_data() != new_size >= 0:
+
+                        if size_def.get_data() is None:
+                            current_size = 0
+                        else:
+                            current_size = size_def.get_data()
+
+                        if new_size > current_size:
                             # store current size
                             size_def.set_data(new_size)
 
@@ -2284,6 +2434,17 @@ class MFPackage(PackageContainer, PackageInterface):
         setattr(self, pkg_type, child_pkgs)
         self._child_package_groups[pkg_type] = child_pkgs
 
+    def _get_dfn_name_dict(self):
+        dfn_name_dict = {}
+        item_num = 0
+        for item in self.structure.dfn_list:
+            if len(item) > 1:
+                item_name = item[1].split()
+                if len(item_name) > 1 and item_name[0] == "name":
+                    dfn_name_dict[item_name[1]] = item_num
+                    item_num += 1
+        return dfn_name_dict
+
     def build_child_package(self, pkg_type, data, parameter_name, filerecord):
         """Builds a child package.  This method is only intended for FloPy
         internal use."""
@@ -2303,9 +2464,23 @@ class MFPackage(PackageContainer, PackageInterface):
             assert hasattr(package, parameter_name)
 
             if isinstance(data, dict):
+                # order data correctly
+                dfn_name_dict = package._get_dfn_name_dict()
+                ordered_data_items = []
+                for key, value in data.items():
+                    if key in dfn_name_dict:
+                        ordered_data_items.append(
+                            [dfn_name_dict[key], key, value]
+                        )
+                    else:
+                        ordered_data_items.append([999999, key, value])
+                ordered_data_items = sorted(
+                    ordered_data_items, key=lambda x: x[0]
+                )
+
                 # evaluate and add data to package
                 unused_data = {}
-                for key, value in data.items():
+                for order, key, value in ordered_data_items:
                     # if key is an attribute of the child package
                     if isinstance(key, str) and hasattr(package, key):
                         # set child package attribute
