@@ -763,7 +763,27 @@ def svd_enchilada(gwf, m_d):
 
     return interact(plot_enchilada, eig=widgets.IntSlider(description="eig comp:", 
                                            continuous_update=True, value=400, max=799));
-    
+
+def get_sorted_ppoint_names(par, tmp_d):
+    sim = flopy.mf6.MFSimulation.load(sim_ws=tmp_d, verbosity_level=0) #modflow.Modflow.load(fs.MODEL_NAM,model_ws=working_dir,load_only=[])
+    gwf= sim.get_model()
+    mg = gwf.modelgrid
+    cx = mg.xcellcenters
+    cy = mg.ycellcenters
+
+    ij = par.loc[par.pargp=='hk1', ["parnme","i","j"]]
+    ij[["i","j"]] = ij[["i","j"]].astype(int)
+    ij['x'] = cx[ij.i,ij.j]
+    ij['y'] = cy[ij.i,ij.j]
+
+    pp_file=os.path.join(tmp_d,"hkpp.dat")
+    df_pp = pd.read_csv(pp_file, delim_whitespace=True, header=None, names=['name','x','y','zone','parval1'])
+    df_pp = pd.merge(df_pp, ij, on=["x",'y'])
+    df_pp.set_index("parnme", inplace=True)
+    sorted_pnames = df_pp.index.values
+    return sorted_pnames
+
+
 def plot_arr2grid(ident_vals, tmp_d, title='Identifiability'):
     sim = flopy.mf6.MFSimulation.load(sim_ws=tmp_d, verbosity_level=0) #modflow.Modflow.load(fs.MODEL_NAM,model_ws=working_dir,load_only=[])
     gwf= sim.get_model()
