@@ -5,26 +5,18 @@ channels:
 dependencies:
   - python=3.9
   - pip
-  - pandas 
-  - geopandas 
+  - pandas<2.0
   - numpy 
   - matplotlib 
   - jupyter 
   - notebook 
   - scipy 
-  - openpyxl 
-  - xlrd
-  - rasterio>=1.0
-  - rasterstats
-  - pyyaml
   - shapely
-  - xarray
-  - netcdf4
   - rtree
   - pyproj>=2.0
   - pyshp
-  - gdal
-  - fiona
   - psutil
+  - git
+  - nbconvert
 
 
