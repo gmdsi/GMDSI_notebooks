@@ -26,5 +26,8 @@ dependencies:
   - gdal
   - fiona
   - psutil
+#  - pip:
+#      - flopy
+#      - pyemu
 
 
