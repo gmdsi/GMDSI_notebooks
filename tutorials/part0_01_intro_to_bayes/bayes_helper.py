@@ -2,7 +2,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
-sys.path.insert(0,os.path.join("..", "..", "dependencies"))
+# sys.path.insert(0,os.path.join("..", "..", "dependencies"))
 import pyemu
 import flopy
 assert "dependencies" in flopy.__file__

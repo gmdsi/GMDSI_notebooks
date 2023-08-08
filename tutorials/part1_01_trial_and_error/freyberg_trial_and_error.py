@@ -11,7 +11,7 @@ import pandas as pd
 
 
 sys.path.append("..")
-sys.path.append("../../dependencies")
+# sys.path.append("../../dependencies")
 import flopy
 import pyemu
 import herebedragons as hbd
