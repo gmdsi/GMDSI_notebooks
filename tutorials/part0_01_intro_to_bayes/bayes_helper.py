@@ -2,7 +2,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
-sys.path.insert(0,os.path.join("..", "..", "dependencies"))
+# sys.path.insert(0,os.path.join("..", "..", "dependencies"))
 import pyemu
 import flopy
 assert "dependencies" in flopy.__file__
@@ -10,8 +10,6 @@ assert "dependencies" in pyemu.__file__
 import matplotlib as mpl
 
 #--modify default matplotlib settings
-mpl.rcParams['font.sans-serif']          = 'Univers 57 Condensed'
-mpl.rcParams['font.serif']               = 'Times'
 mpl.rcParams['pdf.compression']          = 0
 mpl.rcParams['pdf.fonttype']             = 42
 #--figure text sizes

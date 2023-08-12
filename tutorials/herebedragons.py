@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import zipfile
 import shutil
 import sys
-sys.path.insert(0,os.path.join("..","..","dependencies"))                               
+# sys.path.insert(0,os.path.join("..","..","dependencies"))                               
 import pyemu
 import flopy
 
@@ -72,13 +72,13 @@ def prep_forecasts(pst, model_times=False):
     return 
 
 def prep_deps(template_ws, dep_dir=None):
-    dep_dir=os.path.join('..','..','dependencies')
-    for org_d in [os.path.join(dep_dir,"flopy"),os.path.join(dep_dir,"pyemu")]:
-        #org_d = i.path
-        new_d = os.path.join(template_ws, os.path.basename(org_d))
-        if os.path.exists(new_d):
-            shutil.rmtree(new_d)
-        shutil.copytree(org_d, new_d)
+    # dep_dir=os.path.join('..','..','dependencies')
+    # for org_d in [os.path.join(dep_dir,"flopy"),os.path.join(dep_dir,"pyemu")]:
+    #     #org_d = i.path
+    #     new_d = os.path.join(template_ws, os.path.basename(org_d))
+    #     if os.path.exists(new_d):
+    #         shutil.rmtree(new_d)
+    #     shutil.copytree(org_d, new_d)
     return
 
 
@@ -336,8 +336,8 @@ def prep_pest(tmp_d):
         pst.model_command = 'runmodel.bat'
     else:
         with open(os.path.join(tmp_d, 'runmodel.sh'), 'w+') as f:
-            f.write('mf6\n')
-            f.write('mp7 freyberg_mp.mpsim')
+            f.write('./mf6\n')
+            f.write('./mp7 freyberg_mp.mpsim')
         pyemu.os_utils.run("chmod 777 runmodel.sh",cwd=tmp_d)
         pst.model_command = './runmodel.sh'
     pst.control_data.noptmax=0
