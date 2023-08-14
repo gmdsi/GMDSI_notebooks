@@ -86,10 +86,10 @@ jobs:
               d="unexpectedos"
               exit 1
           fi
-          cp -r bin_new/$d/. "$HOME/.local/bin/."
+          cp -r bin_new/$d/. "$HOME/.local/bin/"
           
           # do we also need to cp to os specific within .local/bin/? probs...
-          find bin -maxdepth 1 -type f -exec cp {} $HOME/.local/bin/. \;
+          #find bin -maxdepth 1 -type f -exec cp {} $HOME/.local/bin/. \;
           # cp -r bin ../bin
           cd ..
 
