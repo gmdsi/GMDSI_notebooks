@@ -4,7 +4,7 @@ import numpy as np
 
 def process_secondary_obs(ws='.'):
     # load dependencies insde the function so that they get carried over to forward_run.py by PstFrom
-    import os 
+    import os
     import pandas as pd
 
     def write_tdif_obs(orgf, newf, ws='.'):
@@ -12,13 +12,13 @@ def process_secondary_obs(ws='.'):
         df = df - df.iloc[0, :]
         df.to_csv(os.path.join(ws,newf))
         return
-    
+
     # write the tdiff observation csv's
     write_tdif_obs('heads.csv', 'heads.tdiff.csv', ws)
     write_tdif_obs('sfr.csv', 'sfr.tdiff.csv', ws)
 
     print('Secondary observation files processed.')
-    return 
+    return
 
 
 def extract_hds_arrays_and_list_dfs():
@@ -28,7 +28,7 @@ def extract_hds_arrays_and_list_dfs():
         d = hds.get_data(totim=t)
         for k,dlay in enumerate(d):
             np.savetxt("hdslay{0}_t{1}.txt".format(k+1,it+1),d[k,:,:],fmt="%15.6E")
-            
+
     lst = flopy.utils.Mf6ListBudget("freyberg6.lst")
     inc,cum = lst.get_dataframes(diff=True,start_datetime=None)
     inc.columns = inc.columns.map(lambda x: x.lower().replace("_","-"))
@@ -38,7 +38,7 @@ def extract_hds_arrays_and_list_dfs():
     inc.to_csv("inc.csv")
     cum.to_csv("cum.csv")
     return
-    
+
 
 def test_extract_hds_arrays(d):
     cwd = os.getcwd()
