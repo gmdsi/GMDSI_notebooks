@@ -34,7 +34,7 @@ def run_nb(nb_file, nb_dir):
 nb_dir = "part2_01_pstfrom_pest_setup"
 nb_file = "freyberg_pstfrom_pest_setup.ipynb"
 run_nb(nb_file, nb_dir)
-exit()
+
 
 nb_dir = "part2_02_obs_and_weights"
 nb_file = "freyberg_obs_and_weights.ipynb"
