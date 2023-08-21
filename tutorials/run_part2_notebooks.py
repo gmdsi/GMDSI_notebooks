@@ -34,6 +34,7 @@ def run_nb(nb_file, nb_dir):
 nb_dir = "part2_01_pstfrom_pest_setup"
 nb_file = "freyberg_pstfrom_pest_setup.ipynb"
 run_nb(nb_file, nb_dir)
+exit()
 
 nb_dir = "part2_02_obs_and_weights"
 nb_file = "freyberg_obs_and_weights.ipynb"
@@ -59,6 +60,8 @@ nb_dir = "part2_06_ies"
 nb_file = "freyberg_ies_1_basics.ipynb"
 run_nb(nb_file, nb_dir)
 nb_file = "freyberg_ies_2_localization.ipynb"
+run_nb(nb_file, nb_dir)
+nb_file = "freyberg_ies_3_restarting.ipynb"
 run_nb(nb_file, nb_dir)
 
 nb_dir = "part2_07_da"
