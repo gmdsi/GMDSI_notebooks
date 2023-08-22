@@ -8,7 +8,7 @@ Register for the course here:
 
 [https://forms.gle/MHRuUFJHWUsnUA8H6](https://forms.gle/MHRuUFJHWUsnUA8H6)
 
-Once you have registered, follow the instructions herein to get git,python, and jupyter installed using the supplied environment file ([https://github.com/gmdsi/GMDSI_notebooks/blob/main/environment.yml](https://github.com/gmdsi/GMDSI_notebooks/blob/main/environment.yml))
+Once you have registered, follow the [instructions herein](https://github.com/gmdsi/GMDSI_notebooks#installation-instructions) to get git, python, and jupyter installed using the supplied environment file ([https://github.com/gmdsi/GMDSI_notebooks/blob/main/environment.yml](https://github.com/gmdsi/GMDSI_notebooks/blob/main/environment.yml))
 
 Once you have everything installed and working (and `gmdsitut` environment is active), you should be able to run the test notebook:
 
