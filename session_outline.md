@@ -8,29 +8,32 @@ Below is an aspirational outline of what we hope cover for over the next four to
 
 - standard introductions and goals
     + not just "shift+enter" - take the time to explore and understand
+    + learning by struggling
 - notebook structure
     + a quick aside on using git and github (the fork and PR approach)
-    + the nuclear option: "git reset --hard"
+        * live demo of fork-PR model
+    + crawl-walk-run: intro, part1, part2 notebooks
+        * live demo?
 - the Freyberg model
     + background
     + history and future together in one model
 - intro to Bayes equation
+    + live demo "intro to Bayes"
 - the pest interface 
     + the value of "non-intrusiveness"
     + components of model interaction
-        * inputs, run model, outputs
+        * create inputs, run model, read outputs
     + components needed for analysis
-        * parameters and prior info
-        * observations and weights
+        * parameter values, bounds, and prior info
+        * observation values and weights
         * aux and diagnostic observations
 - live coding demo of using pyemu.PstFrom
-    + understanding the pest interface in action
-    + understanding multiplier parameters in action
-    + 
+    + understanding the pest interface in action (gifs)
+    + understanding multiplier parameters in action (gifs)
 - homework:
-    + work through the part2 PstFrom notebook
+    + work through the part2 "PstFrom setup pest" notebook
         * referencing back to part 1 notebooks on pilot points and geostats as needed
-        * referencing the pest and pest++ users guides 
+        * referencing the pest and pest++ users guides as needed
         
 
 ## Week 2: The Likelihood and Prior
@@ -49,7 +52,7 @@ Below is an aspirational outline of what we hope cover for over the next four to
 - next steps: prior monte carlo and rejection sampling
     + background on prior monte carlo
     + what can you learn from prior monte carlo
-    + an aside on parallelization mechanics
+    + an aside on parallelization mechanics (and how it will crush your machine!)
 - homework
     + work through the part2 "set obsvals and weights" notebook
     + work through the part2 "prior monte carlo" notebook
@@ -79,7 +82,6 @@ Below is an aspirational outline of what we hope cover for over the next four to
 - Introduction to management optimization
     + terms and jargon
     + relation to forecasts
-        * "beyond the scenario testing universe"
     + what about uncertainty?
     + linear programming
     + evolutionary multi-objective optimization
