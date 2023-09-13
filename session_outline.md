@@ -13,7 +13,8 @@ Below is an aspirational outline of what we hope cover for over the next four to
     + a quick aside on using git and github (the fork and PR approach)
         * live demo of fork-PR model
     + crawl-walk-run: intro, part1, part2 notebooks
-        * live demo?
+        * live demo
+    + dependency management in the notebooks
 - the Freyberg model
     + background
     + history and future together in one model
