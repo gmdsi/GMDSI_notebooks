@@ -9,17 +9,18 @@ Below is an aspirational outline of what we hope cover for over the next four to
 - standard introductions and goals
     + not just "shift+enter" - take the time to explore and understand
     + learning by struggling
+    + using GH discussions/issues for help
 - notebook structure
     + a quick aside on using git and github (the fork and PR approach)
         * live demo of fork-PR model
+        * managing file sizes
     + crawl-walk-run: intro, part1, part2 notebooks
-        * live demo
     + dependency management in the notebooks
 - the Freyberg model
     + background
     + history and future together in one model
 - intro to Bayes equation
-    + live demo "intro to Bayes"
+    + live demo "intro to Bayes" notebook
 - the pest interface 
     + the value of "non-intrusiveness"
     + components of model interaction
@@ -29,8 +30,8 @@ Below is an aspirational outline of what we hope cover for over the next four to
         * observation values and weights
         * aux and diagnostic observations
 - live coding demo of using pyemu.PstFrom
-    + understanding the pest interface in action (gifs)
-    + understanding multiplier parameters in action (gifs)
+    + understanding the pest interface in action 
+    + understanding multiplier parameters in action
 - homework:
     + work through the part2 "PstFrom setup pest" notebook
         * referencing back to part 1 notebooks on pilot points and geostats as needed
