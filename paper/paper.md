@@ -1,5 +1,5 @@
 ---
-title: 'Gala: A Python package for galactic dynamics'
+title: 'Self-Guided Decision Support Groundwater Modelling with Python'
 tags:
   - Python
   - groundwater modelling
@@ -35,12 +35,12 @@ bibliography: paper.bib
 
 
 
-List all authors and affiliations.
-Describe the submission, and explain its eligibility for JOSE.
-Include a “Statement of Need” section, explaining how the submitted artifacts contribute to computationally enabled teaching and learning, and describing how they might be adopted by others.
-For learning modules, describe the learning objectives, content, instructional design, and experience of use in teaching and learning situations.
-Tell us the “story” of the project: how did it come to be?
-Cite key references, including a link to the open archive of the sofware or the learning module.
+# List all authors and affiliations.
+# Describe the submission, and explain its eligibility for JOSE.
+# Include a “Statement of Need” section, explaining how the submitted artifacts contribute to # computationally enabled teaching and learning, and describing how they might be adopted by # others.
+# For learning modules, describe the learning objectives, content, instructional design, and # experience of use in teaching and learning situations.
+# Tell us the “story” of the project: how did it come to be?
+# Cite key references, including a link to the open archive of the sofware or the learning module.
 
 
 # # Citations
