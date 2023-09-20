@@ -2,24 +2,6 @@
 
 We have produced a series of tutorial notebooks to assist modellers in setting up and using model-partner software in ways that support the decision-support imperatives of data assimilation and uncertainty quantification. These tutorials provide an introduction to both the concepts and the practicalities of undertaking decision-support groundwater modelling with the PEST/PEST++ and pyEMU suites of software. Their aim is to provide examples of both “how to use” the software as well as “how to think” about using the software. 
 
-## Guide Self-Study Course Registration Instructions
-
-Register for the course here:
-
-[https://forms.gle/MHRuUFJHWUsnUA8H6](https://forms.gle/MHRuUFJHWUsnUA8H6)
-
-Once you have registered, follow the [instructions herein](https://github.com/gmdsi/GMDSI_notebooks#installation-instructions) to get git, python, and jupyter installed using the supplied environment file ([https://github.com/gmdsi/GMDSI_notebooks/blob/main/environment.yml](https://github.com/gmdsi/GMDSI_notebooks/blob/main/environment.yml))
-
-Once you have everything installed and working (and `gmdsitut` environment is active), you should be able to run the test notebook:
-
-[https://github.com/gmdsi/GMDSI_notebooks/tree/main/etc](https://github.com/gmdsi/GMDSI_notebooks/tree/main/etc)
-
-If you see the secret code, go to this form and complete your registration:
-
-[https://forms.gle/JkohGowJgYyxGoPZ7](https://forms.gle/JkohGowJgYyxGoPZ7)
-
-Meetings start the week of 11 September, 2023 and seats are limited!
-
 ## Notebook Contents
 
 We have endeavoured to make these tutorials as accesible to as many people as possible. Workflows demonstrated herein are implemented programmaticaly in Python, employing functionality to interface with PEST/PEST++ available in pyEMU. However, concepts and the general approaches described are not limited to programmatic workflows. If you are interested in understanding how to implement pyEMU workflows, then you are encouraged to complete the jupyter notebooks yourself. If you just want to get a high-level understanding of decision-support modelling concepts and software, then you can simply read through the notebooks without having to run the code yourself. You can access complete version of the notebooks in your web browser [__here__](https://gmdsi.github.io/GMDSI_notebooks/). 
