@@ -62,7 +62,7 @@ bibliography: paper.bib
 
 # Summary
 
-The [GMDSI tutorial notebooks repository](https://github.com/gmdsi/GMDSI_notebooks/tree/main) provide learners with a comprehensive set of tutorials for self-guided training on decision-support groundwater modelling using Python-based tools. Although targeted at groundwater modelling, they are readily transferable to other environmental modelling workflows. The tutorials are divided into three parts. The first covers fundamental theoretical concepts. These are intended as background reading for reference on an as-needed basis. Tutorials in the second part introduce learners to some of the core concepts parameter estimation in a groundwater modelling context, as well as providing a gentle introduction to the ``PEST``, ``PEST++`` and ``pyEMU`` software. Lasty, the third part demonstrates how to implement high-dimensional applied decision-support modelling workflows. Their aim is to provide examples of both “how to use” the software as well as “how to think” about using the software.
+The [GMDSI tutorial notebooks repository](https://github.com/gmdsi/GMDSI_notebooks/tree/main) provide learners with a comprehensive set of tutorials for self-guided training on decision-support groundwater modelling using Python-based tools. Although targeted at groundwater modelling, they are readily transferable to other environmental modelling workflows. The tutorials are divided into three parts. The first covers fundamental theoretical concepts. These are intended as background reading for reference on an as-needed basis. Tutorials in the second part introduce learners to some of the core concepts parameter estimation in a groundwater modelling context, as well as providing a gentle introduction to the ``PEST``, ``PEST++`` and ``pyEMU`` software. Lasty, the third part demonstrates how to implement high-dimensional applied decision-support modelling workflows. Their aim is to provide examples of both “how to use” the software as well as “how to think” about using the software. 
 
 
 # Statement of Need
@@ -94,12 +94,14 @@ Over time, more modelers are turning to Python packages like ``FloPy`` and ``pyE
 
 USGS origin...? #TODO
 
-...fusion
+
 
 
 # Resources
 
-The [GMDSI](https://gmdsi.org) web-page hosts an extensive range of resources  and educational material on decision support modelling. These include numerous instructional video lectures, webinar recordings, non-programatic workflow tutorials, as well as worked example reports desrcibing real-world applications. 
+A webinar hosted by GMDSI introducing the tutorial notebooks can be viewed [here](https://vimeo.com/856752189). During the webinar the authors provide an overview of the notebooks, as well as a demonstration of how to use them and introduce an online self-guided course.
+
+The [GMDSI](https://gmdsi.org) web-page also hosts an extensive range of resources  and educational material on decision support modelling. These include numerous instructional video lectures, webinar recordings, non-programatic workflow tutorials, as well as worked example reports desrcibing real-world applications. 
 
 Software from the ``PEST`` suite can be downloaded from John Doherty's web-page [here](https://www.pesthomepage.org/). The [user manual](https://www.pesthomepage.org/Downloads/PEST%20Manuals/PEST%20Manual.pdf) contains lots of usefull information. The [PEST Book](https://pesthomepage.org/pest-book) is also a great resource for learning about the theory underpinning use of the software.
 
@@ -148,11 +150,9 @@ In summary, the tutorial notebooks are organized to guide learners through a str
 
 
 # Experience of use in teaching and learning situations
-...feedback from students and instructors...
 
+The notebooks have been employed during the [Applied Decision Support Groundwater Modeling With Python: A Guided Self-Study Course](https://gmdsi.org/blog/guided-self-study-course/) hosted by GMDSI. This self-guided course comprised 4 to 5 online sessions, each lasting 1 to 2 hours. During each session the hosts go through a section of the tutorials and expand on some of the concepts. Learners were tasked with going through the notebooks in between sessions to stimulate discussion and questions. Sessions were recorded and can be accessed [on the GMDSI website](https://gmdsi.org/education/videos/). Beyond the live online sessions, learners were incetivized to make use of the Git-Hub [Discussions](https://github.com/gmdsi/GMDSI_notebooks/discussions) feature to retain a search-engine findable record of common questions.
 
-
-...self-guided online series, recordings link
 
 # Acknowledgements
 
