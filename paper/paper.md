@@ -70,17 +70,32 @@ The [GMDSI tutorial notebooks repository](https://github.com/gmdsi/GMDSI_noteboo
 # Statement of Need
 ...geologists are dumb.
 
+pyEMU promotes the integration of uncertainty assessments into environmental modeling analyses, thereby improving the precision of decisions related to resource management based on model outputs. Additionally, it offers users an exploratory platform for enhancing their comprehension of uncertainty analysis principles. Although initially designed for groundwater modeling, pyEMU's methodologies are versatile and can be applied to diverse numerical environmental models, as long as they can be manipulated using text files and generate results that can be automatically extracted without manual interference.
+
 
 # Story of the project
-GMDSI origin...
 
-GMDSI "non-programatic" tutorials...
+The Groundwater Modelling Decision Support Initiative ([GMDSI](https://gmdsi.org)) is an industry-backed and industry-aligned initiative. Established in mid-2019, its primary goal is to enhance the role of groundwater modeling in groundwater management, regulatory processes, and decision-making. At the core of GMDSI's mission lies the numerical simulation of groundwater movement and processes. Often, data related to groundwater are limited, leading to uncertainties in simulator predictions. However, despite this uncertainty, decisions must be made, and associated risks must be assessed. Modeling plays a central role in the evaluation of these risks.
 
-USGS origin...?
+GMDSI is dedicated to promoting, facilitating, and providing support for the improved utilization of modeling in decision support processes. Its activities endeavor to elevate the role of groundwater modeling in decision-making processes, recognizing the importance of model partner software and offering a range of activities aimed at industry engagement, education, practical examples, research, and software development.
+
+A majority of groundwater modelers typically rely on Graphical User Interfaces (GUIs) for their modeling needs. However, it's important to note that each GUI has its unique characteristics and varying degrees of compatibility with external software like PEST. Creating educational materials for these GUIs would necessitate tailoring content to each GUI's specific features, potentially lagging behind the latest developments, and obtaining cooperation from the GUI developers themselves.
+
+It's worth noting that decision-support modeling often demands capabilities that surpass what current GUIs can offer. For example, many of GMDSI's worked examples rely on custom-designed utilities or the integration of different software components. Currently, a significant portion of users may not have the expertise to independently implement such advanced approaches. Furthermore, the manual preparation of input files for implementing these complex workflows can be time-consuming. Programmatic workflows, such as those facilitated by ``pyEMU``, offer advantages by reducing the time and user input required for setup and execution. This approach is somewhat analogous to the role played by a GUI but offers added flexibility, allowing users to customize and design their own functions and utilities as needed. However, it comes with the drawback of increased potential for user-introduced errors.
+
+Over time, more modelers are turning to Python packages like ``FloPy`` and ``pyEMU`` for model and PEST++ setup, moving away from GUIs. Unfortunately, the adoption of this approach is hindered by a steep learning curve primarily due to the scarcity of user-friendly training materials. The GMDSI tutorial notebooks aim to address this gap by providing a comprehensive, self-guided, and open-source resource for learning decision-support modeling workflows with Python.
+
+
+
+USGS origin...? #TODO
 
 ...fusion
 
+
 # Resources
+
+The [GMDSI](https://gmdsi.org) hosts an extensive range of resources  and educational material on decision support modelling. These include numerous instructional video lectures, webinar recordings, non-programatic workflow tutorials, as well as  worked example reports desribing real-world applications. 
+
 link to GMDSI webiste, documents and videos
 
 link to pest manuals
@@ -104,7 +119,7 @@ Each notebook in Part 0 is standalone and covers a unique topic. These include:
 
 ## Part 1: Introduction to PEST and the Gauss-Levenberg Marquardt Approach
 
-Part 1 focuses on the Gauss-Levenberg Marquardt approach to parameter estimation and  associated uncertainty analysis in a groundwater modelling context. TThis was the foundation of the PEST software for multiple decades and the theory continues to resonate through newer techniques.
+Part 1 focuses on the Gauss-Levenberg Marquardt (GLM) approach to parameter estimation and  associated uncertainty analysis in a groundwater modelling context. This was the foundation of the PEST software for multiple decades and the theory continues to resonate through newer techniques.
 
 Part 1 is designed to be accessible without strict sequential dependencies. Learners have the flexibility to explore its contents in any order that suits their preferences or needs. These include:
  - Introduction to concepts such as non-uniquesness, identifiability, and equifinality.
