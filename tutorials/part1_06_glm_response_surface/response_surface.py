@@ -17,7 +17,7 @@ MODEL_NAM = "freyberg.nam"
 PST_NAME = 'freyberg.pst'
 NUM_STEPS_RESPSURF = 40
 
-def run_respsurf(par_names=None, pstfile='freyberg.pst', WORKING_DIR='freyberg_mf6'):
+def run_respsurf(par_names=None, pstfile='freyberg.pst', WORKING_DIR='freyberg_mf6',num_workers=8,port=4004):
     pst = pyemu.Pst(os.path.join(WORKING_DIR,pstfile))
     par = pst.parameter_data
     pst.pestpp_options['sweep_parameter_csv_file'] = pstfile.replace('.pst', "sweep_in.csv")
@@ -43,13 +43,14 @@ def run_respsurf(par_names=None, pstfile='freyberg.pst', WORKING_DIR='freyberg_m
     df.to_csv(os.path.join(WORKING_DIR,pstfile.replace('.pst',"sweep_in.csv")))
 
 
-    num_workers=8
     pyemu.os_utils.start_workers(WORKING_DIR, # the folder which contains the "template" PEST dataset
                             'pestpp-swp', #the PEST software version we want to run
                             pstfile, # the control file to use with PEST
                             num_workers=num_workers, #how many agents to deploy
                             worker_root='.', #where to deploy the agent directories; relative to where python is running
-                            master_dir=WORKING_DIR, reuse_master=True #the manager directory
+                            master_dir=WORKING_DIR,
+                            port=port,
+                            reuse_master=True #the manager directory
                             )
     return
 
