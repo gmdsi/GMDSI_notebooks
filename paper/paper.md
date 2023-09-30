@@ -11,7 +11,7 @@ authors:
     orcid: 0000-0003-0891-3886
     affiliation: 1 
   - name: Jeremy T. White
-    orcid: xxxx-xxxx-xxxx-xxxx
+    orcid: 0000-0002-4950-1469
     affiliation: 1 
   - name: Mike Fienen
     orcid: xxxx-xxxx-xxxx-xxxx
@@ -84,11 +84,11 @@ The Groundwater Modelling Decision Support Initiative ([GMDSI](https://gmdsi.org
 
 GMDSI is dedicated to promoting, facilitating, and providing support for the improved utilization of modeling in decision support processes. Its activities endeavor to elevate the role of groundwater modeling in decision-making processes, recognizing the importance of model partner software and offering a range of activities aimed at industry engagement, education, practical examples, research, and software development.
 
-A majority of groundwater modelers typically rely on Graphical User Interfaces (GUIs) for their modeling needs. However, it's important to note that each GUI has its unique characteristics and varying degrees of compatibility with external software like PEST. Creating educational materials for these GUIs would necessitate tailoring content to each GUI's specific features, potentially lagging behind the latest developments, and obtaining cooperation from the GUI developers themselves.
+Many practicing groundwater modelers rely on Graphical User Interfaces (GUIs) to implement their modeling workflows. However, it's important to note that each GUI has its unique characteristics and varying degrees of compatibility with external software like PEST. Creating educational materials for these GUIs would necessitate tailoring content to each GUI's specific features, potentially lagging behind the latest developments, and obtaining cooperation from the GUI developers themselves.
 
-It's worth noting that decision-support modeling often demands capabilities that surpass what current GUIs can offer. For example, many of GMDSI's worked examples rely on custom-designed utilities or the integration of different software components. Currently, a significant portion of users may not have the expertise to independently implement such advanced approaches. Furthermore, the manual preparation of input files for implementing these complex workflows can be time-consuming. Programmatic workflows, such as those facilitated by ``pyEMU``, offer advantages by reducing the time and user input required for setup and execution. This approach is somewhat analogous to the role played by a GUI but offers added flexibility, allowing users to customize and design their own functions and utilities as needed. However, it comes with the drawback of increased potential for user-introduced errors.
+Decision-support modeling often demands capabilities that surpass what current GUIs can offer. For example, many of GMDSI's worked examples rely on custom-designed utilities or the bespoke integration of different software components. Currently, a significant portion of users may not have the expertise to independently implement such advanced approaches. Furthermore, the manual preparation of input files for implementing these complex workflows can be time-consuming and offers many opportunities for error. Programmatic workflows, such as those facilitated by ``pyEMU``, offer advantages by reducing the time and user input required for setup and execution, while simultaneously offering reproducibility as a by-product of this approach. This approach is somewhat analogous to the role played by a GUI but offers added flexibility, allowing users to customize and design their own functions and utilities as needed. However, it comes with the potential drawback of increased potential for user-introduced errors, which manifest in ways similar to software bugs.
 
-Over time, more modelers are turning to Python packages like ``FloPy`` and ``pyEMU`` for model and PEST++ setup, moving away from GUIs. Unfortunately, the adoption of this approach is hindered by a steep learning curve primarily due to the scarcity of user-friendly training materials. The [GMDSI tutorial notebooks](https://github.com/gmdsi/GMDSI_notebooks/tree/main) aim to address this gap by providing a comprehensive, self-guided, and open-source resource for learning decision-support modeling workflows with Python.
+The adoption of a scripting-based approach may be hindered by a steep learning curve primarily due to the scarcity of targeted, user-friendly training materials. The [GMDSI tutorial notebooks](https://github.com/gmdsi/GMDSI_notebooks/tree/main) aim to address this gap by providing a comprehensive, self-guided, and open-source resource for learning decision-support modeling workflows with Python.
 
 
 
@@ -101,7 +101,7 @@ USGS origin...? #TODO
 
 A webinar hosted by GMDSI introducing the tutorial notebooks can be viewed [here](https://vimeo.com/856752189). During the webinar the authors provide an overview of the notebooks, as well as a demonstration of how to use them and introduce an online self-guided course.
 
-The [GMDSI](https://gmdsi.org) web-page also hosts an extensive range of resources  and educational material on decision support modelling. These include numerous instructional video lectures, webinar recordings, non-programatic workflow tutorials, as well as worked example reports desrcibing real-world applications. 
+The [GMDSI](https://gmdsi.org) web-page also hosts an extensive range of resources  and educational material on decision support modelling. These include numerous instructional video lectures, webinar recordings, non-programmatic workflow tutorials, as well as worked example reports describing real-world applications. 
 
 Software from the ``PEST`` suite can be downloaded from John Doherty's web-page [here](https://www.pesthomepage.org/). The [user manual](https://www.pesthomepage.org/Downloads/PEST%20Manuals/PEST%20Manual.pdf) contains lots of usefull information. The [PEST Book](https://pesthomepage.org/pest-book) is also a great resource for learning about the theory underpinning use of the software.
 
@@ -115,7 +115,7 @@ The tutorial notebooks are structured into three main parts:
 
 ## Part 0: Introductory Background
 
-Part0 serves as the foundation, providing essential background material. Learners are encouraged to reference notebooks in Part0 to polish their understnading of concepts they encounter in Parts 1 and 2. Part0 is not intended to be a comprehensive resource for all background material, but rather to establish a solid understanding of the basics. 
+Part0 serves as the foundation, providing essential background material. Learners are encouraged to reference notebooks in Part0 to polish their understanding of concepts they encounter in Parts 1 and 2. Part0 is not intended to be a comprehensive resource for all background material, but rather to establish a solid understanding of the basics. 
 
 Each notebook in Part 0 is standalone and covers a unique topic. These include:
  - Introduction to a synthetic model known as the "Freyberg" model. This model is used as a consistent example throughout the tutorial exercises, allowing learners to apply concepts in a practical context.
