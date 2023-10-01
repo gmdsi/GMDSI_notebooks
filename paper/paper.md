@@ -11,7 +11,7 @@ authors:
     orcid: 0000-0003-0891-3886
     affiliation: 1 
   - name: Jeremy T. White
-    orcid: xxxx-xxxx-xxxx-xxxx
+    orcid: 0000-0002-4950-1469
     affiliation: 1 
   - name: Mike Fienen
     orcid: 0000-0002-7756-4651
@@ -84,6 +84,7 @@ The Groundwater Modelling Decision Support Initiative ([GMDSI](https://gmdsi.org
 
 GMDSI is dedicated to promoting, facilitating, and providing support for the improved utilization of modeling in decision support processes. Its activities endeavor to elevate the role of groundwater modeling in decision-making processes, recognizing the importance of model partner software and offering a range of activities aimed at industry engagement, education, practical examples, research, and software development.
 
+
 A majority of groundwater modelers typically rely on Graphical User Interfaces (GUIs) for their modeling needs. However, it is important to note that each GUI has its unique characteristics and varying degrees of compatibility with external software like PEST. Creating educational materials for these GUIs would necessitate tailoring content to each GUI's specific features, potentially lagging behind the latest developments, and obtaining cooperation from the GUI developers themselves.
 
 Decision-support modeling often demands capabilities that surpass what current GUIs can offer. For example, many of GMDSI's worked examples rely on custom-designed utilities or the integration of different software components. Currently, a significant portion of users may not have the expertise to independently implement such advanced approaches. Furthermore, the manual preparation of input files for implementing these complex workflows can be time-consuming. Programmatic workflows, such as those facilitated by ``pyEMU``, offer advantages by reducing the time and user input required for setup and execution. This approach is somewhat analogous to the role played by a GUI but offers added flexibility, allowing users to customize and design their own functions and utilities as needed. However, it comes with the drawback of increased potential for user-introduced errors.
@@ -112,7 +113,7 @@ The tutorial notebooks are structured into three main parts:
 
 ## Part 0: Introductory Background
 
-Part0 serves as the foundation, providing essential background material. Learners are encouraged to reference notebooks in Part0 to polish their understnading of concepts they encounter in Parts 1 and 2. Part0 is not intended to be a comprehensive resource for all background material, but rather to establish a solid understanding of the basics. 
+Part0 serves as the foundation, providing essential background material. Learners are encouraged to reference notebooks in Part0 to polish their understanding of concepts they encounter in Parts 1 and 2. Part0 is not intended to be a comprehensive resource for all background material, but rather to establish a solid understanding of the basics. 
 
 Each notebook in Part 0 is standalone and covers a unique topic. These include:
  - Introduction to a synthetic model known as the "Freyberg" model. This model is used as a consistent example throughout the tutorial exercises, allowing learners to apply concepts in a practical context.
