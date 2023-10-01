@@ -14,8 +14,8 @@ authors:
     orcid: 0000-0002-4950-1469
     affiliation: 1 
   - name: Mike Fienen
-    orcid: xxxx-xxxx-xxxx-xxxx
-    affiliation: "2,3,4" # (Multiple affiliations must be quoted)
+    orcid: 0000-0002-7756-4651
+    affiliation: "2" # (Multiple affiliations must be quoted)
   - name: Brioch Hemmings
     orcid: xxxx-xxxx-xxxx-xxxx
     affiliation: "3" # (Multiple affiliations must be quoted)
@@ -26,7 +26,7 @@ authors:
 affiliations:
  - name: INTERA Geosciences
    index: 1
- - name: Institution 2 #TODO
+ - name: U.S. Geological Survey, Upper Midwest Water Science Center, Madison, WI USA
    index: 2
  - name: Institution 3 #TODO
    index: 3
@@ -62,16 +62,16 @@ bibliography: paper.bib
 
 # Summary
 
-The [GMDSI tutorial notebooks repository](https://github.com/gmdsi/GMDSI_notebooks/tree/main) provide learners with a comprehensive set of tutorials for self-guided training on decision-support groundwater modelling using Python-based tools. Although targeted at groundwater modelling, they are readily transferable to other environmental modelling workflows. The tutorials are divided into three parts. The first covers fundamental theoretical concepts. These are intended as background reading for reference on an as-needed basis. Tutorials in the second part introduce learners to some of the core concepts parameter estimation in a groundwater modelling context, as well as providing a gentle introduction to the ``PEST``, ``PEST++`` and ``pyEMU`` software. Lasty, the third part demonstrates how to implement high-dimensional applied decision-support modelling workflows. Their aim is to provide examples of both “how to use” the software as well as “how to think” about using the software. 
-
+The [GMDSI tutorial notebooks repository](https://github.com/gmdsi/GMDSI_notebooks/tree/main) provide learners with a comprehensive set of tutorials for self-guided training on decision-support groundwater modelling using Python-based tools. Although targeted at groundwater modelling, they are based around model-agnostic tools and readily transferable to other environmental modelling workflows. The tutorials are divided into three parts. The first covers fundamental theoretical concepts. These are intended as background reading for reference on an as-needed basis. Tutorials in the second part introduce learners to some of the core concepts parameter estimation in a groundwater modelling context, as well as providing a gentle introduction to the ``PEST``, ``PEST++`` and ``pyEMU`` software. Lastly, the third part demonstrates how to implement highly-parameterized applied decision-support modelling workflows. Their aim is to provide examples of both “how to use” the software as well as “how to think” about using the software. 
+<!-- switching from "high-dimensional" to "highly-parameterized" to tie into the series of USGS publications we put out a while back -->
 
 # Statement of Need
 
 Effective environmental management necessitates transparent acknowledgment of uncertainties in critical decision-making predictions, coupled with efforts to mitigate these uncertainties, especially when significant risks accompany management outcomes. The significance of uncertainty quantification (UQ) and parameter estimation (PE) in environmental modeling for decision support is widely acknowledged. UQ provides estimates of outcome uncertainty, while PE reduces this uncertainty through assimilating data. 
 
-Implementing high-dimensional UQ and PE in real-world modeling can be challenging due to both theoretical complexity and practical logistics. Limited project time and funding also often hinder their application. Open-source software such as PEST `[@pest]` and PEST++ `[@whitepestpp]` provide tools for underaking UQ and PE analyses. However, the steep learning curve associated with their use and the lack of user-friendly training materials have been a barrier to entry.
+Implementing highly-parameterized UQ and PE in real-world modeling can be challenging due to both theoretical complexity and practical logistics. Limited project time and funding also often hinder their application. Open-source software such as PEST `[@pest]` and PEST++ `[@whitepestpp]` provide tools for undertaking UQ and PE analyses. However, the steep learning curve associated with their use and the lack of user-friendly training materials have been a barrier to entry.
 
-There is a growing demand within the environemntal modelling community for transparent, reproducible, and accountable modeling processes, driven by the need for increased credibility and rigor in computational science and environmental simulation `[@white11rapid]`. While some script-based tools enhance the reproducibility of forward model construction `[@flopy]`, they often overlook UQ and PE analyses. In decision-support scenarios, these analyses are equally vital for robust model deployment as the forward model itself. 
+There is a growing demand within the environmental modelling community for transparent, reproducible, and accountable modeling processes, driven by the need for increased credibility and rigor in computational science and environmental simulation `[@white11rapid; @fienen2016hess]`. While some script-based tools enhance the reproducibility of forward model construction `[@flopy]`, they often overlook UQ and PE analyses. In decision-support scenarios, these analyses are equally vital for robust model deployment as the forward model itself. 
 
 The uptake of Python for environmental modeling has increased in recent years, due to its open-source nature, user-friendly syntax, and extensive scientific libraries. Python-based tools have been developed to facilitate UQ and PE analyses, such as ``pyEMU`` `[@White_A_python_framework_2016; @white2021towards]`. ``pyEMU`` is a Python package that provides a framework for implementing UQ and PE analyses with PEST and PEST++. It offers a range of capabilities, including parameter estimation, uncertainty analysis, and optimization. Although initially designed for groundwater modeling, ``pyEMU``'s methodologies are versatile and can be applied to diverse numerical environmental models, as long as they can be manipulated using text files and generate results that can be automatically extracted without manual interference.
 
@@ -80,22 +80,20 @@ The tutorial notebooks discussed herein provide a comprehensive, self-guided, an
 
 # Story of the Project
 
-The Groundwater Modelling Decision Support Initiative ([GMDSI](https://gmdsi.org)) is an industry-backed and industry-aligned initiative. Established in mid-2019, its primary goal is to enhance the role of groundwater modeling in groundwater management, regulatory processes, and decision-making. At the core of GMDSI's mission lies the numerical simulation of groundwater movement and processes. Often, data related to groundwater are limited, leading to uncertainties in simulator predictions. However, despite this uncertainty, decisions must be made, and associated risks must be assessed. Modeling plays a central role in the evaluation of these risks.
+The Groundwater Modelling Decision Support Initiative ([GMDSI](https://gmdsi.org)) is an industry-backed and industry-aligned initiative. Established in mid-2019, its primary goal is to enhance the role of groundwater modeling in groundwater management, regulatory processes, and decision-making. At the core of GMDSI's mission lies the numerical simulation of groundwater movement and processes. Often, data related to groundwater are limited, leading to uncertainties in simulator predictions. However, despite this uncertainty, decisions must be made, and associated risks must be assessed. Modelling plays a central role in the evaluation of these risks.
 
 GMDSI is dedicated to promoting, facilitating, and providing support for the improved utilization of modeling in decision support processes. Its activities endeavor to elevate the role of groundwater modeling in decision-making processes, recognizing the importance of model partner software and offering a range of activities aimed at industry engagement, education, practical examples, research, and software development.
 
-Many practicing groundwater modelers rely on Graphical User Interfaces (GUIs) to implement their modeling workflows. However, it's important to note that each GUI has its unique characteristics and varying degrees of compatibility with external software like PEST. Creating educational materials for these GUIs would necessitate tailoring content to each GUI's specific features, potentially lagging behind the latest developments, and obtaining cooperation from the GUI developers themselves.
 
-Decision-support modeling often demands capabilities that surpass what current GUIs can offer. For example, many of GMDSI's worked examples rely on custom-designed utilities or the bespoke integration of different software components. Currently, a significant portion of users may not have the expertise to independently implement such advanced approaches. Furthermore, the manual preparation of input files for implementing these complex workflows can be time-consuming and offers many opportunities for error. Programmatic workflows, such as those facilitated by ``pyEMU``, offer advantages by reducing the time and user input required for setup and execution, while simultaneously offering reproducibility as a by-product of this approach. This approach is somewhat analogous to the role played by a GUI but offers added flexibility, allowing users to customize and design their own functions and utilities as needed. However, it comes with the potential drawback of increased potential for user-introduced errors, which manifest in ways similar to software bugs.
+A majority of groundwater modelers typically rely on Graphical User Interfaces (GUIs) for their modeling needs. However, it is important to note that each GUI has its unique characteristics and varying degrees of compatibility with external software like PEST. Creating educational materials for these GUIs would necessitate tailoring content to each GUI's specific features, potentially lagging behind the latest developments, and obtaining cooperation from the GUI developers themselves.
 
-The adoption of a scripting-based approach may be hindered by a steep learning curve primarily due to the scarcity of targeted, user-friendly training materials. The [GMDSI tutorial notebooks](https://github.com/gmdsi/GMDSI_notebooks/tree/main) aim to address this gap by providing a comprehensive, self-guided, and open-source resource for learning decision-support modeling workflows with Python.
+Decision-support modeling often demands capabilities that surpass what current GUIs can offer. For example, many of GMDSI's worked examples rely on custom-designed utilities or the integration of different software components. Currently, a significant portion of users may not have the expertise to independently implement such advanced approaches. Furthermore, the manual preparation of input files for implementing these complex workflows can be time-consuming. Programmatic workflows, such as those facilitated by ``pyEMU``, offer advantages by reducing the time and user input required for setup and execution. This approach is somewhat analogous to the role played by a GUI but offers added flexibility, allowing users to customize and design their own functions and utilities as needed. However, it comes with the drawback of increased potential for user-introduced errors.
 
+Over time, more modelers are turning to Python packages like ``FloPy`` and ``pyEMU`` for model and PEST++ setup. Unfortunately, the adoption of this approach is hindered by a steep learning curve primarily due to the scarcity of user-friendly training materials. The [GMDSI tutorial notebooks](https://github.com/gmdsi/GMDSI_notebooks/tree/main) aim to address this gap by providing a comprehensive, self-guided, and open-source resource for learning decision-support modeling workflows with Python.
 
+The roots of the materials making up the tutorial notebooks were from a traditional, week-long classroom course curriculum developed for internal training at the USGS by a subset of the authors of this paper. For this course, the instructors leveraged the power of jupyter notebooks as a mechanism to teach both the theory and application of inverse theory. High-level mathematical libraries in python (and other high-level languages with easy plotting utilities such as MATLAB and R) provide an opportunity for students to explore linear algebra and statistical modeling principles that underlie the PE and UQ techniques implemented in ``PEST`` and ``PEST++``. Furthermore, the combination of text, code, and graphics provide an interactive platform for mixing theory and applications and, potentially, providing a template for application on real-world applications. The native support for python makes the connection between worked examples and notebooks seamless and has connections with other worked examples [`@white2020r3`;`@white2020DR`;`@fienen2022risk`;https://github.com/doi-usgs/neversink_workflow]
 
-USGS origin...? #TODO
-
-
-
+After three iterations of teaching the in-person class, the instructors concluded that the materials and approach were valuable, but came to question the level of retention by students in a 40-hour intensive setting. It is well-documented that without repetition and rapid adoption of new techniques, they can fade quickly from memory [`@glaveski2019companies`]. As a result, the authors, with support from the GMDSI, endeavored to build on the positive aspects of using jupyter notebooks and explore alternative teaching environments instead of week-long classes. The first major change was to add sufficient narration and explanation to improve possibilities for self-study. The initial design through in-person instruction was to have the notebooks serve as illustrations to assist in a narrative discussion, so bolstering of the explanatory text was necessary to make them stand alone. The next change was to refactor the organization from a strictly linear progression to the current three-part organization discussed below. This led to a hybrid model of self-study punctuated by discussion and background lectures online. 
 
 # Resources
 
@@ -103,9 +101,9 @@ A webinar hosted by GMDSI introducing the tutorial notebooks can be viewed [here
 
 The [GMDSI](https://gmdsi.org) web-page also hosts an extensive range of resources  and educational material on decision support modelling. These include numerous instructional video lectures, webinar recordings, non-programmatic workflow tutorials, as well as worked example reports describing real-world applications. 
 
-Software from the ``PEST`` suite can be downloaded from John Doherty's web-page [here](https://www.pesthomepage.org/). The [user manual](https://www.pesthomepage.org/Downloads/PEST%20Manuals/PEST%20Manual.pdf) contains lots of usefull information. The [PEST Book](https://pesthomepage.org/pest-book) is also a great resource for learning about the theory underpinning use of the software.
+Software from the ``PEST`` suite can be downloaded from John Doherty's web-page [here](https://www.pesthomepage.org/). The [user manual](https://www.pesthomepage.org/Downloads/PEST%20Manuals/PEST%20Manual.pdf) contains lots of useful information. The [PEST Book](https://pesthomepage.org/pest-book) is also a great resource for learning about the theory underpinning use of the software.
 
-Software from the ``PEST++`` suite can be accessed from the Git-Hub [repository](https://github.com/usgs/pestpp/tree/master). The [user manual](https://github.com/usgs/pestpp/blob/develop/documentation/pestpp_users_manual.md) contains lots of usefull information, as well as  theoretical background to the software.
+Software from the ``PEST++`` suite can be accessed from the Git-Hub [repository](https://github.com/usgs/pestpp/tree/master). The [user manual](https://github.com/usgs/pestpp/blob/develop/documentation/pestpp_users_manual.md) contains lots of useful information, as well as  theoretical background to the software.
 
 ``pyEMU`` can be accessed from the Git-Hub [repository](https://github.com/pypest/pyemu/tree/master). The repo contains several example jupyter notebooks. The tutorial notebooks discussed herein provided a more exhaustive and structured learning experience.
 
@@ -128,9 +126,9 @@ Each notebook in Part 0 is standalone and covers a unique topic. These include:
 Part 1 focuses on the Gauss-Levenberg Marquardt (GLM) approach to parameter estimation and  associated uncertainty analysis in a groundwater modelling context. This was the foundation of the PEST software for multiple decades and the theory continues to resonate through newer techniques.
 
 Part 1 is designed to be accessible without strict sequential dependencies. Learners have the flexibility to explore its contents in any order that suits their preferences or needs. These include:
- - Introduction to concepts such as non-uniquesness, identifiability, and equifinality.
+ - Introduction to concepts such as non-uniqueness, identifiability, and equifinality.
  - Introduction to the PEST control file and the PEST/PEST++ interface.
- - Explorating the challenges of parameterization schemes on predictive ability, as well as how to mitigate them.
+ - Exploring the challenges of parameterization schemes on predictive ability, as well as how to mitigate them.
  - Introducing first-order second-moment (FOSM) and prior Monte Carlo uncertainty analysis approaches.
 
 
