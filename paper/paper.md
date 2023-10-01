@@ -17,18 +17,18 @@ authors:
     orcid: 0000-0002-7756-4651
     affiliation: "2" # (Multiple affiliations must be quoted)
   - name: Brioch Hemmings
-    orcid: xxxx-xxxx-xxxx-xxxx
+    orcid: 0000-0001-6311-8450
     affiliation: "3" # (Multiple affiliations must be quoted)
   - name: Katie Markovitch
-    orcid: xxxx-xxxx-xxxx-xxxx
+    orcid: 0000-0002-4455-8255
     affiliation: 1 
 
 affiliations:
- - name: INTERA Geosciences
+ - name: INTERA Geosciences, Perth, Western Australia, Australia
    index: 1
  - name: U.S. Geological Survey, Upper Midwest Water Science Center, Madison, WI USA
    index: 2
- - name: Institution 3 #TODO
+ - name: Wairakei Research Centre, GNS Science, Taupō, New Zealand
    index: 3
 date: 20 September 2023
 bibliography: paper.bib
