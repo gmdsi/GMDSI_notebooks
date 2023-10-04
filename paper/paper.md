@@ -154,6 +154,6 @@ The notebooks have been employed during the [Applied Decision Support Groundwate
 
 # Acknowledgements
 
-The tutorials were originally developed with support from the U.S Geological Survey (USGS) and support from USGS continues. Continued development and support is funded by the Groundwater Modelling Decision Support Initiative (GMDSI). GMDSI is jointly funded by BHP and Rio Tinto. We thank users and stress-testers for their valuable feedback and continued community contributions to the repository.
+The tutorials were originally developed with support from the U.S Geological Survey (USGS) and support from USGS continues. Continued development and support is funded by the Groundwater Modelling Decision Support Initiative (GMDSI). GMDSI is jointly funded by BHP and Rio Tinto. We thank Dr. John Doherty for his tireless and pioneering efforts starting `PEST` and continuing to innovate and Dr. Randall Hunt for his leadership in `PEST` and `PEST++` applications and contributions to the initial curriculum for this material and the early version of the notebooks. We finally thank users and stress-testers for their valuable feedback and continued community contributions to the repository.
 
 # References
