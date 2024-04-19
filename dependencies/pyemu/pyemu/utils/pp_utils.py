@@ -365,7 +365,7 @@ def pp_file_to_dataframe(pp_filename):
 
     df = pd.read_csv(
         pp_filename,
-        delim_whitespace=True,
+        sep='\\s+',
         header=None,
         names=PP_NAMES,
         usecols=[0, 1, 2, 3, 4],
