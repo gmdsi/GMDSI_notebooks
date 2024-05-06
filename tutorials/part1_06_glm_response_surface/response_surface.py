@@ -2,6 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import sys
 # sys.path.insert(0,os.path.join("..", "..", "dependencies"))
 import pyemu
@@ -10,7 +11,7 @@ assert "dependencies" in flopy.__file__
 assert "dependencies" in pyemu.__file__
 sys.path.insert(0,"..")
 import herebedragons as hbd
-
+import flopy.plot.styles as wtf
 
 WORKING_DIR = 'freyberg_mf6'
 MODEL_NAM = "freyberg.nam"
@@ -56,49 +57,78 @@ def run_respsurf(par_names=None, pstfile='freyberg.pst', WORKING_DIR='freyberg_m
 
 def plot_response_surface(parnames=['hk1','rch0'], pstfile='freyberg.pst', WORKING_DIR='freyberg_mf6',
                           nanthresh=None,alpha=0.5, label=True, maxresp=None,
-                          figsize=(5,5),levels=None, cmap="nipy_spectral"):
-    p1,p2 = parnames
-    df_in = pd.read_csv(os.path.join(WORKING_DIR, pstfile.replace('.pst',"sweep_in.csv")))
-    df_out = pd.read_csv(os.path.join(WORKING_DIR, pstfile.replace('.pst',"sweep_out.csv")))
-    resp_surf = np.zeros((NUM_STEPS_RESPSURF, NUM_STEPS_RESPSURF))
-    p1_values = df_in[p1].unique()
-    p2_values = df_in[p2].unique()
-    c = 0
-    for i, v1 in enumerate(p1_values):
-        for j, v2 in enumerate(p2_values):
-            resp_surf[j, i] = df_out.loc[c, "phi"]
-            c += 1
-    fig = plt.figure(figsize=figsize)
-    ax = plt.subplot(111)
-    X, Y = np.meshgrid(p1_values, p2_values)
-    if nanthresh is not None:
-        resp_surf = np.ma.masked_where(resp_surf > nanthresh, resp_surf)
-    if maxresp is None:
-        maxresp = np.max(resp_surf)
-    if levels is None:
-        levels = np.array([0.001, 0.01, 0.02, 0.05, .1, .2, .5])*maxresp
+                          figsize=(5,5),levels=None, cmap="magma",title=None):
     
-    import matplotlib.colors as colors
-    vmin=np.min(resp_surf)
-    vmax=maxresp
-    p = ax.pcolor(X, Y, resp_surf, alpha=alpha, cmap=cmap,# vmin=vmin, vmax=vmax,
-                norm=colors.LogNorm(vmin=vmin, vmax=vmax))
-    plt.colorbar(p)
-    c = ax.contour(X, Y, resp_surf,
-                   levels=levels,
-                   colors='k', alpha=0.5)
-    plt.title('min $\\Phi$ = {0:.2f}'.format(np.nanmin(resp_surf)))
-    if label:
-        plt.clabel(c)
-    ax.set_xlim(p1_values.min(), p1_values.max())
-    ax.set_ylim(p2_values.min(), p2_values.max())
-    ax.set_xlabel(p1)
-    ax.set_ylabel(p2)
-    return fig, ax, resp_surf
+    with wtf.USGSPlot():
+        font = {'size'   : 12}
+
+        mpl.rc('font', **font)
+        p1,p2 = parnames
+        df_in = pd.read_csv(os.path.join(WORKING_DIR, pstfile.replace('.pst',"sweep_in.csv")))
+        df_out = pd.read_csv(os.path.join(WORKING_DIR, pstfile.replace('.pst',"sweep_out.csv")))
+        resp_surf = np.zeros((NUM_STEPS_RESPSURF, NUM_STEPS_RESPSURF))
+        p1_values = df_in[p1].unique()
+        p2_values = df_in[p2].unique()
+        c = 0
+        minval=np.inf
+        min_i = np.inf
+        min_j = np.inf
+        min1,min2 = np.inf,np.inf
+        for i, v1 in enumerate(p1_values):
+            for j, v2 in enumerate(p2_values):
+                resp_surf[j, i] = df_out.loc[c, "phi"]
+                if resp_surf[j, i] < minval:
+                    min_i,min_j = i,j
+                    min1 = v1
+                    min2 = v2
+                    minval = resp_surf[j, i]
+                c += 1
+        fig = plt.figure(figsize=figsize)
+        ax = plt.subplot(111)
+        X, Y = np.meshgrid(p1_values, p2_values)
+        if nanthresh is not None:
+            resp_surf = np.ma.masked_where(resp_surf > nanthresh, resp_surf)
+        if maxresp is None:
+            maxresp = np.max(resp_surf)
+        if levels is None:
+            levels = np.array([0.001, 0.01, 0.02, 0.05, .1, .2, .5])*maxresp
+        
+        import matplotlib.colors as colors
+        vmin=np.min(resp_surf)
+        vmax=maxresp
+        p = ax.pcolor(X, Y, resp_surf, alpha=alpha, cmap=cmap,# vmin=vmin, vmax=vmax,
+                    norm=colors.LogNorm(vmin=vmin, vmax=vmax))
+        cb = plt.colorbar(p)
+        cb.ax.get_yaxis().labelpad = 10
+        cb.ax.tick_params(labelsize = 12)
+        
+        cb.set_label('Objective Function $\\Phi$', rotation=90, fontsize=12)
+        c = ax.contour(X, Y, resp_surf,
+                       levels=levels,
+                       colors='k', alpha=0.5)
+        ax.plot(min1,min2, 'r*',zorder=100,markersize=15)
+        if title is None:
+            plt.title('min $\\Phi$ = {0:.2f}'.format(np.nanmin(resp_surf)),fontsize=12)
+        else:
+            plt.title(title,fontsize=12)
+        if label:
+            plt.clabel(c)
+        plt.xticks(fontsize=12)
+        plt.yticks(fontsize=12)
+        ax.set_xlim(p1_values.min(), p1_values.max())
+        ax.set_ylim(p2_values.min(), p2_values.max())
+        #ax.set_xlabel(p1)
+        #ax.set_ylabel(p2)
+        ax.set_xlabel('Hydraulic Conductivity', fontsize=12)
+        ax.set_ylabel('Recharge', fontsize=12)
+        return fig, ax, resp_surf
 
 def add_trajectory_to_plot(fig,ax, title, working_dir='freyberg_mf6', pst_name='freyberg.pst', pars2plot=['hk1','rch0']):
     obfun = pd.read_csv(os.path.join(working_dir,pst_name.replace('.pst','.iobj')))
     pars=pd.read_csv(os.path.join(working_dir,pst_name.replace('.pst','.ipar')))
-    ax.plot(pars[pars2plot[0]].values,pars[pars2plot[1]].values, 'kx-')
-    ax.set_title(title)
+    #ax.plot(pars[pars2plot[0]].values,pars[pars2plot[1]].values, 'kx-')
+    ax.plot(pars[pars2plot[0]].values,pars[pars2plot[1]].values,'.-', color="w",lw=0.5)
+    ax.plot(pars[pars2plot[0]].values[-1],pars[pars2plot[1]].values[-1], '.',markersize=10,color='b',zorder=10)
+    
+    ax.set_title(title,fontsize=12)
     return pars, obfun
