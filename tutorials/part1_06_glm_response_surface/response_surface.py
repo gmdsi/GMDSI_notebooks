@@ -57,7 +57,7 @@ def run_respsurf(par_names=None, pstfile='freyberg.pst', WORKING_DIR='freyberg_m
 
 def plot_response_surface(parnames=['hk1','rch0'], pstfile='freyberg.pst', WORKING_DIR='freyberg_mf6',
                           nanthresh=None,alpha=0.5, label=True, maxresp=None,
-                          figsize=(5,5),levels=None, cmap="magma",title=None):
+                          figsize=(5,5),levels=None, cmap="magma",title=None,ax=None):
     
     with wtf.USGSPlot():
         font = {'size'   : 12}
@@ -83,8 +83,10 @@ def plot_response_surface(parnames=['hk1','rch0'], pstfile='freyberg.pst', WORKI
                     min2 = v2
                     minval = resp_surf[j, i]
                 c += 1
-        fig = plt.figure(figsize=figsize)
-        ax = plt.subplot(111)
+        fig = None
+        if ax is None:
+            fig = plt.figure(figsize=figsize)
+            ax = plt.subplot(111)
         X, Y = np.meshgrid(p1_values, p2_values)
         if nanthresh is not None:
             resp_surf = np.ma.masked_where(resp_surf > nanthresh, resp_surf)
@@ -108,9 +110,9 @@ def plot_response_surface(parnames=['hk1','rch0'], pstfile='freyberg.pst', WORKI
                        colors='k', alpha=0.5)
         ax.plot(min1,min2, 'r*',zorder=100,markersize=15)
         if title is None:
-            plt.title('min $\\Phi$ = {0:.2f}'.format(np.nanmin(resp_surf)),fontsize=12)
+            ax.set_title('min $\\Phi$ = {0:.2f}'.format(np.nanmin(resp_surf)),fontsize=12)
         else:
-            plt.title(title,fontsize=12)
+            ax.set_title(title,fontsize=12)
         if label:
             plt.clabel(c)
         plt.xticks(fontsize=12)
@@ -120,7 +122,7 @@ def plot_response_surface(parnames=['hk1','rch0'], pstfile='freyberg.pst', WORKI
         #ax.set_xlabel(p1)
         #ax.set_ylabel(p2)
         ax.set_xlabel('Hydraulic Conductivity', fontsize=12)
-        ax.set_ylabel('Recharge', fontsize=12)
+        ax.set_ylabel('Recharge Multiplier', fontsize=12)
         return fig, ax, resp_surf
 
 def add_trajectory_to_plot(fig,ax, title, working_dir='freyberg_mf6', pst_name='freyberg.pst', pars2plot=['hk1','rch0']):
