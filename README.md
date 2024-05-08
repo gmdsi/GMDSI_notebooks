@@ -78,6 +78,11 @@ PEST++MOU:
  
 IMPORTANT NOTE: When running some of these notebooks, PEST++ undertakes parallel model runs for computational efficiency. These runs are coordinated using internet communication protocols (e.g. TCP/IP). As a result, it is common (but not universal) that the first time a set of parallel runs is launched, a Windows Defender (or similar popup on other operating systems) box appears warning the user. This box can simply be closed by clicking "cancel" and then the model runs should proceed without issue.
 
+## Example Tutorial Notebook Learning Flow
+While there is an intentional organization to the notebooks, described above, they can also serve as standalone references, or a subset can be curated to achieve a specific learning outcome. An example of a curated learning flow for a common decision support modeling application is shown in the flowchart below. 
+
+![flowchart](https://raw.githubusercontent.com/gmdsi/GMDSI_notebooks/jose-review/.github/flowchart.png)
+
 ## Installation Instructions
 
 **Download the course repository:**
