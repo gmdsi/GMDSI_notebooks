@@ -82,6 +82,13 @@ To start up the jupyter notebook:
 - Then navigate to folder where you downloaded the course materials repo and type `jupyter notebook`
 A jupyter notebook instance should start within the course repo flder. Using the browser, you can now navigate to the "notebooks" folder and open one.
  
+ ## Contributing
+
+We welcome community contributions to this repository. If you would like to contribute, please fork the repository and submit a pull request. If you have any questions, or would like to discuss a contribution beforehand, please open a [discussion] (https://github.com/gmdsi/GMDSI_notebooks/discussions). 
+
+If you have a found a bug or would like to suggest a new feature or tutorial, please open an [issue](https://github.com/gmdsi/GMDSI_notebooks/issues).
+
+
  # Acknowledgments
  
 These tutorials were originally developed with support from the U.S Geological Survey (USGS) and support from USGS continues. Continued development and support is funded by the Groundwater Modelling Decision Support Initiative (GMDSI). GMDSI is jointly funded by BHP and Rio Tinto.
