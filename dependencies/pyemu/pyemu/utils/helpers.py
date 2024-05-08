@@ -2135,7 +2135,7 @@ def _process_list_file(model_file, df):
 
     for mlt in df_mf.itertuples():
         new_df.loc[:, mlt.index_cols] = new_df.loc[:, mlt.index_cols].apply(
-            pd.to_numeric, errors='ignore', downcast='integer')
+            pd.to_numeric, downcast='integer')
         try:
             new_df = new_df.reset_index().rename(
                 columns={"index": "oidx"}

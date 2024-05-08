@@ -708,7 +708,7 @@ def plot_truth_k(m_d):
 def svd_enchilada(gwf, m_d):
     from ipywidgets import interact, interactive, fixed, interact_manual
     import ipywidgets as widgets
-
+    import sys
     v = pyemu.geostats.ExpVario(1.0,a=200,anisotropy=1.0,bearing=45)
     struct = pyemu.geostats.GeoStruct(variograms=v)
     arr_dict = {"test":gwf.dis.idomain.get_data()[0]}
@@ -717,52 +717,69 @@ def svd_enchilada(gwf, m_d):
                         os.path.join(m_d, "freyberg6.nam"),
                         delr=gwf.dis.delr.array, delc=gwf.dis.delc.array)
     bd = pyemu.helpers.kl_setup(num_eig=800,sr=sr,struct=struct,prefixes=['hk'],basis_file="basis.jco",)
-    basis = pyemu.Matrix.from_binary("basis.jco").to_dataframe().T
-    i = basis.index.map(lambda x: int(x.split('_')[-1]))
-    j = basis.index.map(lambda x: int(x[-4:]))  
+    basis = pyemu.Matrix.from_binary("basis.jco").to_dataframe()
 
 
+    i = basis.index.map(lambda x: int(x[1:5]))
+    j = basis.index.map(lambda x: int(x[-4:]))
+    nrow,ncol = gwf.dis.nrow.data,gwf.dis.ncol.data
+    #arr = np.zeros((nrow,ncol))
+    #arr[i,j] = basis.iloc[:,:100].values.sum(axis=1)
+    #plt.imshow(arr)
+    #plt.show()
+
+    ib = gwf.dis.idomain.array[0,:,:]
     k_truth= np.loadtxt(os.path.join('..','..', 'models', 'daily_freyberg_mf6_truth','truth_hk.txt'))
     # downsample for model 
     k_truth_res = k_truth[::3,::3]
     k_truth_res[np.isnan(k_truth_res)] =0 
+    #k_truth_res[ib==0] = np.nan
+
+    truth_vec = np.atleast_2d(k_truth_res[i,j].flatten()).transpose()
+    k_truth_mask = np.log10(k_truth_res)
+
+    k_truth_mask[ib==0] = np.nan
+    mn = np.nanmin(k_truth_mask)
+    mx = np.nanmax(k_truth_mask)
 
     def plot_enchilada(eig):
         basis_arr = np.array(basis.values)
-        flat_arr = np.atleast_2d(k_truth_res.flatten()).transpose()
+        flat_arr = truth_vec.copy()
+        #np.atleast_2d(k_truth_res.flatten()).transpose()
         #fig,ax = plt.subplots(ncols=2, figsize=(10,7),aspect='equal')
-        fig = plt.figure(figsize=(10, 7))
+        fig = plt.figure(figsize=(10, 5))
         ax = fig.add_subplot(1, 3, 1, aspect='equal',)
 
-        arr = np.ones_like(gwf.dis.idomain.get_data()[0])
-        arr = basis.iloc[:,eig].values.reshape(arr.shape)
-        mm = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
-        mm.plot_array(arr)
-        mm.plot_ibound()
-        #mm = plt.imshow(arr)
+        arr = np.ones((nrow,ncol))
+        arr[i,j] = basis.iloc[:,eig].values
+        arr[ib==0] = np.nan
+        ax.imshow(arr)
         ax.set_title('Plot of individual CV')
 
         ax = fig.add_subplot(1, 3, 2, aspect='equal', )
         basis_eig = basis_arr[:,:eig+1].transpose()
         factors = np.dot(basis_eig, flat_arr).transpose()
-        factors = np.dot(factors, basis_eig).reshape(arr.shape)
-        mm2 = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=0)
-        ca = mm2.plot_array(factors, masked_values=[1e30],)
-        mm2.plot_ibound()
+        factors = np.dot(factors, basis_eig)#.reshape(arr.shape)
+        recon = np.zeros((nrow,ncol))
+        recon[i,j] = factors.flatten()
+        recon[ib==0] = np.nan
+        recon[recon<1e-10] = 1e-10
+        ax.imshow(np.log10(recon),vmin=mn,vmax=mx)
         ax.set_title('Reconstructed field')
 
         ax = fig.add_subplot(1, 3, 3, aspect='equal',)
-        mm = flopy.plot.PlotMapView(model=gwf, ax=ax)
-        ca = mm.plot_array(k_truth_res, masked_values=[1e30],)
-        mm.plot_inactive()
-        ax.set_title('Truth $K$');
+
+        cb = ax.imshow(k_truth_mask,vmin=mn,vmax=mx)
+        plt.colorbar(cb,ax=ax,label="HK")
+        ax.set_title('Truth $K$')
 
         plt.suptitle('Using {0} SVs'.format(eig+1))
-        fig.tight_layout()
+        plt.tight_layout()
+        #plt.savefig("temp.pdf")
 
 
-    return interact(plot_enchilada, eig=widgets.IntSlider(description="eig comp:", 
-                                           continuous_update=True, value=400, max=799));
+    return interact(plot_enchilada, eig=widgets.IntSlider(description="eig comp:",
+                                          continuous_update=True, value=40, max=799));
 
 def get_sorted_ppoint_names(par, tmp_d):
     sim = flopy.mf6.MFSimulation.load(sim_ws=tmp_d, verbosity_level=0) #modflow.Modflow.load(fs.MODEL_NAM,model_ws=working_dir,load_only=[])
@@ -889,6 +906,8 @@ def prep_mc(tmp_d):
 
 if __name__ == "__main__":
     #make_truth(os.path.join('..','models','freyberg_mf6_truth'))
-    prep_notebooks(rebuild_truth=True)
+    #prep_notebooks(rebuild_truth=True)
     #prep_pest(os.path.join("pest_files"))
+    gwf = flopy.mf6.MFSimulation.load(sim_ws=os.path.join("part0_intro_to_svd","master_pp")).get_model()
+    svd_enchilada(gwf,os.path.join("part0_intro_to_svd","master_pp"))
 
