@@ -23,7 +23,7 @@ After completing this module, learners should be able to:
     - Apply the `pyemu` Python package to interface with PEST/PEST++.
     - Discuss the mathematical concepts that underpin the PEST/PEST++ software.
 
- - part 1: this part covers the Gauss-Levenberg Marquardt approach to parameter estimation and associated uncertainty analysis. This was the foundation of the PEST software for multiple decades and the theory continues to resonate through newer techniques
+ - part 1: this part covers the Gauss-Levenberg Marquardt (GLM) approach to parameter estimation and associated uncertainty analysis. This was the foundation of the PEST software for multiple decades and the theory continues to resonate through newer techniques
 After completing this module, learners should be able to:
     - Describe the GLM approach to parameter estimation.
     - Explain non-uniqueness, identifiability and equifinality in the context of decision-support modelling.
@@ -31,11 +31,11 @@ After completing this module, learners should be able to:
     - Understand the effect of parameterization schemes on model predictive ability.
     - Explain the difference between linear and non-linear uncertainy analysis approaches and the value of each.
 
- - part 2: this part expands largely into ensemble-based parameter estimation and uncertainty analysis methods using PEST++. Advanced topics include management optimization and sequential data assimilation.
+ - part 2: this part expands largely into ensemble-based parameter estimation and uncertainty analysis methods using PEST++. Advanced topics include management optimization (OPT and MOU) and sequential data assimilation (DA).
 After completing this module, learners should be able to:
     - Construct a high-dimensional PEST control file and interface files.
     - Implement GLM and ensemble-based parameter estimation and uncertainty analysis workflows using PEST++ and associated tools.
-    - Apply management optimization and sequential data assimilation techniques to decision-support groundwater modelling problems.
+    - Apply management optimization (OPT and MOU) and sequential data assimilation (DA) techniques to decision-support groundwater modelling problems.
 
 
 **To run the Part 0 notebooks**
