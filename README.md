@@ -18,8 +18,25 @@ Familiarity with git would be a bonus, but not fundamental.
 ## Organization of the Tutorial Notebooks
 The notebooks in the `tutorial` folder are organized in three main parts:
  - part 0: this is introductory background material that can be referred to for more detail on special topics. This includes the synthetic "freyberg" model used throughout the exercises, the `pyemu` python package that is used to interface with PEST++, and some of the mathematical concepts that come up throughout the tutorial notebooks. Note that the `part1_02_pest_setup/freyberg_pest_setup.ipynb` notebook provides valuable context that will help with understanding the `pyemu` introduction.
+After completing this module, learners should be able to:
+    - Describe the structure and components of the synthetic Freyberg model.
+    - Apply the `pyemu` Python package to interface with PEST/PEST++.
+    - Discuss the mathematical concepts that underpin the PEST/PEST++ software.
+
  - part 1: this part covers the Gauss-Levenberg Marquardt approach to parameter estimation and associated uncertainty analysis. This was the foundation of the PEST software for multiple decades and the theory continues to resonate through newer techniques
+After completing this module, learners should be able to:
+    - Describe the GLM approach to parameter estimation.
+    - Explain non-uniqueness, identifiability and equifinality in the context of decision-support modelling.
+    - Construct a PEST control file and interface files.
+    - Understand the effect of parameterization schemes on model predictive ability.
+    - Explain the difference between linear and non-linear uncertainy analysis approaches and the value of each.
+
  - part 2: this part expands largely into ensemble-based parameter estimation and uncertainty analysis methods using PEST++. Advanced topics include management optimization and sequential data assimilation.
+After completing this module, learners should be able to:
+    - Construct a high-dimensional PEST control file and interface files.
+    - Implement GLM and ensemble-based parameter estimation and uncertainty analysis workflows using PEST++ and associated tools.
+    - Apply management optimization and sequential data assimilation techniques to decision-support groundwater modelling problems.
+
 
 **To run the Part 0 notebooks**
 The part 0 notebooks can be run in any order and do not depend on each other. We recommend, in particular, the first 3 topics as background for the rest of the tutorials, but the remaining part 0 notebooks stand alone for more theoretical basis and a reference for topics covered later.
