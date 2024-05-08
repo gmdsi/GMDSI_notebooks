@@ -116,16 +116,16 @@ The tutorial notebooks are structured into three main parts:
 Part 0 serves as the foundation, providing essential background material. Learners are encouraged to reference notebooks in Part 0 to polish their understanding of concepts they encounter in Parts 1 and 2. Part 0 is not intended to be a comprehensive resource for all background material, but rather to establish a solid understanding of the basics. The explanations of mathematical concepts are intended to be accessible through visualization and descriptions related to everyday concepts and modelling concepts. 
 
 Each notebook in Part 0 is standalone and covers a unique topic. These include:
- -Introduction to a synthetic model known as the "Freyberg" model. This model is used as a consistent example throughout the tutorial exercises, allowing learners to apply concepts in a practical context.
- -An introduction to the `pyemu` Python package that is used to complement and interface with PEST/PEST++.
- -Explanation of fundamental mathematical concepts that are relevant and will be encountered throughout the tutorial notebooks.
+ * Introduction to a synthetic model known as the "Freyberg" model. This model is used as a consistent example throughout the tutorial exercises, allowing learners to apply concepts in a practical context.
+ * An introduction to the `pyemu` Python package that is used to complement and interface with PEST/PEST++.
+ * Explanation of fundamental mathematical concepts that are relevant and will be encountered throughout the tutorial notebooks.
 
 Pre-requisites for Part 0 include a basic understanding of Python, Jupyter Notebooks, and MODFLOW 6. Familiarity with git is a bonus but not fundamental.
 
 After completing this module, learners should be able to:
-  - Describe the structure and components of the synthetic Freyberg model.
-  - Apply the `pyemu` Python package to interface with PEST/PEST++.
-  - Discuss the mathematical concepts that underpin the PEST/PEST++ software.
+  * Describe the structure and components of the synthetic Freyberg model.
+  * Apply the `pyemu` Python package to interface with PEST/PEST++.
+  * Discuss the mathematical concepts that underpin the PEST/PEST++ software.
 
 ## Part 1: Introduction to PEST and the Gauss-Levenberg Marquardt Approach
 
@@ -142,21 +142,21 @@ Part 1 is designed to be accessible without strict sequential dependencies. Lear
 Pre-requisites for Part 1 include a basic understanding of numerical groundwater modelling and familiarity with MODFLOW 6. Familiarity with Python and Jupyter Notebooks is assumed.
 
 After completing this module, learners should be able to:
- - Describe the GLM approach to parameter estimation.
- - Explain non-uniqueness, identifiability and equifinality in the context of decision-support modelling.
- - Construct a PEST control file and interface files.
- - Understand the effect of parameterization schemes on model predictive ability.
- - Explain the difference between linear and non-linear uncertainy analysis approaches and the value of each.
+ * Describe the GLM approach to parameter estimation.
+ * Explain non-uniqueness, identifiability and equifinality in the context of decision-support modelling.
+ * Construct a PEST control file and interface files.
+ * Understand the effect of parameterization schemes on model predictive ability.
+ * Explain the difference between linear and non-linear uncertainy analysis approaches and the value of each.
 
 ## Part 2: Python-based Decision-Support Modelling Workflows
 Part 2 expands on the foundational knowledge gained in Part 1 and delves into advanced topics related to ensemble-based parameter estimation, uncertainty analysis and optimization methods. These advanced topics include management optimization and sequential data assimilation. This approach and these advanced topics assume a highly-parameterized approach, as motivated in Part 1. Topics are laid out in manner that reflects real-world workflows, with a focus on practical application of concepts and problem solving.
 
 Part 2 is structured with a specific order for learners to follow to ensure a logical progression of topics, inline with a real-world applied workflow. Learners have the option to explore various sequences covering advanced topics, such as:
- -Prior Monte Carlo analysis
- -Highly-parameterized Gauss-Levenberg Marquardt history matching and associated Data Worth analysis using First Order, Second Moment (FOSM) techqnique, 
- -Ensemble-based history matching and uncertainty analysis with the iterative ensemble smoother approach as implemented in ``PEST++IES``, 
- -Sequential data assimilation with ``PEST++DA``, and 
- -Single-objective and multi-objective optimization under uncertainty with ``PEST++OPT`` and ``PEST++MOU``.
+ * Prior Monte Carlo analysis
+ * Highly-parameterized Gauss-Levenberg Marquardt history matching and associated Data Worth analysis using First Order, Second Moment (FOSM) techqnique, 
+ * Ensemble-based history matching and uncertainty analysis with the iterative ensemble smoother approach as implemented in ``PEST++IES``, 
+ * Sequential data assimilation with ``PEST++DA``, and 
+ * Single-objective and multi-objective optimization under uncertainty with ``PEST++OPT`` and ``PEST++MOU``.
  
 Each of these sequences comprises multiple notebooks to be executed in a specified order. They demonstrate how to execute the workflow, interpret results, and apply the concepts to real-world problems.
 
@@ -165,9 +165,9 @@ In summary, the tutorial notebooks are organized to guide learners through a str
 Pre-requisites for Part 2 include a basic understanding of PEST/PEST++ and the PEST interface, as well as familiarity with the Freyberg model. Familiarity with Python and Jupyter Notebooks is assumed.
 
 After completing this module, learners should be able to:
- - Construct a high-dimensional PEST control file and interface files.
- - Implement GLM and ensemble-based parameter estimation and uncertainty analysis workflows using PEST++ and associated tools.
- - Apply management optimization and sequential data assimilation techniques to decision-support groundwater modelling problems.
+ * Construct a high-dimensional PEST control file and interface files.
+ * Implement GLM and ensemble-based parameter estimation and uncertainty analysis workflows using PEST++ and associated tools.
+ * Apply management optimization and sequential data assimilation techniques to decision-support groundwater modelling problems.
 
 
 # Experience of use in teaching and learning situations
@@ -178,10 +178,10 @@ Feedback from the 65 students who participated in the course was anecdotal but i
 
 Open-ended feedback from the participants was generally positive and also included some constructive criticism. Participants appreciated the opportunity to ask questions and several reported hearing the discussion around other peoples' questions as being valuable and clarifying aspects of the material. The main critical suggestions included incorporating more real-world examples rather than relying, as we 100% did in the notebook design, on the synthetic model. Participants also noted the twin challenges of a large amount of information coupled with trying to be accountable to keep up in the class as potentially limiting the value relative to a week-long course. We conclude from this experience that the hybrid approach has value but there may still be a better approach for future educational opportunities. 
 
-![Summary of responses to post-course survey based on 34 responses. Panel A summarizes whether respondents would prefer and intensive in-person workshop or this hybrid option. Panel B summarizes how much of the notebooks respondents were able to complete throughout the course. Panel C summarizes respondent comfort level with PEST++ before and after the course. Panel D highlights individual changes in comfort level reported due to the course.](./responses.png){#fig-responses}
+![Summary of responses to post-course survey based on 34 responses. Panel A summarizes whether respondents would prefer and intensive in-person workshop or this hybrid option. Panel B summarizes how much of the notebooks respondents were able to complete throughout the course. Panel C summarizes respondent comfort level with PEST++ before and after the course. Panel D highlights individual changes in comfort level reported due to the course.{#fig-responses}](./responses.png)
 
 # Acknowledgements
 
-The tutorials were originally developed with support from the US Geological Survey (USGS) and support from USGS continues through the HyTest training project. Continued development and support is funded by the Groundwater Modelling Decision Support Initiative (GMDSI). GMDSI is jointly funded by BHP and Rio Tinto. We thank Dr. John Doherty for his tireless and pioneering efforts starting `PEST` and continuing to innovate and Dr. Randall Hunt for his leadership in `PEST` and `PEST++` applications and development and contributions to the initial curriculum for this material and the early version of the notebooks. Kalle Jahn (USGS) and REVEIEWR FROM JOURNAL? made reviews that improved this manuscript. We finally thank users and stress-testers for their valuable feedback and continued community contributions to the repository.
+The tutorials were originally developed with support from the US Geological Survey (USGS) and support from USGS continues through the HyTest training project. Continued development and support is funded by the Groundwater Modelling Decision Support Initiative (GMDSI). GMDSI is jointly funded by BHP and Rio Tinto. We thank Dr. John Doherty for his tireless and pioneering efforts starting `PEST` and continuing to innovate and Dr. Randall Hunt for his leadership in `PEST` and `PEST++` applications and development and contributions to the initial curriculum for this material and the early version of the notebooks. Kalle Jahn (USGS) and REVIEWER FROM JOURNAL? made reviews that improved this manuscript. We finally thank users and stress-testers for their valuable feedback and continued community contributions to the repository.
 
 # References
