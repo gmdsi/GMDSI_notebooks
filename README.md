@@ -81,7 +81,9 @@ IMPORTANT NOTE: When running some of these notebooks, PEST++ undertakes parallel
 ## Example Tutorial Notebook Learning Flow
 While there is an intentional organization to the notebooks, described above, they can also serve as standalone references, or a subset can be curated to achieve a specific learning outcome. An example of a curated learning flow for a common decision support modeling application is shown in the flowchart below. 
 
-![flowchart](https://raw.githubusercontent.com/kmarkovich-intera/GMDSI_notebooks/jose-review/.github/flowchart.png)
+<p align="center">
+  <img src="flowchart.png" alt="flowchart">
+</p>
 
 ## Installation Instructions
 
