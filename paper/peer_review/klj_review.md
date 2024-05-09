@@ -1,3 +1,10 @@
+---
+title: "Kalle Jahn Review of _Self-Guided Decision Support Groundwater Modelling
+with Python_"
+format:
+ pdf
+---
+
 ## General comments
 - Overall, this is a great presentation/summary of the notebooks and their utility, and I think the evaluation of them as a teaching tool is well done. Would be great to gather more data on that in the future!
 - Although the first paragraph of intro needs a little work, the rest of the intro does a great job of highlighting the issue that these notebooks help address.
