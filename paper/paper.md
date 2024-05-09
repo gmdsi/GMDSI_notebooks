@@ -13,13 +13,13 @@ authors:
   - name: Jeremy T. White
     orcid: 0000-0002-4950-1469
     affiliation: 1 
-  - name: Mike Fienen
+  - name: Michael N. Fienen
     orcid: 0000-0002-7756-4651
     affiliation: "2" # (Multiple affiliations must be quoted)
   - name: Brioch Hemmings
     orcid: 0000-0001-6311-8450
     affiliation: "3" # (Multiple affiliations must be quoted)
-  - name: Katie Markovitch
+  - name: Katie Markovich
     orcid: 0000-0002-4455-8255
     affiliation: 1 
 
