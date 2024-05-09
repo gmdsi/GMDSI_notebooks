@@ -25,11 +25,11 @@ authors:
 
 affiliations:
  - name: INTERA Geosciences, Perth, Western Australia, Australia
-. index: 1
+ - index: 1
  - name: U.S. Geological Survey, Upper Midwest Water Science Center, Madison, WI USA
-. index: 2
+ - index: 2
  - name: Wairakei Research Centre, GNS Science, Taupō, New Zealand
-. index: 3
+ - index: 3
 date: 20 September 2023
 bibliography: paper.bib
 
