@@ -8,28 +8,28 @@ tags:
   - uncertainty analysis
 authors:
   - name: Rui T. Hugman
-    orcid: 0000-0003-0891-3886
-    affiliation: 1 
+.  orcid: 0000-0003-0891-3886
+.  affiliation: 1 
   - name: Jeremy T. White
-    orcid: 0000-0002-4950-1469
-    affiliation: 1 
+.  orcid: 0000-0002-4950-1469
+.  affiliation: 1 
   - name: Mike Fienen
-    orcid: 0000-0002-7756-4651
-    affiliation: "2" # (Multiple affiliations must be quoted)
+.  orcid: 0000-0002-7756-4651
+.  affiliation: "2" # (Multiple affiliations must be quoted)
   - name: Brioch Hemmings
-    orcid: 0000-0001-6311-8450
-    affiliation: "3" # (Multiple affiliations must be quoted)
+.  orcid: 0000-0001-6311-8450
+.  affiliation: "3" # (Multiple affiliations must be quoted)
   - name: Katie Markovitch
-    orcid: 0000-0002-4455-8255
-    affiliation: 1 
+.  orcid: 0000-0002-4455-8255
+.  affiliation: 1 
 
 affiliations:
  - name: INTERA Geosciences, Perth, Western Australia, Australia
-   index: 1
+. index: 1
  - name: U.S. Geological Survey, Upper Midwest Water Science Center, Madison, WI USA
-   index: 2
+. index: 2
  - name: Wairakei Research Centre, GNS Science, Taupō, New Zealand
-   index: 3
+. index: 3
 date: 20 September 2023
 bibliography: paper.bib
 
@@ -174,11 +174,12 @@ After completing this module, learners should be able to:
 
 The notebooks were employed during the [Applied Decision Support Groundwater Modeling With Python: A Guided Self-Study Course](https://gmdsi.org/blog/guided-self-study-course/) hosted by GMDSI. This self-guided course comprised 5 online sessions, each lasting 1 to 2 hours and focused on the workflows of Part 2. During each session the instructors go through a section of the tutorials and expand on some of the concepts. Learners were tasked with going through the notebooks in between sessions to stimulate discussion and questions. Sessions were recorded and can be accessed [on the GMDSI website](https://gmdsi.org/education/videos/). Beyond the live online sessions, learners were incentivized to make use of the GitHub [Discussions](https://github.com/gmdsi/GMDSI_notebooks/discussions) feature to retain a search-engine findable record of common questions that persist beyond the time-frame of the course and can help address other questions that arise in the community. 
 
-Feedback from the 65 students who participated in the course was anecdotal but informative. Figure (@fig-responses) summarizes the responses by 34 respondents to four questions, comprising 52%. The majority of respondents indicated a preference for this hybrid self-guided/online instruction approach over an in-person week-long intensive class with only one respondent indicating preference for self-guided study of the course materials only. Just under 60% of the respondents reported being able to keep up with most or all of the assigned self-study notebooks, while 41% reported falling behind. Given 5 categories of comfort level working with PEST++ (1 being most comfortable, and 5 being least) before and after the class, there was a notable shift toward higher comfort level. Interestingly, when evaluating individual responses, the majority (56%) reported being more comfortable with PEST++ after the course (defined as an increase of one level) and 15% reported being much more comfortable (an increase of two levels). However, 21% reported the same comfort level before and after while 24% reported being less or much less comfortable (a decrease or one or two levels, respectively). Without further questions, we cannot know whether these decreases reflect a humble realization that their mastery was less complete than they thought, _a priori_, or whether the material was confounding. 
+Feedback from the 65 students who participated in the course was anecdotal but informative. Figure \autoref{fig:responses} summarizes the responses by 34 respondents to four questions, comprising 52%. The majority of respondents indicated a preference for this hybrid self-guided/online instruction approach over an in-person week-long intensive class with only one respondent indicating preference for self-guided study of the course materials only. Just under 60% of the respondents reported being able to keep up with most or all of the assigned self-study notebooks, while 41% reported falling behind. Given 5 categories of comfort level working with PEST++ (1 being most comfortable, and 5 being least) before and after the class, there was a notable shift toward higher comfort level. Interestingly, when evaluating individual responses, the majority (56%) reported being more comfortable with PEST++ after the course (defined as an increase of one level) and 15% reported being much more comfortable (an increase of two levels). However, 21% reported the same comfort level before and after while 24% reported being less or much less comfortable (a decrease or one or two levels, respectively). Without further questions, we cannot know whether these decreases reflect a humble realization that their mastery was less complete than they thought, _a priori_, or whether the material was confounding. 
 
 Open-ended feedback from the participants was generally positive and also included some constructive criticism. Participants appreciated the opportunity to ask questions and several reported hearing the discussion around other peoples' questions as being valuable and clarifying aspects of the material. The main critical suggestions included incorporating more real-world examples rather than relying, as we 100% did in the notebook design, on the synthetic model. Participants also noted the twin challenges of a large amount of information coupled with trying to be accountable to keep up in the class as potentially limiting the value relative to a week-long course. We conclude from this experience that the hybrid approach has value but there may still be a better approach for future educational opportunities. 
 
-![Summary of responses to post-course survey based on 34 responses. Panel A summarizes whether respondents would prefer and intensive in-person workshop or this hybrid option. Panel B summarizes how much of the notebooks respondents were able to complete throughout the course. Panel C summarizes respondent comfort level with PEST++ before and after the course. Panel D highlights individual changes in comfort level reported due to the course.](./responses.png)
+![Summary of responses to post-course survey based on 34 responses. Panel A summarizes whether respondents would prefer and intensive in-person workshop or this hybrid option. Panel B summarizes how much of the notebooks respondents were able to complete throughout the course. Panel C summarizes respondent comfort level with PEST++ before and after the course. Panel D highlights individual changes in comfort level reported due to the course.\label{fig:responses}](./responses.png)
+
 
 # Acknowledgements
 
