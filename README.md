@@ -108,7 +108,7 @@ A jupyter notebook instance should start within the course repo flder. Using the
  
  ## Contributing
 
-We welcome community contributions to this repository. If you would like to contribute, please fork the repository and submit a pull request. If you have any questions, or would like to discuss a contribution beforehand, please open a [discussion] (https://github.com/gmdsi/GMDSI_notebooks/discussions). 
+We welcome community contributions to this repository. If you would like to contribute, please fork the repository and submit a pull request. If you have any questions, or would like to discuss a contribution beforehand, please open a [discussion](https://github.com/gmdsi/GMDSI_notebooks/discussions). 
 
 If you have a found a bug or would like to suggest a new feature or tutorial, please open an [issue](https://github.com/gmdsi/GMDSI_notebooks/issues).
 
@@ -119,4 +119,5 @@ These tutorials were originally developed with support from the U.S Geological S
 
 # Reference
 To reference this material, please use the following:
+
 Hugman, R., White, J.T., Fienen, M.N., and Hunt, R.J., 2022, Parameter Estimation, Uncertainty Analysis, and Optimization with the PEST++ Family of codes: Tutorial Jupyter Notebooks: U.S. Geological Survey data release, https://doi.org/10.5066/P901F9G0.
