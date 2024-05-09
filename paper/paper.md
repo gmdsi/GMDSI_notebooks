@@ -8,20 +8,20 @@ tags:
   - uncertainty analysis
 authors:
   - name: Rui T. Hugman
-.  orcid: 0000-0003-0891-3886
-.  affiliation: 1 
+  - orcid: 0000-0003-0891-3886
+  - affiliation: 1 
   - name: Jeremy T. White
-.  orcid: 0000-0002-4950-1469
-.  affiliation: 1 
+  - orcid: 0000-0002-4950-1469
+  - affiliation: 1 
   - name: Mike Fienen
-.  orcid: 0000-0002-7756-4651
-.  affiliation: "2" # (Multiple affiliations must be quoted)
+  - orcid: 0000-0002-7756-4651
+  - affiliation: "2" # (Multiple affiliations must be quoted)
   - name: Brioch Hemmings
-.  orcid: 0000-0001-6311-8450
-.  affiliation: "3" # (Multiple affiliations must be quoted)
+  - orcid: 0000-0001-6311-8450
+  - affiliation: "3" # (Multiple affiliations must be quoted)
   - name: Katie Markovitch
-.  orcid: 0000-0002-4455-8255
-.  affiliation: 1 
+  - orcid: 0000-0002-4455-8255
+  - affiliation: 1 
 
 affiliations:
  - name: INTERA Geosciences, Perth, Western Australia, Australia
