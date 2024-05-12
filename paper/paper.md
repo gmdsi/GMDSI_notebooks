@@ -19,7 +19,7 @@ authors:
   - name: Brioch Hemmings
     orcid: 0000-0001-6311-8450
     affiliation: "3" # (Multiple affiliations must be quoted)
-  - name: Katie Markovich
+  - name: Katherine H. Markovich
     orcid: 0000-0002-4455-8255
     affiliation: 1 
 
@@ -166,7 +166,9 @@ Part 2 is structured with a specific order for learners to follow to ensure a lo
  
 Each of these sequences comprises multiple notebooks to be executed in a specified order. They demonstrate how to execute the workflow, interpret results, and apply the concepts to real-world problems.
 
-In summary, the tutorial notebooks are organized to guide learners through a structured learning experience in the field of decision-support groundwater modelling. Part 0 provides foundational knowledge, while Parts 1 and 2 offer progressively advanced content. The authors attest that it is ideal to work through Parts 1 and 2 in their entirety, referring back to Part 0 for additional background. However, this amount of content requires a significant time commitment so, practically, many users will start with Part 2 and, hopefully, be able to apply the concepts to a problem of their own as they progress. Over time, referring back through Part 1 will provide a deeper understanding of some concepts and techniques taken for granted in the highly-parameterized, largely ensemble-based approaches of Part 2.
+In summary, the tutorial notebooks are organized to guide learners through a structured learning experience in the field of decision-support groundwater modelling. Part 0 provides foundational knowledge, while Parts 1 and 2 offer progressively advanced content. The authors attest that it is ideal to work through Parts 1 and 2 in their entirety, referring back to Part 0 for additional background. However, this amount of content requires a significant time commitment so, practically, many users will start with Part 2 and, hopefully, be able to apply the concepts to a problem of their own as they progress. Over time, referring back through Part 1 will provide a deeper understanding of some concepts and techniques taken for granted in the highly-parameterized, largely ensemble-based approaches of Part 2. Alternatively, users and educators with a specific application in mind may find it useful to curate notebooks from Part 2 into a comprehensive and demonstrative workflow. \autoref{fig:flowchart} gives an example of a curated learning flow for a common decision supoprt modeling application.
+
+![Example notebook learning flow demonstrating a comprehensive workflow for an applied, ensemble-based management optimization .\label{fig:flowchart}](../flowchart.png)
 
 Pre-requisites for Part 2 include a basic understanding of PEST/PEST++ and the PEST interface, as well as familiarity with the Freyberg model. Familiarity with Python and Jupyter Notebooks is assumed.
 
