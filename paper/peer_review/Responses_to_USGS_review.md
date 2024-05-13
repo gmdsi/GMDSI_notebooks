@@ -1,4 +1,9 @@
-# Responses to USGS-selected Peer Review by Kalle Jahn
+---
+title: "Responses to USGS-selected Peer Review by Kalle Jahn for _Self-Guided Decision Support Groundwater Modelling
+with Python_"
+format:
+ pdf
+---
 We are repeating all comments in normal type with our repsonses in _italics_.
 
 
