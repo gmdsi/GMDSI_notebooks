@@ -1,9 +1,16 @@
-# Reply to https://github.com/openjournals/jose-reviews/issues/244
+---
+title: "Responses to journal review  for _Self-Guided Decision Support Groundwater Modelling
+with Python_"
+format:
+ pdf
+---
 
 Thank you @incsanchezro for your comprehensive review. Please see below replies and updates.
 
 Kind regards,
--R
+-R  
+
+# Reply to https://github.com/openjournals/jose-reviews/issues/244  
 
 > **Comments:**
 > 1. The authors have articulated the need for this educational framework, targeting the environmental modellers and decision-makers as specific audiences that could benefit from its implementation. The framework's usage and installation instructions are detailed. 
@@ -20,7 +27,8 @@ We feel that the existing "workflow" outlined in the [README](https://github.com
 
 > 3. The repository's current documentation needs specific guidelines for community involvement in the module's collaborative development. This oversight could be rectified by establishing clear pathways for third-party contributions, issue reporting, and support-seeking, fostering a more engaged and supportive community around the framework.
 
-We have included a "Contributing" section in the README. See commit https://github.com/gmdsi/GMDSI_notebooks/commit/bf5229a4884892a2b9af1e1f018ddde87e66e1d7
+We have included a "Contributing" section in the README. See commit  
+ https://github.com/gmdsi/GMDSI_notebooks/commit/bf5229a4884892a2b9af1e1f018ddde87e66e1d7
 
 > 4. Additionally, clarifying the project's funding sources and outlining strategies for its long-term sustainability would provide further transparency and confidence in the framework's continued evolution and support.
 
@@ -73,3 +81,17 @@ We appreciate the feedback. We will endeavour to do so in the future.
 > 4. The narrative of the paper effectively conveys the story of the framework's development and the authors' expertise, enriching the content with a personal touch that underscores the project's depth. The diligent citation of all archival references, complete with DOIs for papers, datasets, and software, exemplifies a rigorous adherence to academic standards. Such meticulous attention to detail further asserts the module's integrity, credibility, and invaluable role as a teaching and learning resource.
 
 Appreciated.
+
+# Reply to https://github.com/openjournals/jose-reviews/issues/240#issuecomment-2105074567
+@kls2177
+
+> Thank you for your patience with my review.  
+We appreciate your positive comments.  
+
+> Self-Guided Decision Support Groundwater Modelling with Python is a valuable contribution and satisfies a need for concise and informed guidance on PEST and pyEMU. I agree with @incsanchezro regarding the organization of the workbook and the effort put forward by the authors to develop and improve GMDSI.  
+We appreciate the concurrence with the overall positive assessment.  
+
+> I found that the detail and theoretical background was exceptional and that the workbook followed a logical trajectory that is aligned with a typical workflow.  
+Thanks! We wanted the workflow to be logical and to be something people could use in their projects. 
+
+Overall, I believe that this work is suitable for publication and that the authors seem ready to take feedback from end-users to continuously improve their experience.
