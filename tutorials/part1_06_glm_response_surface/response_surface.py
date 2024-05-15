@@ -124,7 +124,65 @@ def plot_response_surface(parnames=['hk1','rch0'], pstfile='freyberg.pst', WORKI
         ax.set_xlabel('Hydraulic Conductivity', fontsize=12)
         ax.set_ylabel('Recharge Multiplier', fontsize=12)
         return fig, ax, resp_surf
+        
+def plot_ies_and_resp_par_forecast_results(resp_d,ies_d,pst,title=None,fig_name=None):
+    r_inp = pd.read_csv(os.path.join(resp_d,"freybergsweep_in.csv"),index_col=0)
+    r_out = pd.read_csv(os.path.join(resp_d,"freybergsweep_out.csv"),index_col=1)
+    r_out.loc[:,"likelihood"] = 1.0/r_out.phi.values**2
+    phidf = pd.read_csv(os.path.join(ies_d,"freyberg.phi.actual.csv"))
+    iiter = int(phidf.iteration.max())
+    print("using iter",iiter)
+    pe = pd.read_csv(os.path.join(ies_d,"freyberg.{0}.par.csv".format(iiter)),index_col=0)
+    oe_pt = pd.read_csv(os.path.join(ies_d,"freyberg.{0}.obs.csv".format(iiter)),index_col=0)
+    oe_pr = pd.read_csv(os.path.join(ies_d,"freyberg.0.obs.csv"),index_col=0)
+    r_inp.loc[:,"phi"] = r_out.likelihood
+    
+    fig, ax, resp_surf = plot_response_surface(figsize=(7,7),WORKING_DIR=resp_d,title=title) #maxresp=1e3,
+    pes = []
+    for i in range(iiter+1):
+        fname = os.path.join(ies_d,"freyberg.{0}.par.csv".format(i))
+        if not os.path.exists(fname):
+            break
+        pe = pd.read_csv(fname,index_col=0)    
+        pes.append(pe)
+    for real in pes[-1].index:
+        xvals  = [pe.loc[real,"hk1"] for pe in pes]
+        yvals  = [pe.loc[real,"rch0"] for pe in pes]
+        ax.plot(xvals,yvals,marker=".",c="w",lw=0.5,markersize=3)
+    xvals = pes[-1].loc[:,"hk1"].values
+    yvals = pes[-1].loc[:,"rch0"].values
+    ax.scatter(xvals,yvals,marker=".",c="b",s=15,zorder=5)
+    plt.tight_layout()
+    if fig_name is not None:
+        plt.savefig(fig_name)
+    plt.show()
 
+    fig,axes = plt.subplots(2,1,figsize=(6,6))
+    hk1 = r_inp.groupby("hk1").sum().loc[:,"phi"]
+    rch0 = r_inp.groupby("rch0").sum().loc[:,"phi"]
+    hk1_space = hk1.index[1] - hk1.index[0]
+    rch0_space = rch0.index[1] - rch0.index[0]
+    axes[0].bar(hk1.index,hk1.values,width=hk1_space,alpha=0.1,fc="0.5")
+    axes[1].bar(rch0.index,rch0.values,width=rch0_space,alpha=0.1,fc="0.5")
+    axt0 = plt.twinx(axes[0])
+    axt0.hist(pe.loc[:,"hk1"].values,density=True,alpha=0.5,fc="b")
+    axt1 = plt.twinx(axes[1])
+    axt1.hist(pe.loc[:,"rch0"].values,density=True,alpha=0.5,fc="b")
+    axes[0].set_title("hk1",loc="left")
+    axes[1].set_title("rch0",loc="left")
+    for ax in [axes[0],axes[1],axt0,axt1]:
+        ax.set_yticks([])
+    
+    for forecast in pst.pestpp_options["forecasts"].split(","):
+        fig,ax = plt.subplots(1,1,figsize=(6,3))
+        #ax.hist(r_out.loc[:,forecast].values,weights=r_out.likelihood.values,alpha=0.5,fc="0.5",density=True)
+        ax.hist(oe_pr.loc[:,forecast].values,alpha=0.5,fc="0.5",density=True)
+        ax.hist(oe_pt.loc[:,forecast].values,alpha=0.5,fc="b",density=True)
+        ax.set_yticks([])
+        ax.set_title(forecast,loc="left")
+        ylim = ax.get_ylim()
+        #fval = pst.observation_data.loc[forecast,"obsval"]
+        #ax.plot([fval,fval],ylim,"r-",lw=2)
 def add_trajectory_to_plot(fig,ax, title, working_dir='freyberg_mf6', pst_name='freyberg.pst', pars2plot=['hk1','rch0']):
     obfun = pd.read_csv(os.path.join(working_dir,pst_name.replace('.pst','.iobj')))
     pars=pd.read_csv(os.path.join(working_dir,pst_name.replace('.pst','.ipar')))
