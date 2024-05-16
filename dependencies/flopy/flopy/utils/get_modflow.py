@@ -7,6 +7,7 @@ It requires Python 3.6 or later, and has no dependencies.
 
 See https://developer.github.com/v3/repos/releases/ for GitHub Releases API.
 """
+
 import json
 import os
 import shutil
@@ -18,13 +19,15 @@ import warnings
 import zipfile
 from importlib.util import find_spec
 from pathlib import Path
+from platform import processor
 
 __all__ = ["run_main"]
 __license__ = "CC0"
 
 from typing import Dict, List, Tuple
 
-owner = "MODFLOW-USGS"
+default_owner = "MODFLOW-USGS"
+default_repo = "executables"
 # key is the repo name, value is the renamed file prefix for the download
 renamed_prefix = {
     "modflow6": "modflow6",
@@ -32,7 +35,7 @@ renamed_prefix = {
     "modflow6-nightly-build": "modflow6_nightly",
 }
 available_repos = list(renamed_prefix.keys())
-available_ostags = ["linux", "mac", "win32", "win64"]
+available_ostags = ["linux", "mac", "macarm", "win32", "win64", "win64par"]
 max_http_tries = 3
 
 # Check if this is running from flopy
@@ -64,11 +67,11 @@ def get_ostag() -> str:
 
 
 def get_suffixes(ostag) -> Tuple[str, str]:
-    if ostag in ["win32", "win64"]:
+    if ostag in ["win32", "win64", "win64par"]:
         return ".exe", ".dll"
     elif ostag == "linux":
         return "", ".so"
-    elif ostag == "mac":
+    elif "mac" in ostag:
         return "", ".dylib"
     else:
         raise KeyError(
@@ -93,8 +96,12 @@ def get_request(url, params={}):
     return urllib.request.Request(url, headers=headers)
 
 
-def get_releases(repo, quiet=False, per_page=None) -> List[str]:
+def get_releases(
+    owner=None, repo=None, quiet=False, per_page=None
+) -> List[str]:
     """Get list of available releases."""
+    owner = default_owner if owner is None else owner
+    repo = default_repo if repo is None else repo
     req_url = f"https://api.github.com/repos/{owner}/{repo}/releases"
 
     params = {}
@@ -133,8 +140,10 @@ def get_releases(repo, quiet=False, per_page=None) -> List[str]:
     return avail_releases
 
 
-def get_release(repo, tag="latest", quiet=False) -> dict:
+def get_release(owner=None, repo=None, tag="latest", quiet=False) -> dict:
     """Get info about a particular release."""
+    owner = default_owner if owner is None else owner
+    repo = default_repo if repo is None else repo
     api_url = f"https://api.github.com/repos/{owner}/{repo}"
     req_url = (
         f"{api_url}/releases/latest"
@@ -166,7 +175,7 @@ def get_release(repo, tag="latest", quiet=False) -> dict:
                 ) from err
             elif err.code == 404:
                 if releases is None:
-                    releases = get_releases(repo, quiet)
+                    releases = get_releases(owner, repo, quiet)
                 if tag not in releases:
                     raise ValueError(
                         f"Release {tag} not found (choose from {', '.join(releases)})"
@@ -287,7 +296,8 @@ def select_bindir(bindir, previous=None, quiet=False, is_cli=False) -> Path:
 
 def run_main(
     bindir,
-    repo="executables",
+    owner=default_owner,
+    repo=default_repo,
     release_id="latest",
     ostag=None,
     subset=None,
@@ -304,6 +314,8 @@ def run_main(
         Writable path to extract executables. Auto-select options start with a
         colon character. See error message or other documentation for further
         information on auto-select options.
+    owner : str, default "MODFLOW-USGS"
+        Name of GitHub repository owner (user or organization).
     repo : str, default "executables"
         Name of GitHub repository. Choose one of "executables" (default),
         "modflow6", or "modflow6-nightly-build".
@@ -393,22 +405,30 @@ def run_main(
         )
 
     # get the selected release
-    release = get_release(repo, release_id, quiet)
+    release = get_release(owner, repo, release_id, quiet)
     assets = release.get("assets", [])
-
+    asset_names = [a["name"] for a in assets]
     for asset in assets:
-        if ostag in asset["name"]:
+        asset_name = asset["name"]
+        if ostag in asset_name:
+            # temporary hack for nightly gfortran build for ARM macs
+            # todo: clean up if/when all repos have an ARM mac build
+            if (
+                repo == "modflow6-nightly-build"
+                and "macarm.zip" in asset_names
+                and processor() == "arm"
+                and ostag == "mac.zip"
+            ):
+                continue
             break
     else:
         raise ValueError(
             f"could not find ostag {ostag!r} from release {release['tag_name']!r}; "
             f"see available assets here:\n{release['html_url']}"
         )
-    asset_name = asset["name"]
     download_url = asset["browser_download_url"]
     if repo == "modflow6":
         asset_pth = Path(asset_name)
-        asset_stem = asset_pth.stem
         asset_suffix = asset_pth.suffix
         dst_fname = "-".join([repo, release["tag_name"], ostag]) + asset_suffix
     else:
@@ -588,7 +608,7 @@ def run_main(
                     break
                 shutil.rmtree(str(bindir_path))
 
-    if ostag in ["linux", "mac"]:
+    if ostag in ["linux", "mac", "macarm"]:
         # similar to "chmod +x fname" for each executable
         for fname in chmod:
             pth = bindir / fname
@@ -684,10 +704,16 @@ Examples:
         )
     parser.add_argument("bindir", help=bindir_help)
     parser.add_argument(
+        "--owner",
+        type=str,
+        default=default_owner,
+        help=f"GitHub repository owner; default is '{default_owner}'.",
+    )
+    parser.add_argument(
         "--repo",
         choices=available_repos,
-        default="executables",
-        help="Name of GitHub repository; default is 'executables'.",
+        default=default_repo,
+        help=f"Name of GitHub repository; default is '{default_repo}'.",
     )
     parser.add_argument(
         "--release-id",

@@ -5,7 +5,7 @@ Mfusgcln module.
 Contains the MfUsgCln class. Note that the user can
 access the MfUsgCln class as `flopy.mfusg.MfUsgCln`.
 
-Compatible with USG-Transport Version 1.7.0. which can be downloade from
+Compatible with USG-Transport Version 1.7.0. which can be download from
 https://www.gsi-net.com/en/software/free-software/modflow-usg.html
 
 Additional information for this MODFLOW package can be found at the `Online
@@ -19,6 +19,7 @@ for simulating groundwater flow and tightly coupled processes using a control
 volume finite-difference formulation: U.S. Geological Survey Techniques and
 Methods, book 6, chap. A45, 66 p.
 """
+
 import numpy as np
 
 from ..pakbase import Package
@@ -625,13 +626,13 @@ class MfUsgCln(Package):
         if model.verbose:
             print("   Reading ibound...")
         ibound = Util2d.load(
-            f, model, (nclnnds,), np.int32, "ibound", ext_unit_dict
+            f, model, (nclnnds, 1), np.int32, "ibound", ext_unit_dict
         )
 
         if model.verbose:
             print("   Reading strt...")
         strt = Util2d.load(
-            f, model, (nclnnds,), np.float32, "strt", ext_unit_dict
+            f, model, (nclnnds, 1), np.float32, "strt", ext_unit_dict
         )
 
         if hasattr(f, "read"):
@@ -788,7 +789,7 @@ class MfUsgCln(Package):
             if model.verbose:
                 print("   Reading nndcln...")
             nndcln = Util2d.load(
-                f_obj, model, (ncln,), np.int32, "nndcln", ext_unit_dict
+                f_obj, model, (ncln, 1), np.int32, "nndcln", ext_unit_dict
             )
             nclnnds = nndcln.array.sum()
             if iclnnds > 0:
@@ -814,13 +815,13 @@ class MfUsgCln(Package):
                 print("   Reading iac_cln...")
             nclnnds = abs(iclnnds)
             iac_cln = Util2d.load(
-                f_obj, model, (nclnnds,), np.int32, "iac_cln", ext_unit_dict
+                f_obj, model, (nclnnds, 1), np.int32, "iac_cln", ext_unit_dict
             )
 
             if model.verbose:
                 print("   Reading ja_cln...")
             ja_cln = Util2d.load(
-                f_obj, model, (nja_cln,), np.int32, "ja_cln", ext_unit_dict
+                f_obj, model, (nja_cln, 1), np.int32, "ja_cln", ext_unit_dict
             )
         else:
             raise Exception("mfcln: negative number of CLN segments")

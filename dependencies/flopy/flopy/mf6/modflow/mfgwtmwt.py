@@ -1,6 +1,6 @@
 # DO NOT MODIFY THIS FILE DIRECTLY.  THIS FILE MUST BE CREATED BY
 # mf6/utils/createpackages.py
-# FILE created on June 29, 2023 14:20:38 UTC
+# FILE created on February 07, 2024 20:16:08 UTC
 from .. import mfpackage
 from ..data.mfdatautil import ListTemplateGenerator
 
@@ -88,10 +88,10 @@ class ModflowGwtmwt(mfpackage.MFPackage):
           containing data for the obs package with variable names as keys and
           package data as values. Data just for the observations variable is
           also acceptable. See obs package documentation for more information.
-    packagedata : [mawno, strt, aux, boundname]
-        * mawno (integer) integer value that defines the well number associated
-          with the specified PACKAGEDATA data on the line. MAWNO must be
-          greater than zero and less than or equal to NMAWWELLS. Well
+    packagedata : [ifno, strt, aux, boundname]
+        * ifno (integer) integer value that defines the feature (well) number
+          associated with the specified PACKAGEDATA data on the line. IFNO must
+          be greater than zero and less than or equal to NMAWWELLS. Well
           information must be specified for every well or the program will
           terminate with an error. The program will also terminate with an
           error if information for a well is specified more than once. This
@@ -113,23 +113,23 @@ class ModflowGwtmwt(mfpackage.MFPackage):
           character variable that can contain as many as 40 characters. If
           BOUNDNAME contains spaces in it, then the entire name must be
           enclosed within single quotes.
-    mwtperioddata : [mawno, mwtsetting]
-        * mawno (integer) integer value that defines the well number associated
-          with the specified PERIOD data on the line. MAWNO must be greater
-          than zero and less than or equal to NMAWWELLS. This argument is an
-          index variable, which means that it should be treated as zero-based
-          when working with FloPy and Python. Flopy will automatically subtract
-          one when loading index variables and add one when writing index
-          variables.
+    mwtperioddata : [ifno, mwtsetting]
+        * ifno (integer) integer value that defines the feature (well) number
+          associated with the specified PERIOD data on the line. IFNO must be
+          greater than zero and less than or equal to NMAWWELLS. This argument
+          is an index variable, which means that it should be treated as zero-
+          based when working with FloPy and Python. Flopy will automatically
+          subtract one when loading index variables and add one when writing
+          index variables.
         * mwtsetting (keystring) line of information that is parsed into a
           keyword and values. Keyword values that can be used to start the
-          MWTSETTING string include: STATUS, CONCENTRATION, RAINFALL,
-          EVAPORATION, RUNOFF, and AUXILIARY. These settings are used to assign
-          the concentration associated with the corresponding flow terms.
-          Concentrations cannot be specified for all flow terms. For example,
-          the Multi-Aquifer Well Package supports a "WITHDRAWAL" flow term. If
-          this withdrawal term is active, then water will be withdrawn from the
-          well at the calculated concentration of the well.
+          MWTSETTING string include: STATUS, CONCENTRATION, RATE, and
+          AUXILIARY. These settings are used to assign the concentration
+          associated with the corresponding flow terms. Concentrations cannot
+          be specified for all flow terms. For example, the Multi-Aquifer Well
+          Package supports a "WITHDRAWAL" flow term. If this withdrawal term is
+          active, then water will be withdrawn from the well at the calculated
+          concentration of the well.
             status : [string]
                 * status (string) keyword option to define well status. STATUS
                   can be ACTIVE, INACTIVE, or CONSTANT. By default, STATUS is
@@ -444,13 +444,13 @@ class ModflowGwtmwt(mfpackage.MFPackage):
         [
             "block packagedata",
             "name packagedata",
-            "type recarray mawno strt aux boundname",
+            "type recarray ifno strt aux boundname",
             "shape (maxbound)",
             "reader urword",
         ],
         [
             "block packagedata",
-            "name mawno",
+            "name ifno",
             "type integer",
             "shape",
             "tagged false",
@@ -503,13 +503,13 @@ class ModflowGwtmwt(mfpackage.MFPackage):
         [
             "block period",
             "name mwtperioddata",
-            "type recarray mawno mwtsetting",
+            "type recarray ifno mwtsetting",
             "shape",
             "reader urword",
         ],
         [
             "block period",
-            "name mawno",
+            "name ifno",
             "type integer",
             "shape",
             "tagged false",

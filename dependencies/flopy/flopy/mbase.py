@@ -4,6 +4,7 @@ mbase module
   all of the other models inherit from.
 
 """
+
 import abc
 import copy
 import os
@@ -26,12 +27,14 @@ from .discretization.grid import Grid
 from .utils import flopy_io
 from .version import __version__
 
+on_windows = sys.platform.startswith("win")
+
 # Prepend flopy appdir bin directory to PATH to work with "get-modflow :flopy"
-if sys.platform.startswith("win"):
+if on_windows:
     flopy_bin = os.path.expandvars(r"%LOCALAPPDATA%\flopy\bin")
 else:
     flopy_bin = os.path.join(os.path.expanduser("~"), ".local/share/flopy/bin")
-os.environ["PATH"] = flopy_bin + os.path.pathsep + os.environ.get("PATH", "")
+os.environ["PATH"] = os.environ.get("PATH", "") + os.path.pathsep + flopy_bin
 
 ## Global variables
 # Multiplier for individual array elements in integer and real arrays read by
@@ -41,44 +44,67 @@ iconst = 1
 iprn = -1
 
 
-def resolve_exe(exe_name: Union[str, os.PathLike]) -> str:
+def resolve_exe(
+    exe_name: Union[str, os.PathLike], forgive: bool = False
+) -> str:
     """
-    Resolves the absolute path of the executable.
+    Resolves the absolute path of the executable, raising FileNotFoundError if the executable
+    cannot be found (set forgive to True to return None and warn instead of raising an error).
 
     Parameters
     ----------
     exe_name : str or PathLike
         The executable's name or path. If only the name is provided,
         the executable must be on the system path.
+    forgive : bool
+        If True and executable cannot be found, return None and warn
+        rather than raising a FileNotFoundError. Defaults to False.
 
     Returns
     -------
         str: absolute path to the executable
     """
 
-    exe_name = str(exe_name)
-    exe = which(exe_name)
-    if exe is not None:
-        # in case which() returned a relative path, resolve it
-        exe = which(str(Path(exe).resolve()))
-    else:
-        if exe_name.lower().endswith(".exe"):
-            # try removing .exe suffix
-            exe = which(exe_name[:-4])
+    def _resolve(exe_name):
+        exe = which(exe_name)
         if exe is not None:
-            # in case which() returned a relative path, resolve it
+            # if which() returned a relative path, resolve it
             exe = which(str(Path(exe).resolve()))
         else:
-            # try tilde-expanded abspath
-            exe = which(Path(exe_name).expanduser().absolute())
-        if exe is None and exe_name.lower().endswith(".exe"):
-            # try tilde-expanded abspath without .exe suffix
-            exe = which(Path(exe_name[:-4]).expanduser().absolute())
-    if exe is None:
+            if exe_name.lower().endswith(".exe"):
+                # try removing .exe suffix
+                exe = which(exe_name[:-4])
+            if exe is not None:
+                # in case which() returned a relative path, resolve it
+                exe = which(str(Path(exe).resolve()))
+            else:
+                # try tilde-expanded abspath
+                exe = which(Path(exe_name).expanduser().absolute())
+            if exe is None and exe_name.lower().endswith(".exe"):
+                # try tilde-expanded abspath without .exe suffix
+                exe = which(Path(exe_name[:-4]).expanduser().absolute())
+        return exe
+
+    name = str(exe_name)
+    exe_path = _resolve(name)
+    if exe_path is None and on_windows and Path(name).suffix == "":
+        # try adding .exe suffix on windows (for portability from other OS)
+        exe_path = _resolve(f"{name}.exe")
+
+    # raise if we are unforgiving, otherwise return None
+    if exe_path is None:
+        if forgive:
+            warn(
+                f"The program {exe_name} does not exist or is not executable.",
+                category=UserWarning,
+            )
+            return None
+
         raise FileNotFoundError(
             f"The program {exe_name} does not exist or is not executable."
         )
-    return exe
+
+    return exe_path
 
 
 # external exceptions for users
@@ -376,10 +402,11 @@ class BaseModel(ModelInterface):
         self._namefile = self.__name + "." + self.namefile_ext
         self._packagelist = []
         self.heading = ""
-        try:
-            self.exe_name = resolve_exe(exe_name)
-        except:
-            self.exe_name = "mf2005"
+        self.exe_name = (
+            "mf2005"
+            if exe_name is None
+            else resolve_exe(exe_name, forgive=True)
+        )
         self._verbose = verbose
         self.external_path = None
         self.external_extension = "ref"
@@ -391,7 +418,8 @@ class BaseModel(ModelInterface):
         except:
             warn(
                 f"\n{model_ws} not valid, "
-                f"workspace-folder was changed to {os.getcwd()}\n"
+                f"workspace-folder was changed to {os.getcwd()}\n",
+                category=UserWarning,
             )
             model_ws = os.getcwd()
         self._model_ws = str(model_ws)
@@ -409,6 +437,12 @@ class BaseModel(ModelInterface):
         self._rotation = kwargs.pop("rotation", 0.0)
         self._crs = kwargs.pop("crs", None)
         self._start_datetime = kwargs.pop("start_datetime", "1-1-1970")
+
+        if kwargs:
+            warn(
+                f"unhandled keywords: {kwargs}",
+                category=UserWarning,
+            )
 
         # build model discretization objects
         self._modelgrid = Grid(
@@ -622,20 +656,20 @@ class BaseModel(ModelInterface):
                         pn = p.name[idx]
                     except:
                         pn = p.name
-                    if self.verbose:
-                        print(
-                            f"\nWARNING:\n    unit {u} of package {pn} already in use."
-                        )
+                    warn(
+                        f"Unit {u} of package {pn} already in use.",
+                        category=UserWarning,
+                    )
             self.package_units.append(u)
         for i, pp in enumerate(self.packagelist):
             if pp.allowDuplicates:
                 continue
             elif isinstance(p, type(pp)):
-                if self.verbose:
-                    print(
-                        "\nWARNING:\n    Two packages of the same type, "
-                        f"Replacing existing '{p.name[0]}' package."
-                    )
+                warn(
+                    "Two packages of the same type, "
+                    f"Replacing existing '{p.name[0]}' package.",
+                    category=UserWarning,
+                )
                 self.packagelist[i] = p
                 return
         if self.verbose:
@@ -677,19 +711,29 @@ class BaseModel(ModelInterface):
         Parameters
         ----------
         item : str
-            3 character package name (case insensitive) or "sr" to access
-            the SpatialReference instance of the ModflowDis object
+            This can be one of:
+
+                * A short package name (case insensitive), e.g., "dis" or "bas6"
+                  returns package object
+                * "tr" to access the time discretization object, if set
+                * "start_datetime" to get str describing model start date/time
+                * Some packages use "nper" or "modelgrid" for corner cases
 
 
         Returns
         -------
-        sr : SpatialReference instance
-        pp : Package object
-            Package object of type :class:`flopy.pakbase.Package`
+        object, str, int or None
+            Package object of type :class:`flopy.pakbase.Package`,
+            :class:`flopy.utils.reference.TemporalReference`, str, int or None.
+
+        Raises
+        ------
+        AttributeError
+            When package or object name cannot be resolved.
 
         Note
         ----
-        if self.dis is not None, then the spatial reference instance is updated
+        if self.dis is not None, then the modelgrid instance is updated
         using self.dis.delr, self.dis.delc, and self.dis.lenuni before being
         returned
         """
@@ -703,6 +747,7 @@ class BaseModel(ModelInterface):
                 return None
 
         if item == "nper":
+            # most subclasses have a nper property, but ModflowAg needs this
             if self.dis is not None:
                 return self.dis.nper
             else:
@@ -726,6 +771,7 @@ class BaseModel(ModelInterface):
         if pckg is not None or item in self.mfnam_packages:
             return pckg
         if item == "modelgrid":
+            # most subclasses have a modelgrid property, but not MfUsg
             return
         raise AttributeError(item)
 
@@ -1369,17 +1415,6 @@ class BaseModel(ModelInterface):
             self._set_name(value)
         elif key == "model_ws":
             self.change_model_ws(value)
-        elif key == "sr" and value.__class__.__name__ == "SpatialReference":
-            warnings.warn(
-                "SpatialReference has been deprecated.",
-                category=DeprecationWarning,
-            )
-            if self.dis is not None:
-                self.dis.sr = value
-            else:
-                raise Exception(
-                    "cannot set SpatialReference - ModflowDis not found"
-                )
         elif key == "tr":
             assert isinstance(
                 value, discretization.reference.TemporalReference
@@ -1472,7 +1507,7 @@ class BaseModel(ModelInterface):
         if self.verbose:
             print("\nWriting packages:")
 
-        if SelPackList == False:
+        if SelPackList is False:
             for p in self.packagelist:
                 if self.verbose:
                     print("   Package: ", p.name[0])
@@ -1709,6 +1744,7 @@ def run_model(
     normal_msg="normal termination",
     use_async=False,
     cargs=None,
+    custom_print=None,
 ) -> Tuple[bool, List[str]]:
     """
     Run the model using subprocess.Popen, optionally collecting stdout and printing
@@ -1747,12 +1783,22 @@ def run_model(
     cargs : str or list, optional, default None
         Additional command line arguments to pass to the executable.
         (Default is None)
+    custom_print: callable
+        Optional callable for printing. It will replace the builtin print
+        function. This is useful for a shorter print output or integration into
+        other systems such as GUIs.
+        default is None, i.e. use the builtin print
     Returns
     -------
     success : boolean
     buff : list of lines of stdout (empty if report is False)
 
     """
+    if custom_print is not None:
+        print = custom_print
+    else:
+        print = __builtins__["print"]
+
     success = False
     buff = []
 
@@ -1764,7 +1810,7 @@ def run_model(
 
     # make sure executable exists
     if exe_name is None:
-        raise ValueError(f"An executable name or path must be provided")
+        raise ValueError("An executable name or path must be provided")
     exe_path = resolve_exe(exe_name)
     if not silent:
         print(

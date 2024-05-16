@@ -1,6 +1,6 @@
 # DO NOT MODIFY THIS FILE DIRECTLY.  THIS FILE MUST BE CREATED BY
 # mf6/utils/createpackages.py
-# FILE created on June 29, 2023 14:20:38 UTC
+# FILE created on February 07, 2024 20:16:08 UTC
 from .. import mfpackage
 from ..data.mfdatautil import ListTemplateGenerator
 
@@ -88,10 +88,10 @@ class ModflowGwtlkt(mfpackage.MFPackage):
           containing data for the obs package with variable names as keys and
           package data as values. Data just for the observations variable is
           also acceptable. See obs package documentation for more information.
-    packagedata : [lakeno, strt, aux, boundname]
-        * lakeno (integer) integer value that defines the lake number
-          associated with the specified PACKAGEDATA data on the line. LAKENO
-          must be greater than zero and less than or equal to NLAKES. Lake
+    packagedata : [ifno, strt, aux, boundname]
+        * ifno (integer) integer value that defines the feature (lake) number
+          associated with the specified PACKAGEDATA data on the line. IFNO must
+          be greater than zero and less than or equal to NLAKES. Lake
           information must be specified for every lake or the program will
           terminate with an error. The program will also terminate with an
           error if information for a lake is specified more than once. This
@@ -113,9 +113,9 @@ class ModflowGwtlkt(mfpackage.MFPackage):
           character variable that can contain as many as 40 characters. If
           BOUNDNAME contains spaces in it, then the entire name must be
           enclosed within single quotes.
-    lakeperioddata : [lakeno, laksetting]
-        * lakeno (integer) integer value that defines the lake number
-          associated with the specified PERIOD data on the line. LAKENO must be
+    lakeperioddata : [ifno, laksetting]
+        * ifno (integer) integer value that defines the feature (lake) number
+          associated with the specified PERIOD data on the line. IFNO must be
           greater than zero and less than or equal to NLAKES. This argument is
           an index variable, which means that it should be treated as zero-
           based when working with FloPy and Python. Flopy will automatically
@@ -124,12 +124,12 @@ class ModflowGwtlkt(mfpackage.MFPackage):
         * laksetting (keystring) line of information that is parsed into a
           keyword and values. Keyword values that can be used to start the
           LAKSETTING string include: STATUS, CONCENTRATION, RAINFALL,
-          EVAPORATION, RUNOFF, and AUXILIARY. These settings are used to assign
-          the concentration of associated with the corresponding flow terms.
-          Concentrations cannot be specified for all flow terms. For example,
-          the Lake Package supports a "WITHDRAWAL" flow term. If this
-          withdrawal term is active, then water will be withdrawn from the lake
-          at the calculated concentration of the lake.
+          EVAPORATION, RUNOFF, EXT-INFLOW, and AUXILIARY. These settings are
+          used to assign the concentration of associated with the corresponding
+          flow terms. Concentrations cannot be specified for all flow terms.
+          For example, the Lake Package supports a "WITHDRAWAL" flow term. If
+          this withdrawal term is active, then water will be withdrawn from the
+          lake at the calculated concentration of the lake.
             status : [string]
                 * status (string) keyword option to define lake status. STATUS
                   can be ACTIVE, INACTIVE, or CONSTANT. By default, STATUS is
@@ -469,13 +469,13 @@ class ModflowGwtlkt(mfpackage.MFPackage):
         [
             "block packagedata",
             "name packagedata",
-            "type recarray lakeno strt aux boundname",
+            "type recarray ifno strt aux boundname",
             "shape (maxbound)",
             "reader urword",
         ],
         [
             "block packagedata",
-            "name lakeno",
+            "name ifno",
             "type integer",
             "shape",
             "tagged false",
@@ -528,13 +528,13 @@ class ModflowGwtlkt(mfpackage.MFPackage):
         [
             "block period",
             "name lakeperioddata",
-            "type recarray lakeno laksetting",
+            "type recarray ifno laksetting",
             "shape",
             "reader urword",
         ],
         [
             "block period",
-            "name lakeno",
+            "name ifno",
             "type integer",
             "shape",
             "tagged false",

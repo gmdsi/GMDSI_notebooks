@@ -1,3 +1,4 @@
-# flopy version file automatically created using update_version.py on July 13, 2023 18:32:27
+# flopy version file automatically created using
+# update_version.py on February 08, 2024 08:23:36
 
-__version__ = "3.5.0.dev0"
+__version__ = "3.7.0.dev0"

@@ -360,7 +360,7 @@ class UnstructuredGrid(Grid):
     @property
     def xyzvertices(self):
         """
-        Method to get model grid verticies
+        Method to get model grid vertices
 
         Returns:
             list of dimension ncpl by nvertices
@@ -442,7 +442,7 @@ class UnstructuredGrid(Grid):
 
     def cross_section_adjust_indicies(self, k, cbcnt):
         """
-        Method to get adjusted indicies by layer and confining bed
+        Method to get adjusted indices by layer and confining bed
         for PlotCrossSection plotting
 
         Parameters
@@ -463,8 +463,8 @@ class UnstructuredGrid(Grid):
         self, plotarray, xcenters, head, elev, projpts
     ):
         """
-        Method to set countour array centers for rare instances where
-        matplotlib contouring is prefered over trimesh plotting
+        Method to set contour array centers for rare instances where
+        matplotlib contouring is preferred over trimesh plotting
 
         Parameters
         ----------
@@ -552,6 +552,52 @@ class UnstructuredGrid(Grid):
                 ]
 
         return copy.copy(self._polygons)
+
+    @property
+    def geo_dataframe(self):
+        """
+        Returns a geopandas GeoDataFrame of the model grid
+
+        Returns
+        -------
+            GeoDataFrame
+        """
+        polys = [[self.get_cell_vertices(nn)] for nn in range(self.nnodes)]
+        gdf = super().geo_dataframe(polys)
+        return gdf
+
+    def convert_grid(self, factor):
+        """
+        Method to scale the model grid based on user supplied scale factors
+
+        Parameters
+        ----------
+        factor
+
+        Returns
+        -------
+            Grid object
+        """
+        if self.is_complete:
+            return UnstructuredGrid(
+                vertices=[
+                    [i[0], i[1] * factor, i[2] * factor]
+                    for i in self._vertices
+                ],
+                iverts=self._iverts,
+                xcenters=self._xc * factor,
+                ycenters=self._yc * factor,
+                top=self.top * factor,
+                botm=self.botm * factor,
+                idomain=self.idomain,
+                xoff=self.xoffset * factor,
+                yoff=self.yoffset * factor,
+                angrot=self.angrot,
+            )
+        else:
+            raise AssertionError(
+                "Grid is not complete and cannot be converted"
+            )
 
     def intersect(self, x, y, z=None, local=False, forgive=False):
         """
@@ -973,13 +1019,17 @@ class UnstructuredGrid(Grid):
         with open(file_path) as file:
 
             def split_line():
-                return file.readline().strip().split()
+                return [
+                    head.upper() for head in file.readline().strip().split()
+                ]
 
             header = split_line()
+            while header[0][0] == "#":
+                header = split_line()
             if not (len(header) == 1 and header[0] == "UNSTRUCTURED") or (
                 len(header) == 2 and header == ["UNSTRUCTURED", "GWF"]
             ):
-                raise ValueError(f"Invalid GSF file, no header")
+                raise ValueError("Invalid GSF file, no header")
 
             nnodes = int(split_line()[0])
             verts_declared = int(split_line()[0])

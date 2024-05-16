@@ -7,6 +7,7 @@ MODFLOW Guide
 <https://water.usgs.gov/ogw/modflow/MODFLOW-2005-Guide/dis.html>`_.
 
 """
+
 import warnings
 
 import numpy as np
@@ -611,9 +612,7 @@ class ModflowDis(Package):
         None
 
         """
-        if (
-            check
-        ):  # allows turning off package checks when writing files at model level
+        if check:  # allows turning off package checks when writing files at model level
             self.check(
                 f=f"{self.name[0]}.chk",
                 verbose=self.parent.verbose,
@@ -666,7 +665,7 @@ class ModflowDis(Package):
         ----------
         f : str or file handle
             String defining file name or file handle for summary file
-            of check method output. If a sting is passed a file handle
+            of check method output. If a string is passed a file handle
             is created. If f is None, check method does not write
             results to a summary file. (default is None)
         verbose : bool
@@ -773,62 +772,11 @@ class ModflowDis(Package):
             f = open(filename, "r")
 
         # dataset 0 -- header
-        header = ""
         while True:
             line = f.readline()
             if line[0] != "#":
                 break
-            header += line.strip()
 
-        header = header.replace("#", "")
-        xul, yul = None, None
-        rotation = None
-        proj4_str = None
-        start_datetime = "1/1/1970"
-        dep = False
-        for item in header.split(","):
-            if "xul" in item.lower():
-                try:
-                    xul = float(item.split(":")[1])
-                except:
-                    if model.verbose:
-                        print(f"   could not parse xul in {filename}")
-                dep = True
-            elif "yul" in item.lower():
-                try:
-                    yul = float(item.split(":")[1])
-                except:
-                    if model.verbose:
-                        print(f"   could not parse yul in {filename}")
-                dep = True
-            elif "rotation" in item.lower():
-                try:
-                    rotation = float(item.split(":")[1])
-                except:
-                    if model.verbose:
-                        print(f"   could not parse rotation in {filename}")
-                dep = True
-            elif "proj4_str" in item.lower():
-                try:
-                    proj4_str = ":".join(item.split(":")[1:]).strip()
-                except:
-                    if model.verbose:
-                        print(f"   could not parse proj4_str in {filename}")
-                dep = True
-            elif "start" in item.lower():
-                try:
-                    start_datetime = item.split(":")[1].strip()
-                except:
-                    if model.verbose:
-                        print(f"   could not parse start in {filename}")
-                dep = True
-        if dep:
-            warnings.warn(
-                "SpatialReference information found in DIS header,"
-                "this information is being ignored.  "
-                "SpatialReference info is now stored in the namfile"
-                "header"
-            )
         # dataset 1
         nlay, nrow, ncol, nper, itmuni, lenuni = line.strip().split()[0:6]
         nlay = int(nlay)
@@ -945,11 +893,6 @@ class ModflowDis(Package):
             steady=steady,
             itmuni=itmuni,
             lenuni=lenuni,
-            xul=xul,
-            yul=yul,
-            rotation=rotation,
-            crs=proj4_str,
-            start_datetime=start_datetime,
             unitnumber=unitnumber,
             filenames=filenames,
         )

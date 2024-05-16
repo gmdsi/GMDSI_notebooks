@@ -3,6 +3,7 @@ mfpks module.  Contains the ModflowPks class. Note that the user can access
 the ModflowPks class as `flopy.modflow.ModflowPks`.
 
 """
+
 from ..pakbase import Package
 
 
@@ -182,7 +183,7 @@ class ModflowPks(Package):
             f.write(f"DROPTOL {self.droptol}\n")
         f.write(f"HCLOSEPKS {self.hclose}\n")
         f.write(f"RCLOSEPKS {self.rclose}\n")
-        if self.l2norm != None:
+        if self.l2norm is not None:
             if self.l2norm.lower() == "l2norm" or self.l2norm == "1":
                 f.write("L2NORM\n")
             elif self.l2norm.lower() == "rl2norm" or self.l2norm == "2":

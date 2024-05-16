@@ -89,6 +89,18 @@ class Trie:
     def pattern(self):
         return self._pattern(self.dump())
 
+
+def _try_pdcol_numeric(x, first=True, **kwargs):
+    try:
+        x = pd.to_numeric(x, errors="raise", **kwargs)
+    except ValueError as e:
+        if first:
+            x = x.apply(_try_pdcol_numeric, first=False, **kwargs)
+        else:
+            pass
+    return x
+
+
 def autocorrelated_draw(pst,struct_dict,time_distance_col="distance",num_reals=100,verbose=True,
                         enforce_bounds=False, draw_ineq=False):
     """construct an autocorrelated observation noise ensemble from covariance matrices
@@ -1112,7 +1124,7 @@ def first_order_pearson_tikhonov(pst, cov, reset=True, abs_drop_tol=1.0e-3):
         pst.control_data.pestmode = "regularization"
 
 
-def simple_tpl_from_pars(parnames, tplfilename="model.input.tpl"):
+def simple_tpl_from_pars(parnames, tplfilename="model.input.tpl", out_dir="."):
     """Make a simple template file from a list of parameter names.
 
     Args:
@@ -1120,17 +1132,21 @@ def simple_tpl_from_pars(parnames, tplfilename="model.input.tpl"):
             new template file
         tplfilename (`str`): Name of the template file to create.  Default
             is "model.input.tpl"
+        out_dir (`str`): Directory where the template file should be saved.
+            Default is the current working directory (".")
 
     Note:
         Writes a file `tplfilename` with each parameter name in `parnames` on a line
 
     """
-    with open(tplfilename, "w") as ofp:
+    tpl_path = os.path.join(out_dir, tplfilename)
+
+    with open(tpl_path, "w") as ofp:
         ofp.write("ptf ~\n")
         [ofp.write("~{0:^12}~\n".format(cname)) for cname in parnames]
 
 
-def simple_ins_from_obs(obsnames, insfilename="model.output.ins"):
+def simple_ins_from_obs(obsnames, insfilename="model.output.ins", out_dir="."):
     """write a simple instruction file that reads the values named
      in obsnames in order, one per line from a model output file
 
@@ -1139,20 +1155,23 @@ def simple_ins_from_obs(obsnames, insfilename="model.output.ins"):
             new instruction file
         insfilename (`str`): the name of the instruction file to
             create. Default is "model.output.ins"
+        out_dir (`str`): Directory where the instruction file should be saved.
+            Default is the current working directory (".")
 
     Note:
         writes a file `insfilename` with each observation read off
         of a single line
 
-
     """
-    with open(insfilename, "w") as ofp:
+    ins_path = os.path.join(out_dir, insfilename)
+
+    with open(ins_path, "w") as ofp:
         ofp.write("pif ~\n")
         [ofp.write("l1 !{0}!\n".format(cob)) for cob in obsnames]
 
 
 def pst_from_parnames_obsnames(
-    parnames, obsnames, tplfilename="model.input.tpl", insfilename="model.output.ins"
+    parnames, obsnames, tplfilename="model.input.tpl", insfilename="model.output.ins", out_dir="."
 ):
     """Creates a Pst object from a list of parameter names and a list of observation names.
 
@@ -1161,6 +1180,8 @@ def pst_from_parnames_obsnames(
         obsnames (`str`): list of observation names
         tplfilename (`str`): template filename. Default is  "model.input.tpl"
         insfilename (`str`): instruction filename. Default is "model.output.ins"
+        out_dir (str): Directory where template and instruction files should be saved.
+            Default is the current working directory (".")
 
     Returns:
         `pyemu.Pst`: the generic control file
@@ -1173,14 +1194,17 @@ def pst_from_parnames_obsnames(
 
 
     """
-    simple_tpl_from_pars(parnames, tplfilename)
-    simple_ins_from_obs(obsnames, insfilename)
+    tpl_path = os.path.join(out_dir, tplfilename)
+    ins_path = os.path.join(out_dir, insfilename)
+
+    simple_tpl_from_pars(parnames, tplfilename, out_dir)
+    simple_ins_from_obs(obsnames, insfilename, out_dir)
 
     modelinputfilename = tplfilename.replace(".tpl", "")
     modeloutputfilename = insfilename.replace(".ins", "")
 
     return pyemu.Pst.from_io_files(
-        tplfilename, modelinputfilename, insfilename, modeloutputfilename
+        tpl_path, modelinputfilename, ins_path, modeloutputfilename
     )
 
 
@@ -1262,6 +1286,7 @@ def read_pestpp_runstorage(filename, irun=0, with_metadata=False):
         f.seek(run_start + (irun * run_size))
         r_status = np.fromfile(f, dtype=np.int8, count=1)
         info_txt = struct.unpack("1001s", f.read(1001))[0].strip().lower().decode()
+        info_txt = info_txt.replace("\x00","")
         par_vals = np.fromfile(f, dtype=np.float64, count=len(par_names) + 1)[1:]
         obs_vals = np.fromfile(f, dtype=np.float64, count=len(obs_names) + 1)[:-1]
         par_df = pd.DataFrame({"parnme": par_names, "parval1": par_vals})
@@ -1621,13 +1646,13 @@ def _process_array_file(model_file, df):
     org_file = df_mf.org_file.unique()
     if org_file.shape[0] != 1:
         raise Exception("wrong number of org_files for {0}".format(model_file))
-    org_arr = np.loadtxt(org_file[0])
+    org_arr = np.loadtxt(org_file[0], ndmin=2)
 
     if "mlt_file" in df_mf.columns:
         for mlt, operator in zip(df_mf.mlt_file, df_mf.operator):
             if pd.isna(mlt):
                 continue
-            mlt_data = np.loadtxt(mlt)
+            mlt_data = np.loadtxt(mlt, ndmin=2)
             if org_arr.shape != mlt_data.shape:
                 raise Exception(
                     "shape of org file {}:{} differs from mlt file {}:{}".format(
@@ -1664,7 +1689,17 @@ def _process_array_file(model_file, df):
                 lb = float(list(lb_vals.keys())[0])
                 org_arr[org_arr < lb] = lb
 
-    np.savetxt(model_file, np.atleast_2d(org_arr), fmt="%15.6E", delimiter="")
+    try:
+        fmt = df_mf.fmt.iloc[0]
+    except AttributeError:
+        fmt = "%15.6E"
+    try:
+        sep = df_mf.sep.iloc[0]
+    except AttributeError:
+        sep = np.nan
+    if np.isnan(sep):
+        sep = ''
+    np.savetxt(model_file, np.atleast_2d(org_arr), fmt=fmt, delimiter=sep)
 
 
 def apply_array_pars(arr_par="arr_pars.csv", arr_par_file=None, chunk_len=50):
@@ -1755,14 +1790,15 @@ def apply_array_pars(arr_par="arr_pars.csv", arr_par_file=None, chunk_len=50):
         if len(chunks) == 1:
             _process_chunk_fac2real(chunks[0], 0)
         else:
-            pool = mp.Pool(processes=min(mp.cpu_count(), len(chunks), 60))
-            x = [
-                pool.apply_async(_process_chunk_fac2real, args=(chunk, i))
-                for i, chunk in enumerate(chunks)
-            ]
-            [xx.get() for xx in x]
-            pool.close()
-            pool.join()
+            with mp.get_context("spawn").Pool(
+                    processes=min(mp.cpu_count(), 60)) as pool:
+                x = [
+                    pool.apply_async(_process_chunk_fac2real, args=(chunk, i))
+                    for i, chunk in enumerate(chunks)
+                ]
+                [xx.get() for xx in x]
+                pool.close()
+                pool.join()
         # procs = []
         # for chunk in chunks:
         #     p = mp.Process(target=_process_chunk_fac2real, args=[chunk])
@@ -1796,14 +1832,15 @@ def apply_array_pars(arr_par="arr_pars.csv", arr_par_file=None, chunk_len=50):
     #     r = p.get(False)
     #     p.join()
     else:
-        pool = mp.Pool(processes=min(mp.cpu_count(), len(chunks), 60))
-        x = [
-            pool.apply_async(_process_chunk_array_files, args=(chunk, i, df))
-            for i, chunk in enumerate(chunks)
-        ]
-        [xx.get() for xx in x]
-        pool.close()
-        pool.join()
+        with mp.get_context("spawn").Pool(
+                processes=min(mp.cpu_count(), 60)) as pool:
+            x = [
+                pool.apply_async(_process_chunk_array_files, args=(chunk, i, df))
+                for i, chunk in enumerate(chunks)
+            ]
+            [xx.get() for xx in x]
+            pool.close()
+            pool.join()
     print("finished arr mlt", datetime.now())
 
 
@@ -2028,14 +2065,15 @@ def apply_genericlist_pars(df, chunk_len=50):
     if len(chunks) == 1:
         _process_chunk_list_files(chunks[0], 0, df)
     else:
-        pool = mp.Pool(processes=min(mp.cpu_count(), len(chunks), 60))
-        x = [
-            pool.apply_async(_process_chunk_list_files, args=(chunk, i, df))
-            for i, chunk in enumerate(chunks)
-        ]
-        [xx.get() for xx in x]
-        pool.close()
-        pool.join()
+        with mp.get_context("spawn").Pool(
+                processes=min(mp.cpu_count(), 60)) as pool:
+            x = [
+                pool.apply_async(_process_chunk_list_files, args=(chunk, i, df))
+                for i, chunk in enumerate(chunks)
+            ]
+            [xx.get() for xx in x]
+            pool.close()
+            pool.join()
     print("finished list mlt", datetime.now())
 
 
@@ -2099,8 +2137,6 @@ def _process_list_file(model_file, df):
     else:
         sep = None
     datastrtrow = df_mf.head_rows.values[-1]
-    if fmt.lower() == "free" and sep == " ":
-        delim_whitespace = True
     if datastrtrow > 0:
         with open(org_file, "r") as fp:
             storehead = [next(fp) for _ in range(datastrtrow)]
@@ -2135,7 +2171,7 @@ def _process_list_file(model_file, df):
 
     for mlt in df_mf.itertuples():
         new_df.loc[:, mlt.index_cols] = new_df.loc[:, mlt.index_cols].apply(
-            pd.to_numeric, downcast='integer')
+            _try_pdcol_numeric, downcast='integer')
         try:
             new_df = new_df.reset_index().rename(
                 columns={"index": "oidx"}
@@ -2171,7 +2207,7 @@ def _process_list_file(model_file, df):
             if mlts.index.nlevels < 2:  # just in case only one index col is used
                 mlts.index = mlts.index.get_level_values(0)
             common_idx = (
-                new_df.index.intersection(mlts.index).sort_values().drop_duplicates()
+                new_df.index.intersection(mlts.index).drop_duplicates()
             )
             mlt_cols = [str(col) for col in mlt.use_cols]
             assert len(common_idx) == mlt.chkpar, (
@@ -2230,7 +2266,7 @@ def _process_list_file(model_file, df):
         else:
             np.savetxt(
                 fo,
-                np.atleast_2d(new_df.apply(pd.to_numeric, errors="ignore").values),
+                np.atleast_2d(new_df.apply(_try_pdcol_numeric).values),
                 fmt=fmt
             )
 
@@ -2507,7 +2543,7 @@ class SpatialReference(object):
     ):
 
         for delrc in [delr, delc]:
-            if isinstance(delrc, float) or isinstance(delrc, int):
+            if isinstance(delrc, (float, int, np.integer)):
                 msg = (
                     "delr and delcs must be an array or sequences equal in "
                     "length to the number of rows/columns."
@@ -3658,6 +3694,8 @@ def setup_threshold_pars(orgarr_file,cat_dict,testing_workspace=".",inact_arr=No
 
     Note:
         all required files are based on the `orgarr_file` with suffixes appended to them
+        This process was inspired by Todaro and others, 2023, "Experimental sandbox tracer
+        tests to characterize a two-facies aquifer via an ensemble smoother"
 
     """
     assert os.path.exists(orgarr_file)
@@ -3668,10 +3706,6 @@ def setup_threshold_pars(orgarr_file,cat_dict,testing_workspace=".",inact_arr=No
         raise Exception("only two categories currently supported, {0} found in target_proportions_dict".\
                         format(len(cat_dict)))
 
-    tol = 1.0e-10
-    if org_arr.std() < tol * 2.0:
-        print("WARNING: org_arr has very low standard deviation, adding some noise for now...")
-        org_arr += np.random.normal(0,1e-6,org_arr.shape)
     prop_tags,prop_vals,fill_vals = [],[],[]
     for key,(proportion,fill_val) in cat_dict.items():
         if int(key) not in cat_dict:
@@ -3691,7 +3725,7 @@ def setup_threshold_pars(orgarr_file,cat_dict,testing_workspace=".",inact_arr=No
         inactarr_file = orgarr_file+".threshinact.dat"
         np.savetxt(inactarr_file,inact_arr,fmt="%4.0f")
 
-    df = pd.DataFrame({"threshcat":prop_tags,"threshval":prop_vals,"threshfill":fill_vals})
+    df = pd.DataFrame({"threshcat":prop_tags,"threshproportion":prop_vals,"threshfill":fill_vals})
     csv_file = orgarr_file+".threshprops.csv"
     df.to_csv(csv_file,index=False)
 
@@ -3706,21 +3740,32 @@ def setup_threshold_pars(orgarr_file,cat_dict,testing_workspace=".",inact_arr=No
 def apply_threshold_pars(csv_file):
     """apply the thresholding process.  everything keys off of csv_file name...
 
+    Note: if the standard deviation of the continous thresholding array is too low,
+    the line search will fail.  Currently, if this stdev is less than 1.e-10,
+    then a homogenous array of the first category fill value will be created.  User
+    beware!
+
     """
     df = pd.read_csv(csv_file,index_col=0)
     thresarr_file = csv_file.replace("props.csv","arr.dat")
     tarr = np.loadtxt(thresarr_file)
     if np.any(tarr < 0):
         print(tarr)
-        raise Exception("negatives in thresholding array")
+        raise Exception("negatives in thresholding array {0}".format(thresarr_file))
     #norm tarr
-    tarr = tarr / tarr.max()
+    tarr = (tarr - tarr.min()) / tarr.max()
     orgarr_file = csv_file.replace(".threshprops.csv","")
     inactarr_file = csv_file.replace(".threshprops.csv",".threshinact.dat")
-
-    tvals = df.threshval.astype(float).values.copy()
+    tarr_file = csv_file.replace(".threshprops.csv",".threshcat.dat")
+    tcat = df.index.values.astype(int).copy()
+    tvals = df.threshproportion.astype(float).values.copy()
     #ttags = df.threshcat.astype(int).values.copy()
     tfill = df.threshfill.astype(float).values.copy()
+
+    iarr = None
+    if os.path.exists(inactarr_file):
+        iarr = np.loadtxt(inactarr_file, dtype=int)
+
     # for now...
     assert len(tvals) == 2
     if np.any(tvals <= 0.0):
@@ -3731,8 +3776,26 @@ def apply_threshold_pars(csv_file):
     target_prop = tvals[0]
 
     tol = 1.0e-10
-    if tarr.std() < tol * 2.0:
-        raise Exception("thresholding array has very low standard deviation")
+    if tarr.std() < tol:
+        print("WARNING: thresholding array {0} has very low standard deviation".format(thresarr_file))
+        print("         using a homogenous array with first category fill value {0}".format(tfill[0]))
+
+        farr = np.zeros_like(tarr) + tfill[0]
+        if iarr is not None:
+            farr[iarr == 0] = -1.0e+30
+            tarr[iarr == 0] = -1.0e+30
+        df.loc[tcat[0], "threshold"] = tarr.mean()
+        df.loc[tcat[1], "threshold"] = tarr.mean()
+        df.loc[tcat[0], "proportion"] = 1
+        df.loc[tcat[1], "proportion"] = 0
+
+        df.to_csv(csv_file.replace(".csv", "_results.csv"))
+        np.savetxt(orgarr_file, farr, fmt="%15.6E")
+        np.savetxt(tarr_file, tarr, fmt="%15.6E")
+        return tarr.mean(), 1.0
+
+        #    print("WARNING: thresholding array {0} has very low standard deviation, adding noise".format(thresarr_file))
+        #    tarr += np.random.normal(0, tol*2.0, tarr.shape)
 
     # a classic:
     gr = (np.sqrt(5.) + 1.) / 2.
@@ -3741,10 +3804,10 @@ def apply_threshold_pars(csv_file):
     c = b - ((b - a) / gr)
     d = a + ((b - a) / gr)
 
-    iarr = None
+
     tot_shape = tarr.shape[0] * tarr.shape[1]
-    if os.path.exists(inactarr_file):
-        iarr = np.loadtxt(inactarr_file, dtype=int)
+    if iarr is not None:
+
         # this keeps inact from interfering with calcs later...
         tarr[iarr == 0] = 1.0e+30
         tiarr = iarr.copy()
@@ -3778,17 +3841,28 @@ def apply_threshold_pars(csv_file):
         d = a + ((b - a) / gr)
         numiter += 1
 
-    #print(a,b,c,d)
     thresh = (a+b) / 2.0
     prop = get_current_prop(thresh)
-    #print(thresh,prop)
     farr = np.zeros_like(tarr) - 1
     farr[tarr>thresh] = tfill[1]
     farr[tarr<=thresh] = tfill[0]
+    tarr[tarr>thresh] = tcat[0]
+    tarr[tarr <= thresh] = tcat[1]
+
     if iarr is not None:
         farr[iarr==0] = -1.0e+30
+        tarr[iarr == 0] = -1.0e+30
+    df.loc[tcat[0],"threshold"] = thresh
+    df.loc[tcat[1], "threshold"] = 1.0 - thresh
+    df.loc[tcat[0], "proportion"] = prop
+    df.loc[tcat[1], "proportion"] = 1.0 - prop
+    df.to_csv(csv_file.replace(".csv","_results.csv"))
     np.savetxt(orgarr_file,farr,fmt="%15.6E")
+    np.savetxt(tarr_file, tarr, fmt="%15.6E")
+
     return thresh, prop
+
+
 
 
 

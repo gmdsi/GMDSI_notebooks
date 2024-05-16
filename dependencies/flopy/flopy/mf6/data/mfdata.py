@@ -95,9 +95,6 @@ class MFTransient:
                 # update current key
                 self._current_key = new_transient_key
 
-    def _transient_setup(self, data_storage):
-        self._data_storage = data_storage
-
     def get_data_prep(self, transient_key=0):
         if isinstance(transient_key, int):
             self._verify_sp(transient_key)
@@ -163,7 +160,7 @@ class MFTransient:
     def _verify_sp(self, sp_num):
         if self._path[0].lower() == "nam":
             return True
-        if not ("tdis", "dimensions", "nper") in self._simulation_data.mfdata:
+        if ("tdis", "dimensions", "nper") not in self._simulation_data.mfdata:
             raise FlopyException(
                 "Could not find number of stress periods (nper)."
             )
@@ -254,7 +251,7 @@ class MFData(DataInterface):
         self._data_type = structure.type
         self._keyword = ""
         if self._simulation_data is not None:
-            self._data_dimensions = DataDimensions(dimensions, structure)
+            self.data_dimensions = DataDimensions(dimensions, structure)
             # build a unique path in the simulation dictionary
             self._org_path = self._path
             index = 0
@@ -272,10 +269,26 @@ class MFData(DataInterface):
         self._cached_model_grid = None
 
     def __repr__(self):
-        return repr(self._get_storage_obj())
+        if isinstance(self._data_storage, dict):
+            stor_size = len(self._data_storage)
+        else:
+            stor_size = 1
+        if stor_size <= 1:
+            return repr(self._get_storage_obj(first_record=True))
+        else:
+            rpr = repr(self._get_storage_obj(first_record=True))
+            return f"{rpr}...\nand {stor_size - 1} additional data blocks"
 
     def __str__(self):
-        return str(self._get_storage_obj())
+        if isinstance(self._data_storage, dict):
+            stor_size = len(self._data_storage)
+        else:
+            stor_size = 1
+        if stor_size <= 1:
+            return str(self._get_storage_obj(first_record=True))
+        else:
+            st = str(self._get_storage_obj(first_record=True))
+            return f"{st}...\nand {stor_size - 1} additional data blocks"
 
     @property
     def path(self):
@@ -383,13 +396,13 @@ class MFData(DataInterface):
         layers = []
         layer_dims = self.structure.data_item_structures[0].layer_dims
         if len(layer_dims) == 1:
-            layers.append(self._data_dimensions.get_model_grid().num_layers())
+            layers.append(self.data_dimensions.get_model_grid().num_layers())
         else:
             for layer in layer_dims:
                 if layer == "nlay":
                     # get the layer size from the model grid
                     try:
-                        model_grid = self._data_dimensions.get_model_grid()
+                        model_grid = self.data_dimensions.get_model_grid()
                     except Exception as ex:
                         type_, value_, traceback_ = sys.exc_info()
                         raise MFDataException(
@@ -524,17 +537,17 @@ class MFData(DataInterface):
             const_val,
             data_type,
             self._simulation_data,
-            self._data_dimensions,
+            self.data_dimensions,
             verify_data=self._simulation_data.verify_data,
         )
         return f"{sim_data.indent_string.join(const_format)}{suffix}"
 
     def _get_aux_var_name(self, aux_var_index):
-        aux_var_names = self._data_dimensions.package_dim.get_aux_variables()
+        aux_var_names = self.data_dimensions.package_dim.get_aux_variables()
         # TODO: Verify that this works for multi-dimensional layering
         return aux_var_names[0][aux_var_index[0] + 1]
 
-    def _get_storage_obj(self):
+    def _get_storage_obj(self, first_record=False):
         return self._data_storage
 
 
@@ -596,26 +609,43 @@ class MFMultiDimVar(MFData):
         else:
             layer_storage = storage.layer_storage[layer]
         # resolve external file path
-        file_mgmt = self._simulation_data.mfpath
-        model_name = self._data_dimensions.package_dim.model_dim[0].model_name
-        ext_file_path = file_mgmt.get_updated_path(
-            layer_storage.fname, model_name, ext_file_action
+        ret, fname = self._get_external_formatting_str(
+            layer_storage.fname,
+            layer_storage.factor,
+            layer_storage.binary,
+            layer_storage.iprn,
+            storage.data_structure_type,
+            ext_file_action,
         )
-        layer_storage.fname = datautil.clean_filename(ext_file_path)
+        layer_storage.fname = fname
+        return ret
+
+    def _get_external_formatting_str(
+        self, fname, factor, binary, iprn, data_type, ext_file_action
+    ):
+        file_mgmt = self._simulation_data.mfpath
+        model_name = self.data_dimensions.package_dim.model_dim[0].model_name
+        ext_file_path = file_mgmt.get_updated_path(
+            fname, model_name, ext_file_action
+        )
+        fname = datautil.clean_filename(ext_file_path)
         ext_format = ["OPEN/CLOSE", f"'{ext_file_path}'"]
-        if storage.data_structure_type != DataStructureType.recarray:
-            if layer_storage.factor is not None:
+        if data_type != DataStructureType.recarray:
+            if factor is not None:
                 data_type = self.structure.get_datum_type(
                     return_enum_type=True
                 )
                 ext_format.append("FACTOR")
                 if data_type == DatumType.integer:
-                    ext_format.append(str(int(layer_storage.factor)))
+                    ext_format.append(str(int(factor)))
                 else:
-                    ext_format.append(str(layer_storage.factor))
-        if layer_storage.binary:
+                    ext_format.append(str(factor))
+        if binary:
             ext_format.append("(BINARY)")
-        if layer_storage.iprn is not None:
+        if iprn is not None:
             ext_format.append("IPRN")
-            ext_format.append(str(layer_storage.iprn))
-        return f"{self._simulation_data.indent_string.join(ext_format)}\n"
+            ext_format.append(str(iprn))
+        return (
+            f"{self._simulation_data.indent_string.join(ext_format)}\n",
+            fname,
+        )

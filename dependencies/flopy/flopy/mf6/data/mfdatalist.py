@@ -12,7 +12,7 @@ from ..data import mfdata, mfstructure
 from ..mfbase import ExtFileAction, MFDataException, VerbosityLevel
 from ..utils.mfenums import DiscretizationType
 from .mfdatastorage import DataStorage, DataStorageType, DataStructureType
-from .mfdatautil import to_string
+from .mfdatautil import list_to_array, to_string
 from .mffileaccess import MFFileAccessList
 from .mfstructure import DatumType, MFDataStructure
 
@@ -30,7 +30,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
         data contained in the simulation
     structure : MFDataStructure
         describes the structure of the data
-    data : list or ndarray
+    data : list or ndarray or None
         actual data
     enable : bool
         enable/disable the array
@@ -133,7 +133,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
             MODFLOW zero-based stress period number to return. (default is
             zero)
         mask : bool
-            return array with np.NaN instead of zero
+            return array with np.nan instead of zero
 
         Returns
         ----------
@@ -141,66 +141,9 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
             Dictionary of 3-D numpy arrays containing the stress period data
             for a selected stress period. The dictionary keys are the
             MFDataList dtype names for the stress period data."""
-        i0 = 1
         sarr = self.get_data(key=kper)
-        if not isinstance(sarr, list):
-            sarr = [sarr]
-        if len(sarr) == 0 or sarr[0] is None:
-            return None
-        if "inode" in sarr[0].dtype.names:
-            raise NotImplementedError()
-        arrays = {}
-        model_grid = self._data_dimensions.get_model_grid()
-
-        if model_grid._grid_type.value == 1:
-            shape = (
-                model_grid.num_layers(),
-                model_grid.num_rows(),
-                model_grid.num_columns(),
-            )
-        elif model_grid._grid_type.value == 2:
-            shape = (
-                model_grid.num_layers(),
-                model_grid.num_cells_per_layer(),
-            )
-        else:
-            shape = (model_grid.num_cells_per_layer(),)
-
-        for name in sarr[0].dtype.names[i0:]:
-            if not sarr[0].dtype.fields[name][0] == object:
-                arr = np.zeros(shape)
-                arrays[name] = arr.copy()
-
-        if np.isscalar(sarr[0]):
-            # if there are no entries for this kper
-            if sarr[0] == 0:
-                if mask:
-                    for name, arr in arrays.items():
-                        arrays[name][:] = np.NaN
-                return arrays
-            else:
-                raise Exception("MfList: something bad happened")
-
-        for name, arr in arrays.items():
-            cnt = np.zeros(shape, dtype=np.float64)
-            for sp_rec in sarr:
-                if sp_rec is not None:
-                    for rec in sp_rec:
-                        arr[rec["cellid"]] += rec[name]
-                        cnt[rec["cellid"]] += 1.0
-            # average keys that should not be added
-            if name != "cond" and name != "flux":
-                idx = cnt > 0.0
-                arr[idx] /= cnt[idx]
-            if mask:
-                arr = np.ma.masked_where(cnt == 0.0, arr)
-                arr[cnt == 0.0] = np.NaN
-
-            arrays[name] = arr.copy()
-        # elif mask:
-        #     for name, arr in arrays.items():
-        #         arrays[name][:] = np.NaN
-        return arrays
+        model_grid = self.data_dimensions.get_model_grid()
+        return list_to_array(sarr, model_grid, kper, mask)
 
     def new_simulation(self, sim_data):
         """Initialize MFList object for a new simulation.
@@ -278,8 +221,9 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
                         >= VerbosityLevel.verbose.value
                     ):
                         print(
-                            "Storing {} to external file {}.."
-                            ".".format(self.structure.name, external_file_path)
+                            "Storing {} to external file {}.." ".".format(
+                                self.structure.name, external_file_path
+                            )
                         )
                     external_data = {
                         "filename": external_file_path,
@@ -505,6 +449,36 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
                             idomain_val = idomain
                             # cellid should be within the model grid
                             for idx, cellid_part in enumerate(record[index]):
+                                if cellid_part == -1:
+                                    # cellid not defined, all values should
+                                    # be -1
+                                    match = all(
+                                        elem == record[index][0]
+                                        for elem in record[index]
+                                    )
+                                    if not match:
+                                        message = (
+                                            f"Invalid cellid {record[index]}"
+                                        )
+                                        (
+                                            type_,
+                                            value_,
+                                            traceback_,
+                                        ) = sys.exc_info()
+                                        raise MFDataException(
+                                            self.structure.get_model(),
+                                            self.structure.get_package(),
+                                            self.structure.path,
+                                            "storing data",
+                                            self.structure.name,
+                                            inspect.stack()[0][3],
+                                            type_,
+                                            value_,
+                                            traceback_,
+                                            message,
+                                            self._simulation_data.debug,
+                                        )
+                                    continue
                                 if (
                                     model_shape[idx] <= cellid_part
                                     or cellid_part < 0
@@ -530,7 +504,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
                                     )
                                 idomain_val = idomain_val[cellid_part]
                             # cellid should be at an active cell
-                            if idomain_val < 1:
+                            if record[index][0] != -1 and idomain_val < 1:
                                 message = (
                                     "Cellid {} is outside of the "
                                     "active model grid"
@@ -739,7 +713,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
                         if (
                             val is not None
                             and val.lower() == search_term
-                            and (col == None or col == col_num)
+                            and (col is None or col == col_num)
                         ):
                             return (row, col)
                         col_num += 1
@@ -788,7 +762,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
     ):
         try:
             # freeze model grid to boost performance
-            self._data_dimensions.lock()
+            self.data_dimensions.lock()
             # init
             indent = self._simulation_data.indent_string
             file_entry = []
@@ -899,7 +873,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
                 self._crnt_line_num += 1
 
         # unfreeze model grid
-        self._data_dimensions.unlock()
+        self.data_dimensions.unlock()
         return "".join(file_entry)
 
     def _get_file_entry_record(
@@ -940,7 +914,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
                     ex,
                 )
         else:
-            data_dim = self._data_dimensions
+            data_dim = self.data_dimensions
             data_line = data_complete[mflist_line]
             for data_item in data_set.data_item_structures:
                 if data_item.is_aux:
@@ -958,7 +932,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
                                                 data_val,
                                                 data_item.type,
                                                 self._simulation_data,
-                                                self._data_dimensions,
+                                                self.data_dimensions,
                                                 data_item.is_cellid,
                                                 data_item.possible_cellid,
                                                 data_item,
@@ -1004,7 +978,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
                 ):
                     data_complete_len = len(data_line)
                     if data_complete_len <= index:
-                        if data_item.optional == False:
+                        if data_item.optional is False:
                             message = (
                                 "Not enough data provided "
                                 "for {}. Data for required data "
@@ -1055,7 +1029,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
                                 model_num = DatumUtil.cellid_model_num(
                                     data_item,
                                     self.structure.model_data,
-                                    self._data_dimensions.package_dim.model_dim,
+                                    self.data_dimensions.package_dim.model_dim,
                                 )
                                 model_grid = data_dim.get_model_grid(model_num)
                                 cellid_size = (
@@ -1207,7 +1181,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
                                                         data_line[data_index],
                                                         k_data_item.type,
                                                         self._simulation_data,
-                                                        self._data_dimensions,
+                                                        self.data_dimensions,
                                                         k_data_item.is_cellid,
                                                         k_data_item.possible_cellid,
                                                         k_data_item,
@@ -1271,7 +1245,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
                                                 data_val,
                                                 DatumType.string,
                                                 self._simulation_data,
-                                                self._data_dimensions,
+                                                self.data_dimensions,
                                                 False,
                                                 data_item=data_item,
                                                 verify_data=self._simulation_data.verify_data,
@@ -1284,7 +1258,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
                                             data_val,
                                             data_item.type,
                                             self._simulation_data,
-                                            self._data_dimensions,
+                                            self.data_dimensions,
                                             data_item.is_cellid,
                                             data_item.possible_cellid,
                                             data_item,
@@ -1366,7 +1340,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
 
         Parameters
         ----------
-            first_line : str
+            first_line : str, None
                 A string containing the first line of data in this list.
             file_handle : file descriptor
                 A file handle for the data file which points to the second
@@ -1396,7 +1370,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
         else:
             file_access = MFFileAccessList(
                 self.structure,
-                self._data_dimensions,
+                self.data_dimensions,
                 self._simulation_data,
                 self._path,
                 self._current_key,
@@ -1410,7 +1384,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
         return DataStorage(
             self._simulation_data,
             self._model_or_sim,
-            self._data_dimensions,
+            self.data_dimensions,
             self._get_file_entry,
             DataStorageType.internal_array,
             DataStructureType.recarray,
@@ -1418,7 +1392,7 @@ class MFList(mfdata.MFMultiDimVar, DataListInterface):
             data_path=self._path,
         )
 
-    def _get_storage_obj(self):
+    def _get_storage_obj(self, first_record=False):
         return self._data_storage
 
     def plot(
@@ -1548,7 +1522,6 @@ class MFTransientList(MFList, mfdata.MFTransient, DataListInterface):
             package=package,
             block=block,
         )
-        self._transient_setup(self._data_storage)
         self.repeating = True
 
     @property
@@ -1574,8 +1547,8 @@ class MFTransientList(MFList, mfdata.MFTransient, DataListInterface):
     @property
     def masked_4D_arrays(self):
         """Returns list data as a masked 4D array."""
-        model_grid = self._data_dimensions.get_model_grid()
-        nper = self._data_dimensions.package_dim.model_dim[
+        model_grid = self.data_dimensions.get_model_grid()
+        nper = self.data_dimensions.package_dim.model_dim[
             0
         ].simulation_time.get_num_stress_periods()
         # get the first kper
@@ -1621,8 +1594,8 @@ class MFTransientList(MFList, mfdata.MFTransient, DataListInterface):
 
     def masked_4D_arrays_itr(self):
         """Returns list data as an iterator of a masked 4D array."""
-        model_grid = self._data_dimensions.get_model_grid()
-        nper = self._data_dimensions.package_dim.model_dim[
+        model_grid = self.data_dimensions.get_model_grid()
+        nper = self.data_dimensions.package_dim.model_dim[
             0
         ].simulation_time.get_num_stress_periods()
         # get the first kper
@@ -1772,6 +1745,9 @@ class MFTransientList(MFList, mfdata.MFTransient, DataListInterface):
                 self.get_data_prep(sto_key)
                 if super().has_data():
                     return True
+            for val in self.empty_keys.values():
+                if val:
+                    return True
             return False
         else:
             self.get_data_prep(key)
@@ -1824,7 +1800,7 @@ class MFTransientList(MFList, mfdata.MFTransient, DataListInterface):
             if key is None:
                 if "array" in kwargs:
                     output = []
-                    sim_time = self._data_dimensions.package_dim.model_dim[
+                    sim_time = self.data_dimensions.package_dim.model_dim[
                         0
                     ].simulation_time
                     num_sp = sim_time.get_num_stress_periods()
@@ -2074,7 +2050,11 @@ class MFTransientList(MFList, mfdata.MFTransient, DataListInterface):
     def _new_storage(self, stress_period=0):
         return {}
 
-    def _get_storage_obj(self):
+    def _get_storage_obj(self, first_record=False):
+        if first_record and isinstance(self._data_storage, dict):
+            for value in self._data_storage.values():
+                return value
+            return None
         if (
             self._current_key is None
             or self._current_key not in self._data_storage

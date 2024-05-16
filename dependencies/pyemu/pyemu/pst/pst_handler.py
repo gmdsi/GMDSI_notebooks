@@ -12,7 +12,7 @@ import pandas as pd
 
 
 pd.options.display.max_colwidth = 100
-pd.options.mode.use_inf_as_na = True
+# pd.options.mode.use_inf_as_na = True
 import pyemu
 from ..pyemu_warnings import PyemuWarning
 from pyemu.pst.pst_controldata import ControlData, SvdData, RegData
@@ -21,6 +21,25 @@ from pyemu.plot import plot_utils
 
 # from pyemu.utils.os_utils import run
 
+def get_constraint_tags(ltgt='lt'):
+    if ltgt == 'lt':
+        return "l_", "less", ">@"
+    else:
+        return "g_", "greater", "<@"
+
+
+def _check_and_reject_nans(df, name):
+    # warnings.warn("WARNING: NaNs in {0} dataframe".format(name))
+    if (np.isfinite(df.select_dtypes('number').values).all()
+            and not df.isnull().values.any()):
+        return
+    csv_name = "pst.{0}.nans.csv".format(
+        name.replace(" ", "_").replace("*", "")
+    )
+    df.to_csv(csv_name)
+    raise Exception(
+        "NaNs in {0} dataframe, csv written to {1}".format(name, csv_name)
+    )
 
 class Pst(object):
     """All things PEST(++) control file
@@ -148,11 +167,69 @@ class Pst(object):
         return pst_utils.generic_pst(par_names=par_names, obs_names=obs_names)
 
     @staticmethod
-    def get_constraint_tags(ltgt='lt'):
-        if ltgt == 'lt':
-            return "l_", "less", ">@"
-        else:
-            return "g_", "greater", "<@"
+    def get_phi_components(ogroups,  res, obs, pi_ogroups=None, pi_df=None):
+
+        components = {}
+        rgroups = res.groupby("group").groups
+        for og, onames in ogroups.items():
+            og_res_df = res.loc[onames, :].dropna(axis=1)
+            og_df = obs.loc[onames, :]
+            # og_df.index = og_df.obsnme
+            assert og_df.shape[0] == og_res_df.shape[0], (
+                " Pst.phi_components error: group residual dataframe row length"
+                + "doesn't match observation data group dataframe row length"
+                + str(og_df.shape)
+                + " vs. "
+                + str(og_res_df.shape)
+                + ","
+                + og
+            )
+            if "modelled" not in og_res_df.columns:
+                print(og_res_df)
+                m = res.loc[onames, "modelled"]
+                print(m.loc[m.isna()])
+                raise Exception("'modelled' not in res df columns for group " + og)
+
+            mod_vals = og_res_df.loc[onames, "modelled"]
+            if og.lower().startswith(get_constraint_tags('gt')):
+                mod_vals.loc[mod_vals >= og_df.loc[:, "obsval"]] = og_df.loc[
+                    :, "obsval"
+                ]
+            elif og.lower().startswith(get_constraint_tags('lt')):
+                mod_vals.loc[mod_vals <= og_df.loc[:, "obsval"]] = og_df.loc[
+                    :, "obsval"
+                ]
+            components[og] = np.sum(
+                ((og_df.loc[:, "obsval"] - mod_vals) * og_df.loc[:, "weight"]) ** 2
+            )
+        if pi_ogroups is not None:
+            for og, onames in pi_ogroups.items():
+                if og not in rgroups.keys():
+                    raise Exception(
+                        "Pst.prior_information() obs group " + "not found: " + str(og)
+                    )
+                og_res_df = res.loc[rgroups[og], :]
+                og_res_df.index = og_res_df.name
+                og_df = pi_df.loc[onames, :]
+                og_df.index = og_df.pilbl
+                og_res_df = og_res_df.loc[og_df.index, :].copy()
+                if og_df.shape[0] != og_res_df.shape[0]:
+                    raise Exception(
+                        " Pst.phi_components error: group residual dataframe row length"
+                        + "doesn't match observation data group dataframe row length"
+                        + str(og_df.shape)
+                        + " vs. "
+                        + str(og_res_df.shape)
+                    )
+                if og.lower().startswith(get_constraint_tags('gt')):
+                    gidx = og_res_df.loc[:, "residual"] >= 0
+                    og_res_df.loc[gidx, "residual"] = 0
+                elif og.lower().startswith(get_constraint_tags('lt')):
+                    lidx = og_res_df.loc[:, "residual"] <= 0
+                    og_res_df.loc[lidx, "residual"] = 0
+                components[og] = np.sum((og_res_df["residual"] * og_df["weight"]) ** 2)
+
+        return components
 
     @property
     def phi(self):
@@ -183,80 +260,18 @@ class Pst(object):
 
         """
 
-        # calculate phi components for each obs group
-        components = {}
         ogroups = self.observation_data.groupby("obgnme").groups
-        rgroups = self.res.groupby("group").groups
         self.res.index = self.res.name
-        for og, onames in ogroups.items():
-            # assert og in rgroups.keys(),"Pst.phi_componentw obs group " +\
-            #    "not found: " + str(og)
-            # og_res_df = self.res.ix[rgroups[og]]
-            og_res_df = self.res.loc[onames, :].dropna(axis=1)
-            # og_res_df.index = og_res_df.name
-            og_df = self.observation_data.loc[ogroups[og], :]
-            og_df.index = og_df.obsnme
-            # og_res_df = og_res_df.loc[og_df.index,:]
-            assert og_df.shape[0] == og_res_df.shape[0], (
-                " Pst.phi_components error: group residual dataframe row length"
-                + "doesn't match observation data group dataframe row length"
-                + str(og_df.shape)
-                + " vs. "
-                + str(og_res_df.shape)
-                + ","
-                + og
-            )
-            if "modelled" not in og_res_df.columns:
-                print(og_res_df)
-                m = self.res.loc[onames, "modelled"]
-                print(m.loc[m.isna()])
-                raise Exception("'modelled' not in res df columns for group " + og)
-            # components[og] = np.sum((og_res_df["residual"] *
-            #                          og_df["weight"]) ** 2)
-            mod_vals = og_res_df.loc[og_df.obsnme, "modelled"]
-            if og.lower().startswith(self.get_constraint_tags('gt')):
-                mod_vals.loc[mod_vals >= og_df.loc[:, "obsval"]] = og_df.loc[
-                    :, "obsval"
-                ]
-            elif og.lower().startswith(self.get_constraint_tags('lt')):
-                mod_vals.loc[mod_vals <= og_df.loc[:, "obsval"]] = og_df.loc[
-                    :, "obsval"
-                ]
-            components[og] = np.sum(
-                ((og_df.loc[:, "obsval"] - mod_vals) * og_df.loc[:, "weight"]) ** 2
-            )
-        if (
-            not self.control_data.pestmode.startswith("reg")
-            and self.prior_information.shape[0] > 0
-        ):
-            ogroups = self.prior_information.groupby("obgnme").groups
-            for og in ogroups.keys():
-                if og not in rgroups.keys():
-                    raise Exception(
-                        "Pst.adjust_weights_res() obs group " + "not found: " + str(og)
-                    )
-                og_res_df = self.res.loc[rgroups[og], :]
-                og_res_df.index = og_res_df.name
-                og_df = self.prior_information.loc[ogroups[og], :]
-                og_df.index = og_df.pilbl
-                og_res_df = og_res_df.loc[og_df.index, :].copy()
-                if og_df.shape[0] != og_res_df.shape[0]:
-                    raise Exception(
-                        " Pst.phi_components error: group residual dataframe row length"
-                        + "doesn't match observation data group dataframe row length"
-                        + str(og_df.shape)
-                        + " vs. "
-                        + str(og_res_df.shape)
-                    )
-                if og.lower().startswith(self.get_constraint_tags('gt')):
-                    gidx = og_res_df.loc[:, "residual"] >= 0
-                    og_res_df.loc[gidx, "residual"] = 0
-                elif og.lower().startswith(self.get_constraint_tags('lt')):
-                    lidx = og_res_df.loc[:, "residual"] <= 0
-                    og_res_df.loc[lidx, "residual"] = 0
-                components[og] = np.sum((og_res_df["residual"] * og_df["weight"]) ** 2)
-
-        return components
+        obs = self.observation_data[['obsval','weight']]
+        if (not self.control_data.pestmode.startswith("reg")
+            and self.prior_information.shape[0] > 0):
+            pi_ogroups = self.prior_information.groupby("obgnme").groups
+            pi_df = self.prior_information
+        else:
+            pi_ogroups = None
+            pi_df = None
+        return self.get_phi_components(ogroups, self.res, obs, pi_ogroups, pi_df)
+       
 
     @property
     def phi_components_normalized(self):
@@ -589,7 +604,11 @@ class Pst(object):
         if tied_pars.shape[0] == 0:
             return None
         if "partied" not in par.columns:
-            par.loc[:, "partied"] = np.NaN
+            # pandas 2.1 + assigning np.nan triggers column to be set as float
+            # whole load of trouble assigning strings later -- but assume that
+            # we want nan (nodata) here for other methods downstream.
+            # pandas 3+ might handle this as pyarrow supports nan string type
+            par["partied"] = pd.Series(np.nan, index=par.index, dtype=object)
         tied = par.loc[tied_pars, ["parnme", "partied"]]
         return tied
 
@@ -729,7 +748,7 @@ class Pst(object):
                 header=None,
                 names=names,
                 nrows=nrows,
-                delim_whitespace=True,
+                sep=r"\s+",
                 converters=converters,
                 index_col=False,
                 comment="#",
@@ -848,7 +867,7 @@ class Pst(object):
                 missing_vals = options.get("missing_values", None)
                 if sep.lower() == "w":
                     df = pd.read_csv(
-                        filename, delim_whitespace=True,
+                        filename, sep=r"\s+",
                         na_values=missing_vals,
                         low_memory=False
                     )
@@ -895,7 +914,7 @@ class Pst(object):
             if col not in df.columns:
                 df.loc[:, col] = np.NaN
             if col in defaults:
-                df.loc[:, col] = df.loc[:, col].fillna(defaults[col])
+                df[col] = df.loc[:, col].fillna(defaults[col])
             if col in converters:
                 # pandas 2.0 `df.loc[:, col] = df.loc[:, col].astype(int)` type
                 # assignment cast RHS to LHS dtype -- therefore did not change
@@ -923,7 +942,7 @@ class Pst(object):
                 missing_vals = options.get("missing_values", None)
                 if sep.lower() == "w":
                     df = pd.read_csv(
-                        filename, delim_whitespace=True, na_values=missing_vals,low_memory=False
+                        filename, sep=r"\s+", na_values=missing_vals, low_memory=False
                     )
                 else:
                     df = pd.read_csv(filename, sep=sep, na_values=missing_vals,low_memory=False)
@@ -1055,8 +1074,8 @@ class Pst(object):
                             raw = line.strip().split()
                             tied_pars.append(raw[0].strip().lower())
                             partied.append(raw[1].strip().lower())
-                        self.parameter_data.loc[:, "partied"] = np.NaN
-                        self.parameter_data.loc[tied_pars, "partied"] = partied
+                        self.parameter_data.loc[tied_pars, 'partied'] = \
+                            pd.Series(partied, index=tied_pars)
 
                 elif "* observation data" in last_section.lower():
                     self.observation_data = self._cast_df_from_lines(
@@ -1356,12 +1375,11 @@ class Pst(object):
         if len(need_groups) > 0:
             # print(need_groups)
             defaults = copy.copy(pst_utils.pst_config["pargp_defaults"])
+            dfs = [None if self.parameter_groups.empty else self.parameter_groups]
             for grp in need_groups:
                 defaults["pargpnme"] = grp
-                self.parameter_groups = pd.concat(
-                    [self.parameter_groups, pd.DataFrame([defaults])],
-                    ignore_index=True
-                )
+                dfs.append(pd.DataFrame([defaults]))
+            self.parameter_groups = pd.concat(dfs, ignore_index=True)
 
         # now drop any left over groups that aren't needed
         for gp in self.parameter_groups.loc[:, "pargpnme"]:
@@ -1459,7 +1477,6 @@ class Pst(object):
             pilbl = "pilbl_{0}".format(self.__pi_count)
             self.__pi_count += 1
         missing, fixed = [], []
-
         for par_name in par_names:
             if par_name not in self.parameter_data.parnme:
                 missing.append(par_name)
@@ -1475,6 +1492,10 @@ class Pst(object):
                 "Pst.add_pi_equation(): the following pars "
                 + " were are fixed/tied: {0}".format(",".join(fixed))
             )
+        pi = self.prior_information
+        if "equation" not in pi.columns:
+            idx = pi.index
+            pi["equation"] = pd.Series(np.nan, index=idx, dtype=object)
         eqs_str = ""
         sign = ""
         for i, par_name in enumerate(par_names):
@@ -1488,10 +1509,10 @@ class Pst(object):
                 par_name = "log({})".format(par_name)
             eqs_str += " {0} {1} * {2} ".format(sign, coef, par_name)
         eqs_str += " = {0}".format(rhs)
-        self.prior_information.loc[pilbl, "pilbl"] = pilbl
-        self.prior_information.loc[pilbl, "equation"] = eqs_str
-        self.prior_information.loc[pilbl, "weight"] = weight
-        self.prior_information.loc[pilbl, "obgnme"] = obs_group
+        pi.loc[pilbl, "pilbl"] = pilbl
+        pi.loc[pilbl, "equation"] = eqs_str
+        pi.loc[pilbl, "weight"] = weight
+        pi.loc[pilbl, "obgnme"] = obs_group
 
     def rectify_pi(self):
         """rectify the prior information equation with the current state of the
@@ -1525,15 +1546,7 @@ class Pst(object):
         if self.with_comments:
             for line in self.comments.get(name, []):
                 f.write(line + "\n")
-        if df.loc[:, columns].isnull().values.any():
-            # warnings.warn("WARNING: NaNs in {0} dataframe".format(name))
-            csv_name = "pst.{0}.nans.csv".format(
-                name.replace(" ", "_").replace("*", "")
-            )
-            df.to_csv(csv_name)
-            raise Exception(
-                "NaNs in {0} dataframe, csv written to {1}".format(name, csv_name)
-            )
+        _check_and_reject_nans(df.loc[:, columns], name)
 
         def ext_fmt(x):
             if pd.notnull(x):
@@ -1622,8 +1635,8 @@ class Pst(object):
         if self.tied is not None and len(self.tied) > 0:
             sadj = set(self.adj_par_names)
             spar = set(self.par_names)
-
-            tpar_dict = self.parameter_data.partied.to_dict()
+            ptied = self.parameter_data.loc[self.parameter_data.loc[:,"partrans"]=="tied",:]
+            tpar_dict = ptied.partied.to_dict()
 
             for tpar, ptied in tpar_dict.items():
                 if pd.isna(ptied):
@@ -1710,15 +1723,7 @@ class Pst(object):
         # parameter groups
         name = "pargp_data"
         columns = self.pargp_fieldnames
-        if self.parameter_groups.loc[:, columns].isnull().values.any():
-            # warnings.warn("WARNING: NaNs in {0} dataframe".format(name))
-            csv_name = "pst.{0}.nans.csv".format(
-                name.replace(" ", "_").replace("*", "")
-            )
-            self.parameter_groups.to_csv(csv_name)
-            raise Exception(
-                "NaNs in {0} dataframe, csv written to {1}".format(name, csv_name)
-            )
+        _check_and_reject_nans(self.parameter_groups.loc[:, columns], name)
         f_out.write("* parameter groups external\n")
         pargp_filename = new_filename.lower().replace(".pst", ".{0}.csv".format(name))
         if pst_path is not None:
@@ -1730,15 +1735,7 @@ class Pst(object):
         # parameter data
         name = "par_data"
         columns = self.par_fieldnames
-        if self.parameter_data.loc[:, columns].isnull().values.any():
-            # warnings.warn("WARNING: NaNs in {0} dataframe".format(name))
-            csv_name = "pst.{0}.nans.csv".format(
-                name.replace(" ", "_").replace("*", "")
-            )
-            self.parameter_data.to_csv(csv_name)
-            raise Exception(
-                "NaNs in {0} dataframe, csv written to {1}".format(name, csv_name)
-            )
+        _check_and_reject_nans(self.parameter_data.loc[:, columns], name)
         f_out.write("* parameter data external\n")
         par_filename = new_filename.lower().replace(".pst", ".{0}.csv".format(name))
         if pst_path is not None:
@@ -1750,15 +1747,7 @@ class Pst(object):
         # observation data
         name = "obs_data"
         columns = self.obs_fieldnames
-        if self.observation_data.loc[:, columns].isnull().values.any():
-            # warnings.warn("WARNING: NaNs in {0} dataframe".format(name))
-            csv_name = "pst.{0}.nans.csv".format(
-                name.replace(" ", "_").replace("*", "")
-            )
-            self.observation_data.to_csv(csv_name)
-            raise Exception(
-                "NaNs in {0} dataframe, csv written to {1}".format(name, csv_name)
-            )
+        _check_and_reject_nans(self.observation_data.loc[:, columns], name)
         f_out.write("* observation data external\n")
         obs_filename = new_filename.lower().replace(".pst", ".{0}.csv".format(name))
         if pst_path is not None:
@@ -1774,15 +1763,7 @@ class Pst(object):
         # model input
         name = "tplfile_data"
         columns = self.model_io_fieldnames
-        if self.model_input_data.loc[:, columns].isnull().values.any():
-            # warnings.warn("WARNING: NaNs in {0} dataframe".format(name))
-            csv_name = "pst.{0}.nans.csv".format(
-                name.replace(" ", "_").replace("*", "")
-            )
-            self.model_input_data.to_csv(csv_name)
-            raise Exception(
-                "NaNs in {0} dataframe, csv written to {1}".format(name, csv_name)
-            )
+        _check_and_reject_nans(self.model_input_data.loc[:, columns], name)
         f_out.write("* model input external\n")
         io_filename = new_filename.lower().replace(".pst", ".{0}.csv".format(name))
         if pst_path is not None:
@@ -1794,15 +1775,7 @@ class Pst(object):
         # model output
         name = "insfile_data"
         columns = self.model_io_fieldnames
-        if self.model_output_data.loc[:, columns].isnull().values.any():
-            # warnings.warn("WARNING: NaNs in {0} dataframe".format(name))
-            csv_name = "pst.{0}.nans.csv".format(
-                name.replace(" ", "_").replace("*", "")
-            )
-            self.model_output_data.to_csv(csv_name)
-            raise Exception(
-                "NaNs in {0} dataframe, csv written to {1}".format(name, csv_name)
-            )
+        _check_and_reject_nans(self.model_output_data.loc[:, columns], name)
         f_out.write("* model output external\n")
         io_filename = new_filename.lower().replace(".pst", ".{0}.csv".format(name))
         if pst_path is not None:
@@ -1815,15 +1788,7 @@ class Pst(object):
         if self.prior_information.shape[0] > 0:
             name = "pi_data"
             columns = self.prior_fieldnames
-            if self.prior_information.loc[:, columns].isnull().values.any():
-                # warnings.warn("WARNING: NaNs in {0} dataframe".format(name))
-                csv_name = "pst.{0}.nans.csv".format(
-                    name.replace(" ", "_").replace("*", "")
-                )
-                self.prior_information.to_csv(csv_name)
-                raise Exception(
-                    "NaNs in {0} dataframe, csv written to {1}".format(name, csv_name)
-                )
+            _check_and_reject_nans(self.prior_information.loc[:, columns], name)
             f_out.write("* prior information external\n")
             pi_filename = new_filename.lower().replace(".pst", ".{0}.csv".format(name))
             if pst_path is not None:
@@ -1973,26 +1938,10 @@ class Pst(object):
 
         name = "tplfile_data"
         columns = self.model_io_fieldnames
-        if self.model_input_data.loc[:, columns].isnull().values.any():
-            # warnings.warn("WARNING: NaNs in {0} dataframe".format(name))
-            csv_name = "pst.{0}.nans.csv".format(
-                name.replace(" ", "_").replace("*", "")
-            )
-            self.model_input_data.to_csv(csv_name)
-            raise Exception(
-                "NaNs in {0} dataframe, csv written to {1}".format(name, csv_name)
-            )
+        _check_and_reject_nans(self.model_input_data.loc[:, columns], name)
         name = "insfile_data"
         columns = self.model_io_fieldnames
-        if self.model_output_data.loc[:, columns].isnull().values.any():
-            # warnings.warn("WARNING: NaNs in {0} dataframe".format(name))
-            csv_name = "pst.{0}.nans.csv".format(
-                name.replace(" ", "_").replace("*", "")
-            )
-            self.model_output_data.to_csv(csv_name)
-            raise Exception(
-                "NaNs in {0} dataframe, csv written to {1}".format(name, csv_name)
-            )
+        _check_and_reject_nans(self.model_output_data.loc[:, columns], name)
         f_out.write("* model input/output\n")
         for tplfle, infle in zip(
             self.model_input_data.pest_file, self.model_input_data.model_file
@@ -2006,15 +1955,7 @@ class Pst(object):
         if self.nprior > 0:
             name = "pi_data"
             columns = self.prior_fieldnames
-            if self.prior_information.loc[:, columns].isnull().values.any():
-                # warnings.warn("WARNING: NaNs in {0} dataframe".format(name))
-                csv_name = "pst.{0}.nans.csv".format(
-                    name.replace(" ", "_").replace("*", "")
-                )
-                self.prior_information.to_csv(csv_name)
-                raise Exception(
-                    "NaNs in {0} dataframe, csv written to {1}".format(name, csv_name)
-                )
+            _check_and_reject_nans(self.prior_information.loc[:, columns], name)
             f_out.write("* prior information\n")
             # self.prior_information.index = self.prior_information.pop("pilbl")
             max_eq_len = self.prior_information.equation.apply(lambda x: len(x)).max()
@@ -2143,7 +2084,7 @@ class Pst(object):
                     skiprows=1,
                     index_col=0,
                     usecols=[0, 1],
-                    delim_whitespace=True,
+                    sep=r"\s+",
                     header=None,
                     low_memory = False
                 )
@@ -2398,21 +2339,20 @@ class Pst(object):
             names = self.nnz_obs_names
             obs = self.observation_data.loc[names, :]
             # "Phi should equal nnz - nnzobs that satisfy inequ"
-            res = self.res.loc[names, :].residual
+            res = self.res.loc[names, 'residual'].copy()
             og = obs.obgnme
             res.loc[
-                (og.str.startswith(self.get_constraint_tags('gt'))) &
+                (og.str.startswith(get_constraint_tags('gt'))) &
                 (res <= 0)] = 0
             res.loc[
-                (og.str.startswith(self.get_constraint_tags('lt'))) &
+                (og.str.startswith(get_constraint_tags('lt'))) &
                 (res >= 0)] = 0
             swr = (res * obs.weight) ** 2
             factors = (1.0 / swr)**0.5
             if original_ceiling:
                 factors = factors.apply(lambda x: 1.0 if x > 1.0 else x)
 
-            w = self.observation_data.weight
-            w.loc[names] *= factors.values
+            self.observation_data.loc[names, "weight"] *= factors
 
     def _adjust_weights_by_phi_components(self, components, original_ceiling):
         """private method that resets the weights of observations by group to account for
@@ -2493,10 +2433,10 @@ class Pst(object):
             ).loc[tmpobs.index]
             og = tmpobs.obgnme
             resid.loc[
-                (og.str.startswith(self.get_constraint_tags('gt'))) &
+                (og.str.startswith(get_constraint_tags('gt'))) &
                 (resid <= 0)] = 0
             resid.loc[
-                (og.str.startswith(self.get_constraint_tags('lt'))) &
+                (og.str.startswith(get_constraint_tags('lt'))) &
                 (resid >= 0)] = 0
 
             actual_phi = np.sum(
@@ -3633,7 +3573,7 @@ class Pst(object):
         """
         obs = self.observation_data
         lt_obs = obs.loc[
-            obs.obgnme.str.startswith(self.get_constraint_tags('lt')) &
+            obs.obgnme.str.startswith(get_constraint_tags('lt')) &
             (obs.weight != 0.0), "obsnme"
         ]
         return lt_obs
@@ -3654,7 +3594,7 @@ class Pst(object):
 
         pi = self.prior_information
         lt_pi = pi.loc[
-            pi.obgnme.str.startswith(self.get_constraint_tags('lt')) &
+            pi.obgnme.str.startswith(get_constraint_tags('lt')) &
             (pi.weight != 0.0), "pilbl"
         ]
         return lt_pi
@@ -3680,7 +3620,7 @@ class Pst(object):
 
         obs = self.observation_data
         gt_obs = obs.loc[
-            obs.obgnme.str.startswith(self.get_constraint_tags('gt')) &
+            obs.obgnme.str.startswith(get_constraint_tags('gt')) &
             (obs.weight != 0.0), "obsnme"
         ]
         return gt_obs
@@ -3702,7 +3642,7 @@ class Pst(object):
 
         pi = self.prior_information
         gt_pi = pi.loc[
-            pi.obgnme.str.startswith(self.get_constraint_tags('gt')) &
+            pi.obgnme.str.startswith(get_constraint_tags('gt')) &
             (pi.weight != 0.0),
             "pilbl"]
         return gt_pi
@@ -3854,15 +3794,9 @@ class Pst(object):
                         [item.split(":") for item in x.split("_") if ":" in item]
                     )
                 )
-                unique_keys = []
-                for k, v in meta_dict.items():
-                    for kk, vv in v.items():
-                        if kk not in fieldnames and kk not in unique_keys:
-                            unique_keys.append(kk)
-                for uk in unique_keys:
-                    if uk not in df.columns:
-                        df.loc[:, uk] = np.NaN
-                    df.loc[:, uk] = meta_dict.apply(lambda x: x.get(uk, np.NaN))
+                meta_dict = pd.DataFrame(list(meta_dict), index=meta_dict.index)
+                unique_keys = meta_dict.columns.difference(fieldnames)
+                df[unique_keys] = meta_dict[unique_keys]
             except Exception as e:
                 print("error parsing metadata from '{0}', continuing".format(name))
 
@@ -3966,7 +3900,8 @@ def _replace_str_in_files(filelist, name_dict, file_obsparmap=None, pst_path='.'
             )
             if not os.path.exists(sys_fname):
                 warnings.warn(
-                    "template/instruction file '{0}' not found, continuing...",
+                    f"template/instruction file '{sys_fname}' "
+                    f"not found, continuing...",
                     PyemuWarning
                 )
                 continue
