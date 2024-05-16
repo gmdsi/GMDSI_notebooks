@@ -7,6 +7,7 @@ MODFLOW Guide
 <https://water.usgs.gov/ogw/modflow/MODFLOW-2005-Guide/name_file.html>`_.
 
 """
+
 import os
 from os import PathLike
 from pathlib import Path, PurePosixPath, PureWindowsPath
@@ -205,7 +206,17 @@ def parsenamefile(namfilename, packages, verbose=True):
 
 
 def attribs_from_namfile_header(namefile):
-    # check for reference info in the nam file header
+    """Return spatial and temporal reference info from the nam header.
+
+    Parameters
+    ----------
+    namefile : str, PathLike or None
+        Path to NAM file to read.
+
+    Returns
+    -------
+    dict
+    """
     defaults = {
         "xll": None,
         "yll": None,
@@ -255,7 +266,6 @@ def attribs_from_namfile_header(namefile):
             except:
                 print(f"   could not parse rotation in {namefile}")
         elif "proj4_str" in item.lower():
-            # deprecated, use "crs" instead
             try:
                 proj4 = ":".join(item.split(":")[1:]).strip()
                 if proj4.lower() == "none":
@@ -277,6 +287,9 @@ def attribs_from_namfile_header(namefile):
                 defaults["start_datetime"] = start_datetime
             except:
                 print(f"   could not parse start in {namefile}")
+    if "proj4_str" in defaults and defaults["crs"] is None:
+        # handle deprecated keyword, use "crs" instead
+        defaults["crs"] = defaults.pop("proj4_str")
     return defaults
 
 

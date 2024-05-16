@@ -167,7 +167,7 @@ class ModflowBas(Package):
         ----------
         f : str or file handle
             String defining file name or file handle for summary file
-            of check method output. If a sting is passed a file handle
+            of check method output. If a string is passed a file handle
             is created. If f is None, check method does not write
             results to a summary file. (default is None)
         verbose : bool
@@ -193,9 +193,9 @@ class ModflowBas(Package):
 
         neighbors = chk.get_neighbors(self.ibound.array)
         if isinstance(neighbors, np.ndarray):
-            neighbors[
-                np.isnan(neighbors)
-            ] = 0  # set neighbors at edges to 0 (inactive)
+            neighbors[np.isnan(neighbors)] = (
+                0  # set neighbors at edges to 0 (inactive)
+            )
             chk.values(
                 self.ibound.array,
                 (self.ibound.array > 0) & np.all(neighbors < 1, axis=0),

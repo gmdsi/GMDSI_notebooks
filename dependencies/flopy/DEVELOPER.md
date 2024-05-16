@@ -5,7 +5,6 @@ This document describes how to set up a FloPy development environment, run the e
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Requirements & installation](#requirements--installation)
   - [Git](#git)
   - [Python](#python)
@@ -19,11 +18,7 @@ This document describes how to set up a FloPy development environment, run the e
       - [Mac](#mac)
   - [Updating FloPy packages](#updating-flopy-packages)
 - [Examples](#examples)
-  - [Scripts](#scripts)
-  - [Notebooks](#notebooks)
-    - [Developing new notebooks](#developing-new-notebooks)
-      - [Adding a tutorial notebook](#adding-a-tutorial-notebook)
-      - [Adding an example notebook](#adding-an-example-notebook)
+  - [Developing new examples](#developing-new-examples)
 - [Tests](#tests)
   - [Configuring tests](#configuring-tests)
   - [Running tests](#running-tests)
@@ -33,6 +28,7 @@ This document describes how to set up a FloPy development environment, run the e
   - [Performance testing](#performance-testing)
     - [Benchmarking](#benchmarking)
     - [Profiling](#profiling)
+  - [Snapshot testing](#snapshot-testing)
 - [Branching model](#branching-model)
 - [Deprecation policy](#deprecation-policy)
 - [Miscellaneous](#miscellaneous)
@@ -42,7 +38,7 @@ This document describes how to set up a FloPy development environment, run the e
 
 ## Requirements & installation
 
-To develop `flopy` you must have the following software installed on your machine:
+To develop FloPy you must have the following software installed on your machine:
 
 - git
 - Python3
@@ -59,18 +55,18 @@ FloPy supports several recent versions of Python, loosely following [NEP 29](htt
 
 Install Python >=3.8.1, via [standalone download](https://www.python.org/downloads/) or a distribution like [Anaconda](https://www.anaconda.com/products/individual) or [miniconda](https://docs.conda.io/en/latest/miniconda.html). (An [infinite recursion bug](https://github.com/python/cpython/pull/17098) in 3.8.0's [`shutil.copytree`](https://github.com/python/cpython/commit/65c92c5870944b972a879031abd4c20c4f0d7981) can cause test failures if the destination is a subdirectory of the source.)
 
-Then install `flopy` and core dependencies from the project root:
+Then install FloPy and core dependencies from the project root:
 
     pip install .
+
+The FloPy package has a number of [optional dependencies](.docs/optional_dependencies.md), as well as extra dependencies required for linting, testing, and building documentation. Extra dependencies are listed in the `test`, `lint`, `optional`, and `doc` groups under the `[project.optional-dependencies]` section in `pyproject.toml`. Core, linting, testing and optional dependencies are included in the Conda environment in `etc/environment.yml`. Only core dependencies are included in the PyPI package &mdash; to install extra dependency groups with pip, use `pip install ".[<group>]"`. For instance, to install all development dependencies:
+
+    pip install ".[dev]"
 
 Alternatively, with Anaconda or Miniconda:
 
     conda env create -f etc/environment.yml
     conda activate flopy
-
-The `flopy` package has a number of [optional dependencies](docs/flopy_method_dependencies.md), as well as extra dependencies required for linting, testing, and building documentation. Extra dependencies are listed in the `test`, `lint`, `optional`, and `doc` groups under the `[project.optional-dependencies]` section in `pyproject.toml`. Core, linting, testing and optional dependencies are included in the Conda environment in `etc/environment.yml`. Only core dependencies are included in the PyPI package &mdash; to install extra dependency groups with pip, use `pip install ".[<group>]"`. For instance, to install all extra dependency groups:
-
-    pip install ".[test, lint, optional, doc]"
 
 #### Python IDEs
 
@@ -80,7 +76,7 @@ VSCode users on Windows may need to run `conda init`, then open a fresh terminal
 
 ```json
 {
-    "python.defaultInterpreterPath": "/path/to/your/virtual/environment",
+    "python.defaultInterpreterPath": "/path/to/environment",
     "python.terminal.activateEnvironment": true
 }
 ```
@@ -93,11 +89,11 @@ To configure a Python interpreter in PyCharm, navigate to `Settings -> Project -
 
 ### MODFLOW executables
 
-To develop `flopy` you will need a number of MODFLOW executables installed.
+To develop FloPy you will need a number of MODFLOW executables installed.
 
 #### Scripted installation
 
-A utility script is provided to easily download and install executables: after installing `flopy`, just run `get-modflow` (see the script's [documentation](docs/get_modflow.md) for more info).
+A utility script is provided to easily download and install executables: after installing FloPy, just run `get-modflow` (see the script's [documentation](.docs/md/get_modflow.md) for more info).
 
 #### Manually installing executables
 
@@ -110,9 +106,9 @@ wget https://github.com/MODFLOW-USGS/executables/releases/download/8.0/linux.zip
 unzip linux.zip -d /path/to/your/install/location
 ```
 
-Then add the install location to your `PATH`
+Then add the install location to the `PATH`
 
-    export PATH="/path/to/your/install/location:$PATH"
+    export PATH="/path/to/install/location:$PATH"
 
 ##### Mac
 
@@ -141,38 +137,22 @@ This can be fixed by running `Install Certificates.command` in your Python insta
 
 ### Updating FloPy packages
 
-FloPy must be up-to-date with the version of MODFLOW 6 and other executables it is being used with. Synchronization is achieved via "definition" (DFN) files, which define the format of MODFLOW6 inputs and outputs. FloPy contains Python source code automatically generated from DFN files. This is done with the `generate_classes` function in `flopy.mf6.utils`. See [this document](./docs/generate_classes.md) for usage examples.
+FloPy must be up-to-date with the version of MODFLOW 6 and other executables it is being used with. Synchronization is achieved via "definition" (DFN) files, which define the format of MODFLOW6 inputs and outputs. FloPy contains Python source code automatically generated from DFN files. This is done with the `generate_classes` function in `flopy.mf6.utils`. See [this document](./.docs/generate_classes.md) for usage examples.
 
 ## Examples
 
-A number of scripts and notebooks demonstrating various `flopy` functions and features are located in `examples/` and `.docs/`. These are probably the easiest way to get acquainted with `flopy`.
+A number of examples demonstrating FloPy features are located in `.docs/Notebooks`. These are probably the easiest way to get acquainted with FloPy. Examples are version-controlled as [`jupytext`-managed Python scripts](https://jupytext.readthedocs.io/en/latest/#paired-notebooks). Any `.ipynb` files in `.docs/Notebooks` are ignored by Git. Each script can be invoked by name with Python per usual. The scripts can also be converted to Jupyter notebooks with `jupytext`.
 
-### Scripts
-
-Tutorial scripts are located in `examples/scripts` and `examples/Tutorials`. The scripts are rendered as a notebook gallery [in the user documentation](https://flopy.readthedocs.io/en/stable/tutorials.html).
-
-Each script be invoked by name with Python per usual. The scripts can also be converted to notebooks with `jupytext`. By default, all scripts create and attempt to clean up temporary working directories. (On Windows, Python's `TemporaryDirectory` can raise permissions errors, so cleanup is trapped with `try/except`.) Some scripts also accept a `--quiet` flag, curtailing verbose output, and a `--keep` option to specify a working directory of the user's choice.
-
-Some of the scripts use [optional dependencies](docs/flopy_method_dependencies.md). If you're using `pip`, make sure these have been installed with `pip install ".[optional]"`. The conda environment provided in `etc/environment.yml` already includes all optional dependencies.
-
-### Notebooks
-
-Notebooks are located in `.docs/Notebooks`.
-
-There are two kinds of notebooks: tutorials and examples. All notebooks are version-controlled as [`jupytext`-managed Python scripts](https://jupytext.readthedocs.io/en/latest/#paired-notebooks). Any `.ipynb` files in `.docs/Notebooks` are ignored by Git.
-
-To convert a paired Python script to an `.ipynb` notebook, run:
+To convert a Python example script to an `.ipynb` notebook, run:
 
 ```
-jupytext --from py --to ipynb path/to/notebook
+jupytext --from py --to ipynb path/to/script.py
 ```
 
-Notebook scripts can be run like any other Python script. To run `.ipynb` notebooks, you will need `jupyter` installed (`jupyter` is included with the `test` optional dependency group in `pyproject.toml`). Some of the notebooks use [optional dependencies](docs/flopy_method_dependencies.md) as well.
-
-To install jupyter and optional dependencies at once:
+To work with `.ipynb` notebooks from a browser interface, you will need `jupyter` installed (`jupyter` is included with the `test` optional dependency group in `pyproject.toml`). Some of the notebooks use testing dependencies and [optional dependencies](.docs/optional_dependencies.md) as well. The conda environment provided in `etc/environment.yml` already includes all dependencies needed to run the examples. To install all development dependencies at once using `pip`:
 
 ```shell
-pip install ".[test, optional]"
+pip install ".[dev]"
 ```
 
 To start a local Jupyter notebook server, run:
@@ -181,19 +161,19 @@ To start a local Jupyter notebook server, run:
 jupyter notebook
 ```
 
-Like the scripts and tutorials, each notebook is configured to create and (attempt to) dispose of its own isolated temporary workspace. (On Windows, Python's `TemporaryDirectory` can raise permissions errors, so cleanup is trapped with `try/except`.)
+### Developing new examples
 
-#### Developing new notebooks
+Submissions of high-quality examples that demonstrate the use of FloPy are encouraged, as are edits to existing examples to improve the code quality, performance, or clarity of presentation.
 
-Submissions of high-quality Jupyter Notebook examples that demonstrate the use of FloPy are encouraged, as are edits to existing notebooks to improve the code quality, performance, or clarity of presentation.
+There are two kinds of examples: tutorials and full-fledged examples. 
 
-##### Adding a tutorial notebook
+If a script's filename contains "tutorial", it will automatically be assigned to the [Tutorials](https://flopy.readthedocs.io/en/latest/tutorials.html) page on the documentation site.
 
-If a notebook's name contains "tutorial", it will automatically be assigned to the [Tutorials](https://flopy.readthedocs.io/en/latest/tutorials.html) page in ReadTheDocs.
+Tutorials should aim to briefly demonstrate one basic feature. Most tutorials do not create visualizations, so tutorials are simply listed on the documentation site rather than rendered into a thumbnail gallery.
 
-Tutorial notebooks should aim to briefly demonstrate a basic FloPy feature. Most tutorial notebooks do not perform post-processing or generate visualizations, so tutorials are simply listed rather than rendered into a thumbnail gallery.
+If a script's filename contains "example", it is considered a full-fledged example. These are more broadly scoped than tutorials, and may demonstrate several features at once, typically in the context of a sample model, including pre- and/or post-processing and visualization.
 
-Tutorials are assigned to sections by a notebook metadata `section` attribute. For instance, to assign a tutorial notebook to the MODFLOW 6 section:
+All tutorials and examples should include a header with the following format:
 
 ```
 # ---
@@ -201,31 +181,41 @@ Tutorials are assigned to sections by a notebook metadata `section` attribute. F
 #   jupytext:
 #     ...
 #   kernelspec:
-#     ..
+#     ...
 #   metadata:
-#     section: mf6
+#     section: ...
 #     authors:
-#       - name: ...
+#       - name: ......
 # ---
 ```
 
-See [the `create_rstfiles.py` script](./.docs/create_rstfiles.py) for a complete list of sections. If your notebook lacks a `section` attribute, it will be assigned to the "Miscellaneous" section.
+Contents above the `metadata` attribute can be auto-generated with `jupytext` by first-converting an example script to a notebook, and then back to a script (i.e. a round-trip conversion). For instance:
 
-##### Adding an example notebook
+```shell
+jupytext --from py --to ipynb .docs/Notebooks/your_example.py
+jupytext --from ipynb --to py .docs/Notebooks/your_example.ipynb
+```
 
-If a notebook's name contains "example", it is considered an example notebook. Example notebooks are more broadly scoped than tutorials, and typically include plots. Example notebooks are rendered into an HTML gallery view by [nbsphinx](https://github.com/spatialaudio/nbsphinx) when the [online documentation](https://flopy.readthedocs.io/en/latest/) is built.
+The `metadata` attribute should be filled by the example developer, and should contain at minimum:
 
-**Note**: at least one plot/visualization is recommended in order to provide a thumbnail for each example notebook in the [Examples gallery](https://flopy.readthedocs.io/en/latest/notebooks.html)gallery.
+- `section`: the section within the Tutorials or Examples page
+- `authors`: the example's author(s)
 
-Thumbnails for the examples gallery are generated automatically from the notebook header (typically the first line, begining with a single '#'), and by default, the last plot generated. Thumbnails can be customized to use any plot in the notebook, or an external image, as described [here](https://nbsphinx.readthedocs.io/en/0.9.1/subdir/gallery.html).
+The `section` attribute assigns the example to a group within the rendered documentation page. See [the `create_rstfiles.py` script](./.docs/create_rstfiles.py) for a complete list of sections. If your example lacks a `section` attribute, it will be assigned to the "Miscellaneous" section.
 
-Example notebooks are assigned to sections in the same way as tutorials. See [the `create_rstfiles.py` script](./.docs/create_rstfiles.py) for a complete list of sections. If your notebook lacks a `section` attribute, it will be assigned to the "Miscellaneous" section.
+**Note**: Examples are rendered into a thumbnail gallery view by [nbsphinx](https://github.com/spatialaudio/nbsphinx) when the [online documentation](https://flopy.readthedocs.io/en/latest/) is built. At least one plot/visualization is recommended in order to provide a thumbnail for each example notebook in the [Examples gallery](https://flopy.readthedocs.io/en/latest/notebooks.html)gallery.
+
+**Note**: Thumbnails for the examples gallery are generated automatically from the notebook header (typically the first line, begining with a single '#'), and by default, the last plot generated. Thumbnails can be customized to use any plot in the notebook, or an external image, as described [here](https://nbsphinx.readthedocs.io/en/0.9.1/subdir/gallery.html).
+
+Each example should create and (attempt to) dispose of its own isolated temporary workspace. On Windows, Python's `TemporaryDirectory` can raise permissions errors, so cleanup is trapped with `try/except`. Some scripts also accept a `--quiet` flag, curtailing verbose output, and a `--keep` option to specify a working directory of the user's choice.
 
 ## Tests
 
 To run the tests you will need `pytest` and a few plugins, including [`pytest-xdist`](https://pytest-xdist.readthedocs.io/en/latest/), [`pytest-dotenv`](https://github.com/quiqua/pytest-dotenv), and [`pytest-benchmark`](https://pytest-benchmark.readthedocs.io/en/latest/index.html). Test dependencies are specified in the `test` extras group in `pyproject.toml` (with pip, use `pip install ".[test]"`). Test dependencies are included in the Conda environment `etc/environment`.
 
-**Note:** to prepare your code for a pull request, you will need a few more packages specified in the `lint` extras group in `pyproject.toml` (also included by default for Conda). See the docs on [submitting a pull request](CONTRIBUTING.md) for more info.
+**Note:** tests require the [`modflow-devtools`](https://github.com/MODFLOW-USGS/modflow-devtools) package, which is a grab bag of utilities and `pytest` fixtures shared by FloPy, MODFLOW 6, and other related projects. If you see testing errors that don't seem related to the contents of the tests, updating to the latest `modflow-devtools` is recommended as a first troubleshooting step.
+
+**Note:** to prepare your code for a pull request, you will need the [`ruff`](https://docs.astral.sh/ruff/) linter/formatter, which is included in the `lint` extras group in `pyproject.toml` (also included by default for Conda). See the docs on [submitting a pull request](CONTRIBUTING.md) for more info.
 
 ### Configuring tests
 
@@ -233,7 +223,7 @@ Some tests require environment variables. Currently the following variables are 
 
 - `GITHUB_TOKEN`
 
-The `GITHUB_TOKEN` variable is needed because the [`get-modflow`](docs/get_modflow.md) utility invokes the GitHub API &mdash; to avoid rate-limiting, requests to the GitHub API should bear an [authentication token](https://github.com/settings/tokens). A token is automatically provided to GitHub Actions CI jobs via the [`github` context's](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context) `token` attribute, however a personal access token is needed to run the tests locally. To create a personal access token, go to [GitHub -> Settings -> Developer settings -> Personal access tokens -> Tokens (classic)](https://github.com/settings/tokens). The `get-modflow` utility automatically detects and uses the `GITHUB_TOKEN` environment variable if available.
+The `GITHUB_TOKEN` variable is needed because the [`get-modflow`](.docs/md/get_modflow.md) utility invokes the GitHub API &mdash; to avoid rate-limiting, requests to the GitHub API should bear an [authentication token](https://github.com/settings/tokens). A token is automatically provided to GitHub Actions CI jobs via the [`github` context's](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context) `token` attribute, however a personal access token is needed to run the tests locally. To create a personal access token, go to [GitHub -> Settings -> Developer settings -> Personal access tokens -> Tokens (classic)](https://github.com/settings/tokens). The `get-modflow` utility automatically detects and uses the `GITHUB_TOKEN` environment variable if available.
 
 Environment variables can be set as usual, but a more convenient way to store variables for all future sessions is to create a text file called `.env` in the `autotest` directory, containing variables in `NAME=VALUE` format, one on each line. [`pytest-dotenv`](https://github.com/quiqua/pytest-dotenv) will detect and add these to the environment provided to the test process. All `.env` files in the project are ignored in `.gitignore` so there is no danger of checking in secrets unless the file is misnamed.
 
@@ -358,9 +348,19 @@ Profiling is [distinct](https://stackoverflow.com/a/39381805/6514033) from bench
 
 By default, `pytest-benchmark` will only print profiling results to `stdout`. If the `--benchmark-autosave` flag is provided, performance profile data will be included in the JSON files written to the `.benchmarks` save directory as described in the benchmarking section above.
 
+### Snapshot testing
+
+Snapshot testing is a form of regression testing in which a "snapshot" of the results of some computation is verified and captured by the developer to be compared against when tests are subsequently run. This is accomplished with [`syrupy`](https://github.com/tophat/syrupy), which provides a `snapshot` fixture overriding the equality operator to allow comparison with e.g. `snapshot == result`. A few custom fixtures for snapshots of NumPy arrays are provided in `autotest/conftest.py`:
+
+- `array_snapshot`: saves an array in a binary file for compact storage, can be inspected programmatically with `np.load()`
+- `text_array_snapshot`: flattens an array and stores it in a text file, compromise between readability and disk usage
+- `readable_array_snapshot`: stores an array in a text file in its original shape, easy to inspect but largest on disk
+
+By default, tests run in comparison mode. This means a newly written test using any of the snapshot fixtures will fail until a snapshot is created. Snapshots can be created/updated by running pytest with the `--snapshot-update` flag.
+
 ## Branching model
 
-This project follows the [git flow](https://nvie.com/posts/a-successful-git-branching-model/): development occurs on the `develop` branch, while `main` is reserved for the state of the latest release. Development PRs are typically squashed to `develop`, to avoid merge commits. At release time, release branches are merged to `main`, and then `main` is merged back into `develop`.
+This project follows the [git flow](https://nvie.com/posts/a-successful-git-branching-model/): development occurs on the `develop` branch, while `master` is reserved for the state of the latest release. Development PRs are typically squashed to `develop`, to avoid merge commits. At release time, release branches are merged to `master`, and then `master` is merged back into `develop`.
 
 ## Deprecation policy
 

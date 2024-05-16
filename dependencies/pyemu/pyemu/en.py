@@ -85,6 +85,8 @@ class Ensemble(object):
 
     def __init__(self, pst, df, istransformed=False):
         self._df = df
+        if df is not None:
+            self._df = self._df.replace([np.inf, -np.inf], np.nan)
         """`pandas.DataFrame`: the underlying dataframe that stores the realized values"""
         self.pst = pst
         """`pyemu.Pst`: control file instance"""
@@ -810,17 +812,63 @@ class ObservationEnsemble(Ensemble):
             this method to evaluate new weighting strategies
 
         """
+        return self.get_phi_vector()
+
+    def get_phi_vector(self, noise_obs_filename=None, noise_obs_flag=False):
+        from pyemu.pst.pst_handler import get_constraint_tags
+        pstpath = os.path.join(*os.path.split(self.pst.filename)[:-1])
+        if noise_obs_filename is not None:
+            noise_obs_flag = True
+        if noise_obs_flag is True:
+            # if no noise_obs_filename included, try to grab from pst object
+            if noise_obs_filename is None:
+                for tag in ['ies_observation_ensemble', 'ies_obs_en']:
+                    noise_obs_filename = self.pst.pestpp_options.get(tag)
+                    if noise_obs_filename is not None:
+                        break
+                if noise_obs_filename is None:
+                    raise Exception(
+                        "no noise_observation_filename passed or found in pst options"
+                    )
+            # if it looks like a binary file, try loading from binary
+            if (noise_obs_filename.endswith('jcb')) or (noise_obs_filename.endswith('jco')):
+                try:
+                    noise_obs = pyemu.Matrix.from_binary(
+                        os.path.join(pstpath, noise_obs_filename)
+                    ).to_dataframe()
+                except:
+                    raise Exception(
+                        f"Could not open {noise_obs_filename}"
+                    )
+            # otherwise assume it's a csv
+            else:
+                kwargs = {}
+                kwargs["index_col"] = 0
+                kwargs["low_memory"] = False
+                try:
+                    noise_obs = pd.read_csv(noise_obs_filename, **kwargs)
+                except:
+                    raise Exception(
+                        f"Could not open {noise_obs_filename}"
+                    )
+            # make sure the index is all string (since the real)
+            noise_obs.index = [str(i) for i in noise_obs.index]
+
         cols = self._df.columns
         pst = self.pst
-        weights = self.pst.observation_data.loc[cols, "weight"]
-        obsval = self.pst.observation_data.loc[cols, "obsval"]
-        phi_vec = []
-        for idx in self._df.index.values:
-            simval = self._df.loc[idx, cols]
-            phi = (((simval - obsval) * weights) ** 2).sum()
-            phi_vec.append(phi)
-        return pd.Series(data=phi_vec, index=self.index)
+        obs = pst.observation_data.loc[cols, ['obsval', 'weight', "obgnme"]]
+        if noise_obs_flag is True:
+            enres = self._df.sub(noise_obs).dropna().T
+        else:
+            enres = self._df.sub(obs.obsval).T
+        ltobs = obs.obgnme.str.lower().str.startswith(get_constraint_tags('lt'))
+        gtobs = obs.obgnme.str.lower().str.startswith(get_constraint_tags('gt'))
+        enres.loc[ltobs] = enres.loc[ltobs].clip(0, None)
+        enres.loc[gtobs] = enres.loc[gtobs].clip(None, 0)
+        enswr = enres.mul(obs.weight, axis=0) ** 2
 
+        return enswr.sum()
+               
     def add_base(self):
         """add the control file `obsval` values as a realization
 

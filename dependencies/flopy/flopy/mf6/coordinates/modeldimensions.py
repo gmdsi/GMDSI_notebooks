@@ -401,9 +401,21 @@ class ModelDimensions:
             self._model_grid = UnstructuredModelGrid(
                 self.model_name, self.simulation_data
             )
-        elif grid_type == DiscretizationType.DISL:
+        elif grid_type == DiscretizationType.DISV1D:
             self._model_grid = ModelGrid(
-                self.model_name, self.simulation_data, DiscretizationType.DISL
+                self.model_name,
+                self.simulation_data,
+                DiscretizationType.DISV1D,
+            )
+        elif grid_type == DiscretizationType.DIS2D:
+            self._model_grid = ModelGrid(
+                self.model_name, self.simulation_data, DiscretizationType.DIS2D
+            )
+        elif grid_type == DiscretizationType.DISV2D:
+            self._model_grid = ModelGrid(
+                self.model_name,
+                self.simulation_data,
+                DiscretizationType.DISV2D,
             )
         else:
             self._model_grid = ModelGrid(
@@ -466,9 +478,7 @@ class ModelDimensions:
                             data_item_struct,
                             path=path,
                             repeating_key=repeating_key,
-                        )[
-                            0
-                        ]
+                        )[0]
                         num_cols = num_cols + num
                         shape_consistent = (
                             shape_consistent and consistent_shape
@@ -615,10 +625,10 @@ class ModelDimensions:
                                 if data is None:
                                     if (
                                         self.simulation_data.verbosity_level.value
-                                        >= VerbosityLevel.normal.value
+                                        >= VerbosityLevel.verbose.value
                                     ):
                                         print(
-                                            "WARNING: Unable to resolve "
+                                            "INFORMATION: Unable to resolve "
                                             "dimension of {} based on shape "
                                             '"{}".'.format(
                                                 data_item_struct.path, item[0]
@@ -651,10 +661,10 @@ class ModelDimensions:
                             else:
                                 if (
                                     self.simulation_data.verbosity_level.value
-                                    >= VerbosityLevel.normal.value
+                                    >= VerbosityLevel.verbose.value
                                 ):
                                     print(
-                                        "WARNING: Unable to resolve "
+                                        "INFORMATION: Unable to resolve "
                                         "dimension of {} based on shape "
                                         '"{}".'.format(
                                             data_item_struct.path, item[0]

@@ -5,6 +5,7 @@ util_array module.  Contains the util_2d, util_3d and transient_2d classes.
  instantiate these classes directly.
 
 """
+
 # from future.utils import with_metaclass
 
 import copy
@@ -487,7 +488,7 @@ class Util3d(DataInterface):
         ext_filename is reset to value.
     bin : bool
         flag to control writing external arrays as binary (optional)
-        (the defaut is False)
+        (the default is False)
 
     Attributes
     ----------
@@ -1404,7 +1405,7 @@ class Transient2d(DataInterface):
             pak_name : str package name (e.g. RCH)
             m4ds : dict(name,(masked) 4d numpy.ndarray)
                 each ndarray must have shape (nper,1,nrow,ncol).
-                if an entire (nrow,ncol) slice is np.NaN, then
+                if an entire (nrow,ncol) slice is np.nan, then
                 that kper is skipped.
         Returns
         -------
@@ -2390,7 +2391,7 @@ class Util2d(DataInterface):
             record multiplier - this method is used primarily for writing model input files
 
         """
-        # convert array to sting with specified format
+        # convert array to string with specified format
         a_string = self.array2string(
             self.shape, self._array, python_format=self.format.py
         )
@@ -2646,11 +2647,13 @@ class Util2d(DataInterface):
         # write the array to a string
         len_data = data.size
         str_fmt_data = [
-            output_fmt.format(d) + "\n"
-            if (((i + 1) % column_length == 0.0) and (i != 0 or ncol == 1))
-            or ((i + 1 == ncol) and (ncol != 1))
-            or (i + 1 == len_data)
-            else output_fmt.format(d)
+            (
+                output_fmt.format(d) + "\n"
+                if (((i + 1) % column_length == 0.0) and (i != 0 or ncol == 1))
+                or ((i + 1 == ncol) and (ncol != 1))
+                or (i + 1 == len_data)
+                else output_fmt.format(d)
+            )
             for i, d in enumerate(data.flatten())
         ]
         s = "".join(str_fmt_data)

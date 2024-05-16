@@ -1,6 +1,6 @@
 # DO NOT MODIFY THIS FILE DIRECTLY.  THIS FILE MUST BE CREATED BY
 # mf6/utils/createpackages.py
-# FILE created on June 29, 2023 14:20:38 UTC
+# FILE created on February 07, 2024 20:16:08 UTC
 from .. import mfpackage
 from ..data.mfdatautil import ListTemplateGenerator
 
@@ -160,10 +160,7 @@ class ModflowGwfevt(mfpackage.MFPackage):
     dfn_file_name = "gwf-evt.dfn"
 
     dfn = [
-        [
-            "header",
-            "multi-package",
-        ],
+        ["header", "multi-package", "package-type stress-package"],
         [
             "block options",
             "name fixed_cell",
@@ -202,6 +199,7 @@ class ModflowGwfevt(mfpackage.MFPackage):
             "type keyword",
             "reader urword",
             "optional true",
+            "mf6internal iprpak",
         ],
         [
             "block options",
@@ -209,6 +207,7 @@ class ModflowGwfevt(mfpackage.MFPackage):
             "type keyword",
             "reader urword",
             "optional true",
+            "mf6internal iprflow",
         ],
         [
             "block options",
@@ -216,6 +215,7 @@ class ModflowGwfevt(mfpackage.MFPackage):
             "type keyword",
             "reader urword",
             "optional true",
+            "mf6internal ipakcb",
         ],
         [
             "block options",
@@ -297,6 +297,7 @@ class ModflowGwfevt(mfpackage.MFPackage):
             "type keyword",
             "reader urword",
             "optional true",
+            "mf6internal surfratespec",
         ],
         [
             "block dimensions",
@@ -331,6 +332,7 @@ class ModflowGwfevt(mfpackage.MFPackage):
             "boundname",
             "shape (maxbound)",
             "reader urword",
+            "mf6internal spd",
         ],
         [
             "block period",
@@ -379,6 +381,7 @@ class ModflowGwfevt(mfpackage.MFPackage):
             "tagged false",
             "in_record true",
             "reader urword",
+            "optional true",
             "time_series true",
         ],
         [
@@ -389,6 +392,7 @@ class ModflowGwfevt(mfpackage.MFPackage):
             "tagged false",
             "in_record true",
             "reader urword",
+            "optional true",
             "time_series true",
         ],
         [
@@ -412,6 +416,7 @@ class ModflowGwfevt(mfpackage.MFPackage):
             "reader urword",
             "optional true",
             "time_series true",
+            "mf6internal auxvar",
         ],
         [
             "block period",

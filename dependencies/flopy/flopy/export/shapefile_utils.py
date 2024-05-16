@@ -2,6 +2,7 @@
 Module for exporting and importing flopy model attributes
 
 """
+
 import copy
 import json
 import os
@@ -9,12 +10,13 @@ import shutil
 import sys
 import warnings
 from pathlib import Path
-from typing import Optional, Union
+from typing import List, Optional, Union
 from warnings import warn
 
 import numpy as np
 
 from ..datbase import DataInterface, DataType
+from ..discretization.grid import Grid
 from ..utils import Util3d, flopy_io, import_optional_dependency
 from ..utils.crs import get_crs
 
@@ -28,7 +30,8 @@ def write_gridlines_shapefile(filename: Union[str, os.PathLike], mg):
     ----------
     filename : str or PathLike
         path of the shapefile to write
-    mg : model grid
+    mg : flopy.discretization.grid.Grid object
+        flopy model grid
 
     Returns
     -------
@@ -36,6 +39,10 @@ def write_gridlines_shapefile(filename: Union[str, os.PathLike], mg):
 
     """
     shapefile = import_optional_dependency("shapefile")
+    if not isinstance(mg, Grid):
+        raise ValueError(
+            f"'mg' must be a flopy Grid subclass instance; found '{type(mg)}'"
+        )
     wr = shapefile.Writer(str(filename), shapeType=shapefile.POLYLINE)
     wr.field("number", "N", 18, 0)
     grid_lines = mg.grid_lines
@@ -68,7 +75,7 @@ def write_grid_shapefile(
     ----------
     path : str or PathLike
         shapefile file path
-    mg : flopy.discretization.Grid object
+    mg : flopy.discretization.grid.Grid object
         flopy model grid
     array_dict : dict
         dictionary of model input arrays
@@ -101,7 +108,11 @@ def write_grid_shapefile(
     w = shapefile.Writer(str(path), shapeType=shapefile.POLYGON)
     w.autoBalance = 1
 
-    if mg.grid_type == "structured":
+    if not isinstance(mg, Grid):
+        raise ValueError(
+            f"'mg' must be a flopy Grid subclass instance; found '{type(mg)}'"
+        )
+    elif mg.grid_type == "structured":
         verts = [
             mg.get_cell_vertices(i, j)
             for i in range(mg.nrow)
@@ -112,7 +123,7 @@ def write_grid_shapefile(
     elif mg.grid_type == "unstructured":
         verts = [mg.get_cell_vertices(cellid) for cellid in range(mg.nnodes)]
     else:
-        raise Exception(f"Grid type {mg.grid_type} not supported.")
+        raise NotImplementedError(f"Grid type {mg.grid_type} not supported.")
 
     # set up the attribute fields and arrays of attributes
     if mg.grid_type == "structured":
@@ -293,8 +304,6 @@ def model_attributes_to_shapefile(
         pak = ml.get_package(pname)
         attrs = dir(pak)
         if pak is not None:
-            if "sr" in attrs:
-                attrs.remove("sr")
             if "start_datetime" in attrs:
                 attrs.remove("start_datetime")
             for attr in attrs:
@@ -463,20 +472,28 @@ def shape_attr_name(name, length=6, keep_layer=False):
     return n
 
 
-def enforce_10ch_limit(names):
+def enforce_10ch_limit(names: List[str], warnings: bool = True) -> List[str]:
     """Enforce 10 character limit for fieldnames.
     Add suffix for duplicate names starting at 0.
 
     Parameters
     ----------
     names : list of strings
+    warnings : whether to warn if names are truncated
 
     Returns
     -------
     list
         list of unique strings of len <= 10.
     """
-    names = [n[:5] + n[-4:] + "_" if len(n) > 10 else n for n in names]
+
+    def truncate(s):
+        name = s[:5] + s[-4:] + "_"
+        if warnings:
+            warn(f"Truncating shapefile fieldname {s} to {name}")
+        return name
+
+    names = [truncate(n) if len(n) > 10 else n for n in names]
     dups = {x: names.count(x) for x in names}
     suffix = {n: list(range(cnt)) for n, cnt in dups.items() if cnt > 1}
     for i, n in enumerate(names):

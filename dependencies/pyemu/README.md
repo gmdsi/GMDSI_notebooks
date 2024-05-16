@@ -7,12 +7,12 @@ pyEMU also has a pure python (pandas and numpy) implementation of ordinary krigi
 support for generating high-dimensional PEST(++) model interfaces, including support for (very) high-dimensional 
 ensemble generation and handling   
 
-Master branch:
-[![GHA CI](https://github.com/pypest/pyemu/workflows/pyemu%20continuous%20integration/badge.svg?branch=master)](https://github.com/pypest/pyemu/actions)
-[![Coverage Status](https://coveralls.io/repos/github/pypest/pyemu/badge.svg?branch=master)](https://coveralls.io/github/pypest/pyemu?branch=master)
+Main branch:
+[![pyemu continuous integration](https://github.com/pypest/pyemu/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pypest/pyemu/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/pypest/pyemu/badge.svg?branch=main)](https://coveralls.io/github/pypest/pyemu?branch=main)
 
 Develop branch:
-[![GHA CI](https://github.com/pypest/pyemu/workflows/pyemu%20continuous%20integration/badge.svg?branch=develop)](https://github.com/pypest/pyemu/actions)
+[![pyemu continuous integration](https://github.com/pypest/pyemu/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/pypest/pyemu/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/pypest/pyemu/badge.svg?branch=develop)](https://coveralls.io/github/pypest/pyemu?branch=develop)
 
 Documentation
@@ -80,11 +80,21 @@ Related Links
 How to get started with pyEMU
 =============================
 
-pyEMU is available through pyPI:
+pyEMU is available through pyPI and conda. To install pyEMU type:
 
-`>>>pip install pyemu`
+    >>>conda install -c conda-forge pyemu
+
+or
+
+    >>>pip install pyemu
 
 pyEMU needs `numpy` and `pandas`.  For plotting, `matplotloib`, `pyshp`, and `flopy` to take advantage of the auto interface construction
+
+After pyEMU is installed, the PEST++ software suite can be installed for your operating system  using the command:
+
+    get-pestpp :pyemu
+
+See [documentation](get_pestpp.md) for more information.
 
 Found a bug? Got a smart idea? Contributions welcome.
 ====================================================

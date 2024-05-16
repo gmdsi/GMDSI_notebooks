@@ -101,9 +101,6 @@ class VertexGrid(Grid):
         self._vertices = vertices
         self._cell1d = cell1d
         self._cell2d = cell2d
-        self._top = top
-        self._botm = botm
-        self._idomain = idomain
         if botm is None:
             self._nlay = nlay
             self._ncpl = ncpl
@@ -291,6 +288,53 @@ class VertexGrid(Grid):
             ]
 
         return copy.copy(self._polygons)
+
+    @property
+    def geo_dataframe(self):
+        """
+        Returns a geopandas GeoDataFrame of the model grid
+
+        Returns
+        -------
+            GeoDataFrame
+        """
+        polys = [[self.get_cell_vertices(nn)] for nn in range(self.ncpl)]
+        gdf = super().geo_dataframe(polys)
+        return gdf
+
+    def convert_grid(self, factor):
+        """
+        Method to scale the model grid based on user supplied scale factors
+
+        Parameters
+        ----------
+        factor
+
+        Returns
+        -------
+            Grid object
+        """
+        if self.is_complete:
+            return VertexGrid(
+                vertices=[
+                    [i[0], i[1] * factor, i[2] * factor]
+                    for i in self._vertices
+                ],
+                cell2d=[
+                    [i[0], i[1] * factor, i[2] * factor] + i[3:]
+                    for i in self._cell2d
+                ],
+                top=self.top * factor,
+                botm=self.botm * factor,
+                idomain=self.idomain,
+                xoff=self.xoffset * factor,
+                yoff=self.yoffset * factor,
+                angrot=self.angrot,
+            )
+        else:
+            raise AssertionError(
+                "Grid is not complete and cannot be converted"
+            )
 
     def intersect(self, x, y, z=None, local=False, forgive=False):
         """
@@ -531,7 +575,7 @@ class VertexGrid(Grid):
                 a = np.squeeze(a, axis=1)
                 plotarray = a[layer, :]
             else:
-                raise Exception(
+                raise ValueError(
                     "Array has 3 dimensions so one of them must be of size 1 "
                     "for a VertexGrid."
                 )
@@ -543,7 +587,7 @@ class VertexGrid(Grid):
                 plotarray = plotarray.reshape(self.nlay, self.ncpl)
                 plotarray = plotarray[layer, :]
         else:
-            raise Exception("Array to plot must be of dimension 1 or 2")
+            raise ValueError("Array to plot must be of dimension 1 or 2")
         msg = f"{plotarray.shape[0]} /= {required_shape}"
         assert plotarray.shape == required_shape, msg
         return plotarray

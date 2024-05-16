@@ -1,8 +1,10 @@
 import os
+from itertools import repeat
 from pathlib import Path
-from typing import Optional, Union
+from typing import Union
 
 import numpy as np
+from packaging.version import Version
 
 from ..datbase import DataInterface, DataListInterface, DataType
 from ..mbase import BaseModel, ModelInterface
@@ -157,12 +159,12 @@ def _add_output_nc_variable(
     array = np.zeros(
         (len(times), shape3d[0], shape3d[1], shape3d[2]), dtype=np.float32
     )
-    array[:] = np.NaN
+    array[:] = np.nan
 
     if isinstance(out_obj, ZBNetOutput):
         a = np.asarray(out_obj.zone_array, dtype=np.float32)
         if mask_array3d is not None:
-            a[mask_array3d] = np.NaN
+            a[mask_array3d] = np.nan
         for i, _ in enumerate(times):
             array[i, :, :, :] = a
 
@@ -185,7 +187,7 @@ def _add_output_nc_variable(
                         print(estr)
                     continue
                 if mask_array3d is not None and a.shape == mask_array3d.shape:
-                    a[mask_array3d] = np.NaN
+                    a[mask_array3d] = np.nan
                 try:
                     array[i, :, :, :] = a.astype(np.float32)
                 except Exception as e:
@@ -201,7 +203,7 @@ def _add_output_nc_variable(
         logger.log(f"creating array for {var_name}")
 
     for mask_val in mask_vals:
-        array[np.where(array == mask_val)] = np.NaN
+        array[np.where(array == mask_val)] = np.nan
     mx, mn = np.nanmax(array), np.nanmin(array)
     array[np.isnan(array)] = netcdf.FILLVALUE
 
@@ -594,7 +596,7 @@ def model_export(
         output format flag. 'vtk' will export to vtk
     **kwargs : keyword arguments
         modelgrid: flopy.discretization.Grid
-            user supplied modelgrid object which will supercede the built
+            user supplied modelgrid object which will supersede the built
             in modelgrid object
         crs : pyproj.CRS, int, str, optional if `prjfile` is specified
             Coordinate reference system (CRS) for the model grid
@@ -685,9 +687,9 @@ def package_export(
         package to export
     fmt : str
         output format flag. 'vtk' will export to vtk
-    ** kwargs : keword arguments
+    ** kwargs : keyword arguments
         modelgrid: flopy.discretization.Grid
-            user supplied modelgrid object which will supercede the built
+            user supplied modelgrid object which will supersede the built
             in modelgrid object
         crs : pyproj.CRS, int, str, optional if `prjfile` is specified
             Coordinate reference system (CRS) for the model grid
@@ -871,7 +873,7 @@ def mflist_export(f: Union[str, os.PathLike, NetCdf], mfl, **kwargs):
     mfl : MfList instance
     **kwargs : keyword arguments
         modelgrid : flopy.discretization.Grid
-            model grid instance which will supercede the flopy.model.modelgrid
+            model grid instance which will supersede the flopy.model.modelgrid
         crs : pyproj.CRS, int, str, optional if `prjfile` is specified
             Coordinate reference system (CRS) for the model grid
             (must be projected; geographic CRS are not supported).
@@ -1032,7 +1034,7 @@ def transient2d_export(f: Union[str, os.PathLike], t2d, fmt=None, **kwargs):
         min_valid : minimum valid value
         max_valid : maximum valid value
         modelgrid : flopy.discretization.Grid
-            model grid instance which will supercede the flopy.model.modelgrid
+            model grid instance which will supersede the flopy.model.modelgrid
         if fmt is set to 'vtk', parameters of Vtk initializer
 
     """
@@ -1080,9 +1082,9 @@ def transient2d_export(f: Union[str, os.PathLike], t2d, fmt=None, **kwargs):
         with np.errstate(invalid="ignore"):
             if array.dtype not in [int, np.int32, np.int64]:
                 if mask is not None:
-                    array[:, 0, mask] = np.NaN
-                array[array <= min_valid] = np.NaN
-                array[array >= max_valid] = np.NaN
+                    array[:, 0, mask] = np.nan
+                array[array <= min_valid] = np.nan
+                array[array >= max_valid] = np.nan
                 mx, mn = np.nanmax(array), np.nanmin(array)
             else:
                 mx, mn = np.nanmax(array), np.nanmin(array)
@@ -1097,7 +1099,7 @@ def transient2d_export(f: Union[str, os.PathLike], t2d, fmt=None, **kwargs):
 
         var_name = t2d.name.replace("_", "")
         if isinstance(f, dict):
-            array[array == netcdf.FILLVALUE] = np.NaN
+            array[array == netcdf.FILLVALUE] = np.nan
             f[var_name] = array
             return f
 
@@ -1192,7 +1194,7 @@ def array3d_export(f: Union[str, os.PathLike], u3d, fmt=None, **kwargs):
         min_valid : minimum valid value
         max_valid : maximum valid value
         modelgrid : flopy.discretization.Grid
-            model grid instance which will supercede the flopy.model.modelgrid
+            model grid instance which will supersede the flopy.model.modelgrid
         if fmt is set to 'vtk', parameters of Vtk initializer
 
     """
@@ -1241,7 +1243,7 @@ def array3d_export(f: Union[str, os.PathLike], u3d, fmt=None, **kwargs):
         # if isinstance(f,NetCdf) and array.shape != f.shape:
         #     f.log("broadcasting 3D array for {0}".format(var_name))
         #     full_array = np.empty(f.shape)
-        #     full_array[:] = np.NaN
+        #     full_array[:] = np.nan
         #     full_array[:array.shape[0]] = array
         #     array = full_array
         #     f.log("broadcasting 3D array for {0}".format(var_name))
@@ -1254,7 +1256,7 @@ def array3d_export(f: Union[str, os.PathLike], u3d, fmt=None, **kwargs):
         if mask is not None and array.shape != mask.shape:
             # f.log("broadcasting 3D array for {0}".format(var_name))
             full_array = np.empty(mask.shape)
-            full_array[:] = np.NaN
+            full_array[:] = np.nan
             full_array[: array.shape[0]] = array
             array = full_array
             # f.log("broadcasting 3D array for {0}".format(var_name))
@@ -1266,13 +1268,13 @@ def array3d_export(f: Union[str, os.PathLike], u3d, fmt=None, **kwargs):
                 # if u3d.model.modelgrid.bas6 is not None and "ibound" not
                 # in var_name:
                 #    array[u3d.model.modelgrid.bas6.ibound.array == 0] =
-                # np.NaN
+                # np.nan
                 # elif u3d.model.btn is not None and 'icbund' not in var_name:
-                #    array[u3d.model.modelgrid.btn.icbund.array == 0] = np.NaN
+                #    array[u3d.model.modelgrid.btn.icbund.array == 0] = np.nan
                 if mask is not None:
-                    array[mask] = np.NaN
-                array[array <= min_valid] = np.NaN
-                array[array >= max_valid] = np.NaN
+                    array[mask] = np.nan
+                array[array <= min_valid] = np.nan
+                array[array >= max_valid] = np.nan
                 mx, mn = np.nanmax(array), np.nanmin(array)
             else:
                 mx, mn = np.nanmax(array), np.nanmin(array)
@@ -1370,7 +1372,7 @@ def array2d_export(
         min_valid : minimum valid value
         max_valid : maximum valid value
         modelgrid : flopy.discretization.Grid
-            model grid instance which will supercede the flopy.model.modelgrid
+            model grid instance which will supersede the flopy.model.modelgrid
         if fmt is set to 'vtk', parameters of Vtk initializer
 
     """
@@ -1419,9 +1421,9 @@ def array2d_export(
                     and "ibound" not in u2d.name.lower()
                     and "idomain" not in u2d.name.lower()
                 ):
-                    array[modelgrid.idomain[0, :, :] == 0] = np.NaN
-                array[array <= min_valid] = np.NaN
-                array[array >= max_valid] = np.NaN
+                    array[modelgrid.idomain[0, :, :] == 0] = np.nan
+                array[array <= min_valid] = np.nan
+                array[array >= max_valid] = np.nan
                 mx, mn = np.nanmax(array), np.nanmin(array)
             else:
                 mx, mn = np.nanmax(array), np.nanmin(array)
@@ -1523,9 +1525,9 @@ def export_array(
         model grid
     filename : str or PathLike
         Path of output file. Export format is determined by
-        file extention.
+        file extension.
         '.asc'  Arc Ascii grid
-        '.tif'  GeoTIFF (requries rasterio package)
+        '.tif'  GeoTIFF (requires rasterio package)
         '.shp'  Shapefile
     a : 2D numpy.ndarray
         Array to export
@@ -1680,6 +1682,7 @@ def export_contours(
     filename: Union[str, os.PathLike],
     contours,
     fieldname="level",
+    verbose=False,
     **kwargs,
 ):
     """
@@ -1693,6 +1696,8 @@ def export_contours(
         (object returned by matplotlib.pyplot.contour)
     fieldname : str
         gis attribute table field name
+    verbose : bool, optional, default False
+        whether to show verbose output
     **kwargs : key-word arguments to flopy.export.shapefile_utils.recarray2shp
 
     Returns
@@ -1700,26 +1705,76 @@ def export_contours(
     df : dataframe of shapefile contents
 
     """
+    from importlib.metadata import version
+
+    from matplotlib.path import Path
+
     from ..utils.geometry import LineString
     from .shapefile_utils import recarray2shp
 
     if not isinstance(contours, list):
         contours = [contours]
 
+    # Export a linestring for each contour component.
+    # Levels may have multiple disconnected components.
     geoms = []
     level = []
-    for ctr in contours:
-        levels = ctr.levels
-        for i, c in enumerate(ctr.collections):
-            paths = c.get_paths()
-            geoms += [LineString(p.vertices) for p in paths]
-            level += list(np.ones(len(paths)) * levels[i])
 
-    # convert the dictionary to a recarray
+    # ContourSet.collections was deprecated with
+    # matplotlib 3.8. ContourSet is a collection
+    # of Paths, where each Path corresponds to a
+    # contour level, and may contain one or more
+    # (possibly disconnected) components. Before
+    # 3.8, iterating over ContourSet.collections
+    # and enumerating from get_paths() suffices,
+    # but post-3.8, we have to walk the segments
+    # to distinguish disconnected components.
+    mpl_ver = Version(version("matplotlib"))
+
+    for ctr in contours:
+        if mpl_ver < Version("3.8.0"):
+            levels = ctr.levels
+            for i, c in enumerate(ctr.collections):
+                paths = c.get_paths()
+                geoms += [LineString(p.vertices) for p in paths]
+                level += list(np.ones(len(paths)) * levels[i])
+        else:
+            paths = ctr.get_paths()
+            for pi, path in enumerate(paths):
+                # skip empty paths
+                if path.vertices.shape[0] == 0:
+                    continue
+
+                # Each Path may contain multiple components
+                # so we unpack them as separate geometries.
+                lines = []
+                segs = []
+                for seg in path.iter_segments():
+                    pts, code = seg
+                    if code == Path.MOVETO:
+                        if len(segs) > 0:
+                            lines.append(LineString(segs))
+                            segs = []
+                        segs.append(pts)
+                    elif code == Path.LINETO:
+                        segs.append(pts)
+                    elif code == Path.CLOSEPOLY:
+                        segs.append(pts)
+                        segs.append(segs[0])  # add closing segment
+                        lines.append(LineString(segs))
+                        segs = []
+                if len(segs) > 0:
+                    lines.append(LineString(segs))
+
+                level += list(np.ones(len(lines)) * ctr.levels[pi])
+                geoms += lines
+
+    if verbose:
+        print(f"Writing {len(level)} contour lines")
+
     ra = np.array(level, dtype=[(fieldname, float)]).view(np.recarray)
 
     recarray2shp(ra, geoms, filename, **kwargs)
-    return
 
 
 def export_contourf(
@@ -1756,57 +1811,99 @@ def export_contourf(
     >>> export_contourf('myfilledcontours.shp', cs)
 
     """
+    from importlib.metadata import version
+
+    from matplotlib.path import Path
+
     from ..utils.geometry import Polygon, is_clockwise
     from .shapefile_utils import recarray2shp
-
-    geoms = []
-    level = []
 
     if not isinstance(contours, list):
         contours = [contours]
 
-    for c in contours:
-        levels = c.levels
-        for idx, col in enumerate(c.collections):
-            # Loop through all polygons that have the same intensity level
-            for contour_path in col.get_paths():
-                # Create the polygon(s) for this intensity level
-                poly = None
-                for ncp, cp in enumerate(contour_path.to_polygons()):
-                    x = cp[:, 0]
-                    y = cp[:, 1]
-                    verts = [(i[0], i[1]) for i in zip(x, y)]
-                    new_shape = Polygon(verts)
+    # export a polygon for each filled contour
+    geoms = []
+    level = []
 
-                    if ncp == 0:
-                        poly = new_shape
-                    else:
-                        # check if this is a multipolygon by checking vertex
-                        # order.
-                        if is_clockwise(verts):
-                            # Clockwise is a hole, set to interiors
-                            if not poly.interiors:
-                                poly.interiors = [new_shape.exterior]
-                            else:
-                                poly.interiors.append(new_shape.exterior)
-                        else:
-                            geoms.append(poly)
-                            level.append(levels[idx])
+    # ContourSet.collections was deprecated with
+    # matplotlib 3.8. ContourSet is a collection
+    # of Paths, where each Path corresponds to a
+    # contour level, and may contain one or more
+    # (possibly disconnected) components. Before
+    # 3.8, iterating over ContourSet.collections
+    # and enumerating from get_paths() suffices,
+    # but post-3.8, we have to walk the segments
+    # to distinguish disconnected components.
+    mpl_ver = Version(version("matplotlib"))
+
+    for ctr in contours:
+        if mpl_ver < Version("3.8.0"):
+            levels = ctr.levels
+            for idx, col in enumerate(ctr.collections):
+                for contour_path in col.get_paths():
+                    # Create the polygon(s) for this intensity level
+                    poly = None
+                    for ncp, cp in enumerate(contour_path.to_polygons()):
+                        x = cp[:, 0]
+                        y = cp[:, 1]
+                        verts = [(i[0], i[1]) for i in zip(x, y)]
+                        new_shape = Polygon(verts)
+
+                        if ncp == 0:
                             poly = new_shape
+                        else:
+                            # check if this is a multipolygon by checking vertex
+                            # order.
+                            if is_clockwise(verts):
+                                # Clockwise is a hole, set to interiors
+                                if not poly.interiors:
+                                    poly.interiors = [new_shape.exterior]
+                                else:
+                                    poly.interiors.append(new_shape.exterior)
+                            else:
+                                geoms.append(poly)
+                                level.append(levels[idx])
+                                poly = new_shape
 
-                if poly is not None:
-                    # store geometry object
-                    geoms.append(poly)
+                    if poly is not None:
+                        # store geometry object
+                        geoms.append(poly)
                     level.append(levels[idx])
+        else:
+            paths = ctr.get_paths()
+            for pi, path in enumerate(paths):
+                # skip empty paths
+                if path.vertices.shape[0] == 0:
+                    continue
+
+                polys = []
+                segs = []
+                for seg in path.iter_segments():
+                    pts, code = seg
+                    if code == Path.MOVETO:
+                        if len(segs) > 0:
+                            polys.append(Polygon(segs))
+                            segs = []
+                        segs.append(pts)
+                    elif code == Path.LINETO:
+                        segs.append(pts)
+                    elif code == Path.CLOSEPOLY:
+                        segs.append(pts)
+                        segs.append(segs[0])  # add closing segment
+                        polys.append(Polygon(segs))
+                        segs = []
+                if len(segs) > 0:
+                    polys.append(Polygon(segs))
+
+                geoms.extend(polys)
+                level.extend(repeat(ctr.levels[pi], len(polys)))
 
     if verbose:
         print(f"Writing {len(level)} polygons")
 
-    # Create recarray
     ra = np.array(level, dtype=[(fieldname, float)]).view(np.recarray)
 
     recarray2shp(ra, geoms, filename, **kwargs)
-    return
 
 
 def export_array_contours(
@@ -1827,7 +1924,7 @@ def export_array_contours(
     modelgrid : flopy.discretization.Grid object
         model grid object
     filename : str or PathLike
-        Path of output file with '.shp' extention.
+        Path of output file with '.shp' extension.
     a : 2D numpy array
         Array to contour
     fieldname : str
@@ -1851,14 +1948,15 @@ def export_array_contours(
         assert nlevels < maxlevels, msg
         levels = np.arange(imin, imax, interval)
     ax = plt.subplots()[-1]
-    ctr = contour_array(modelgrid, ax, a, levels=levels)
+    layer = kwargs.pop("layer", 0)
+    ctr = contour_array(modelgrid, ax, a, layer, levels=levels)
 
     kwargs["mg"] = modelgrid
     export_contours(filename, ctr, fieldname, **kwargs)
     plt.close()
 
 
-def contour_array(modelgrid, ax, a, **kwargs):
+def contour_array(modelgrid, ax, a, layer=0, **kwargs):
     """
     Create a QuadMesh plot of the specified array using pcolormesh
 
@@ -1870,6 +1968,8 @@ def contour_array(modelgrid, ax, a, **kwargs):
         ax to add the contours
     a : np.ndarray
         array to contour
+    layer : int, optional
+        layer to contour
 
     Returns
     -------
@@ -1879,7 +1979,7 @@ def contour_array(modelgrid, ax, a, **kwargs):
     from ..plot import PlotMapView
 
     kwargs["ax"] = ax
-    pmv = PlotMapView(modelgrid=modelgrid)
+    pmv = PlotMapView(modelgrid=modelgrid, layer=layer)
     contour_set = pmv.contour_array(a=a, **kwargs)
 
     return contour_set

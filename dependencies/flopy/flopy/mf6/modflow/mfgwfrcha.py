@@ -1,6 +1,6 @@
 # DO NOT MODIFY THIS FILE DIRECTLY.  THIS FILE MUST BE CREATED BY
 # mf6/utils/createpackages.py
-# FILE created on June 29, 2023 14:20:38 UTC
+# FILE created on February 07, 2024 20:16:08 UTC
 from .. import mfpackage
 from ..data.mfdatautil import ArrayTemplateGenerator, ListTemplateGenerator
 
@@ -116,10 +116,7 @@ class ModflowGwfrcha(mfpackage.MFPackage):
     dfn_file_name = "gwf-rcha.dfn"
 
     dfn = [
-        [
-            "header",
-            "multi-package",
-        ],
+        ["header", "multi-package", "package-type stress-package"],
         [
             "block options",
             "name readasarrays",
@@ -159,6 +156,7 @@ class ModflowGwfrcha(mfpackage.MFPackage):
             "type keyword",
             "reader urword",
             "optional true",
+            "mf6internal iprpak",
         ],
         [
             "block options",
@@ -166,6 +164,7 @@ class ModflowGwfrcha(mfpackage.MFPackage):
             "type keyword",
             "reader urword",
             "optional true",
+            "mf6internal iprflow",
         ],
         [
             "block options",
@@ -173,6 +172,7 @@ class ModflowGwfrcha(mfpackage.MFPackage):
             "type keyword",
             "reader urword",
             "optional true",
+            "mf6internal ipakcb",
         ],
         [
             "block options",
@@ -275,6 +275,7 @@ class ModflowGwfrcha(mfpackage.MFPackage):
             "type double precision",
             "shape (ncol*nrow; ncpl)",
             "reader readarray",
+            "time_series true",
             "default_value 1.e-3",
         ],
         [
@@ -283,7 +284,9 @@ class ModflowGwfrcha(mfpackage.MFPackage):
             "type double precision",
             "shape (ncol*nrow; ncpl)",
             "reader readarray",
+            "time_series true",
             "optional true",
+            "mf6internal auxvar",
         ],
     ]
 

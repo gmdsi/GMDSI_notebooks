@@ -257,6 +257,7 @@ class MFSimulationData:
         self.verbosity_level = VerbosityLevel.normal
         self.max_columns_user_set = False
         self.max_columns_auto_set = False
+        self.use_pandas = True
 
         self._update_str_format()
 
@@ -430,6 +431,8 @@ class MFSimulationBase(PackageContainer):
         and only writes external data if the data has changed.  This option
         automatically overrides the verify_data and auto_set_sizes, turning
         both off.
+    use_pandas: bool
+        Load/save data using pandas dataframes (for supported data)
     Examples
     --------
     >>> s = MFSimulationBase.load('my simulation', 'simulation.nam')
@@ -455,12 +458,14 @@ class MFSimulationBase(PackageContainer):
         memory_print_option=None,
         write_headers=True,
         lazy_io=False,
+        use_pandas=True,
     ):
         super().__init__(MFSimulationData(sim_ws, self), sim_name)
         self.simulation_data.verbosity_level = self._resolve_verbosity_level(
             verbosity_level
         )
         self.simulation_data.write_headers = write_headers
+        self.simulation_data.use_pandas = use_pandas
         if lazy_io:
             self.simulation_data.lazy_io = True
 
@@ -609,9 +614,9 @@ class MFSimulationBase(PackageContainer):
     def _get_data_str(self, formal):
         file_mgt = self.simulation_data.mfpath
         data_str = (
-            "sim_name = {}\nsim_path = {}\nexe_name = "
-            "{}\n"
-            "\n".format(self.name, file_mgt.get_sim_path(), self.exe_name)
+            "sim_name = {}\nsim_path = {}\nexe_name = " "{}\n" "\n".format(
+                self.name, file_mgt.get_sim_path(), self.exe_name
+            )
         )
 
         for package in self._packagelist:
@@ -686,6 +691,7 @@ class MFSimulationBase(PackageContainer):
         verify_data=False,
         write_headers=True,
         lazy_io=False,
+        use_pandas=True,
     ):
         """
         Load an existing model. Do not call this method directly.  Should only
@@ -729,6 +735,9 @@ class MFSimulationBase(PackageContainer):
             and only writes external data if the data has changed.  This option
             automatically overrides the verify_data and auto_set_sizes, turning
             both off.
+        use_pandas: bool
+            Load/save data using pandas dataframes (for supported data)
+
         Returns
         -------
         sim : MFSimulation object
@@ -746,6 +755,7 @@ class MFSimulationBase(PackageContainer):
             sim_ws,
             verbosity_level,
             write_headers=write_headers,
+            use_pandas=use_pandas,
         )
         verbosity_level = instance.simulation_data.verbosity_level
 
@@ -795,6 +805,9 @@ class MFSimulationBase(PackageContainer):
                 package="nam",
                 message=message,
             )
+        if models is None:
+            return instance
+
         for item in models:
             # resolve model working folder and name file
             path, name_file = os.path.split(item[1])
@@ -1296,6 +1309,26 @@ class MFSimulationBase(PackageContainer):
                         mfdata_except=mfde, package="nam", message=message
                     )
 
+    def _create_package(self, package_type, package_data):
+        if package_data is None:
+            return None
+        if not isinstance(package_data, dict):
+            message = (
+                "Error occurred while creating the solution package "
+                f"{package_type}.  Package data must be provided in a "
+                f"dictionary.  User provided type {type(package_data)}."
+            )
+            raise MFDataException(package=package_type, message=message)
+        # find package - only supporting utl packages for now
+        package_obj = self.package_factory(package_type, "utl")
+        if package_obj is not None:
+            # determine file name
+            if "filename" not in package_data:
+                package_data["filename"] = f"{self.name}.{package_type}"
+            # create package which should automatically register with the
+            # simulation
+            pkg = package_obj(self, **package_data)
+
     @staticmethod
     def _rename_package_group(group_dict, name):
         package_type_count = {}
@@ -1435,7 +1468,11 @@ class MFSimulationBase(PackageContainer):
             model.rename_all_packages(name)
 
     def set_all_data_external(
-        self, check_data=True, external_data_folder=None
+        self,
+        check_data=True,
+        external_data_folder=None,
+        base_name=None,
+        binary=False,
     ):
         """Sets the simulation's list and array data to be stored externally.
 
@@ -1448,20 +1485,44 @@ class MFSimulationBase(PackageContainer):
                 Path relative to the simulation path or model relative path
                 (see use_model_relative_path parameter), where external data
                 will be stored
+            base_name: str
+                Base file name prefix for all files
+            binary: bool
+                Whether file will be stored as binary
         """
         # copy any files whose paths have changed
         self.simulation_data.mfpath.copy_files()
         # set data external for all packages in all models
         for model in self._models.values():
-            model.set_all_data_external(check_data, external_data_folder)
+            model.set_all_data_external(
+                check_data,
+                external_data_folder,
+                base_name,
+                binary,
+            )
         # set data external for solution packages
         for package in self._solution_files.values():
-            package.set_all_data_external(check_data, external_data_folder)
+            package.set_all_data_external(
+                check_data,
+                external_data_folder,
+                base_name,
+                binary,
+            )
         # set data external for other packages
         for package in self._other_files.values():
-            package.set_all_data_external(check_data, external_data_folder)
+            package.set_all_data_external(
+                check_data,
+                external_data_folder,
+                base_name,
+                binary,
+            )
         for package in self._exchange_files.values():
-            package.set_all_data_external(check_data, external_data_folder)
+            package.set_all_data_external(
+                check_data,
+                external_data_folder,
+                base_name,
+                binary,
+            )
 
     def set_all_data_internal(self, check_data=True):
         # set data external for all packages in all models
@@ -1497,7 +1558,7 @@ class MFSimulationBase(PackageContainer):
         if not sim_data.max_columns_user_set:
             # search for dis packages
             for model in self._models.values():
-                dis = model.get_package("dis")
+                dis = model.get_package("dis", type_only=True)
                 if dis is not None and hasattr(dis, "ncol"):
                     sim_data.max_columns_of_data = dis.ncol.get_data()
                     sim_data.max_columns_user_set = False
@@ -1593,6 +1654,7 @@ class MFSimulationBase(PackageContainer):
         normal_msg="normal termination",
         use_async=False,
         cargs=None,
+        custom_print=None,
     ):
         """
         Run the simulation.
@@ -1619,6 +1681,11 @@ class MFSimulationBase(PackageContainer):
             cargs : str or list of strings
                 Additional command line arguments to pass to the executable.
                 default is None
+            custom_print: callable
+                Optional callbale for printing. It will replace the builtin
+                print function. This is useful for shorter prints or integration
+                into other systems such as GUIs.
+                default is None, i.e. use the builtion print
 
         Returns
         --------
@@ -1645,6 +1712,7 @@ class MFSimulationBase(PackageContainer):
             normal_msg=normal_msg,
             use_async=use_async,
             cargs=cargs,
+            custom_print=custom_print,
         )
 
     def delete_output_files(self):
@@ -1689,6 +1757,17 @@ class MFSimulationBase(PackageContainer):
                 del self._other_files[package.filename]
 
             self._remove_package(package)
+
+        # if this is a package referenced from a filerecord, remove filerecord
+        # from name file
+        file_record_name = f"_{package.package_type}_filerecord"
+        if hasattr(self.name_file, file_record_name):
+            file_record = getattr(self.name_file, file_record_name)
+            if isinstance(file_record, mfdata.MFData):
+                file_record.set_data(None)
+            if hasattr(self.name_file, package.package_type):
+                child_pkgs = getattr(self.name_file, package.package_type)
+                child_pkgs._remove_packages(package.filename, True)
 
     @property
     def model_dict(self):
@@ -2063,6 +2142,13 @@ class MFSimulationBase(PackageContainer):
                 package.filename = file_name
                 self._other_files[file_name] = package
 
+            # If this package is declared in the namefile options block,
+            # update namefile
+            file_record = f"_{package.package_type}_filerecord"
+            if hasattr(self.name_file, file_record):
+                fr_obj = getattr(self.name_file, file_record)
+                fr_obj.set_data(package.filename)
+
         if package.package_type.lower() in self.structure.package_struct_objs:
             return (
                 path,
@@ -2183,11 +2269,36 @@ class MFSimulationBase(PackageContainer):
                 Model name to remove from simulation
 
         """
-        # Remove model
+        # remove model
         del self._models[model_name]
 
-        # TODO: Fully implement this
-        # Update simulation name file
+        # remove from solution group block
+        self._remove_from_all_solution_groups(model_name)
+
+        # remove from models block
+        models_recarray = self.name_file.models.get_data()
+        if models_recarray is not None:
+            new_records = []
+            for record in models_recarray:
+                if len(record) <= 2 or record[2] != model_name:
+                    new_records.append(tuple(record))
+            self.name_file.models.set_data(new_records)
+
+        # remove from exchanges block
+        exch_recarray = self.name_file.exchanges.get_data()
+        if exch_recarray is not None:
+            new_records = []
+            for record in exch_recarray:
+                model_in_record = False
+                if len(record) > 2:
+                    for item in list(record)[2:]:
+                        if item == model_name:
+                            model_in_record = True
+                if not model_in_record:
+                    new_records.append(tuple(record))
+            if len(new_records) == 0:
+                new_records = None
+            self.name_file.exchanges.set_data(new_records)
 
     def is_valid(self):
         """

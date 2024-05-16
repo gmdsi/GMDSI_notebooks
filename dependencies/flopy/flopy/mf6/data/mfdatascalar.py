@@ -191,7 +191,7 @@ class MFScalar(mfdata.MFData):
             data_struct = self.structure.data_item_structures[0]
             try:
                 converted_data = convert_data(
-                    data, self._data_dimensions, self._data_type, data_struct
+                    data, self.data_dimensions, self._data_type, data_struct
                 )
             except Exception as ex:
                 type_, value_, traceback_ = sys.exc_info()
@@ -299,8 +299,7 @@ class MFScalar(mfdata.MFData):
                     )
         else:
             message = (
-                "{} of type {} does not support add one "
-                "operation.".format(
+                "{} of type {} does not support add one " "operation.".format(
                     self._data_name, self.structure.get_datum_type()
                 )
             )
@@ -385,7 +384,7 @@ class MFScalar(mfdata.MFData):
                     ex,
                 )
         if self.structure.type == DatumType.keyword:
-            if data is not None and data != False:
+            if data is not None and data is not False:
                 # keyword appears alone
                 return "{}{}\n".format(
                     self._simulation_data.indent_string,
@@ -408,7 +407,8 @@ class MFScalar(mfdata.MFData):
                         ):
                             data = data[0]
                         if len(data) > index and (
-                            data[index] is not None and data[index] != False
+                            data[index] is not None
+                            and data[index] is not False
                         ):
                             text_line.append(data_item.name.upper())
                             if (
@@ -421,7 +421,7 @@ class MFScalar(mfdata.MFData):
                                 # assume the keyword was excluded
                                 index -= 1
                     else:
-                        if data is not None and data != False:
+                        if data is not None and data is not False:
                             text_line.append(data_item.name.upper())
                 else:
                     if data is not None and data != "":
@@ -429,12 +429,12 @@ class MFScalar(mfdata.MFData):
                             if len(data) > index:
                                 if (
                                     data[index] is not None
-                                    and data[index] != False
+                                    and data[index] is not False
                                 ):
                                     current_data = data[index]
                                 else:
                                     break
-                            elif data_item.optional == True:
+                            elif data_item.optional is True:
                                 break
                             else:
                                 message = (
@@ -462,7 +462,7 @@ class MFScalar(mfdata.MFData):
                         if data_item.type == DatumType.keyword:
                             if (
                                 current_data is not None
-                                and current_data != False
+                                and current_data is not False
                             ):
                                 if (
                                     isinstance(data[index], str)
@@ -479,7 +479,7 @@ class MFScalar(mfdata.MFData):
                                         current_data,
                                         self._data_type,
                                         self._simulation_data,
-                                        self._data_dimensions,
+                                        self.data_dimensions,
                                         data_item=data_item,
                                     )
                                 )
@@ -555,7 +555,7 @@ class MFScalar(mfdata.MFData):
                     data,
                     self._data_type,
                     self._simulation_data,
-                    self._data_dimensions,
+                    self.data_dimensions,
                     data_item=data_item,
                     verify_data=self._simulation_data.verify_data,
                 )
@@ -635,7 +635,7 @@ class MFScalar(mfdata.MFData):
         self._resync()
         file_access = MFFileAccessScalar(
             self.structure,
-            self._data_dimensions,
+            self.data_dimensions,
             self._simulation_data,
             self._path,
             self._current_key,
@@ -653,7 +653,7 @@ class MFScalar(mfdata.MFData):
         return DataStorage(
             self._simulation_data,
             self._model_or_sim,
-            self._data_dimensions,
+            self.data_dimensions,
             self.get_file_entry,
             DataStorageType.internal_array,
             DataStructureType.scalar,
@@ -661,7 +661,7 @@ class MFScalar(mfdata.MFData):
             data_path=self._path,
         )
 
-    def _get_storage_obj(self):
+    def _get_storage_obj(self, first_record=False):
         return self._data_storage
 
     def plot(self, filename_base=None, file_extension=None, **kwargs):
@@ -737,7 +737,6 @@ class MFScalarTransient(MFScalar, mfdata.MFTransient):
             path=path,
             dimensions=dimensions,
         )
-        self._transient_setup(self._data_storage)
         self.repeating = True
 
     @property
@@ -912,7 +911,11 @@ class MFScalarTransient(MFScalar, mfdata.MFTransient):
     def _new_storage(self, stress_period=0):
         return {}
 
-    def _get_storage_obj(self):
+    def _get_storage_obj(self, first_record=False):
+        if first_record and isinstance(self._data_storage, dict):
+            for value in self._data_storage.values():
+                return value
+            return None
         if (
             self._current_key is None
             or self._current_key not in self._data_storage

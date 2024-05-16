@@ -10,6 +10,7 @@ from ..pyemu_warnings import PyemuWarning
 import copy
 import string
 
+from pyemu.utils.helpers import _try_pdcol_numeric
 
 # the tolerable percent difference (100 * (max - min)/mean)
 # used when checking that constant and zone type parameters are in fact constant (within
@@ -41,6 +42,52 @@ def _check_var_len(var, n, fill=None):
     if nv < n:
         var.extend([fill for _ in range(n - nv)])
     return var
+
+
+def _load_array_get_fmt(fname, sep=None, fullfile=False):
+    splitsep = sep  # sep for splitting string for fmt (need to count mult delim.)
+    if sep is None:  # need to split line with space and count multiple
+        splitsep = ' '
+    with open(fname, 'r') as fp:  # load file or line
+        if fullfile:
+            lines = [line for line in fp.readlines()]
+            arr = np.genfromtxt(lines, delimiter=sep, ndmin=2)
+        else:
+            lines = [fp.readline()]  # just read first line
+            if splitsep not in lines[0]:
+                return _load_array_get_fmt(fname, sep, True)
+            fp.seek(0)  # reset pointer
+            arr = np.loadtxt(fp, delimiter=sep, ndmin=2)  # read array
+    n = 0  # counter for repeat delim when sep is None
+    lens, prec = [], []  # container for fmt length and precision
+    exps = 0  # exponential counter (could be bool)
+    for s in lines:
+        ilens, iprec = [], []
+        for ss in s.split(splitsep):
+            ss = ss.strip('\n').lower()
+            if not ss:
+                n += 1
+            else:
+                d = len(ss) + n if sep is None else len(ss)
+                ilens.append(d)
+                if 'e' in ss:
+                    exps += 1
+                    ss = ss.split('e')[0]
+                iprec.append(len(ss.split('.')[-1]))
+                n = 0  # reset space counter
+        lens.append(ilens)
+        prec.append(iprec)
+    firsts = [line.pop(0) for line in lens]
+    fmax = max(firsts)
+    maxlen = max(np.ravel(lens) if np.ravel(lens).shape[0]>0 else [0])
+    maxprec = max(np.ravel(prec))
+    if sep is None and fmax <= maxlen:
+        maxlen += 1
+    maxlen = max([fmax, maxlen])
+    # fracexp = exps / total
+    fmt = f"%{maxlen}.{maxprec}"
+    fmt += "E" if exps > 0 else "F"
+    return arr, fmt
 
 
 class PstFrom(object):
@@ -90,7 +137,6 @@ class PstFrom(object):
         chunk_len=50,
         echo=True,
     ):
-
         self.original_d = Path(original_d)
         self.new_d = Path(new_d)
         self.original_file_d = None
@@ -435,8 +481,8 @@ class PstFrom(object):
             for k, li in gps.items():
                 tdf = []
                 for df in li:
-                    df.parnme.update(mapdict)
-                    df = df.rename(index=mapdict)
+                    df['parnme'] = df.parnme.apply(lambda x: mapdict.get(x, x))
+                    df = df.set_index('parnme', drop=False)
                     tdf.append(df)
                 df_dict[k] = tdf
             self.par_struct_dict[gs] = df_dict
@@ -603,7 +649,7 @@ class PstFrom(object):
         else:
             pe = pyemu.ParameterEnsemble(pst=self.pst, df=gr_par_pe)
         self.logger.log("drawing realizations")
-        return pe
+        return pe.copy()
 
     def build_pst(self, filename=None, update=False, version=1):
         """Build control file from i/o files in PstFrom object.
@@ -845,11 +891,11 @@ class PstFrom(object):
                 # shortnames from using previous a starting point (if existing)
                 obgpmap["shortname"] = "obg" + (obgpmap.index+gshtmx).astype(str)
                 ltobs = obgpmap.longname.str.startswith(
-                    pyemu.Pst.get_constraint_tags('lt')
+                    pyemu.pst.pst_handler.get_constraint_tags('lt')
                 )
                 obgpmap.loc[ltobs, "shortname"] = "l_" + obgpmap.loc[ltobs, "shortname"]
                 gtobs = obgpmap.longname.str.startswith(
-                    pyemu.Pst.get_constraint_tags('gt')
+                    pyemu.pst.pst_handler.get_constraint_tags('gt')
                 )
                 obgpmap.loc[gtobs, "shortname"] = "g_" + obgpmap.loc[gtobs, "shortname"]
                 obgpmap_dict = obgpmap.set_index('longname').shortname.to_dict()
@@ -1037,7 +1083,7 @@ class PstFrom(object):
                         sep=",",
                         header=hheader,
                     )
-                file_dict[rel_filepath] = df.apply(pd.to_numeric, errors='ignore')  # make sure numeric (if reasonable)
+                file_dict[rel_filepath] = df.apply(_try_pdcol_numeric)  # make sure numeric (if reasonable)
                 fmt_dict[rel_filepath] = fmt
                 sep_dict[rel_filepath] = sep
                 skip_dict[rel_filepath] = skip
@@ -1077,16 +1123,18 @@ class PstFrom(object):
                 if not dest_filepath.exists():
                     self.logger.lraise(f"par filename '{dest_filepath}' not found ")
                 # read array type input file
-                arr = np.loadtxt(dest_filepath, delimiter=sep, ndmin=2)
+                arr, infmt = _load_array_get_fmt(dest_filepath, sep=sep)
+                # arr = np.loadtxt(dest_filepath, delimiter=sep, ndmin=2)
                 self.logger.log(f"loading array {dest_filepath}")
                 self.logger.statement(
                     f"loaded array '{input_filena}' of shape {arr.shape}"
                 )
                 # save copy of input file to `org` dir
                 # make any subfolders if they don't exist
+                # this will be python auto precision
                 np.savetxt(self.original_file_d / rel_filepath.name, arr)
                 file_dict[rel_filepath] = arr
-                fmt_dict[rel_filepath] = fmt
+                fmt_dict[rel_filepath] = infmt
                 sep_dict[rel_filepath] = sep
                 skip_dict[rel_filepath] = skip
             # check for compatibility
@@ -1481,7 +1529,8 @@ class PstFrom(object):
                 filenames, index_cols, use_cols, fmts, seps, skip_rows
             )
             # parse to numeric (read as dtype object to preserve mixed types)
-            df = df.apply(pd.to_numeric, errors="ignore")
+            # df = df.apply(pd.to_numeric, errors="ignore")
+            df = df.apply(_try_pdcol_numeric)
             if inssep != ",":
                 inssep = seps
             else:
@@ -1490,17 +1539,15 @@ class PstFrom(object):
             # if iloc[0] are strings and index_cols are ints,
             #   can we assume that there were infact column headers?
             if all(isinstance(c, str) for c in df.iloc[0]) and all(
-                isinstance(a, int) for a in index_cols
+                isinstance(a, (int, np.integer)) for a in index_cols
             ):
                 index_cols = df.iloc[0][index_cols].to_list()  # redefine index_cols
                 if use_cols is not None:
                     use_cols = df.iloc[0][use_cols].to_list()  # redefine use_cols
-                df = (
-                    df.rename(columns=df.iloc[0].to_dict())
-                    .drop(0)
-                    .reset_index(drop=True)
-                    .apply(pd.to_numeric, errors="ignore")
-                )
+                df = df.rename(
+                    columns=df.iloc[0].to_dict()
+                ).drop(0).reset_index(drop=True)
+                df = df.apply(_try_pdcol_numeric)
             # Select all non index cols if use_cols is None
             if use_cols is None:
                 use_cols = df.columns.drop(index_cols).tolist()
@@ -1537,7 +1584,7 @@ class PstFrom(object):
                                 "".format(use_rows)
                             )
                             use_rows = None
-                    elif isinstance(use_rows, int):
+                    elif isinstance(use_rows, (int, np.integer)):
                         use_rows = [use_rows]
                     use_rows = [r for r in use_rows if r <= len(df)]
                     use_rows = df.iloc[use_rows].idx_str.unique()
@@ -1566,7 +1613,7 @@ class PstFrom(object):
 
                 if len(nprefix) == 0:
                     nprefix = filenames[0]
-                nprefix = "oname:{0}_otype:lst".format(nprefix)
+                nprefix = "oname:{0}_otype:lst".format(nprefix.lower())
                 df_ins = pyemu.pst_utils.csv_to_ins_file(
                     df.set_index("idx_str"),
                     ins_filename=self.new_d / insfile,
@@ -1770,7 +1817,9 @@ class PstFrom(object):
         pest interface
 
         Args:
-            filenames (`str`): Model input filenames to parameterize
+            filenames (`str`): Model input filenames to parameterize. By default filename should give relative
+                loction from top level of pest template directory
+                (`new_d` as passed to `PstFrom()`).
             par_type (`str`): One of `grid` - for every element, `constant` - for single
                 parameter applied to every element, `zone` - for zone-based
                 parameterization or `pilotpoint` - for
@@ -2326,7 +2375,7 @@ class PstFrom(object):
                     self.logger.warn("pp_space is None, using 10...\n")
                     pp_space = 10
                 else:
-                    if not use_pp_zones and (isinstance(pp_space, int)):
+                    if not use_pp_zones and (isinstance(pp_space, (int, np.integer))):
                         # if not using pp zones will set up pp for just one
                         # zone (all non zero) -- for active domain...
                         if zone_array is None:
@@ -2336,7 +2385,7 @@ class PstFrom(object):
                         # gt-zero to 1
                     if isinstance(pp_space, float):
                         pp_space = int(pp_space)
-                    elif isinstance(pp_space, int):
+                    elif isinstance(pp_space, (int, np.integer)):
                         pass
                     elif isinstance(pp_space, str):
                         if pp_space.lower().strip().endswith(".csv"):
@@ -2457,7 +2506,7 @@ class PstFrom(object):
                             "and a=(pp_space*max(delr,delc))"
                         )
                         # set up a default - could probably do something better if pp locs are passed
-                        if not isinstance(pp_space, int):
+                        if not isinstance(pp_space, (int, np.integer)):
                             space = 10
                         else:
                             space = pp_space
@@ -2832,7 +2881,7 @@ class PstFrom(object):
         if all(isinstance(a[0], str) for a in check_args):
             # index_cols can be from header str
             header = 0  # will need to read a header
-        elif all(isinstance(a[0], int) for a in check_args):
+        elif all(isinstance(a[0], (int, np.integer)) for a in check_args):
             # index_cols are column numbers in input file
             header = None
         else:
@@ -3436,7 +3485,7 @@ def _get_index_strings(df, fmt, zero_based):
     if not zero_based:
         # only if indices are ints (trying to support strings as par ids)
         df.loc[:, "sidx"] = df.sidx.apply(
-            lambda x: tuple(xx - 1 if isinstance(xx, int) else xx for xx in x)
+            lambda x: tuple(xx - 1 if isinstance(xx, (int, np.integer)) else xx for xx in x)
         )
 
     df.loc[:, "idx_strs"] = df.sidx.apply(lambda x: fmt.format(*x)).str.replace(" ", "")
@@ -3582,7 +3631,7 @@ def _build_parnames(
             )
 
         if par_style == "d":
-            direct_tpl_df.loc[:, use_col] = (
+            direct_tpl_df[use_col] = (
                 df.loc[:, use_col].apply(lambda x: "~ {0} ~".format(x)).values
             )
     if par_style == "d":

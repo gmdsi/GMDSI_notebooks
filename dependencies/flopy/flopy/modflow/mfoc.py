@@ -7,6 +7,7 @@ MODFLOW Guide
 <https://water.usgs.gov/ogw/modflow/MODFLOW-2005-Guide/oc.html>`_.
 
 """
+
 import os
 
 from ..pakbase import Package
@@ -491,7 +492,7 @@ class ModflowOc(Package):
 
         Returns
         -------
-        iubud : integer ot list of integers
+        iubud : integer or list of integers
             Unit number or list of cell-by-cell budget output unit numbers.
             None is returned if ipakcb is less than one for all packages.
 
@@ -816,7 +817,7 @@ class ModflowOc(Package):
 
         # process each line
         lines = []
-        if numericformat == True:
+        if numericformat:
             for iperoc in range(nper):
                 for itsoc in range(nstp[iperoc]):
                     line = f.readline()
@@ -977,7 +978,7 @@ class ModflowOc(Package):
                     else:
                         if itsoc != itsoc1:
                             iempty = True
-                    if iempty == True:
+                    if iempty:
                         kperkstp = (iperoc1 - 1, itsoc1 - 1)
                         stress_period_data[kperkstp] = []
                 # dataset 3
@@ -1003,7 +1004,7 @@ class ModflowOc(Package):
                 else:
                     if itsoc != itsoc1:
                         iempty = True
-                if iempty == True:
+                if iempty:
                     kperkstp = (iperoc1 - 1, itsoc1 - 1)
                     stress_period_data[kperkstp] = []
 

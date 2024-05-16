@@ -497,6 +497,22 @@ class DataStorage:
                             layer_str,
                             self._get_layer_header_str(index),
                         )
+            elif storage.data_storage_type == DataStorageType.external_file:
+                header = self._get_layer_header_str(index)
+                if self.layered:
+                    data_str = "{}{}{{{}}}\n({})\n".format(
+                        data_str,
+                        layer_str,
+                        header,
+                        "External data not displayed",
+                    )
+                else:
+                    data_str = "{}{}{{{}}}\n({})\n".format(
+                        data_str,
+                        layer_str,
+                        header,
+                        "External data not displayed",
+                    )
         return data_str
 
     def _get_layer_header_str(self, layer):
@@ -1277,6 +1293,10 @@ class DataStorage:
                     DataStorageType.internal_array
                 )
                 if data is None or isinstance(data, np.recarray):
+                    if not self.tuple_cellids(data):
+                        # fix data so cellid is a single tuple
+                        data = self.make_tuple_cellids(data.tolist())
+                if data is None or isinstance(data, np.recarray):
                     if self._simulation_data.verify_data and check_data:
                         self._verify_list(data)
                     self.layer_storage.first_item().internal_data = data
@@ -1403,6 +1423,14 @@ class DataStorage:
                         message,
                         self._simulation_data.debug,
                     )
+                data_type = self.data_dimensions.structure.get_datum_type(True)
+                dt = self.layer_storage[layer].internal_data.dtype
+                if dt != data_type:
+                    self.layer_storage[
+                        layer
+                    ].internal_data = self.layer_storage[
+                        layer
+                    ].internal_data.astype(data_type)
             if not preserve_record:
                 self.layer_storage[layer].factor = multiplier
                 self.layer_storage[layer].iprn = print_format
@@ -1602,9 +1630,15 @@ class DataStorage:
         return new_data
 
     def tuple_cellids(self, data):
+        if data is None or len(data) == 0:
+            return True
         for data_entry, cellid in zip(data[0], self.recarray_cellid_list):
             if cellid:
-                if isinstance(data_entry, int):
+                if (
+                    isinstance(data_entry, int)
+                    or isinstance(data_entry, np.int32)
+                    or isinstance(data_entry, np.int64)
+                ):
                     # cellid is stored in separate columns in the recarray
                     # (eg: one column for layer one column for row and
                     # one columne for column)
@@ -1978,6 +2012,7 @@ class DataStorage:
                     self._data_type,
                     self.get_data_dimensions(layer),
                     layer,
+                    self.layered,
                     read_file,
                 )[0]
             if apply_mult and self.layer_storage[layer].factor is not None:
@@ -2072,8 +2107,9 @@ class DataStorage:
             )
         except Exception as se:
             comment = (
-                'Unable to resolve shape for data "{}" field "{}"'
-                ".".format(struct.name, data_item.name)
+                'Unable to resolve shape for data "{}" field "{}"' ".".format(
+                    struct.name, data_item.name
+                )
             )
             type_, value_, traceback_ = sys.exc_info()
             raise MFDataException(
@@ -2168,136 +2204,28 @@ class DataStorage:
         return multiplier, print_format
 
     def process_open_close_line(self, arr_line, layer, store=True):
-        # process open/close line
-        index = 2
-        if self._data_type == DatumType.integer:
-            multiplier = 1
-        else:
-            multiplier = 1.0
-        print_format = None
-        binary = False
-        data_file = None
-        data = None
-
         data_dim = self.data_dimensions
-        if isinstance(arr_line, list):
-            if len(arr_line) < 2 and store:
-                message = (
-                    'Data array "{}" contains a OPEN/CLOSE '
-                    "that is not followed by a file. {}".format(
-                        data_dim.structure.name, data_dim.structure.path
-                    )
-                )
-                type_, value_, traceback_ = sys.exc_info()
-                raise MFDataException(
-                    self.data_dimensions.structure.get_model(),
-                    self.data_dimensions.structure.get_package(),
-                    self.data_dimensions.structure.path,
-                    "processing open/close line",
-                    data_dim.structure.name,
-                    inspect.stack()[0][3],
-                    type_,
-                    value_,
-                    traceback_,
-                    message,
-                    self._simulation_data.debug,
-                )
-            while index < len(arr_line):
-                if isinstance(arr_line[index], str):
-                    word = arr_line[index].lower()
-                    if word == "factor" and index + 1 < len(arr_line):
-                        try:
-                            multiplier = convert_data(
-                                arr_line[index + 1],
-                                self.data_dimensions,
-                                self._data_type,
-                            )
-                        except Exception as ex:
-                            message = (
-                                "Data array {} contains an OPEN/CLOSE "
-                                "with an invalid multiplier following "
-                                'the "factor" keyword.'
-                                ".".format(data_dim.structure.name)
-                            )
-                            type_, value_, traceback_ = sys.exc_info()
-                            raise MFDataException(
-                                self.data_dimensions.structure.get_model(),
-                                self.data_dimensions.structure.get_package(),
-                                self.data_dimensions.structure.path,
-                                "processing open/close line",
-                                data_dim.structure.name,
-                                inspect.stack()[0][3],
-                                type_,
-                                value_,
-                                traceback_,
-                                message,
-                                self._simulation_data.debug,
-                                ex,
-                            )
-                        index += 2
-                    elif word == "iprn" and index + 1 < len(arr_line):
-                        print_format = arr_line[index + 1]
-                        index += 2
-                    elif word == "data" and index + 1 < len(arr_line):
-                        data = arr_line[index + 1]
-                        index += 2
-                    elif word == "binary" or word == "(binary)":
-                        binary = True
-                        index += 1
-                    else:
-                        break
-                else:
-                    break
-                # save comments
-            if index < len(arr_line):
-                self.layer_storage[layer].comments = MFComment(
-                    " ".join(arr_line[index:]),
-                    self.data_dimensions.structure.path,
-                    self._simulation_data,
-                    layer,
-                )
-            if arr_line[0].lower() == "open/close":
-                data_file = clean_filename(arr_line[1])
-            else:
-                data_file = clean_filename(arr_line[0])
-        elif isinstance(arr_line, dict):
-            for key, value in arr_line.items():
-                if key.lower() == "factor":
-                    try:
-                        multiplier = convert_data(
-                            value, self.data_dimensions, self._data_type
-                        )
-                    except Exception as ex:
-                        message = (
-                            "Data array {} contains an OPEN/CLOSE "
-                            "with an invalid factor following the "
-                            '"factor" keyword.'
-                            ".".format(data_dim.structure.name)
-                        )
-                        type_, value_, traceback_ = sys.exc_info()
-                        raise MFDataException(
-                            self.data_dimensions.structure.get_model(),
-                            self.data_dimensions.structure.get_package(),
-                            self.data_dimensions.structure.path,
-                            "processing open/close line",
-                            data_dim.structure.name,
-                            inspect.stack()[0][3],
-                            type_,
-                            value_,
-                            traceback_,
-                            message,
-                            self._simulation_data.debug,
-                            ex,
-                        )
-                if key.lower() == "iprn":
-                    print_format = value
-                if key.lower() == "binary":
-                    binary = bool(value)
-                if key.lower() == "data":
-                    data = value
-            if "filename" in arr_line:
-                data_file = clean_filename(arr_line["filename"])
-
+        (
+            multiplier,
+            print_format,
+            binary,
+            data_file,
+            data,
+            comment,
+        ) = mfdatautil.process_open_close_line(
+            arr_line,
+            data_dim,
+            self._data_type,
+            self._simulation_data.debug,
+            store,
+        )
+        if comment is not None:
+            self.layer_storage[layer].comments = MFComment(
+                comment,
+                self.data_dimensions.structure.path,
+                self._simulation_data,
+                layer,
+            )
         if data_file is None:
             message = (
                 "Data array {} contains an OPEN/CLOSE without a "
@@ -2543,6 +2471,7 @@ class DataStorage:
                             np_data_type,
                             self.get_data_dimensions(layer),
                             layer,
+                            self.layered,
                             read_file,
                         )[0]
                         * mult
@@ -2857,6 +2786,7 @@ class DataStorage:
                     if (
                         data_item.type != DatumType.keyword
                         or data_set.block_variable
+                        or data_item.optional
                     ):
                         initial_keyword = False
                         shape_rule = None

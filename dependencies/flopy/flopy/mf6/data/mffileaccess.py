@@ -215,6 +215,7 @@ class MFFileAccessArray(MFFileAccess):
         if data.size == modelgrid.nnodes:
             write_multi_layer = False
         if write_multi_layer:
+            # write data from each layer with a separate header
             for layer, value in enumerate(data):
                 self._write_layer(
                     fd,
@@ -228,6 +229,7 @@ class MFFileAccessArray(MFFileAccess):
                     layer + 1,
                 )
         else:
+            # write data with a single header
             self._write_layer(
                 fd,
                 data,
@@ -238,7 +240,6 @@ class MFFileAccessArray(MFFileAccess):
                 text,
                 fname,
             )
-        data.tofile(fd)
         fd.close()
 
     def _write_layer(
@@ -576,10 +577,17 @@ class MFFileAccessArray(MFFileAccess):
         data_type,
         data_dim,
         layer,
+        layered,
         fname=None,
         fd=None,
-        data_item=None,
     ):
+        # determine line size
+        line_size = None
+        if layered:
+            # if the array is layered (meaning a control record for
+            # each layer), then limit line size to number of columns
+            if isinstance(data_dim, list):
+                line_size = data_dim[-1]
         # load variable data from file
         current_size = 0
         if layer is None:
@@ -600,6 +608,8 @@ class MFFileAccessArray(MFFileAccess):
                 if line == "" or arr_line[0].upper() == "END":
                     break
                 if not MFComment.is_comment(arr_line, True):
+                    if line_size is not None:
+                        arr_line = arr_line[:line_size]
                     data_raw += arr_line
                 else:
                     PyListUtil.reset_delimiter_used()
@@ -608,6 +618,8 @@ class MFFileAccessArray(MFFileAccess):
                 line = fd.readline()
                 arr_line = PyListUtil.split_data_line(line, True)
                 if not MFComment.is_comment(arr_line, True):
+                    if line_size is not None:
+                        arr_line = arr_line[:line_size]
                     data_raw += arr_line
                 else:
                     PyListUtil.reset_delimiter_used()
@@ -885,6 +897,7 @@ class MFFileAccessArray(MFFileAccess):
                     data_type,
                     storage.get_data_dimensions(layer),
                     layer,
+                    storage.layered,
                     fd=file_handle,
                 )
             except Exception as ex:
@@ -1034,13 +1047,15 @@ class MFFileAccessList(MFFileAccess):
         self.simple_line = False
 
     def read_binary_data_from_file(
-        self, read_file, modelgrid, precision="double"
+        self, read_file, modelgrid, precision="double", build_cellid=True
     ):
         # read from file
         header, int_cellid_indexes, ext_cellid_indexes = self._get_header(
             modelgrid, precision
         )
         file_array = np.fromfile(read_file, dtype=header, count=-1)
+        if not build_cellid:
+            return file_array
         # build data list for recarray
         cellid_size = len(self._get_cell_header(modelgrid))
         data_list = []
@@ -1132,6 +1147,9 @@ class MFFileAccessList(MFFileAccess):
         self._data_dimensions.lock()
         self._last_line_info = []
         self._data_line = None
+
+        if first_line is None:
+            first_line = file_handle.readline()
 
         # read in any pre data comments
         current_line = self._read_pre_data_comments(
@@ -1350,7 +1368,7 @@ class MFFileAccessList(MFFileAccess):
                     if store_internal:
                         # store as rec array
                         storage.store_internal(
-                            data_loaded, None, False, current_key
+                            data_loaded, None, False, key=current_key
                         )
                         storage.data_dimensions.unlock()
                         return [False, line, data_line]
@@ -1463,9 +1481,7 @@ class MFFileAccessList(MFFileAccess):
                                     current_key,
                                     self._data_line,
                                     False,
-                                )[
-                                    0:2
-                                ]
+                                )[0:2]
                             elif (
                                 data_item.name == "boundname"
                                 and self._data_dimensions.package_dim.boundnames()
@@ -1714,9 +1730,7 @@ class MFFileAccessList(MFFileAccess):
                                                 for (
                                                     key,
                                                     record,
-                                                ) in (
-                                                    data_item.keystring_dict.items()
-                                                ):
+                                                ) in data_item.keystring_dict.items():
                                                     if (
                                                         isinstance(
                                                             record,
@@ -1796,9 +1810,9 @@ class MFFileAccessList(MFFileAccess):
                                             keyword_data_item.type = (
                                                 DatumType.string
                                             )
-                                            self._temp_dict[
-                                                data_item.name
-                                            ] = keyword_data_item
+                                            self._temp_dict[data_item.name] = (
+                                                keyword_data_item
+                                            )
                                         (
                                             data_index,
                                             more_data_expected,
@@ -2044,9 +2058,7 @@ class MFFileAccessList(MFFileAccess):
                             current_key,
                             data_line,
                             add_to_last_line,
-                        )[
-                            0:3
-                        ]
+                        )[0:3]
                     else:
                         # read in aux variables
                         (
@@ -2064,9 +2076,7 @@ class MFFileAccessList(MFFileAccess):
                             current_key,
                             data_line,
                             add_to_last_line,
-                        )[
-                            0:3
-                        ]
+                        )[0:3]
         return data_index, data_line, more_data_expected
 
     def _append_data_list(
@@ -2317,7 +2327,7 @@ class MFFileAccessScalar(MFFileAccess):
                 if (
                     len(arr_line) <= index + 1
                     or data_item_type[0] != DatumType.keyword
-                    or (index > 0 and optional == True)
+                    or (index > 0 and optional is True)
                 ):
                     break
                 index += 1
