@@ -1137,20 +1137,20 @@ class MFPandasList(mfdata.MFMultiDimVar, DataListInterface):
     def _try_pandas_read(self, fd_data_file):
         delimiter_list = ["\\s+", ","]
         for delimiter in delimiter_list:
-            try:
-                # read flopy formatted data, entire file
-                data_frame = pandas.read_csv(
-                    fd_data_file,
-                    sep=delimiter,
-                    names=self._header_names,
-                    dtype=self._data_header,
-                    comment="#",
-                    index_col=False,
-                    skipinitialspace=True,
-                )
-            except BaseException:
-                fd_data_file.seek(0)
-                continue
+            # try:
+            #     # read flopy formatted data, entire file
+            #     data_frame = pandas.read_csv(
+            #         fd_data_file,
+            #         sep=delimiter,
+            #         names=self._header_names,
+            #         dtype=self._data_header,
+            #         comment="#",
+            #         index_col=False,
+            #         skipinitialspace=True,
+            #     )
+            # except BaseException:
+            fd_data_file.seek(0)
+            continue
 
             # basic check for valid dataset
             if self._dataframe_check(data_frame):

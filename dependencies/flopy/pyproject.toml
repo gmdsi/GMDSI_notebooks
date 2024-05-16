@@ -1,0 +1,146 @@
+[build-system]
+requires = [
+    "setuptools >=61",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flopy"
+description = "FloPy is a Python package to create, run, and post-process MODFLOW-based models"
+authors = [
+    {name = "FloPy Team", email = "modflow@usgs.gov"},
+]
+maintainers = [
+    {name = "Joseph D. Hughes", email = "jdhughes@usgs.gov"},
+]
+keywords = ["MODFLOW", "groundwater", "hydrogeology"]
+license = {text = "CC0"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Hydrology",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy >=1.15.0,<2.0.0",
+    "matplotlib >=1.4.0",
+    "pandas >=2.0.0"
+]
+dynamic = ["version", "readme"]
+
+[project.optional-dependencies]
+dev = ["flopy[lint,test,optional,doc]"]
+lint = [
+    "cffconvert",
+    "ruff"
+]
+test = [
+    "flopy[lint]",
+    "coverage",
+    "flaky",
+    "filelock",
+    "jupyter",
+    "jupytext",
+    "modflow-devtools",
+    "pytest !=8.1.0",
+    "pytest-benchmark",
+    "pytest-cov",
+    "pytest-dotenv",
+    "pytest-xdist",
+    "pyzmq >=25.1.2",
+    "syrupy",
+    "virtualenv"
+]
+optional = [
+    "affine",
+    "descartes",
+    "fiona",
+    "geojson",
+    "geopandas",
+    "imageio",
+    "netcdf4",
+    "pymetis ; platform_system != 'Windows'",
+    "pyproj",
+    "pyshp",
+    "pyvista",
+    "rasterio",
+    "rasterstats",
+    "scipy",
+    "shapely >=1.8",
+    "vtk",
+    "xmipy",
+]
+doc = [
+    "flopy[optional]",
+    "ipython[kernel]",
+    "jupytext",
+    "myst-parser",
+    "nbconvert <7.14.0",
+    "nbsphinx",
+    "PyYAML",
+    "rtds-action",
+    "sphinx ==7.1.2",
+    "sphinx-rtd-theme >=1",
+]
+
+[project.scripts]
+get-modflow = "flopy.utils.get_modflow:cli_main"
+
+[project.urls]
+Documentation = "https://flopy.readthedocs.io"
+"Release Notes" = "https://github.com/modflowpy/flopy/blob/develop/docs/version_changes.md"
+"Bug Tracker" = "https://github.com/modflowpy/flopy/issues"
+"Source Code" = "https://github.com/modflowpy/flopy"
+
+[tool.setuptools]
+include-package-data = true
+zip-safe = false
+
+[tool.setuptools.dynamic]
+version = {attr = "flopy.version.__version__"}
+readme = {file = ["docs/PyPI_release.md", "LICENSE.md"], content-type = "text/markdown"}
+
+[tool.setuptools.packages.find]
+include = ["flopy", "flopy.*"]
+
+[tool.setuptools.package-data]
+"flopy.mf6.data" = ["dfn/*.dfn"]
+"flopy.plot" = ["mplstyle/*.mplstyle"]
+
+[tool.ruff]
+line-length = 79
+target-version = "py38"
+include = [
+    "pyproject.toml",
+    "flopy/**/*.py",
+    "autotest/**/*.py",
+    "examples/**/*.py",
+    "scripts/**/*.py",
+    ".docs/**/*.py",
+]
+extend-include = [
+    "examples/**/*.ipynb"
+]
+
+[tool.ruff.lint]
+select = ["F", "E", "I001"]
+ignore = [
+    "E402", # module level import not at top of file
+    "E501", # line too long TODO FIXME
+    "E712", # Avoid equality comparisons to `True`
+    "E722", # do not use bare `except`
+    "E741", # ambiguous variable name
+    "F401", # unused import
+    "F403", # unable to detect undefined names (star imports)
+    "F524", # `.format` missing argument(s) for placeholder(s)
+    "F811", # Redefinition of unused variable
+    "F821", # undefined name TODO FIXME
+    "F841", # local variable assigned but never used
+]
