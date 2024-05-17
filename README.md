@@ -80,7 +80,7 @@ To start up the jupyter notebook:
 - Windows: open the Anaconda prompt and type `conda activate gmdsitut`
 - Mac/Linux: open a termainal and type `conda activate gmdsitut`
 - Then navigate to folder where you downloaded the course materials repo and type `jupyter notebook`
-A jupyter notebook instance should start within the course repo flder. Using the browser, you can now navigate to the "notebooks" folder and open one.
+A jupyter notebook instance should start within the course repo flder. Using the browser, you can now navigate to the "tutorials" folder and open one and you are in business!
  
  # Acknowledgments
  
