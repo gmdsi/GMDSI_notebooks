@@ -2,6 +2,13 @@
 
 We have produced a series of tutorial notebooks to assist modellers in setting up and using model-partner software in ways that support the decision-support imperatives of data assimilation and uncertainty quantification. These tutorials provide an introduction to both the concepts and the practicalities of undertaking decision-support groundwater modelling with the PEST/PEST++ and pyEMU suites of software. Their aim is to provide examples of both “how to use” the software as well as “how to think” about using the software. 
 
+## Next Hybrid Online Course Offering Open Now
+The GMDSI, in collaboration with Intera Inc. and the USGS, will be offering the hybrid online version of the class on Mondays starting July 22 through August 19 from 12 noon – 1:30 pm Central Time virtually on Teams.
+ 
+This hybrid course will make use of the notebooks and curriculum in this repo. The idea is for you to work through some assigned notebooks between sessions, and then meet with us to discuss and fill in more background.
+ 
+If you are interested, please fill out this [form](https://forms.gle/2SPynj2LU5fbUo2g9) and follow instructions to verify software installation as well. If you have trouble with the software installation or other questions, feel free to post in discussions or an issue in this repo.
+
 ## Notebook Contents
 
 We have endeavoured to make these tutorials as accesible to as many people as possible. Workflows demonstrated herein are implemented programmaticaly in Python, employing functionality to interface with PEST/PEST++ available in pyEMU. However, concepts and the general approaches described are not limited to programmatic workflows. If you are interested in understanding how to implement pyEMU workflows, then you are encouraged to complete the jupyter notebooks yourself. If you just want to get a high-level understanding of decision-support modelling concepts and software, then you can simply read through the notebooks without having to run the code yourself. You can access complete version of the notebooks in your web browser [__here__](https://gmdsi.github.io/GMDSI_notebooks/). 
