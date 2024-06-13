@@ -3,7 +3,7 @@
 We have produced a series of tutorial notebooks to assist modellers in setting up and using model-partner software in ways that support the decision-support imperatives of data assimilation and uncertainty quantification. These tutorials provide an introduction to both the concepts and the practicalities of undertaking decision-support groundwater modelling with the PEST/PEST++ and pyEMU suites of software. Their aim is to provide examples of both “how to use” the software as well as “how to think” about using the software. 
 
 ## Next Hybrid Online Course Offering Open Now
-The GMDSI, in collaboration with Intera Inc. and the USGS, will be offering the hybrid online version of the class on Mondays starting July 22 through August 19 from 12 noon – 1:30 pm Central Time virtually on Teams.
+The GMDSI, in collaboration with Intera Inc. and the USGS, will be offering the hybrid online version of the class on Mondays starting July 22 through August 19, 2024 from 12 noon – 1:30 pm US Central Time virtually on Teams.
  
 This hybrid course will make use of the notebooks and curriculum in this repo. The idea is for you to work through some assigned notebooks between sessions, and then meet with us to discuss and fill in more background.
  
