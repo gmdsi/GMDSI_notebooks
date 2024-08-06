@@ -15,6 +15,7 @@ import traceback
 import re
 import numpy as np
 import pandas as pd
+import math
 
 pd.options.display.max_colwidth = 100
 from ..pyemu_warnings import PyemuWarning
@@ -234,6 +235,158 @@ def autocorrelated_draw(pst,struct_dict,time_distance_col="distance",num_reals=1
         for n, v in gt_dict.items():
             full_oe.loc[:, n] = v
     return full_oe
+
+
+def draw_by_group(pst, num_reals=100, sigma_range=6, use_specsim=False,
+                  struct_dict=None, delr=None, delc=None, scale_offset=True,
+                  echo=True, logger=False):
+    """Draw a parameter ensemble from the distribution implied by the initial parameter values in the
+    control file and a prior parameter covariance matrix derived from grouped geostructures.
+    Previously in pst_from.
+
+    Args:
+        pst (`pyemu.Pst`): a control file instance
+        num_reals (`int`): the number of realizations to draw
+        sigma_range (`int`): number of standard deviations represented by parameter bounds.  Default is 6 (99%
+            confidence).  4 would be approximately 95% confidence bounds
+        use_specsim (`bool`): flag to use spectral simulation for grid-scale pars (highly recommended).
+            Default is False
+        struct_dict (`dict`): a dict with keys of GeoStruct (or structure file).
+            Dictionary values can depend on the values of `use_specsim`.
+            If `use_specsim` is True, values are expected to be `list[pd.DataFrame]`
+            with dataframes indexed by parameter names and containing columns
+            [`parval1`, `pargp`, `i`, `j`, `partype`], where `i` and `j` are
+            grid index locations of grid parameters, and `partype` is used to
+            indicate grid type parameters. The draw will be independent for each
+            unique `pargp`.
+            If `use_specsim` is False, dictionary values are expected to be
+            `list[pd.DataFrame]` with dataframes indexed by parameter names and
+            containing columns ["x", "y", "parnme"], the optional `zone` column
+            can be used to draw realizations independently for different zones.
+            Alternatively, if use_specsim` is False dictionary keys and values
+            can be paths to external structure files and pilotpoint or tpl files,
+            respectively.
+        delr (`list`, optional): required for specsim (`use_specsim` is True),
+            dimension of cells along a row (i.e., column widths), specsim only
+            works with regular grids
+        delc (`list`, optional):  required for specsim (`use_specsim` is True),
+            dimension of cells along a column (i.e., row heights)
+        scale_offset (`bool`): flag to apply scale and offset to parameter bounds before calculating prior variance.
+            Dfault is True.  If you are using non-default scale and/or offset and you get an exception during
+            draw, try changing this value to False.
+        echo (`bool`): Verbosity flag passed to new Logger instance if
+            `logger`is None
+        logger (`pyemu.Logger`, optional): Object for logging process
+
+    Returns:
+        `pyemu.ParameterEnsemble`: a prior parameter ensemble
+
+    Note:
+        This method draws by parameter group
+
+        If you are using grid-style parameters, please use spectral simulation (`use_specsim=True`)
+
+    """
+    if delc is None:
+        delc = []
+    if delr is None:
+        delr = []
+    if struct_dict is None:
+        struct_dict = {}
+    if not logger:
+        logger = pyemu.Logger("draw_by_groups.log", echo=echo)
+    if pst.npar_adj == 0:
+        logger.warn("no adjustable parameters, nothing to draw...")
+        return
+    # list for holding grid style groups
+    gr_pe_l = []
+    subset = pst.parameter_data.index
+    gr_par_pe = None
+    if use_specsim:
+        if len(delr)>0 and len(delc)>0 and not pyemu.geostats.SpecSim2d.grid_is_regular(
+            delr, delc
+        ):
+            logger.lraise(
+                "draw() error: can't use spectral simulation with irregular grid"
+            )
+        logger.log("spectral simulation for grid-scale pars")
+        # loop over geostructures defined in PestFrom object
+        # (setup through add_parameters)
+        for geostruct, par_df_l in struct_dict.items():
+            par_df = pd.concat(par_df_l)  # force to single df
+            if not 'partype' in par_df.columns:
+                logger.warn(
+                    f"draw() error: use_specsim is {use_specsim} but no column named"
+                    f"'partype' to indicate grid based pars in geostruct {geostruct}"
+                    f"not using specsim"
+                )
+            else:
+                par_df = par_df.loc[par_df.partype == "grid", :]
+                if "i" in par_df.columns:  # need 'i' and 'j' for specsim
+                    grd_p = pd.notna(par_df.i)
+                else:
+                    grd_p = np.array([0])
+                # if there are grid pars (also grid pars with i,j info)
+                if grd_p.sum() > 0:
+                    # select pars to use specsim for
+                    gr_df = par_df.loc[grd_p]
+                    gr_df = gr_df.astype({"i": int, "j": int})  # make sure int
+                    # (won't be if there were nans in concatenated df)
+                    if len(gr_df) > 0:
+                        # get specsim object for this geostruct
+                        ss = pyemu.geostats.SpecSim2d(
+                            delx=delr,
+                            dely=delc,
+                            geostruct=geostruct,
+                        )
+                        # specsim draw (returns df)
+                        gr_pe1 = ss.grid_par_ensemble_helper(
+                            pst=pst,
+                            gr_df=gr_df,
+                            num_reals=num_reals,
+                            sigma_range=sigma_range,
+                            logger=logger,
+                        )
+                        # append to list of specsim drawn pars
+                        gr_pe_l.append(gr_pe1)
+                        # rebuild struct_dict entry for this geostruct
+                        # to not include specsim pars
+                        struct_dict[geostruct] = []
+                        # loop over all in list associated with geostruct
+                        for p_df in par_df_l:
+                            # if pars are not in the specsim pars just created
+                            # assign them to this struct_dict entry
+                            # needed if none specsim pars are linked to same geostruct
+                            if not p_df.index.isin(gr_df.index).all():
+                                struct_dict[geostruct].append(p_df)
+                            else:
+                                subset = subset.difference(p_df.index)
+        if len(gr_pe_l) > 0:
+            gr_par_pe = pd.concat(gr_pe_l, axis=1)
+        logger.log("spectral simulation for grid-scale pars")
+    # draw remaining pars based on their geostruct
+    if not subset.empty:
+        logger.log(f"Drawing {len(subset)} non-specsim pars")
+        pe = pyemu.helpers.geostatistical_draws(
+            pst,
+            struct_dict=struct_dict,
+            num_reals=num_reals,
+            sigma_range=sigma_range,
+            scale_offset=scale_offset,
+            subset=subset
+        )
+        logger.log(f"Drawing {len(subset)} non-specsim pars")
+        if gr_par_pe is not None:
+            logger.log(f"Joining specsim and non-specsim pars")
+            exist = gr_par_pe.columns.intersection(pe.columns)
+            pe = pe._df.drop(exist, axis=1)  # specsim par take precedence
+            pe = pd.concat([pe, gr_par_pe], axis=1)
+            pe = pyemu.ParameterEnsemble(pst=pst, df=pe)
+            logger.log(f"Joining specsim and non-specsim pars")
+    else:
+        pe = pyemu.ParameterEnsemble(pst=pst, df=gr_par_pe)
+    logger.log("drawing realizations")
+    return pe.copy()
 
 
 def geostatistical_draws(
@@ -1694,11 +1847,11 @@ def _process_array_file(model_file, df):
     except AttributeError:
         fmt = "%15.6E"
     try:
-        sep = df_mf.sep.iloc[0]
+        # default to space (if fixed format file this should be taken care of
+        # in fmt string)
+        sep = df_mf.sep.fillna(' ').iloc[0]
     except AttributeError:
-        sep = np.nan
-    if np.isnan(sep):
-        sep = ''
+        sep = ' '
     np.savetxt(model_file, np.atleast_2d(org_arr), fmt=fmt, delimiter=sep)
 
 
@@ -2088,9 +2241,12 @@ def _process_chunk_list_files(chunk, i, df):
 
 
 def _list_index_caster(x, add1):
-        vals = []
-        for xx in x:
-            if xx:
+    vals = []
+    for xx in x:
+        if xx:
+            if any(s not in " 0123456789.-" for s in xx):
+                vals.append(xx.strip().strip("'\" "))
+            else:
                 if (xx.strip().isdigit() or
                         (xx.strip()[0] == '-' and xx.strip()[1:].isdigit())):
                     vals.append(add1 + int(xx))
@@ -2100,7 +2256,7 @@ def _list_index_caster(x, add1):
                     except Exception as e:
                         vals.append(xx.strip().strip("'\" "))
 
-        return tuple(vals)
+    return tuple(vals)
 
 
 def _list_index_splitter_and_caster(x, add1):
@@ -3864,14 +4020,158 @@ def apply_threshold_pars(csv_file):
 
 
 
+def randrealgen_optimized(nreal, tol=1e-7, max_samples=1000000):
+    """
+    Generate a set of random realizations with a normal distribution.
+    
+    Parameters:
+    nreal : int
+        The number of realizations to generate.
+    tol : float
+        Tolerance for the stopping criterion.
+    max_samples : int
+        Maximum number of samples to use.
+        
+    Returns:
+    numpy.ndarray
+        An array of nreal random realizations.
+    """
+    rval = np.zeros(nreal)
+    nsamp = 0
+    numsort = (nreal + 1) // 2
+
+    while nsamp < max_samples:
+        nsamp += 1
+        work1 = np.random.normal(size=nreal)
+        work1.sort()
+        
+        if nsamp > 1:
+            previous_mean = rval[:numsort] / (nsamp - 1)
+            rval[:numsort] += work1[:numsort]
+            current_mean = rval[:numsort] / nsamp
+            max_diff = np.max(np.abs(current_mean - previous_mean))
+            
+            if max_diff <= tol:
+                break
+        else:
+            rval[:numsort] = work1[:numsort]
+    
+    rval[:numsort] /= nsamp
+    rval[numsort:] = -rval[:numsort][::-1]
+    
+    return rval
 
 
+def normal_score_transform(nstval, val, value):
+    """
+    Transform a value to its normal score using a normal score transform table.
+    
+    Parameters:
+    nstval : array-like
+        Normal score transform table values.
+    val : array-like
+        Original values corresponding to the normal score transform table.
+    value : float
+        The value to transform.
+        
+    Returns:
+    float
+        The normal score of the value.
+    int
+        The index of the value in the normal score transform table."""
+    
+    # make sure the input is numpy arrays
+    val = np.asarray(val)
+    nstval = np.asarray(nstval)
+    
+    # if the value is outside the range of the table, return the first or last value
+    if value <= val[0]:
+        return nstval[0], 0
+    elif value >= val[-1]:
+        return nstval[-1], len(val)
+
+    # find the rank of the value in the table
+    rank = np.searchsorted(val, value, side='right') - 1
+    if rank == len(val) - 1:
+        return nstval[-1], len(val)
+    # if the value conincides with a value in the table, return the corresponding normal score
+    nstdiff = nstval[rank + 1] - nstval[rank]
+    diff = val[rank + 1] - val[rank]
+    if nstdiff <= 0.0 or diff <= 0.0:
+        return nstval[rank], rank
+    
+    # otherwise, interpolate to get the normal score
+    dist = value - val[rank]
+    interpolated_value = nstval[rank] + (dist / diff) * nstdiff
+    return interpolated_value, rank
 
 
+def inverse_normal_score_transform(nstval, val, value, extrap='quadratic'):
+    nreal = len(val)
+    
+    def linear_extrapolate(x0, y0, x1, y1, x):
+        if x1 != x0:
+            return y0 + (y1 - y0) / (x1 - x0) * (x - x0)
+        return y0
 
+    def quadratic_extrapolate(x0, y0, x1, y1, x2, y2, x):
+        denom = (x0 - x) * (x1 - x) * (x2 - x)
+        if denom == 0:
+            print(x, x0, x1, x2)
+            raise ValueError("Input x values must be distinct")
 
+        a = ((x - x1) * (y2 - y1) - (x - x2) * (y1 - y0)) / denom
+        b = ((x - x2) * (y1 - y0) - (x - x0) * (y2 - y1)) / denom
+        c = y0 - a * x0**2 - b * x0
+        y = a * x**2 + b * x + c
+        return y
 
+    ilim = 0
+    if value in nstval:
+        rank = np.searchsorted(nstval, value)
+        value = val[rank]
 
+    elif value < nstval[0]:
+        ilim = -1
+        if extrap is None:
+            value = val[0]
+        elif extrap == 'linear':
+            value = linear_extrapolate(nstval[0], val[0], nstval[1], val[1], value)
+            value = min(value, val[0])
+        elif extrap == 'quadratic' and nreal >= 3:
+            y_vals = np.unique(val)[:3]
+            idxs = np.searchsorted(val,y_vals)
+            x_vals = nstval[idxs]
+            value = quadratic_extrapolate(x_vals[-3], y_vals[-3], x_vals[-2], y_vals[-2], x_vals[-1], y_vals[-1], value)
+            #value = min(value, val[0])
+        else:
+            value = val[0]
 
+    elif value > nstval[-1]:
+        ilim = 1
+        if extrap is None:
+            value = val[-1]
+        elif extrap == 'linear':
+            value = linear_extrapolate(nstval[-2], val[-2], nstval[-1], val[-1], value)
+            value = max(value, val[-1])
+        elif extrap == 'quadratic' and nreal >= 3:
+            y_vals = np.unique(val)[-3:]
+            idxs = np.searchsorted(val,y_vals)
+            x_vals = nstval[idxs]
+            value = quadratic_extrapolate(x_vals[-3], y_vals[-3], x_vals[-2], y_vals[-2], x_vals[-1], y_vals[-1], value)
+            #value = max(value, val[-1])
+        else:
+            value = val[-1]
 
+    else:
+        rank = np.searchsorted(nstval, value) - 1
+        nstdiff = nstval[rank + 1] - nstval[rank]
+        diff = val[rank + 1] - val[rank]
+        if nstdiff <= 0.0 or diff <= 0.0:
+            value = val[rank]
+        else:
+            nstdist = value - nstval[rank]
+            value = val[rank] + (nstdist / nstdiff) * diff
+    
+    return value, ilim
 
