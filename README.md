@@ -106,6 +106,12 @@ The tutorial notebooks are structured into three main parts:
 
 ## Part 0: Introductory Background
 
+> After completing this module, learners should be able to:
+>   - Describe the structure and components of the synthetic Freyberg model.
+>   - Apply the `pyemu` Python package to interface with PEST/PEST++.
+>   - Discuss the mathematical concepts that underpin the PEST/PEST++ software.
+> 
+
 Part 0 serves as the foundation, providing essential background material. Learners are encouraged to reference notebooks in Part 0 to polish their understanding of concepts they encounter in Parts 1 and 2. Part 0 is not intended to be a comprehensive resource for all background material, but rather to establish a solid understanding of the basics. The explanations of mathematical concepts are intended to be accessible through visualization and descriptions related to everyday concepts and modelling concepts. 
 
 Each notebook in Part 0 is standalone and covers a unique topic. These include:
@@ -116,13 +122,17 @@ Each notebook in Part 0 is standalone and covers a unique topic. These include:
 
 Pre-requisites for Part 0 include a basic understanding of Python, Jupyter Notebooks, and MODFLOW 6 [@Langevin_MODFLOW_6_Modular_2022]. Familiarity with git is a bonus but not fundamental.
 
-After completing this module, learners should be able to:
 
-  - Describe the structure and components of the synthetic Freyberg model.
-  - Apply the `pyemu` Python package to interface with PEST/PEST++.
-  - Discuss the mathematical concepts that underpin the PEST/PEST++ software.
 
 ## Part 1: Introduction to ``PEST`` and the Gauss-Levenberg Marquardt Approach
+
+> After completing this module, learners should be able to:
+> 
+> - Describe the GLM approach to parameter estimation.
+> - Explain non-uniqueness, identifiability and equifinality in the context of decision-support > modelling.
+> - Construct a ``PEST`` control file and interface files.
+> - Understand the effect of parameterization schemes on model predictive ability.
+> - Explain the difference between linear and non-linear uncertainty analysis approaches and > the value of each.
 
 Part 1 focuses on the Gauss-Levenberg Marquardt (GLM) approach to parameter estimation and associated uncertainty analysis in a groundwater modelling context. This was the foundation of the ``PEST`` software for multiple decades and the theory continues to resonate through newer techniques.
 
@@ -137,15 +147,16 @@ Part 1 is designed to be accessible without strict sequential dependencies. Lear
 
 Pre-requisites for Part 1 include a basic understanding of numerical groundwater modelling and familiarity with MODFLOW 6. Familiarity with Python and Jupyter Notebooks is assumed.
 
-After completing this module, learners should be able to:
 
-  - Describe the GLM approach to parameter estimation.
-  - Explain non-uniqueness, identifiability and equifinality in the context of decision-support modelling.
-  - Construct a ``PEST`` control file and interface files.
-  - Understand the effect of parameterization schemes on model predictive ability.
-  - Explain the difference between linear and non-linear uncertainty analysis approaches and the value of each.
 
 ## Part 2: Python-based Decision-Support Modelling Workflows
+
+> After completing this module, learners should be able to:
+> 
+> - Construct a high-dimensional ``PEST`` control file and interface files.
+> - Implement GLM and ensemble-based parameter estimation and uncertainty analysis workflows > using ``PEST++`` and associated tools.
+> - Apply management optimization and sequential data assimilation techniques to > decision-support groundwater modelling problems.
+
 Part 2 expands on the foundational knowledge gained in Part 1 and delves into advanced topics related to ensemble-based parameter estimation, uncertainty analysis and optimization methods. These advanced topics include management optimization and sequential data assimilation. This approach and these advanced topics assume a highly parameterized approach, as motivated in Part 1. Topics are laid out in manner that reflects real-world workflows, with a focus on practical application of concepts and problem solving.
 
 Part 2 is structured with a specific order for learners to follow to ensure a logical progression of topics, inline with a real-world applied workflow. Learners have the option to explore various sequences covering advanced topics, such as:
@@ -165,13 +176,6 @@ In summary, the tutorial notebooks are organized to guide learners through a str
 </p>
 
 Pre-requisites for Part 2 include a basic understanding of PEST/PEST++ and the ``PEST`` interface, as well as familiarity with the Freyberg model. Familiarity with Python and Jupyter Notebooks is assumed.
-
-After completing this module, learners should be able to:
-
-  - Construct a high-dimensional ``PEST`` control file and interface files.
-  - Implement GLM and ensemble-based parameter estimation and uncertainty analysis workflows using ``PEST++`` and associated tools.
-  - Apply management optimization and sequential data assimilation techniques to decision-support groundwater modelling problems.
-
 
 
 
