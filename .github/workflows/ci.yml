@@ -37,7 +37,7 @@ jobs:
             miniforge-variant: Miniforge
             miniforge-version: latest
             activate-environment: gmdsitut
-            use-mamba: true
+            use-mamba: false
             python-version: ${{ matrix.python-version }}
 
      #- name: Set cache date
