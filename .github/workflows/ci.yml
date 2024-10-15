@@ -34,7 +34,7 @@ jobs:
 
       # Setup conda env
       - name: Install Conda environment using micromamba
-        uses: goanpeca/setup-miniconda@v1
+        uses: mamba-org/setup-micromamba@v1
         with:
           environment-file: ./environment.yml
           environment-name: pyemu
