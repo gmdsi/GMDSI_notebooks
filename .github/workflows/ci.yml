@@ -29,19 +29,22 @@ jobs:
     name: ${{ matrix.os }}-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Setup Miniforge
-        uses: conda-incubator/setup-miniconda@v2
+      # Setup conda env
+      - name: Install Conda environment using micromamba
+        uses: mamba-org/setup-micromamba@v1
         with:
-            miniforge-variant: Miniforge
-            miniforge-version: latest
-            activate-environment: gmdsitut
-            use-mamba: false
-            python-version: ${{ matrix.python-version }}
+          environment-file: ./environment.yml
+          environment-name: pyemu
+          create-args: >-
+            python=${{ matrix.python-version }}
+          cache-downloads: true
+          cache-environment: true
+          cache-environment-key: environment-${{ steps.date.outputs.date }}
+          cache-downloads-key: downloads-${{ steps.date.outputs.date }}
 
-     #- name: Set cache date
-     #  run: echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
 
       - name: Set cache environment variables
         shell: bash -l {0}
@@ -50,11 +53,6 @@ jobs:
           CONDA_PREFIX=$(python -c "import sys; print(sys.prefix)")
           echo "CONDA_PREFIX=$CONDA_PREFIX" >> $GITHUB_ENV
 
-     # - uses: actions/cache@v2
-     #   with:
-     #     path: ${{ matrix.prefix }}
-     #     key: ${{ matrix.label }}-conda-${{ hashFiles('environment.yml') }}-${{ env.DATE }}-${{ env.CACHE_NUMBER }}
-     #   id: cache
 
       # make the cache
       - uses: actions/cache@v3
@@ -65,7 +63,7 @@ jobs:
       
       # update the cache if ncessary
       - name: Update environment
-        run: mamba env update -n gmdsitut -f environment.yml
+        run: micromamba env update -n gmdsitut -f environment.yml
         if: steps.cache.outputs.cache-hit != 'true'
 
       # add exes to path so that they run in non-win OSs
