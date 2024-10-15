@@ -63,7 +63,7 @@ jobs:
       
       # update the cache if ncessary
       - name: Update environment
-        run: micromamba env update --name gmdsitut --file environment.yml
+        run: micromamba create --name gmdsitut --file environment.yml
         if: steps.cache.outputs.cache-hit != 'true'
 
       # add exes to path so that they run in non-win OSs
