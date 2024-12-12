@@ -39,15 +39,15 @@ def prep_forecasts(pst, model_times=False):
     obs = pst.observation_data
     obs_names = [o for o in pst.obs_names if o not in pst.nnz_obs_names]
 
-    # get list of times for obs name sufixes
+    # get list of times for obs name suffixes
     time_str = obs_data.index.map(lambda x: f"time:{x}").values
-    # empyt list to keep track of misssing observation names
+    # empyt list to keep track of missing observation names
     missing=[]
     for col in obs_data.columns:
         if col.lower()=='part_time':
             obs_sufix = col.lower()
         else:
-        # get obs list sufix for each column of data
+        # get obs list suffix for each column of data
             obs_sufix = col.lower()+"_"+time_str
         if type(obs_sufix)==str:
             obs_sufix=[obs_sufix]
@@ -351,7 +351,7 @@ def prep_pest(tmp_d):
     obs_data.site = obs_data.site.str.lower()
     obs_data.set_index('site', inplace=True)
     
-    # restructure the obsevration data 
+    # restructure the observation data 
     obs_sites = obs_data.index.unique().tolist()
     model_times = obs.loc[:,obs_sites[0]].astype(float)
     ess_obs_data = {}
@@ -375,10 +375,10 @@ def prep_pest(tmp_d):
     # for checking
     org_nnzobs = pst.nnz_obs
     org_nobs = pst.nobs
-    # empyt list to keep track of misssing observation names
+    # empyt list to keep track of missing observation names
     missing=[]
     for col in obs_data.columns:
-        # get obs list sufix for each column of data
+        # get obs list suffix for each column of data
         obs_sufix = obs_data.index.map(lambda x: col.lower()+f':{x}' ).values
         for string, oval, time in zip(obs_sufix, obs_data.loc[:,col].values, obs_data.index.values):
             # get a list of obsnames
@@ -475,7 +475,7 @@ def add_ppoints(tmp_d='freyberg_mf6'):
 
     hk_parval, hkub, hklb = pst.parameter_data.loc['hk1', ['parval1','parlbnd','parubnd']]
     pst.drop_parameters(tpl_file=os.path.join(tmp_d,'freyberg6.npf_k_layer1.txt.tpl'), pst_path='.', )
-    # remove the .tpl file for tidyness
+    # remove the .tpl file for tidiness
     #os.remove(os.path.join(tmp_d,'freyberg6.npf_k_layer1.txt.tpl') )
     par_pp = pst.add_parameters(os.path.join(tmp_d,'hkpp.dat.tpl'), pst_path='.' )
     pst.parameter_data.loc[par_pp.parnme, ['parval1','parlbnd','parubnd', 'pargp']] = hk_parval, hkub, hklb, 'hk1'
@@ -895,7 +895,7 @@ def prep_mc(tmp_d):
 
     #update parameter data
     par = pst.parameter_data
-    #update paramter transform
+    #update parameter transform
     par.loc[:, 'partrans'] = 'log'
 
     pst.control_data.noptmax = 20
