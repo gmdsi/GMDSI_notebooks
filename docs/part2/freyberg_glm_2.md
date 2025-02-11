@@ -8,11 +8,11 @@ math: mathjax3
 
 # Highly Parameterized Inversion
 
-The current tutorial continues where the "freyberg glm part1" notebook left off. The "freyberg intro to model" and "freyberg pstfrom pest setup" provide details on the model and PEST dataset. The "freyberg glm 1" notebooks introduced changes to the PEST setup that are relevant to the current tutorial. You do not need to know the details of all these noteboks to follow along with general points of the current tutorial - but it helps! 
+The current tutorial continues where the "freyberg glm part1" notebook left off. The "freyberg intro to model" and "freyberg pstfrom pest setup" provide details on the model and PEST dataset. The "freyberg glm 1" notebooks introduced changes to the PEST setup that are relevant to the current tutorial. You do not need to know the details of all these notebooks to follow along with general points of the current tutorial - but it helps! 
 
-In this tutorial we will add the final tweaks to a PEST dataset and then calibrate our model using PESTPP-GLM. Much like PEST, PESTPP-GLM undertakes highly parameterized inversion. However, it streamlines alot of the user-input process. It also automates FOSM and FOSM-based Monte Carlo uncertainty analyses. This drastically reduces requirements for user input, making workflows easier to implement. However, it also increases the number of moving pieces that a user must be familiar with (no free lunch!).
+In this tutorial we will add the final tweaks to a PEST dataset and then calibrate our model using PESTPP-GLM. Much like PEST, PESTPP-GLM undertakes highly parameterized inversion. However, it streamlines a lot of the user-input process. It also automates FOSM and FOSM-based Monte Carlo uncertainty analyses. This drastically reduces requirements for user input, making workflows easier to implement. However, it also increases the number of moving pieces that a user must be familiar with (no free lunch!).
 
-Here we will discuss some PESTPP-GLM specific options and their implications, calibrate the model and then explore outputs - all using a programatic interface. 
+Here we will discuss some PESTPP-GLM specific options and their implications, calibrate the model and then explore outputs - all using a programmatic interface. 
 
 ### Admin
 
@@ -72,11 +72,11 @@ pst_path = os.path.join(t_d, 'freyberg_pp.pst')
 
 Right then, let's load in our PEST control file.
 
-Just as a reminder, this is the control fle prepared in the "glm 1" notebook:
+Just as a reminder, this is the control file prepared in the "glm 1" notebook:
  - We have reduced our very high dimensional PEST dataset down from 10s of thousands to several hundreds of parameters (#sad).
  - We continue to have lots of spatially distributed parameters (pilot points), which we expect to have a degree of spatial (and in some cases, temporal) correlation. 
  - We have weighted observations to reflect the inverse of measurement noise standard deviation. 
- - We have already calculated a Jacobian matrix, with parameter sensitivities based on intial parameter values. It is stored in a file named "freyberg_pp.jcb".
+ - We have already calculated a Jacobian matrix, with parameter sensitivities based on initial parameter values. It is stored in a file named "freyberg_pp.jcb".
 
 
 
@@ -98,7 +98,7 @@ print(f'number of observations: {pst.nnz_obs} \nnumber of parameters: {pst.npar_
 
 ## Regularisation
 
-We have more unkown parameters than observations. Thus, we have an ill-posed inverse problem. The mathematical term for the process through which a unique solution is sought for a nonunique inverse problem is “regularisation”. The goal of regularised inversion is to seek a unique parameter field that results in a suitable fit between model outputs and field measurements, whilst minimizing the potential for wrongness in model predictions. That is, out of all the ways to fit a calibration dataset, regularized inversion seeks the parameter set of minimum error variance.
+We have more unknown parameters than observations. Thus, we have an ill-posed inverse problem. The mathematical term for the process through which a unique solution is sought for a nonunique inverse problem is “regularisation”. The goal of regularised inversion is to seek a unique parameter field that results in a suitable fit between model outputs and field measurements, whilst minimizing the potential for wrongness in model predictions. That is, out of all the ways to fit a calibration dataset, regularized inversion seeks the parameter set of minimum error variance.
 
 There are two main approaches used to stabilize this problem: 
  1) adding soft knowledge and/or 
@@ -115,23 +115,23 @@ PEST provides a user with a great deal of flexibility in how Tikhonov constraint
 
 #### Promoting "Geologicaly Reasonable" Patterns
 
-PEST (and PEST_HP) provide the option to replace prior information equation weights with covariance matrices. When prior information equations embody Tikhonov constraints, they can be used to ensure that patterns of parameter heterogeneity that emerge from the inversion process are geologically reasonable. (See the GMDSI Tutorials for examples of how to accompish this with PEST_HP: https://gmdsi.org/blog/calibration-a-simple-model/)
+PEST (and PEST_HP) provide the option to replace prior information equation weights with covariance matrices. When prior information equations embody Tikhonov constraints, they can be used to ensure that patterns of parameter heterogeneity that emerge from the inversion process are geologically reasonable. (See the GMDSI Tutorials for examples of how to accomplish this with PEST_HP: https://gmdsi.org/blog/calibration-a-simple-model/)
 
 PEST++GLM (which we will be using here) does things a bit differently. You *can* specify prior information equations and assign relevant weights and run PEST++GLM in "regularisation" mode. (See the "intro to pyemu" notebook for an example of how to specify prior information equations.) However, PEST++GLM does not accept covariance matrices for the purposes of specifying preferred parameter heterogeneity.
 
-Alternatively, PEST++GLM offers users the option of using prior parameter covariance matrix based regularisation directly in the parameter upgrade calculation process - referred to as Regularized-Gauss-Levenburg-Marquardt. Instead of using the contribution of regularisation to the objective function to avoid "unrealistic" parameter patterns (as is done in PEST), this approach tries to maintain "realistic" patterns directly when calculating parameter upgrades. 
+Alternatively, PEST++GLM offers users the option of using prior parameter covariance matrix based regularisation directly in the parameter upgrade calculation process - referred to as Regularized-Gauss-Levenberg-Marquardt. Instead of using the contribution of regularisation to the objective function to avoid "unrealistic" parameter patterns (as is done in PEST), this approach tries to maintain "realistic" patterns directly when calculating parameter upgrades. 
 
 As we will show further on, this is implemented by specifying a prior parameter covariance matrix and the relevant `pest++` options. If this option is enabled, then prior information equation based regularisation cannot also be employed. Regularisation is controlled by the max singular values and eigen threshold control variables in the SVD section.
 
-Pragmatically, the latter approach is the easier one to implement within a PEST++ workflow. A modeller will likley have already prepared a prior parameter covariance marix (we have uncertianty on our mind after all...). Thus, only a few lines need to be added to the PEST control file. It also removes the need to determine and dynamically adjust prior information weights, making the process numerically more efficient. 
+Pragmatically, the latter approach is the easier one to implement within a PEST++ workflow. A modeller will likely have already prepared a prior parameter covariance matrix (we have uncertainty on our mind after all...). Thus, only a few lines need to be added to the PEST control file. It also removes the need to determine and dynamically adjust prior information weights, making the process numerically more efficient. 
 
-The Regularized-Gauss-Levenburg-Marquardt option is activated with the `glm_normal_form(prior)` pest++ option and by providing a prior parameter covariance matrix in `parcov()`.
+The Regularized-Gauss-Levenberg-Marquardt option is activated with the `glm_normal_form(prior)` pest++ option and by providing a prior parameter covariance matrix in `parcov()`.
 
 Let's start by preparing this covariance matrix. Recall that we created a prior covariance matrix in the "freyberg pstfrom pest setup" tutorial and saved it in a file named "prior_cov.jcb". That matrix contains values for *all* the parameters. First, we need to reduce it down to only the adjustable parameters in our current "pilot points" control file:
 
 
 ```python
-# read the orginal high-dimensional covariance matrix
+# read the original high-dimensional covariance matrix
 cov = pyemu.Cov.from_binary(os.path.join(t_d,"prior_cov.jcb"))
 
 # reduce it down to the currently adjustable parameters
@@ -151,7 +151,7 @@ Start by providing the control variable specifying the filename for the prior pa
 pst.pestpp_options["parcov"] = "glm_prior.cov"
 ```
 
-Then specify the option to employ Regularized-Gauss-Levenburg-Marquardt:
+Then specify the option to employ Regularized-Gauss-Levenberg-Marquardt:
 
 
 ```python
@@ -163,13 +163,13 @@ Boom! Done.
 
 ###  SVD
 
-Tikhonov regularisation adds information to the calibration process in order to achieve numerical stability. In contrast, subspace methods do so by reducing the dimensionality of the problem, removing and/or combining prameters. When employing SVD in calibration, only parameters and linear combinations of parameters that are suficiently constrained by measured data are estimated. These parameters are said to reside in the *solution space*. Chossing which parameter combinations to estimate is accomplished via singular value decomposition (SVD). SVD-based parameter estimation fixes intial values for parameters/parameter combinations that are not estimable (reside in the *null space*) and does not adjust them during inversion. (So make sure initial parameter values are sensible!)  
+Tikhonov regularisation adds information to the calibration process in order to achieve numerical stability. In contrast, subspace methods do so by reducing the dimensionality of the problem, removing and/or combining parameters. When employing SVD in calibration, only parameters and linear combinations of parameters that are sufficiently constrained by measured data are estimated. These parameters are said to reside in the *solution space*. Choosing which parameter combinations to estimate is accomplished via singular value decomposition (SVD). SVD-based parameter estimation fixes initial values for parameters/parameter combinations that are not estimable (reside in the *null space*) and does not adjust them during inversion. (So make sure initial parameter values are sensible!)  
 
-Unlike PEST, by default members of the PEST++ suite employ singular value decomposition (or methods closely related to it) for solution of the inverse problem. Unless otherwise specifed, default options are employed. PEST++GLm offers two numerical libraries for implementing SVD; the default option will usually suffice (see the manual for details).
+Unlike PEST, by default members of the PEST++ suite employ singular value decomposition (or methods closely related to it) for solution of the inverse problem. Unless otherwise specified, default options are employed. PEST++GLm offers two numerical libraries for implementing SVD; the default option will usually suffice (see the manual for details).
 
 Two variables affect how SVD is deployed: MAXSING and EIGTHRESH. These are recorded in the `* singular value decomposition` section of the PEST control file. By default, MAXSING is equal to the number of adjustable parameters and EIGHTRESH is 1.0E-7. 
 
-When employing Regularized-Gauss-Levenburg-Marquardt (i.e. if the `glm_normal_form(prior)` option is specified, as we have done here), the values of MAXSING and EIGTHRESH control the degree of regularisation. 
+When employing Regularized-Gauss-Levenberg-Marquardt (i.e. if the `glm_normal_form(prior)` option is specified, as we have done here), the values of MAXSING and EIGTHRESH control the degree of regularisation. 
 
 For the purposes of this tutorial, we will use default values. However, if desired, these variables could be assigned thus:
 
@@ -207,7 +207,7 @@ Unfortunately, the large computational savings gained from SVD-assisted inversio
 
 For moderately to highly nonlinear models, super parameter redefinition may be required every few iterations. With intermittent super parameter redefinition, model run savings accrued through SVD-assisted inversion may still be considerable; however, they will not be as great as for a linear model where re-computation of a full Jacobian matrix is never required.
 
-In PEST++GLM, the `n_iter_base` and `n_iter_super` pestpp options determine the number of sequential base and super parameter iterations, respectively. Choosing values for these variables will be case specific and may require some trial and error. Relatively linear problems may work well a single base iteration. Non linear problems will likley benefit from fewer super iterations, interspersed with base iterations. Ideal values may also depend on the maximum number of super parameters (discussed further on).
+In PEST++GLM, the `n_iter_base` and `n_iter_super` pestpp options determine the number of sequential base and super parameter iterations, respectively. Choosing values for these variables will be case specific and may require some trial and error. Relatively linear problems may work well a single base iteration. Non linear problems will likely benefit from fewer super iterations, interspersed with base iterations. Ideal values may also depend on the maximum number of super parameters (discussed further on).
 
 For our case we have found that a single base parameter iteration, followed by a few super iterations is sufficient. 
 
@@ -224,9 +224,9 @@ pst.pestpp_options["n_iter_base"] = -1
 pst.pestpp_options["n_iter_super"] = pst.control_data.noptmax
 ```
 
-The number of super parameters determines the number of model runs undertaken during a super parameter iteration. The number of super parameters to estimate can be set using either or both of the `max_n_super()` and ­`super_eigthresh()` pest++ control variable.  The upper limit of super parameters to form is controlled by `max_n_super()`. The higher this value is set, the greater the flexibility that PEST++GLM will have to adjust parameters and achieve a good fit with observation data. But, as we discuss quite often over the course of these tutorials, a good fit does not guarantee a good forecast. If you try to esimate more super parameters than there are valid dimensions in the calibration solution space, you run the risk of incurring numerical instability and overfitting. 
+The number of super parameters determines the number of model runs undertaken during a super parameter iteration. The number of super parameters to estimate can be set using either or both of the `max_n_super()` and ­`super_eigthresh()` pest++ control variable.  The upper limit of super parameters to form is controlled by `max_n_super()`. The higher this value is set, the greater the flexibility that PEST++GLM will have to adjust parameters and achieve a good fit with observation data. But, as we discuss quite often over the course of these tutorials, a good fit does not guarantee a good forecast. If you try to estimate more super parameters than there are valid dimensions in the calibration solution space, you run the risk of incurring numerical instability and overfitting. 
 
-Ideally an upper limit to `max_n_super` should reflect the amount of information contained in the observation dataset (e.g. the calibration solution space). It cannot be higher than the number of non-zero weighted observations. It will likely be lower. As we have previoulsy calcualted a Jacobian matrix, we can get an estimate of the dimensions of the solution space by inspecting the singular value spectrum using `pyemu.ErrVar` (or the SUPCALC utility form the PEST suite).
+Ideally an upper limit to `max_n_super` should reflect the amount of information contained in the observation dataset (e.g. the calibration solution space). It cannot be higher than the number of non-zero weighted observations. It will likely be lower. As we have previously calculated a Jacobian matrix, we can get an estimate of the dimensions of the solution space by inspecting the singular value spectrum using `pyemu.ErrVar` (or the SUPCALC utility form the PEST suite).
 
 First create a linear analysis object.  We will use `ErrVar`  derived type, which replicates the behavior of the `PREDVAR` suite of PEST utilities. We pass it the name of the jacobian matrix file.  If we don't pass an explicit argument for `parcov` or `obscov`, `pyemu` attempts to build them from the parameter bounds and observation weights in a pest control file (.pst) with the same base case name as the jacobian. Seeing as we have a prior covariance matrix, let's pass that in explicitly. 
 
@@ -244,7 +244,7 @@ We can inspect the singular spectrum of $\mathbf{Q}^{\frac{1}{2}}\mathbf{J}$, wh
 s = la.qhalfx.s
 ```
 
-If we plot the singular spectrum, we can see that it decays rapidly (note the y-axis is log-scaled). We can really only support about `max_sing_val` right singular vectors even though we have several hundred adjustable parameters. Should we be using mre super-parameters than that then? Doing so runs the risk of overfitting. Overfitting leads to bias. Bias leads to suffering...
+If we plot the singular spectrum, we can see that it decays rapidly (note the y-axis is log-scaled). We can really only support about `max_sing_val` right singular vectors even though we have several hundred adjustable parameters. Should we be using more super-parameters than that then? Doing so runs the risk of overfitting. Overfitting leads to bias. Bias leads to suffering...
 
 
 ```python
@@ -265,7 +265,7 @@ plt.show()
 
 That's already a decent amount of savings in terms of run-time! Now, for each iteration instead of running the model several hundred times (i.e. the number of adjustable base parameters; see `pst.npar_adj`) we only need to run the model a few tens of times. An order of magnitude less!
 
-In practice, `max_n_super` may be further limited to reflect available computational resources - if you only have time/resources to run the modle 10 times...well then that is what you should set it at. (See the PEST Manual Part 1 for a pragmatic discussion of how to choose the number of super parameters.) 
+In practice, `max_n_super` may be further limited to reflect available computational resources - if you only have time/resources to run the model 10 times...well then that is what you should set it at. (See the PEST Manual Part 1 for a pragmatic discussion of how to choose the number of super parameters.) 
 
 
 ```python
@@ -287,20 +287,20 @@ pst.pestpp_options['parcov']
 
 PEST++GLM calculates a posterior parameter covariance matrix at the end of each iteration. Each covariance matrix is recorded in an external file. PEST++GLM also provides summaries of prior and posterior parameter uncertainties (means, standard deviations and bounds) for each iteration.
 
-If any observations are listed as forecasts (in the `forecast()` variable), PEST++GLM will also undertake predictive uncertainty analysis. By default, if no forecasts are provided, PEST++GLM will assume all zero-weighted observations are forecasts - so it is usually a good idea to specify forecasts explicitly (if you have many many zero-weighted obsevrations FOSM can cost some computation time). Recall that we specified several observations as forecasts:
+If any observations are listed as forecasts (in the `forecast()` variable), PEST++GLM will also undertake predictive uncertainty analysis. By default, if no forecasts are provided, PEST++GLM will assume all zero-weighted observations are forecasts - so it is usually a good idea to specify forecasts explicitly (if you have many many zero-weighted observations FOSM can cost some computation time). Recall that we specified several observations as forecasts:
 
 
 ```python
 pst.pestpp_options['forecasts']
 ```
 
-FOSM implemented by PEST++GLM assumes that the standard deviation of measurement noise associated with each observation is proportional to current observation residual. This accounts for the model's ability to reproduce an observation. Effectively, it assumes that the residual is a measure of measurement noise + model error. Thus, observation weights used during FOSM are calculated as the inverse of the residual. Note that this "residual weight" never increases weights beyond those which are specified in the control file! The assumption is that weighs in the control file represent the inverse of measurment noise standard deviation - and it would be illogical to decrease noise beyond this level. 
+FOSM implemented by PEST++GLM assumes that the standard deviation of measurement noise associated with each observation is proportional to current observation residual. This accounts for the model's ability to reproduce an observation. Effectively, it assumes that the residual is a measure of measurement noise + model error. Thus, observation weights used during FOSM are calculated as the inverse of the residual. Note that this "residual weight" never increases weights beyond those which are specified in the control file! The assumption is that weighs in the control file represent the inverse of measurement noise standard deviation - and it would be illogical to decrease noise beyond this level. 
 
-It is important to keep this in mind. If observation weights in the control file do **not** represent measurement noise, then it may be preferable to not use PEST++GLM to undertake FOSM during parameter estimation. In our case, weights represent the inverse of measurment standard deviations - so we are all good!
+It is important to keep this in mind. If observation weights in the control file do **not** represent measurement noise, then it may be preferable to not use PEST++GLM to undertake FOSM during parameter estimation. In our case, weights represent the inverse of measurement standard deviations - so we are all good!
 
 ### FOSM-informed Monte Carlo
 
-PEST++GLM also has the ability to undertake nonlinear Monte Carlo uncertainty analysis. FOSM-based posterior Monte Carlo (also called Bayes-linear Monte Carlo) is implemented by drawing samples of parameters from the posterior parameter distribution (described by the posterior parameter covariance matrix and assuming best-fit parameter values as the mean). Each of these parameter realisation is then simulated. As long as forecasts are included as observations in the control file, then the Monte Carlo process provides an ensemble of forecast values. With enough samples of foreacast the posterior predictive uncertainty can be described. In principle, using FOSM-based Monte Carlo to evaluate forecast uncertainty relaxes the assumption of linearity between and foreacsts and parameters - making it more robust.
+PEST++GLM also has the ability to undertake nonlinear Monte Carlo uncertainty analysis. FOSM-based posterior Monte Carlo (also called Bayes-linear Monte Carlo) is implemented by drawing samples of parameters from the posterior parameter distribution (described by the posterior parameter covariance matrix and assuming best-fit parameter values as the mean). Each of these parameter realisation is then simulated. As long as forecasts are included as observations in the control file, then the Monte Carlo process provides an ensemble of forecast values. With enough samples of forecast the posterior predictive uncertainty can be described. In principle, using FOSM-based Monte Carlo to evaluate forecast uncertainty relaxes the assumption of linearity between and forecasts and parameters - making it more robust.
 
 Activating this option is as easy as adding the `glm_num_reals()` option to the control file and specifying the number of Monte Carlo realisation to sample: 
 
@@ -317,7 +317,7 @@ There are numerous "utility" options available in PEST++GLM. The user manual pro
 ```python
 # consider a model to have failed if it takes 5 times the average model run time
 pst.pestpp_options["overdue_giveup_fac"] = 5.0
-# attemp to repeat a failed model a maximum of 3 times; if it still fails, halt PEST++
+# attempt to repeat a failed model a maximum of 3 times; if it still fails, halt PEST++
 pst.pestpp_options["max_run_fail"] = 3
 ```
 
@@ -334,7 +334,7 @@ pst.write(os.path.join(t_d,f"{case}.pst"))
 
 Now, deploy PEST++GLM in parallel.
 
-To speed up the process, you will want to distribute the workload across as many parallel agents as possible. Normally, you will want to use the same number of agents (or less) as you have available CPU cores. Most personal computers (i.e. desktops or laptops) these days have between 4 and 10 cores. Servers or HPCs may have many more cores than this. Another limitation to keep in mind is the read/write speed of your machines disk (e.g. your hard drive). PEST and the model software are going to be reading and writting lots of files. This often slows things down if agents are competing for the same resources to read/write to disk.
+To speed up the process, you will want to distribute the workload across as many parallel agents as possible. Normally, you will want to use the same number of agents (or less) as you have available CPU cores. Most personal computers (i.e. desktops or laptops) these days have between 4 and 10 cores. Servers or HPCs may have many more cores than this. Another limitation to keep in mind is the read/write speed of your machines disk (e.g. your hard drive). PEST and the model software are going to be reading and writing lots of files. This often slows things down if agents are competing for the same resources to read/write to disk.
 
 The first thing we will do is specify the number of agents we are going to use.
 
@@ -367,7 +367,7 @@ To see PEST++'s progress, switch to the command line window from which you launc
 
 ## Postprocess
 
-During inversion PEST++ records a lot of usefull information in external files. We shall not go through each of these here (see the PEST++ user manual for detailed descriptions). The following are some common outputs a modeller is likely to inspect.
+During inversion PEST++ records a lot of useful information in external files. We shall not go through each of these here (see the PEST++ user manual for detailed descriptions). The following are some common outputs a modeller is likely to inspect.
 
 Let's first re-read the control file so as to update the `.phi` and `.res` attributes.
 
@@ -377,14 +377,14 @@ pst = pyemu.Pst(os.path.join(m_d,'freyberg_pp.pst'))
 pst.phi
 ```
 
-Recall that observations are weighted according to the inverse of measurment noise. Conceptualy, we hope to achieve a fit between simulated and measured values comensurate with measurment error. As we saw in the "obs and weights" tutorial, such a fit would result in a Phi equal to the number of non-zero weighted observations. Did we achieve that? No?! Shocking! (Why not, you ask? Short answer: not enough parameters.) Model-to-measurment misfit is often dominated by model error (and by "model" we also mean the parameterisation of the model) and not just measurement noise. 
+Recall that observations are weighted according to the inverse of measurement noise. Conceptually, we hope to achieve a fit between simulated and measured values commensurate with measurement error. As we saw in the "obs and weights" tutorial, such a fit would result in a Phi equal to the number of non-zero weighted observations. Did we achieve that? No?! Shocking! (Why not, you ask? Short answer: not enough parameters.) Model-to-measurement misfit is often dominated by model error (and by "model" we also mean the parameterisation of the model) and not just measurement noise. 
 
 
 ```python
 print(f"Phi: {pst.phi} \nNumber of non-zero obs: {pst.nnz_obs}")
 ```
 
-A usefull way to track PEST's performance is to look at the evolution of Phi throughout the inversion. This is recorded in a file with the extension `*.iobj`  (e.g. `freyperg_pp.iobj`). You can read this file whilst PEST++ is working if you like. PEST++ will update the file after every iteration, thus it provides an easy way to keep an eye on the inversion progress.
+A useful way to track PEST's performance is to look at the evolution of Phi throughout the inversion. This is recorded in a file with the extension `*.iobj`  (e.g. `freyperg_pp.iobj`). You can read this file whilst PEST++ is working if you like. PEST++ will update the file after every iteration, thus it provides an easy way to keep an eye on the inversion progress.
 
 The file has a tabular format, making it easy to read as a `Pandas` dataframe:
 
@@ -397,7 +397,7 @@ df_obj = pd.read_csv(os.path.join(m_d, "freyberg_pp.iobj"),index_col=0)
 df_obj.head()
 ```
 
-A quick and dirty plot to see the evolution of Phi per iteration. Ideally Phi should decrease for each sucessive iteration. If this plot bounces up and down it is often a sign of trouble. When using SVD-Assist, this often occurs if the inverse problem is highy nonlinear. In such cases it may be worth experimenting with fewer sucessive super parameter iterations and/or a greater number of super parameters. Lack of convergence can also be a sign of "dirty derivatives", often due to model output files which PEST is reading being written with insufficient precision.
+A quick and dirty plot to see the evolution of Phi per iteration. Ideally Phi should decrease for each successive iteration. If this plot bounces up and down it is often a sign of trouble. When using SVD-Assist, this often occurs if the inverse problem is highly nonlinear. In such cases it may be worth experimenting with fewer successive super parameter iterations and/or a greater number of super parameters. Lack of convergence can also be a sign of "dirty derivatives", often due to model output files which PEST is reading being written with insufficient precision.
 
 
 ```python
@@ -409,7 +409,7 @@ df_obj.loc[:,["total_phi","model_runs_completed"]].plot(subplots=True)
 
 We may also wish to compare the measured versus simulated observation values obtained using the "best-fit" parameter set.
 
-PEST++ stores observation residuals in a `*.rei` file. When instantiating a `Pst` class from an existing control file, `pyemu` will attemp to read a corresponding `*.rei` file. Data from the rei file is stored in the `Pst.res` attribute as a `Pandas` `DataFrame`. This makes it easy to access and postprocess. We can also read in residuals after instatinating a `Pst` object by using the `Pst.set_res()` method. 
+PEST++ stores observation residuals in a `*.rei` file. When instantiating a `Pst` class from an existing control file, `pyemu` will attempt to read a corresponding `*.rei` file. Data from the rei file is stored in the `Pst.res` attribute as a `Pandas` `DataFrame`. This makes it easy to access and postprocess. We can also read in residuals after instantiating a `Pst` object by using the `Pst.set_res()` method. 
 
 
 ```python
@@ -441,7 +441,7 @@ oe = pyemu.ObservationEnsemble.from_dataframe(pst=pst,df=df)
 oe.head()
 ```
 
-Let's plot a histogram of Phi achieved by this ensemble. Some have a good fit (low Phi). Others not so much. (The more linear the problem, the more likley that more will have a good fit.) So should we use all of them? Probably not.
+Let's plot a histogram of Phi achieved by this ensemble. Some have a good fit (low Phi). Others not so much. (The more linear the problem, the more likely that more will have a good fit.) So should we use all of them? Probably not.
 
 
 ```python
@@ -455,9 +455,9 @@ Theoretically, as observations were weighted with the inverse of the standard de
 oe_pt = oe.loc[oe.phi_vector.sort_values().index[:30],:] #just take the 30 lowest phi realizations
 ```
 
-Most of our observations are time series. Let's take a look at how well time series from the ensemble of outputs match those of measured values. This allows us to get a quick look at where the ensmbles may not be capturing model behaviour well. Run the following cell to generate the plots. Each plot displays an obsevration time series. The red lines are the measured values. The simulated values from each posterior realisation are displayed as blue lines.
+Most of our observations are time series. Let's take a look at how well time series from the ensemble of outputs match those of measured values. This allows us to get a quick look at where the ensembles may not be capturing model behaviour well. Run the following cell to generate the plots. Each plot displays an observation time series. The red lines are the measured values. The simulated values from each posterior realisation are displayed as blue lines.
 
-What do you think? Are we happy with these results? There are some more indications of potential problems. The posterior ensemble fails to cover some of the measured data. And the simulated results do not seem to match the pattern in the measured data time series. The model does not seem to be capturing some details of system behaviour - possibly due to over-simplification of model structure or lack of flexibility in the parameterisation scheme. How confortable are we with trying to fit parameters under these conditions? Sketchy.
+What do you think? Are we happy with these results? There are some more indications of potential problems. The posterior ensemble fails to cover some of the measured data. And the simulated results do not seem to match the pattern in the measured data time series. The model does not seem to be capturing some details of system behaviour - possibly due to over-simplification of model structure or lack of flexibility in the parameterisation scheme. How comfortable are we with trying to fit parameters under these conditions? Sketchy.
 
 
 ```python
@@ -481,7 +481,7 @@ plt.show()
 
 ### The Minimum Error Variance Parameter Field
 
-We have inspected the models' ability to replicate measured data. It is also a good idea to inspect how "sensible" are the obtained parameter values. A common easy check is to visualy inspect the spatial distirbution of hydrualic property parameters. One can often find unexpected insight from how parameter patterns emerge during calibration. 
+We have inspected the models' ability to replicate measured data. It is also a good idea to inspect how "sensible" are the obtained parameter values. A common easy check is to visually inspect the spatial distribution of hydraulic property parameters. One can often find unexpected insight from how parameter patterns emerge during calibration. 
 
 First start by updating the control file with the calibrated parameter values using the `Pst.parrep()` method:
 
@@ -497,13 +497,13 @@ Then write the parameter values to the model input files and run the model once:
 # updates the model input files with parameter values
 pst.write_input_files(pst_path=m_d)
 
-# run the model forward run; this applies all the multipler paarameters, executes MODFLOW6 and MODPATH7 and then postprocess observations
+# run the model forward run; this applies all the multiplier parameters, executes MODFLOW6 and MODPATH7 and then postprocess observations
 pyemu.os_utils.run('python forward_run.py', cwd=m_d)
 ```
 
 Now we can use `flopy` to load the model and plot some of the parameters. Let's plot some maps of the spatial distribution of K. (Run the next cell.) 
 
-Looks a bit "blotchy"...perhaps not particularily realistic, hey? In part, this is due to using the regularized Gauss Levenburg Marquardt option which tends to not look as "smooth" as using geostatistics-informed Tikhonov regularisation explicitly. In this case, it is also likley due to parameter values compensating for model structural error (e.g. we have n imperfect model and a corase parmaeterisation scheme).
+Looks a bit "blotchy"...perhaps not particularly realistic, hey? In part, this is due to using the regularized Gauss Levenberg Marquardt option which tends to not look as "smooth" as using geostatistics-informed Tikhonov regularisation explicitly. In this case, it is also likely due to parameter values compensating for model structural error (e.g. we have n imperfect model and a coarse parametrisation scheme).
 
 
 ```python
@@ -518,17 +518,17 @@ gwf.npf.k.plot(colorbar=True)
 
 Another quick check is to look for parameters which are at their bounds. (Run the next cell.) 
 
-Some parameters are at their bounds. Along with the extreme values and blotchiness in parameter spatial distributions, this can often be a sign of either a strucutral problem with the model or an inflexible parameterisation scheme. 
+Some parameters are at their bounds. Along with the extreme values and blotchiness in parameter spatial distributions, this can often be a sign of either a structural problem with the model or an inflexible parameterisation scheme. 
 
 
 ```python
-# idealy, this should return an empty list
+# ideally, this should return an empty list
 pst.get_adj_pars_at_bounds()
 ```
 
 ### Forecast Uncertainty
 
-So far we have looked at the fit with measured data. But what we are realy intersted in are the forecasts. We instructed PEST++GLM to undertake both FOSM and FOSM-based Monte Carlo uncertainty analysis. We have already loaded the ensemble of forecasts from the Monte Carlo analysis (`oe_pt`). Let's also load and plot the FOSM forecast results along side of the ensemble results. FOSM forecast results are recorded in the file named `freyberg_pp.pred.usum.csv`. 
+So far we have looked at the fit with measured data. But what we are really interested in are the forecasts. We instructed PEST++GLM to undertake both FOSM and FOSM-based Monte Carlo uncertainty analysis. We have already loaded the ensemble of forecasts from the Monte Carlo analysis (`oe_pt`). Let's also load and plot the FOSM forecast results along side of the ensemble results. FOSM forecast results are recorded in the file named `freyberg_pp.pred.usum.csv`. 
 
 
 ```python
@@ -537,7 +537,7 @@ f_df.index = f_df.index.map(str.lower)
 f_df
 ```
 
-Now, let's make some plots of the forecast uncertainties obtained from FOSM (e.g. linear analysis) and from FOSM-based Monte Carlo (e.g. nonlinear analyis). This let's us investigate the validity of the assumed linear relation between parameters and forecasts (the forecast sensitivity vectors). If it holds up, then the FOSM posterior should cover the Monte Carlo posterior (note that we used very few realisations for Monte Carlo, so in our case this assumption is a bit shaky). 
+Now, let's make some plots of the forecast uncertainties obtained from FOSM (e.g. linear analysis) and from FOSM-based Monte Carlo (e.g. nonlinear analysis). This let's us investigate the validity of the assumed linear relation between parameters and forecasts (the forecast sensitivity vectors). If it holds up, then the FOSM posterior should cover the Monte Carlo posterior (note that we used very few realisations for Monte Carlo, so in our case this assumption is a bit shaky). 
 
 We will superimpose the two posteriors on the *prior* forecast probability distribution to illustrate the uncertainty reduction gained from history matching. Because we are using a synthetic case, we know the true forecast values. So let's also plot these. If all went well, both posteriors should cover the truth.
 
@@ -568,7 +568,7 @@ for forecast in fnames:
     plt.show()
 ```
 
-Does the FOSM posterior (blue-shaded area) overlap the Monte Carlo posterior (blue columns) for all forecasts? If so, that's good news. It means the assumed linear parameter-forecast relation in the FOSM calculations holds true. If it does not, then the usefullness of FOSM for forecast uncertainty analysis is erroded.
+Does the FOSM posterior (blue-shaded area) overlap the Monte Carlo posterior (blue columns) for all forecasts? If so, that's good news. It means the assumed linear parameter-forecast relation in the FOSM calculations holds true. If it does not, then the usefulness of FOSM for forecast uncertainty analysis is eroded.
 
 Because we are working with a synthetic case for which we know the truth, we can also assess whether forecast posteriors include the true value. Naturally, this would not be possible for a real-world case. Do each of the red lines fall within the FOSM (blue shaded area) and Monte Carlo (blue column) posteriors? If so, then technically uncertainty analysis has not failed. #winning. If not, then it has failed. #major bad times.
 

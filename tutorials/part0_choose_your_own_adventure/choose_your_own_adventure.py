@@ -63,7 +63,7 @@ def setup_pst():
                                 spatial_reference=sr, #the spatial reference we generated earlier
                                 zero_based=False, # does the MODEL use zero based indices? For example, MODFLOW does NOT
                                 start_datetime=start_datetime, # required when specifying temporal correlation between parameters
-                                echo=False) # to stop PstFrom from writting lots of infromation to the notebook; experiment by setting it as True to see the difference; usefull for troubleshooting
+                                echo=False) # to stop PstFrom from writing lots of information to the notebook; experiment by setting it as True to see the difference; useful for troubleshooting
 
 
     df = pd.read_csv(os.path.join(template_ws,"heads.csv"),index_col=0)
@@ -71,7 +71,7 @@ def setup_pst():
                                 insfile="heads.csv.ins", #optional, the instruction file name
                                 index_cols="time", #column header to use as index; can also use column number (zero-based) instead of the header name
                                 use_cols=list(df.columns.values), #names of columns that include observation values; can also use column number (zero-based) instead of the header name
-                                prefix="hds") #prefix to all observation names; choose something logical and easy o find. We use it later on to select obsevrations
+                                prefix="hds") #prefix to all observation names; choose something logical and easy o find. We use it later on to select observations
 
 
 
@@ -135,7 +135,7 @@ def setup_pst():
                             pargp=base+"pp",
                             lower_bound=lb, upper_bound=ub,
                             ult_ubound=uub, ult_lbound=ulb,
-                            pp_space=5) # `PstFrom` will generate a unifrom grid of pilot points in every 4th row and column
+                            pp_space=5) # `PstFrom` will generate a uniform grid of pilot points in every 4th row and column
         if add_coarse==True:
             # constant (coarse) scale parameters
             pf.add_parameters(f,
@@ -394,7 +394,7 @@ def setup_pst():
 
 
     pf.add_py_function("helpers.py", # the file which contains the function
-                        "process_secondary_obs(ws='.')", #the function, making sure to specify any arguments it may requrie
+                        "process_secondary_obs(ws='.')", #the function, making sure to specify any arguments it may require
                         is_pre_cmd=False) # whether it runs before the model system command, or after. In this case, after.
 
 
@@ -481,7 +481,7 @@ def setup_pst():
 
     pe = pf.draw(num_reals=20, use_specsim=True) # draw parameters from the prior distribution
     pe.enforce() # enforces parameter bounds
-    pe.to_binary(os.path.join(template_ws,"prior_pe.jcb")) #writes the paramter ensemble to binary file
+    pe.to_binary(os.path.join(template_ws,"prior_pe.jcb")) #writes the parameter ensemble to binary file
     assert pe.shape[1] == pst.npar
 
     pst.parameter_data.loc[:,"parval1"] = pe.loc[pe.index[0],pst.par_names].values

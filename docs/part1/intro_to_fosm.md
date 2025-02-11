@@ -43,7 +43,7 @@ FOSM tasks may include:
  - identifying parameter contributions to predictive uncertainty and 
  - assessing parameter identifiability. 
 
-Outcomes of these analyses can provide easily understood insights into what history-matching can and cannot achieve with the available information. These insights can be used to streamline the data assimlation process and guide further site characterisation studies. Of particular interest is data worth analysis. The worth of data is measured by their ability to reduce the uncertainties of model predictions that we care about. Because the equations on which FOSM relies do not require that an observation value already be known, data worth can be assessed on as-of-yet ungathered data. 
+Outcomes of these analyses can provide easily understood insights into what history-matching can and cannot achieve with the available information. These insights can be used to streamline the data assimilation process and guide further site characterisation studies. Of particular interest is data worth analysis. The worth of data is measured by their ability to reduce the uncertainties of model predictions that we care about. Because the equations on which FOSM relies do not require that an observation value already be known, data worth can be assessed on as-of-yet ungathered data. 
 
 But we are getting ahead of ourselves, let's take this back to basics.
 
@@ -59,7 +59,7 @@ We can also think of this graphically, as taken from Anderson et al. (2015) in s
 
 <img src="intro_to_fosm_files/Fig10.3_Bayes_figure.png" style="inline:center;width:500px;"/>
 
-The problem is, for real-world problems, the likelihood function ("what we learned") is high-dimensional and non-parameteric, requiring non-linear (typically Monte Carlo) integration for rigorous Bayes. Unfortunatley, non-linear methods are computationaly expensive and ineficient as we will see in a subsequent notebook. 
+The problem is, for real-world problems, the likelihood function ("what we learned") is high-dimensional and non-parametric, requiring non-linear (typically Monte Carlo) integration for rigorous Bayes. Unfortunately, non-linear methods are computationally expensive and inefficient as we will see in a subsequent notebook. 
 
 But, we can make some assumptions and greatly reduce computational burden. This is why we often suggest using these linear methods first before burning the silicon on the non-linear ones like Monte Carlo.  
 
@@ -79,7 +79,7 @@ By assuming that:
 
 ###  <center>  $ P(\boldsymbol{\theta}|\mathbf{d}) \approx \mathcal{N}(\overline{\boldsymbol{\mu}}_{\boldsymbol{\theta}},\overline{\boldsymbol{\Sigma}}_{\boldsymbol{\theta}})$ </center>
 
-Armed with these two assumptions, from Bayes equations, one can derive the Schur complement for conditional uncertainty propogation:
+Armed with these two assumptions, from Bayes equations, one can derive the Schur complement for conditional uncertainty propagation:
 
 <img src="intro_to_fosm_files/schur.jpg" style="inline: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;">
 
@@ -343,7 +343,7 @@ Prior parameter distributions can come from one of two sources.
 
 ### Where do the prior forecast distributions come from?
 
-At the first iteration of the parameter estimation process, PEST++GLM calculates sensitivities based on initial parameter values. These are used to determine the prior parameter and forecast uncertianty.
+At the first iteration of the parameter estimation process, PEST++GLM calculates sensitivities based on initial parameter values. These are used to determine the prior parameter and forecast uncertainty.
 
 
 ### Why are are the posterior distributions different than the priors?
@@ -1019,7 +1019,7 @@ For our purposes, a diagonal Prior -  numbers only along the diagonal - shows th
 
 ### The  matrix  of observation noise - $C{\epsilon}$
 
-Forecast uncertainty has to take into account the noise/uncertainty in the observations.   Similar to the parameter Prior - the $\Sigma_{\theta}$ matrix -, it is a covariance matrix of measurement error associated with the observations.  This is the same as  $\Sigma_{\epsilon}$ that we discussed above. For our Fryberg problem, sthe $C{\epsilon}$ matrix would look like:
+Forecast uncertainty has to take into account the noise/uncertainty in the observations.   Similar to the parameter Prior - the $\Sigma_{\theta}$ matrix -, it is a covariance matrix of measurement error associated with the observations.  This is the same as  $\Sigma_{\epsilon}$ that we discussed above. For our Freyberg problem, the $C{\epsilon}$ matrix would look like:
 
 
 ```python
@@ -1210,7 +1210,7 @@ Okay, enough emphasis.  Here's the point.  When we apply FOSM using the matrices
 
 Here, we are updating parameter covariance following notional calibration as represented by the Jacobian matrix and both prior parameter and observation noise covariance matrices. 
 
-In other words, given prior parameter uncertainty and the inherent noise in measurments, we calculate the expected parameter uncertainty __after__ calibration. This assumes that _calibration achieves a fit comensurate with measurement noise, parameter linearity, etc_.
+In other words, given prior parameter uncertainty and the inherent noise in measurements, we calculate the expected parameter uncertainty __after__ calibration. This assumes that _calibration achieves a fit commensurate with measurement noise, parameter linearity, etc_.
 
 The posterior parameter covariance matrix is stored as a `pyemu.Cov` object in the `sc.posterior_parameter` attribute. The diagonal of this matrix contains the posterior __variance__ for each parameter. The off-diagonals the parameter covariances. 
 
@@ -1479,7 +1479,7 @@ df.percent_reduction.plot(kind="bar", figsize=(15,3));
 
 As the name suggests, the `percent_reduction` column shows the  percentage decrease in uncertainty expected through calibration for each parameter.
 
-From the plot above we can see that calibrating the model with available data definetly reduces uncertainty of some parameters. Some parameters are informed by observation data...however calibration does not affect all parameters equally. Available observation data does not contain information that affects these parameters. Calibration will not help us reduce their uncertainty.
+From the plot above we can see that calibrating the model with available data definitely reduces uncertainty of some parameters. Some parameters are informed by observation data...however calibration does not affect all parameters equally. Available observation data does not contain information that affects these parameters. Calibration will not help us reduce their uncertainty.
 
 ##  Forecast Uncertainty
 
@@ -1565,7 +1565,7 @@ df
 
 
 
-And we can make a cheeky little plot of that. As you can see, unsurprisingly some forecasts benefit more from calibration than others. So, depending on the foreacst of interest, calibration may or may not be worthwhile...
+And we can make a cheeky little plot of that. As you can see, unsurprisingly some forecasts benefit more from calibration than others. So, depending on the forecast of interest, calibration may or may not be worthwhile...
 
 
 ```python
@@ -1594,7 +1594,7 @@ ax.set_xlabel("forecast")
 
 Information flows from observations to parameters and then out to forecasts. Information contained in observation data constrains parameter uncertainty, which in turn constrains forecast uncertainty. For a given forecast, we can evaluate which parameter contributes the most to uncertainty. This is accomplished by assuming a parameter (or group of parameters) is perfectly known and then assessing forecast uncertainty under that assumption. Comparing uncertainty obtained in this manner, to the forecast uncertainty under the base assumption (in which no parameter is perfectly known), the contribution from that parameter (or parameter group) is obtained. 
 
-Now, this is a pretty big assumption - in practice a parameter is never perfectly known. Nevertheless, this metric can provide usefull insights into the flow of information from data to forecast uncertainty, which can help guide data assimilation design as well as future data collection efforts. 
+Now, this is a pretty big assumption - in practice a parameter is never perfectly known. Nevertheless, this metric can provide useful insights into the flow of information from data to forecast uncertainty, which can help guide data assimilation design as well as future data collection efforts. 
 
 In `pyemu` we can  evaluate parameter contributions to forecast uncertainty with groups of parameters by type using `.get_par_group_contribution()`:
 
@@ -1673,7 +1673,7 @@ par_contrib.head()
 
 
 
-We can see the relatve contribution by normalizing to the base case (e.g. in which no parameters/groups are perfectly known):
+We can see the relative contribution by normalizing to the base case (e.g. in which no parameters/groups are perfectly known):
 
 
 ```python
@@ -1751,7 +1751,7 @@ par_contrib.sort_index().head()
 
 
 
-Understanding the links between parameters and forecast uncertainties can be usefull - in particular to gain insight into the system dynamics. But we are still missing a step to understand what _observation_ data affects the forecast. It is often more straightforward to quantify how observation information imapcts forecast uncertianty so that we can explore the worth of observation data directly.
+Understanding the links between parameters and forecast uncertainties can be useful - in particular to gain insight into the system dynamics. But we are still missing a step to understand what _observation_ data affects the forecast. It is often more straightforward to quantify how observation information impacts forecast uncertainty so that we can explore the worth of observation data directly.
 
 # Data worth analysis
 

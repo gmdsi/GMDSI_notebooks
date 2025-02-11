@@ -8,13 +8,13 @@ math: mathjax3
 
 # History Match Freyberg using K
 
-In this notebook we will start to ease our way into using PEST++ for history-matching and uncertainty analysis. We will start by revisting the Freyberg model and the PEST control file. Both of these are pre-prepared and provided for you. We will calibrate the model by adjusting a single hydraulic property (hydraulic conductivity) and then look at typical summary statstics and plots that describe our degree of fit. 
+In this notebook we will start to ease our way into using PEST++ for history-matching and uncertainty analysis. We will start by revisiting the Freyberg model and the PEST control file. Both of these are pre-prepared and provided for you. We will calibrate the model by adjusting a single hydraulic property (hydraulic conductivity) and then look at typical summary statistics and plots that describe our degree of fit. 
 
-We will also start to gently introduce the use of `pyEMU` and programaticaly interfacing with PEST and PEST outputs. 
+We will also start to gently introduce the use of `pyEMU` and programmatically interfacing with PEST and PEST outputs. 
 
 ### Admin
 
-We have provided some pre-cooked PEST dataset files, wraped around the modified Freyberg model. This is the same dataset introduced in the "freyberg pest setup" notebook. 
+We have provided some pre-cooked PEST dataset files, wrapped around the modified Freyberg model. This is the same dataset introduced in the "freyberg pest setup" notebook. 
 
 The functions in the next cell import required dependencies and prepare a folder for you. This folder contains the model files and a preliminary PEST setup. Run the cells, then inspect the new folder named "freyberg_k" which has been created in your tutorial directory. (Just press `shift+enter` to run the cells). 
 
@@ -179,14 +179,14 @@ Yeah, that's right, the NOPTMAX=0 thing again.  We had that set to zero because 
 
 
 ```python
-# specify the path ot the pst control file
+# specify the path to the pst control file
 pstfile = os.path.join(tmp_d,'freyberg.pst')
 
 # pymu stores all things related to a PEST control file in the Pst class. 
 # We can instantiate a Pst object by reading an existing control file 
 pst = pyemu.Pst(pstfile)
 
-# We can access and modfiy variables in the "* control data" section using the Pst.control_data attribute
+# We can access and modify variables in the "* control data" section using the Pst.control_data attribute
 # have pyemu change PEST's NOPTMAX variable to 20
 pst.control_data.noptmax = 20
 
@@ -214,7 +214,7 @@ pyemu.os_utils.run("pestpp-glm freyberg.pst", cwd=tmp_d)
 
 ### Explore Results
 
-PEST writes lots of usefull information to the `*.rec` file. It also outputs a series of other useful files. What outputs are recorded depends on which version of PEST or PEST++ is being used. Here we will use PEST++GLM. The following section will demonstrate usefull information that can be found in some of the outputs. Throughout subsequent tutorials we will address others.
+PEST writes lots of useful information to the `*.rec` file. It also outputs a series of other useful files. What outputs are recorded depends on which version of PEST or PEST++ is being used. Here we will use PEST++GLM. The following section will demonstrate useful information that can be found in some of the outputs. Throughout subsequent tutorials we will address others.
 
 #### Objective Function
 First let's look at the measurement objective function (Phi), which is calculated using the sum of squared weighted residuals.  First we'll look at a table, then plots.
@@ -400,7 +400,7 @@ df_obj
 
 
 
-So thats usefull. If we make a plot (see next cell), it becomes evident that there are diminshing returns after a certain point (for this case!).
+So that's useful. If we make a plot (see next cell), it becomes evident that there are diminishing returns after a certain point (for this case!).
 
 
 ```python
@@ -430,7 +430,7 @@ But hold on a second! We told PEST to try 20 parameter estimation upgrades but i
 
 PEST and PEST++ will quit the parameter estimation process if one of these 4 conditions is met:
 
-1. The maximum number of interations specified in NOPTMAX is reached
+1. The maximum number of iterations specified in NOPTMAX is reached
 2. The fit is not getting any better based on a user-supplied closure
 3. The parameters are not changing based on a user-supplied closure
 4. The user halted the run, usually with a ctrl-c  (happens quite frequently)
@@ -449,15 +449,15 @@ where Phi is the "sum of squared weighted residuals" that we look to minimize, *
 
 If we use only heads for calibration, then PHI only reflects the sum of squared weighted residuals for the observed-simulated head targets. 
 
-So! We have two types of observations (heads and flux) each in their respecive observation groups (hds and flux)...but only heads are contributing to the objective function. This is because all "flux" observations have been assigned zero weight (see the `* observation data` section). They are in the control file, but they aren't doing anything for the time-being. 
+So! We have two types of observations (heads and flux) each in their respective observation groups (hds and flux)...but only heads are contributing to the objective function. This is because all "flux" observations have been assigned zero weight (see the `* observation data` section). They are in the control file, but they aren't doing anything for the time-being. 
 
 #### Residuals
 
-Let's evaulate our fit using the observed-simulated residuals.
+Let's evaluate our fit using the observed-simulated residuals.
 
-PEST++ stores obsevration residuals in a `*.rei` file. In the working folder you will find a file named `freyberg.rei`. Open it in a text editor. Here you will find a table with observation names, their measured and simulated values, the differneces between them (e.g. the residuals) and weights assigned in the PEST control file. 
+PEST++ stores observation residuals in a `*.rei` file. In the working folder you will find a file named `freyberg.rei`. Open it in a text editor. Here you will find a table with observation names, their measured and simulated values, the differences between them (e.g. the residuals) and weights assigned in the PEST control file. 
 
-When instantiating a `Pst` class from an existing control file, `pyemu` will attemp to read a corresponding `*.rei` file. Data from the rei file is stored in the `Pst.res` attribute as a `Pandas` `DataFrame`. This makes it easy to access and postprocess. 
+When instantiating a `Pst` class from an existing control file, `pyemu` will attempt to read a corresponding `*.rei` file. Data from the rei file is stored in the `Pst.res` attribute as a `Pandas` `DataFrame`. This makes it easy to access and postprocess. 
 
 
 ```python
@@ -774,7 +774,7 @@ df_paru
 
 Recall that because we log transformed the `hk` parameters the uncertainty results are reported as logarithms in the dataframe above.  What you'll see in the MODFLOW input file is the non-log transformed `hk` value (e.g. 10^0.69897 = 5.0  for the prior mean).
 
-A quick way to evaluate the ***reduction in uncertainty*** is to compare `prior_stdev` (e.g. standard deviation of the prior, or standard deviation before calibration) to `post_stdev` (e.g. standard deviation of the posterior, or standard deviation after caibration).  The amount that `post_stdev` is less than `pre_stdev` reflects the magnitude of the uncertainty reduction
+A quick way to evaluate the ***reduction in uncertainty*** is to compare `prior_stdev` (e.g. standard deviation of the prior, or standard deviation before calibration) to `post_stdev` (e.g. standard deviation of the posterior, or standard deviation after calibration).  The amount that `post_stdev` is less than `pre_stdev` reflects the magnitude of the uncertainty reduction
 
 Now let's plot it using `pyemu`'s plot utility.
 
@@ -900,7 +900,7 @@ df_predu
 
 
 
-Same deal as above: a quick way to evaluate the ***reduction in uncertainty*** is to compare `prior_stdev` (=standard deviation of the prior=standard deviation before calibration) to `post_stdev` (=standard deviation of the posterior = standard deviation after caibration).  The amount that `post_stdev` is less than pre_stdev reflects the magnitude of the uncertainty reduction.
+Same deal as above: a quick way to evaluate the ***reduction in uncertainty*** is to compare `prior_stdev` (=standard deviation of the prior=standard deviation before calibration) to `post_stdev` (=standard deviation of the posterior = standard deviation after calibration).  The amount that `post_stdev` is less than pre_stdev reflects the magnitude of the uncertainty reduction.
 
 As we can see in the plot below, prediction uncertainty is reduced for all forecasts. Some by quite a lot! Our calibration must have been amazing (#sarcasm)
 
@@ -917,7 +917,7 @@ figs[0].tight_layout()
     
 
 
-By comparing prior to posterior standatd deviations we can check how well calibration reduced forecast uncertainties (see bar plot in the next cell; larger value is better).
+By comparing prior to posterior standard deviations we can check how well calibration reduced forecast uncertainties (see bar plot in the next cell; larger value is better).
 
 
 ```python
@@ -944,7 +944,7 @@ Wow! Calibration really helped huh? So we can call it a day and bill the client?
 
 Well, no...
 
-Just because we can, let's look again at forecast uncertainty with the "truth". In the next cell we plot the forecast probability distributions again, but this time we have included the "true" outcome as well (the vertical black dashed line). Recal that here we know the "truth" because we (the authors) created reality; in the real-world we do not have this luxury.
+Just because we can, let's look again at forecast uncertainty with the "truth". In the next cell we plot the forecast probability distributions again, but this time we have included the "true" outcome as well (the vertical black dashed line). Recall that here we know the "truth" because we (the authors) created reality; in the real-world we do not have this luxury.
 
 
 ```python
@@ -968,6 +968,6 @@ Dear oh dear....none of the forecasts are bracketed by the posterior distributio
 
 ## __uncertainty analysis has failed!__
 
-In some cases the prior (the dashed grey line) encompasses the "truth" but the posterior (the blue shaded area) does not. Therefore calibration actualy made our forecasts less reliable. Why is that? How can improving a model's ability to represent the past make it *worse* at representing the future? 
+In some cases the prior (the dashed grey line) encompasses the "truth" but the posterior (the blue shaded area) does not. Therefore calibration actually made our forecasts less reliable. Why is that? How can improving a model's ability to represent the past make it *worse* at representing the future? 
 
 Find out in the next episode! 

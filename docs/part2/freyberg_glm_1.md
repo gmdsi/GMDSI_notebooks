@@ -8,7 +8,7 @@ math: mathjax3
 
 # Filling a Jacobian Matrix
 
-This notebook is an optional, but recommended, first step for a workflow that implements linear uncertainty analysis (i.e. FOSM), data worth analysis and highly-parameterized regularised inversion (i.e. calibration). It will be relatively short, but provides the foundation for subsequet tutorials. 
+This notebook is an optional, but recommended, first step for a workflow that implements linear uncertainty analysis (i.e. FOSM), data worth analysis and highly-parameterized regularised inversion (i.e. calibration). It will be relatively short, but provides the foundation for subsequent tutorials. 
 
 Here, we are going to calculate a base Jacobian. In other words, we are going to calculate partial derivatives of model outputs with respect to (adjustable) model parameters. Or "how much each observation value changes for a change in each parameter value".  These partial derivatives (or *sensitivity coefficients*) are fundamental for the implementation of inversion and for linear uncertainty analysis. They form a two-dimensional array of values with as many rows as observations and as many columns as parameters. This array is commonly known as the **Jacobian matrix**. 
 
@@ -60,7 +60,7 @@ import herebedragons as hbd
 
 ```
 
-To maintain continuity in the series of tutorials, we we use the PEST-dataset prepared in the "obs and weigths" tutorial. Run the next cell to copy fthe necessary files across. Note that if you will need to run the previous notebooks in the correct order beforehand.
+To maintain continuity in the series of tutorials, we we use the PEST-dataset prepared in the "obs and weights" tutorial. Run the next cell to copy the necessary files across. Note that if you will need to run the previous notebooks in the correct order beforehand.
 
 Specify the path to the PEST dataset template folder. Recall that we will prepare our PEST dataset files in this folder, keeping them separate from the original model files. Then copy across pre-prepared model and PEST files:
 
@@ -117,7 +117,7 @@ Let's recall how many adjustable parameters we have:
 pst.npar_adj
 ```
 
-Quite a lot! How long does the model take to run? Even if it is well under a minute, that can quickly add up. Just to illustrate, let's chekc how long it takes our forwrd run to complete:
+Quite a lot! How long does the model take to run? Even if it is well under a minute, that can quickly add up. Just to illustrate, let's check how long it takes our forward run to complete:
 
 
 ```python
@@ -155,9 +155,9 @@ As previously discussed, the computational cost of conventional model calibratio
 adjustment of a single parameter field using partial derivatives calculated using finite parameter
 differences) increases with the number of adjustable parameters. This imposes pragmatic limits on the number of adjustable parameters we can have.
 
-We are limited by compute power (e.g. how many parallel model runs can we deploy) and how long each model takes to run. At the end of the day, it will be project time and cost constraints that will pose hard limits on what is acceptible. 
+We are limited by compute power (e.g. how many parallel model runs can we deploy) and how long each model takes to run. At the end of the day, it will be project time and cost constraints that will pose hard limits on what is acceptable. 
 
-So here comes the painfull part: we can't use these 10's of thousands of parameters. We are going to have to set many of them as "fixed" (e.g. no longer adjustable). We do this by changing the parameter transform value in the `* parameter data` section (e.g. the "partrans" column in `pst.parameter_data`). 
+So here comes the painful part: we can't use these 10's of thousands of parameters. We are going to have to set many of them as "fixed" (e.g. no longer adjustable). We do this by changing the parameter transform value in the `* parameter data` section (e.g. the "partrans" column in `pst.parameter_data`). 
 
 
 ```python
@@ -207,7 +207,7 @@ par.loc[par.pargp.apply(lambda x: x in fi_grps),"partrans"] = "fixed"
 pst.npar_adj
 ```
 
-OK, let's check that estimate of run time again...hmm...a bit more manageable. Of course, the cost of this has been a loss of flexibility in our parameterisation scheme. This means we are potentialy less able to fit historical data...but worse, we are also less able to capture the effect of uncertianty from these fixed parameters on model forecasts.
+OK, let's check that estimate of run time again...hmm...a bit more manageable. Of course, the cost of this has been a loss of flexibility in our parameterisation scheme. This means we are potentially less able to fit historical data...but worse, we are also less able to capture the effect of uncertainty from these fixed parameters on model forecasts.
 
 
 ```python
@@ -236,7 +236,7 @@ Alright! Let's run this thing!
 
 As we saw in the "freyberg prior monte carlo" notebook, we can use `pyemu` to deploy PEST in parallel. 
 
-To speed up the process, you will want to distribute the workload across as many parallel agents as possible. Normally, you will want to use the same number of agents (or less) as you have available CPU cores. Most personal computers (i.e. desktops or laptops) these days have between 4 and 10 cores. Servers or HPCs may have many more cores than this. Another limitation to keep in mind is the read/write speed of your machines disk (e.g. your hard drive). PEST and the model software are going to be reading and writting lots of files. This often slows things down if agents are competing for the same resources to read/write to disk. (It also wears through SSD drives...)
+To speed up the process, you will want to distribute the workload across as many parallel agents as possible. Normally, you will want to use the same number of agents (or less) as you have available CPU cores. Most personal computers (i.e. desktops or laptops) these days have between 4 and 10 cores. Servers or HPCs may have many more cores than this. Another limitation to keep in mind is the read/write speed of your machines disk (e.g. your hard drive). PEST and the model software are going to be reading and writing lots of files. This often slows things down if agents are competing for the same resources to read/write to disk. (It also wears through SSD drives...)
 
 The first thing we will do is specify the number of agents we are going to use.
 

@@ -12,7 +12,7 @@ In this notebook we are going to calibrate the Freyberg model with pilot points 
 
  
 ### Admin
-We have provided some pre-cooked PEST dataset files, wraped around the modified Freyberg model. This is the same dataset introduced in the "freyberg_pest_setup" and subsequent notebooks. We pick up here after the "freyberg pilotpoints setup" notebook.
+We have provided some pre-cooked PEST dataset files, wrapped around the modified Freyberg model. This is the same dataset introduced in the "freyberg_pest_setup" and subsequent notebooks. We pick up here after the "freyberg pilotpoints setup" notebook.
 
 The functions in the next cell import required dependencies and prepare a folder for you. This folder contains the model files and a preliminary PEST setup. Run the cells, then inspect the new folder named "freyberg_mf6" which has been created in your tutorial directory. (Just press `shift+enter` to run the cells). 
 
@@ -123,7 +123,7 @@ pst.write(os.path.join(tmp_d, 'freyberg_pp.pst'))
 pyemu.os_utils.run("pestpp-glm freyberg_pp.pst", cwd=tmp_d)
 ```
 
-Check if it completed sucessfully:
+Check if it completed successfully:
 
 
 ```python
@@ -149,11 +149,11 @@ OK, good to go.
 
 Now, when using derivative-based methods such as are implemented in PEST++GLM (and PEST/PEST_HP) the cost of more adjustable parameters is ...more run-time. Recall that PEST(++) needs to run the model the same number of times as there are adjustable parameters in order to fill the Jacobian matrix.
 
-We just went from having 2 adjustable paramters to having 30. So this is going to take quite a bit longer. 
+We just went from having 2 adjustable parameters to having 30. So this is going to take quite a bit longer. 
 
 Up until now, we have been running a single instance of `pestpp-glm`. Now, we are going to run `pestpp-glm` in parallel. 
 
-To speed up the process, you will want to distribute the workload across as many parallel agents as possible. Normally, you will want to use the same number of agents (or less) as you have available CPU cores. Most personal computers (i.e. desktops or laptops) these days have between 4 and 10 cores. Servers or HPCs may have many more cores than this. Another limitation to keep in mind is the read/write speed of your machines disk (e.g. your hard drive). PEST and the model software are going to be reading and writting lots of files. This often slows things down if agents are competing for the same resources to read/write to disk.
+To speed up the process, you will want to distribute the workload across as many parallel agents as possible. Normally, you will want to use the same number of agents (or less) as you have available CPU cores. Most personal computers (i.e. desktops or laptops) these days have between 4 and 10 cores. Servers or HPCs may have many more cores than this. Another limitation to keep in mind is the read/write speed of your machines disk (e.g. your hard drive). PEST and the model software are going to be reading and writing lots of files. This often slows things down if agents are competing for the same resources to read/write to disk.
 
 The first thing we will do is specify the number of agents we are going to use.
 
@@ -187,7 +187,7 @@ If you open the tutorial folder, you should also see a bunch of new folders ther
 
 This run should take several minutes to complete (depending on the number of workers and the speed of your machine). If you get an error, make sure that your firewall or antivirus software is not blocking `pestpp-glm` from communicating with the agents (this is a common problem!).
 
-> **Pro Tip**: Running PEST from within a `jupyter notebook` has a tendency to slow things down and hog alot of RAM. When modelling in the "real world" it is more efficient to implement workflows in scripts which you can call from the command line.
+> **Pro Tip**: Running PEST from within a `jupyter notebook` has a tendency to slow things down and hog a lot of RAM. When modelling in the "real world" it is more efficient to implement workflows in scripts which you can call from the command line.
 
 
 ```python
@@ -236,7 +236,7 @@ What about the fits with measured values? Doing better than before, for sure. No
 figs = pst.plot(kind="1to1");
 ```
 
-Let's inspect the posterior parameter uncetanties for each group of pilot points (`hk1` and `rchpp`). The next cell plots the prbability distribution for each parameter in each parameter group. Recall that each pilot point is assigned a unique parmaeter, so in each plot we are displaying 30 distributions. We are also plotting the parmater upper and lower bounds as vertical dashed black lines.
+Let's inspect the posterior parameter uncertainties for each group of pilot points (`hk1` and `rchpp`). The next cell plots the probability distribution for each parameter in each parameter group. Recall that each pilot point is assigned a unique parameter, so in each plot we are displaying 30 distributions. We are also plotting the parameter upper and lower bounds as vertical dashed black lines.
 
 
 ```python
@@ -263,11 +263,11 @@ for pargp in pst.adj_par_groups:
     ax.plot([mx,mx],ax.get_ylim(),"k--")
 ```
 
-Yikes - that doesn't look good. Lots of parameters are right up againts the bounds. (The center of the distributions is centered on the black lines.) This implies that they are taking on exteme values in order to achieve that "excelent" fit with measured data. 
+Yikes - that doesn't look good. Lots of parameters are right up against the bounds. (The center of the distributions is centered on the black lines.) This implies that they are taking on extreme values in order to achieve that "excellent" fit with measured data. 
 
-Is this realistic? No, not really. It often means parameters are taking on compensatory roles to make up for strucutural error or poor conceptualization.
+Is this realistic? No, not really. It often means parameters are taking on compensatory roles to make up for structural error or poor conceptualization.
 
-Another noteworthy aspect is that `rchpp` parameters have deviated from the prior. But most of the `hk1` parameters have not changed much. Why do you think this is? Usually we assume that we are more confident that we "know" recharge better than hydraulic conductivity. After all, hydraulic conductivity can vary by orders of magnitude, whislt recharge is usually only expected to vary within an order of magnitude (_big ugly rule of thumb alert!_).
+Another noteworthy aspect is that `rchpp` parameters have deviated from the prior. But most of the `hk1` parameters have not changed much. Why do you think this is? Usually we assume that we are more confident that we "know" recharge better than hydraulic conductivity. After all, hydraulic conductivity can vary by orders of magnitude, whilst recharge is usually only expected to vary within an order of magnitude (_big ugly rule of thumb alert!_).
 
 Let's take a look at the calibrated parameter field. First we just need to update the model files with the calibrated parameter values:
 
@@ -338,9 +338,9 @@ Even though we are able to measure water levels very precisely, the model has pr
 
 The last few tutorials have shown us a few things:
  - Having more parameters than observations allows us to have an overdetermined, and therefore solvable, inverse problem. But! It under-represents uncertainty. Using few parameters will by default fail to capture nuances of properties and processes of a complex real world system. 
- - More parameters introduces more flexibility. This can mean better fits with calibration data. It also may mean more uncertainty. (This leads to an often touted falacy that a model should "use fewer parameters to have less uncertainty". Doing so doesn't reduce uncertainty. It merely ignores it.) 
+ - More parameters introduces more flexibility. This can mean better fits with calibration data. It also may mean more uncertainty. (This leads to an often touted fallacy that a model should "use fewer parameters to have less uncertainty". Doing so doesn't reduce uncertainty. It merely ignores it.) 
  - But more parameters also means more problems. 
      - Parameters may be correlated, resulting in non-unique solutions to the inverse problem. 
-     - But more parameters than observations results in an ill-posed inverse problem. We might be able to achive excelent fits with obsevration data, but this comes at the costof "unreasoanble" parameter values (e.g. overfitting). 
+     - But more parameters than observations results in an ill-posed inverse problem. We might be able to achieve excellent fits with observation data, but this comes at the costof "unreasonable" parameter values (e.g. overfitting). 
      
 So how can we use many parameters and avoid overfitting? Enter "regularization". Stick around for the next episode.

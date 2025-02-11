@@ -14,16 +14,16 @@ math: mathjax3
 
 The runs so far were intended to be greatly oversimplified so as to be a starting point for adding complexity. However, when we added just __*one more parameter*__ for a total of 2 parameters uncertainty for some forecasts got appreciably __worse__.  And these parameters cover the entire model domain, which is unrealistic for the natural world!  Are we past the "sweetspot" and should avoid any additional complexity even if our model looks nothing like reality?  
 
-Adding parameters in and of itself is not the real problem.  Rather, it is adding parameters that influence forecasts but which are unconstrained by observations so that they are free to wiggle and ripple uncertainty to our forcasts.  If observations are added that help constrain the parameters, the forecast observation will be more certain. That is, the natural flip side of adding parameters is constraining them, with data (first line of defense) or soft-knowledge and problem dimension reduciton (SVD).  
+Adding parameters in and of itself is not the real problem.  Rather, it is adding parameters that influence forecasts but which are unconstrained by observations so that they are free to wiggle and ripple uncertainty to our forecasts.  If observations are added that help constrain the parameters, the forecast observation will be more certain. That is, the natural flip side of adding parameters is constraining them, with data (first line of defense) or soft-knowledge and problem dimension reduciton (SVD).  
 
-Anderson et al. (2015) suggest that at a minimum groundwater models be history matched to heads and fluxes.  There is a flux observation in our PEST control file, but it was given zero weight.  Let's see what happens if we move our model to the minimum calibration critera of Anderson et al.
+Anderson et al. (2015) suggest that at a minimum groundwater models be history matched to heads and fluxes.  There is a flux observation in our PEST control file, but it was given zero weight.  Let's see what happens if we move our model to the minimum calibration criteria of Anderson et al.
 
 #### Objectives for this notebook are to:
 1) Add a flux observation to the measurement objective function of our Freyberg model
 2) Explore the effect of adding the observation to history matching, parameter uncertainty, and forecast uncertainty
 
 ### Admin
-We have provided some pre-cooked PEST dataset files, wraped around the modified Freyberg model. This is the same dataset introduced in the "freyberg_pest_setup" and "freyberg_k" notebooks. 
+We have provided some pre-cooked PEST dataset files, wrapped around the modified Freyberg model. This is the same dataset introduced in the "freyberg_pest_setup" and "freyberg_k" notebooks. 
 
 The functions in the next cell import required dependencies and prepare a folder for you. This folder contains the model files and a preliminary PEST setup. Run the cells, then inspect the new folder named "freyberg_k" which has been created in your tutorial directory. (Just press `shift+enter` to run the cells). 
 
@@ -83,7 +83,7 @@ As we did in the last tutorial, set `rch0` parameter transform to `log` and upda
 
 
 ```python
-#update paramter transform
+#update parameter transform
 par = pst.parameter_data
 par.loc['rch0', 'partrans'] = 'log'
 # update noptmax
@@ -149,7 +149,7 @@ Egads!  Our Phi is a bit larger!  Are we moving backwards? Oh wait, we added a n
 
 #### Okay, what did it do to our parameter uncertainty?
 
-As a reminder, let's load in the parameter uncerainty from the previous calibration (in which we only used head observations).
+As a reminder, let's load in the parameter uncertainty from the previous calibration (in which we only used head observations).
 
 
 ```python
@@ -177,13 +177,13 @@ for pname,ax in zip(pst.adj_par_names,axes):
 figs[0].tight_layout()
 ```
 
-So, the blue shaded areas are taller and thiner than the green. This implies that, from an uncertainty standpoint, including the flux observations has helped us learn alot about the recharge parameter. As recharge and `hk1` are correlated, this has in turn reduced uncertainty in `hk1`. #dividends
+So, the blue shaded areas are taller and thinner than the green. This implies that, from an uncertainty standpoint, including the flux observations has helped us learn a lot about the recharge parameter. As recharge and `hk1` are correlated, this has in turn reduced uncertainty in `hk1`. #dividends
 
 But, as usual, what about the forecast uncertainty?
 
 ### Forecasts
 
-Let's look at our forecast uncertainty for both calibration runs. Load the original forecast uncetainties (head observations only):
+Let's look at our forecast uncertainty for both calibration runs. Load the original forecast uncertainties (head observations only):
 
 
 ```python
@@ -215,7 +215,7 @@ for forecast in pst.forecast_names:
 figs[0].tight_layout()
 ```
 
-As you can see, the information in the flux observations has reduced forecast uncertainty significantly for the `headwater`, but not so much for the `tailwater` forecast. So, at first glance we that the same model/observtion data set can make some forecasts better....but not others! i.e. calibration is sometimes worth it, sometimes it isnt.
+As you can see, the information in the flux observations has reduced forecast uncertainty significantly for the `headwater`, but not so much for the `tailwater` forecast. So, at first glance we that the same model/observtion data set can make some forecasts better....but not others! i.e. calibration is sometimes worth it, sometimes it isn't.
 
 But have we succeeded? Let's plot with the true forecast values:
 
@@ -282,7 +282,7 @@ for forecast,ax in zip(sorted(pst.forecast_names),axes):
 figs[0].tight_layout()
 ```
 
-Oh hello! Forecast uncertainty for the `headwater` and `tailwater` forecasts have increased alot (the `trgw` and `part_time` forecast did as well, but less noticeably). 
+Oh hello! Forecast uncertainty for the `headwater` and `tailwater` forecasts have increased a lot (the `trgw` and `part_time` forecast did as well, but less noticeably). 
 
 We see that the posterior for most forecasts is increased because of including future recharge uncertainty.  Intutitively, it makes sense because future recharge directly influences water levels and fluxes in the future.  And since calibration (history-matching) can't tell us anything about future recharge.  This means there is no data we can collect to reduce this source of uncertainty.
 

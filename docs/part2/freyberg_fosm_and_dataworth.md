@@ -26,14 +26,14 @@ FOSM tasks may include:
  - identifying parameter contributions to predictive uncertainty and 
  - assessing parameter identifiability. 
 
-Outcomes of these analyses can provide easily understood insights into what history-matching can and cannot achieve with the available information. These insights can be used to streamline the data assimlation process and guide further site characterisation studies. Of particular interest is data worth analysis. The worth of data is measured by their ability to reduce the uncertainties of model predictions that we care about. Because the equations on which FOSM relies do not require that an observation value already be known, data worth can be assessed on as-of-yet ungathered data. 
+Outcomes of these analyses can provide easily understood insights into what history-matching can and cannot achieve with the available information. These insights can be used to streamline the data assimilation process and guide further site characterisation studies. Of particular interest is data worth analysis. The worth of data is measured by their ability to reduce the uncertainties of model predictions that we care about. Because the equations on which FOSM relies do not require that an observation value already be known, data worth can be assessed on as-of-yet ungathered data. 
 
 
 ### The current tutorial
  
-In this notebook, we will use outputs from previous notebooks (in particular `freyberg_glm_1.ipynb`) to eply first-order second-moment (FOSM) techniques to assess the flow of information from data to parameters and forecasts. In doing so we will asses the worth of existing and potential new data. "Worth" is framed here in the context of the extent to which the uncertainty surrounding a model prediction of management interest is reduced.  Given that these anayses can help target and optimize data acquisition strategies, this is a concept that really resonates with decision makers.
+In this notebook, we will use outputs from previous notebooks (in particular `freyberg_glm_1.ipynb`) to apply first-order second-moment (FOSM) techniques to assess the flow of information from data to parameters and forecasts. In doing so we will asses the worth of existing and potential new data. "Worth" is framed here in the context of the extent to which the uncertainty surrounding a model prediction of management interest is reduced.  Given that these analyses can help target and optimize data acquisition strategies, this is a concept that really resonates with decision makers.
 
-Note that in this tutorial, we will demonstrate FOSM applied __before__ calibration (i.e. as an optional intermediate step between the `freyberg_glm_1.ipynb` and `freyberg_glm_2.ipynb` notebooks), as several of these techniques can be a usefull tools that aid in the design of the calibration setup. However, they are equaly applicable __after__ calibration. In the `freyberg_glm_2.ipynb` notebook, some outcomes of post-calibration FOSM are discussed. 
+Note that in this tutorial, we will demonstrate FOSM applied __before__ calibration (i.e. as an optional intermediate step between the `freyberg_glm_1.ipynb` and `freyberg_glm_2.ipynb` notebooks), as several of these techniques can be a useful tools that aid in the design of the calibration setup. However, they are equally applicable __after__ calibration. In the `freyberg_glm_2.ipynb` notebook, some outcomes of post-calibration FOSM are discussed. 
 
 Here we will be using functionality in `pyemu` to undertake FOSM. Similar analyses can be undertaken with the PREDUNC and PREDVAR suite of PEST utilities (see the [GMDSI](https://gmdsi.org/education/tutorials/) website for tutorials on these utilities). 
 
@@ -76,7 +76,7 @@ Let's start by specifying the folder path:
 ```python
 m_d = os.path.join("..","part2_4_glm","master_glm_1")
 
-# a check to see if the files are avilable
+# a check to see if the files are available
 if not os.path.exists(m_d):
     raise Exception("you need to run the '/part2_4_glm/freyberg_glm_1.ipynb' notebook")
 ```
@@ -125,7 +125,7 @@ c = plt.imshow(x)
 plt.colorbar()
 ```
 
-The second ingredient we need is the jacobian matrix. In a previous tutorial, we ran `PEST++GLM` with the `fresyberg_pp.pst` control file to calculate the jacobian for intial parameter values and then stop (by setting `NOPTMAX` to -1). It is stored in the binary file named `freyberg_pp.jcb`.
+The second ingredient we need is the jacobian matrix. In a previous tutorial, we ran `PEST++GLM` with the `fresyberg_pp.pst` control file to calculate the jacobian for initial parameter values and then stop (by setting `NOPTMAX` to -1). It is stored in the binary file named `freyberg_pp.jcb`.
 
 Let's read it in as a `pyemu.Jco`:
 
@@ -138,7 +138,7 @@ jco = pyemu.Jco.from_binary(jco_file)
 
 Lastly, we are still missing the noise covariance matrix. Unless instructed otherwise, `pyemu` will construct this matrix on-the-fly using weights in the PEST control file (and assuming that weights are the inverse of the standard deviation). 
 
-Alternatively you can provide a user created (diagonal!) covariance matrix. In our case weights reflect measurement uncertainty. But just for the sake of demosntration, let's generate an observation covarance matrix from the control file (this is the same thing that `pyemu` would do in the background by default):
+Alternatively you can provide a user created (diagonal!) covariance matrix. In our case weights reflect measurement uncertainty. But just for the sake of demonstration, let's generate an observation covariance matrix from the control file (this is the same thing that `pyemu` would do in the background by default):
 
 
 ```python
@@ -163,7 +163,7 @@ sc = pyemu.Schur(pst=pst, # the pest control file
 sc
 ```
 
-So that was easy...but maybe not the standard use case.  In many modeling analyses, there will be a separate scenario model - it is this model that will yield the forecast sensitivity vector(s) needed to map parameter uncertainty to _forecast_ uncertainty.  That is, you will need to run the scenario model once for each adjustble parameter to fill a separate jacobian -  jacobian that has the same columns as the obervation jacobian, but has rows that are the forecasts.  
+So that was easy...but maybe not the standard use case.  In many modeling analyses, there will be a separate scenario model - it is this model that will yield the forecast sensitivity vector(s) needed to map parameter uncertainty to _forecast_ uncertainty.  That is, you will need to run the scenario model once for each adjustable parameter to fill a separate jacobian -  jacobian that has the same columns as the observation jacobian, but has rows that are the forecasts.  
 
 In these cases you would have:
  1. a jacobian that pertains to the history matching model, and 
@@ -171,7 +171,7 @@ In these cases you would have:
 
 For the purposes of FOSM, you would be interested in the sensitivities of history-matching observations recorded in (1) and sensitivities of forecast observations recorded in (2).
 
-Now we didnt do that here - our model forward run includes both the history matching and scenario periods. So our jacobian already contains both sets of sensitivities. But we can "fake" it just for the sake of demonstration. Let's pretend that we have a second jacobian calculated using a scenario model:
+Now we didn't do that here - our model forward run includes both the history matching and scenario periods. So our jacobian already contains both sets of sensitivities. But we can "fake" it just for the sake of demonstration. Let's pretend that we have a second jacobian calculated using a scenario model:
 
 
 
@@ -209,9 +209,9 @@ All computations are done and contained within `sc`.  We can now access differen
 
 ### Posterior Parameter Uncertainty
 
-Let's start by calculating the (approximate) __posterior__ parameter covariance matrix. Here, we are updating parameter covariance following notional calibration as represented by te Jacobian matrix and both prior parameter and observation noise covariance matrices. 
+Let's start by calculating the (approximate) __posterior__ parameter covariance matrix. Here, we are updating parameter covariance following notional calibration as represented by the Jacobian matrix and both prior parameter and observation noise covariance matrices. 
 
-In other words, given prior parameter uncertainty (expressed by the prior `cov` matrix) and the inherent noise in measurments (expressed by the `obscov` matrix), we calculate the expected parameter uncertainty __after__ calibration. This assumes that calibration achieves a fit comensurate with measurement noise, parameter linearity, etc.
+In other words, given prior parameter uncertainty (expressed by the prior `cov` matrix) and the inherent noise in measurements (expressed by the `obscov` matrix), we calculate the expected parameter uncertainty __after__ calibration. This assumes that calibration achieves a fit commensurate with measurement noise, parameter linearity, etc.
 
 The posterior parameter covariance is stored as a `pyemu.Cov` object in the `sc.posterior_parameter` attribute:
 
@@ -266,7 +266,7 @@ Alternatively we can compare the prior and posterior variances for the best ten:
 par_sum.iloc[0:10,:][['prior_var','post_var']].plot(kind='bar');
 ```
 
-From the two plots above we can see that calibrating the model with available data definetly reduces uncertainty of some parameters. Some parameters are informed by observation data...however calibration does not afffect all parameters equally. 
+From the two plots above we can see that calibrating the model with available data definitely reduces uncertainty of some parameters. Some parameters are informed by observation data...however calibration does not affect all parameters equally. 
 
 Let's look at the other end of the spectrum - parameters for which there was little uncertainty reduction. Inspect the end of the parameter summary dataframe:
 
@@ -290,11 +290,11 @@ pst.parameter_data.loc[uninf_par_names, 'pargp'].unique()
 
 So, not too surprising to see porosity parameters groups, as well as parameters for recharge during the prediction period. Others, such as storage and permeability parameter groups, indicate that available observation data is not informative for the entire model domain.
 
-When working with spatially ditributed parameters, it can be informative to map the distribution of uncertainty reduction. For example, let's use some `flopy` trickery to plot the % uncertainty reduction for a set of pilot point parameters:
+When working with spatially distributed parameters, it can be informative to map the distribution of uncertainty reduction. For example, let's use some `flopy` trickery to plot the % uncertainty reduction for a set of pilot point parameters:
 
 
 ```python
-# choose a pilot point parmaeter group
+# choose a pilot point parameter group
 pargp = 'npfklayer1pp'
 ```
 
@@ -329,7 +329,7 @@ pp_y = [gwf.modelgrid.ycellcenters[r-1,c-1] for r,c in hk_pars.loc[:,["i","j"]].
 scatter = ax.scatter(pp_x,pp_y,marker='o', s=hk_parsum.percent_reduction, c=hk_parsum.percent_reduction)
 plt.colorbar(scatter,label="percent uncertainty reduction")
 
-# plot head obsveration points
+# plot head observation points
 obs_ij = list(set([tuple(i.split('-')[-2:]) for i in pst.nnz_obs_groups if 'trgw' in i]))
 obs_x = [gwf.modelgrid.xcellcenters[int(i)-1,int(j)-1] for i,j in obs_ij]
 obs_y = [gwf.modelgrid.ycellcenters[int(i)-1,int(j)-1] for i,j in obs_ij]
@@ -358,7 +358,7 @@ df = sc.get_forecast_summary()
 df
 ```
 
-And we can make a cheeky little plot of that. As you can see, unsurprisingly some forecasts benefit more from calibration than others. So, depending on the foreacst of interest, calibration may or may not be worthwhile...
+And we can make a cheeky little plot of that. As you can see, unsurprisingly some forecasts benefit more from calibration than others. So, depending on the forecast of interest, calibration may or may not be worthwhile...
 
 
 ```python
@@ -374,7 +374,7 @@ ax.set_xlabel("forecast")
 
 Information flows from observations to parameters and then out to forecasts. Information contained in observation data constrains parameter uncertainty, which in turn constrains forecast uncertainty. For a given forecast, we can evaluate which parameter contributes the most to uncertainty. This is accomplished by assuming a parameter (or group of parameters) is perfectly known and then assessing forecast uncertainty under that assumption. Comparing uncertainty obtained in this manner, to the forecast uncertainty under the base assumption (in which no parameter is perfectly known), the contribution from that parameter (or parameter group) is obtained. 
 
-Now, this is a pretty big assumption - in practice a parameter is never perfectly known. Nevertheless, this metric can provide usefull insights into the flow of information from data to forecast uncertainty, which can help guide data assimilation design as well as future data collection efforts. 
+Now, this is a pretty big assumption - in practice a parameter is never perfectly known. Nevertheless, this metric can provide useful insights into the flow of information from data to forecast uncertainty, which can help guide data assimilation design as well as future data collection efforts. 
 
 In `pyemu` we can  evaluate parameter contributions to forecast uncertainty with groups of parameters by type using `.get_par_group_contribution()`:
 
@@ -384,7 +384,7 @@ par_contrib = sc.get_par_group_contribution()
 par_contrib.head()
 ```
 
-We can see the relatve contribution by normalizing to the base case (e.g. in which no parameters/groups are perfectly known):
+We can see the relative contribution by normalizing to the base case (e.g. in which no parameters/groups are perfectly known):
 
 
 ```python
@@ -412,7 +412,7 @@ for forecast in par_contrib.columns:
 plt.show()
 ```
 
-Understanding the links between parameters and forecast uncertainties can be usefull - in particular to gain insight into the system dynamics. But we are still missing a step to understand what _observation_ data affects the forecast. It is often more straightforward to quantify how observation information imapcts forecast uncertianty so that we can explore the worth of observation data directly.
+Understanding the links between parameters and forecast uncertainties can be useful - in particular to gain insight into the system dynamics. But we are still missing a step to understand what _observation_ data affects the forecast. It is often more straightforward to quantify how observation information impacts forecast uncertainty so that we can explore the worth of observation data directly.
 
 # Data worth analysis
 
@@ -427,9 +427,9 @@ There are two main applications for data worth analysis:
 
 ## Data worth - evaluating existing observations
 
-Here we identify which (existing) observations are most important to reducing the posterior uncertainty of a specific forecast. To acomplish this, we simply need to recalculate the Schur complement, but ignoring some of the observation sensitivities. 
+Here we identify which (existing) observations are most important to reducing the posterior uncertainty of a specific forecast. To accomplish this, we simply need to recalculate the Schur complement, but ignoring some of the observation sensitivities. 
 
-Once again, `pyemu` makes this easy for us with the `get_removed_obs_importance()` method.  This method tests how important individual __non-zero__ observations are for reducing uncertainty for each forecast observation. By default, it tests all non-zero obsevrations in the control file and returns a `Dataframe`:
+Once again, `pyemu` makes this easy for us with the `get_removed_obs_importance()` method.  This method tests how important individual __non-zero__ observations are for reducing uncertainty for each forecast observation. By default, it tests all non-zero observations in the control file and returns a `Dataframe`:
 
 
 
@@ -438,9 +438,9 @@ df_worth = sc.get_removed_obs_importance()
 df_worth.head()
 ```
 
-It may be more usefull to look at groupings of observations. For example, in our case we are dealing with time series of measurments at different locations. It may be more usefull to assess the worth of the entire time series of data, and not just each individual measurement. 
+It may be more useful to look at groupings of observations. For example, in our case we are dealing with time series of measurements at different locations. It may be more useful to assess the worth of the entire time series of data, and not just each individual measurement. 
 
-We can assess groupings of observations by passsing a dictionary with non-zero observation name lists as values. Let's first create such a dictionary. In our case, the time series of observations from each site is in a distinct observation group. So we can simply group observations by observation group name:
+We can assess groupings of observations by passing a dictionary with non-zero observation name lists as values. Let's first create such a dictionary. In our case, the time series of observations from each site is in a distinct observation group. So we can simply group observations by observation group name:
 
 
 ```python
@@ -490,7 +490,7 @@ for forecast in dw_rm.columns:
 plt.show()
 ```
 
-We also have the option of calculating the worth of obsverations by taking a "base" condition of zero observations (i.e. no measurment information at all) and calculating the reduction in uncertainty by __adding__ observations to the dataset.
+We also have the option of calculating the worth of observations by taking a "base" condition of zero observations (i.e. no measurement information at all) and calculating the reduction in uncertainty by __adding__ observations to the dataset.
 
 Here we are obtaining a measure of the worth of the observation __on its own__. This provides a metric of the absolute worth of information contained by the observation. The previous metric (of removed importance) provides a measure of the worth that the observation contributes to the _existing_ dataset; so how much more information do we gain by also including this observation. 
 
@@ -520,9 +520,9 @@ plt.show()
 
 This is where things get really cool. As previously mentioned, the equations on which FOSM is based do not rely on knowing the values of observations or parameters - only their sensitivities. This allows us to calculate the worth of as-of-yet uncollected data. 
 
-Recall from the "pstfrom_pest_setup" tutorial that we included the simulated head in every cell at the end of every stress period as observations in our PEST dataset. (We included a function to extract these values from the MODFLOW6 generated outputs as part of the model forward run.) We have been "carrying" these zero-weighted observations all this time and thus obtained sensitivities for these observations when calcualiting the Jacobian (see the "freyberg_glm_1" tutorial). If we now assume some value of measurement noise (a non-zero weight in the control file), we can run a hypothetical "calibration" analysis using Schur complement. 
+Recall from the "pstfrom_pest_setup" tutorial that we included the simulated head in every cell at the end of every stress period as observations in our PEST dataset. (We included a function to extract these values from the MODFLOW6 generated outputs as part of the model forward run.) We have been "carrying" these zero-weighted observations all this time and thus obtained sensitivities for these observations when calculating the Jacobian (see the "freyberg_glm_1" tutorial). If we now assume some value of measurement noise (a non-zero weight in the control file), we can run a hypothetical "calibration" analysis using Schur complement. 
 
-Cell-by-cell head observations are in the observation groups with names that start with `hdslay1`. Now, we could look at the data worth at each location at the end of each stress period. But, beware! Calculaling the Schur complement for all potential observation types and locations can take quite some time! You may need to sample from all availables outputs to speed things up.  
+Cell-by-cell head observations are in the observation groups with names that start with `hdslay1`. Now, we could look at the data worth at each location at the end of each stress period. But, beware! Calculating the Schur complement for all potential observation types and locations can take quite some time! You may need to sample from all available outputs to speed things up.  
 
 Instead of evaluating the worth of observations at each distinct time, let's look at the value of having *time series* of observations at each location. To do so we group head observations from each stress period at the same cell and assess the worth of having this "group" of observations.
 
@@ -559,7 +559,7 @@ An __important__ detail here: the potential new observation weights.
 
 Inherent to these analyses is the assumption that calibration will be able to achieve a fit with observation data that reflects measurement noise (and that the observation weight is equal to the inverse of the standard deviation of noise). We need to provide `pyemu` with the weights for these potential new observations. Weights need to reflect expected measurement noise. We do so by passing the a value to `reset_zero_weight` when calling `get_added_obs_importance()`.
 
-Let's assign the same weight to all new obsevrations:
+Let's assign the same weight to all new observations:
 
 
 ```python
@@ -586,7 +586,7 @@ As before, `get_added_obs_importance()` returns a dataframe with a column for ea
 df_worth_new.head()
 ```
 
-It can be usefull to display this information on a map. Let's process this output and do some `flopy` trickery to display it on the model grid.
+It can be useful to display this information on a map. Let's process this output and do some `flopy` trickery to display it on the model grid.
 
 As we did before, first let's normalize the results to the "base" case (i.e. base==with no new observations). Let's prepare a function to make our life easier:
 
@@ -616,7 +616,7 @@ df_worth_new_plot, df_worth_new_imax = worth_plot_prep(df_worth_new)
 df_worth_new_plot.head()
 ```
 
-And now a longer funtion to display this information on the model grid:
+And now a longer function to display this information on the model grid:
 
 
 ```python
@@ -638,7 +638,7 @@ def plot_added_importance(df_worth_new_plot, forecast_name, newlox=None):
     cb = mm.plot_array(unc_array, alpha=0.5, vmin=0, vmax=vmax)
     plt.colorbar(cb,label="percent uncertainty reduction")
 
-    # plot head obsveration points
+    # plot head observation points
     obs_ij = list(set([tuple(i.split('-')[-2:]) for i in pst.nnz_obs_groups if 'trgw' in i]))
     obs_x = [gwf.modelgrid.xcellcenters[int(i)-1,int(j)-1] for i,j in obs_ij]
     obs_y = [gwf.modelgrid.ycellcenters[int(i)-1,int(j)-1] for i,j in obs_ij]
@@ -674,7 +674,7 @@ Recall that data worth is forecast specific, so let's plot a map for each foreca
 
 Magic! (Well, no - just maths actually, but pretty close.) 
 
-From the plots below we can identify where we should prioritize groundwater level data collection in the bottom layer to improve our ability to reduce forecast uncertainty. (Recall that we only asssed data worth of time series of head in the bottom layer).
+From the plots below we can identify where we should prioritize groundwater level data collection in the bottom layer to improve our ability to reduce forecast uncertainty. (Recall that we only assessed data worth of time series of head in the bottom layer).
 
 
 ```python
@@ -690,7 +690,7 @@ Through the above analysis we have determined the ability of head observations t
 
 So what we really want to know is, if we now have new data...what is the next best location _accounting for the new data_? Glad you asked!
 
-We can do this by incrementaly making additional observations. For example, from the analyses shown above, assume we take the best new potential observation. Then, repeat the analysis again, but this time we assume that we have that new data. From the second iteration we obtain the next best observation. Repeat it again for the third best...and so on.
+We can do this by incrementally making additional observations. For example, from the analyses shown above, assume we take the best new potential observation. Then, repeat the analysis again, but this time we assume that we have that new data. From the second iteration we obtain the next best observation. Repeat it again for the third best...and so on.
 
 Incremental observation worth analysis can be implemented with `next_most_important_added_obs()`. Let's do so now for the same observation list as above, assuming we only have a budget to drill 5 new observation wells.  Now, keep in mind that we are going to repeat the calculations five times. Just once already took quite some time - guess what, its going to take about 5 times as long this time!
 
@@ -727,4 +727,4 @@ fig = plot_added_importance(df_worth_new_plot,
                             newlox = next_most_df.best_obs.tolist())
 ```
 
-And there we have it - a usefull tool to guide data collection with the aim of reducing forecast uncertainty. It is important to recall that a major assumption underpinning these analyses is that the model is able to fit observations to a level comensurate with measurment noise. This is a pretty big assumption! Not so easy, as we will see in the "freyberg_glm_2" tutorial.
+And there we have it - a useful tool to guide data collection with the aim of reducing forecast uncertainty. It is important to recall that a major assumption underpinning these analyses is that the model is able to fit observations to a level commensurate with measurement noise. This is a pretty big assumption! Not so easy, as we will see in the "freyberg_glm_2" tutorial.

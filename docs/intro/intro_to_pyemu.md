@@ -14,10 +14,10 @@ We will make use of an existing PEST(++) interface. You do not need to be famili
 
 Throughout the notebook we will:
  - introduce how to access and edit an existing PEST control file and setup using the `Pst` class.
- - explore some of the built-in methods for customing PEST setups and post-processing outcomes.
+ - explore some of the built-in methods for customizing PEST setups and post-processing outcomes.
  - introduce geostats in `pyemu`.
- - introduce methods for handling matricies with the `Matrix` class, as special instances with the `Cov` and `Jco` classes.
- - introduce classes that facilitate generating and handling parameter and obsveration Ensembles.
+ - introduce methods for handling matrices with the `Matrix` class, as special instances with the `Cov` and `Jco` classes.
+ - introduce classes that facilitate generating and handling parameter and observation Ensembles.
 
 Here we **do not** demonstrate how to setup a PEST interface from scratch. See the "part2_pstfrom_pest_setup" tutorial for a demonstration on how to use the `PstFrom` class to do so.
 
@@ -284,7 +284,7 @@ pst.observation_data.head()
 
 
 
-You can access, slice and edit `pst.parameter_data` or `pst.observation_data` just as you would a DataFrame. You can add columns, these will not be writen to the control file. `pyemu` is clever like that.
+You can access, slice and edit `pst.parameter_data` or `pst.observation_data` just as you would a DataFrame. You can add columns, these will not be written to the control file. `pyemu` is clever like that.
 
 
 ```python
@@ -307,7 +307,7 @@ You can edit values like so:
 
 
 ```python
-#assing values to all parameter intial values
+#assign values to all parameter initial values
 pst.parameter_data['parval1'] = 1.1
 
 # the pandas .loc method makes for easy slicing and dicing
@@ -494,7 +494,7 @@ pst.control_data.formatted_values
 
 ### PEST++ Options
 
-PEST++ options are stored in a dictionary in which the `keys` are the PEST++ Control Variable name (see the PEST++ user manual for names of these variables and their descriptions). Values must be asigned according to what PEST++ expects as input.
+PEST++ options are stored in a dictionary in which the `keys` are the PEST++ Control Variable name (see the PEST++ user manual for names of these variables and their descriptions). Values must be assigned according to what PEST++ expects as input.
 
 You can access the existing PEST++ options like so:
 
@@ -574,9 +574,9 @@ pst.pestpp_options
 
 ### Writing the .pst control file
 
-All of these edits are kept in memory untill explicitly written to a .pst file. This is accomplished with the `Pst.write()` method.
+All of these edits are kept in memory until explicitly written to a .pst file. This is accomplished with the `Pst.write()` method.
 
-The control file can be written as version 1 or 2 (see the PEST++ user manual for descriptions of versions). Unlike the original PEST version 1, version 2 control files have each of the "*" sections stored in external csv files. This makes them easier to access and manipulate, either programatically or using common spreadsheet software. PEST and PEST_HP only accept version 1. Only PEST++ accepts version 2. If there are more than 10k parameters, version 2 is written by default. 
+The control file can be written as version 1 or 2 (see the PEST++ user manual for descriptions of versions). Unlike the original PEST version 1, version 2 control files have each of the "*" sections stored in external csv files. This makes them easier to access and manipulate, either programmatically or using common spreadsheet software. PEST and PEST_HP only accept version 1. Only PEST++ accepts version 2. If there are more than 10k parameters, version 2 is written by default. 
 
 You can specify the version by passing the relevant argument. Run the cells below then inspect the folder to see the differences.
 
@@ -612,9 +612,9 @@ pst.write(os.path.join(f_d, "temp_v2.pst"), version=2)
 
 In another tutorial we demonstrate the use of the `PstFrom` to automate construction of a complete PEST interface, starting from scratch.
 
-Alternatively, it is possible to construct a PEST control file from template (.tpl) and instruction (.ins) files. The `Pst` class includes methods to read .tpl/.ins files and add parameters/observations to the control file. This enables construction of a PEST dataset, or simply adding new ones to an existing control file. It is particularily usefull for pesky model input/output files with inconvenient file structures (e.g. that are not array or tabular formats).
+Alternatively, it is possible to construct a PEST control file from template (.tpl) and instruction (.ins) files. The `Pst` class includes methods to read .tpl/.ins files and add parameters/observations to the control file. This enables construction of a PEST dataset, or simply adding new ones to an existing control file. It is particularly useful for pesky model input/output files with inconvenient file structures (e.g. that are not array or tabular formats).
 
-The cell bellow writes a "dummy" template file to the tutorial folder for demonstration purposes. 
+The cell below writes a "dummy" template file to the tutorial folder for demonstration purposes. 
 
 
 ```python
@@ -625,7 +625,7 @@ with open(tpl_filename,'w') as f:
     f.write("special_par2  ~  special_par2   ~\n")
 ```
 
-Adding the parameters from "special_pars.dat.tpl" to the control file is a simple matter of calling the `.add_parameters()` method. This method adds the parameters to the `pst.parameter_data` section, and updates other relevant sections of the `pst` control file; it also returns a DataFrame. Note that parameter names come from the .tpl file. However, intial values, bounds and group name are assigned default values; you will need to specify correct values before writing the control file to disk.
+Adding the parameters from "special_pars.dat.tpl" to the control file is a simple matter of calling the `.add_parameters()` method. This method adds the parameters to the `pst.parameter_data` section, and updates other relevant sections of the `pst` control file; it also returns a DataFrame. Note that parameter names come from the .tpl file. However, initial values, bounds and group name are assigned default values; you will need to specify correct values before writing the control file to disk.
 
 
 ```python
@@ -785,7 +785,7 @@ par.loc[par['pargp'] == 'pargp']
 
 ### Tying Parameters
 
-We may on ocasion need to tie parameters in the control file. In the `pyemu` world, tied parametes are specified in the `Pst.parameter_data` dataframe. Start by adding a `partied` column and, for parameters you want to tie, changing "partrans" to "tied" and adding the name of the parameter to tie to in the "partied" column. 
+We may on occasion need to tie parameters in the control file. In the `pyemu` world, tied parameters are specified in the `Pst.parameter_data` dataframe. Start by adding a `partied` column and, for parameters you want to tie, changing "partrans" to "tied" and adding the name of the parameter to tie to in the "partied" column. 
 
 We will demonstrate step-by-step by tying "special_par2" to "special_par1" (the parameters we just added from the .tpl file):
 
@@ -920,10 +920,10 @@ par.loc[par['pargp'] == 'pargp', ['partrans', 'partied']]
 
 ## Utilities
 
-`pyemu` has several built-in methods to make your PEST-life easier. Several of these handle similar tasks as utilities from the PEST-suite, such as adjusting observation weights and assigning prior information equations. Others provide usefull tables or plots that summarize details of the PEST setup and/or outcomes.
+`pyemu` has several built-in methods to make your PEST-life easier. Several of these handle similar tasks as utilities from the PEST-suite, such as adjusting observation weights and assigning prior information equations. Others provide useful tables or plots that summarize details of the PEST setup and/or outcomes.
 
 ### Par and Obs Summaries
-You can access quick summaries of observation and paramaeter names, group names, etc thorugh the respective `pst` attributes:
+You can access quick summaries of observation and parameter names, group names, etc through the respective `pst` attributes:
 
 
 ```python
@@ -941,7 +941,7 @@ pst.nnz_obs_groups[:5]
 
 
 ```python
-# number of non-zero observations and adjustable parmaeters
+# number of non-zero observations and adjustable parameters
 pst.nnz_obs, pst.npar_adj
 ```
 
@@ -954,7 +954,7 @@ pst.nnz_obs, pst.npar_adj
 
 
 ```python
-# adjustble parameter group names
+# adjustable parameter group names
 pst.adj_par_groups[:5]
 ```
 
@@ -965,7 +965,7 @@ pst.adj_par_groups[:5]
 
 
 
-You can write a parameter or observation summary table wth the `Pst.write_par_symmary_table()` and `Pst.write_obs_symmary_table()` methods, respectively. Quite usefull when preparing those pesky reports. 
+You can write a parameter or observation summary table with the `Pst.write_par_symmary_table()` and `Pst.write_obs_symmary_table()` methods, respectively. Quite useful when preparing those pesky reports. 
 
 These methods return a Pandas DataFrame and (by default) write the table to an external file. Parameters and observations are summarized by group name.
 
@@ -1345,13 +1345,13 @@ pst.write_obs_summary_table()
 
 ### Phi and residuals
 
-The `Pst` class tries to load a residuals file iduring construction. It looks for a file in the same folder as the control file and with the same base name, but with the extension ".rei". Alterantaively, you can specify the name of the residual file when constructing the `Pst`. (e.g. `pyemu.Pst("controlfile.pst", resfile="residualfile.rei")`)
+The `Pst` class tries to load a residuals file iduring construction. It looks for a file in the same folder as the control file and with the same base name, but with the extension ".rei". Alternatively, you can specify the name of the residual file when constructing the `Pst`. (e.g. `pyemu.Pst("controlfile.pst", resfile="residualfile.rei")`)
 
 If that file is found, you can access some pretty cool stuff.  The `Pst.res` attribute is stored as a Pandas DataFrame. 
 
-Of course, all of this relies on PEST(++) having been run at least once before hand to record the residuals file. For the purposes of this tutorial, we have already done so. When we constructed `pst` at the beggining of this notebook, `pyemu` also loaded the residuals file. 
+Of course, all of this relies on PEST(++) having been run at least once before hand to record the residuals file. For the purposes of this tutorial, we have already done so. When we constructed `pst` at the beginning of this notebook, `pyemu` also loaded the residuals file. 
 
-Inspect it by running the cell bellow. As you can see, the DataFrame lists all observations and group names, their modelled and measured values, weights and of course the residual:
+Inspect it by running the cell below. As you can see, the DataFrame lists all observations and group names, their modelled and measured values, weights and of course the residual:
 
 
 
@@ -1579,7 +1579,7 @@ obs = pst.observation_data
 # change all observation weights
 obs['weight'] = 1.0
 
-# check the phi contributions again; compare to vaues displayed above
+# check the phi contributions again; compare to values displayed above
 pst.phi_components
 ```
 
@@ -1618,7 +1618,7 @@ cases, it is wise to weight observations strictly according to the inverse of th
 measurement noise. Certainly, observations of greater credibility should be given greater weights
 than those of lower credibility. 
 
-However, when history-matching, this approach can result in the loss of information contained in some observations, due to their contribution to the objective function being over-shadowed by the contribution from other obsevrations. An alternative approach is to weight observations (or observation groups) such that, at the start of the history-matching process, they each contribute the same amount to the objective function. The information content of each of these groups is thereby given equal right of entry to the parameter estimation process. (This matter is extensively discussed in the PEST Book.)
+However, when history-matching, this approach can result in the loss of information contained in some observations, due to their contribution to the objective function being over-shadowed by the contribution from other observations. An alternative approach is to weight observations (or observation groups) such that, at the start of the history-matching process, they each contribute the same amount to the objective function. The information content of each of these groups is thereby given equal right of entry to the parameter estimation process. (This matter is extensively discussed in the PEST Book.)
 
 As stated above, a practical means of accommodating this situation is to weight all observation groups
 such that they contribute an equal amount to the starting measurement objective function. In this
@@ -1629,10 +1629,10 @@ The `Pst.adjust_weights()` method provides a mechanism to fine tune observation 
 
 Some **caution** is required here. Observation weights and how these pertain to history-matching *versus* how they pertain to generating an observation ensemble for use with `pestpp-ies` is a frequent source of confusion.
 
- - when **history-matching**, observation weights listed in the control file determine their contribution to the objective function, and therefore to the parameter estiamtion process. Here, observation weights may be assigned to reflect observation uncertainty, the balance required for equal "visibility", or other modeller-defined (and perhaps subjective...) measures of observation worth.  
+ - when **history-matching**, observation weights listed in the control file determine their contribution to the objective function, and therefore to the parameter estimation process. Here, observation weights may be assigned to reflect observation uncertainty, the balance required for equal "visibility", or other modeller-defined (and perhaps subjective...) measures of observation worth.  
  - when undertaking  **generating an observation ensemble**, weights should reflect the inverse of the standard deviation of measurement noise. Unless instructed otherwise, `pestpp-ies` will generate the observation ensemble *using observation weights in the PEST control file*. Therefore, when history-matching with `pestpp-ies` and using weights that **do not** reflect observation uncertainty, it is important to provide `pestpp-ies` with a previously prepared observation ensemble (we will demonstrate this further on).
 
-OK, so let's adjust some observation weights using `Pst.adjust_weights()`. This method allows us to adjust weights for individual observations, or for entire observation groups. We do so by passing a dictionary with observation names (or group names) as keys, and the correspding value they contribute to the objective function as values.
+OK, so let's adjust some observation weights using `Pst.adjust_weights()`. This method allows us to adjust weights for individual observations, or for entire observation groups. We do so by passing a dictionary with observation names (or group names) as keys, and the corresponding value they contribute to the objective function as values.
 
 Let's get started.
 
@@ -1718,7 +1718,7 @@ And voila. Run the cell below to see that phi components form each group are (ro
 
 
 ```python
-# check the phi contributions; comapre to those above
+# check the phi contributions; compare to those above
 pst.phi_components
 ```
 
@@ -1752,7 +1752,7 @@ pst.phi_components
 
 
 ```python
-# comapre this plot to the one we generated earlier; this one is much more balanced
+# compare this plot to the one we generated earlier; this one is much more balanced
 pst.plot(kind="phi_pie");
 ```
 
@@ -1764,13 +1764,13 @@ pst.plot(kind="phi_pie");
 
 ### Discrepancy based weight adjustment
 
-In a perfect (model and algorithm) world, we would acheive a final objective function that is equal to the number of (non-zero weighted) observations. But because of model error and simplifying assumptions in the algorithms we use for history matching, this is rarely the case.  More often, the final objective function is much larger than the number of observations.  This implies that we were not able to "fit" as well as we thought we could (where "thought" is incapsulated in the observations weights in the control file, representing the inverse of measurment noise).  This really matters when we do posterior uncertainty analyses following a PEST run (this will be discussed further in the FOSM and data-worth notebooks). 
+In a perfect (model and algorithm) world, we would achieve a final objective function that is equal to the number of (non-zero weighted) observations. But because of model error and simplifying assumptions in the algorithms we use for history matching, this is rarely the case.  More often, the final objective function is much larger than the number of observations.  This implies that we were not able to "fit" as well as we thought we could (where "thought" is incapsulated in the observations weights in the control file, representing the inverse of measurement noise).  This really matters when we do posterior uncertainty analyses following a PEST run (this will be discussed further in the FOSM and data-worth notebooks). 
 
-The simpliest way to try to rectify this situation is to adjust the weights in the control file so that the resulting contribution to the objective function from each observation (or optional observation group) is equal to 1 (or the number of members of the group).  This is related to Morozov's discrepancy principal (google it!).  `pyEMU` has a built in routine to help with this: `Pst.adjust_weights_discrepancy()` - great name!
+The simplest way to try to rectify this situation is to adjust the weights in the control file so that the resulting contribution to the objective function from each observation (or optional observation group) is equal to 1 (or the number of members of the group).  This is related to Morozov's discrepancy principal (google it!).  `pyEMU` has a built in routine to help with this: `Pst.adjust_weights_discrepancy()` - great name!
 
-*Note 1: dont make this adjustment until after you are through with history matching! The point is for weights to represent the inverse of observation uncertainty, which includes both measurement error **and** model error.*
+*Note 1: don't make this adjustment until after you are through with history matching! The point is for weights to represent the inverse of observation uncertainty, which includes both measurement error **and** model error.*
 
-*Note 2: the PWTADJ2 utility from the PEST-suite acomplishes a similar task.*  
+*Note 2: the PWTADJ2 utility from the PEST-suite accomplishes a similar task.*  
 
 
 ```python
@@ -1801,7 +1801,7 @@ pst.phi
 
 So we were expecting Phi to be equal to `nnz_obs` (number of non zero observations). This did not happen due to the `original_ceiling` argument being set to `True` (which is the default value).
 
-What this means is that, for some observations, weights would have to be *increased* to achieve a contribution to Phi of 1.0. Which is illogical if the original weight is assumed to be the inverse of the measurement noise. In some cases, this requirement may not apply; such as when observatons are weighted for visibility.
+What this means is that, for some observations, weights would have to be *increased* to achieve a contribution to Phi of 1.0. Which is illogical if the original weight is assumed to be the inverse of the measurement noise. In some cases, this requirement may not apply; such as when observations are weighted for visibility.
 
 ## Geostatistics in pyEMU
 
@@ -1856,7 +1856,7 @@ gs.plot()
     
 
 
-Using the geostatistical structure (or a variogram), a covariance matrix describing the statistical relationship between spatialy distributed parameters can be constructed. These covariance matrices are used (1) to describe prior parameter probability distributions, and (2) specifying the weights of prior information equations as a regularisation device. 
+Using the geostatistical structure (or a variogram), a covariance matrix describing the statistical relationship between spatially distributed parameters can be constructed. These covariance matrices are used (1) to describe prior parameter probability distributions, and (2) specifying the weights of prior information equations as a regularisation device. 
 
 For example, let's create a covariance matrix for a set of pilot point parameters from the `gs` structure. This requires a list of X and Y coordinates. Let's make use of the coordinates from a pilot points file in the `f_d` folder.
 
@@ -1943,7 +1943,7 @@ df.head()
 
 
 
-Now simply pass the respective values from the pilot points file as arguments to `gs.covariance_matrix()`. Conveniently, we can also take the parameter names from the pilot point file. This returns a `pyemu.Cov` object (which we will discuss later). The same can be complished with a single variogram (e.g. `v.covariance_matrix()`)
+Now simply pass the respective values from the pilot points file as arguments to `gs.covariance_matrix()`. Conveniently, we can also take the parameter names from the pilot point file. This returns a `pyemu.Cov` object (which we will discuss later). The same can be accomplished with a single variogram (e.g. `v.covariance_matrix()`)
 
 
 ```python
@@ -2022,7 +2022,7 @@ preferred values that are assigned to linear relationships between parameters. (
 
 *Note: in a similar manner, the PEST-utilities ADDREG1 and ADDREG2 also automate the addition of prior information equations to a PEST-control file.*
 
-### Preffered value or Zero Order Tikhonov
+### Preferred value or Zero Order Tikhonov
 
 `pyemu` provides utilities to apply preferred value prior equations to a PEST control file. Note though, pyemu doesn't call it "preferred value"! Rather, it uses the mathematical term "Zero Order Tikhonov".
 
@@ -2217,7 +2217,7 @@ pst.prior_information.head()
 
 ### Preferred difference or First Order Pearson Tikhonov
 
-We may wish (almost certaintly) to express a preference for similarity between parameters. For example, hydraulic properties of two points close together are more likley to be similar to each other, than two points which are far apart. We describe this relationship using geostatistics, encapsulated in a covariance matrix.
+We may wish (almost certainly) to express a preference for similarity between parameters. For example, hydraulic properties of two points close together are more likely to be similar to each other, than two points which are far apart. We describe this relationship using geostatistics, encapsulated in a covariance matrix.
 
 As previously described, `pyemu.geostats` module provides tools for generating such matrices. The PEST suite also includes many utilities for this purpose (see the PPCOV* set of utilities.)
 Let's use the `cov` covariance matrix we constructed earlier for the set of pilot points.
@@ -2250,7 +2250,7 @@ The weights on the prior information equations are the Pearson correlation coeff
 # then assign cov pror
 pyemu.helpers.first_order_pearson_tikhonov(pst, 
                                             cov=cov,     # the covariance matrix; these can be for some OR all parameters in pst
-                                            reset=False, # so as to have both prefered value and prefered differnece eqs
+                                            reset=False, # so as to have both preferred value and preferred difference eqs
                                             abs_drop_tol=0.01) # drop pi eqs that have small weight
 ```
 
@@ -2348,7 +2348,7 @@ pst.prior_information.tail()
 ```python
 # reminder
 par = pst.parameter_data
-# let's just un-tie special_par2, otherwise we can't assign a prior info euqation using it
+# let's just un-tie special_par2, otherwise we can't assign a prior info equation using it
 par.loc[par['pargp']=='pargp', 'partrans'] = 'log'
 #display
 par.loc[par['pargp']=='pargp']
@@ -2449,7 +2449,7 @@ pst.add_pi_equation(
                     rhs=0.0, # the value on the right hand side of the equation; make sure that this value is logical. you may also wish to check if it conflicts with existing prior information equations
                     weight=1.0, # the weight assigned to the prior information equation
                     obs_group='regul_special', # name to assign to the prior information "observationg group"
-                    coef_dict = {'special_par1':1.0, 'special_par2':0.5} # dictionary of parameter coeficients; try specifying different values, note how the equation changes
+                    coef_dict = {'special_par1':1.0, 'special_par2':0.5} # dictionary of parameter coefficients; try specifying different values, note how the equation changes
                     )
 
 # let's take a look; just print the last row (e.g. the latest prior info equation)
@@ -2552,7 +2552,7 @@ parcov.isdiagonal
 
 
 
-How about the `cov` covariance matrix we generated earlier for spatialy correlated parameters?
+How about the `cov` covariance matrix we generated earlier for spatially correlated parameters?
 
 Recall that, a matrix is "diagonal" when all the entries off the diagonal are zero. This means that elements of the matrix are **uncorrelated**. By generating a covariance matrix from parameter data, the only information we have is the uncertainty of each individual parameter (expressed by the parameter bounds). There is no information on correlation between parameters. Therefore `cov_pb.isdiagonal` is `True`. When we generated `cov`, we specified correlation between parameters; so, off-diagonal entries in `cov` are non-zero. Therefore, `cov.isdiagonal` is `False`.
 
@@ -2960,7 +2960,7 @@ cov = cov.from_ascii(filename=os.path.join(f_d,'ppoint.cov'))
 cov.to_uncfile(os.path.join(f_d,'test.unc'))
 ```
 
-Jacobian matrices, recorded by PEST(++) during parameter estimation, can be read and manipulated with the `Jco` class. This calss has the same functioanlity as the `Matrix` class.
+Jacobian matrices, recorded by PEST(++) during parameter estimation, can be read and manipulated with the `Jco` class. This class has the same functionality as the `Matrix` class.
 
 
 ```python
@@ -2982,7 +2982,7 @@ FOSM stands for "First Order, Second Moment". You may also see this referred to 
 
 The ``pyemu.Schur`` object is one of the primary object for FOSM in `pyemu`. Instantiating a `Schur` object requires, at minimum, a Jacobian matrix and a PEST(++) control file.  From these, `pyemu` builds the prior parameter covariance matrix (from parameter bounds) and the observation noise covariance matrix (from observation weights). Alternatively, the parameter and observation covariance matrices can be provided explicitly.
 
-Optionaly, observation names can be specified as forecasts. The `Schur` object extracts the corresponding rows from the Jacobian matrix to serve as forecast sensitivity vectors.
+Optionally, observation names can be specified as forecasts. The `Schur` object extracts the corresponding rows from the Jacobian matrix to serve as forecast sensitivity vectors.
 
 As we saw earlier, there is a Jacobian matrix in the tutorial folder, recorded in the file named `freyberg_pp.jcb`. 
 
@@ -3528,7 +3528,7 @@ sc.posterior_parameter.to_dataframe().head()
 
 
 
-Let's record the prior and posterior coavariance matrix to external files (we will use these later):
+Let's record the prior and posterior covariance matrix to external files (we will use these later):
 
 
 ```python
@@ -3539,7 +3539,7 @@ post_cov = sc.posterior_parameter
 post_cov.to_ascii(os.path.join(f_d, 'freyberg_pp.post.cov'))
 ```
 
-The ``Schur`` object found the "++forecasts()" optional pestpp argument in the control, found the associated rows in the Jacobian matrix file and extracted those rows to serve as forecast sensitivity vectors. lterantively, we can also pass a list of observation names to use as forecasts when instantiating the `Schur` object. (e.g.`pyemu.Schur("jacobian.jcb", forecasts=[obsname1, obsname2, etc...])`.)
+The ``Schur`` object found the "++forecasts()" optional pestpp argument in the control, found the associated rows in the Jacobian matrix file and extracted those rows to serve as forecast sensitivity vectors. Alternatively, we can also pass a list of observation names to use as forecasts when instantiating the `Schur` object. (e.g.`pyemu.Schur("jacobian.jcb", forecasts=[obsname1, obsname2, etc...])`.)
 
 
 ```python
@@ -3694,7 +3694,7 @@ sc.get_forecast_summary()
 
 
 
-`pyemu` makes FOSM easy to undertake. It has lot's of usefull functionality. We will not go into further detail here. See the "intro to fosm" tutorial for a deeper dive.
+`pyemu` makes FOSM easy to undertake. It has lot's of useful functionality. We will not go into further detail here. See the "intro to fosm" tutorial for a deeper dive.
 
 ## Ensembles
 
@@ -3721,13 +3721,13 @@ pe = pyemu.ParameterEnsemble.from_gaussian_draw(pst, # the Pst control file obje
                                                 
 ```
 
-We can express prior parameter correlation by passing a covariance matrix to the `cov` argument. In doing so, the covariance matrix describes the second moement (the standard deviation and optionally prior correlation between parameters) of the gaussian distribution. This allows us to draw parameter ensembles respecting prior parameter covariance. 
+We can express prior parameter correlation by passing a covariance matrix to the `cov` argument. In doing so, the covariance matrix describes the second moment (the standard deviation and optionally prior correlation between parameters) of the gaussian distribution. This allows us to draw parameter ensembles respecting prior parameter covariance. 
 
 
 ```python
 pe = pyemu.ParameterEnsemble.from_gaussian_draw(pst,           # the Pst control file object, parameter data here will be used to characterize the ensembles' parameter statisctical distribution
                                                 num_reals=200, # the number of realisations to generate
-                                                cov=prior_cov)    # specify parameter covariance; in this case, `parcov` doesn't actualy specify any covariance, but you get the idea...
+                                                cov=prior_cov)    # specify parameter covariance; in this case, `parcov` doesn't actually specify any covariance, but you get the idea...
 ```
 
 Because the Ensemble is stored as a DataFrame, we can easily access it. Each row is an individual realisation. Each column is a parameter.
@@ -3969,7 +3969,7 @@ plt.ylabel('number of realisations')
 
 
 ```python
-# chekc the parmeter bounds; do any of the histogram bnis fall above/below the upper/lower bound value?
+# check the parameter bounds; do any of the histogram bnis fall above/below the upper/lower bound value?
 par.loc['rch_0', ['parlbnd','parubnd']]
 ```
 
@@ -3994,13 +3994,13 @@ pe.loc[:,"rch_0"].min(),pe.loc[:,"rch_0"].max()
 
 
 
-As you can see, parameter bounds may be violated when drawing the ensemble because gaussian distributions are continuous. The `.enforce()` method goes through it and makes sure that bounds are respected. It does this by assigning the bound value to any parameter values which exceed the bound.  Conceptaully this results in a "truncated gaussian distribution"
+As you can see, parameter bounds may be violated when drawing the ensemble because gaussian distributions are continuous. The `.enforce()` method goes through it and makes sure that bounds are respected. It does this by assigning the bound value to any parameter values which exceed the bound.  Conceptually this results in a "truncated gaussian distribution"
 
 As you can see in the subsequent plot, bounds are now respected:
 
 
 ```python
-# enforce parmeter bounds
+# enforce parameter bounds
 pe.enforce()
 
 # plot again
@@ -4028,7 +4028,7 @@ There are also built in functions to automate plotting of ensembles:
 ```python
 # generates a A4 page of histograms for specified columns (e.g. parameters)
 
-# slect column (e.g. parameter) names
+# select column (e.g. parameter) names
 plot_cols = pe.columns[0:8].tolist() 
 
 # plot histograms
@@ -4120,7 +4120,7 @@ posterior covariance matrix to the draw method.  Note this covariance matrix is 
 
 In other GMDSI educational material, and in the PEST Roadmaps, this approach is sometimes referred to as "using the linearized posterior parameter distribution". 
 
-Applying Bayes linear Monte Carlo requires that we have previously calibrated a model and calculated a post-calibration Jacobian matrix.  From the Jacobian, we can obtain the post-calibration parameter covariance. The "calibrated" parameter values represent the mean of the posterior parameter probability distribution. By centering the distribution on values that already provide a good fit with measurment data, we are increasing the likelihood that the realisatiosn that we draw will also fit measured data well. This can be usefull in reducing subsequent history-matching computation time.
+Applying Bayes linear Monte Carlo requires that we have previously calibrated a model and calculated a post-calibration Jacobian matrix.  From the Jacobian, we can obtain the post-calibration parameter covariance. The "calibrated" parameter values represent the mean of the posterior parameter probability distribution. By centering the distribution on values that already provide a good fit with measurement data, we are increasing the likelihood that the realisations that we draw will also fit measured data well. This can be useful in reducing subsequent history-matching computation time.
 
 
 
@@ -4141,7 +4141,7 @@ pe_post.enforce()
 
 
 ```python
-# comapre the prior and the posterior
+# compare the prior and the posterior
 pe.loc[:, 'rch_0'].hist(alpha=0.5,color="0.5")
 pe_post.loc[:, 'rch_0'].hist(alpha=0.5,color="b")
 #pe_post.loc[:, 'hk00'].plot(kind="hist",bins=20,ax=ax,alpha=0.5)

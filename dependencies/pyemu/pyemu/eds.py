@@ -33,7 +33,7 @@ class EnDS(object):
             or ".unc" for uncertainty files).  If `None`, the noise covariance matrix is
             constructed from the observation weights (and optionally "standard_deviation")
             .  Can also be a `pyemu.Cov` instance
-        forecasts (enumerable of `str`): the names of the entries in `pst.osbervation_data` (and in `ensemble`).
+        forecasts (enumerable of `str`): the names of the entries in `pst.observation_data` (and in `ensemble`).
         verbose (`bool`): controls screen output.  If `str`, a filename is assumed and
                 and log file is written.
         
@@ -379,7 +379,7 @@ class EnDS(object):
             - **dict**: dictionary of first-moment dataframes. Keys are `obslist_dict` keys.  If `include_first_moment`
                 is None, this is an empty dict.
             - **pd.DataFrame**: prediction standard deviation summary
-            - **pd.DataFrame**: precent prediction standard deviation reduction summary
+            - **pd.DataFrame**: percent prediction standard deviation reduction summary
 
 
         Example::
@@ -447,7 +447,7 @@ class EnDS(object):
             dd += self.obscov.get(onames,onames).x
             self.logger.log("adding noise cov to data block")
 
-            #todo: test for inveribility and shrink if needed...
+            #todo: test for invertibility and shrink if needed...
             self.logger.log("inverting data cov block")
             dd = np.linalg.inv(dd)
             self.logger.log("inverting data cov block")
@@ -875,7 +875,7 @@ def moving_average_with_endpoints(y_values, window_size):
     # Handle the middle part with full window
     for i in range(half_window, len(y_values) - half_window):
         smoothed_y[i] = np.mean(y_values[i - half_window:i + half_window])
-    #Enforce endoints
+    #Enforce endpoints
     smoothed_y[0] = y_values[0]
     smoothed_y[-1] = y_values[-1]
     # Ensure uniqueness by adding small increments if values are duplicated

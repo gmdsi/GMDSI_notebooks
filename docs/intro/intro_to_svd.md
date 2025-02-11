@@ -31,14 +31,14 @@ math: mathjax3
 In this and the next notebooks we'll get under the hood of SVD and see what it does.  A high-level understanding is not needed to take advantage of the power of SVD for your typical calibration parameter estimation problem ("set it and forget it").  BUT in addition to the glow of knowledge that they impart, these SVD concepts will cascade into understanding other tools such as parameter identifiability, calculation of uncertainty, and null-space Monte Carlo.  
 
 > #### We highly recommend going through:
-> - Gregory Gunderson's [Singular Value Decomposition as Simply as Possible](https://gregorygundersen.com/blog/2018/12/10/svd/#:~:text=The%20singular%20values%20referred%20to,our%20transformation%20flattens%20our%20square.). An excelent place to start to gain an intuitive understanding of SVD. 
+> - Gregory Gunderson's [Singular Value Decomposition as Simply as Possible](https://gregorygundersen.com/blog/2018/12/10/svd/#:~:text=The%20singular%20values%20referred%20to,our%20transformation%20flattens%20our%20square.). An excellent place to start to gain an intuitive understanding of SVD. 
 > -  Frank Cleary's [introduction to SVD notebook](https://gist.github.com/frankcleary/a89da479d85c98f86e31).
 
 ## Matrices
 
 Linear Algebra is the foundation of much of our maths and modeling. At the basis of this is matrices, which contain vector information like spatial arrays of properties, mappings from one set of properties to another, the variability of properties.
 
- Another example of a matrix is just a photograph. It turns out, much of the information contained in a matrix is redundant. If we think of the columns of a matrix as vectors, they are orthogonal but maybe aren't quite the right basis for the infromation. What if we could find another basis, where we rotate to a more suitable set of orthogonal basis vectors and maybe even stretch them?
+ Another example of a matrix is just a photograph. It turns out, much of the information contained in a matrix is redundant. If we think of the columns of a matrix as vectors, they are orthogonal but maybe aren't quite the right basis for the information. What if we could find another basis, where we rotate to a more suitable set of orthogonal basis vectors and maybe even stretch them?
 
 Any matrix can be decomposed into 3 matrices:
 
@@ -120,7 +120,7 @@ plt.axis('off');
 
 We can treat this like any matrix and perform SVD. In python, `numpy` makes this easy. (_Go through Frank Clearly's [notebooks](https://gist.github.com/frankcleary/a89da479d85c98f86e31) for details on the math behind all of this._)
 
-In the next cell we use `numpy` to  decompose the `photogray` matrix using the equiation shown earlier: $\mathbf{M}=\mathbf{U}\mathbf{S}\mathbf{V}^T$
+In the next cell we use `numpy` to  decompose the `photogray` matrix using the equation shown earlier: $\mathbf{M}=\mathbf{U}\mathbf{S}\mathbf{V}^T$
 
 
 ```python
@@ -216,7 +216,7 @@ Hey that's pretty good! And with a fraction of the total information.
 
 # What does this have to do with groundwater modeling?
 
-Let's cook up a Jacobian Matrix. You should be familiar with this process now. We are going to re-construct the Freyberg pilot point PEST setup. Then run PEST++GLM once, with NOPMAX set to -1 to calculate a Jacobian matrix.
+Let's cook up a Jacobian Matrix. You should be familiar with this process now. We are going to re-construct the Freyberg pilot point PEST setup. Then run PEST++GLM once, with NOPTMAX set to -1 to calculate a Jacobian matrix.
 
 
 ```python
@@ -407,7 +407,7 @@ hbd.intertive_sv_vec_plot(inpst, U);
 
 ### Great - finally how does this impact our calibration of a K-field?
 
-The function below pulls in the "true" hydraulic conductivity fro our Freyberg model:
+The function below pulls in the "true" hydraulic conductivity from our Freyberg model:
 
 
 ```python
