@@ -8,18 +8,18 @@ math: mathjax3
 
 # Gauss-Levenberg-Marquardt (GLM) algorithm
 
-The Gauss-Levenberg-Marquart (GLM) method is a derivative-based method used to search the objective function surface for its minimum value. It assumes that simulated values of observation targets vary continuously in response to changes in calibration-adjusted model parameters. 
+The Gauss-Levenberg-Marquardt (GLM) method is a derivative-based method used to search the objective function surface for its minimum value. It assumes that simulated values of observation targets vary continuously in response to changes in calibration-adjusted model parameters. 
 
-However, certain combinations of parameters can provide similar fits to calibration data (as we saw in the "freyberg k and r" tutorial, in which we attempt to calibrate a model with two correlated parameters). This phenomenon is refered to as non-uniqueness. For a two-parameter case, this can be visualized as a "valley" in the objective function surface. In such cases, there is no single "minimum" value for the objective function. 
+However, certain combinations of parameters can provide similar fits to calibration data (as we saw in the "freyberg k and r" tutorial, in which we attempt to calibrate a model with two correlated parameters). This phenomenon is referred to as non-uniqueness. For a two-parameter case, this can be visualized as a "valley" in the objective function surface. In such cases, there is no single "minimum" value for the objective function. 
 
 Nevertheless, PEST(++) may obtain a solution to an ill-posed inverse problem and even fit the calibration dataset very well. This occurs due to the addition of the Marquardt lambda to the diagonal of the $X^{t}QX$ matrix and enables the achievement of a set of parameters which minimize the objective function. However, this parameter set will not be unique. Changing observation weights, initial parameter values, or a different Marquardt lambda selection strategy, may result in an entirely different set of parameters which also minimize the objective function.
 
-In practice, this can be avoided by ensuring a well-posed inverse problem. In simple terms, this requires having a greater number of sources of calibration data than the number of adjustable parameters. As we saw in the "freyberg k, r and flux obsevrations" tutorial, one option is to include multiple types of observation data which inform different parameter types. (As we will see further on, regularisation provides another.)
+In practice, this can be avoided by ensuring a well-posed inverse problem. In simple terms, this requires having a greater number of sources of calibration data than the number of adjustable parameters. As we saw in the "freyberg k, r and flux observations" tutorial, one option is to include multiple types of observation data which inform different parameter types. (As we will see further on, regularisation provides another.)
 
-In this tutorial we are going to visualize the "objective function surface" and how the parameter ugrade process moves across it. 
+In this tutorial we are going to visualize the "objective function surface" and how the parameter upgrade process moves across it. 
 
 ### Admin
-We have provided some pre-cooked PEST dataset files, wraped around the modified Freyberg model. This is the same dataset introduced in the "freyberg_pest_setup" and "freyberg_k" notebooks. 
+We have provided some pre-cooked PEST dataset files, wrapped around the modified Freyberg model. This is the same dataset introduced in the "freyberg_pest_setup" and "freyberg_k" notebooks. 
 
 The functions in the next cell import required dependencies and prepare a folder for you. This folder contains the model files and a preliminary PEST setup. Run the cells, then inspect the new folder named "freyberg_k" which has been created in your tutorial directory. (Just press `shift+enter` to run the cells). 
 
@@ -106,7 +106,7 @@ par = pst.parameter_data
 par
 ```
 
-We shall explore the effect of having two adjustable parameters: `hk1` and `rch0`. As we saw previsouly, these two parameters are correlated. If we use only head observations for calibration we are unable to achive a unique solution. 
+We shall explore the effect of having two adjustable parameters: `hk1` and `rch0`. As we saw previously, these two parameters are correlated. If we use only head observations for calibration we are unable to achieve a unique solution. 
 
 (We shall change `hk1` parameter bounds just to make visualization easier.)
 
@@ -136,7 +136,7 @@ else:
 
 Make a plot of the response surface for `hk1` (x-axis) and `rch0` (y-axis). The colored contours indicate the objective function value for each combination of these two parameters. 
 
-As you can see, a long eliptical "valley" of optimal values is formed (grey zone). Parameter combinations in this zone all result in equivlent levels of "good fit".
+As you can see, a long elliptical "valley" of optimal values is formed (grey zone). Parameter combinations in this zone all result in equivalent levels of "good fit".
 
 
 ```python
@@ -145,7 +145,7 @@ fig, ax, resp_surf = resurf.plot_response_surface(cmap='jet', figsize=(7,7)) #ma
 
 ### Add Flux Observations
 
-As we did in the "freyberg k, r and flux obs" tutorial, we know add a second set of observation data. These are measurments of stream flow. We now have observations of head and observations of stream flow
+As we did in the "freyberg k, r and flux obs" tutorial, we know add a second set of observation data. These are measurements of stream flow. We now have observations of head and observations of stream flow
 
 
 ```python
@@ -154,7 +154,7 @@ pst = pyemu.Pst(os.path.join(tmp_d, 'freyberg.pst'))
 
 
 ```python
-# set weights to gage-1 observations during calibratin period
+# set weights to gage-1 observations during calibration period
 obs = pst.observation_data
 obs_times = obs.loc[~obs['gage-1'].isnull(), 'gage-1'].astype(float).values
 calib_times = [str(i) for i in obs_times if i<4018.5]
@@ -168,7 +168,7 @@ Re-write the ocntrol file.
 pst.write(os.path.join(tmp_d, 'freyberg.pst'))
 ```
 
-Run PEST++SWP again to recalcualte the response surface.
+Run PEST++SWP again to recalculate the response surface.
 
 
 ```python
@@ -191,11 +191,11 @@ When used to undertake highly parameterized inversion, PESTPP-GLM implements the
 
 Nonlinear model behaviour is also accommodated by introducing a so-called "Marquardt lambda" to these equations. Employing a nonzero lambda tweaks the direction of parameter improvement so that it is more aligned with the objective function gradient. This increases the efficiency of early iterations of the inversion process when implemented in conjunction with a nonlinear model.
 
-If Lambdas are high, then the parameter estimation process updates parameter values accodring to the objective function gradient. If they are small (or zero), parameter upgrades receive a greater influence from the $J^{t}QJ$ matrix. 
+If Lambdas are high, then the parameter estimation process updates parameter values according to the objective function gradient. If they are small (or zero), parameter upgrades receive a greater influence from the $J^{t}QJ$ matrix. 
 
-Highy non-linear problems, in particular, benefit from high lambdas at the start of the parameter estimation process. This accomodates non-elipticity of the objective function surface, avoiding sending the parameter estimation process in the "wrong direction" and wasting computation time. 
+Highly non-linear problems, in particular, benefit from high lambdas at the start of the parameter estimation process. This accommodates non-ellipticity of the objective function surface, avoiding sending the parameter estimation process in the "wrong direction" and wasting computation time. 
 
-However, as the objective function minimum is approached, the process becomes more eficient if smaller lambdas are used. This avoids the phenomenon known as "hemstictching", in which parameter upgrades jump-across small, thin "valleys" in the objective function surface. 
+However, as the objective function minimum is approached, the process becomes more efficient if smaller lambdas are used. This avoids the phenomenon known as "hemstitching", in which parameter upgrades jump-across small, thin "valleys" in the objective function surface. 
 
 See the PEST Book (Doherty, 2015) for more details.
 
@@ -282,7 +282,7 @@ pars, obfun = resurf.add_trajectory_to_plot(fig, ax, 'Lambda:7000', pst_name='fr
 
 ### Normal PEST(++) Behaviour
 
-In practice, PEST and PEST++ can search for the optimum parameter upgrade vector at each iteartion. PEST(++) calculates upgrade vectors, each based on a different value of lambda. The one which results in the larges objective function decrease is used to calculate parameters for the next iteration. 
+In practice, PEST and PEST++ can search for the optimum parameter upgrade vector at each iteration. PEST(++) calculates upgrade vectors, each based on a different value of lambda. The one which results in the larges objective function decrease is used to calculate parameters for the next iteration. 
 
 
 ```python
