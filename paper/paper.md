@@ -40,7 +40,7 @@ bibliography: paper.bib
 # Include a “Statement of Need” section, explaining how the submitted artifacts contribute to # computationally enabled teaching and learning, and describing how they might be adopted by # others.
 # For learning modules, describe the learning objectives, content, instructional design, and # experience of use in teaching and learning situations.
 # Tell us the “story” of the project: how did it come to be?
-# Cite key references, including a link to the open archive of the sofware or the learning module.
+# Cite key references, including a link to the open archive of the software or the learning module.
 
 
 # # Citations

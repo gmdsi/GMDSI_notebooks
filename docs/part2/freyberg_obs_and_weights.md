@@ -16,7 +16,7 @@ In most history matching contexts a “multicomponent” objective function is r
 
 **Observation Grouping** 
 
-Using a multicomponent approach can extract as much information from an observation dataset as possible and transfer this information to estimated parameters. When constructing a PEST dataset, it is often usefull (and convenient) to group observations by type. This makes it easier to customize objective function design and track the flow of information from data to parameters (and subsequently to predictions). Ideally, each observation grouping should illuminate and constrain parameter estimation related to a separate aspect of the system being modelled (Doherty and Hunt, 2010). For example, absolute values of heads may inform parameters that control horizontal flow patterns, whilst vertical diferences between heads in different aquifers may inform parameters that control vertical flow patterns. 
+Using a multicomponent approach can extract as much information from an observation dataset as possible and transfer this information to estimated parameters. When constructing a PEST dataset, it is often useful (and convenient) to group observations by type. This makes it easier to customize objective function design and track the flow of information from data to parameters (and subsequently to predictions). Ideally, each observation grouping should illuminate and constrain parameter estimation related to a separate aspect of the system being modelled (Doherty and Hunt, 2010). For example, absolute values of heads may inform parameters that control horizontal flow patterns, whilst vertical differences between heads in different aquifers may inform parameters that control vertical flow patterns. 
 
 **Observation Weighting**
 
@@ -32,7 +32,7 @@ The PEST Book (Doherty, 2015) and the USGS published report "A Guide to Using PE
 
 ### Recap: the modified-Freyberg PEST dataset
 
-The modified Freyberg model is introduced in another tutorial notebook (see "intro to freyberg model"). The current notebook picks up following the "psfrom pest setup" notebook, in which a high-dimensional PEST dataset was constructed using `pyemu.PstFrom`. You may also wish to go through the "intro to pyemu" notebook beforehand.
+The modified Freyberg model is introduced in another tutorial notebook (see "intro to freyberg model"). The current notebook picks up following the "pstfrom pest setup" notebook, in which a high-dimensional PEST dataset was constructed using `pyemu.PstFrom`. You may also wish to go through the "intro to pyemu" notebook beforehand.
 
 We will now address assigning observation target values from "measured" data and observation weighting prior to history matching. 
 
@@ -111,11 +111,11 @@ obs.head()
 ```
 
 As mentioned above, we need to do several things:
- - replace observation target values (the `obsval` column) with corresponding vallues from "measured data";
- - assign meaningfull weights to history matching target observations (the `weight` column);
+ - replace observation target values (the `obsval` column) with corresponding values from "measured data";
+ - assign meaningful weights to history matching target observations (the `weight` column);
  - assign zero weight to observations that should not affect history matching.
 
-Let's start off with the basics. First set all weights to zero. We will then go through and assign meaningfull weights only to relevant target observations. 
+Let's start off with the basics. First set all weights to zero. We will then go through and assign meaningful weights only to relevant target observations. 
 
 
 ```python
@@ -160,7 +160,7 @@ model_times = pst.observation_data.time.dropna().astype(float).unique()
 # get the list of osb names for which we have data
 obs_sites =  obs_data.index.unique().tolist()
 
-# restructure the obsevration data 
+# restructure the observation data 
 es_obs_data = []
 for site in obs_sites:
     site_obs_data = obs_data.loc[site,:].copy()
@@ -200,7 +200,7 @@ for site in obs_sites:
 plt.show()
 ```
 
-This time, let's try using a moving-average instead. Effectively this is applying a low-pass filter to the time-series, smooting out some of the spiky noise. 
+This time, let's try using a moving-average instead. Effectively this is applying a low-pass filter to the time-series, smoothing out some of the spiky noise. 
 
 The next cell re-samples the data and then plots it. Measured data sampled using a low-pass filter is shown by the marked green line. What do you think? Better? It certainly does a better job at capturing the trends in the original data! Let's go with that.
 
@@ -241,7 +241,7 @@ Right then - so, these are our smoothed-sampled observation values:
 ess_obs_data.head()
 ```
 
-Now we are confronted with the task of getting these _processed_ measured observation values into the `Pst` control file. Once again, how you do this will end up being somewhat case-specific and will depend on how your obsveration names were constructed. For example, in our case we can use the following function (we made it a function because we are going to repeat it a few times):
+Now we are confronted with the task of getting these _processed_ measured observation values into the `Pst` control file. Once again, how you do this will end up being somewhat case-specific and will depend on how your observation names were constructed. For example, in our case we can use the following function (we made it a function because we are going to repeat it a few times):
 
 
 ```python
@@ -250,12 +250,12 @@ def update_pst_obsvals(obs_names, obs_data):
        obs_data: dataframe with obs values to use in pst"""
     # for checking
     org_nnzobs = pst.nnz_obs
-    # get list of times for obs name sufixes
+    # get list of times for obs name suffixes
     time_str = obs_data.index.map(lambda x: f"time:{x}").values
-    # empyt list to keep track of misssing observation names
+    # empyt list to keep track of missing observation names
     missing=[]
     for col in obs_data.columns:
-        # get obs list sufix for each column of data
+        # get obs list suffix for each column of data
         obs_sufix = col.lower()+"_"+time_str
         for string, oval, time in zip(obs_sufix,obs_data.loc[:,col].values, obs_data.index.values):
                 
@@ -294,7 +294,7 @@ pst.nnz_obs_groups
 
 
 ```python
-# subselection of observaton names; this is because several groups share the same obs name sufix
+# subselection of observation names; this is because several groups share the same obs name suffix
 obs_names = obs.loc[obs.oname.isin(['hds', 'sfr']), 'obsnme']
 
 # run the function
@@ -311,7 +311,7 @@ pst.nnz_obs_groups
 pst.observation_data.oname.unique()
 ```
 
-So that has sorted out the absolute observation groups. But remember the 'sfrtd' and 'hdstd' observation groups? Yeah thats right, we also added in a bunch of other "secondary observations" (the time difference between obsevrations) as well as postprocessing functions to get them from model outputs. We need to get target values for these observations into our control file as well!
+So that has sorted out the absolute observation groups. But remember the 'sfrtd' and 'hdstd' observation groups? Yeah that's right, we also added in a bunch of other "secondary observations" (the time difference between observations) as well as postprocessing functions to get them from model outputs. We need to get target values for these observations into our control file as well!
 
 Let's start by calculating the secondary values from the absolute measured values. In our case, the easiest is to populate the model output files with measured values and then call our postprocessing function.
 
@@ -364,7 +364,7 @@ helpers.process_secondary_obs(ws=t_d)
 
 
 ```python
-# the oname column in the pst.observation_data provides a usefull way to select observations in this case
+# the oname column in the pst.observation_data provides a useful way to select observations in this case
 obs.oname.unique()
 ```
 
@@ -465,9 +465,9 @@ pst = pyemu.Pst(os.path.join(t_d, pst_file))
 pst.phi
 ```
 
-Jeepers - that's large! Before we race off and start running PEST to lower it we should compare simualted and measured values and take a look at the components of Phi. 
+Jeepers - that's large! Before we race off and start running PEST to lower it we should compare simulated and measured values and take a look at the components of Phi. 
 
-Let's start with taking a closer look. The `pst.phi_components` attribute returns a dictionary of the observation group names and their contribution to the overal value of Phi. 
+Let's start with taking a closer look. The `pst.phi_components` attribute returns a dictionary of the observation group names and their contribution to the overall value of Phi. 
 
 
 ```python
@@ -477,7 +477,7 @@ pst.phi_components
 
 Unfortunately, in this case we have too many observation groups to easily display (we assigned each individual time series to its own observation group; this is a default setting in `pyemu.PstFrom`). 
 
-So let's use `Pandas` to help us sumamrize this information (note: `pyemu.plot_utils.res_phi_pie()` does the same thing, but it looks a bit ugly because of the large number of observation groups). To make it easier, we are going to just look at the nonzero observation groups:
+So let's use `Pandas` to help us summarize this information (note: `pyemu.plot_utils.res_phi_pie()` does the same thing, but it looks a bit ugly because of the large number of observation groups). To make it easier, we are going to just look at the nonzero observation groups:
 
 
 ```python
@@ -498,7 +498,7 @@ plt.pie(phicomp, labels=phicomp.index.values);
 
 Well that is certainly not ideal - phi is dominated by the SFR observation groups. Why? Because the observation values of these are much larger than those of the other observation groups...and we assigned the same weight to all of them...
 
-Let's try error-based weighting combined with common sense (e.g. subjectivity) instead. For each observation type we will assign a weight equal to the inverse of error. Conceptualy, this error reflects our estimate of measurement noise. In practice, it reflects both measurment noise and model error.
+Let's try error-based weighting combined with common sense (e.g. subjectivity) instead. For each observation type we will assign a weight equal to the inverse of error. Conceptually, this error reflects our estimate of measurement noise. In practice, it reflects both measurement noise and model error.
 
 
 ```python
@@ -512,7 +512,7 @@ obs = pst.observation_data
 obs.loc[nz_obs.loc[(nz_obs.oname=='hds'), 'obsnme'], 'weight'] = 1/0.1
 obs.loc[nz_obs.loc[(nz_obs.oname=='hdstd'), 'obsnme'], 'weight'] = 1/0.05
 obs.loc[nz_obs.loc[(nz_obs.oname=='hdsvd'), 'obsnme'], 'weight'] = 1/0.01
-# fanciness alert: heteroskedasticity; error will be proportional to the obsveration value for SFR obs
+# fanciness alert: heteroskedasticity; error will be proportional to the observation value for SFR obs
 obs.loc[nz_obs.loc[(nz_obs.oname=='sfr'), 'obsnme'], 'weight'] = 1/ abs(0.1 * nz_obs.loc[(nz_obs.oname=='sfr'), 'obsval'])
 obs.loc[nz_obs.loc[(nz_obs.oname=='sfrtd'), 'obsnme'], 'weight'] = 1/100 #abs(0.5* nz_obs.loc[(nz_obs.oname=='sfrtd'), 'obsval'])
 ```
@@ -527,7 +527,7 @@ plt.pie(phicomp, labels=phicomp.index.values);
 plt.tight_layout()
 ```
 
-Better! Now weights reflect the quality of the data. Another aspect to consider is if obsveration group contributions to phi are relatively balanced...do you think any of these observation groups will dominate phi (or be lost)? 
+Better! Now weights reflect the quality of the data. Another aspect to consider is if observation group contributions to phi are relatively balanced...do you think any of these observation groups will dominate phi (or be lost)? 
 
 The next cell adds in a column to the `pst.observation_data` for checking purposes in subsequent tutorials. Pretend you didn't see it :)
 
@@ -589,7 +589,7 @@ def plot_obs_ts(pst, oe, obsgrps=pst.nnz_obs_groups):
     return
 ```
 
-Let's visualize the time series of observations for the SFR measurment types. Run the next cell.
+Let's visualize the time series of observations for the SFR measurement types. Run the next cell.
 
 The blue line is the time series of "field measured" values (in the control file). The red lines are time series from the observation ensemble.The dashed black line is the model output with initial parameter values. What we are saying with these weights is that any of these red lines could also have been "measured". Due to the noise (e.g. uncertainty) in our measurements, the true value can fall any where in that range.
 
@@ -599,9 +599,9 @@ ts_obs = [i for i in pst.nnz_obs_groups if 'sfr' in i]
 plot_obs_ts(pst, oe, ts_obs)
 ```
 
-### An Aside: A Convenience of Error-Based Weigthing
+### An Aside: A Convenience of Error-Based Weighting
 
-A convenience of weighting with the inverse of the measurement uncertainty is that it is easy to know what the ideal Phi should be: it should be equal to the number of non-zero weighted observations. This of course assumes that all model-to-measurment misfit is due to *measurement* uncertainty. In practice, model error usualy plays a larger role, as we will see in other tutorials. 
+A convenience of weighting with the inverse of the measurement uncertainty is that it is easy to know what the ideal Phi should be: it should be equal to the number of non-zero weighted observations. This of course assumes that all model-to-measurement misfit is due to *measurement* uncertainty. In practice, model error usually plays a larger role, as we will see in other tutorials. 
 
 Just to demonstrate what we mean, let's quickly do some math. Imagine that we have:
  - 2 observations
@@ -666,11 +666,11 @@ obs = pst.observation_data
 # generate cov matrix for all obs using weights in the control file
 obs_cov = pyemu.Cov.from_observation_data(pst, )
 
-# reduce cov down to only include non-zero obsverations
+# reduce cov down to only include non-zero observations
 obs_cov = obs_cov.get(row_names=pst.nnz_obs_names, col_names=pst.nnz_obs_names, )
 
 # side note: 
-# we are saving the diagonal (e.g no correlation) obsevration uncertainty cov matrix
+# we are saving the diagonal (e.g no correlation) observation uncertainty cov matrix
 # to an external file for use in a later tutorial
 obs_cov.to_coo(os.path.join(t_d,"obs_cov_diag.jcb"))
 
@@ -682,7 +682,7 @@ df.head()
 
 So this returned a diagonal covariance matrix (e.g. only values in the diagonal are non-zero). This implies that there is no covariance between observation noise. 
 
-You can plot the matrix, but due to the scale it wont look particularily interesting:
+You can plot the matrix, but due to the scale it won't look particularly interesting:
 
 
 ```python
@@ -690,9 +690,9 @@ plt.imshow(df.values)
 plt.colorbar()
 ```
 
-Hmm...you can kinda see something there (thats the sfr flow obs...large variance). Let's instead just look at a small part, focusing on observations that make up a single time series. 
+Hmm...you can kinda see something there (that's the sfr flow obs...large variance). Let's instead just look at a small part, focusing on observations that make up a single time series. 
 
-So as you can see below, the matrix diagonal reflects individual obsevation uncertianties, whilst all the off-diagonals are zero (e.g. no correlation).
+So as you can see below, the matrix diagonal reflects individual observation uncertainties, whilst all the off-diagonals are zero (e.g. no correlation).
 
 
 ```python
@@ -702,7 +702,7 @@ plt.imshow(df.loc[obs_select.obsnme,obs_select.obsnme].values)
 plt.colorbar()
 ```
 
-But recall that most of the observations are time-series. Here we are saying "how wrong the measurement is today, has nothing to do with how wrong it was yesterday". Is that reasonable? For some noise (e.g. white noise), yes, surely. But perhaps not for all noise. So how can we express that "if my measurement was wrong yesterday, then it is *likely* to be wrong in the same way today"? Through covariance, that's how. We can use the same priciples that we employed to specfy parameter spatial/temporal covariance earlier on.
+But recall that most of the observations are time-series. Here we are saying "how wrong the measurement is today, has nothing to do with how wrong it was yesterday". Is that reasonable? For some noise (e.g. white noise), yes, surely. But perhaps not for all noise. So how can we express that "if my measurement was wrong yesterday, then it is *likely* to be wrong in the same way today"? Through covariance, that's how. We can use the same principles that we employed to specify parameter spatial/temporal covariance earlier on.
 
 We will now demonstrate for the single time series we looked at above. 
 
@@ -774,7 +774,7 @@ plt.imshow(x);
 
 beautiful!
 
-Last thing here, let's just see what this actualy implies for our observation ensembles. As before, let's generate an ensemble of observations, but this time we pass the `obs_cov_tv` covarince matrix:
+Last thing here, let's just see what this actually implies for our observation ensembles. As before, let's generate an ensemble of observations, but this time we pass the `obs_cov_tv` covariance matrix:
 
 
 ```python
@@ -791,7 +791,7 @@ print('Non correlated observation noise:')
 plot_obs_ts(pst, oe, ts_obs)
 ```
 
-And now the ensemble of obs timeseries with autocorrelated noise. Note how thse are smoother and less of a jumble of spaghetti.
+And now the ensemble of obs timeseries with autocorrelated noise. Note how these are smoother and less of a jumble of spaghetti.
 
 
 ```python
@@ -838,8 +838,8 @@ plt.pie(phicomp, labels=phicomp.index.values);
 
 Some **caution** is required here. Observation weights and how these pertain to history-matching *versus* how they pertain to generating an observation ensemble for use with `pestpp-ies` or FOSM is a frequent source of confusion.
 
- - when **history-matching**, observation weights listed in the control file determine their contribution to the objective function, and therefore to the parameter estiamtion process. Here, observation weights may be assigned to reflect observation uncertainty, the balance required for equal "visibility", or other modeller-defined (and perhaps subjective...) measures of observation worth.  
- - when undertaking **uncertainty analysis**, weights should reflect idealy the inverse of obseravtion error (or the standard deviation of measurement noise). Keep this in mind when using `pestpp-glm` or `pestpp-ies`. If the observations in the control file do not have error-based weighting then (1) care is required if using `pestpp-glm` for FOSM and (2) make sure to provide an adequately prepared observation ensemble to `pestpp-ies`.
+ - when **history-matching**, observation weights listed in the control file determine their contribution to the objective function, and therefore to the parameter estimation process. Here, observation weights may be assigned to reflect observation uncertainty, the balance required for equal "visibility", or other modeller-defined (and perhaps subjective...) measures of observation worth.  
+ - when undertaking **uncertainty analysis**, weights should reflect ideally the inverse of observation error (or the standard deviation of measurement noise). Keep this in mind when using `pestpp-glm` or `pestpp-ies`. If the observations in the control file do not have error-based weighting then (1) care is required if using `pestpp-glm` for FOSM and (2) make sure to provide an adequately prepared observation ensemble to `pestpp-ies`.
 
 
 

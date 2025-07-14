@@ -4694,7 +4694,7 @@ Final composite objective function
   Contribution to phi from observation group      "regulw1" : 0.00000
 
 
-Number of forward model runs performed during optimiztion: 221
+Number of forward model runs performed during optimization: 221
 
 
 
@@ -4702,7 +4702,7 @@ Number of forward model runs performed during optimiztion: 221
 -----------------------------------------------------------------------
 Note: The following uncertainty estimates were calculated using 
       Schur's complement for linear-based conditional uncertainty 
-      propogation.  For a derviation from Bayes equation, see 
+      propagation.  For a derviation from Bayes equation, see 
       M. N. Fienen, J. E. Doherty, R. J. Hunt, and H. W. Reeves. 
       2010. 'Using Prediction Uncertainty Analysis to Design 
       Hydrologic Monitoring Networks : Example Applications 
@@ -4714,7 +4714,7 @@ Note: Any observations or prior information equations with a group name
       starting with 'regul' are dropped from the jacobian and observation
       covariance matrices before uncertainty calculations.  Please
       make sure that all expert knowledge is expressed in the prior 
-      parameter bounds or through a covariance matix, which can be 
+      parameter bounds or through a covariance matrix, which can be 
       supplied as a pest++ option as 'parameter_covariance(<matrix_file_name>),
       where <matrix_file_name> can be an ASCII PEST-compatible matrix file (.mat) or
       a PEST-compatible uncertainty file (.unc).

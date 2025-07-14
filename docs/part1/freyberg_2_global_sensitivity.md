@@ -19,16 +19,16 @@ Some GSA methods provide general information about the variability of the sensit
 
 [Saltelli et al (2004)](http://www.andreasaltelli.eu/file/repository/SALTELLI_2004_Sensitivity_Analysis_in_Practice.pdf) provide an overview of the "settings" in which sensitivity analysis can be usefully employed. Of these, in an environmental modelling context the following are highlighted:
 
-1. Identifying non-influencial parameters (also known as "screening") is usefull in the process of simplifying complex models (or parameterisation schemes). Non-influencial parameters are those that do not influence the model output of interest (whether it be a forecast or the measurment objective function). These are parameters which can be fixed at any given value, without signifincatly influencing the output of interest. If necessary, they can be omitted from model design or parameter estimation, in an effort to reduce computational burden.
+1. Identifying non-influential parameters (also known as "screening") is useful in the process of simplifying complex models (or parameterisation schemes). Non-influential parameters are those that do not influence the model output of interest (whether it be a forecast or the measurement objective function). These are parameters which can be fixed at any given value, without significantly influencing the output of interest. If necessary, they can be omitted from model design or parameter estimation, in an effort to reduce computational burden.
 
-2. Identifying parameters, and the interactions between parameters, which are important for a forecast of interest. This is perhaps one of the most common uses of sensitivity analysis. Assuming that all uncertain parameters are susceptible to determination (at the same cost per parameter). A sensitivity analysis can aid in idnetifying the parameter that is most deserving of better experimental measurement in order to reduce the forecast uncertainty the most.
+2. Identifying parameters, and the interactions between parameters, which are important for a forecast of interest. This is perhaps one of the most common uses of sensitivity analysis. Assuming that all uncertain parameters are susceptible to determination (at the same cost per parameter). A sensitivity analysis can aid in identifying the parameter that is most deserving of better experimental measurement in order to reduce the forecast uncertainty the most.
 
-3. Mapping parameter-to-output response. Often decision-support modelling is interested in avoiding an undesired outcome for some forecast of interest. Sensitivity analysis can be employed to assess which parameters (or parameter combinations) are most responsible for producing output in the region of interest. In other words, which parameter (and parameter values) are most likely to result in a "bad thing" happening? This can become usefull in a hypothesis-testing workflow.
+3. Mapping parameter-to-output response. Often decision-support modelling is interested in avoiding an undesired outcome for some forecast of interest. Sensitivity analysis can be employed to assess which parameters (or parameter combinations) are most responsible for producing output in the region of interest. In other words, which parameter (and parameter values) are most likely to result in a "bad thing" happening? This can become useful in a hypothesis-testing workflow.
 
 
 ## GSA with PEST++
 
-[PEST++SEN](https://github.com/usgs/pestpp/blob/master/documentation/pestpp_users_manual.md#7-pestpp-sen) currently supports two GSA meth­ods. These are:
+[PEST++SEN](https://github.com/usgs/pestpp/blob/master/documentation/pestpp_users_manual.md#7-pestpp-sen) currently supports two GSA methods. These are:
 
  - the __Method of Morris__ (Morris, 1991), with extensions proposed by Campolongo et al (2005), and
  - the __Method of Sobol__ (Sobol, 2001).
@@ -48,7 +48,7 @@ The method samples the sensitivity of a given parameter at several locations ove
 
 ## The Current Tutorial
 
-In this notebook we will undertake GSA of the Freyberg model that employs pilot points as a parameterisation device. We will use the same model and PEST setup as in the "freyberg_1_local_sensitivty" tutorial ntoebook, and employ the Method of Morris.
+In this notebook we will undertake GSA of the Freyberg model that employs pilot points as a parameterisation device. We will use the same model and PEST setup as in the "freyberg_1_local_sensitivity" tutorial notebook, and employ the Method of Morris.
 
 ### Admin
 
@@ -142,13 +142,13 @@ pst_name = "freyberg_pp.pst"
 pst = pyemu.Pst(os.path.join(working_dir,pst_name))
 #update parameter data
 par = pst.parameter_data
-#update paramter transform
+#update parameter transform
 par.loc[:, 'partrans'] = 'log'
 ```
 
 
 ```python
-# rewrite the contorl file!
+# rewrite the control file!
 pst.write(os.path.join(working_dir,pst_name))
 ```
 
@@ -157,9 +157,9 @@ pst.write(os.path.join(working_dir,pst_name))
 
 # Global Sensitivity
 
-Unlike in the local sensitivty tutorial, we are no longer reliant on the exitence of a Jacobian matrix. 
+Unlike in the local sensitivity tutorial, we are no longer reliant on the existence of a Jacobian matrix. 
 
-However, to implement the Method of Morris we need to run the model a certain number of times for each adjustable parameter.   By default (no extra settings), PEST++SEN will run the Method of Morris with 4 discretization points for each parameter, plus the 4 new starting points from the intial conditions (4 runs). Effectively this will take 4 times as much computational time as calcualting a Jacobian matrix would. 
+However, to implement the Method of Morris we need to run the model a certain number of times for each adjustable parameter.   By default (no extra settings), PEST++SEN will run the Method of Morris with 4 discretization points for each parameter, plus the 4 new starting points from the initial conditions (4 runs). Effectively this will take 4 times as much computational time as calculating a Jacobian matrix would. 
 
 Fortunately, we can run it in parallel.
 
@@ -195,7 +195,7 @@ Let's look at a table and plot of the GSA results.  In this case we are looking 
 
 >If the __standard deviation is low__, then the linear assumptions of FOSM holds (that is, the sensitivity is the similar regardless of starting value).  
 
-### Parameter Sensitvities
+### Parameter Sensitivities
 
 PES++SEN has written an output file with the extension `*.msn`. This file lists method of Morris outputs (μ, μ* and σ) for each adjustable parameter. The model-generated quantity for which these provide sensitivity measures is the objective function. 
 
@@ -293,11 +293,11 @@ plt.yscale('log');
     
 
 
-Where mean absolute sensitivity ($μ*$) - blue bars - is large, shows that the parameter is sensitive across parameter space. The parameters `rch0` and `strinf` stand out. This is logical, as it is reasonable that they both have a singificant control on the systems' water budget (reminder: these parameters are global recharge and stream inflow rates). 
+Where mean absolute sensitivity ($μ*$) - blue bars - is large, shows that the parameter is sensitive across parameter space. The parameters `rch0` and `strinf` stand out. This is logical, as it is reasonable that they both have a significant control on the systems' water budget (reminder: these parameters are global recharge and stream inflow rates). 
 
-Other parameters which are notable are `ne1` (porosity) and `rch1` (recharge in the future). Sensitivities for these are non-existent. Is this reasoanble? In this case - yes. Why? Becasue we have no observations in the calibration dataset that inform these parameters. We have no measurments in the future which might provide information on rechareg (because it is the future..), and we have no measurments of transport or flow velocities which might infrm porosity.
+Other parameters which are notable are `ne1` (porosity) and `rch1` (recharge in the future). Sensitivities for these are non-existent. Is this reasonable? In this case - yes. Why? Because we have no observations in the calibration dataset that inform these parameters. We have no measurements in the future which might provide information on recharge (because it is the future..), and we have no measurements of transport or flow velocities which might inform porosity.
 
-This means that, from a ___parameter estimation___ perspective, these two parameter groups are not important. If we aare concerned with computational cost, we could potentialy omit them from parameter esitmation. However! These results tell us nothing about their importance from a forecast perspecitve. So we may still need to include them during uncertainty analysis.
+This means that, from a ___parameter estimation___ perspective, these two parameter groups are not important. If we are concerned with computational cost, we could potentially omit them from parameter estimation. However! These results tell us nothing about their importance from a forecast perspective. So we may still need to include them during uncertainty analysis.
 
 
 
@@ -353,6 +353,6 @@ for forecast in pst.forecast_names:
     
 
 
-As you can see, different forecasts are sensitive to different parameters. Note, for example, that the `part_time` (particle travel time) forecast is sensitive to `ne1` (porostity) parameters, however none of the other forecasts are. Almost all forecasts are sensitive to recharge (`rch0` and `rch1`), and so on. By ranking sensitivities in this fashion, we can identify which parameters to focus on to reduce forecast uncertainty. We can also identify parameters which can be omitted (or "simplified"), if they have little or no effect on the forecast of interest (e.g. porosity on the `headwater` forecast).
+As you can see, different forecasts are sensitive to different parameters. Note, for example, that the `part_time` (particle travel time) forecast is sensitive to `ne1` (porosity) parameters, however none of the other forecasts are. Almost all forecasts are sensitive to recharge (`rch0` and `rch1`), and so on. By ranking sensitivities in this fashion, we can identify which parameters to focus on to reduce forecast uncertainty. We can also identify parameters which can be omitted (or "simplified"), if they have little or no effect on the forecast of interest (e.g. porosity on the `headwater` forecast).
 
-As we saw above for parameters, once again σ is very high (for almost all parameters...). This suggests either non-lienarity and/or parameter interactions. Relying on linear methods for uncertainty analysis is therefore compromised. Ideally we should employ non-linear methods, as will be discussed in the subsequent tutorial.
+As we saw above for parameters, once again σ is very high (for almost all parameters...). This suggests either non-linearity and/or parameter interactions. Relying on linear methods for uncertainty analysis is therefore compromised. Ideally we should employ non-linear methods, as will be discussed in the subsequent tutorial.

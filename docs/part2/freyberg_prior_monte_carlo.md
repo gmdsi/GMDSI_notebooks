@@ -8,9 +8,9 @@ math: mathjax3
 
 # Prior Monte Carlo
 
-Prior-based (or "unconstrained") Monte Carlo is a usefull, but quite often underused, analysis. It is conceptually simple, does not require much in terms of algorithmic controls and forces the modeller to think about the prior parameter probability distribution - both the mean vector (i.e. the initial parameter values) and the prior parameter covariance matrix. 
+Prior-based (or "unconstrained") Monte Carlo is a useful, but quite often underused, analysis. It is conceptually simple, does not require much in terms of algorithmic controls and forces the modeller to think about the prior parameter probability distribution - both the mean vector (i.e. the initial parameter values) and the prior parameter covariance matrix. 
 
-The idea is simple: sample many sets of parameters (i.e. an ensemble) from a prior probability distribution and run the model forward for each realization in this ensemble and collate the results. Do not try and fit historical data (yet!). Do not throw any of the simulations out because they "do not represent historical data well". This allows us to explore the entire range of model outcomes across the (prior) range of parameter vaues. It let's us investigate model stability (e.g. can the model setup handle the parameters we are throwing at it?). It also let's us start to think critically about what observations the model will be able to match.
+The idea is simple: sample many sets of parameters (i.e. an ensemble) from a prior probability distribution and run the model forward for each realization in this ensemble and collate the results. Do not try and fit historical data (yet!). Do not throw any of the simulations out because they "do not represent historical data well". This allows us to explore the entire range of model outcomes across the (prior) range of parameter values. It let's us investigate model stability (e.g. can the model setup handle the parameters we are throwing at it?). It also let's us start to think critically about what observations the model will be able to match.
 
 Sometimes, it shows us that history matching is not required - saving us a whole lot of time and effort!
 
@@ -22,7 +22,7 @@ In this notebook we will demonstrate:
 
 ### The modified Freyberg PEST dataset
 
-The modified Freyberg model is introduced in another tutorial notebook (see "freyberg intro to model"). The current notebook picks up following the "freyberg psfrom pest setup" notebook, in which a high-dimensional PEST dataset was constructed using `pyemu.PstFrom`. You may also wish to go through the "intro to pyemu" notebook beforehand.
+The modified Freyberg model is introduced in another tutorial notebook (see "freyberg intro to model"). The current notebook picks up following the "freyberg pstfrom pest setup" notebook, in which a high-dimensional PEST dataset was constructed using `pyemu.PstFrom`. You may also wish to go through the "intro to pyemu" notebook beforehand.
 
 The next couple of cells load necessary dependencies and call a convenience function to prepare the PEST dataset folder for you. This is the same dataset that was constructed during the "freyberg pstfrom pest setup" tutorial. Simply press `shift+enter` to run the cells.
 
@@ -119,7 +119,7 @@ pyemu.os_utils.run("pestpp-ies freyberg_mf6.pst",cwd=t_d)
 
 Now, we are going to run `pestpp-swp` in parallel. 
 
-To speed up the process, you will want to distribute the workload across as many parallel agents as possible. Normally, you will want to use the same number of agents (or less) as you have available CPU cores. Most personal computers (i.e. desktops or laptops) these days have between 4 and 10 cores. Servers or HPCs may have many more cores than this. Another limitation to keep in mind is the read/write speed of your machines disk (e.g. your hard drive). PEST and the model software are going to be reading and writting lots of files. This often slows things down if agents are competing for the same resources to read/write to disk.
+To speed up the process, you will want to distribute the workload across as many parallel agents as possible. Normally, you will want to use the same number of agents (or less) as you have available CPU cores. Most personal computers (i.e. desktops or laptops) these days have between 4 and 10 cores. Servers or HPCs may have many more cores than this. Another limitation to keep in mind is the read/write speed of your machines disk (e.g. your hard drive). PEST and the model software are going to be reading and writing lots of files. This often slows things down if agents are competing for the same resources to read/write to disk.
 
 The first thing we will do is specify the number of agents we are going to use.
 
@@ -147,7 +147,7 @@ If you open the tutorial folder, you should also see a bunch of new folders ther
 
 This run should take several minutes to complete (depending on the number of workers and the speed of your machine). If you get an error, make sure that your firewall or antivirus software is not blocking `pestpp-swp` from communicating with the agents (this is a common problem!).
 
-> **Pro Tip**: Running PEST from within a `jupyter notebook` has a tendency to slow things down and hog alot of RAM. When modelling in the "real world" it is more efficient to implement workflows in scripts which you can call from the command line.
+> **Pro Tip**: Running PEST from within a `jupyter notebook` has a tendency to slow things down and hog a lot of RAM. When modelling in the "real world" it is more efficient to implement workflows in scripts which you can call from the command line.
 
 
 ```python
@@ -180,7 +180,7 @@ obs_df = obs_df.loc[obs_df.failed_flag==0,:]
 print('number of realization in the ensemble **after** dropping: ' + str(obs_df.shape[0]))
 ```
 
-Are they the same? Good, that means none failed. If any had failed, this would be an opportunity to go and figure out why, by identifying the parameter realisations that failed and figuring out why they may have had trouble converging. This might lead to discovering inadequacies in the model configuration and/or parameterisation.  Better to catch them now, before spending alot of effort history matching the model... 
+Are they the same? Good, that means none failed. If any had failed, this would be an opportunity to go and figure out why, by identifying the parameter realisations that failed and figuring out why they may have had trouble converging. This might lead to discovering inadequacies in the model configuration and/or parameterisation.  Better to catch them now, before spending a lot of effort history matching the model... 
 
 We can take a look at the distribution of Phi obtained for the ensemble. Some pretty high values there. But that's fine. We are not concerned with getting a "good fit" in prior MC.
 
@@ -189,21 +189,21 @@ We can take a look at the distribution of Phi obtained for the ensemble. Some pr
 obs_df.phi.hist()
 ```
 
-More important is to inspect whether the ***distribution*** of simulated observations encompass measured values. Our first concern is to ensure that the model is ***able*** to captured observed behaviour. If measured values do not fall within the range of simualted values, this is a sign that something ain't right and we should revisit our model or prior parameter distributions.
+More important is to inspect whether the ***distribution*** of simulated observations encompass measured values. Our first concern is to ensure that the model is ***able*** to captured observed behaviour. If measured values do not fall within the range of simulated values, this is a sign that something ain't right and we should revisit our model or prior parameter distributions.
 
 
-A quick check is to plot stochastic (ensemble-based) 1-to-1 plots. We can plot 1to1 plots for obsvervation groups using the `pyemu.plot_utils.ensemble_res_1to1()` method. However, in our case that will result in lots of plots (we have many obs groups!). 
+A quick check is to plot stochastic (ensemble-based) 1-to-1 plots. We can plot 1to1 plots for observation groups using the `pyemu.plot_utils.ensemble_res_1to1()` method. However, in our case that will result in lots of plots (we have many obs groups!). 
 
 
 ```python
 #pyemu.plot_utils.ensemble_res_1to1(obs_df, pst);
 ```
 
-Feel free to uncomment the previous cell and see what happens. This can be usefull for a quick review, but for the purposes of this tutorial, let's just look at four observation groups (recall, each group is made up of a time series of observations from a single location).
+Feel free to uncomment the previous cell and see what happens. This can be useful for a quick review, but for the purposes of this tutorial, let's just look at four observation groups (recall, each group is made up of a time series of observations from a single location).
 
-Now, this plot does not look particularily pretty...but we aren't here for pretty, we are here for results! What are we concerned with? Whether the range of ensemble simulated outcomes form the prior covers the measured values. Recall that plots on the left are 1to1 plots and on the right the residuals ar edisplayed.  In both cases, a grey line represents the range of simulated values for a given observation
+Now, this plot does not look particularly pretty...but we aren't here for pretty, we are here for results! What are we concerned with? Whether the range of ensemble simulated outcomes form the prior covers the measured values. Recall that plots on the left are 1to1 plots and on the right the residuals are displayed.  In both cases, a grey line represents the range of simulated values for a given observation
 
-In plots on the left, each grey line should interesect the 1-to-1 line. In the plots on the right, each grey line should intersect the "zero-residual" line. 
+In plots on the left, each grey line should intersect the 1-to-1 line. In the plots on the right, each grey line should intersect the "zero-residual" line. 
 
 
 ```python
@@ -242,7 +242,7 @@ pyemu.plot_utils.ensemble_res_1to1(obs_df,
 
 Another, perhaps coarser, method to quickly explore outcomes is to look at histograms of observations. 
 
-The following figure groups obsevrations according to type (just to lump them together and make a smaller plot) and then plots histograms of observation values. Grey shaded columns represent simulated values from the prior. Red shaded columns represent the ensemble of measured values + noise. The grey columns should ideally be spread wider than the red columns.
+The following figure groups observations according to type (just to lump them together and make a smaller plot) and then plots histograms of observation values. Grey shaded columns represent simulated values from the prior. Red shaded columns represent the ensemble of measured values + noise. The grey columns should ideally be spread wider than the red columns.
 
 
 ```python
@@ -291,11 +291,11 @@ As usual, we bring this story back to the forecasts - after all they are why we 
 pst.forecast_names
 ```
 
-The following cell will plot the distribution of each forecast obtained by running the prior parameter ensemble. Because we are using a synthetic model, we also have the privilege of being able to plot the "truth" (in the real world we dont know the truth of course). 
+The following cell will plot the distribution of each forecast obtained by running the prior parameter ensemble. Because we are using a synthetic model, we also have the privilege of being able to plot the "truth" (in the real world we don't know the truth of course). 
 
 Many modelling analyses could stop here. If outcomes from a prior MC analysis show that the simulated distribution of forecasts *does not* cause some "bad-thing" to happen within an "acceptable" confidence, then you are done. No need to go and do expensive and time-consuming history-matching! 
 
-On the other hand, if the uncertainty (e.g. variance) is unacceptably wide, then it *may* be justifiable to try to reduce forecast unertainty through history matching. But only if you have forecast-sensitive observation data, and if the model is amenable to assimilating these data! How do I know that you ask? Worry not, we will get to this in subsequent tutorials.
+On the other hand, if the uncertainty (e.g. variance) is unacceptably wide, then it *may* be justifiable to try to reduce forecast uncertainty through history matching. But only if you have forecast-sensitive observation data, and if the model is amenable to assimilating these data! How do I know that you ask? Worry not, we will get to this in subsequent tutorials.
 
 
 
@@ -312,7 +312,7 @@ for forecast in pst.forecast_names:
 
 The workflow above demonstrated how to use `pestpp-swp` to undertake a "sweep" of model runs. Here, we undertook prior Monte Carlo by running models with an ensemble of parameter sets sampled from the prior parameter probability distribution. 
 
-The same can be accomplished with `pestpp-ies` by assigning the `NOPTMAX` control variable to -1 and either providing `pestpp-ies` with a predefined parameter ensebmle (the same as we did for `pestpp-swp`) or by providing the parameter covariance matrix and allowing `pestpp-ies` to sample from the prior itself.
+The same can be accomplished with `pestpp-ies` by assigning the `NOPTMAX` control variable to -1 and either providing `pestpp-ies` with a predefined parameter ensemble (the same as we did for `pestpp-swp`) or by providing the parameter covariance matrix and allowing `pestpp-ies` to sample from the prior itself.
 
 The next few cells do something slightly different. Here we will use `pestpp-ies` to undertake prior MC, but assuming no correlation between parameters. Here, prior parameter uncertainty is diagonal and determined solely based on the parameter bounds in the PEST control file. 
 

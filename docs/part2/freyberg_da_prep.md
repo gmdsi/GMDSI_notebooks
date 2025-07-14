@@ -12,7 +12,7 @@ Sequential state-parameter estimation is a whole new beast for the PEST world.  
 
 ### The modified Freyberg PEST dataset
 
-The modified Freyberg model is introduced in another tutorial notebook (see "freyberg intro to model"). The current notebook picks up following the "freyberg psfrom pest setup" notebook, in which a high-dimensional PEST dataset was constructed using `pyemu.PstFrom`. You may also wish to go through the "intro to pyemu" notebook beforehand.
+The modified Freyberg model is introduced in another tutorial notebook (see "freyberg intro to model"). The current notebook picks up following the "freyberg pstfrom pest setup" notebook, in which a high-dimensional PEST dataset was constructed using `pyemu.PstFrom`. You may also wish to go through the "intro to pyemu" notebook beforehand.
 
 The next couple of cells load necessary dependencies and call a convenience function to prepare the PEST dataset folder for you. This is the same dataset that was constructed during the "freyberg pstfrom pest setup" tutorial. Simply press `shift+enter` to run the cells.
 
@@ -77,7 +77,7 @@ with open(os.path.join(t_d,"freyberg6.tdis"),'w') as f:
           
 ```
 
-Now, just make sure we havent done something dumb (er than usual):
+Now, just make sure we haven't done something dumb (er than usual):
 
 
 ```python
@@ -88,7 +88,7 @@ pyemu.os_utils.run("mf6",cwd=t_d)
 
 ## This is going to be rough...
 
-First, let's assign cycle numbers to the time-varying parameters and their template files.  The "cycle" concept is core to squential estimation with PESTPP-DA.  A cycle can be thought of as a unit of simulation time that we are interested in. In the PEST interface, a cycle defines a set of parameters and observations, so you can think of a cycle as a "sub-problem" in the PEST since - PESTPP-DA creates this subproblem under the hood for us. For a given cycle, we will "assimilate" all non-zero weighted obsevations in that cycle using the adjustable parameters and states in that cycle.  If a parameter/observation (and associated input/outputs files) are assigned a cycle value of -1, that means it applies to all cycles. 
+First, let's assign cycle numbers to the time-varying parameters and their template files.  The "cycle" concept is core to sequential estimation with PESTPP-DA.  A cycle can be thought of as a unit of simulation time that we are interested in. In the PEST interface, a cycle defines a set of parameters and observations, so you can think of a cycle as a "sub-problem" in the PEST since - PESTPP-DA creates this subproblem under the hood for us. For a given cycle, we will "assimilate" all non-zero weighted observations in that cycle using the adjustable parameters and states in that cycle.  If a parameter/observation (and associated input/outputs files) are assigned a cycle value of -1, that means it applies to all cycles. 
 
 
 ```python
@@ -174,7 +174,7 @@ df.loc[rchppdf.index,"model_file"] = rchppdf.model_file.iloc[0]
 df.loc[rchppdf.index,:].head()
 ```
 
-Now we need to set the cycle numbers for the parmaeters themselves - good luck doing this with recarrays!
+Now we need to set the cycle numbers for the parameters themselves - good luck doing this with recarrays!
 
 
 ```python
@@ -182,7 +182,7 @@ par = pst.parameter_data
 par.loc[:,"cycle"] = -1
 ```
 
-time-varying well parameters - the parmaeter instance ("inst") value assigned by `PstFrom` correspond to the zero-based stress period number, so we can just use that as the cycle value - nice!
+time-varying well parameters - the parameter instance ("inst") value assigned by `PstFrom` correspond to the zero-based stress period number, so we can just use that as the cycle value - nice!
 
 
 ```python
@@ -446,7 +446,7 @@ for site in sites:
 odata
 ```
 
-### Buidling the observation and weight cycle tables
+### Building the observation and weight cycle tables
 
 Since we have observations at the same spatial locations across cycles, but we have only one "observation" (and there for `obsval` and `weight`) for that location in the control file.  So we can use the pestpp-da specific options: the observation and weight cycle table.
 

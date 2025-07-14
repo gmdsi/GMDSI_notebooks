@@ -10,7 +10,7 @@ math: mathjax3
 > ### _"When the facts change, I change my mind. What do you do, sir?"_
 > --John Maynard Keynes
 
-Loosely, Bayes' Theorem can be interpeted as 
+Loosely, Bayes' Theorem can be interpreted as
 
 $$P\left(\boldsymbol{\theta}|\textbf{d}\right)=\frac{P\left(\textbf{d}|\boldsymbol{\theta}\right) P\left> (\boldsymbol{\theta}\right)}{P\left(\textbf{d}\right)}$$
  
@@ -116,7 +116,7 @@ Prior_thnw = 0.1
 
 Now we can ask questions like, "what is the probability the plant is dead?"
 
-To calculate, we add up all the conditional probablities like this:
+To calculate, we add up all the conditional probabilities like this:
 
 $$P\left(d_d\right) = P\left(d_d\cap\theta_w\right) + P\left(d_d\cap\theta_{nw}\right)$$
 
@@ -205,7 +205,7 @@ print("having seen it's alive is {0:.3f}".format(PthnwDa))
 
 Right then, but we are in the world of continuous variables, not simple discrete probabilities
 
-This means that we end up with probability density functions rather than discrete probabilities and the denominator on the RHS gets tricky to evaluate (the total probability). Luckily, we are mostly conncerned with finding the parameters that maximize the probability and less concerned with the probability itself.
+This means that we end up with probability density functions rather than discrete probabilities and the denominator on the RHS gets tricky to evaluate (the total probability). Luckily, we are mostly concerned with finding the parameters that maximize the probability and less concerned with the probability itself.
 
 <img src="intro_to_bayes_files/Fig10.3_Bayes_figure.png" style="inline: left; width: 75%; margin-right: 1%; margin-bottom: 0.5em;">
 

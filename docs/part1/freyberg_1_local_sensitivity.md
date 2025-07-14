@@ -8,20 +8,20 @@ math: mathjax3
 
 # Local Parameter Sensitivity and Identifiability
 
-Sensitivity analysis maks use of a Joacoban matrix to determine statistical insights into a model. We have already discussed the Jacobian matrix in a few places. It is calculated by perturbing the parameter (usually 1%) and tracking what happens to each observation.  In a general form the sensitivity equation looks like eq. 9.7 Anderson et al. 2015:
+Sensitivity analysis makes use of a Joacoban matrix to determine statistical insights into a model. We have already discussed the Jacobian matrix in a few places. It is calculated by perturbing the parameter (usually 1%) and tracking what happens to each observation.  In a general form the sensitivity equation looks like eq. 9.7 Anderson et al. 2015:
 
 <img src="freyberg_1_local_sensitivity_files/Sensitivity_eq.png" style="float: center">
 
 This is key for derivative-based parameter estimation because, as we've seen, it allows us to efficiently compute upgraded parameters to try during the lambda search.  But the Jacobian matrix can give us insight about the model in and of itself.  
 
-### Parameter Sensitivty
+### Parameter Sensitivity
 
 Recall that a Jacobian matrix stores parameter-to-observation sensitivities.  For each parameter-observation combination, we can see how much the observation value changes due to a small change in the parameter. If $y$ are the observations and $x$ are the parameters, the equation for the $i^th$ observation with respect to the $j^th$ parameter is:  
 $$\frac{\partial y_i}{\partial x_j}$$
 This can be approximated by finite differences as :  
 $$\frac{\partial y_i}{\partial x_j}~\frac{y\left(x+\Delta x \right)-y\left(x\right)}{\Delta x}$$
 
-___Insensitive parameters___ (i.e. parameters which are not informed by calibration) are defined as those which have sensitivity coefficients larger than a modeller specified value (Note: this is subjective! In practice, insensitive parameters are usually defined has having a sensitiveity coeficient two orders of magnitude lower than the most sensitive parameter.)
+___Insensitive parameters___ (i.e. parameters which are not informed by calibration) are defined as those which have sensitivity coefficients larger than a modeller specified value (Note: this is subjective! In practice, insensitive parameters are usually defined has having a sensitiveity coefficient two orders of magnitude lower than the most sensitive parameter.)
 
 
 ### Parameter Identifiability
@@ -31,9 +31,9 @@ Parameter identifiability is considered a "linear method" in that it assumes the
 
 ### Limitations
 
-As has been mentioned a couple of times now, sensitivity and identifiability assumes that the relation between parameter and obsevration changes are linear. These sensitivities are tested for a single parameter set (i.e. the parameter values listed in the PEST control file). This parameter set can be before or after calibration (or any where in between). The undelying assumption is that the linear relation holds. 
+As has been mentioned a couple of times now, sensitivity and identifiability assumes that the relation between parameter and observation changes are linear. These sensitivities are tested for a single parameter set (i.e. the parameter values listed in the PEST control file). This parameter set can be before or after calibration (or any where in between). The underlying assumption is that the linear relation holds. 
 
-In practice, this is rarely the case. Thus, sensitivities obtained during derivative-based parameter estimation is ___local___. It only holds up in the vicinity of the current parameters. That being said, it is a quick and computationaly efficient method to gain insight into the model and links between parameters and simualted outputs. 
+In practice, this is rarely the case. Thus, sensitivities obtained during derivative-based parameter estimation is ___local___. It only holds up in the vicinity of the current parameters. That being said, it is a quick and computationally efficient method to gain insight into the model and links between parameters and simulated outputs. 
 
 An alternative is to employ _global_ sensitivity analysis methods, which we introduce in a subsequent notebook.
 
@@ -44,7 +44,7 @@ An alternative is to employ _global_ sensitivity analysis methods, which we intr
 
 ## Admin
 
-We are going to pick up where the "Freyberg pilot points" tutorials left off. The cells bellow prepare the model and PEST files.
+We are going to pick up where the "Freyberg pilot points" tutorials left off. The cells below prepare the model and PEST files.
 
 
 ```python
@@ -161,7 +161,7 @@ For the sake of this tutorial, let's set all the parameters free:
 
 ```python
 par = pst.parameter_data
-#update paramter transform
+#update parameter transform
 par.loc[:, 'partrans'] = 'log'
 #check adjustable parameter groups again
 pst.adj_par_groups
@@ -182,7 +182,7 @@ First Let's calculate a single Jacobian by changing the NOPTMAX = -2.  This will
 ```python
 # change noptmax
 pst.control_data.noptmax = -2
-# rewrite the contorl file!
+# rewrite the control file!
 pst.write(os.path.join(working_dir,pst_name))
 ```
 
@@ -204,7 +204,7 @@ pyemu.os_utils.start_workers(working_dir, # the folder which contains the "templ
 
 # Sensitivity
 
-Okay, let's examing the *local sensitivities* by looking at the local gradients of parameters with respect to observations (the Jacobian matrix from the PEST++ NOPTMAX = -2 run)
+Okay, let's examining the *local sensitivities* by looking at the local gradients of parameters with respect to observations (the Jacobian matrix from the PEST++ NOPTMAX = -2 run)
 
 We'll use `pyemu` to do this:
 
@@ -395,7 +395,7 @@ We can see that some parameters (e.g. `rch0`) have a large effect on the observa
 ## How about Composite Scaled Sensitivities
 As can be seen above, parameter sensitivity for any given parameter is split among all the observations in the Jacobian matrix, but the parameter sensitivity that is most important for parameter estimation is the *total* parameter sensitivity, which reflects contributions from all the observations.  
 
-How to sum the individual sensitivities in the Jacobian matrix in the most meaningful way?  In the traditional, overdetermined regression world, CSS was a popular metric. CSS is Composite Scaled Sensitivitity. It sums the observation *weighted* sensitivity to report a single number for each parameter.
+How to sum the individual sensitivities in the Jacobian matrix in the most meaningful way?  In the traditional, overdetermined regression world, CSS was a popular metric. CSS is Composite Scaled Sensitivity. It sums the observation *weighted* sensitivity to report a single number for each parameter.
 
 In Hill and Tiedeman (2007) this is calculated as: 
 $${css_{j}=\sqrt{\left(\sum_{i-1}^{ND}\left(\frac{\partial y'_{i}}{\partial b_{j}}\right)\left|b_{j}\right|\sqrt{w_{ii}}\right)/ND}}$$
@@ -409,7 +409,7 @@ Let's instantiate a `Schur` object (see the "intro to fosm" tutorials) to calcul
 # instantiate schur
 sc = pyemu.Schur(jco=os.path.join(m_d,pst_name.replace(".pst",".jcb")))
 
-# calcualte the parameter CSS
+# calculate the parameter CSS
 css_df = sc.get_par_css_dataframe()
 css_df.sort_values(by='pest_css', ascending=False).plot(kind='bar', figsize=(13,3))
 plt.yscale('log')
@@ -421,7 +421,7 @@ plt.yscale('log')
     
 
 
-Note that the reltive ranks of the `hk` parameters agree between the two...but no so for the `rchpp` ilot point parameters, nor the `rch0` parameter. According to `pest_css` the `rch0` is the most sensitive. Not so for the `hill_css`.  Why might this be?
+Note that the relative ranks of the `hk` parameters agree between the two...but no so for the `rchpp` ilot point parameters, nor the `rch0` parameter. According to `pest_css` the `rch0` is the most sensitive. Not so for the `hill_css`.  Why might this be?
 
 > hint: what is the initial value of `rch0`?  What is the log of that initial value?  
 
@@ -712,7 +712,7 @@ covar.df().head()
 For covariance, very small numbers reflect that the parameter doesn't covary with another.  (Does it make sense that `rch1` does not covary with other parameters?)
 
 
-### We can visualize the correlation betwen the two parameters using a correlation coefficient
+### We can visualize the correlation between the two parameters using a correlation coefficient
 
 
 ```python
@@ -734,7 +734,7 @@ plt.colorbar()
     
 
 
-As expected, the parameters are correlated perfectly to themselves (1.0 along the yellow diagonal) buth they also can have appreciable correlation to each other, both positively and negatively.
+As expected, the parameters are correlated perfectly to themselves (1.0 along the yellow diagonal) but they also can have appreciable correlation to each other, both positively and negatively.
 
 #### Inspect correlation for a single parameter
 
@@ -785,7 +785,7 @@ plt.colorbar();
     
 
 
-In practice, correlation >0.95 or so becomes a problem for obtainning a unique solution to the parameter estimation problem. (A problem which can be avoided with regularization.)
+In practice, correlation >0.95 or so becomes a problem for obtaining a unique solution to the parameter estimation problem. (A problem which can be avoided with regularization.)
 
 # Identifiability
 
@@ -1024,7 +1024,7 @@ id = pyemu.plot_utils.plot_id_bar(id_df, nsv=10, figsize=(14,4))
 
 # Display Spatially
 
-It can be usefull to display sensitivities or identifiabilities spatially. Pragmatically this can be acomplished by assigning sensitivity/identifiability values to pilot points (as if they were parameter values) and then interpolating to the model grid.
+It can be useful to display sensitivities or identifiabilities spatially. Pragmatically this can be accomplished by assigning sensitivity/identifiability values to pilot points (as if they were parameter values) and then interpolating to the model grid.
 
 The next cells do this in the background for the `hk1` pilot parameter identifiability.
 
@@ -1071,9 +1071,9 @@ hbd.plot_arr2grid(css_hk, working_dir, title='Sensitivity')
 
 # So what?
 
-So what is this usefull for? Well if we have a very long-running model and many adjstable parameters - _and if we really need to use derivative-based parameter estimation methods (i.e. PEST++GLM)_ - we could now identify parameters that can be fixed and/or omitted during parameter estimation (but not uncertainty analysis!). 
+So what is this useful for? Well if we have a very long-running model and many adjustable parameters - _and if we really need to use derivative-based parameter estimation methods (i.e. PEST++GLM)_ - we could now identify parameters that can be fixed and/or omitted during parameter estimation (but not uncertainty analysis!). 
 
-Looking at forecast-to-parameter sensitivities can also inform us of which parameters matter for our forecast. If a a parameter doesnt affect a forecast, then we are less concerned with it. If it does...then we may wish to give it more attention. These methods provide usefull tools for assessing details of model construction and their impact on decision-support forecasts of interest (e.g. assessing whether a boundary condition affects a forecast).
+Looking at forecast-to-parameter sensitivities can also inform us of which parameters matter for our forecast. If a a parameter doesn't affect a forecast, then we are less concerned with it. If it does...then we may wish to give it more attention. These methods provide useful tools for assessing details of model construction and their impact on decision-support forecasts of interest (e.g. assessing whether a boundary condition affects a forecast).
 
 
-But! As has been mentioned - these methods are _local_ and assume a linear relation between parameter and observation changes. As we have seen, this is usualy not the case. A more robust measure of parameter sensitivity requires the use of global sensitivity analysis methods, discussed in the next tutorial.
+But! As has been mentioned - these methods are _local_ and assume a linear relation between parameter and observation changes. As we have seen, this is usually not the case. A more robust measure of parameter sensitivity requires the use of global sensitivity analysis methods, discussed in the next tutorial.

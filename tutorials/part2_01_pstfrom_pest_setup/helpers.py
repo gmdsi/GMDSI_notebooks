@@ -3,7 +3,7 @@ import numpy as np
 
 
 def process_secondary_obs(ws='.'):
-    # load dependencies insde the function so that they get carried over to forward_run.py by PstFrom
+    # load dependencies inside the function so that they get carried over to forward_run.py by PstFrom
     import os
     import pandas as pd
 

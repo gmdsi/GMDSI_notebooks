@@ -10,7 +10,7 @@ math: mathjax3
 
 In this notebook we introduce the automated parameter estimation tools PEST and PEST++. This introduction is far from comprehensive. Our goal here is to provide you the basics to understand the "plumbing" of how PEST interacts with a "model".
 
-Recall that, for all its sophistication, automated parameter estimation software does the same things as a modeler does during manual trial-and-error.  It (1) assigns best guess parameter values, (2) runs the model, (3) compares model outputs to measured values, (4) if model-to-measurment fit is inadequate, it adjusts parameter values and repeats the process. Once model-to-meareument fit ceases to improve, it stops. As is implied by the name, all of these steps must be automated. All of the decision criteria must also be quantified and are recorded, making the process transparent and reproducible.
+Recall that, for all its sophistication, automated parameter estimation software does the same things as a modeler does during manual trial-and-error.  It (1) assigns best guess parameter values, (2) runs the model, (3) compares model outputs to measured values, (4) if model-to-measurement fit is inadequate, it adjusts parameter values and repeats the process. Once model-to-measurement fit ceases to improve, it stops. As is implied by the name, all of these steps must be automated. All of the decision criteria must also be quantified and are recorded, making the process transparent and reproducible.
 
 Here is a flow chart of manual trial-and-error history matching from *Applied Groundwater Modeling (2nd edition)* by Anderson et al. (2015): 
 
@@ -43,18 +43,18 @@ convention, template files are provided with an extension of “.tpl”. A uniqu
 
 After running the model, PEST must read observations from model output files. PEST requires instruction files in order to know where to find observation values in the output files. By convention, instruction files are provided with an extension ".ins". A single instruction file is required for each model output file which PEST must read.
 
-For any particular PEST run there is only one PEST control file. As is implied by the name, the information in this file "controls" PEST behaviour. This file contains information on how PEST decides to update parameters, whether the fit is "good enough", where model input and output files are located, how to run the model and so on. The control file is divided into sections. Each section has a specifc format and layout in which variables can be included. Many of these variables can be assigned with default values and will only require adjustment in specifc cases. We will discuss the more pertinent (or common) ones as we progress through the various tutorials. The PEST and PEST++ user manuals provide further detail. Users are encouraged to take the time to read these documents. 
+For any particular PEST run there is only one PEST control file. As is implied by the name, the information in this file "controls" PEST behaviour. This file contains information on how PEST decides to update parameters, whether the fit is "good enough", where model input and output files are located, how to run the model and so on. The control file is divided into sections. Each section has a specific format and layout in which variables can be included. Many of these variables can be assigned with default values and will only require adjustment in specific cases. We will discuss the more pertinent (or common) ones as we progress through the various tutorials. The PEST and PEST++ user manuals provide further detail. Users are encouraged to take the time to read these documents. 
 
 Most groundwater modelling graphical user interfaces (GUIs) support construction of PEST input
 datasets of varying complexity. In many cases, PEST setup achieved in this way is fit for purpose.
 However, no GUI is able to cater for every conceivable history-matching context. Hence there are
-many contexts in which a user may need to construct their own PEST input dataset. Doing so in a programatic environment makes this process automatable, replicable and much less painfull. `pyEMU` provides a `python` based interface that facilitates PEST-based workflows.  In this tutorial we will start by construting some of the PEST dataset "manually" so that you become familiar with what goes on in the background. Then, we will begin to introduce the use of `pyEMU`. Other tutorials provide general overview to `pyEMU` (see the "intro to pyemu" notebook) and demonstrate how to build a high-dimensional PEST interface from scratch (see the "freyberg pstfrom pest setup" notebook). But we are getting ahead of ourselves - we will get to those notebooks further along in the course.
+many contexts in which a user may need to construct their own PEST input dataset. Doing so in a programmatic environment makes this process automatable, replicable and much less painful. `pyEMU` provides a `python` based interface that facilitates PEST-based workflows.  In this tutorial we will start by constructing some of the PEST dataset "manually" so that you become familiar with what goes on in the background. Then, we will begin to introduce the use of `pyEMU`. Other tutorials provide general overview to `pyEMU` (see the "intro to pyemu" notebook) and demonstrate how to build a high-dimensional PEST interface from scratch (see the "freyberg pstfrom pest setup" notebook). But we are getting ahead of ourselves - we will get to those notebooks further along in the course.
 
 ### Additional Resources
 
-Providing details on all of the functionality and intricacies of PEST and PEST++ in a single tutorial is not feasible. Here we introduce you to the basics. The following are usefull resources for further reading:
+Providing details on all of the functionality and intricacies of PEST and PEST++ in a single tutorial is not feasible. Here we introduce you to the basics. The following are useful resources for further reading:
 
-- GMDSI tutorials on using PEST(++) in a non-programatic workflow: https://gmdsi.org/education/tutorials/ 
+- GMDSI tutorials on using PEST(++) in a non-programmatic workflow: https://gmdsi.org/education/tutorials/ 
 - The PEST manual: https://pesthomepage.org/documentation
 - The PEST book: https://pesthomepage.org/pest-book
 - PEST tutorials: https://pesthomepage.org/tutorials
@@ -68,7 +68,7 @@ Providing details on all of the functionality and intricacies of PEST and PEST++
 
 ### Admin
 
-We have provided some pre-cooked PEST dataset files, wrpaped around the modeified Freyberg model. The functions in the next cell import required dependencies and prepare a folder for you. This folder contains the model files and a preliminary PEST setup. Run the cells, then inspect the new folder named "pest_files" which has been created in your tutorial directory. (Just press shift-enter to run the cells). 
+We have provided some pre-cooked PEST dataset files, wrapped around the modified Freyberg model. The functions in the next cell import required dependencies and prepare a folder for you. This folder contains the model files and a preliminary PEST setup. Run the cells, then inspect the new folder named "pest_files" which has been created in your tutorial directory. (Just press shift-enter to run the cells). 
 
 
 ```python
@@ -146,7 +146,7 @@ hbd.plot_freyberg(tmp_d)
 
 In the previous tutorial on manual trial-and-error, we "manually" changed parameter values to get a good fit with measured data. We want PEST to this for us instead. To do so, we need to provide PEST with conduits that change a model input file and that extract model outputs after the model has been run. 
 
-**In this tutorial you do not *have* to get your hands dirty. However, we recomend you do. We provide all the necessary files to advance through the tutorial without any user-input. However, getting to grips with how files are constructed and the inner-workings of PEST is often insightfull. Throughout the notebook we will provide instructions to read and edit files manually (yes, yes...we know...we will get back to good old python in due course). This will require the use of a text editor software. Generic text editors (e.g notepad on Windows) are sufficent, but you will benefit from more versatile software such as Notepad++, UltraEdit, etc. There are many free options available online.**
+**In this tutorial you do not *have* to get your hands dirty. However, we recommend you do. We provide all the necessary files to advance through the tutorial without any user-input. However, getting to grips with how files are constructed and the inner-workings of PEST is often insightful. Throughout the notebook we will provide instructions to read and edit files manually (yes, yes...we know...we will get back to good old python in due course). This will require the use of a text editor software. Generic text editors (e.g notepad on Windows) are sufficient, but you will benefit from more versatile software such as Notepad++, UltraEdit, etc. There are many free options available online.**
 
 
 # Template Files
@@ -191,7 +191,7 @@ The PEST manual explains more detail about how you can control the writing of mo
 
 Let's check to see if this template file is correct using TEMPCHEK.  
 
-TEMPCHEK is a handy PEST utility that allows us to error check our template files without having to do a full PEST run. You can see exactly what files and what order TEMPCHECK is expecting them by simply typing 'TEMPCHEK" at the command line (tempchek for Windows and ./tempchek for Mac). 
+TEMPCHEK is a handy PEST utility that allows us to error check our template files without having to do a full PEST run. You can see exactly what files and what order TEMPCHEK is expecting them by simply typing 'TEMPCHEK" at the command line (tempchek for Windows and ./tempchek for Mac). 
 
 Open up a command line in the `pest_files` folder and run TEMPCHEK. You'll see:
 
@@ -217,12 +217,12 @@ Run `TEMPCHEK` __on the template file listed in  `freyberg.pst`__ and open the a
 
 Test your understanding. Construct your own template file and check it with TEMPCHEK.
 
-The easiest way to make a template file? Modify an existing input file. You can do for any moel input file. Suggest using `freyberg6.npf_k_layer1.txt` so you can compare to the provided template file.
+The easiest way to make a template file? Modify an existing input file. You can do for any model input file. Suggest using `freyberg6.npf_k_layer1.txt` so you can compare to the provided template file.
 
  1. Open the input file in a text editor
- 2. Make a copy of the input file with a new name and with .tpl extension (ex.: `test.tpl`; normaly we use the same file name as the input file, and just change the extension. Just make sure not to use the same name as we did.)
+ 2. Make a copy of the input file with a new name and with .tpl extension (ex.: `test.tpl`; normally we use the same file name as the input file, and just change the extension. Just make sure not to use the same name as we did.)
  5. Add a new line at the top of your tpl file to tell PEST that it is a template file and what the delimiter is
- 6. Do a search and replace, subsituting the variable "hk1" surrounded by the delimiter you chose where appropriate
+ 6. Do a search and replace, substituting the variable "hk1" surrounded by the delimiter you chose where appropriate
  7. Save the file and run TEMPCHEK 
 
 # Instruction files
@@ -245,7 +245,7 @@ Open one of these instruction file and model output file pairs in a text editor 
    1. Using a line advance.  PEST starts at the very top the model output file, and you have to move down 1 line to get to the first line that you see in the model output. You can tell PEST to move down the file _`n`_ lines using the `l` character (=lowercase letter l) with a number.  So "`l1`" moves down one line, "`l3`" moves down 3 lines.  
    2. Using the marker delimiter, the INS file can search through a file until it finds a "primary marker". For example:  
    "`~VOLUMETRIC BUDGET FOR ENTIRE MODEL~`" can be used to search for budgets in a LST file  
-   This is particularly well suited for output files (like a LST file) that have unpredictable lengths.  Note though that PEST will always start at the top of the file and go down, never up and never wrapping once it reaches the end.  This can be a problem when the order of some observations with respect to other observations is not consistent (e.g., some MODPATH output).  When searching for mutiple observations that may vary in order in an output file, it is easiest to have multiple instruction files open the same model output file multiple times so you are always starting at the top of the file (PEST does not mind). 
+   This is particularly well suited for output files (like a LST file) that have unpredictable lengths.  Note though that PEST will always start at the top of the file and go down, never up and never wrapping once it reaches the end.  This can be a problem when the order of some observations with respect to other observations is not consistent (e.g., some MODPATH output).  When searching for multiple observations that may vary in order in an output file, it is easiest to have multiple instruction files open the same model output file multiple times so you are always starting at the top of the file (PEST does not mind). 
    3. Next, you can search for a "secondary marker" within a line using the marker delimiter again. This navigates from the left of the line until the secondary marker is found.
    4. Once on the line you can specify which columns on a line to extract.  So a line in an instruction file that says `~101  138~ (depth_T2-90)46:58` means that PEST will look for `101  138` in the model output file (with the exact number of spaces between the two numbers) then extract column `46:58` to determine the model output that equates to the target observation `depth_T2-90` that is listed in the PEST control file.   
 5. Finally, you can read in whitespace-delimited numerical data using "`!`" around the observation name:  
@@ -285,7 +285,7 @@ Let's check an instruction file using `INSCHEK`, a handy utility that allows us 
 >     "modfile" is an [optional] model output file to be read by INSCHEK.
 > ```
 
-When succesful, `INSCHEK` writes an output file with the extension `.obs`, listing observation names that it found in the instruction file. If a model output file name was also specified, `INSCHEK` also writes the observation values it found in that file. This enables a quick check to verify that files have been setup correctly. 
+When successful, `INSCHEK` writes an output file with the extension `.obs`, listing observation names that it found in the instruction file. If a model output file name was also specified, `INSCHEK` also writes the observation values it found in that file. This enables a quick check to verify that files have been setup correctly. 
 
 Check the instruction files listed in `freyberg.pst` by running INSCHEK: 
 1) without the optional model output file/ look at output; and 
@@ -297,7 +297,7 @@ Check the instruction files listed in `freyberg.pst` by running INSCHEK:
 
 Test your understanding. Try building your own instruction file. As for TPL files, it is sometimes easiest to start by using a model output as a template.
 
-Remember to alsways check the validity of the INS file using `INSCHEK`.
+Remember to always check the validity of the INS file using `INSCHEK`.
 
 # The Control File
 
@@ -361,7 +361,7 @@ If no errors are highlighted, let's go ahead and run PEST!
 
 From the command line run __`pestpp-glm freyberg.pst`__ (Windows) or __`./pestpp-glm freyberg.pst`__ (Mac).
 
-PEST++ should commence, run the model once and then stop (should take a ouple of seconds at most). You should see something like the following in your terminal:
+PEST++ should commence, run the model once and then stop (should take a couple of seconds at most). You should see something like the following in your terminal:
 
 >```
 >-----------------------------------------
@@ -403,7 +403,7 @@ PEST++ should commence, run the model once and then stop (should take a ouple of
 >
 >  ```
 
-If you check the "pest_files" folder, you should see several new files. Open the one named "freyberg.rec". This is the PEST record file. It records lots of usefull information about the PEST run. 
+If you check the "pest_files" folder, you should see several new files. Open the one named "freyberg.rec". This is the PEST record file. It records lots of useful information about the PEST run. 
 
 If you scroll down to the end of the file you should see a line that says:
 
@@ -425,7 +425,7 @@ Now run PESTCHEK again - note that the NOPTMAX=0 warning is now gone.
 
 This will run parameter estimation on the model and will max out at 20 parameter upgrades. (This time it should take a couple of minutes.) You may have figured out by now, but NOPTMAX stands for __N__umber of __OPT__imization iterations __MAX__imum --cryptic variable names were the price one had to pay when computer RAM was exceedingly small! 
 
-Check the `freyberg.rec` file again. What has changed? Try searching for "Final phi". How does it compare to the initial Phi (which we obtained earlier by running the modell only once)? It should be a lot smaller. 
+Check the `freyberg.rec` file again. What has changed? Try searching for "Final phi". How does it compare to the initial Phi (which we obtained earlier by running the model only once)? It should be a lot smaller. 
 
 >```
 >Final composite objective function 

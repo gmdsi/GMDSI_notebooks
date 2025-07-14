@@ -8,9 +8,9 @@ math: mathjax3
 
 # Introduction to Regression
 
-This tutorial proves an overview of linear regression. It illustrates fitting a polynomial to noisy data, including the role of SSE (reponse curve), degrees of freedom, the gradient of that surface (Jacobian) and overfitting.
+This tutorial proves an overview of linear regression. It illustrates fitting a polynomial to noisy data, including the role of SSE (response curve), degrees of freedom, the gradient of that surface (Jacobian) and overfitting.
 
-We use a very simple model (a polynomial function) to illustrate these core concepts and the maths underpinning them. When the models get more complicated, we will need more powerfull tools (i.e. PEST/PEST++). However, many of the underlying concepts will be similar.
+We use a very simple model (a polynomial function) to illustrate these core concepts and the maths underpinning them. When the models get more complicated, we will need more powerful tools (i.e. PEST/PEST++). However, many of the underlying concepts will be similar.
 
 
 ```python
@@ -23,7 +23,7 @@ import ipywidgets as widgets
 ```
 
 ## First cook up some data
-In the tutorial folder there is a file named `regression_helper.py` that we have imported as `rh`. It contains functions used throught this notebook. You do not need to know the details of those functions, merely to follow the ideas discussed herein.
+In the tutorial folder there is a file named `regression_helper.py` that we have imported as `rh`. It contains functions used throughout this notebook. You do not need to know the details of those functions, merely to follow the ideas discussed herein.
 
 We are going to generate some data using the function `rh.data_cooker()`. This function sets a range of x-values, then makes a "true" set of y-values using a second degree polynomial (e.g. `best_degree=2`). 
 
@@ -59,9 +59,9 @@ rh.plot_truth(xplot,x,y_data, poly_func)
 
 We are going to construct a model with which we hope to explain the "measured" data. The intention is to use this model to subsequently make a prediction.
 
-Our model is a 2nd degree polynomial function (i.e. it has three variables). In this scenario we actualy know the number of unkown parameters that exist in "reality". Thus, in principle, it is possible to build a perfect model.
+Our model is a 2nd degree polynomial function (i.e. it has three variables). In this scenario we actually know the number of unknown parameters that exist in "reality". Thus, in principle, it is possible to build a perfect model.
 
-We will use the Numpy `poly1d()` class to generate a polynomial function as our model. We specified the coeficient $c$ as being equal to zero. Coeficients $a$ and $b$ are unkown. In the example below, we specify a "first-guess" for $a$ and $b$ as -1 and 0.5, respectively.
+We will use the Numpy `poly1d()` class to generate a polynomial function as our model. We specified the coefficient $c$ as being equal to zero. Coefficients $a$ and $b$ are unknown. In the example below, we specify a "first-guess" for $a$ and $b$ as -1 and 0.5, respectively.
 
 We can then use the `rh.plot_truth()` function to display our model with measured data and the truth.
 
@@ -83,7 +83,7 @@ rh.plot_truth(xplot,x,y_data, poly_func, model)
 
 ## Measure Model-to-Measurement Fit 
 
-History-matching (and calibration) are essentialy a search for parameters which allow a model to "better" fit a set of measurement data. This is acomplished through minimizing a so called "objective function" (often displayed as Phi, $\Phi$). The objective function can be defined in many ways. Perhaps the most common is the “**sum of squared weighted differences (or residuals)**” between model outputs and field measurements:
+History-matching (and calibration) are essentially a search for parameters which allow a model to "better" fit a set of measurement data. This is accomplished through minimizing a so called "objective function" (often displayed as Phi, $\Phi$). The objective function can be defined in many ways. Perhaps the most common is the “**sum of squared weighted differences (or residuals)**” between model outputs and field measurements:
 
 $\Phi=\sum_{i=1}^{NPAR}\left[w_{hi}(y_{i}-m\left(x_{i}\right)\right)]^{2}$
 
@@ -146,7 +146,7 @@ print('Phi =',phi_0)
 
 Now, we can use $\Phi$ to evaluate the **response surface**. In other words, "how $\Phi$ changes with changes in parameter values". 
 
-The function `rh.plot_sse()` calculates and plots $\Phi$ for a range of values of the two parameters ($a$ and $b$). Inspecting the plots below allow us to idenitfy the values of $a$ and $b$ where $\Phi$ is smallest.
+The function `rh.plot_sse()` calculates and plots $\Phi$ for a range of values of the two parameters ($a$ and $b$). Inspecting the plots below allow us to identify the values of $a$ and $b$ where $\Phi$ is smallest.
 
 
 ```python
@@ -176,11 +176,11 @@ A, B, SSE_AB = rh.contour_sse(a, b, x, y_data)
 
 ## Fit a Polynomial Function
 
-Now we will fit our polynomial model to minimize the misfit between measured and modelled values. Recall that we are assuming a polynomial of the same degree as was used to generate the data (e.g. 2 unkown parameters).
+Now we will fit our polynomial model to minimize the misfit between measured and modelled values. Recall that we are assuming a polynomial of the same degree as was used to generate the data (e.g. 2 unknown parameters).
 
 We will use the least squares method, as implemented in `scipy.optimize` package, to minimize the `errfun()` function that we wrote earlier. (Recall that `errfun()` calculates the residuals between modelled and "measured" values for our polynomial function.)
 
-Essentialy, the optimizer will iteratively adjust the value of each parameter ($a$ and $b$) in turn. By comparing the effect of parameter changes on the change in objective function ($\Phi$), it calculates the slope of the objective function surface. From this it determines the direction in parameter space to take in order to head towards the minimum value of the objective function. It does this untill it reaches some user defined criteria to stop (usualy when improvements in $\Phi$ become small).
+Essentially, the optimizer will iteratively adjust the value of each parameter ($a$ and $b$) in turn. By comparing the effect of parameter changes on the change in objective function ($\Phi$), it calculates the slope of the objective function surface. From this it determines the direction in parameter space to take in order to head towards the minimum value of the objective function. It does this until it reaches some user defined criteria to stop (usually when improvements in $\Phi$ become small).
 
 
 ```python
@@ -221,7 +221,7 @@ And if we plot modelled values with the best fit parameters:
 
 
 ```python
-# construct the model with best fit parameteres
+# construct the model with best fit parameters
 calib_model = np.poly1d(y_fit_pars_best) 
 
 # plot 
@@ -258,7 +258,7 @@ This can be approximated by finite differences as :
 
 ### $\frac{\partial y_i}{\partial x_j} \approx \frac{y\left(x+\Delta x \right)-y\left(x\right)}{\Delta x}$
 
-These provide information on how "sensitive" observations are to parameter changes. They can provide lots of usefull information, such as which parameters are more relevant for improving the fit with measured data or, perhaps more importantly, which parameters affect a simulated prediction.
+These provide information on how "sensitive" observations are to parameter changes. They can provide lots of useful information, such as which parameters are more relevant for improving the fit with measured data or, perhaps more importantly, which parameters affect a simulated prediction.
 
 `scipy.optimize.least_squares` provides a method to access a modified Jacobian matrix at the solution. Instead of changes for individual observations, here we can see how the "cost function" changes with changes in parameter values. Use the `rh.plot_jacobian()` function to display a graph of the cost function versus changes in parameter value.
 
@@ -303,7 +303,7 @@ Both plots show the same thing. The only difference is that the scale on the y-a
 Model values are updated whenever you shift the slider. (In the background a new model is "calibrated" and the new values are displayed.) Above the plot two values are shown:
 
 1. the absolute error between the true and simulated prediction;
-2. everyone's favourite satistic of "good-fit", the coefficient of determination $R^2$
+2. everyone's favourite statistic of "good-fit", the coefficient of determination $R^2$
 
 Play around with the slider. 
 
@@ -325,7 +325,7 @@ The two plots below illustrate this. Both plots illustrate how model error chang
 
 "**Data error** decreases with increasing number of parameters. However, **prediction error** increases after the ideal number of parameters is surpassed. This is deemed **overfitting**. More parameters mean the model has more flexibility to fit the measured data. But the measured data has noise! Effectively, after a certain point, we are just improving the fit by making our model very good at simulating "noise". When modeling in the real-world, we employ _regularization_ to avoid this. (Demonstrated for groundwater modelling contexts in subsequent tutorials.)
 
-**Prediction error** is minimized when we have the "correct" number of parameters (in this case, two). Using less parameters results in a worse fit with measured data, as well as greater prediction error. This is deemed **underfitting**. In this case the model does not have sufficient freedom to replicate true behaviour. In practice __this is the case for all groundwater models__. No model has as many parameters (i.e. level of detail) as the rel world. (That's why we are modelling in the first place...). 
+**Prediction error** is minimized when we have the "correct" number of parameters (in this case, two). Using less parameters results in a worse fit with measured data, as well as greater prediction error. This is deemed **underfitting**. In this case the model does not have sufficient freedom to replicate true behaviour. In practice __this is the case for all groundwater models__. No model has as many parameters (i.e. level of detail) as the real world. (That's why we are modelling in the first place...). 
 
 Using too-few parameters in a model "hard wires" in the model's inability to represent system behaviour. Using too many does not. In practice, when simulating groundwater systems, our models will never have more parameters than exist in reality. Thus, we will always be below the "true" optimal number of parameters. Overfitting in this case becomes a matter of having more adjustable parameters than measured data. During subsequent tutorials we will explore how to handle this in practice.
 
@@ -354,7 +354,7 @@ rh.plot_error_tradeoff_fine(x, y_data, poly_func)
 
 ## Linking to Groundwater Modelling
 
-At first glance, from what we have shown above, it may appear that _over_-parameterisation leads to larger erros than _under_-parameterisation. This is because this 2-parameter example is very simple. When modelling in the real-world the number of parameters of the truth is near-infinite. In the real-world __it is impossible to have more parameters than the truth__. 
+At first glance, from what we have shown above, it may appear that _over_-parameterisation leads to larger errors than _under_-parameterisation. This is because this 2-parameter example is very simple. When modelling in the real-world the number of parameters of the truth is near-infinite. In the real-world __it is impossible to have more parameters than the truth__. 
 
 In groundwater (or environmental) modelling, when we talk about overfitting, in practice we are talking about "fitting to observation noise". Fortunately, we have at our disposal techniques (i.e. regularization) to cope with this, as is discussed in subsequent tutorials. The purpose of this exercise is to demonstrate how off-the-rails things can go without expert input. 
 
@@ -364,4 +364,4 @@ So, in practice __using more parameters is better__, as it reduces the potential
 
 This notebook has been a very brief introduction to regression. This is intended as a primer, introducing a few fundamental concepts and terminology that play a role in environmental decision-support modelling. Subsequent tutorials will delve into further details as these apply to modelling of groundwater systems.
 
-Perhaps one of the main take aways should be **just because a model has a good fit with measurement data, does not make it a good predictor!**
+Perhaps one of the main take away should be **just because a model has a good fit with measurement data, does not make it a good predictor!**
