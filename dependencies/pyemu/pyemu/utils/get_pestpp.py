@@ -58,7 +58,7 @@ def get_ostag() -> str:
         return "linux"
     elif sys.platform.startswith("win"):
         return "win"
-    elif sys.platform.startswith("darwin") or sys.platform.startswith("mac"):
+    elif sys.platform.startswith("darwin"):
         return "mac"
     raise ValueError(f"platform {sys.platform!r} not supported")
 
@@ -156,9 +156,8 @@ def get_release(owner=None, repo=None, tag="latest", quiet=False) -> dict:
         try:
             with urllib.request.urlopen(request, timeout=10) as resp:
                 result = resp.read()
-                remaining = resp.headers.get("x-ratelimit-remaining",None)
-                
-                if remaining is not None and int(remaining) <= 10:
+                remaining = int(resp.headers["x-ratelimit-remaining"])
+                if remaining <= 10:
                     warnings.warn(
                         f"Only {remaining} GitHub API requests remaining "
                         "before rate-limiting"
@@ -408,7 +407,7 @@ def run_main(
 
     inconsistent_ostag_dict = {
         "win": "iwin",
-        "mac": "mac",
+        "mac": "imac",
         "linux": "linux",
     }
 

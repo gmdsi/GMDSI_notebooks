@@ -202,7 +202,7 @@ def modflow_read_hydmod_file(hydmod_file, hydmod_outfile=None):
     vc = hyd_df.obsnme.value_counts().sort_values()
     vc = list(vc.loc[vc > 1].index.values)
     if len(vc) > 0:
-        hyd_df.to_csv("hyd_df.duplicates.csv")
+        hyd_df.to_csv("hyd_df.duplciates.csv")
         obs.get_dataframe().to_csv("hyd_org.duplicates.csv")
         raise Exception("duplicates in obsnme:{0}".format(vc))
     # assert hyd_df.obsnme.value_counts().max() == 1,"duplicates in obsnme"
@@ -547,11 +547,11 @@ def setup_hds_timeseries(
         text (`str`): the text record entry in the binary file (e.g. "constant_head").
             Used to indicate that the binary file is a MODFLOW cell-by-cell budget file.
             If None, headsave or MT3D unformatted concentration file
-            is assumed.  Default is None
+            is assummed.  Default is None
         fill (`float`): fill value for NaNs in the extracted timeseries dataframe.  If
             `None`, no filling is done, which may yield model run failures as the resulting
             processed timeseries CSV file (produced at runtime) may have missing values and
-            can't be processed with the corresponding instruction file.  Default is `None`.
+            can't be processed with the cooresponding instruction file.  Default is `None`.
         precision (`str`): the precision of the binary file.  Can be "single" or "double".
             Default is "single".
 
@@ -1004,10 +1004,10 @@ def setup_hds_obs(
             If skip can also be a np.ndarry with dimensions equal to the model.
             Observations are set up only for cells with Non-zero values in the array.
             If not np.ndarray or np.scalar(skip), then skip will be treated as a lambda function that
-            returns np.nan if the value should be skipped.
+            returns np.NaN if the value should be skipped.
         prefix (`str`): the prefix to use for the observation names. default is "hds".
         text (`str`): the text tag the flopy HeadFile instance.  Default is "head"
-        precision (`str`): the precision string for the flopy HeadFile instance.  Default is "single"
+        precison (`str`): the precision string for the flopy HeadFile instance.  Default is "single"
         include_path (`bool`, optional): flag to setup the binary file processing in directory where the hds_file
         is located (if different from where python is running).  This is useful for setting up
             the process in separate directory for where python is running.
@@ -1089,7 +1089,7 @@ def setup_hds_obs(
     if skip is not None:
         for col in data_cols:
             if np.isscalar(skip):
-                df.loc[df.loc[:, col] == skip, col] = np.nan
+                df.loc[df.loc[:, col] == skip, col] = np.NaN
             elif isinstance(skip, np.ndarray):
                 assert (
                     skip.ndim >= 2
@@ -1122,7 +1122,7 @@ def setup_hds_obs(
                         == 0
                     ),
                     col,
-                ] = np.nan
+                ] = np.NaN
             else:
                 df.loc[:, col] = df.loc[:, col].apply(skip)
 
@@ -1207,7 +1207,7 @@ def apply_hds_obs(hds_file, inact_abs_val=1.0e20, precision="single", text="head
     Args:
         hds_file (`str`): a modflow head save filename. if hds_file ends with 'ucn',
             then the file is treated as a UcnFile type.
-        inact_abs_val (`float`, optional): the value that marks the minimum and maximum
+        inact_abs_val (`float`, optional): the value that marks the mininum and maximum
             active value.  values in the headsave file greater than `inact_abs_val` or less
             than -`inact_abs_val` are reset to `inact_abs_val`
     Returns:
@@ -1230,7 +1230,7 @@ def apply_hds_obs(hds_file, inact_abs_val=1.0e20, precision="single", text="head
     df = pd.DataFrame({"obsnme": pst_utils.parse_ins_file(ins_file)})
     df.index = df.obsnme
 
-    # populate metadata
+    # populate metdata
     items = ["k", "i", "j", "kper"]
     for i, item in enumerate(items):
         df.loc[:, item] = df.obsnme.apply(lambda x: int(x.split("_")[i + 1]))
@@ -1242,7 +1242,7 @@ def apply_hds_obs(hds_file, inact_abs_val=1.0e20, precision="single", text="head
     else:
         hds = flopy.utils.HeadFile(hds_file, precision=precision, text=text)
     kpers = df.kper.unique()
-    df.loc[:, "obsval"] = np.nan
+    df.loc[:, "obsval"] = np.NaN
     for kper in kpers:
         kstp = last_kstp_from_kper(hds, kper)
         data = hds.get_data(kstpkper=(kstp, kper))
@@ -1412,7 +1412,7 @@ def setup_sfr_seg_parameters(
             available as pathed in the nam_file.  Optionally, `nam_file` can be
             an existing `flopy.modflow.Modflow`.
         model_ws (`str`): model workspace for flopy to load the MODFLOW model from
-        par_cols ([`str`]): a list of segment data entries to parameterize
+        par_cols ([`str`]): a list of segment data entires to parameterize
         tie_hcond (`bool`):  flag to use same mult par for hcond1 and hcond2 for a
             given segment.  Default is `True`.
         include_temporal_pars ([`str`]):  list of spatially-global multipliers to set up for
@@ -1480,7 +1480,7 @@ def setup_sfr_seg_parameters(
     for kper, seg_data in m.sfr.segment_data.items():
         assert (
             seg_data.shape == shape
-        ), "cannot use: seg data must have the same number of entries for all kpers"
+        ), "cannot use: seg data must have the same number of entires for all kpers"
     seg_data_col_order = list(seg_data.dtype.names)
     # convert segment_data dictionary to multi index df - this could get ugly
     reform = {
@@ -1523,7 +1523,7 @@ def setup_sfr_seg_parameters(
                 ),
                 PyemuWarning,
             )
-    seg_data = seg_data[seg_data_col_order]  # reset column orders to initial
+    seg_data = seg_data[seg_data_col_order]  # reset column orders to inital
     seg_data_org = seg_data.copy()
     seg_data.to_csv(os.path.join(model_ws, "sfr_seg_pars.dat"), sep=",")
 
@@ -1647,7 +1647,7 @@ def setup_sfr_seg_parameters(
 
 
 def setup_sfr_reach_parameters(nam_file, model_ws=".", par_cols=["strhc1"]):
-    """Setup multiplier parameters for reach data, when reachinput option is specified in sfr.
+    """Setup multiplier paramters for reach data, when reachinput option is specififed in sfr.
 
 
     Args:
@@ -1655,7 +1655,7 @@ def setup_sfr_reach_parameters(nam_file, model_ws=".", par_cols=["strhc1"]):
             available as pathed in the nam_file.  Optionally, `nam_file` can be
             an existing `flopy.modflow.Modflow`.
         model_ws (`str`): model workspace for flopy to load the MODFLOW model from
-        par_cols ([`str`]): a list of segment data entries to parameterize
+        par_cols ([`str`]): a list of segment data entires to parameterize
         tie_hcond (`bool`):  flag to use same mult par for hcond1 and hcond2 for a
             given segment.  Default is `True`.
         include_temporal_pars ([`str`]):  list of spatially-global multipliers to set up for
@@ -1692,7 +1692,7 @@ def setup_sfr_reach_parameters(nam_file, model_ws=".", par_cols=["strhc1"]):
         )
     # get reachdata as dataframe
     reach_data = pd.DataFrame.from_records(m.sfr.reach_data)
-    # write initial reach_data as csv
+    # write inital reach_data as csv
     reach_data_orig = reach_data.copy()
     reach_data.to_csv(os.path.join(m.model_ws, "sfr_reach_pars.dat"), sep=",")
 
@@ -1782,7 +1782,7 @@ def setup_sfr_reach_parameters(nam_file, model_ws=".", par_cols=["strhc1"]):
 
 
 def apply_sfr_seg_parameters(seg_pars=True, reach_pars=False):
-    """apply the SFR segment multiplier parameters.
+    """apply the SFR segement multiplier parameters.
 
     Args:
         seg_pars (`bool`, optional): flag to apply segment-based parameters.
@@ -1910,7 +1910,7 @@ def setup_sfr_obs(
 
     Args:
         sft_out_file (`str`): the name and path to an existing SFR output file
-        seg_group_dict (`dict`): a dictionary of SFR segments to aggregate together for a single obs.
+        seg_group_dict (`dict`): a dictionary of SFR segements to aggregate together for a single obs.
             the key value in the dict is the base observation name. If None, all segments
             are used as individual observations. Default is None
         model (`flopy.mbase`): a flopy model.  If passed, the observation names will have
@@ -2033,7 +2033,7 @@ def apply_sfr_obs():
         None
 
     Returns:
-        **pandas.DataFrame**: a dataframe of aggregated sfr segment aquifer and outflow
+        **pandas.DataFrame**: a dataframe of aggregrated sfr segment aquifer and outflow
 
     Note:
         This is the companion function of `gw_utils.setup_sfr_obs()`.
@@ -2232,7 +2232,7 @@ def setup_sfr_reach_obs(
             seg_reach = [seg_reach]
         assert (
             np.shape(seg_reach)[1] == 2
-        ), "variable seg_reach expected shape (n,2), received {0}".format(
+        ), "varible seg_reach expected shape (n,2), received {0}".format(
             np.shape(seg_reach)
         )
         seg_reach = pd.DataFrame(seg_reach, columns=["segment", "reach"])
@@ -2529,7 +2529,7 @@ def setup_gage_obs(gage_file, ins_file=None, start_datetime=None, times=None):
             obs_ids[col] = "g{0}{1}".format(gage_type[0], col[0:2])
     with open(
         "_gage_obs_ids.csv", "w"
-    ) as f:  # write file relating obs names to meaningful keys!
+    ) as f:  # write file relating obs names to meaningfull keys!
         [f.write("{0},{1}\n".format(key, obs)) for key, obs in obs_ids.items()]
     # find passed times in df
     if times is None:
@@ -2749,8 +2749,10 @@ def write_hfb_zone_multipliers_template(m):
     with open(tpl_file, "w", newline="") as ofp:
         ofp.write("ptf ~\n")
         [ofp.write("{0}\n".format(line.strip())) for line in header]
-        hfb_in[["lay", "irow1", "icol1", "irow2", "icol2", "tpl"]].apply(
-            lambda x: ofp.write(' '.join(x.astype(str)) + '\n'), axis=1)
+        ofp.flush()
+        hfb_in[["lay", "irow1", "icol1", "irow2", "icol2", "tpl"]].to_csv(
+            ofp, sep=" ", quotechar=" ", header=None, index=None, mode="a"
+        )
 
     # make a lookup for lining up the necessary files to
     # perform multiplication with the helpers.apply_hfb_pars() function
