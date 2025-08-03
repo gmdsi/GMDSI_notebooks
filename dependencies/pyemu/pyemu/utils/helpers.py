@@ -15,6 +15,7 @@ import traceback
 import re
 import numpy as np
 import pandas as pd
+import math
 
 pd.options.display.max_colwidth = 100
 from ..pyemu_warnings import PyemuWarning
@@ -26,7 +27,7 @@ except:
     pass
 
 import pyemu
-from pyemu.utils.os_utils import run, start_workers
+from pyemu.utils.os_utils import run, start_workers,PyPestWorker
 
 
 class Trie:
@@ -90,12 +91,17 @@ class Trie:
         return self._pattern(self.dump())
 
 
-def _try_pdcol_numeric(x, first=True, **kwargs):
+def _try_pdcol_numeric(x, first=True, intadj=0, **kwargs):
     try:
         x = pd.to_numeric(x, errors="raise", **kwargs)
+        if intadj != 0:
+            if first:
+                x = pd.Series([xx + intadj if isinstance(xx, (int, np.integer)) else xx for xx in x])
+            else:
+                x = x + intadj if isinstance(x, (int, np.integer)) else x
     except ValueError as e:
         if first:
-            x = x.apply(_try_pdcol_numeric, first=False, **kwargs)
+            x = x.apply(_try_pdcol_numeric, first=False, intadj=intadj, **kwargs)
         else:
             pass
     return x
@@ -236,6 +242,158 @@ def autocorrelated_draw(pst,struct_dict,time_distance_col="distance",num_reals=1
     return full_oe
 
 
+def draw_by_group(pst, num_reals=100, sigma_range=6, use_specsim=False,
+                  struct_dict=None, delr=None, delc=None, scale_offset=True,
+                  echo=True, logger=False):
+    """Draw a parameter ensemble from the distribution implied by the initial parameter values in the
+    control file and a prior parameter covariance matrix derived from grouped geostructures.
+    Previously in pst_from.
+
+    Args:
+        pst (`pyemu.Pst`): a control file instance
+        num_reals (`int`): the number of realizations to draw
+        sigma_range (`int`): number of standard deviations represented by parameter bounds.  Default is 6 (99%
+            confidence).  4 would be approximately 95% confidence bounds
+        use_specsim (`bool`): flag to use spectral simulation for grid-scale pars (highly recommended).
+            Default is False
+        struct_dict (`dict`): a dict with keys of GeoStruct (or structure file).
+            Dictionary values can depend on the values of `use_specsim`.
+            If `use_specsim` is True, values are expected to be `list[pd.DataFrame]`
+            with dataframes indexed by parameter names and containing columns
+            [`parval1`, `pargp`, `i`, `j`, `partype`], where `i` and `j` are
+            grid index locations of grid parameters, and `partype` is used to
+            indicate grid type parameters. The draw will be independent for each
+            unique `pargp`.
+            If `use_specsim` is False, dictionary values are expected to be
+            `list[pd.DataFrame]` with dataframes indexed by parameter names and
+            containing columns ["x", "y", "parnme"], the optional `zone` column
+            can be used to draw realizations independently for different zones.
+            Alternatively, if use_specsim` is False dictionary keys and values
+            can be paths to external structure files and pilotpoint or tpl files,
+            respectively.
+        delr (`list`, optional): required for specsim (`use_specsim` is True),
+            dimension of cells along a row (i.e., column widths), specsim only
+            works with regular grids
+        delc (`list`, optional):  required for specsim (`use_specsim` is True),
+            dimension of cells along a column (i.e., row heights)
+        scale_offset (`bool`): flag to apply scale and offset to parameter bounds before calculating prior variance.
+            Dfault is True.  If you are using non-default scale and/or offset and you get an exception during
+            draw, try changing this value to False.
+        echo (`bool`): Verbosity flag passed to new Logger instance if
+            `logger`is None
+        logger (`pyemu.Logger`, optional): Object for logging process
+
+    Returns:
+        `pyemu.ParameterEnsemble`: a prior parameter ensemble
+
+    Note:
+        This method draws by parameter group
+
+        If you are using grid-style parameters, please use spectral simulation (`use_specsim=True`)
+
+    """
+    if delc is None:
+        delc = []
+    if delr is None:
+        delr = []
+    if struct_dict is None:
+        struct_dict = {}
+    if not logger:
+        logger = pyemu.Logger("draw_by_groups.log", echo=echo)
+    if pst.npar_adj == 0:
+        logger.warn("no adjustable parameters, nothing to draw...")
+        return
+    # list for holding grid style groups
+    gr_pe_l = []
+    subset = pst.parameter_data.index
+    gr_par_pe = None
+    if use_specsim:
+        if len(delr)>0 and len(delc)>0 and not pyemu.geostats.SpecSim2d.grid_is_regular(
+            delr, delc
+        ):
+            logger.lraise(
+                "draw() error: can't use spectral simulation with irregular grid"
+            )
+        logger.log("spectral simulation for grid-scale pars")
+        # loop over geostructures defined in PestFrom object
+        # (setup through add_parameters)
+        for geostruct, par_df_l in struct_dict.items():
+            par_df = pd.concat(par_df_l)  # force to single df
+            if not 'partype' in par_df.columns:
+                logger.warn(
+                    f"draw() error: use_specsim is {use_specsim} but no column named"
+                    f"'partype' to indicate grid based pars in geostruct {geostruct}"
+                    f"not using specsim"
+                )
+            else:
+                par_df = par_df.loc[par_df.partype == "grid", :]
+                if "i" in par_df.columns:  # need 'i' and 'j' for specsim
+                    grd_p = pd.notna(par_df.i)
+                else:
+                    grd_p = np.array([0])
+                # if there are grid pars (also grid pars with i,j info)
+                if grd_p.sum() > 0:
+                    # select pars to use specsim for
+                    gr_df = par_df.loc[grd_p]
+                    gr_df = gr_df.astype({"i": int, "j": int})  # make sure int
+                    # (won't be if there were nans in concatenated df)
+                    if len(gr_df) > 0:
+                        # get specsim object for this geostruct
+                        ss = pyemu.geostats.SpecSim2d(
+                            delx=delr,
+                            dely=delc,
+                            geostruct=geostruct,
+                        )
+                        # specsim draw (returns df)
+                        gr_pe1 = ss.grid_par_ensemble_helper(
+                            pst=pst,
+                            gr_df=gr_df,
+                            num_reals=num_reals,
+                            sigma_range=sigma_range,
+                            logger=logger,
+                        )
+                        # append to list of specsim drawn pars
+                        gr_pe_l.append(gr_pe1)
+                        # rebuild struct_dict entry for this geostruct
+                        # to not include specsim pars
+                        struct_dict[geostruct] = []
+                        # loop over all in list associated with geostruct
+                        for p_df in par_df_l:
+                            # if pars are not in the specsim pars just created
+                            # assign them to this struct_dict entry
+                            # needed if none specsim pars are linked to same geostruct
+                            if not p_df.index.isin(gr_df.index).all():
+                                struct_dict[geostruct].append(p_df)
+                            else:
+                                subset = subset.difference(p_df.index)
+        if len(gr_pe_l) > 0:
+            gr_par_pe = pd.concat(gr_pe_l, axis=1)
+        logger.log("spectral simulation for grid-scale pars")
+    # draw remaining pars based on their geostruct
+    if not subset.empty:
+        logger.log(f"Drawing {len(subset)} non-specsim pars")
+        pe = pyemu.helpers.geostatistical_draws(
+            pst,
+            struct_dict=struct_dict,
+            num_reals=num_reals,
+            sigma_range=sigma_range,
+            scale_offset=scale_offset,
+            subset=subset
+        )
+        logger.log(f"Drawing {len(subset)} non-specsim pars")
+        if gr_par_pe is not None:
+            logger.log(f"Joining specsim and non-specsim pars")
+            exist = gr_par_pe.columns.intersection(pe.columns)
+            pe = pe._df.drop(exist, axis=1)  # specsim par take precedence
+            pe = pd.concat([pe, gr_par_pe], axis=1)
+            pe = pyemu.ParameterEnsemble(pst=pst, df=pe)
+            logger.log(f"Joining specsim and non-specsim pars")
+    else:
+        pe = pyemu.ParameterEnsemble(pst=pst, df=gr_par_pe)
+    logger.log("drawing realizations")
+    return pe.copy()
+
+
 def geostatistical_draws(
     pst, struct_dict, num_reals=100, sigma_range=4, verbose=True,
         scale_offset=True, subset=None
@@ -260,7 +418,7 @@ def geostatistical_draws(
         scale_offset (`bool`,optional): flag to apply scale and offset to parameter bounds
             when calculating variances - this is passed through to `pyemu.Cov.from_parameter_data()`.
             Default is True.
-        subset (`array-like`, optional): list, array, set or pandas index defining subset of paramters
+        subset (`array-like`, optional): list, array, set or pandas index defining subset of parameters
             for draw.
 
     Returns
@@ -612,7 +770,7 @@ def calc_observation_ensemble_quantiles(
         tuple containing
 
         - **pandas DataFrame**: same ens object that was input but with quantile realizations
-                                appended as new rows labelled with 'q_#' where '#' is the slected quantile
+                                appended as new rows labelled with 'q_#' where '#' is the selected quantile
         - **dict**: dictionary with keys being quantiles and values being realizations
                     corresponding to each realization
     """
@@ -1473,7 +1631,7 @@ def pst_from_io_files(
 
     Returns:
         `Pst`: new control file instance with parameter and observation names
-        found in `tpl_files` and `ins_files`, repsectively.
+        found in `tpl_files` and `ins_files`, respectively.
 
     Note:
         calls `pyemu.helpers.pst_from_io_files()`
@@ -1591,7 +1749,7 @@ def apply_list_and_array_pars(arr_par_file="mult2model_info.csv", chunk_len=50):
     Args:
         arr_par_file (str):
         chunk_len (`int`): the number of files to process per multiprocessing
-            chunk in appl_array_pars().  default is 50.
+            chunk in apply_array_pars().  default is 50.
 
     Returns:
 
@@ -1612,17 +1770,39 @@ def apply_list_and_array_pars(arr_par_file="mult2model_info.csv", chunk_len=50):
             lambda x: os.path.join(*x.replace("\\","/").split("/"))
             if isinstance(x,str) else x
         )
-    arr_pars = df.loc[df.index_cols.isna()].copy()
-    list_pars = df.loc[df.index_cols.notna()].copy()
-    # extract lists from string in input df
-    list_pars["index_cols"] = list_pars.index_cols.apply(literal_eval)
-    list_pars["use_cols"] = list_pars.use_cols.apply(literal_eval)
-    list_pars["lower_bound"] = list_pars.lower_bound.apply(literal_eval)
-    list_pars["upper_bound"] = list_pars.upper_bound.apply(literal_eval)
+    if "apply_order" in df.columns:
+        df["apply_order"] = df.apply_order.astype(float)
+        uapply_values = df.apply_order.unique()
+        uapply_values.sort()
+    else:
+        df["apply_order"] = 999
+        uapply_values = [999]
+    for apply_value in uapply_values:
+        ddf = df.loc[df.apply_order==apply_value,:].copy()
+        assert ddf.shape[0] > 0
+        arr_pars = ddf.loc[ddf.index_cols.isna()].copy()
+        list_pars = ddf.loc[ddf.index_cols.notna()].copy()
+        # extract lists from string in input df
+        list_pars["index_cols"] = list_pars.index_cols.apply(literal_eval)
+        list_pars["use_cols"] = list_pars.use_cols.apply(literal_eval)
+        list_pars["lower_bound"] = list_pars.lower_bound.apply(literal_eval)
+        list_pars["upper_bound"] = list_pars.upper_bound.apply(literal_eval)
 
-    # TODO check use_cols is always present
-    apply_genericlist_pars(list_pars, chunk_len=chunk_len)
-    apply_array_pars(arr_pars, chunk_len=chunk_len)
+        if "pre_apply_function" in ddf.columns:
+            calls = ddf.pre_apply_function.dropna()
+            for call in calls:
+                print("...evaluating pre-apply function '{0}'".format(call))
+                eval(call)
+
+        # TODO check use_cols is always present
+        apply_genericlist_pars(list_pars, chunk_len=chunk_len)
+        apply_array_pars(arr_pars, chunk_len=chunk_len)
+
+        if "post_apply_function" in ddf.columns:
+            calls = ddf.post_apply_function.dropna()
+            for call in calls:
+                print("...evaluating post-apply function '{0}'".format(call))
+                eval(call)
 
 
 def _process_chunk_fac2real(chunk, i):
@@ -1639,20 +1819,29 @@ def _process_chunk_array_files(chunk, i, df):
 
 def _process_array_file(model_file, df):
     if "operator" not in df.columns:
-        df.loc[:, "operator"] = "m"
+        df["operator"] = "m"
     # find all mults that need to be applied to this array
     df_mf = df.loc[df.model_file == model_file, :]
     results = []
     org_file = df_mf.org_file.unique()
     if org_file.shape[0] != 1:
         raise Exception("wrong number of org_files for {0}".format(model_file))
-    org_arr = np.loadtxt(org_file[0], ndmin=2)
+    if "head_rows" not in df.columns:
+        skip = 0
+    else:
+        skip = df_mf.head_rows.values[0]
+    with open(org_file[0], 'r') as fp:
+         header = [fp.readline() for _ in range(skip)]
+    org_arr = np.loadtxt(org_file[0], ndmin=2, skiprows=skip)
+
 
     if "mlt_file" in df_mf.columns:
         for mlt, operator in zip(df_mf.mlt_file, df_mf.operator):
             if pd.isna(mlt):
                 continue
             mlt_data = np.loadtxt(mlt, ndmin=2)
+            if 1 in list(mlt_data.shape): # if 1d arrays
+                org_arr = org_arr.reshape(mlt_data.shape)
             if org_arr.shape != mlt_data.shape:
                 raise Exception(
                     "shape of org file {}:{} differs from mlt file {}:{}".format(
@@ -1694,16 +1883,18 @@ def _process_array_file(model_file, df):
     except AttributeError:
         fmt = "%15.6E"
     try:
-        sep = df_mf.sep.iloc[0]
+        # default to space (if fixed format file this should be taken care of
+        # in fmt string)
+        sep = df_mf.sep.fillna(' ').iloc[0]
     except AttributeError:
-        sep = np.nan
-    if np.isnan(sep):
-        sep = ''
-    np.savetxt(model_file, np.atleast_2d(org_arr), fmt=fmt, delimiter=sep)
+        sep = ' '
+    with open(model_file, 'w') as fp:
+        fp.writelines(header)
+        np.savetxt(fp, np.atleast_2d(org_arr), fmt=fmt, delimiter=sep)
 
 
 def apply_array_pars(arr_par="arr_pars.csv", arr_par_file=None, chunk_len=50):
-    """a function to apply array-based multipler parameters.
+    """a function to apply array-based multiplier parameters.
 
     Args:
         arr_par (`str` or `pandas.DataFrame`): if type `str`,
@@ -1823,14 +2014,6 @@ def apply_array_pars(arr_par="arr_pars.csv", arr_par_file=None, chunk_len=50):
     print("number of chunks to process:", len(chunks))
     if len(chunks) == 1:
         _process_chunk_array_files(chunks[0], 0, df)
-    # procs = []
-    # for chunk in chunks:  # now only spawn processor for each chunk
-    #     p = mp.Process(target=_process_chunk_model_files, args=[chunk, df])
-    #     p.start()
-    #     procs.append(p)
-    # for p in procs:
-    #     r = p.get(False)
-    #     p.join()
     else:
         with mp.get_context("spawn").Pool(
                 processes=min(mp.cpu_count(), 60)) as pool:
@@ -1864,8 +2047,8 @@ def setup_temporal_diff_obs(*args, **kwargs):
             the differencing.  The order of the observations matters for the differencing.  If False, then
             the control file order is used.  If observation names have a datetime suffix, make sure the format is
             year-month-day to use this sorting.  Default is True
-        long_names (`bool`, optional): flag to use long, descriptive names by concating the two observation names
-            that are being differenced.  This will produce names that are too long for tradtional PEST(_HP).
+        long_names (`bool`, optional): flag to use long, descriptive names by concatenating the two observation names
+            that are being differenced.  This will produce names that are too long for traditional PEST(_HP).
             Default is True.
         prefix (`str`, optional): prefix to prepend to observation names and group names.  Default is "dif".
 
@@ -1967,8 +2150,8 @@ def calc_array_par_summary_stats(arr_par_file="mult2model_info.csv"):
             elif len(zone_file) == 1:
                 zone_arr = np.loadtxt(zone_file[0])
             if zone_arr is not None:
-                arr[zone_arr == 0] = np.NaN
-                org_arr[zone_arr == 0] = np.NaN
+                arr[zone_arr == 0] = np.nan
+                org_arr[zone_arr == 0] = np.nan
 
         for stat, func in stat_dict.items():
             v = func(arr)
@@ -2087,26 +2270,6 @@ def _process_chunk_list_files(chunk, i, df):
     print("process", i, " processed ", len(chunk), "process_list_file calls")
 
 
-def _list_index_caster(x, add1):
-        vals = []
-        for xx in x:
-            if xx:
-                if (xx.strip().isdigit() or
-                        (xx.strip()[0] == '-' and xx.strip()[1:].isdigit())):
-                    vals.append(add1 + int(xx))
-                else:
-                    try:
-                        vals.append(float(xx))
-                    except Exception as e:
-                        vals.append(xx.strip().strip("'\" "))
-
-        return tuple(vals)
-
-
-def _list_index_splitter_and_caster(x, add1):
-    return _list_index_caster(x.strip("()").replace('\'', '').split(","), add1)
-
-
 def _process_list_file(model_file, df):
     # print("processing model file:", model_file)
     df_mf = df.loc[df.model_file == model_file, :].copy()
@@ -2160,7 +2323,7 @@ def _process_list_file(model_file, df):
             lambda x: [str(i) for i in x]
         )
 
-    # if writen by PstFrom this should always be comma delim - tidy
+    # if written by PstFrom this should always be comma delim - tidy
     org_data = pd.read_csv(org_file, skiprows=datastrtrow,
                            header=header, dtype='object')
     # mult columns will be string type, so to make sure they align
@@ -2198,12 +2361,9 @@ def _process_list_file(model_file, df):
             # if original model files is not zero based need to add 1
             add1 = int(mlt.zero_based == False)
 
-            mlts.index = pd.MultiIndex.from_tuples(
-                mlts.sidx.apply(
-                    lambda x: _list_index_splitter_and_caster(x,add1)
-                ),
-                names=mlt.index_cols,
-            )
+            mlts[mlt.index_cols] = mlts[mlt.index_cols].apply(
+                _try_pdcol_numeric, intadj=add1, downcast='integer')
+            mlts = mlts.set_index(mlt.index_cols)
             if mlts.index.nlevels < 2:  # just in case only one index col is used
                 mlts.index = mlts.index.get_level_values(0)
             common_idx = (
@@ -2276,10 +2436,10 @@ def build_jac_test_csv(pst, num_steps, par_names=None, forward=True):
 
     Args:
         pst (`pyemu.Pst`): existing control file
-        num_steps (`int`): number of pertubation steps for each parameter
+        num_steps (`int`): number of perturbation steps for each parameter
         par_names [`str`]: list of parameter names of pars to test.
             If None, all adjustable pars are used. Default is None
-        forward (`bool`): flag to start with forward pertubations.
+        forward (`bool`): flag to start with forward perturbations.
             Default is True
 
     Returns:
@@ -2480,7 +2640,7 @@ class SpatialReference(object):
     """
     a class to locate a structured model grid in x-y space.
     Lifted wholesale from Flopy, and preserved here...
-    ...maybe slighlty over-engineered for here
+    ...maybe slightly over-engineered for here
 
     Args:
 
@@ -3679,7 +3839,7 @@ def parse_rmr_file(rmr_file):
 
 
 def setup_threshold_pars(orgarr_file,cat_dict,testing_workspace=".",inact_arr=None):
-    """setup a thresholding 2-category binary array prcoess.
+    """setup a thresholding 2-category binary array process.
 
     Parameters:
         orgarr_file (`str`): the input array that will ultimately be created at runtime
@@ -3699,7 +3859,7 @@ def setup_threshold_pars(orgarr_file,cat_dict,testing_workspace=".",inact_arr=No
 
     """
     assert os.path.exists(orgarr_file)
-    #atleast 2d for xsections
+    #at least 2d for xsections
     org_arr = np.atleast_2d(np.loadtxt(orgarr_file))
 
     if len(cat_dict) != 2:
@@ -3707,7 +3867,14 @@ def setup_threshold_pars(orgarr_file,cat_dict,testing_workspace=".",inact_arr=No
                         format(len(cat_dict)))
 
     prop_tags,prop_vals,fill_vals = [],[],[]
-    for key,(proportion,fill_val) in cat_dict.items():
+    #print(cat_dict[1])
+    #for key,(proportion,fill_val) in cat_dict.items():
+    keys = list(cat_dict.keys())
+    keys.sort()
+    for key in keys:
+        proportion = cat_dict[key][0]
+        fill_val = cat_dict[key][1]
+
         if int(key) not in cat_dict:
             raise Exception("integer type of key '{0}' not found in target_proportions_dict".format(key))
         prop_tags.append(int(key))
@@ -3729,10 +3896,16 @@ def setup_threshold_pars(orgarr_file,cat_dict,testing_workspace=".",inact_arr=No
     csv_file = orgarr_file+".threshprops.csv"
     df.to_csv(csv_file,index=False)
 
+
     # test that it seems to be working
+    rel_csv_file = csv_file
+    
+    rel_csv_file = os.path.relpath(csv_file,start=testing_workspace)
     bd = os.getcwd()
     os.chdir(testing_workspace)
-    apply_threshold_pars(os.path.split(csv_file)[1])
+
+    #apply_threshold_pars(os.path.split(csv_file)[1])
+    apply_threshold_pars(rel_csv_file)
     os.chdir(bd)
     return thresharr_file,csv_file
 
@@ -3740,9 +3913,9 @@ def setup_threshold_pars(orgarr_file,cat_dict,testing_workspace=".",inact_arr=No
 def apply_threshold_pars(csv_file):
     """apply the thresholding process.  everything keys off of csv_file name...
 
-    Note: if the standard deviation of the continous thresholding array is too low,
+    Note: if the standard deviation of the continuous thresholding array is too low,
     the line search will fail.  Currently, if this stdev is less than 1.e-10,
-    then a homogenous array of the first category fill value will be created.  User
+    then a homogeneous array of the first category fill value will be created.  User
     beware!
 
     """
@@ -3750,8 +3923,10 @@ def apply_threshold_pars(csv_file):
     thresarr_file = csv_file.replace("props.csv","arr.dat")
     tarr = np.loadtxt(thresarr_file)
     if np.any(tarr < 0):
-        print(tarr)
-        raise Exception("negatives in thresholding array {0}".format(thresarr_file))
+        tmin = tarr.min()
+        tarr += tmin + 1
+        #print(tarr)
+        #raise Exception("negatives in thresholding array {0}".format(thresarr_file))
     #norm tarr
     tarr = (tarr - tarr.min()) / tarr.max()
     orgarr_file = csv_file.replace(".threshprops.csv","")
@@ -3776,18 +3951,23 @@ def apply_threshold_pars(csv_file):
     target_prop = tvals[0]
 
     tol = 1.0e-10
-    if tarr.std() < tol:
+    if tarr.std() < 1e-5:
+
         print("WARNING: thresholding array {0} has very low standard deviation".format(thresarr_file))
-        print("         using a homogenous array with first category fill value {0}".format(tfill[0]))
+        print("         using a homogeneous array with first category fill value {0}".format(tfill[0]))
 
         farr = np.zeros_like(tarr) + tfill[0]
         if iarr is not None:
-            farr[iarr == 0] = -1.0e+30
-            tarr[iarr == 0] = -1.0e+30
-        df.loc[tcat[0], "threshold"] = tarr.mean()
-        df.loc[tcat[1], "threshold"] = tarr.mean()
+            farr[iarr == 0] = np.nan
+            tarr[iarr == 0] = np.nan
+        df.loc[tcat[0], "threshold"] = np.nanmean(tarr)
+        df.loc[tcat[1], "threshold"] = np.nanmean(tarr)
         df.loc[tcat[0], "proportion"] = 1
         df.loc[tcat[1], "proportion"] = 0
+
+        if iarr is not None:
+            farr[iarr == 0] = -1e30
+            tarr[iarr == 0] = -1e30
 
         df.to_csv(csv_file.replace(".csv", "_results.csv"))
         np.savetxt(orgarr_file, farr, fmt="%15.6E")
@@ -3799,8 +3979,8 @@ def apply_threshold_pars(csv_file):
 
     # a classic:
     gr = (np.sqrt(5.) + 1.) / 2.
-    a = tarr.min()
-    b = tarr.max()
+    a = np.nanmin(tarr)
+    b = np.nanmax(tarr)
     c = b - ((b - a) / gr)
     d = a + ((b - a) / gr)
 
@@ -3809,7 +3989,7 @@ def apply_threshold_pars(csv_file):
     if iarr is not None:
 
         # this keeps inact from interfering with calcs later...
-        tarr[iarr == 0] = 1.0e+30
+        tarr[iarr == 0] = np.nan
         tiarr = iarr.copy()
         tiarr[tiarr <= 0] = 0
         tiarr[tiarr > 0] = 1
@@ -3850,8 +4030,8 @@ def apply_threshold_pars(csv_file):
     tarr[tarr <= thresh] = tcat[1]
 
     if iarr is not None:
-        farr[iarr==0] = -1.0e+30
-        tarr[iarr == 0] = -1.0e+30
+        farr[iarr==0] = -1e+30
+        tarr[iarr==0] = -1e+30
     df.loc[tcat[0],"threshold"] = thresh
     df.loc[tcat[1], "threshold"] = 1.0 - thresh
     df.loc[tcat[0], "proportion"] = prop
@@ -3863,15 +4043,663 @@ def apply_threshold_pars(csv_file):
     return thresh, prop
 
 
+def prep_for_gpr(pst_fname,input_fnames,output_fnames,gpr_t_d="gpr_template",t_d="template",gp_kernel=None,nverf=0,
+                 plot_fits=False,apply_standard_scalar=False, include_emulated_std_obs=False):
+    """helper function to setup a gaussian-process-regression (GPR) emulator for outputs of interest.  This
+    is primarily targeted at low-dimensional settings like those encountered in PESTPP-MOU
+
+    Parameters:
+        pst_fname (str): existing pest control filename
+        input_fnames (str | list[str]): usually a list of decision variable population files
+        output_fnames (str | list[str]): usually a list of observation population files that
+            corresponds to the simulation results associated with `input_fnames`
+        gpr_t_d (str): the template file dir to create that will hold the GPR emulators
+        t_d (str): the template dir containing the PESTPP-MOU outputs that the GPR emulators are trained on
+        gp_kernel (sklearn GaussianProcess kernel): the kernel to use.  if None, a standard RBF kernel
+            is created and used
+        nverf (int): the number of input-output pairs to hold back for a simple verification test
+        plot_fits (bool): flag to plot the fit GPRs
+        apply_standard_scalar (bool): flag to apply sklearn.preprocessing.StandardScaler transform before 
+            training/executing the emulator.  Default is False
+        include_emulated_std_obs (bool): flag to include the estimated standard deviation in the predicted
+            response of each GPR emulator.  If True, additional obserations are added to the GPR pest interface
+            , one for each nominated observation quantity.  Can be very useful for designing in-filling strategies
+
+    Returns:
+        None
+
+    Note:
+        requires scikit-learn
+
+    """
+
+    from sklearn.gaussian_process import GaussianProcessRegressor
+    from sklearn.gaussian_process.kernels import RBF, Matern, ConstantKernel
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.pipeline import Pipeline
+
+    import pickle
+    import inspect
+    pst = pyemu.Pst(pst_fname)
+
+    # work out input variable names
+    input_groups = pst.pestpp_options.get("opt_dec_var_groups",None)
+    par = pst.parameter_data
+    if input_groups is None:
+        print("using all adjustable parameters as inputs")
+        input_names = pst.adj_par_names
+    else:
+        input_groups = set([i.strip() for i in input_groups.lower().strip().split(",")])
+        print("input groups:",input_groups)
+        adj_par = par.loc[pst.adj_par_names,:].copy()
+        adj_par = adj_par.loc[adj_par.pargp.apply(lambda x: x in input_groups),:]
+        input_names = adj_par.parnme.tolist()
+    print("input names:",input_names)
+
+    #work out constraints and objectives
+    ineq_names = pst.less_than_obs_constraints.tolist()
+    ineq_names.extend(pst.greater_than_obs_constraints.tolist())
+    obs = pst.observation_data
+    objs = pst.pestpp_options.get("mou_objectives",None)
+    constraints = []
+
+    if objs is None:
+        print("'mou_objectives' not found in ++ options, using all ineq tagged non-zero weighted obs as objectives")
+        objs = ineq_names
+    else:
+        objs = objs.lower().strip().split(',')
+        constraints = [n for n in ineq_names if n not in objs]
+
+    print("objectives:",objs)
+    print("constraints:",constraints)
+    output_names = objs
+    output_names.extend(constraints)
+
+    print("loading input and output files")
+    if isinstance(input_fnames,str):
+        input_fnames = [input_fnames]
+    if isinstance(output_fnames,str):
+        output_fnames = [output_fnames]
+    if len(output_fnames) != len(input_fnames):
+        raise Exception("len(input_fnames) != len(output_fnames)")
+
+    if os.path.exists(gpr_t_d):
+        shutil.rmtree(gpr_t_d)
+    os.makedirs(gpr_t_d)
+
+    dfs = []
+    for input_fname,output_fname in zip(input_fnames,output_fnames):
+        if input_fname.lower().endswith(".csv"):
+            input_df = pd.read_csv(os.path.join(input_fname),index_col=0)
+        elif input_fname.lower().endswith(".jcb"):
+            input_df = pyemu.ParameterEnsemble.from_binary(pst=pst,filename=input_fname)._df
+        else:
+            raise Exception("unrecognized input_fname extension:'{0}', looking for csv or jcb".\
+                           format(input_fname.lower()))
+
+        if output_fname.lower().endswith(".csv"):
+            output_df = pd.read_csv(os.path.join(output_fname),index_col=0)
+        elif output_fname.lower().endswith(".jcb"):
+            output_df = pyemu.ObservationEnsemble.from_binary(pst=pst,filename=output_fname)._df
+        else:
+            raise Exception("unrecognized output_fname extension:'{0}', looking for csv or jcb".\
+                            format(output_fname.lower()))
+
+        if input_df.shape[0] != output_df.shape[0]:
+            raise Exception("input rows != output rows for {0} and {1}".\
+                            format(input_fname,output_fname))
+        input_df = input_df.loc[:,input_names]
+        assert input_df.shape == input_df.dropna().shape
+
+        output_df = output_df.loc[:, output_names]
+        assert output_df.shape == output_df.dropna().shape
+
+        input_df.loc[:,output_names] = output_df.values
+        dfs.append(input_df)
+        print("...loaded",input_fname,output_fname)
+
+    df = pd.concat(dfs)
+    assert df.shape == df.dropna().shape
+    df.to_csv(os.path.join(gpr_t_d,"gpr_aggregate_training_data.csv"))
+    print("aggregated training dataset shape",df.shape,"saved to",pst_fname + ".aggresults.csv")
 
 
+    if gp_kernel is None:
+        #gp_kernel = ConstantKernel(constant_value=1.0,constant_value_bounds=(1e-8,1e8)) *\
+        #                     RBF(length_scale=1000.0, length_scale_bounds=(1e-8, 1e8))
+        gp_kernel = Matern(length_scale=100.0, length_scale_bounds=(1e-4, 1e4), nu=0.5)
+
+    for hp in gp_kernel.hyperparameters:
+        print(hp)
+
+    cut = df.shape[0] - nverf
+    X_train = df.loc[:, input_names].values.copy()[:cut, :]
+    X_verf = df.loc[:, input_names].values.copy()[cut:, :]
+
+    model_fnames = []
+    if plot_fits:
+        import matplotlib.pyplot as plt
+        from matplotlib.backends.backend_pdf import PdfPages
+        pdf = PdfPages(os.path.join(gpr_t_d,"gpr_fits.pdf"))
+    for i,output_name in enumerate(output_names):
+
+        y_verf = df.loc[:,output_name].values.copy()[cut:]
+        y_train = df.loc[:, output_name].values.copy()[:cut]
+        print("training GPR for {0} with {1} data points".format(output_name,y_train.shape[0]))
+        gaussian_process = GaussianProcessRegressor(kernel=gp_kernel, n_restarts_optimizer=20)
+        if not apply_standard_scalar:
+            print("WARNING: not applying StandardScalar transformation - user beware!")
+            pipeline = Pipeline([("gpr",gaussian_process)])
+        else:
+            pipeline = Pipeline([("std_scalar", StandardScaler()), ("gpr", gaussian_process)])
+        pipeline.fit(X_train, y_train)
+        print(output_name,"optimized kernel:",pipeline["gpr"].kernel_)
+        if plot_fits:
+            print("...plotting fits for",output_name)
+            predmean,predstd = pipeline.predict(df.loc[:, input_names].values.copy(), return_std=True)
+            df.loc[:,"predmean"] = predmean
+            df.loc[:,"predstd"] = predstd
+            isverf = np.zeros_like(predmean)
+            isverf[cut:] = 1
+            df.loc[:,"isverf"] = isverf
+            for input_name in input_names:
+                fig,ax = plt.subplots(1,1,figsize=(6,6))
+                #print(X_train[:,ii])
+                #print(y_train)
+                ddf = df[[input_name,output_name,"predmean","predstd","isverf"]].copy()
+                ddf.sort_values(by=input_name,inplace=True)
+                ax.scatter(ddf.loc[ddf.isverf==0,input_name],ddf.loc[ddf.isverf==0,output_name],marker=".",c="r",label="training")
+                if nverf > 0:
+                    ax.scatter(ddf.loc[ddf.isverf==1,input_name],ddf.loc[ddf.isverf==1,output_name],marker="^",c="c",label="verf")
+                ax.plot(ddf[input_name],ddf["predmean"],"k--",label="GPR mean")
+                ax.fill_between(ddf[input_name],ddf["predmean"] - (2*ddf["predstd"]),ddf["predmean"]+(2*ddf["predstd"]),alpha=0.5,fc='0.5',label="+/- 95%")
+                ax.set_title("input:{0}, output:{1}".format(input_name,output_name),loc="left")
+                ax.legend()
+                plt.tight_layout()
+                pdf.savefig()
+
+                plt.close(fig)
 
 
+        objname = f'obj_{i}'
+        model_fname = os.path.split(pst_fname)[1]+"."+objname+".pkl"
+        if os.path.exists(os.path.join(gpr_t_d,model_fname)):
+            print("WARNING: model_fname '{0}' exists, overwriting...".format(model_fname))
+        with open(os.path.join(gpr_t_d,model_fname),'wb') as f:
+            pickle.dump(pipeline,f)
+
+        model_fnames.append(model_fname)
+        if nverf > 0:
+            pred_mean,pred_std = pipeline.predict(X_verf,return_std=True)
+            vdf = pd.DataFrame({"y_verf":y_verf,"y_pred":pred_mean,"y_pred_std":pred_std})
+            verf_fname = os.path.join(gpr_t_d,"{0}_gpr_verf.csv".format(output_name))
+            vdf.to_csv(verf_fname)
+            print("saved ",output_fname,"verification csv to",verf_fname)
+            mabs = np.abs(vdf.y_verf - vdf.y_pred).mean()
+            print("...mean abs error",mabs)
+    if plot_fits:
+        pdf.close()
+    mdf = pd.DataFrame({"output_name":output_names,"model_fname":model_fnames},index=output_names)
+    minfo_fname = os.path.join(gpr_t_d,"gprmodel_info.csv")
+    mdf.to_csv(minfo_fname)
+    print("GPR model info saved to",minfo_fname)
+
+    #write a template file
+    tpl_fname = os.path.join(gpr_t_d,"gpr_input.csv.tpl")
+    with open(tpl_fname,'w') as f:
+        f.write("ptf ~\nparnme,parval1\n")
+        for input_name in input_names:
+            f.write("{0},~  {0}   ~\n".format(input_name))
+    other_pars = list(set(pst.par_names)-set(input_names))
+    aux_tpl_fname = None
+
+    if len(other_pars) > 0:
+
+        aux_tpl_fname = os.path.join(gpr_t_d,"aux_par.csv.tpl")
+        print("writing aux par tpl file: ",aux_tpl_fname)
+        with open(aux_tpl_fname,'w') as f:
+            f.write("ptf ~\n")
+            for input_name in other_pars:
+                f.write("{0},~  {0}   ~\n".format(input_name))
+    #write an ins file
+    ins_fname = os.path.join(gpr_t_d,"gpr_output.csv.ins")
+    with open(ins_fname,'w') as f:
+        f.write("pif ~\nl1\n")
+        for output_name in output_names:
+            if include_emulated_std_obs:
+                f.write("l1 ~,~ !{0}! ~,~ !{0}_gprstd!\n".format(output_name))
+            else:
+                f.write("l1 ~,~ !{0}!\n".format(output_name))
+    tpl_list = [tpl_fname]
+    if aux_tpl_fname is not None:
+        tpl_list.append(aux_tpl_fname)
+    input_list = [f.replace(".tpl","") for f in tpl_list]
+    gpst = pyemu.Pst.from_io_files(tpl_list,input_list,
+                                   [ins_fname],[ins_fname.replace(".ins","")],pst_path=".")
+    par_names = pst.par_names
+    assert len(set(par_names).symmetric_difference(set(gpst.par_names))) == 0
+    for col in pst.parameter_data.columns:
+        # this gross thing is to avoid a future error warning in pandas - 
+        # why is it getting so strict?!  isn't python duck-typed?
+        if col in gpst.parameter_data.columns and\
+           gpst.parameter_data.dtypes[col] != pst.parameter_data.dtypes[col]:
+            gpst.parameter_data[col] = gpst.parameter_data[col].astype(pst.parameter_data.dtypes[col])
+        gpst.parameter_data.loc[par_names,col] = pst.parameter_data.loc[par_names,col].values
+
+    for col in pst.observation_data.columns:
+        # this gross thing is to avoid a future error warning in pandas -
+        # why is it getting so strict?!  isn't python duck-typed?
+        if col in gpst.observation_data.columns and \
+                gpst.observation_data.dtypes[col] != pst.observation_data.dtypes[col]:
+            gpst.observation_data[col] = gpst.obsveration_data[col].astype(pst.observation_data.dtypes[col])
+        gpst.observation_data.loc[output_names,col] = pst.observation_data.loc[output_names,col].values
+    if include_emulated_std_obs:
+        stdobs = [o for o in gpst.obs_names if o.endswith("_gprstd")]
+        assert len(stdobs) > 0
+        gpst.observation_data.loc[stdobs,"weight"] = 0.0
+    gpst.pestpp_options = pst.pestpp_options
+    gpst.prior_information = pst.prior_information.copy()
+    #lines = [line[4:] for line in inspect.getsource(gpr_forward_run).split("\n")][1:]
+    frun_lines = inspect.getsource(gpr_forward_run)
+    getfxn_lines = inspect.getsource(get_gpr_model_dict)
+    emulfxn_lines = inspect.getsource(emulate_with_gpr)
+    with open(os.path.join(gpr_t_d, "forward_run.py"), 'w') as f:
+        f.write("\n")
+        for import_name in ["pandas as pd","os","pickle","numpy as np"]:
+            f.write("import {0}\n".format(import_name))
+        for line in getfxn_lines:
+            f.write(line)
+        f.write("\n")
+        for line in emulfxn_lines:
+            f.write(line)
+        f.write("\n")
+        for line in frun_lines:
+            f.write(line)
+        f.write("if __name__ == '__main__':\n")
+        f.write("    gpr_forward_run()\n")
+        
+
+    gpst.control_data.noptmax = 0
+    gpst.model_command = "python forward_run.py"
+    gpst_fname = os.path.split(pst_fname)[1]
+    gpst.write(os.path.join(gpr_t_d,gpst_fname),version=2)
+    print("saved gpr pst:",gpst_fname,"in gpr_t_d",gpr_t_d)
+
+    #if they exist, copy pestpp bins from t_d over to gpr_t_d. otherwise, we assume bin is in path
+    pp_bins = [f for f in os.listdir(t_d) if 'pestpp-' in f]
+    if len(pp_bins)>0:
+        for pp_bin in pp_bins:
+            shutil.copy2(os.path.join(t_d,pp_bin),os.path.join(gpr_t_d,pp_bin))
+
+    try:
+        pyemu.os_utils.run("pestpp-mou {0}".format(gpst_fname),cwd=gpr_t_d)
+    except Exception as e:
+        print("WARNING: pestpp-mou test run failed: {0}".format(str(e)))
+    gpst.control_data.noptmax = pst.control_data.noptmax
+    gpst.write(os.path.join(gpr_t_d, gpst_fname), version=2)
 
 
+def get_gpr_model_dict(mdf):
+    import pickle
+    gpr_model_dict = {}
+    for output_name,model_fname in zip(mdf.output_name,mdf.model_fname):
+        gaussian_process = pickle.load(open(model_fname,'rb'))
+        gpr_model_dict[output_name] = gaussian_process
+    return gpr_model_dict
 
 
+def emulate_with_gpr(input_df,mdf,gpr_model_dict):
+    mdf.loc[:,"sim"] = np.nan
+    mdf.loc[:,"sim_std"] = np.nan
+    for output_name,gaussian_process in gpr_model_dict.items():
+        sim = gaussian_process.predict(np.atleast_2d(input_df.parval1.values),return_std=True)
+        mdf.loc[output_name,"sim"] = sim[0]
+        mdf.loc[output_name,"sim_std"] = sim[1]
+    return mdf
 
 
+def gpr_pyworker(pst,host,port,input_df=None,mdf=None):
+    import os
+    import pandas as pd
+    import numpy as np
+    import pickle
 
+    # if explicit args weren't passed, get the default ones...
+    if input_df is None:
+        input_df = pd.read_csv("gpr_input.csv",index_col=0)
+    if mdf is None:
+        mdf = pd.read_csv("gprmodel_info.csv",index_col=0)
+    gpr_model_dict = get_gpr_model_dict(mdf)
+    ppw = PyPestWorker(pst,host,port,verbose=False)
+
+    # we can only get parameters once the worker has initialize and 
+    # is ready to run, so getting the first of pars here
+    # essentially blocks until the worker is ready
+    parameters = ppw.get_parameters()
+    # if its  None, the master already quit...
+    if parameters is None:
+        return
+
+    obs = ppw._pst.observation_data.copy()
+    # align the obsval series with the order sent from the master
+    obs = obs.loc[ppw.obs_names,"obsval"]
+    
+    # work out which par values sent from the master we need to run the emulator
+    par = ppw._pst.parameter_data.copy()
+    usepar_idx = []
+    ppw_par_names = list(ppw.par_names)
+    for i,pname in enumerate(input_df.index.values):
+        usepar_idx.append(ppw_par_names.index(pname))
+    
+
+    while True:
+        # map the current dv values in parameters into the 
+        # df needed to run the emulator
+        input_df["parval1"] = parameters.values[usepar_idx]
+        # do the emulation
+        simdf = emulate_with_gpr(input_df,mdf,gpr_model_dict)
+
+        # replace the emulated quantities in the obs series
+        obs.loc[simdf.index] = simdf.sim.values
+        obs.loc[simdf.index.map(lambda x: x+"_gprstd")] = simdf.sim_std.values
+        #send the obs series to the master
+        ppw.send_observations(obs.values)
+
+        #try to get more pars
+        parameters = ppw.get_parameters()
+        # if None, we are done
+        if parameters is None:
+            break
+        
+
+
+def gpr_forward_run():
+    """the function to evaluate a set of inputs thru the GPR emulators.\
+    This function gets added programmatically to the forward run process"""
+    import pandas as pd
+    input_df = pd.read_csv("gpr_input.csv",index_col=0)
+    mdf = pd.read_csv("gprmodel_info.csv",index_col=0)
+    gpr_model_dict = get_gpr_model_dict(mdf)
+    mdf = emulate_with_gpr(input_df,mdf,gpr_model_dict)    
+    mdf.loc[:,["output_name","sim","sim_std"]].to_csv("gpr_output.csv",index=False)
+    return mdf
+
+
+def dsi_forward_run(pmat=None,ovals=None,pvals=None,
+                    write_csv=True
+                    
+                    ):
+
+    if pvals is None:
+        pvals = pd.read_csv("dsi_pars.csv",index_col=0)
+    if pmat is None:
+        pmat = np.load("dsi_proj_mat.npy")
+    if ovals is None:
+        ovals = pd.read_csv("dsi_pr_mean.csv",index_col=0)
+
+    try:
+        offset = np.load("dsi_obs_offset.npy")
+    except:
+        #print("no offset file found, assuming no offset")
+        offset = np.zeros(ovals.shape[0])
+    try:
+        log_trans = np.load("dsi_obs_log.npy")
+    except:
+        #print("no log-tansform file found, assuming no log-transform")
+        log_trans = np.zeros(ovals.shape[0])
+
+    try:
+        backtransformvals = np.load("dsi_obs_backtransformvals.npy")
+        backtransformobsnmes = np.load("dsi_obs_backtransformobsnmes.npy",allow_pickle=True)
+        backtransform=True
+    except:
+        #print("no back-transform file found, assuming no back-transform")
+        backtransform=False
+
+
+    sim_vals = ovals + np.dot(pmat,pvals.values)
+
+    if backtransform:
+        #print("applying back-transform")
+        obsnmes = np.unique(backtransformobsnmes)
+        back_vals = [
+                    inverse_normal_score_transform(
+                                        backtransformvals[np.where(backtransformobsnmes==o)][:,1],
+                                        backtransformvals[np.where(backtransformobsnmes==o)][:,0],
+                                        sim_vals.loc[o].mn,
+                                        extrap=None
+                                        )[0] 
+                    for o in obsnmes
+                    ]     
+        sim_vals.loc[obsnmes,'mn'] = back_vals
+
+    #print("reversing offset and log-transform")
+    assert log_trans.shape[0] == sim_vals.mn.values.shape[0], f"log transform shape mismatch: {log_trans.shape[0]},{sim_vals.mn.values.shape[0]}"
+    assert offset.shape[0] == sim_vals.mn.values.shape[0], f"offset transform shape mismatch: {offset.shape[0]},{sim_vals.mn.values.shape[0]}"
+    vals = sim_vals.mn.values
+    vals[np.where(log_trans==1)] = 10**vals[np.where(log_trans==1)]
+    vals-= offset
+    sim_vals.loc[:,'mn'] = vals
+    #print(sim_vals)
+    if write_csv:
+        sim_vals.to_csv("dsi_sim_vals.csv")
+    return sim_vals
+
+
+def dsi_pyworker(pst,host,port,pmat=None,ovals=None,pvals=None):
+    
+    import os
+    import pandas as pd
+    import numpy as np
+
+
+    # if explicit args weren't passed, get the default ones...
+    if pvals is None:
+        pvals = pd.read_csv("dsi_pars.csv",index_col=0)
+    if pmat is None:
+        pmat = np.load("dsi_proj_mat.npy")
+    if ovals is None:
+        ovals = pd.read_csv("dsi_pr_mean.csv",index_col=0)
+
+
+    ppw = PyPestWorker(pst,host,port,verbose=False)
+
+    # we can only get parameters once the worker has initialize and 
+    # is ready to run, so getting the first of pars here
+    # essentially blocks until the worker is ready
+    parameters = ppw.get_parameters()
+    # if its  None, the master already quit...
+    if parameters is None:
+        return
+
+    obs = ppw._pst.observation_data.copy()
+    # align the obsval series with the order sent from the master
+    obs = obs.loc[ppw.obs_names,"obsval"]
+
+    while True:
+        # map the current par values in parameters into the 
+        # df needed to run the emulator
+        pvals.parval1 = parameters.loc[pvals.index]
+        # do the emulation
+        simdf = dsi_forward_run(pmat=pmat,ovals=ovals,pvals=pvals,write_csv=False)
+
+        # replace the emulated quantities in the obs series
+        obs.loc[simdf.index] = simdf.mn.values
+
+        #send the obs series to the master
+        ppw.send_observations(obs.values)
+
+        #try to get more pars
+        parameters = ppw.get_parameters()
+        # if None, we are done
+        if parameters is None:
+            break
+
+
+def randrealgen_optimized(nreal, tol=1e-7, max_samples=1000000):
+    """
+    Generate a set of random realizations with a normal distribution.
+    
+    Parameters:
+    nreal : int
+        The number of realizations to generate.
+    tol : float
+        Tolerance for the stopping criterion.
+    max_samples : int
+        Maximum number of samples to use.
+        
+    Returns:
+    numpy.ndarray
+        An array of nreal random realizations.
+    """
+    rval = np.zeros(nreal)
+    nsamp = 0
+    # if nreal is even add 1
+    if nreal % 2 == 0:
+        numsort = (nreal + 1) // 2
+    else:
+        numsort = nreal // 2
+    while nsamp < max_samples:
+        nsamp += 1
+        work1 = np.random.normal(size=nreal)
+        work1.sort()
+        
+        if nsamp > 1:
+            previous_mean = rval[:numsort] / (nsamp - 1)
+            rval[:numsort] += work1[:numsort]
+            current_mean = rval[:numsort] / nsamp
+            max_diff = np.max(np.abs(current_mean - previous_mean))
+            
+            if max_diff <= tol:
+                break
+        else:
+            rval[:numsort] = work1[:numsort]
+    
+    rval[:numsort] /= nsamp
+    if nreal % 2 == 0:
+        rval[numsort:] = -rval[:numsort][::-1]
+    else:
+        rval[numsort+1:] = -rval[:numsort][::-1]
+    
+    return rval
+
+
+def normal_score_transform(nstval, val, value):
+    """
+    Transform a value to its normal score using a normal score transform table.
+    
+    Parameters:
+    nstval : array-like
+        Normal score transform table values.
+    val : array-like
+        Original values corresponding to the normal score transform table.
+    value : float
+        The value to transform.
+        
+    Returns:
+    float
+        The normal score of the value.
+    int
+        The index of the value in the normal score transform table."""
+    
+    # make sure the input is numpy arrays
+    val = np.asarray(val)
+    nstval = np.asarray(nstval)
+    
+    # if the value is outside the range of the table, return the first or last value
+    assert value >= val[0], "Value is below the minimum value in the table."
+    assert value <= val[-1], "Value is greater than the maximum value in the table."
+    # ensure that val is sorted
+    assert np.all(np.diff(val) > 0), f"Values in the table must be sorted in ascending order:{list(zip(np.diff(val)>0,val))}"
+
+    # find the rank of the value in the table
+    rank = np.searchsorted(val, value, side='right') - 1
+    if rank == len(val) - 1:
+        return nstval[-1], len(val)
+    # if the value coincides with a value in the table, return the corresponding normal score
+    nstdiff = nstval[rank + 1] - nstval[rank]
+    diff = val[rank + 1] - val[rank]
+    if nstdiff <= 0.0 or diff <= 0.0:
+        return nstval[rank], rank
+    
+    # otherwise, interpolate to get the normal score
+    dist = value - val[rank]
+    interpolated_value = nstval[rank] + (dist / diff) * nstdiff
+    return interpolated_value, rank
+
+
+def inverse_normal_score_transform(nstval, val, value, extrap='quadratic'):
+    nreal = len(val)
+    # check that nstval is sorted
+    assert np.all(np.diff(nstval) > 0), "Values in the table must be sorted in ascending order"
+    # check that val is sorted
+    assert np.all(np.diff(val) > 0), "Values in the table must be sorted in ascending order"
+    
+    def linear_extrapolate(x0, y0, x1, y1, x):
+        if x1 != x0:
+            return y0 + (y1 - y0) / (x1 - x0) * (x - x0)
+        return y0
+
+    def quadratic_extrapolate(x1, y1, x2, y2, x3, y3, x4):
+        y12=y1-y2
+        x23=x2-x3
+        y23=y2-y3
+        x12=x1-x2
+        x13=x1-x3
+        if x12==0 or x23==0 or x13==0:
+            raise ValueError("Input x values must be distinct")
+        a = (y12*x23-y23*x12)
+        den = x12*x23*x13
+        a = a/den
+        b = y23/x23 - a*(x2+x3)
+        c=y1-x1*(a*x1+b)
+        y4 = a*x4**2 + b*x4 + c
+        return y4
+
+    ilim = 0
+    if value in nstval:
+        rank = np.searchsorted(nstval, value)
+        value = val[rank]
+
+    elif value < nstval[0]:
+        ilim = -1
+        if extrap is None:
+            value = val[0]
+        elif extrap == 'linear':
+            value = linear_extrapolate(nstval[0], val[0], nstval[1], val[1], value)
+            #value = min(value, val[0])
+        elif extrap == 'quadratic' and nreal >= 3:
+            y_vals = np.unique(val)[:3]
+            idxs = np.searchsorted(val,y_vals)
+            x_vals = nstval[idxs]
+            value = quadratic_extrapolate(x_vals[-3], y_vals[-3], x_vals[-2], y_vals[-2], x_vals[-1], y_vals[-1], value)
+            #value = min(value, val[0])
+        else:
+            value = val[0]
+
+    elif value > nstval[-1]:
+        ilim = 1
+        if extrap is None:
+            value = val[-1]
+        elif extrap == 'linear':
+            value = linear_extrapolate(nstval[-2], val[-2], nstval[-1], val[-1], value)
+            #value = max(value, val[-1])
+        elif extrap == 'quadratic' and nreal >= 3:
+            y_vals = np.unique(val)[-3:]
+            idxs = np.searchsorted(val,y_vals)
+            x_vals = nstval[idxs]
+            value = quadratic_extrapolate(x_vals[-3], y_vals[-3], x_vals[-2], y_vals[-2], x_vals[-1], y_vals[-1], value)
+            #value = max(value, val[-1])
+        else:
+            value = val[-1]
+
+    else:
+        rank = np.searchsorted(nstval, value) - 1
+        # Get the bounding x and y values
+        x0, x1 = nstval[rank], nstval[rank + 1]
+        y0, y1 = val[rank], val[rank + 1]
+        # Perform linear interpolation
+        value = y0 + (y1 - y0) * (value - x0) / (x1 - x0)
+    
+    return value, ilim
 
