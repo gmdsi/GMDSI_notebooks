@@ -3,6 +3,7 @@
 from __future__ import print_function
 import os
 import copy
+import shutil
 from datetime import datetime
 import multiprocessing as mp
 import warnings
@@ -346,8 +347,8 @@ class SpecSim2d(object):
         self.geostruct = geostruct
         self.delx = delx
         self.dely = dely
-        self.num_pts = np.NaN
-        self.sqrt_fftc = np.NaN
+        self.num_pts = np.nan
+        self.sqrt_fftc = np.nan
         self.effective_variograms = None
         self.initialize()
 
@@ -553,7 +554,7 @@ class SpecSim2d(object):
 
             gp_par = par.loc[gp_df.parnme, :]
             # use the parval1 as the mean
-            mean_arr = np.zeros((self.dely.shape[0], self.delx.shape[0])) + np.NaN
+            mean_arr = np.zeros((self.dely.shape[0], self.delx.shape[0])) + np.nan
             mean_arr[gp_df.i, gp_df.j] = gp_par.parval1
             # fill missing mean values
             mean_arr[np.isnan(mean_arr)] = gp_par.parval1.mean()
@@ -872,21 +873,26 @@ class OrdinaryKrige(object):
         var_filename=None,
         forgive=False,
         num_threads=1,
+        try_use_ppu=False,
+        ppu_factor_filename = "factors.dat"
     ):
         """calculate kriging factors (weights) for a structured grid.
 
         Args:
-            spatial_reference (`flopy.utils.reference.SpatialReference`): a spatial
+            spatial_reference (`pyemu.helpers.SpatialReference` or
+            `flopy.ModelGrid`): a spatial
                 reference that describes the orientation and
-                spatail projection of the the structured grid
+                spatial projection of the model grid. Needs attributes:
+                [`xcentergrid`, `ycentergrid`, `nrow`, `ncol`,
+                 `grid_type`,  and `ncpl` (only if grid type=='vertex')].
             zone_array (`numpy.ndarray`): an integer array of zones to use for kriging.
                 If not None, then `point_data` must also contain a "zone" column.  `point_data`
                 entries with a zone value not found in zone_array will be skipped.
                 If None, then all `point_data` will (potentially) be used for
                 interpolating each grid node. Default is None
-            minpts_interp (`int`): minimum number of `point_data` entires to use for interpolation at
+            minpts_interp (`int`): minimum number of `point_data` entries to use for interpolation at
                 a given grid node.  grid nodes with less than `minpts_interp`
-                `point_data` found will be skipped (assigned np.NaN).  Defaut is 1
+                `point_data` found will be skipped (assigned np.nan).  Default is 1
             maxpts_interp (`int`) maximum number of `point_data` entries to use for interpolation at
                 a given grid node.  A larger `maxpts_interp` will yield "smoother"
                 interplation, but using a large `maxpts_interp` will slow the
@@ -898,21 +904,28 @@ class OrdinaryKrige(object):
                 Default is False
             var_filename (`str`): a filename to save the kriging variance for each interpolated grid node.
                 Default is None.
-            forgive (`bool`):  flag to continue if inversion of the kriging matrix failes at one or more
+            forgive (`bool`):  flag to continue if inversion of the kriging matrix fails at one or more
                 grid nodes.  Inversion usually fails if the kriging matrix is singular,
                 resulting from `point_data` entries closer than EPSILON distance.  If True,
                 warnings are issued for each failed inversion.  If False, an exception
                 is raised for failed matrix inversion.
             num_threads (`int`): number of multiprocessing workers to use to try to speed up
                 kriging in python.  Default is 1.
-
+            try_use_ppu (`bool`): flag to try to use `PyPestUtils` to solve the kriging equations.  If `true`,
+                and if `from pypestutils.pestutilslib import PestUtilsLib` does not raise an exception,
+                the `PestUtilsLib.calc_kriging_factors_2d()` is used.  Otherwise, the `OrdinaryKrige`
+                implementation is used. 
+            ppu_factor_filename (`str`): the name of the factor file that will be created if 
+                `PestUtilsLib.calc_kriging_factors_2d()` is used.  Default is "factors.dat".  Unused if
+                `try_use_ppu` is `False`.  
         Returns:
             `pandas.DataFrame`: a dataframe with information summarizing the ordinary kriging
-            process for each grid node
+            process for each grid node.  Not returned if `try_use_ppu` is `True`.
 
         Note:
             this method calls OrdinaryKrige.calc_factors()
             this method is the main entry point for grid-based kriging factor generation
+            
 
 
         Example::
@@ -939,6 +952,72 @@ class OrdinaryKrige(object):
             raise Exception(
                 "spatial_reference does not have proper attributes:{0}".format(str(e))
             )
+
+
+
+        use_ppu = False
+        if try_use_ppu:
+            try:
+                from pypestutils.pestutilslib import PestUtilsLib
+                use_ppu = True
+            except Exception as e:
+                pass
+
+
+        if use_ppu:
+            if x.ndim == 1:
+                x = np.atleast_2d(x).transpose()
+                y = np.atleast_2d(y).transpose()
+            print("...pypestutils detected and being used for kriging solve, trust us, you want this!")
+            ecs = self.point_data.x.values
+            ncs = self.point_data.y.values
+            zns = 1#np.ones_like(ecs,dtype=int)
+            if "zone" in self.point_data.columns:
+                zns = self.point_data.zone.values.astype(int)
+            ect = x.ravel()
+            nct = y.ravel()
+            znt = 1
+            if zone_array is not None:
+                znt = zone_array.ravel().astype(int)
+            
+            #reset any missing values in znt to a zns value - 
+            # doesn't matter in the end, just results in more nodes 
+            # being solved for...
+            znt_unique = np.unique(znt)
+            zns_unique = np.unique(zns)
+            for uz in znt_unique:
+                if uz not in zns_unique:
+                    znt[znt==uz] = zns_unique[0]
+            
+            assert len(self.geostruct.variograms) == 1
+            v = self.geostruct.variograms[0]
+            if isinstance(v,ExpVario):
+                vartype = 2
+            elif isinstance(v,SphVario):
+                vartype = 1
+            elif isinstance(v, GauVario):
+                vartype = 3
+            else:
+                raise NotImplementedError("unsupported variogram type: {0}".format(str(type(v))))
+            krigtype = 1 #hard coded to ordinary
+            factorfiletype = 1 #hard coded to ascii for now since we have to rewrite the fac file
+
+            plib = PestUtilsLib()
+            num_interp_pts = plib.calc_kriging_factors_2d(self.point_data.x.values,
+                                                          self.point_data.y.values,zns,
+                                                          x.ravel(),y.ravel(),znt,
+                                                          vartype,krigtype,
+                                                          v.a,v.anisotropy,v.bearing,
+                                                          search_radius,maxpts_interp,
+                                                          minpts_interp,ppu_factor_filename,
+                                                          factorfiletype)
+            plib.free_all_memory()
+            assert os.path.exists(ppu_factor_filename)
+            reformat_factorfile(x.shape[0], x.shape[1], self.point_data, self.geostruct, ppu_factor_filename)
+
+            print("...ppu_factor_filename '{0}' created, factors calculated for {1} points".\
+                  format(ppu_factor_filename,num_interp_pts))
+            return num_interp_pts
 
         if var_filename is not None:
             if self.spatial_reference.grid_type=='vertex':
@@ -1003,8 +1082,8 @@ class OrdinaryKrige(object):
                 idx = np.arange(
                     len(zone_array.ravel())
                 )[(zone_array == pt_data_zone).ravel()]
-                # xzone[zone_array != pt_data_zone] = np.NaN
-                # yzone[zone_array != pt_data_zone] = np.NaN
+                # xzone[zone_array != pt_data_zone] = np.nan
+                # yzone[zone_array != pt_data_zone] = np.nan
 
                 df = self.calc_factors(
                     xzone,
@@ -1133,10 +1212,10 @@ class OrdinaryKrige(object):
         Args:
             x ([`float`]):  x-coordinates to calculate kriging factors for
             y (([`float`]): y-coordinates to calculate kriging factors for
-            minpts_interp (`int`): minimum number of point_data entires to use for interpolation at
+            minpts_interp (`int`): minimum number of point_data entries to use for interpolation at
                 a given x,y interplation point.  interpolation points with less
                 than `minpts_interp` `point_data` found will be skipped
-                (assigned np.NaN).  Defaut is 1
+                (assigned np.nan).  Default is 1
             maxpts_interp (`int`): maximum number of point_data entries to use for interpolation at
                 a given x,y interpolation point.  A larger `maxpts_interp` will
                 yield "smoother" interplation, but using a large `maxpts_interp`
@@ -1146,7 +1225,7 @@ class OrdinaryKrige(object):
                 interpolation point to search for `point_data` entries. Default is 1.0e+10
             verbose (`bool`): a flag to  echo process to stdout during the interpolatino process.
                 Default is False
-            forgive (`bool`): flag to continue if inversion of the kriging matrix failes at one or more
+            forgive (`bool`): flag to continue if inversion of the kriging matrix fails at one or more
                 interpolation points.  Inversion usually fails if the kriging matrix is singular,
                 resulting from `point_data` entries closer than EPSILON distance.  If True,
                 warnings are issued for each failed inversion.  If False, an exception
@@ -1265,7 +1344,7 @@ class OrdinaryKrige(object):
                 inames.append([])
                 idist.append([])
                 ifacts.append([])
-                err_var.append(np.NaN)
+                err_var.append(np.nan)
                 continue
             if verbose:
                 istart = datetime.now()
@@ -1349,7 +1428,7 @@ class OrdinaryKrige(object):
                     inames.append([])
                     idist.append([])
                     ifacts.append([])
-                    err_var.append(np.NaN)
+                    err_var.append(np.nan)
                     continue
                 else:
                     raise Exception("error solving for factors:{0}".format(str(e)))
@@ -1418,7 +1497,7 @@ class OrdinaryKrige(object):
         idist = [[]] * len(df.x)
         inames = [[]] * len(df.x)
         ifacts = [[]] * len(df.x)
-        err_var = [np.NaN] * len(df.x)
+        err_var = [np.nan] * len(df.x)
         with mp.Manager() as manager:
             point_pairs = manager.list(point_pairs)
             idist = manager.list(idist)
@@ -1511,7 +1590,7 @@ class OrdinaryKrige(object):
                 ifacts[idx] = [[]]
                 idist[idx] = [[]]
                 inames[idx] = [[]]
-                err_var[idx] = [np.NaN]
+                err_var[idx] = [np.nan]
                 continue
 
             # calc dist from this interp point to all point data...
@@ -1724,7 +1803,7 @@ class Vario2d(object):
 
     @property
     def rotation_coefs(self):
-        """get the rotation coefficents in radians
+        """get the rotation coefficients in radians
 
         Returns:
             [`float`]: the rotation coefficients implied by `Vario2d.bearing`
@@ -1878,7 +1957,7 @@ class Vario2d(object):
         return self._h_function(h)
 
     def covariance(self, pt0, pt1):
-        """get the covarince between two points implied by Vario2d
+        """get the covariance between two points implied by Vario2d
 
         Args:
             pt0 : ([`float`]): first point x and y
@@ -2325,7 +2404,7 @@ def load_sgems_exp_var(filename):
             for item in attrib:
                 print(item, item.tag)
         df = pd.DataFrame({"x": x, "y": y, "pairs": pairs})
-        df.loc[df.y < 0.0, "y"] = np.NaN
+        df.loc[df.y < 0.0, "y"] = np.nan
         dfs[title] = df
     return dfs
 
@@ -2380,7 +2459,7 @@ def fac2real(
                 type(pp_file)
             )
         )
-    assert os.path.exists(factors_file), "factors file not found"
+    assert os.path.exists(factors_file), "factors file {0} not found".format(factors_file)
     f_fac = open(factors_file, "r")
     fpp_file = f_fac.readline()
     if pp_file is None and pp_data is None:
@@ -2456,3 +2535,29 @@ def _parse_factor_line(line):
     #     fac = float(raw[ifac+1])
     #     fac_data[pnum] = fac
     return inode, itrans, fac_data
+
+
+def reformat_factorfile(nrow,ncol,point_data,geostruct,ppu_factor_filename):
+    f_in = open(ppu_factor_filename,'r')
+    f_out = open("temp.fac",'w')
+    f_out.write("points.junk\nzone.junk\n")
+    f_out.write("{0} {1}\n".format(ncol,nrow))
+    f_out.write("{0}\n".format(point_data.shape[0]))
+    [f_out.write("{0}\n".format(name)) for name in point_data.name]
+    t = 0
+    if geostruct.transform == "log":
+        t = 1
+    t = str(t)
+    f_in.readline()
+    f_in.readline()
+    for line in f_in:
+        raw = line.strip().split()
+        raw.insert(1,t)
+        line = " ".join(raw)
+        f_out.write(line+"\n")
+    f_in.close()
+    f_out.close()
+    shutil.copy2("temp.fac",ppu_factor_filename)
+    os.remove("temp.fac")
+
+

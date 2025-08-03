@@ -3,6 +3,7 @@ import copy
 import warnings
 import numpy as np
 import pandas as pd
+from pathlib import Path
 
 import pyemu
 from .pyemu_warnings import PyemuWarning
@@ -364,7 +365,10 @@ class Ensemble(object):
         """write `Ensemble` to a PEST-style binary file
 
         Args:
-            filename (`str`): file to write
+            filename (`str` or `Path`): file to write
+
+        Returns:
+            `str`: the filename written (may be modified from input)
 
         Example::
 
@@ -377,22 +381,41 @@ class Ensemble(object):
             values are in arithmetic space
 
         """
-
+        if isinstance(filename, Path):
+            returnpath = True
+        else:
+            filename = Path(filename)
+            returnpath = False
         retrans = False
         if self.istransformed:
             self.back_transform()
             retrans = True
         if self._df.isnull().values.any():
-            warnings.warn("NaN in ensemble", PyemuWarning)
-        pyemu.Matrix.from_dataframe(self._df).to_coo(filename)
+            warnings.warn( "Ensemble.to_binary() warning: NaN in ensemble", PyemuWarning)
+        # if the nobs or npar is large, save as dense binary
+        if self._df.shape[1] > 1e6 or filename.suffix == ".bin":
+            # if the filename doesn't have a .bin suffix, warn and add it
+            if filename.suffix != ".bin":
+                warnings.warn(
+                    "Ensemble.to_binary() warning: large ensemble dimension, will save as "
+                    + "dense binary format... adding '.bin' suffix", PyemuWarning
+                )
+                filename = filename.with_suffix(".bin")
+            self.to_dense(filename)
+        else:
+            pyemu.Matrix.from_dataframe(self._df).to_coo(filename)
         if retrans:
             self.transform()
+        if returnpath:
+            return filename
+        else:
+            return filename.as_posix()
 
     def to_dense(self, filename):
         """write `Ensemble` to a dense-format binary file
 
         Args:
-            filename (`str`): file to write
+            filename (`str` or `Path`): file to write
 
         Example::
 
@@ -402,7 +425,7 @@ class Ensemble(object):
 
         Note:
             back transforms `ParameterEnsemble` before writing so that
-            values are in arithmatic space
+            values are in arithmetic space
 
         """
 
@@ -456,7 +479,7 @@ class Ensemble(object):
             }
             snv = np.random.randn(num_reals, mean_values.shape[0])
             reals = np.zeros_like(snv)
-            reals[:, :] = np.NaN
+            reals[:, :] = np.nan
             for i, name in enumerate(mean_values.index):
                 if name in cov_names:
                     reals[:, i] = (snv[:, i] * stds[name]) + mean_values.loc[name]
@@ -464,7 +487,7 @@ class Ensemble(object):
                     reals[:, i] = mean_values.loc[name]
         else:
             reals = np.zeros((num_reals, mean_values.shape[0]))
-            reals[:, :] = np.NaN
+            reals[:, :] = np.nan
             if fill:
                 for i, v in enumerate(mean_values.values):
                     reals[:, i] = v
@@ -732,7 +755,7 @@ class ObservationEnsemble(Ensemble):
                 assumes no correlation (covariates) between observation groups.
             fill (`bool`): flag to fill in zero-weighted observations with control file
                 values.  Default is False.
-            factor (`str`): how to factorize `cov` to form the projectin matrix.  Can
+            factor (`str`): how to factorize `cov` to form the projection matrix.  Can
                 be "eigen" or "svd". The "eigen" option is default and is faster.  But
                 for (nearly) singular cov matrices (such as those generated empirically
                 from ensembles), "svd" is the only way.  Ignored for diagonal `cov`.
@@ -1052,7 +1075,7 @@ class ParameterEnsemble(Ensemble):
         #              for i in range(num_reals)]
         real_names = np.arange(num_reals, dtype=np.int64)
         arr = np.empty((num_reals, len(ub)))
-        arr[:, :] = np.NaN
+        arr[:, :] = np.nan
         adj_par_names = set(pst.adj_par_names)
         for i, pname in enumerate(pst.parameter_data.parnme):
             # print(pname, lb[pname], ub[pname])
@@ -1112,7 +1135,7 @@ class ParameterEnsemble(Ensemble):
 
         real_names = np.arange(num_reals, dtype=np.int64)
         arr = np.empty((num_reals, len(ub)))
-        arr[:, :] = np.NaN
+        arr[:, :] = np.nan
         adj_par_names = set(pst.adj_par_names)
         if len(adj_par_names) == 0:
             warnings.warn("ParameterEnsemble.from_uniform_draw(): no adj pars",PyemuWarning)
@@ -1266,7 +1289,7 @@ class ParameterEnsemble(Ensemble):
 
         df = pd.DataFrame(index=np.arange(num_reals), columns=par_org.parnme.values)
 
-        df.loc[:, :] = np.NaN
+        df.loc[:, :] = np.nan
         if fill:
             fixed_tied = par_org.loc[
                 par_org.partrans.apply(lambda x: x in ["fixed", "tied"]), "parval1"
@@ -1346,7 +1369,7 @@ class ParameterEnsemble(Ensemble):
                     ),
                     PyemuWarning,
                 )
-                blank_df = pd.DataFrame(index=df_all.index, columns=diff)
+                blank_df = pd.DataFrame(index=df_all.index, columns=list(diff))
 
                 df_all = pd.concat([df_all, blank_df], axis=1)
 
@@ -1534,7 +1557,7 @@ class ParameterEnsemble(Ensemble):
                     base = pyemu.pst_utils.read_parfile(center_on)
                 except:
                     raise Exception(
-                        "'center_on' arg not found in index and couldnt be loaded as a '.par' file"
+                        "'center_on' arg not found in index and couldn't be loaded as a '.par' file"
                     )
             else:
                 raise Exception(
@@ -1689,7 +1712,7 @@ class ParameterEnsemble(Ensemble):
                 lb - self._df.loc[ridx, :]
             ).max() > 0.0:
                 drop.append(ridx)
-        self.loc[drop, :] = np.NaN
+        self.loc[drop, :] = np.nan
         self.dropna(inplace=True)
 
     def _enforce_reset(self, bound_tol):
@@ -1697,10 +1720,6 @@ class ParameterEnsemble(Ensemble):
         violating vals to bound
         """
 
-        ub = (self.ubnd * (1.0 - bound_tol)).to_dict()
-        lb = (self.lbnd * (1.0 + bound_tol)).to_dict()
-
-        val_arr = self._df.values
-        for iname, name in enumerate(self.columns):
-            val_arr[val_arr[:, iname] > ub[name], iname] = ub[name]
-            val_arr[val_arr[:, iname] < lb[name], iname] = lb[name]
+        ub = self.ubnd * (1.0 - bound_tol)
+        lb = self.lbnd * (1.0 + bound_tol)
+        self._df = self._df.clip(lb, ub, axis=1)
