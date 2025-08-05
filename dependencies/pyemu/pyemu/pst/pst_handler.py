@@ -3863,6 +3863,8 @@ class Pst(object):
                 df[unique_keys] = meta_dict[unique_keys]
             except Exception as e:
                 print("error parsing metadata from '{0}', continuing".format(name))
+        
+        
 
     def rename_parameters(self, name_dict, pst_path=".", tplmap=None):
         """rename parameters in the control and template files
@@ -3950,6 +3952,40 @@ class Pst(object):
         obs.index = obs.obsnme.values
         _replace_str_in_files(self.model_output_data.pest_file, name_dict,
                               file_obsparmap=insmap, pst_path=pst_path)
+
+
+    def add_pars_as_obs(self,pst_path='.'):
+        """add all parameter values as observation values by creating a new
+        template and instruction file and adding them to the control file
+
+        Args:
+            pst_path (str): the path to the control file from where python
+                is running.  Default is "." (python is running in the
+                same directory as the control file)
+
+
+        """
+        in_fname = os.path.join(pst_path,"pars_as_obs.txt")
+        tpl_fname = in_fname + ".tpl"
+        ins_fname = in_fname + ".ins"
+
+        for name in [in_fname,tpl_fname,ins_fname]:
+            assert not os.path.exists(name)
+        parval1 = self.parameter_data.parval1.copy()
+        parval1.to_csv(in_fname)
+        
+        with open(tpl_fname,'w') as f:
+            f.write("ptf ~\n")
+            f.write("parnme,parval1\n")
+            for name in parval1.index:
+                f.write("{0}, ~      {0}      ~\n".format(name))
+        with open(ins_fname,'w') as f:
+            f.write("pif ~\n")
+            f.write("l1\n")
+            for name in parval1.index:
+                f.write("l1 ~,~  !{0}!\n".format(name))
+        self.add_parameters(tpl_fname,in_fname,pst_path='.')
+        self.add_observations(ins_fname,in_fname,pst_path='.')
 
 
 def _replace_str_in_files(filelist, name_dict, file_obsparmap=None, pst_path='.'):
