@@ -44,6 +44,10 @@ nb_dir = "part2_03_prior_monte_carlo"
 nb_file = "freyberg_prior_monte_carlo.ipynb"
 run_nb(nb_file, nb_dir)
 
+nb_dir = "part2_03_global_sensitivity_analysis"
+nb_file = "freyberg_global_sensitivity_analysis.ipynb"
+run_nb(nb_file, nb_dir)
+
 nb_dir = "part2_04_glm"
 nb_file = "freyberg_glm_1.ipynb"
 run_nb(nb_file, nb_dir)
