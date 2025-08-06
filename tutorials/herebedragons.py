@@ -140,7 +140,7 @@ def make_truth(truth_d):
 
     # pest setup template folder
     t_d = os.path.join('..', 'models', 'freyberg_pstfrom_pest_setup')
-    pst = pyemu.Pst(os.path.join(t_d, 'freyberg_mf6.pst'))
+    pst = pyemu.Pst(os.path.join(t_d, 'pest.pst'))
 
     # choose realisation; this one gives headwater forecast > 95%
     real=187
