@@ -39,7 +39,7 @@ pyemu.plot_utils.font =10
 
 # Geostatistics 
 
-This notebook is a very high-level introduction to geostatisics. Some definitions from Geoff Bohling http://people.ku.edu/~gbohling/cpe940/Variograms.pdf
+This notebook is a very high-level introduction to geostatistics. Some definitions from Geoff Bohling http://people.ku.edu/~gbohling/cpe940/Variograms.pdf
 
 > “_Geostatistics: study of phenomena that vary in space and/or time_”
 (Deutsch, 2002)
@@ -115,7 +115,7 @@ gh.field_scatterplot(sample_df.x,sample_df.y,sample_df.z);
    1. The values are second order stationary (the mean and variance are relatively constant) 
    2. The values are multi-Gaussian (e.g. normally distributed)
 
-If we inspect our generated data, we see that it is normally distributed, so that's good. (_side note: of course it is, we generated it using geostaticsits..so we are cheating here..._)
+If we inspect our generated data, we see that it is normally distributed, so that's good. (_side note: of course it is, we generated it using geostatistics..so we are cheating here..._)
 
 
 ```python
@@ -335,7 +335,7 @@ plt.colorbar();
 
 
 ## Interpolating from Sparse Data
-So how do we go from a sample of measurments (i.e. our 50 points, sampled frmo the field at the start of the notebook) and generate a continuous filed? If we fit an appropriate model ($\gamma$) to the empirical variogram ($\hat\gamma$), we can use that structure for interpolation from sparse data.
+So how do we go from a sample of measurements (i.e. our 50 points, sampled from the field at the start of the notebook) and generate a continuous filed? If we fit an appropriate model ($\gamma$) to the empirical variogram ($\hat\gamma$), we can use that structure for interpolation from sparse data.
 
 Experiment below with changing the `new_a` and `new_c` variables and/or the variogram type.
 
@@ -741,9 +741,9 @@ ax.plot(sample_df.x,sample_df.y, 'yo')
 
 ### Spectral simulation
 
-Because pyemu is pure python (and because the developers are lazy), it only implments spectral simulation for grid-scale field generation.  For regular grids without anisotropy and without conditioning data ("known" property values), it is identical to sequential gaussian simulation.
+Because pyemu is pure python (and because the developers are lazy), it only implements spectral simulation for grid-scale field generation.  For regular grids without anisotropy and without conditioning data ("known" property values), it is identical to sequential gaussian simulation.
 
-Each of hte plots below illustrate the effect of different values of `a`. Experiment with changing `a`,  `contribution`, etc to get a feel for how they affect spatial patterns.
+Each of the plots below illustrate the effect of different values of `a`. Experiment with changing `a`,  `contribution`, etc to get a feel for how they affect spatial patterns.
 
 
 ```python
@@ -801,7 +801,7 @@ plt.imshow(ss.draw_arrays()[0]);
     - In the GW utilities in PEST (http://www.pesthomepage.org/Groundwater_Utilities.php) 
     - The main tools are also available in `pyemu` -- we'll use that in the class
 2. The Stanford Geostatistical Modeling Software (SGeMS: http://sgems.sourceforge.net/) is a nice GUI for geostatistical modeling, but it's not being maintained anymore.
-3. Python libraries for geostistics:
+3. Python libraries for geostatistics:
     - [`pysgems`](https://github.com/robinthibaut/pysgems) uses SGEMS within Python 
     - [`Scikit-GStat`](https://github.com/mmaelicke/scikit-gstat). A tutorial can be found [here](https://guillaumeattard.com/geostatistics-applied-to-hydrogeology-with-scikit-gstat/)
 4. `R` has a package: http://rgeostats.free.fr/

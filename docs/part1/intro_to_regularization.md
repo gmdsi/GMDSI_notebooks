@@ -7,11 +7,11 @@ math: mathjax3
 ---
 
 # Addressing the Ill-Posed Inverse Problem 
-This tutorial picks up following the "Freyberg pilot points" tutorial in which we added a lot more adjustable parameters. We saw that this allowed us to get an excellent fit with measured data (too good!) but resulted in unrealistic parameter fields. Not to mention that we still underepresented forecast uncertainty.
+This tutorial picks up following the "Freyberg pilot points" tutorial in which we added a lot more adjustable parameters. We saw that this allowed us to get an excellent fit with measured data (too good!) but resulted in unrealistic parameter fields. Not to mention that we still underrepresented forecast uncertainty.
 
 ## Regularization
 
-We have more unkown parameters than observations. Thus, we have an ill-posed inverse problem. The mathematical term for the process through which a unique solution is sought for a nonunique inverse problem is “regularization”. The goal of regularised inversion is to seek a unique parameter field that results in a suitable fit between model outputs and field measurements, whilst minimizing the potential for wrongness in model predictions. That is, out of all the ways to fit a calibration dataset, regularized inversion seeks the parameter set of minimum error variance.
+We have more unknown parameters than observations. Thus, we have an ill-posed inverse problem. The mathematical term for the process through which a unique solution is sought for a nonunique inverse problem is “regularization”. The goal of regularised inversion is to seek a unique parameter field that results in a suitable fit between model outputs and field measurements, whilst minimizing the potential for wrongness in model predictions. That is, out of all the ways to fit a calibration dataset, regularized inversion seeks the parameter set of minimum error variance.
 
 There are two main approaches used to stabilize this problem: 
  1) adding soft knowledge and/or 
@@ -48,7 +48,7 @@ of *q* deviations from *j* soft knowledge conditions *fj*, where *fj* is a funct
 objective function (hard data) and the soft knowledge penalty.
 
 > __Take-home point #1 from these equations:__
-> When Tikhonov is set up correctly, PEST(++) should only deviate from the preferred condition when there is a suffient improvement in our fit to the observations (= the measurement objective function).  
+> When Tikhonov is set up correctly, PEST(++) should only deviate from the preferred condition when there is a sufficient improvement in our fit to the observations (= the measurement objective function).  
 >
 > __Take-home point #2 from these equations:__  
 > The two contributors to our total $Phi$ are __*carried separately in the parameter estimation*__.  
@@ -58,7 +58,7 @@ This is important. It allows us to control the balance between fitting measured 
 
 ### Prior Information
 
-How do we express soft-knowledge quantiatively so we can minimize it?
+How do we express soft-knowledge quantitatively so we can minimize it?
 
 PEST(++) provides a user with a great deal of flexibility in how Tikhonov constraints can be introduced to an inversion process. The easiest way is to do this is through the use of prior information equations. When prior information equations are employed, Tikhonov constraints are expressed through preferred values that are assigned to linear relationships between parameters. (Equality is the simplest type of linear relationship.) Weights must be assigned to these equations. As is described in PEST documentation, when PEST is run in “regularization” mode, it makes internal adjustments to the weights that are assigned to any observations or prior information equations that belong to special observation groups that are referred to as “regularization groups”. 
 
@@ -69,9 +69,9 @@ We add preferred conditions.  These are typically:
 
 One of the most useful preferred condition for collapsing all these parameters to fewer bins is a special case of preferred difference where the difference = 0.  This is often called: __"preferred homogeneity"__ -  which equates to something along the lines of "I believe this area has homogeneous Kh" 
 
-Of these, __preferred value__ is the easiest implement, and least memory intensive, preferred condition.   `pyemu` implements this with functionality called "*__zero_order_tikhonov__*". (Make sure the initial values in the control file represent your soft-knowledge!) `pyemu` also has preferred difference available - look for *"__first_order_pearson_tikhonov__"*.  We'll see both of these in this notebook. We will demosntrate these functions further on.
+Of these, __preferred value__ is the easiest implement, and least memory intensive, preferred condition.   `pyemu` implements this with functionality called "*__zero_order_tikhonov__*". (Make sure the initial values in the control file represent your soft-knowledge!) `pyemu` also has preferred difference available - look for *"__first_order_pearson_tikhonov__"*.  We'll see both of these in this notebook. We will demonstrate these functions further on.
 
-### Pilot point regularization can be propogated to other pilot points, or not.
+### Pilot point regularization can be propagated to other pilot points, or not.
 
 Here are two examples from Anderson et al. (2015).  For "preferred value" __(below (a), left)__ there is no cross-talk between pilot points.  The initial parameter value of each pilot point is the preferred value.  For preferred difference __(below (a), right)__, there is a radius of influence that connects the pilot point regularization (think correlation length from geostatistics).  
 
@@ -113,7 +113,7 @@ __<center>PHIMLIM</center>__
 
 PHIMLIM is the "Target Measurement Objective Function", which means rather than finding the best fit to the observations, PEST will hit this new PHIMLIM level and  *then find the minimum of the regularization objective function* (find the parameters that most closely match the preferred conditions while still keeping the PHIMLIM target measurement objective function). 
 
-A good way to think of this is that PHIMLIM controls the trade-off between the two parts of the righthand side of the equal sign in equation 9.8 above. We can plot this tradeoff as a Pareto front between adhereing to soft-knowledge (regularization objective function) and getting a better fit (measurement objective function). That looks like:
+A good way to think of this is that PHIMLIM controls the trade-off between the two parts of the righthand side of the equal sign in equation 9.8 above. We can plot this tradeoff as a Pareto front between adhering to soft-knowledge (regularization objective function) and getting a better fit (measurement objective function). That looks like:
 
 
 <img src="intro_to_regularization_files/Fig9.17_fit_vs_softknowledge_Pareto.png" style="float: center">
@@ -136,17 +136,17 @@ The suggested workflow is to:
 
 We'll use this workflow on our pilot point version of Freyberg later.  But first, let's talk a little more about the theory and implementation of ``prior_information`` in the PEST datasets.
 
-## 2. Singular Value Decompostion
+## 2. Singular Value Decomposition
 
- > See the "intro to svd" notebook for an introduction to Singular Value Decompostion.
+ > See the "intro to svd" notebook for an introduction to Singular Value Decomposition.
 
-Tikhonov regularisation adds information to the calibration process in order to achieve numerical stability. In contrast, subspace methods achive numerical stability by reducing the dimensionality of the problem, removing and/or combining parameters. When employing SVD in calibration, only parameters and linear combinations of parameters that are suficiently constrained by measured data are estimated. These parameters are said to reside in the *solution space*. Choosing which parameter combinations to estimate is accomplished via singular value decomposition (SVD). SVD-based parameter estimation fixes intial values for parameters/parameter combinations that are not estimable (reside in the *null space*) and does not adjust them during inversion. (So, once again, make sure initial parameter values are sensible!)  
+Tikhonov regularisation adds information to the calibration process in order to achieve numerical stability. In contrast, subspace methods achieve numerical stability by reducing the dimensionality of the problem, removing and/or combining parameters. When employing SVD in calibration, only parameters and linear combinations of parameters that are sufficiently constrained by measured data are estimated. These parameters are said to reside in the *solution space*. Choosing which parameter combinations to estimate is accomplished via singular value decomposition (SVD). SVD-based parameter estimation fixes initial values for parameters/parameter combinations that are not estimable (reside in the *null space*) and does not adjust them during inversion. (So, once again, make sure initial parameter values are sensible!)  
 
-Unlike PEST and PEST_HP, by default, members of the PEST++ suite employ singular value decomposition (or methods closely related to it) for solution of the inverse problem. Unless otherwise specifed, default options are employed. PEST++GLM offers two numerical libraries for implementing SVD; the default option will usually suffice (see the PEST++ user manual for details).
+Unlike PEST and PEST_HP, by default, members of the PEST++ suite employ singular value decomposition (or methods closely related to it) for solution of the inverse problem. Unless otherwise specified, default options are employed. PEST++GLM offers two numerical libraries for implementing SVD; the default option will usually suffice (see the PEST++ user manual for details).
 
 # Back to Freyberg
 
-Now that we have gone over a bit of theory, let's apply it to calibrating the Freyberg model. We pick up after the "freyberg pilot point run" notebook. In that tutorial, we saw that adding many more parameters made obtaining a good fit with measured data was easier. Unfortunatley, we also saw that this led to "living beyind our means". We have many more parameters than observations (ill posed inverse problem), which resulted in overfitting. Parameter values took on "unrealistic" values to compensate for structural inadequacies of the model (and parameterisation!).
+Now that we have gone over a bit of theory, let's apply it to calibrating the Freyberg model. We pick up after the "freyberg pilot point run" notebook. In that tutorial, we saw that adding many more parameters made obtaining a good fit with measured data was easier. Unfortunately, we also saw that this led to "living beyond our means". We have many more parameters than observations (ill posed inverse problem), which resulted in overfitting. Parameter values took on "unrealistic" values to compensate for structural inadequacies of the model (and parameterisation!).
 
 Let's see if we can fix this problem with regularization.
 
@@ -279,11 +279,11 @@ Now we are given more strength for keeping recharge near its initial value...goo
 
 Well `pyemu` can do that too.  
 
-The simples form of "preferred difference' is homogeneity. We prefer that the "difference between parameters should equal zero". This is referred to as "first-order pearson tikhonov". But how do we assign weights? How confident are we that this a nearby parameter should have the same value? What about another parameter whic is a bit farther away? Geostatistics, that's how.
+The simples form of "preferred difference' is homogeneity. We prefer that the "difference between parameters should equal zero". This is referred to as "first-order pearson tikhonov". But how do we assign weights? How confident are we that this a nearby parameter should have the same value? What about another parameter which is a bit farther away? Geostatistics, that's how.
 
 Remember that ``Cov``ariance matrix we keep talking about? It expresses the spatial relationship between pilot points (implied by the variogram), so we use to setup these prior information equations.  First we need to make a geostatistical structure to encapsulate the spatial relationships.
 
-As we have seen in other tutorials (see the "intro to geostatistics", "intro to pyemu" and "freyberg pilot point setup" notebooks), `pyemu` can prepare a covariance matrix for spatialy distribuyted parameters, based on a geostatistical structure and variogram(s) that reflect our expert knowledge of how we expect parameters to vary. 
+As we have seen in other tutorials (see the "intro to geostatistics", "intro to pyemu" and "freyberg pilot point setup" notebooks), `pyemu` can prepare a covariance matrix for spatially distributed parameters, based on a geostatistical structure and variogram(s) that reflect our expert knowledge of how we expect parameters to vary. 
 
 For example, construct a variogram:
 
@@ -355,7 +355,7 @@ pst.reg_data.phimlim
 
 That is ___very low___  for a final parameter estimation.  But recall our workflow from earlier on, this value is just a "placeholder" to ignore soft knowledge and only focus on obtaining the best fit.  After the how-low-can-PEST-go run, ``phimlim`` should be set to a larger number, say the number of non-zero weighted obs (assuming that observation weights are the inverse of standard deviation of noise!).  Here we'll explore the effect of ``phimlim`` a bit.  
 
-Now, we have already undertaken an un-regularized parameter estiamtion run. Effectively that is what we did in the "freyberg pilot point run" notebook. We got a really good fit - much better than is reasonable give the uncertainty (e.g. noise) in our observation data (check the previous notebook to get the value of Phi).
+Now, we have already undertaken an un-regularized parameter estimation run. Effectively that is what we did in the "freyberg pilot point run" notebook. We got a really good fit - much better than is reasonable give the uncertainty (e.g. noise) in our observation data (check the previous notebook to get the value of Phi).
 
 How many non-zero weighted observations do we have?
 
@@ -367,7 +367,7 @@ nnz_obs
 
 A convenience of weighting with the inverse of the measurement uncertainty (which we have done in this case) is that it is easy to know what the ideal Phi should be: it should be equal to the number of non-zero weighted observations. 
 
-This of course assumes that all model-to-measurment misfit is due to *measurement* uncertainty. In practice, model error usualy plays a larger role, as we will see in other tutorials. 
+This of course assumes that all model-to-measurement misfit is due to *measurement* uncertainty. In practice, model error usually plays a larger role, as we will see in other tutorials. 
 
 So, let's assign PHILIM equal tot he number of non-zero weighted observations:
 
@@ -377,7 +377,7 @@ pst.reg_data.phimlim = nnz_obs
 pst.reg_data.phimlim
 ```
 
-When chaning PHIMLIM, we must also change PHIMACCEPT. This is the level of acceptable "measurement objective function". If PEST(++) achieves PHIMLIM, it will then attempt to minimize the _regularisation_ objective function, whilst maintaining the _measurment_ objective function below PHIMACCEPT.
+When changing PHIMLIM, we must also change PHIMACCEPT. This is the level of acceptable "measurement objective function". If PEST(++) achieves PHIMLIM, it will then attempt to minimize the _regularisation_ objective function, whilst maintaining the _measurement_ objective function below PHIMACCEPT.
 
 Ideally, PHIMACCEPT should be assigned 5-10% higher than PHIMLIM.
 
@@ -398,7 +398,7 @@ pst.control_data.pestmode
 
 ## Write and Run
 
-Sheesh - this was a long one. Hope you are still with us. Let's now re-write the PESt control file and run it!
+Sheesh - this was a long one. Hope you are still with us. Let's now re-write the PEST control file and run it!
 
 
 ```python
@@ -456,14 +456,14 @@ pst = pyemu.Pst(os.path.join(m_d, 'freyberg_reg.pst'))
 pst.phi
 ```
 
-That number looks familiar...what did we assing to PHIMACCEPT again?
+That number looks familiar...what did we assign to PHIMACCEPT again?
 
 
 ```python
 pst.reg_data.phimaccept
 ```
 
-Check out the Phi progress. Interesting. In this case PEST managed to get a fit better than PHIMLIM in the very first iteration (not a usual case). Measurment Phi then increases up to PHIMACCEPT. Subsequent iterations were spent reducing regularization Phi untill total Phi is lower than PHIMLIM.
+Check out the Phi progress. Interesting. In this case PEST managed to get a fit better than PHIMLIM in the very first iteration (not a usual case). Measurement Phi then increases up to PHIMACCEPT. Subsequent iterations were spent reducing regularization Phi until total Phi is lower than PHIMLIM.
 
 
 ```python
@@ -479,9 +479,9 @@ What about the fits with measured values? Not perfect...but we aren't looking fo
 figs = pst.plot(kind="1to1");
 ```
 
-Let's inspect the posterior parameter uncetanties for each parameter group. 
+Let's inspect the posterior parameter uncertainties for each parameter group. 
 
-The next cell plots the prbability distribution for each parameter in each parameter group. Recall that each pilot point is assigned a unique parmaeter, so in each plot we are displaying multiple distributions. We are also plotting the parmater upper and lower bounds as vertical dashed black lines.
+The next cell plots the probability distribution for each parameter in each parameter group. Recall that each pilot point is assigned a unique parameter, so in each plot we are displaying multiple distributions. We are also plotting the parameter upper and lower bounds as vertical dashed black lines.
 
 
 ```python
@@ -556,7 +556,7 @@ mm.plot_inactive()
 ax.set_title('$K$');
 ```
 
-Hey! Whats this?! nearly uniform K?? Oh right...thats what we told PEST we preferred. Therefore parameter values were left alone, unless needed to improve the fit.
+Hey! What's this?! nearly uniform K?? Oh right...that's what we told PEST we preferred. Therefore parameter values were left alone, unless needed to improve the fit.
 
 What about recharge? Remember from the posterior parameter distributions plotted above, we see `rch` parameter values deviated from the prior the most.
 
@@ -593,11 +593,11 @@ Better...maybe? But still failing. How is this possible?!
 
 ## Model-to-Measurement Misfit is not just Measurement Noise
 
-We specified PHIMLIM to ensure that, at best, PEST would achieve a fit _as good_ as ___measured___ data quality justified. This assumes that the model is actually able to schieve such a fit! 
+We specified PHIMLIM to ensure that, at best, PEST would achieve a fit _as good_ as ___measured___ data quality justified. This assumes that the model is actually able to achieve such a fit! 
 
-But! in practice, measurement noise is only one component of model-to-measurment misfit. The other is ___model error___. We are trying to get an ideal fit, with an imperfect model. Perhaps a higher PHIMLLIM would be a more reliable approach. Given the odd parameter distributions above, makes sense.
+But! in practice, measurement noise is only one component of model-to-measurement misfit. The other is ___model error___. We are trying to get an ideal fit, with an imperfect model. Perhaps a higher PHIMLLIM would be a more reliable approach. Given the odd parameter distributions above, makes sense.
 
-But what value to use...How will we know we have eliminated the overfitting problem? Well..in the real-world, we will never know. In practice, this is where your professional judgment comes in. The modeller must decide what is a justifiable level of fit given the models' limitations.
+But what value to use...How will we know we have eliminated the overfitting problem? Well..in the real-world, we will never know. In practice, this is where your professional judgement comes in. The modeller must decide what is a justifiable level of fit given the models' limitations.
 
 
 ```python
@@ -637,7 +637,7 @@ pst = pyemu.Pst(os.path.join(m_d, 'freyberg_reg.pst'))
 pst.phi
 ```
 
-Now we see that parameters have not deviated as much from the intial values. Not surprising, since we set the PHIMLIM so high.
+Now we see that parameters have not deviated as much from the initial values. Not surprising, since we set the PHIMLIM so high.
 
 
 ```python

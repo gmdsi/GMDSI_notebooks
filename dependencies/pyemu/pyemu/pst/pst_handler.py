@@ -3863,8 +3863,6 @@ class Pst(object):
                 df[unique_keys] = meta_dict[unique_keys]
             except Exception as e:
                 print("error parsing metadata from '{0}', continuing".format(name))
-        
-        
 
     def rename_parameters(self, name_dict, pst_path=".", tplmap=None):
         """rename parameters in the control and template files

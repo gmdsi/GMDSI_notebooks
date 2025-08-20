@@ -8,14 +8,14 @@ math: mathjax3
 
 # History Match Freyberg using K and Recharge
 
-This notebook continues where the `freyberg_k.ipynb` notebook left off. In the previous notebook we calibrated the Freyberg model by adjusting a single parameter - `K`. We were able to obtain excelent fits with measured heads, and _aparently_ forecast uncertainties were very very low. This was of course __wrong__, as we will see over the course of the next few tutorials.
+This notebook continues where the `freyberg_k.ipynb` notebook left off. In the previous notebook we calibrated the Freyberg model by adjusting a single parameter - `K`. We were able to obtain excellent fits with measured heads, and _apparently_ forecast uncertainties were very very low. This was of course __wrong__, as we will see over the course of the next few tutorials.
 
 In this tutorial we introduce the concepts of non-uniqueness and parameter correlation. We will repeat the same calibration and uncertainty analysis but with two adjustable parameters - hydraulic conductivity (`K`) and recharge (`rch0`). 
 
-In the previous tutorial, recharge parameters were fixed. Remember that when a parameter is fixed (e.g. not adjustable during calibration or uncertainty analysis), this implies that it is perfectly known. Rarely, if ever, is a parameter value perfectly known. Recharge in particular. Recharge is hard ot measure int he field and diffcult to upscale to a model domain. It is never perfectly known and should be included in the parameter estimation process. Let's get to it.
+In the previous tutorial, recharge parameters were fixed. Remember that when a parameter is fixed (e.g. not adjustable during calibration or uncertainty analysis), this implies that it is perfectly known. Rarely, if ever, is a parameter value perfectly known. Recharge in particular. Recharge is hard to measure in the field and difficult to upscale to a model domain. It is never perfectly known and should be included in the parameter estimation process. Let's get to it.
 
 ### Admin
-We have provided some pre-cooked PEST dataset files, wraped around the modified Freyberg model. This is the same dataset introduced in the "freyberg_pest_setup" and "freyberg_k" notebooks. 
+We have provided some pre-cooked PEST dataset files, wrapped around the modified Freyberg model. This is the same dataset introduced in the "freyberg_pest_setup" and "freyberg_k" notebooks. 
 
 The functions in the next cell import required dependencies and prepare a folder for you. This folder contains the model files and a preliminary PEST setup. Run the cells, then inspect the new folder named "freyberg_k" which has been created in your tutorial directory. (Just press `shift+enter` to run the cells). 
 
@@ -137,7 +137,7 @@ pst.adj_par_names
 
 So only `hk1` is adjustable. We want to make `rch0` adjustable as well. (`rch0` is a factor by which mean historical recharge is multiplied.)
 
-We can do so by chaging the parameter transfrom in the `parameter data` section of the onctrol file:
+We can do so by changing the parameter transform in the `parameter data` section of the control file:
 
 
 ```python
@@ -408,7 +408,7 @@ pst.phi
 
 
 
-Awesome, good to go. We can set `NOPTMAX` to 20 and let PEST loose. We are actualy going to do this twice. Once with `K` and `rch0` adjustable ( `freyberg_k_r.pst` ) and once with only `k` adjustable (`freyberg_k.pst`). The latter is a repeat of the previous tutorial. We will do it again just so that we can compare outcomes.
+Awesome, good to go. We can set `NOPTMAX` to 20 and let PEST loose. We are actually going to do this twice. Once with `K` and `rch0` adjustable ( `freyberg_k_r.pst` ) and once with only `k` adjustable (`freyberg_k.pst`). The latter is a repeat of the previous tutorial. We will do it again just so that we can compare outcomes.
 
 
 ```python
@@ -451,7 +451,7 @@ pyemu.os_utils.run("pestpp-glm freyberg_k_r.pst", cwd=tmp_d)
 
 ## Explore Results
 
-PEST writes lots of usefull information to the `*.rec` file. It also outputs a series of other useful files. What outputs are recorded depends on which version of PEST or PEST++ is being used. Here we will use PEST++GLM. The following section will demonstrate usefull information that can be found in some of the outputs. Throughout subsequent tutorials we will address others.
+PEST writes lots of useful information to the `*.rec` file. It also outputs a series of other useful files. What outputs are recorded depends on which version of PEST or PEST++ is being used. Here we will use PEST++GLM. The following section will demonstrate useful information that can be found in some of the outputs. Throughout subsequent tutorials we will address others.
 
 ### Objective Function
 First let's look at the measurement objective function (Phi), which is calculated using the sum of squared weighted residuals.  First we'll look at a table, then plots.
@@ -464,7 +464,7 @@ df_obj_k = pd.read_csv(os.path.join(tmp_d, "freyberg_k.iobj"),index_col=0)
 df_obj_k_r = pd.read_csv(os.path.join(tmp_d, "freyberg_k_r.iobj"),index_col=0)
 ```
 
-Let's compare the proress in Phi for both cases:
+Let's compare the process in Phi for both cases:
 
 
 ```python
@@ -482,7 +482,7 @@ df_obj_k_r.loc[:,["total_phi","model_runs_completed"]].plot(y='total_phi', ax=ax
     
 
 
-Looks like giving PEST more "flexibility" (i.e. more parmaters) allows it to get a better fit with measured data. (the Phi obtained by `k+r` is lower).
+Looks like giving PEST more "flexibility" (i.e. more parameters) allows it to get a better fit with measured data. (the Phi obtained by `k+r` is lower).
 
 ### What about the parameter uncertainties? 
 
@@ -660,7 +660,7 @@ for pname in df_paru_concat.index:
 Damn...so `hk1` uncertainty increases if we include `rch0`.  
 
 ## Forecasts
-Let's look at the forecast uncertainties. First for the singe parameter, `k` case. 
+Let's look at the forecast uncertainties. First for the single parameter, `k` case. 
 Sweet - nice and tight 
 
 
@@ -717,7 +717,7 @@ Look at this slightly modified version of the groundwater governing equation fro
   <img src="freyberg_k_and_r_files\GW_GE2.jpg" style="float: center">
  
  
- Recall the Bravo et al. (2002) trough when calibrating K and R with only heads:
+ Recall the Bravo et al. (2002) through when calibrating K and R with only heads:
  
   <img src="freyberg_k_and_r_files\Fig9.11a_bravo_trough.jpeg" style="float: center">
   
@@ -779,7 +779,7 @@ R.df()
 
 Wow - correlated.  Recall that Hill and Tiedeman (2007) suggest that correlation > 0.95 or so is not estimable. Even though estimating both R and K using only head observations is not possible because of this correlation, PEST++ gave you an answer.  
 
-So how did PEST++ deal with this intractable correlation? Let's check how paramter values changed throught the PEST run. Parameter values per iteration are recorded in the `freyberg_k_r.ipar` file.
+So how did PEST++ deal with this intractable correlation? Let's check how parameter values changed throughout the PEST run. Parameter values per iteration are recorded in the `freyberg_k_r.ipar` file.
 
 
 ```python
@@ -878,9 +878,9 @@ plt.xlabel('iteration');
     
 
 
-So PEST++ found a combination of `hk1` and `rch0` that provide an "optimal" fit. It then continues to test changes in parameter values; however, it retains the ratio between these correlated parameters. As this results in no improvement of Phi, PEST halts operation (in this case afetr 3 iterations of no improvement).
+So PEST++ found a combination of `hk1` and `rch0` that provide an "optimal" fit. It then continues to test changes in parameter values; however, it retains the ratio between these correlated parameters. As this results in no improvement of Phi, PEST halts operation (in this case after 3 iterations of no improvement).
 
-Effectively, PEST has detemrined the optimal ratio of these two parameters. But not necessarily their "correct" absolute values.
+Effectively, PEST has determined the optimal ratio of these two parameters. But not necessarily their "correct" absolute values.
 
 ## Last point
 
