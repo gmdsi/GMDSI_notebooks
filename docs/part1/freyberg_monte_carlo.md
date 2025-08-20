@@ -25,7 +25,7 @@ In this notebook we will:
 3. Look at the effect of prior parameter uncertainty covariance
 4. Start thinking of the advantages and disadvantages of linear and nonlinear uncertainty methods
 
-This notebook is going to be computationaly tough and may tax your computer. So buckle up. 
+This notebook is going to be computationally tough and may tax your computer. So buckle up. 
 
 
 ### Admin
@@ -124,7 +124,7 @@ pst_name = "freyberg_pp.pst"
 pst = pyemu.Pst(os.path.join(working_dir,pst_name))
 #update parameter data
 par = pst.parameter_data
-#update paramter transform
+#update parameter transform
 par.loc[:, 'partrans'] = 'log'
 ```
 
@@ -160,7 +160,7 @@ pst.phi
 
 In it's simplest form, Monte Carlo boils down to: (1) "draw" many random samples of parameters from the prior probability distribution, (2) run the model, (3) look at the results.
 
-So how do we "draw", or sample, parameters? (Think "draw" as in "drawing a card from a deck"). We need to randomly sample parameter values from a range. This range is defined by the _prior parameter probability distribution_. As we did for FOSM, let's assume that the bounds in the parameter data section define the range of a Gaussian (or normal) distribution, and that the intial values define the mean. 
+So how do we "draw", or sample, parameters? (Think "draw" as in "drawing a card from a deck"). We need to randomly sample parameter values from a range. This range is defined by the _prior parameter probability distribution_. As we did for FOSM, let's assume that the bounds in the parameter data section define the range of a Gaussian (or normal) distribution, and that the initial values define the mean. 
 
 ### The Prior
 
@@ -171,7 +171,7 @@ We can use `pyemu` to sample parameter values from such a distribution. First, c
 prior_cov = pyemu.Cov.from_parameter_data(pst)
 ```
 
-What did we do there? We generated a covariance matrix from the parameter bound values. The next cell displays an image of the matrix. As you can see, all off-diagonal values are zero. Therefore no parameter correaltion is accounted for. 
+What did we do there? We generated a covariance matrix from the parameter bound values. The next cell displays an image of the matrix. As you can see, all off-diagonal values are zero. Therefore no parameter correlation is accounted for. 
 
 This covariance matrix is the _prior_ (before history matching) parameter covariance. 
 
@@ -399,7 +399,7 @@ hbd.plot_ensemble_arr(pe_k, working_dir, 10)
     
 
 
-That does not look very realistic. Do these look "right" (from a geologic stand point)? Lots of "random" variation (pilot points spatially near each other can have very different values)...not much structure...why? Because we have not specified any parameter correlation. Each pilot point is statisticaly independent. 
+That does not look very realistic. Do these look "right" (from a geologic stand point)? Lots of "random" variation (pilot points spatially near each other can have very different values)...not much structure...why? Because we have not specified any parameter correlation. Each pilot point is statistically independent. 
 
 How do we express that in the prior? We need to express parameter spatial covariance with a geostatistical structure. Much the same as we did for regularization. Let's build a covariance matrix for pilot point parameters.
 
@@ -712,7 +712,7 @@ plt.colorbar()
     
 
 
-Now re-sample using the geostatisticaly informed prior:
+Now re-sample using the geostatistically informed prior:
 
 
 ```python
@@ -909,7 +909,7 @@ parensemble.head()
 
 
 
-Now when we plot the spatialy distributed parameters (`hk1`), it still doesn't look very "natural", but at least we can see some structure and points which are near to each other are more ikely to be similar:
+Now when we plot the spatially distributed parameters (`hk1`), it still doesn't look very "natural", but at least we can see some structure and points which are near to each other are more likely to be similar:
 
 
 ```python
@@ -984,7 +984,7 @@ for pname in pst.par_names[:5]:
     
 
 
-Notice anything funny? Compare these distributions to the uper/lower bounds in the `pst.parameter_data`. There seem to be many parameters "bunched up" at the bounds. This is due to the gaussian distribution being truncated at the parameter bounds.
+Notice anything funny? Compare these distributions to the upper/lower bounds in the `pst.parameter_data`. There seem to be many parameters "bunched up" at the bounds. This is due to the gaussian distribution being truncated at the parameter bounds.
 
 
 ```python
@@ -1434,7 +1434,7 @@ pst.phi
 
 
 
-Let's say any Phi below 2x `pst.phi` is aceptable (which is pretty poor by the way...):
+Let's say any Phi below 2x `pst.phi` is acceptable (which is pretty poor by the way...):
 
 
 ```python
@@ -1467,7 +1467,7 @@ plt.show()
     
 
 
-Now the payoff - using our good runs, let's make some probablistic plots!  Here's our parameters
+Now the payoff - using our good runs, let's make some probabilistic plots!  Here's our parameters
 
 Gray blocks the full the range of the realizations.  These are within our bounds of reasonable given what we knew when we started, so those grey boxes represent our prior
 
@@ -1560,7 +1560,7 @@ for forecast in pst.forecast_names:
     
 
 
-We see for some of the foreacsts that the prior and posterior are similar - indicating that "calibration" hasn't helped reduce forecast uncertainty. That being said, given the issues noted above for high-dimensional conditioned-MC, the very very few realisations we are using here to assess the posterior make it a bit dubious.
+We see for some of the forecasts that the prior and posterior are similar - indicating that "calibration" hasn't helped reduce forecast uncertainty. That being said, given the issues noted above for high-dimensional conditioned-MC, the very very few realisations we are using here to assess the posterior make it a bit dubious.
 
 And, as you can see, some of the true forecast values are not being covered by the posterior. So - failing.
 
@@ -1636,7 +1636,7 @@ sc = pyemu.Schur(jco=os.path.join(m_d,pst_name.replace(".pst",".jcb")),
                 parcov=prior_cov) # geostatistically informed prior covariance matrix we built earlier
 ```
 
-Update the control file with the "best fit" parameters (e.g. the calibrated parameters). These values are the mean ofthe posterior parameter probability distribution.
+Update the control file with the "best fit" parameters (e.g. the calibrated parameters). These values are the mean of the posterior parameter probability distribution.
 
 
 ```python
@@ -1646,7 +1646,7 @@ sc.pst.parrep(os.path.join(m_d,pst_name.replace(".pst",".parb")))
     parrep: updating noptmax to 0
     
 
-Now we sample parameters from the linearized (because it is based on the linear analysis/FOSM derived posterior) posterior probability dristribution. We obtain the mean of the distribution from the calibrated parameters (the parameter values of _minimum error variance_). We obtain the variance from the posterior parameter covariance matrix ($X^{t}QX$).
+Now we sample parameters from the linearized (because it is based on the linear analysis/FOSM derived posterior) posterior probability distribution. We obtain the mean of the distribution from the calibrated parameters (the parameter values of _minimum error variance_). We obtain the variance from the posterior parameter covariance matrix ($X^{t}QX$).
 
 
 ```python
@@ -2278,6 +2278,6 @@ for forecast in pst.forecast_names:
 
 What have we learnt? Even though we are avoiding the assumptions of linearity required for FOSM, and burning a lot more silicone, this does not guarantee that the uncertainty analysis is conservative. Why? Because we are not considering relevant sources of parameter uncertainty. We are not accounting for spatial variability of porosity...boundary condition parameters (e.g. GHB, WEL and STR parameters)...temporal variability of recharge and pumping rates...and so on. 
 
-But we also saw that, with high-dimensional problems, these brute-force approaches to sampling the (non linear) posterior probability distribution get extremely computationaly expensive. In the past, the Null-Space Monte Carlo [(Tonkin and Doherty, 2009)](https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2007WR006678) provided an option that reduced the burden of calibration-constrained Monte Carlo. More recently, ensemble methods such as are avialble in [PEST++IES](https://github.com/usgs/pestpp/blob/master/documentation/pestpp_users_manual.md#9-pestpp-ies) provide an even more efficient option.
+But we also saw that, with high-dimensional problems, these brute-force approaches to sampling the (non linear) posterior probability distribution get extremely computationally expensive. In the past, the Null-Space Monte Carlo [(Tonkin and Doherty, 2009)](https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2007WR006678) provided an option that reduced the burden of calibration-constrained Monte Carlo. More recently, ensemble methods such as are avialble in [PEST++IES](https://github.com/usgs/pestpp/blob/master/documentation/pestpp_users_manual.md#9-pestpp-ies) provide an even more efficient option.
 
 We cover the use of PEST++IES in Part2 of these tutorials, where we introduce workflows for a very high-dimensional prameterisation scheme. 

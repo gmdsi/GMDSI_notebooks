@@ -25,7 +25,7 @@ def add_1to1(ax):
         np.min([ax.get_xlim(), ax.get_ylim()]),  # min of both axes
         np.max([ax.get_xlim(), ax.get_ylim()]),  # max of both axes
     ]
-    # now plot both limits against eachother
+    # now plot both limits against each other
     ax.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
     return
 
@@ -153,7 +153,7 @@ def get_meas_data(tmp_d='freyberg_mf6'):
     obs_data.site = obs_data.site.str.lower()
     obs_data.set_index('site', inplace=True)
     
-    # restructure the obsevration data 
+    # restructure the observation data 
     obs_sites = obs_data.index.unique().tolist()
     #model_times = pst.observation_data.time.dropna().astype(float).unique()
     model_times = pd.read_csv(os.path.join(tmp_d, 'heads.csv')).time.values

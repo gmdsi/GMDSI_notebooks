@@ -16,10 +16,10 @@ Methods of spatial parameterisation based on pilot points reduce these issues. W
 
 This introduces the need for a model pre-processor that handles interpolation from pilot points to the model grid (and assigns values to model input files). The PLPROC suite of software is one option. `pyEMU` includes python-based alternatives.
 
-In this notebook we will employ pilot points to parameterize hydraulic conductivity in the Freyberg model discussed in previous tutorials. Here, we will be adding pilot points to an existing pest setup. This may be usefull in some cases, specially when dealing with legacy models. However, it may be a non-standard workflow.  The approach demonstrated in this notebook is __not__ the recommended approach to construct a highly-parameterized PEST setup with `pyEMU`. We are using it here simply to maintain a coherent narative throughout the `Part1` tutorial notebooks. See `Part2` of the GMDSI Notebooks for a tutorial on `pyemu.PstFrom` instead. 
+In this notebook we will employ pilot points to parameterize hydraulic conductivity in the Freyberg model discussed in previous tutorials. Here, we will be adding pilot points to an existing pest setup. This may be useful in some cases, specially when dealing with legacy models. However, it may be a non-standard workflow.  The approach demonstrated in this notebook is __not__ the recommended approach to construct a highly-parameterized PEST setup with `pyEMU`. We are using it here simply to maintain a coherent narrative throughout the `Part1` tutorial notebooks. See `Part2` of the GMDSI Notebooks for a tutorial on `pyemu.PstFrom` instead. 
  
 ### Admin
-We have provided some pre-cooked PEST dataset files, wraped around the modified Freyberg model. This is the same dataset introduced in the "freyberg_pest_setup" and subsequent notebooks. 
+We have provided some pre-cooked PEST dataset files, wrapped around the modified Freyberg model. This is the same dataset introduced in the "freyberg_pest_setup" and subsequent notebooks. 
 
 The functions in the next cell import required dependencies and prepare a folder for you. This folder contains the model files and a preliminary PEST setup. Run the cells, then inspect the new folder named "freyberg_mf6" which has been created in your tutorial directory. (Just press `shift+enter` to run the cells). 
 
@@ -79,7 +79,7 @@ As we did in the last tutorial, set `rch0` parameter transform to `log`:
 
 
 ```python
-#update paramter transform
+#update parameter transform
 par = pst.parameter_data
 par.loc['rch0', 'partrans'] = 'log'
 ```
@@ -98,7 +98,7 @@ OK, we currently have the model and PEST(++) setup introduced in the "freyberg k
 
 We will now setup pilot points as a parameterisation device for hydraulic conductivity. There are multiple approaches to implementing pilot points with PEST++. In this class, we will use some kick-ass `pyemu` sweetness.
 
-The followng section relies on the use of `flopy`. Functionalitly for setting up pilot points in `pyemu` is limited to MODFLOW models. If you are using other groundwater modelling software, you will need to construct them yourself or check whether it is supported by PLPROC.
+The following section relies on the use of `flopy`. Functionality for setting up pilot points in `pyemu` is limited to MODFLOW models. If you are using other groundwater modelling software, you will need to construct them yourself or check whether it is supported by PLPROC.
 
 Start by loading the model using `flopy`.
 
@@ -218,7 +218,7 @@ plt.colorbar(p)
 ax.scatter(df_pp.x,df_pp.y,marker='.',s=4,color='r');
 ```
 
-We see that at the pilot point locations (red dots), the uncertainty in the geostats is minimal...as expected. The color scale is uncertainty. It increaes with distance to pilot points.
+We see that at the pilot point locations (red dots), the uncertainty in the geostats is minimal...as expected. The color scale is uncertainty. It increases with distance to pilot points.
 
 The call to ``.calc_factors_grid()`` also returns a ``DataFrame`` which has useful info - lets look:
 
@@ -264,7 +264,7 @@ ax.scatter(df_pp.x,df_pp.y,marker='.',s=4,color='k')
 
 What happens if you recalculate the factors using one point for every cell? Change ``max_interp_pts`` to 1 in the ``calc_factors_grid()`` and rerun these cells.
 
-### (Foreshadowng) An aside on geostatistics and covariance matrices
+### (Foreshadowing) An aside on geostatistics and covariance matrices
 
 The ``GeoStruct`` object above was used to interpolate from pilot point locations to each node in the grid.  But this same ``GoeStruct`` also has an important information regarding how the pilot points are related to each other spatially---that is, the ``GeoStruct`` object implies a covariance matrix.  Let's form that matrix 
 
@@ -289,7 +289,7 @@ What do these numbers mean?  Why should you care?  Well, this covariance matrix 
 
 ## Build a control file using these pilot points
 
-There's a fair amount of support in pyemu for building control files and setting PEST inferfaces.  Here we will only briefly touch on some of the basic components.  If you have created template files and instruction files, and have used our proposed naming convention, then you can quickly generate a control file using the following call
+There's a fair amount of support in pyemu for building control files and setting PEST interfaces.  Here we will only briefly touch on some of the basic components.  If you have created template files and instruction files, and have used our proposed naming convention, then you can quickly generate a control file using the following call
 
 First let's just get rid of the existing `hk1` parameter (for simplicity, we are simply going to replace it with the pilot point parameters):
 
@@ -303,7 +303,7 @@ hk_parval, hkub, hklb
 
 ```python
 pst.drop_parameters(tpl_file=os.path.join(tmp_d,'freyberg6.npf_k_layer1.txt.tpl'), pst_path='.', )
-# remove the .tpl file for tidyness
+# remove the .tpl file for tidiness
 os.remove(os.path.join(tmp_d,'freyberg6.npf_k_layer1.txt.tpl') )
 # check the difference
 pst.parameter_data
@@ -326,11 +326,11 @@ pst.parameter_data.head(6)
 ```
 
 ## Model Pre-Processor
-We have aded the pilot point parameters to the control file, but still need to add a pre-processor to the "model run" bacth/script file. Currently, it only runs MODFLOW and MODPATH. We need an additional step beforehand to interpolate values fmor pilot points to model grid and assign values to model input files (as we did earlier.)
+We have added the pilot point parameters to the control file, but still need to add a pre-processor to the "model run" batch/script file. Currently, it only runs MODFLOW and MODPATH. We need an additional step beforehand to interpolate values from pilot points to model grid and assign values to model input files (as we did earlier.)
 
 Easy enough, let's write a python script file that implements the same steps we did above, as well as run MODFLOW and MODPATH.
 
-Write amodel run script, with a pre-processor:
+Write a model run script, with a pre-processor:
 
 
 ```python
@@ -377,7 +377,7 @@ Watch the terminal window where you launched this notebook to see the progress o
 pyemu.os_utils.run("pestpp-glm freyberg_pp.pst", cwd=tmp_d)
 ```
 
-Check if it completed sucessfully:
+Check if it completed successfully:
 
 
 ```python
