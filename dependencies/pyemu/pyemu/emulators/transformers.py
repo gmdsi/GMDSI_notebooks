@@ -4,6 +4,7 @@ Transformer classes for data transformations in emulators.
 from __future__ import print_function, division
 import numpy as np
 import pandas as pd
+import importlib
 
 
 # Check sklearn availability at module level
@@ -392,20 +393,186 @@ class StandardScalerTransformer(BaseTransformer):
             result[self._fitted_columns] = transformed_values
             
         return result
-            
+
     def inverse_transform(self, X):
         if self._sklearn_scaler is None:
             raise ValueError("Transformer must be fitted before inverse_transform")
-        
         result = X.copy()
-        
         if self._fitted_columns:
-            # Inverse transform using sklearn
             inverse_values = self._sklearn_scaler.inverse_transform(X[self._fitted_columns].values)
-            
-            # Update only the fitted columns in the result
             result[self._fitted_columns] = inverse_values
-            
+        return result
+
+class SklearnTransformer(BaseTransformer):
+    """Generic wrapper for any scikit-learn style transformer.
+
+    This class allows users to plug in an arbitrary sklearn transformer/scaler
+    (any estimator implementing ``fit`` and ``transform``) while preserving
+    DataFrame column alignment and (optionally) inverse transformation when
+    supported.
+
+    Parameters
+    ----------
+    estimator : object, optional
+        An already-instantiated sklearn transformer. Takes precedence over
+        ``estimator_class`` and ``estimator_path`` if supplied.
+    estimator_class : type, optional
+        A transformer class (not an instance). Will be instantiated with
+        ``init_kwargs`` if provided.
+    estimator_path : str, optional
+        Dotted import path to a transformer class, e.g.
+        "sklearn.preprocessing.RobustScaler". Used only if neither
+        ``estimator`` nor ``estimator_class`` are given.
+    init_kwargs : dict, optional
+        Keyword arguments for instantiating the transformer when a class or
+        import path is supplied.
+    columns : list, optional
+        Column subset to transform. If None, all columns are used.
+    allow_no_inverse : bool, default=False
+        If True and the underlying estimator lacks ``inverse_transform``, the
+        data are passed through unchanged on ``inverse_transform`` instead of
+        raising.
+    strict_shape : bool, default=True
+        If True, enforce that the transformer does not change the number of
+        columns (features). Many sklearn transformers (e.g., PCA) alter the
+        feature dimension; such usage will raise if this flag is True.
+
+    Notes
+    -----
+    * Only *column-wise* transformers that preserve dimensionality are
+      supported when ``strict_shape=True``.
+    * For dimensionality-reducing transformers, set ``strict_shape=False`` and
+      manage column naming outside this wrapper (not recommended inside the
+      current pipeline which expects stable column sets).
+
+    Examples
+    --------
+    >>> from sklearn.preprocessing import RobustScaler
+    >>> tr = SklearnTransformer(estimator=RobustScaler(), columns=["a","b"])\
+    ...     .fit(df)
+    >>> df_scaled = tr.transform(df)
+    >>> df_orig = tr.inverse_transform(df_scaled)
+
+    >>> # Using dotted path
+    >>> tr = SklearnTransformer(estimator_path="sklearn.preprocessing.MinMaxScaler",
+    ...                         init_kwargs={"feature_range": (0,1)},
+    ...                         columns=["c"]).fit(df)
+    >>> df_scaled = tr.transform(df)
+    """
+
+    def __init__(self, estimator=None, estimator_class=None, estimator_path=None,
+                 init_kwargs=None, columns=None, allow_no_inverse=False,
+                 strict_shape=True):
+        if not HAS_SKLEARN:
+            raise ImportError("scikit-learn is required for SklearnTransformer but is not installed")
+        self.columns = columns
+        self.allow_no_inverse = allow_no_inverse
+        self.strict_shape = strict_shape
+        self._provided_estimator = estimator
+        self._estimator_class = estimator_class
+        self._estimator_path = estimator_path
+        self._init_kwargs = init_kwargs or {}
+        self._estimator = None
+        self._fitted_columns = None
+        self._has_inverse = False
+
+    def _resolve_estimator(self):
+        if self._estimator is not None:
+            return self._estimator
+        if self._provided_estimator is not None:
+            est = self._provided_estimator
+        else:
+            cls = None
+            if self._estimator_class is not None:
+                cls = self._estimator_class
+            elif self._estimator_path is not None:
+                # dynamic import
+                module_path, _, class_name = self._estimator_path.rpartition('.')
+                if not module_path:
+                    raise ValueError("Invalid estimator_path: must include module and class, e.g. 'sklearn.preprocessing.RobustScaler'")
+                try:
+                    mod = importlib.import_module(module_path)
+                except ImportError as e:
+                    raise ImportError(f"Could not import module '{module_path}' for estimator_path '{self._estimator_path}': {e}")
+                try:
+                    cls = getattr(mod, class_name)
+                except AttributeError:
+                    raise ImportError(f"Module '{module_path}' has no attribute '{class_name}' (from estimator_path '{self._estimator_path}')")
+            else:
+                raise ValueError("One of 'estimator', 'estimator_class', or 'estimator_path' must be provided")
+            try:
+                est = cls(**self._init_kwargs)
+            except TypeError as e:
+                raise TypeError(f"Failed to instantiate estimator '{cls}' with init_kwargs {self._init_kwargs}: {e}")
+        # basic protocol check
+        for meth in ("fit", "transform"):
+            if not hasattr(est, meth):
+                raise AttributeError(f"Provided estimator {est} lacks required method '{meth}'")
+        self._estimator = est
+        self._has_inverse = hasattr(est, 'inverse_transform') and callable(getattr(est, 'inverse_transform'))
+        return est
+
+    def fit(self, X):
+        columns = self.columns if self.columns is not None else X.columns
+        columns = [c for c in columns if c in X.columns]
+        self._fitted_columns = columns
+        est = self._resolve_estimator()
+        if columns:
+            est.fit(X[columns].values)
+        return self
+
+    def transform(self, X):
+        if self._estimator is None:
+            raise ValueError("Transformer must be fitted before transform")
+        result = X.copy()
+        if self._fitted_columns:
+            transformed = self._estimator.transform(X[self._fitted_columns].values)
+            # Ensure 2D ndarray
+            if hasattr(transformed, 'toarray'):
+                transformed = transformed.toarray()
+            transformed = np.asarray(transformed)
+            # Shape validation
+            if self.strict_shape and transformed.shape[1] != len(self._fitted_columns):
+                raise ValueError(
+                    f"Underlying estimator changed feature count from {len(self._fitted_columns)} to {transformed.shape[1]} which is incompatible with pipeline; set strict_shape=False to allow."
+                )
+            if transformed.shape[1] != len(self._fitted_columns):
+                # adapt column naming if allowed
+                if not self.strict_shape:
+                    new_cols = [f"{self._fitted_columns[0]}__f{i}" for i in range(transformed.shape[1])]
+                    # Insert new columns at end to avoid collision
+                    for name, col_data in zip(new_cols, transformed.T):
+                        result[name] = col_data
+                    # Optionally drop original columns
+                    result.drop(columns=self._fitted_columns, inplace=True)
+                else:
+                    # Already raised above, but guard anyway
+                    raise ValueError("Feature shape mismatch")
+            else:
+                result[self._fitted_columns] = transformed
+        return result
+
+    def inverse_transform(self, X):
+        if self._estimator is None:
+            raise ValueError("Transformer must be fitted before inverse_transform")
+        if not self._has_inverse:
+            if self.allow_no_inverse:
+                return X.copy()
+            raise ValueError("Underlying estimator does not implement inverse_transform and allow_no_inverse=False")
+        result = X.copy()
+        if self._fitted_columns:
+            inverse_vals = self._estimator.inverse_transform(X[self._fitted_columns].values)
+            if hasattr(inverse_vals, 'toarray'):
+                inverse_vals = inverse_vals.toarray()
+            inverse_vals = np.asarray(inverse_vals)
+            if inverse_vals.shape[1] != len(self._fitted_columns):
+                raise ValueError("inverse_transform feature count mismatch")
+            result[self._fitted_columns] = inverse_vals
+
+        # raise error if nans or inf
+        if not np.isfinite(result[self._fitted_columns]).all():
+            raise ValueError("Inverse transform resulted in NaN or infinite values")
+
         return result
 
 class NormalScoreTransformer(BaseTransformer):
@@ -812,5 +979,7 @@ class AutobotsAssemble:
             return StandardScalerTransformer(**kwargs)
         elif transform_type == "minmax_scaler":
             return MinMaxScaler(**kwargs)
+        elif transform_type == "sklearn":
+            return SklearnTransformer(**kwargs)
         else:
             raise ValueError(f"Unknown transform type: {transform_type}")

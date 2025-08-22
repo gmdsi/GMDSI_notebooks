@@ -2,6 +2,7 @@ from .transformers import (
     BaseTransformer,
     Log10Transformer,
     RowWiseMinMaxScaler,
+    MinMaxScaler,
     #StandardScalerTransformer,
     NormalScoreTransformer,
     TransformerPipeline,
@@ -21,6 +22,7 @@ __all__ = [
     'BaseTransformer',
     'Log10Transformer',
     'RowWiseMinMaxScaler',
+    'MinMaxScaler',
 #    'StandardScalerTransformer',
     'NormalScoreTransformer',
     'TransformerPipeline',
@@ -38,8 +40,8 @@ except ImportError:
 if HAS_SKLEARN:
     from .lpfa import LPFA
     from .gpr import GPR
-    from .transformers import StandardScalerTransformer
-    __all__.extend(['LPFA', 'GPR','StandardScalerTransformer'])
+    from .transformers import StandardScalerTransformer, SklearnTransformer
+    __all__.extend(['LPFA', 'GPR','StandardScalerTransformer', 'SklearnTransformer'])
 else:
     # Create placeholder classes that raise informative errors
     class LPFA:
@@ -53,3 +55,8 @@ else:
     class StandardScalerTransformer:
         def __init__(self, *args, **kwargs):
             raise ImportError("StandardScalerTransformer requires scikit-learn. Install with: pip install scikit-learn")
+
+    class SklearnTransformer:
+        def __init__(self, *args, **kwargs):
+            raise ImportError("SklearnTransformer requires scikit-learn. Install with: pip install scikit-learn")
+    __all__.extend(['SklearnTransformer'])

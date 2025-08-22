@@ -1,0 +1,2 @@
+[console_scripts]
+get-pestpp = pyemu.utils.get_pestpp:cli_main
