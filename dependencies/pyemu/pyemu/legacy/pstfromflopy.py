@@ -296,7 +296,7 @@ def apply_list_pars():
     org_files = os.listdir(org_dir)
     # for fname in df.filename.unique():
     for fname in org_files:
-        # need to get the PAK name to handle stupid horrible expceptions for HFB...
+        # need to get the PAK name to handle stupid horrible exceptions for HFB...
         # try:
         #     pakspat = sum([True if fname in i else False for i in spat_df.filename])
         #     if pakspat:
@@ -397,8 +397,8 @@ def setup_temporal_diff_obs(
             the differencing.  The order of the observations matters for the differencing.  If False, then
             the control file order is used.  If observation names have a datetime suffix, make sure the format is
             year-month-day to use this sorting.  Default is True
-        long_names (`bool`, optional): flag to use long, descriptive names by concating the two observation names
-            that are being differenced.  This will produce names that are too long for tradtional PEST(_HP).
+        long_names (`bool`, optional): flag to use long, descriptive names by concatenating the two observation names
+            that are being differenced.  This will produce names that are too long for traditional PEST(_HP).
             Default is True.
         prefix (`str`, optional): prefix to prepend to observation names and group names.  Default is "dif".
 
@@ -433,7 +433,7 @@ def setup_temporal_diff_obs(
         out_file = ins_file.replace(".ins", "")
 
     # find obs groups from the obs names in the ins that have more than one observation
-    # (cant diff single entry groups)
+    # (can't diff single entry groups)
     obs = pst.observation_data
     if include_zero_weight:
         group_vc = pst.observation_data.loc[ins.obs_name_set, "obgnme"].value_counts()
@@ -677,7 +677,7 @@ class PstFromFlopyModel(object):
         sfr_pars (`bool`): setup parameters for the stream flow routing modflow package.
             If list is passed it defines the parameters to set up.
         sfr_temporal_pars (`bool`)
-            flag to include stress-period level spatially-global multipler parameters in addition to
+            flag to include stress-period level spatially-global multiplier parameters in addition to
             the spatially-discrete `sfr_pars`.  Requires `sfr_pars` to be passed.  Default is False
         grid_geostruct (`pyemu.geostats.GeoStruct`): the geostatistical structure to build the prior parameter covariance matrix
             elements for grid-based parameters.  If None, a generic GeoStruct is created
@@ -705,14 +705,14 @@ class PstFromFlopyModel(object):
             2.0.  For parameters not found in par_bounds_dict,
             `pyemu.helpers.wildass_guess_par_bounds_dict` is
             used to set somewhat meaningful bounds.  Default is None
-        temporal_list_geostruct (`pyemu.geostats.GeoStruct`): the geostastical struture to
+        temporal_list_geostruct (`pyemu.geostats.GeoStruct`): the geostastical structure to
             build the prior parameter covariance matrix
             for time-varying list-type multiplier parameters.  This GeoStruct
             express the time correlation so that the 'a' parameter is the length of
             time that boundary condition multiplier parameters are correlated across.
             If None, then a generic GeoStruct is created that uses an 'a' parameter
             of 3 stress periods.  Default is None
-        spatial_list_geostruct (`pyemu.geostats.GeoStruct`): the geostastical struture to
+        spatial_list_geostruct (`pyemu.geostats.GeoStruct`): the geostastical structure to
             build the prior parameter covariance matrix
             for spatially-varying list-type multiplier parameters.
             If None, a generic GeoStruct is created using an "a" parameter that
@@ -1190,7 +1190,7 @@ class PstFromFlopyModel(object):
             self.log("setting up '{0}' dir".format(d))
 
     def _setup_model(self, model, org_model_ws, new_model_ws):
-        """setup the flopy.mbase instance for use with multipler parameters.
+        """setup the flopy.mbase instance for use with multiplier parameters.
         Changes model_ws, sets external_path and writes new MODFLOW input
         files
 
@@ -1222,7 +1222,7 @@ class PstFromFlopyModel(object):
             self.new_model_ws = new_model_ws
         try:
             self.sr = self.m.sr
-        except AttributeError:  # if sr doesnt exist anymore!
+        except AttributeError:  # if sr doesn't exist anymore!
             # assume that we have switched to model grid
             self.sr = SpatialReference.from_namfile(
                 os.path.join(self.org_model_ws, self.m.namefile),
@@ -1259,7 +1259,7 @@ class PstFromFlopyModel(object):
         return c
 
     def _prep_mlt_arrays(self):
-        """prepare multipler arrays.  Copies existing model input arrays and
+        """prepare multiplier arrays.  Copies existing model input arrays and
         writes generic (ones) multiplier arrays
 
         """
@@ -1541,7 +1541,7 @@ class PstFromFlopyModel(object):
         pp_dfs_k = {}
         fac_files = {}
         pp_processed = set()
-        pp_df.loc[:, "fac_file"] = np.NaN
+        pp_df.loc[:, "fac_file"] = np.nan
         for pg in pargp:
             ks = pp_df.loc[pp_df.pargp == pg, "k"].unique()
             if len(ks) == 0:
@@ -1640,8 +1640,8 @@ class PstFromFlopyModel(object):
         out_files = mlt_df.loc[
             mlt_df.mlt_file.apply(lambda x: x.endswith(self.pp_suffix)), "mlt_file"
         ]
-        # mlt_df.loc[:,"fac_file"] = np.NaN
-        # mlt_df.loc[:,"pp_file"] = np.NaN
+        # mlt_df.loc[:,"fac_file"] = np.nan
+        # mlt_df.loc[:,"pp_file"] = np.nan
         for out_file in out_files:
             pp_df_pf = pp_df.loc[pp_df.out_file == out_file, :]
             fac_files = pp_df_pf.fac_file
@@ -1664,7 +1664,7 @@ class PstFromFlopyModel(object):
 
         self.par_dfs[self.pp_suffix] = pp_df
 
-        mlt_df.loc[mlt_df.suffix == self.pp_suffix, "tpl_file"] = np.NaN
+        mlt_df.loc[mlt_df.suffix == self.pp_suffix, "tpl_file"] = np.nan
 
     def _kl_prep(self, mlt_df):
         """prepare KL based parameterizations"""
@@ -1732,19 +1732,19 @@ class PstFromFlopyModel(object):
             mlt_df.loc[mlt_df.prefix == prefix, "pp_upper_limit"] = 1.0e10
 
         print(kl_mlt_df)
-        mlt_df.loc[mlt_df.suffix == self.kl_suffix, "tpl_file"] = np.NaN
+        mlt_df.loc[mlt_df.suffix == self.kl_suffix, "tpl_file"] = np.nan
         self.par_dfs[self.kl_suffix] = kl_df
         # calc factors for each layer
 
     def _setup_array_pars(self):
-        """main entry point for setting up array multipler parameters"""
+        """main entry point for setting up array multiplier parameters"""
         mlt_df = self._prep_mlt_arrays()
         if mlt_df is None:
             return
         mlt_df.loc[:, "tpl_file"] = mlt_df.mlt_file.apply(
             lambda x: os.path.split(x)[-1] + ".tpl"
         )
-        # mlt_df.loc[mlt_df.tpl_file.apply(lambda x:pd.notnull(x.pp_file)),"tpl_file"] = np.NaN
+        # mlt_df.loc[mlt_df.tpl_file.apply(lambda x:pd.notnull(x.pp_file)),"tpl_file"] = np.nan
         mlt_files = mlt_df.mlt_file.unique()
         # for suffix,tpl_file,layer,name in zip(self.mlt_df.suffix,
         #                                 self.mlt_df.tpl,self.mlt_df.layer,
@@ -2155,7 +2155,7 @@ class PstFromFlopyModel(object):
         observations.
 
         Args:
-            filename (`str`): the filename to save the contorl file to.  If None, the
+            filename (`str`): the filename to save the control file to.  If None, the
                 name if formed from the model namfile name.  Default is None.  The control
                 is saved in the `PstFromFlopy.m.model_ws` directory.
         Note:
@@ -2568,7 +2568,7 @@ class PstFromFlopyModel(object):
         info_df.loc[:, "model_ext_path"] = self.m.external_path
 
         # check that all files for a given package have the same number of entries
-        info_df.loc[:, "itmp"] = np.NaN
+        info_df.loc[:, "itmp"] = np.nan
         pak_dfs = {}
         for pak in info_df.pak.unique():
             df_pak = info_df.loc[info_df.pak == pak, :]
@@ -2762,9 +2762,9 @@ class PstFromFlopyModel(object):
         elif self.m.upw is not None:
             inact = self.m.upw.hdry
         if inact is None:
-            skip = lambda x: np.NaN if x == self.m.bas6.hnoflo else x
+            skip = lambda x: np.nan if x == self.m.bas6.hnoflo else x
         else:
-            skip = lambda x: np.NaN if x == self.m.bas6.hnoflo or x == inact else x
+            skip = lambda x: np.nan if x == self.m.bas6.hnoflo or x == inact else x
         print(self.hds_kperk)
         frun_line, df = setup_hds_obs(
             os.path.join(self.m.model_ws, hds_file),

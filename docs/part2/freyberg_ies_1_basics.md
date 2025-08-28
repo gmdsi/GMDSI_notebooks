@@ -8,13 +8,13 @@ math: mathjax3
 
 # PESTPP-IES - History Matching For "Nothing", Uncertainty Analysis for Free
 
-PESTPP-IES embodies an approach to data assimilation and uncertainty analysis which is a signifcant departure from the “calibrate first and do uncertainty analysis later”. PESTPP-IES does away with the search for a "unique" parameter field that calibrates a model. Instead, its goal is to obtain an _ensemble_ of parameter fields, all of which adequately reflect measured data and expert knowledge. 
+PESTPP-IES embodies an approach to data assimilation and uncertainty analysis which is a significant departure from the “calibrate first and do uncertainty analysis later”. PESTPP-IES does away with the search for a "unique" parameter field that calibrates a model. Instead, its goal is to obtain an _ensemble_ of parameter fields, all of which adequately reflect measured data and expert knowledge. 
 
 Unlike PESTPP-GLM and PEST(\_HP), PESTPP-IES does not calculate derivatives using finite parameter differences. Instead, it calculates approximate partial derivatives from cross-covariances between parameter values and model outputs that are calculated using members of the ensemble. A major benefit that is forthcoming from this approach to calculating partial derivatives is that the number of model runs required to history-match an ensemble is independent of the number of adjustable parameters. This means that it is feasible for a model to employ a large number of adjustable parameters (history matching for "nothing"...). Conceptually, this reduces propensity for predictive bias at the same time as it protects against uncertainties of decision-critical model predictions being underestimated. 
 
 PESTPP-IES commences by using a suite of random parameter fields sampled from the prior parameter probability distribution. Each parameter field is referred to as a “realisation”. The suite of realisations is referred to as an “ensemble”. Using an iterative procedure, PESTPP-IES modifies the parameters that comprise each realisation so that each is better able to better reflect historical data. In other words, PESTPP-IES adjusts the parameters of each realisation in order to reduce the misfit between simulated and measured observation values. 
 
-But there is more! PESTPP-IES also accounts for the influence of observation noise. Each parameter realisation is (optionaly) adjusted to fit a slightly different set of observation values. (An observation ensemble can be provided by the user or generated automatically by PESTPP-IES.) Thus, the uncertainty incurred through observation noise gets carried through to the predictions' posterior uncertainty. 
+But there is more! PESTPP-IES also accounts for the influence of observation noise. Each parameter realisation is (optionally) adjusted to fit a slightly different set of observation values. (An observation ensemble can be provided by the user or generated automatically by PESTPP-IES.) Thus, the uncertainty incurred through observation noise gets carried through to the predictions' posterior uncertainty. 
 
 The outcome of this multi-realisation parameter adjustment process is an ensemble of parameter fields, all of which allow the model to adequately replicate observed system behaviour. These parameter fields can be considered samples of the posterior parameter probability distribution. By simulating a forecast with this ensemble of models, a sample of the _posterior forecast probability distribution_ is obtained (uncertainty analysis for free...). 
 
@@ -123,7 +123,7 @@ pst.pestpp_options["ies_num_reals"] = 50
 
 As already mentioned, PESTPP-IES starts from an ensemble of parameter realisations. You can provide an ensemble yourself. If you do _not_ provide a prior parameter ensemble, PESTPP-IES will generate one itself by sampling parameter values from a multi-Gaussian distribution. In doing so, it will assume that parameter values listed in the control file "parameter data" section reflect the mean of the distribution. If no other information is provided, PESTPP-IES will calculate the standard deviation assuming that parameter upper and lower bounds reflect the 95% confidence interval, and that all parameters are statistically independent.
 
-Now, we are all sophisticated people that recognize the importance of heterogneity and spatial (and temporal) correlation between parameters. So, alterantively, we can inform PESTPP-IES of these covariances by providing a covariance matrix to the pest++ control variable `parcov()`. We prepared a geostatistical prior parameter covariance matrix during the "pstfrom pest setup" tutorial (the file named `prior_cov.jcb`). 
+Now, we are all sophisticated people that recognize the importance of heterogeneity and spatial (and temporal) correlation between parameters. So, alternatively, we can inform PESTPP-IES of these covariances by providing a covariance matrix to the pest++ control variable `parcov()`. We prepared a geostatistical prior parameter covariance matrix during the "pstfrom pest setup" tutorial (the file named `prior_cov.jcb`). 
 
 Alternatively, we can provide PESTPP-IES with a pre-preprepared ensemble of parameter realisations. We also prepared one during the "pstfrom pest setup" tutorial and recorded it in binary format. It is the file named `prior_pe.jcb`.
 
@@ -151,13 +151,13 @@ pst.pestpp_options['ies_parameter_ensemble'] = 'prior_pe.jcb'
 
 We also can also include an ensemble of observation plus noise realizations; these realizations allows measurement noise to be incorporated into the posterior parameter (and therefore forecast) ensemble.  Conceptually, each parameter realization in the prior ensemble is paired with a realization of observed values plus measurement noise.  This means that each parameter realization is seeking to match a (slightly) different set of observed values.  This is the reason pestpp-ies report a "measured" objective function summary and an "actual" objective function summary; the former includes the noise realizations, the latter does not.
 
-As for parameters, PESTPP-IES will by default generate noise realizations from `weight` values in the control file by assuming the weights are the inverse of the standard deviation of noise, and tht noise has a normal distribution. The observation ensemble is generated by adding the ensemble of noise to the observation target values in the control file. (The "obs and weights" tutorial notebook covers these topics in more detail.)
+As for parameters, PESTPP-IES will by default generate noise realizations from `weight` values in the control file by assuming the weights are the inverse of the standard deviation of noise, and that noise has a normal distribution. The observation ensemble is generated by adding the ensemble of noise to the observation target values in the control file. (The "obs and weights" tutorial notebook covers these topics in more detail.)
 
-There are also other options to supply pestpp-ies with information related to measurement noise.  Using the version 2 control file format, users can add a `standard_deviation` column to the `* observation data` section.  This will allow users to seperate the noise realizations from the weights so that the weights can be used to amplify certain parts of the observation data, while the noise can represent expected uncertainty/error in the observations (and the model...).  Users can also supply a ready-made observation ensemble by specifying a file name in the `ies_observation_ensemble()` PEST++ control variable . Let's do that. In the "obs and weights" tutorial we generated a covariance matrix auto-correlated noise and recorded it in a file named `obs_cov.jcb`. Let's now use this to construct an observation ensemble:
+There are also other options to supply pestpp-ies with information related to measurement noise.  Using the version 2 control file format, users can add a `standard_deviation` column to the `* observation data` section.  This will allow users to separate the noise realizations from the weights so that the weights can be used to amplify certain parts of the observation data, while the noise can represent expected uncertainty/error in the observations (and the model...).  Users can also supply a ready-made observation ensemble by specifying a file name in the `ies_observation_ensemble()` PEST++ control variable . Let's do that. In the "obs and weights" tutorial we generated a covariance matrix auto-correlated noise and recorded it in a file named `obs_cov.jcb`. Let's now use this to construct an observation ensemble:
 
 
 ```python
-# load the covarince matrix file
+# load the covariance matrix file
 obscov = pyemu.Cov.from_binary(os.path.join(t_d, 'obs_cov.jcb'))
 # generate the ensemble
 oe = pyemu.ObservationEnsemble.from_gaussian_draw(pst, cov=obscov, num_reals=pe.shape[0])
@@ -173,7 +173,7 @@ And assign the relevant PEST++ control variable:
 pst.pestpp_options["ies_observation_ensemble"] = "oe.csv"
 ```
 
-Right then, let's do a pre-flight check to make sure eveything is working. It's always good to do the 'ole `noptmax=0` test. Set NOPTMAX to zero and run PEST++IES once:
+Right then, let's do a pre-flight check to make sure everything is working. It's always good to do the 'ole `noptmax=0` test. Set NOPTMAX to zero and run PEST++IES once:
 
 
 ```python
@@ -183,7 +183,7 @@ pst.write(os.path.join(t_d, 'freyberg_mf6.pst'))
 pyemu.os_utils.run("pestpp-ies freyberg_mf6.pst",cwd=t_d)
 ```
 
-If that was sucessfull, we can re-load it and just check the Phi:
+If that was successful, we can re-load it and just check the Phi:
 
 
 ```python
@@ -193,9 +193,9 @@ pst.phi
 
 ### Other options that are usually a good idea
 
-PESTPP-IES has heaps of options that can be brought to bare for any given problem but most of these have good default values.  However, two options that can be very important for highly nonlinear inverse problems are related to how and when to give up on realizations that are just not doing very well with respect to phi.  These lagging realizations can dominate the obective function and therefore influence the choice of lambda values, and, ultimately, the success of the PESTPP-IES analysis. These two options are `ies_bad_phi` and `ies_bad_phi_sigma`.  The first one, `ies_bad_phi` is an absolute tolerance on the maximum phi value that will be allowed for any realization in the ensemble at any point in the algorithm.  If a realization yields a phi greater than `ies_bad_phi`, it will be "dropped" from the ensemble.  This can be an important option if cells go dry and yield an enormous phi.  
+PESTPP-IES has heaps of options that can be brought to bare for any given problem but most of these have good default values.  However, two options that can be very important for highly nonlinear inverse problems are related to how and when to give up on realizations that are just not doing very well with respect to phi.  These lagging realizations can dominate the objective function and therefore influence the choice of lambda values, and, ultimately, the success of the PESTPP-IES analysis. These two options are `ies_bad_phi` and `ies_bad_phi_sigma`.  The first one, `ies_bad_phi` is an absolute tolerance on the maximum phi value that will be allowed for any realization in the ensemble at any point in the algorithm.  If a realization yields a phi greater than `ies_bad_phi`, it will be "dropped" from the ensemble.  This can be an important option if cells go dry and yield an enormous phi.  
 
-The second option, `ies_bad_phi_sigma` is a relative tolerance on the phi of a realization vs the mean phi of all the realizations in the ensemble.  The "sigma" tells us standard deviation is involved in this option:  `ies_bad_phi_sigma` is the standard deviation "distance" from the mean phi that realizations are allowed to have before they are dropped.  For example, if the mean phi is 100 and standard deviation around this mean is 20, and `ies_bad_phi_sigma` = 2, then any realization with a phi greater than 100 + (2 * 20) = 140 is dropped.  This "adaptive" rejection filter adapts as the ensemble evolves across iterations, and, for highly nonlinear problems, this option can make a huge difference.  Values between 1.5 (more agressive) and 2.5 (more tolerant) seem to work well...
+The second option, `ies_bad_phi_sigma` is a relative tolerance on the phi of a realization vs the mean phi of all the realizations in the ensemble.  The "sigma" tells us standard deviation is involved in this option:  `ies_bad_phi_sigma` is the standard deviation "distance" from the mean phi that realizations are allowed to have before they are dropped.  For example, if the mean phi is 100 and standard deviation around this mean is 20, and `ies_bad_phi_sigma` = 2, then any realization with a phi greater than 100 + (2 * 20) = 140 is dropped.  This "adaptive" rejection filter adapts as the ensemble evolves across iterations, and, for highly nonlinear problems, this option can make a huge difference.  Values between 1.5 (more aggressive) and 2.5 (more tolerant) seem to work well...
 
 
 ```python
@@ -213,7 +213,7 @@ pst.control_data.noptmax = 3
 pst.write(os.path.join(t_d, 'freyberg_mf6.pst'))
 ```
 
-To speed up the process, you will want to distribute the workload across as many parallel agents as possible. Normally, you will want to use the same number of agents (or less) as you have available CPU cores. Most personal computers (i.e. desktops or laptops) these days have between 4 and 10 cores. Servers or HPCs may have many more cores than this. Another limitation to keep in mind is the read/write speed of your machines disk (e.g. your hard drive). PEST and the model software are going to be reading and writting lots of files. This often slows things down if agents are competing for the same resources to read/write to disk.
+To speed up the process, you will want to distribute the workload across as many parallel agents as possible. Normally, you will want to use the same number of agents (or less) as you have available CPU cores. Most personal computers (i.e. desktops or laptops) these days have between 4 and 10 cores. Servers or HPCs may have many more cores than this. Another limitation to keep in mind is the read/write speed of your machines disk (e.g. your hard drive). PEST and the model software are going to be reading and writing lots of files. This often slows things down if agents are competing for the same resources to read/write to disk.
 
 The first thing we will do is specify the number of agents we are going to use.
 
@@ -221,7 +221,7 @@ __Attention!__
 
 You must specify the number which is adequate for ***your*** machine! Make sure to assign an appropriate value for the following `num_workers` variable - if its too large for your machine, #badtimes:
 
-You can check the number of physical cores avalable on your machine using `psutils`:
+You can check the number of physical cores available on your machine using `psutils`:
 
 
 ```python
@@ -246,7 +246,7 @@ If you open the tutorial folder, you should also see a bunch of new folders ther
 
 This run should take several minutes to complete (depending on the number of workers and the speed of your machine). If you get an error, make sure that your firewall or antivirus software is not blocking PESTPP-IES from communicating with the agents (this is a common problem!).
 
-> **Pro Tip**: Running PEST from within a `jupyter notebook` has a tendency to slow things down and hog alot of RAM. When modelling in the "real world" it is often more efficient to implement workflows in scripts which you can call from the command line. 
+> **Pro Tip**: Running PEST from within a `jupyter notebook` has a tendency to slow things down and hog a lot of RAM. When modelling in the "real world" it is often more efficient to implement workflows in scripts which you can call from the command line. 
 
 
 ```python
@@ -261,7 +261,7 @@ pyemu.os_utils.start_workers(t_d, # the folder which contains the "template" PES
 
 ## Explore the Outcomes
 
-Right then. PESTPP-IES completed sucessfully. Let's take a look at some of the outcomes.
+Right then. PESTPP-IES completed successfully. Let's take a look at some of the outcomes.
 
 First lets open the "freyberg_mf6.rec" and make sure we understand what is going on.  Make sure to look for :
  - initial phi summary
@@ -271,11 +271,11 @@ First lets open the "freyberg_mf6.rec" and make sure we understand what is going
  
 Do you understand the flow of the algorithm? 
 
-It is usually usefull to take a look at how the ensemble performed overall at fitting historical data and how fit evolved at each PESTPP-IES iteration. Let's make a cheap Phi progress plot. PESTPP-IES recorded the Phi ($\Phi$) for each iteration in the file named `freyberg_mf6.phi.actual.csv`. Here you will find a summary of the ensembles' Phi, as well as the Phi from each individual realization. Note that the Phi in this file is calculated from the residual between simulated values and the observation values in the _control file_ (i.e. the measured data). These differ from values in `freyberg_mf6.phi.meas.csv`, which records Phi values calculated from the residual between simulated values and observation values + realizations of noise.  
+It is usually useful to take a look at how the ensemble performed overall at fitting historical data and how fit evolved at each PESTPP-IES iteration. Let's make a cheap Phi progress plot. PESTPP-IES recorded the Phi ($\Phi$) for each iteration in the file named `freyberg_mf6.phi.actual.csv`. Here you will find a summary of the ensembles' Phi, as well as the Phi from each individual realization. Note that the Phi in this file is calculated from the residual between simulated values and the observation values in the _control file_ (i.e. the measured data). These differ from values in `freyberg_mf6.phi.meas.csv`, which records Phi values calculated from the residual between simulated values and observation values + realizations of noise.  
 
 Let's make a plot of the Phi progress from each realization against the total number of model runs.
 
-Wow! Check that out. With a measly few hundered model runs we have a pretty decent fit for most of the ensemble. (How does this compare to the fit achieved with derivative-based methods in the "glm part 2" tutorial?) Recall here we are using >10k parameters...pretty amazing.
+Wow! Check that out. With a measly few hundred model runs we have a pretty decent fit for most of the ensemble. (How does this compare to the fit achieved with derivative-based methods in the "glm part 2" tutorial?) Recall here we are using >10k parameters...pretty amazing.
 
 
 ```python
@@ -305,7 +305,7 @@ phi.iloc[-1,6:].hist()
 plt.title(r'Final $\Phi$ Distribution');
 ```
 
-PESTPP-IES has conveniently kept track of all our observaton data, measurement noise and the model outputs from each realization at each iteration. This now allows us to go back and look at all this information in detail should we wish to do so. We are interested in looking at (1) how model outputs compare to measured data+noise and (2) the distribution of model outps for forecast observations.
+PESTPP-IES has conveniently kept track of all our observation data, measurement noise and the model outputs from each realization at each iteration. This now allows us to go back and look at all this information in detail should we wish to do so. We are interested in looking at (1) how model outputs compare to measured data+noise and (2) the distribution of model outputs for forecast observations.
 
 Since PESTPP-IES evaluates a prior parameter ensemble, we can use the model outputs from that iteration (iteration zero) as a sample of the prior. We treat the model outputs from the ensemble for the final (best?) iteration as a sample of the posterior. Let's read in the files which PESTPP-IES recorded:
 
@@ -367,9 +367,9 @@ def plot_tseries_ensembles(pr_oe, pt_oe, noise, onames=["hds","sfr"]):
 
 OK, now plot the time series of non-zero observation groups. Let's just plot the timeseries of absolute values of heads and stream gage flow.
 
-In the plots below, light grey lines are timeseries simulated with the prior parameter ensemble. Blue lines are model outputs simulted using the posterior parameter ensemble. Red lines are the ensemble of measurement + noise. 
+In the plots below, light grey lines are timeseries simulated with the prior parameter ensemble. Blue lines are model outputs simulated using the posterior parameter ensemble. Red lines are the ensemble of measurement + noise. 
 
-Looks like we are getting an excellent fit. All the blue lines are within the same areas as the red lines. This implies we have acheived a level of fit comensurate with measurment noise. Sounds very positive. What do you think? Success? 
+Looks like we are getting an excellent fit. All the blue lines are within the same areas as the red lines. This implies we have achieved a level of fit commensurate with measurement noise. Sounds very positive. What do you think? Success? 
 
 
 ```python
@@ -378,7 +378,7 @@ fig = plot_tseries_ensembles(pr_oe, pt_oe, noise, onames=["hds","sfr"])
 
 ### (Optional) Some additional filtering
 
-Often a few realizations perform particularily poorly. In such cases it can be good practice to remove them. Easy enough to do. For example, the cell below drops any realizations that did not achieve a Phi lower than the  threshold value assigned to the variable `thresh`.
+Often a few realizations perform particularly poorly. In such cases it can be good practice to remove them. Easy enough to do. For example, the cell below drops any realizations that did not achieve a Phi lower than the  threshold value assigned to the variable `thresh`.
 
 
 ```python
@@ -411,9 +411,9 @@ A quick reminder of the observations that record our forecast value of interest:
 pst.forecast_names
 ```
 
-Now, we are going to plot histograms of the forecast values simulated by the model using parmaeters from the (1) prior and (2) posterior ensembles. Simulated forecast values are recorded in the observation ensembles we read in earlier (as are all observations listed in the PEST contorl file).
+Now, we are going to plot histograms of the forecast values simulated by the model using parameters from the (1) prior and (2) posterior ensembles. Simulated forecast values are recorded in the observation ensembles we read in earlier (as are all observations listed in the PEST control file).
 
-Again, we are going to do this alot in the current and subsequent tutorials, so let's just make a function:
+Again, we are going to do this a lot in the current and subsequent tutorials, so let's just make a function:
 
 
 ```python
@@ -424,7 +424,7 @@ def plot_forecast_hist_compare(pt_oe,pr_oe, last_pt_oe=None,last_prior=None ):
             num_cols=2
         fig,axes = plt.subplots(num_plots, num_cols, figsize=(5*num_cols,num_plots * 2.5), sharex='row',sharey='row')
         for axs,forecast in zip(axes, pst.forecast_names):
-            # plot first column with currrent outcomes
+            # plot first column with current outcomes
             if num_cols==1:
                 axs=[axs]
             ax = axs[0]
@@ -466,10 +466,10 @@ Ruh roh!  The posterior isn't covering the correct values for some of forecasts.
 
 But hold on! The prior does (nearly) cover the true values for all forecasts. So that implies there is somewhere between the prior and posterior we have now, which is optimal with respect to all forecasts. Hmmm...so this means that history matching made our prediction worse. We have incurred forecast-sensitive bias through the parameter adjustment process. How can we fit historical data so well but get the "wrong" answer for some of the forecasts?
 
-Here we have seen a very important concept: when you are using an imperfect model (compared to the truth), the link between a "good fit" and robust forecast is broken. A good fit does not mean a good forecaster! This is particularily the case for forecasts that are sensitive to combinations of parameters that occupy the history-matching null space (see [Doherty and Moore (2020)](https://s3.amazonaws.com/docs.pesthomepage.org/documents/model_complexity_monograph.pdf) for a discussion of these concepts). In other words, forecasts which rely on (combinations of) parameters that are not informed by available observation data. (In our case, an example is the "headwater" forecast.)
+Here we have seen a very important concept: when you are using an imperfect model (compared to the truth), the link between a "good fit" and robust forecast is broken. A good fit does not mean a good forecaster! This is particularly the case for forecasts that are sensitive to combinations of parameters that occupy the history-matching null space (see [Doherty and Moore (2020)](https://s3.amazonaws.com/docs.pesthomepage.org/documents/model_complexity_monograph.pdf) for a discussion of these concepts). In other words, forecasts which rely on (combinations of) parameters that are not informed by available observation data. (In our case, an example is the "headwater" forecast.)
 
 ### Underfitting
-So, somewhere between the prior and the final iteration is the optimal amount of parameter adjustment that (1) reduces uncertainty but (2) does not incur forecast bias. We saw that the posterior for our last iteration achieved a level of fit comensurate with measreument error. So we achieved as good a fit as could be expected with the data. But now we have seen that getting that fit incurred bias. So what happnes if we "underfit"? i.e. accept a level of fit which is _worse_ than can be explained by noise in the _measured_ data.
+So, somewhere between the prior and the final iteration is the optimal amount of parameter adjustment that (1) reduces uncertainty but (2) does not incur forecast bias. We saw that the posterior for our last iteration achieved a level of fit commensurate with measurement error. So we achieved as good a fit as could be expected with the data. But now we have seen that getting that fit incurred bias. So what happens if we "underfit"? i.e. accept a level of fit which is _worse_ than can be explained by noise in the _measured_ data.
 
 Luckily, we can just load up a previous iteration of PESTPP-IES results and use those! Let's see if that resolves our predicament.
 
@@ -495,14 +495,14 @@ _ = ax.set_xlabel("$log_{10}\phi$")
 
 Let's take a look at those time series again. 
 
-There we go...much less satisfying. Clearly not "as good" a replica of observed behaviour. We also see more variance in the simulated equivalents (blue lines) to the observations, meaning we arent fitting the historic observations as well...basically, we have only eliminated the extreme prior realizations - we can call this "light" conditioning or "underfitting"...
+There we go...much less satisfying. Clearly not "as good" a replica of observed behaviour. We also see more variance in the simulated equivalents (blue lines) to the observations, meaning we aren't fitting the historic observations as well...basically, we have only eliminated the extreme prior realizations - we can call this "light" conditioning or "underfitting"...
 
 
 ```python
 fig = plot_tseries_ensembles(pr_oe, pt_oe_iter,noise, onames=["hds","sfr"])
 ```
 
-Finaly, let's see what has happened to the forecasts. The next cell will plot the forecast histograms from the current "posterior" (right column of plots), alongside those from the previous attempt (left column of plots)
+Finally, let's see what has happened to the forecasts. The next cell will plot the forecast histograms from the current "posterior" (right column of plots), alongside those from the previous attempt (left column of plots)
 
 
 ```python
@@ -518,7 +518,7 @@ In summary, we have learnt:
  - How to explore some of the outcomes
  - __Most importantly__, we have learnt that getting a good fit does not a good predictor make. Trying to fit measured data with an imperfect model (which every model is...) can induce bias. 
 
-If prior uncertainty is suficient for decision-support purposes, it may be more robust to forgo history matching entirely. However, if uncertainty reduction is required, additional strategies to avoid inducing bias are needed. We will address some of these in subsequent tutorials.
+If prior uncertainty is sufficient for decision-support purposes, it may be more robust to forgo history matching entirely. However, if uncertainty reduction is required, additional strategies to avoid inducing bias are needed. We will address some of these in subsequent tutorials.
 
 ## Optional
 
