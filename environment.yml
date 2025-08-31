@@ -22,5 +22,6 @@ dependencies:
   - pip:
        - -e ./dependencies/flopy
        - -e ./dependencies/pyemu
+       - pypestutils
 
 
