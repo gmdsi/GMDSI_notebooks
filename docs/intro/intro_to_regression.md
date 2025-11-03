@@ -85,7 +85,7 @@ rh.plot_truth(xplot,x,y_data, poly_func, model)
 
 History-matching (and calibration) are essentially a search for parameters which allow a model to "better" fit a set of measurement data. This is accomplished through minimizing a so called "objective function" (often displayed as Phi, $\Phi$). The objective function can be defined in many ways. Perhaps the most common is the “**sum of squared weighted differences (or residuals)**” between model outputs and field measurements:
 
-$\Phi=\sum_{i=1}^{NPAR}\left[w_{hi}(y_{i}-m\left(x_{i}\right)\right)]^{2}$
+$$\Phi=\sum_{i=1}^{NPAR}\left[w_{hi}(y_{i}-m\left(x_{i}\right)\right)]^{2}$$
 
 where: 
 
