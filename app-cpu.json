@@ -1,5 +1,5 @@
 {
-  "id": "GMDSI_notebooks",
+  "id": "GMDSI_tutorials",
   "version": "0.0.1:sha-0fbefd3",
   "description": "Python Tutorials for groundwater modeling from the GMDSI",
   "owner": "${apiUserId}",
