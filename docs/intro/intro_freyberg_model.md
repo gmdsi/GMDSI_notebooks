@@ -27,7 +27,7 @@ The forecast of interest was the head if the river channel was lined (e.g. condu
 
 There are interesting insights in the paper, but perhaps the most interesting is illustrated by the figure below: just because a model is good at fitting measurement data, does not mean it is good at making a prediction!
 
-<img src=".\intro_freyberg_model_files\cal_pred.png" style="float: center; width: 75%;  margin-bottom: 0.5em;">
+<img src="..\intro_freyberg_model_files\cal_pred.png" style="float: center; width: 75%;  margin-bottom: 0.5em;">
 
 
 You can read the original paper here:

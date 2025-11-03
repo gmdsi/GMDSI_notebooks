@@ -10,7 +10,7 @@ math: mathjax3
 
 #### Where are we on the Goldilocks complexity curve? 
 
-<img src="freyberg_k_r_fluxobs_files\Hunt1998_sweetspot.png" style="float: center">
+<img src="../freyberg_k_r_fluxobs_files\Hunt1998_sweetspot.png" style="float: center">
 
 The runs so far were intended to be greatly oversimplified so as to be a starting point for adding complexity. However, when we added just __*one more parameter*__ for a total of 2 parameters uncertainty for some forecasts got appreciably __worse__.  And these parameters cover the entire model domain, which is unrealistic for the natural world!  Are we past the "sweetspot" and should avoid any additional complexity even if our model looks nothing like reality?  
 

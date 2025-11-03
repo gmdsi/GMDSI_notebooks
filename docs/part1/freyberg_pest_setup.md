@@ -14,15 +14,15 @@ Recall that, for all its sophistication, automated parameter estimation software
 
 Here is a flow chart of manual trial-and-error history matching from *Applied Groundwater Modeling (2nd edition)* by Anderson et al. (2015): 
 
-<img src="freyberg_pest_setup_files\Fig9.1_manual_t&e.png" style="float: center">
+<img src="../freyberg_pest_setup_files\Fig9.1_manual_t&e.png" style="float: center">
 
 Compare this to the full overdetermined parameter estimation flow chart:
 
-<img src="freyberg_pest_setup_files\Fig9.9_full_overdetermined_PE_flowchart.png" style="float: center">
+<img src="../freyberg_pest_setup_files\Fig9.9_full_overdetermined_PE_flowchart.png" style="float: center">
 
 To be more specific, in the blue box in Figure 9.9 above there are certain steps that occur before and after each forward model run that PEST does.  They exactly equate to what a manual trial-and-error calibration does, but PEST does it for you! Here are the steps that happen:
 
-<img src="freyberg_pest_setup_files\Fig9.8_PE_flowchart.png" style="float: center">
+<img src="../freyberg_pest_setup_files\Fig9.8_PE_flowchart.png" style="float: center">
 
 ## The PEST Input Dataset
 

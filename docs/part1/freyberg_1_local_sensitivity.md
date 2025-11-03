@@ -10,7 +10,7 @@ math: mathjax3
 
 Sensitivity analysis makes use of a Joacoban matrix to determine statistical insights into a model. We have already discussed the Jacobian matrix in a few places. It is calculated by perturbing the parameter (usually 1%) and tracking what happens to each observation.  In a general form the sensitivity equation looks like eq. 9.7 Anderson et al. 2015:
 
-<img src="freyberg_1_local_sensitivity_files/Sensitivity_eq.png" style="float: center">
+<img src="../freyberg_1_local_sensitivity_files/Sensitivity_eq.png" style="float: center">
 
 This is key for derivative-based parameter estimation because, as we've seen, it allows us to efficiently compute upgraded parameters to try during the lambda search.  But the Jacobian matrix can give us insight about the model in and of itself.  
 

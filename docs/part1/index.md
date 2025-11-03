@@ -1,0 +1,24 @@
+---
+layout: default
+title: Introduction to Theory, Concepts and PEST Mechanic
+nav_order: 3
+has_children: true
+permalink: /docs/part1
+hide:
+    - toc
+    - navigation
+---
+
+* [Manual Trial-and-Error](freyberg_trial_and_error.md)  
+* [PEST Basics](freyberg_pest_setup.md)  
+* [Automated Calibration with PEST](freyberg_k.md)  
+* [Calibration with Two Parameters](freyberg_k_and_r.md)  
+* [Multiple Observation Types](freyberg_k_r_fluxobs.md)  
+* [GLM and the Objective Function Response Surface](freyberg_glm_response_surface.md)  
+* [Spatial Parameterisation with Pilot Points - setup](freyberg_pilotpoints_1_setup.md)  
+* [Spatial Parameterisation with Pilot Points - run](freyberg_pilotpoints_2_run.md)  
+* [Regularization](intro_to_regularization.md)  
+* [Intro to FOSM](intro_to_fosm.md)  
+* [Local Sensitivity and Identifiability](freyberg_1_local_sensitivity.md)  
+* [Global Sensitivity Analysis](freyberg_2_global_sensitivity.md)  
+* [Monte Carlo](freyberg_monte_carlo.md)  
