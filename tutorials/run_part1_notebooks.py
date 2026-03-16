@@ -39,8 +39,12 @@ for dir in intro_dirs:
     for nb in nbfiles:
         run_nb(nb, dir)
 
-
-for dir in part1_dirs:
-    nbfiles = [i for i in os.listdir(dir) if i.endswith('.ipynb')]
+iesrespsurf_notebook = None
+for d in part1_dirs:
+    nbfiles = [i for i in os.listdir(d) if i.endswith('.ipynb')]
     for nb in nbfiles:
-        run_nb(nb, dir)
+        if "ies" in nb and "resp" in nb:
+            iesrespsurf_notebook = (nb,d)
+        else:
+            run_nb(nb, d)
+run_nb(iesrespsurf_notebook[0],iesrespsurf_notebook[1])

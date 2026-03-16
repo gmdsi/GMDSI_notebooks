@@ -476,8 +476,8 @@ def setup_pst():
     pst.control_data.noptmax = 0
     pst.pestpp_options["ies_parameter_ensemble"] = "prior_pe.jcb"
     pst.pestpp_options["save_binary"] = True
-    pst.write(os.path.join(template_ws, 'freyberg_mf6.pst'))
-    pyemu.os_utils.run('pestpp-glm freyberg_mf6.pst', cwd=template_ws)
+    pst.write(os.path.join(template_ws, 'pest.pst'))
+    pyemu.os_utils.run('pestpp-glm pest.pst', cwd=template_ws)
 
     pe = pf.draw(num_reals=20, use_specsim=True) # draw parameters from the prior distribution
     pe.enforce() # enforces parameter bounds
@@ -493,19 +493,19 @@ def setup_pst():
 
 
 def run_prior_mc(t_d):
-    pst = pyemu.Pst(os.path.join(t_d,"freyberg_mf6.pst"))
+    pst = pyemu.Pst(os.path.join(t_d,"pest.pst"))
     pst.control_data.noptmax = -1
     pst.pestpp_options["ies_num_reals"] = 20
     #pst.pestpp_options["overdue_giveup_fac"] = 5
-    pst.write(os.path.join(t_d,"freyberg_mf6.pst"))
+    pst.write(os.path.join(t_d,"pest.pst"))
     num_workers = 5 #psutil.cpu_count(logical=False)
-    pyemu.os_utils.start_workers(t_d,"pestpp-ies","freyberg_mf6.pst",num_workers=num_workers,worker_root=".",master_dir="master_pmc")
+    pyemu.os_utils.start_workers(t_d,"pestpp-ies","pest.pst",num_workers=num_workers,worker_root=".",master_dir="master_pmc")
 
 
 def pick_truth(m_d,t_d):
-    pst = pyemu.Pst(os.path.join(m_d,"freyberg_mf6.pst"))
-    oe = pyemu.ObservationEnsemble.from_binary(pst=pst,filename=os.path.join(m_d,"freyberg_mf6.0.obs.jcb"))
-    pe = pyemu.ParameterEnsemble.from_binary(pst=pst,filename=os.path.join(m_d,"freyberg_mf6.0.par.jcb"))
+    pst = pyemu.Pst(os.path.join(m_d,"pest.pst"))
+    oe = pyemu.ObservationEnsemble.from_binary(pst=pst,filename=os.path.join(m_d,"pest.0.obs.jcb"))
+    pe = pyemu.ParameterEnsemble.from_binary(pst=pst,filename=os.path.join(m_d,"pest.0.par.jcb"))
     forecasts = pst.pestpp_options["forecasts"].split(",")
     print(forecasts)
     hw_fore = [f for f in forecasts if "headwater" in f]

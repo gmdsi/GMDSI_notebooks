@@ -44,6 +44,10 @@ nb_dir = "part2_03_prior_monte_carlo"
 nb_file = "freyberg_prior_monte_carlo.ipynb"
 run_nb(nb_file, nb_dir)
 
+nb_dir = "part2_03_global_sensitivity_analysis"
+nb_file = "freyberg_global_sensitivity_analysis.ipynb"
+run_nb(nb_file, nb_dir)
+
 nb_dir = "part2_04_glm"
 nb_file = "freyberg_glm_1.ipynb"
 run_nb(nb_file, nb_dir)
@@ -63,11 +67,17 @@ nb_file = "freyberg_ies_2_localization.ipynb"
 run_nb(nb_file, nb_dir)
 nb_file = "freyberg_ies_3_restarting.ipynb"
 run_nb(nb_file, nb_dir)
+nb_file = "freyberg_ies_4_noise.ipynb"
+run_nb(nb_file, nb_dir)
 
 nb_dir = "part2_07_da"
 nb_file = "freyberg_da_prep.ipynb"
 run_nb(nb_file, nb_dir)
 nb_file = "freyberg_da_run.ipynb"
+run_nb(nb_file, nb_dir)
+
+nb_dir = "part2_08_opt"
+nb_file = "simple_LP_example.ipynb"
 run_nb(nb_file, nb_dir)
 
 nb_dir = "part2_08_opt"
@@ -84,6 +94,14 @@ run_nb(nb_file, nb_dir)
 
 nb_dir = "part2_09_mou"
 nb_file = "freyberg_mou_2.ipynb"
+run_nb(nb_file, nb_dir)
+
+nb_dir = "part2_10_eva_and_dsi"
+nb_file = "1_freyberg_ensemble_dataworth.ipynb"
+run_nb(nb_file, nb_dir)
+
+nb_dir = "part2_10_eva_and_dsi"
+nb_file = "2_freyberg_ensemble_data_space_inversion.ipynb"
 run_nb(nb_file, nb_dir)
 
 
