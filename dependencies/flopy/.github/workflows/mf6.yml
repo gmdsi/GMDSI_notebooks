@@ -1,0 +1,153 @@
+name: Modflow6 continuous integration
+
+on:
+  schedule:
+    - cron: '0 8 * * *' # run at 8 AM UTC (12 am PST)
+  push:
+  pull_request:
+    branches:
+      - master
+      - develop
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+
+  test_mf6:
+    name: Modflow6 FloPy tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+
+    - name: Checkout flopy repo
+      uses: actions/checkout@v6
+      with:
+        path: flopy
+
+    - name: Checkout MODFLOW 6
+      uses: actions/checkout@v6
+      with:
+        repository: MODFLOW-ORG/modflow6
+        path: modflow6
+
+    - name: Setup GNU Fortran
+      uses: fortran-lang/setup-fortran@v1
+      with:
+        compiler: gcc
+        version: 13
+
+    - name: Setup pixi
+      uses: prefix-dev/setup-pixi@v0.9.5
+      with:
+        pixi-version: v0.41.4
+        manifest-path: modflow6/pixi.toml
+
+    - name: Install dependencies
+      working-directory: modflow6
+      run: |
+        pixi run install
+        pixi run pip install coverage pytest-cov
+
+    - name: Install FloPy
+      working-directory: flopy
+      run: |
+        pixi run --manifest-path=../modflow6/pixi.toml pip install --no-deps -e .
+        pixi run --manifest-path=../modflow6/pixi.toml python -m flopy.mf6.utils.generate_classes --dfnpath ../modflow6/doc/mf6io/mf6ivar/dfn
+
+    - name: Build MF6
+      working-directory: modflow6
+      run: |
+        pixi run meson setup builddir --buildtype=debugoptimized --prefix=$(pwd) --libdir=bin
+        pixi run meson install -C builddir
+        pixi run meson test --verbose --no-rebuild -C builddir
+
+    - name: Build mf5to6 converter
+      working-directory: modflow6/utils/mf5to6
+      run: |
+        pixi run meson setup builddir --prefix=$(pwd)/../../ --libdir=bin
+        pixi run meson install -C builddir
+
+    - name: Install executables
+      working-directory: modflow6/autotest
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: pixi run pytest -v --durations=0 get_exes.py
+
+    - name: Run tests
+      working-directory: modflow6/autotest
+      run: pixi run pytest -v --cov=flopy --cov-report=xml --cov-append --durations=0 -n auto -m "not repo and not regression"
+
+    - name: Print coverage report before upload
+      working-directory: ./modflow6/autotest
+      run: pixi run coverage report
+
+    - name: Upload coverage to Codecov
+      if:
+        github.repository_owner == 'modflowpy' && (github.event_name == 'push' || github.event_name == 'pull_request')
+      uses: codecov/codecov-action@v6
+      with:
+        files: ./modflow6/autotest/coverage.xml
+
+  test_mf6_examples:
+    name: MF6 examples FloPy tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+
+    - name: Checkout flopy repo
+      uses: actions/checkout@v6
+      with:
+        path: flopy
+
+    - name: Checkout MODFLOW 6
+      uses: actions/checkout@v6
+      with:
+        repository: MODFLOW-ORG/modflow6
+        path: modflow6
+
+    - name: Checkout MF6 examples
+      uses: actions/checkout@v6
+      with:
+        repository: MODFLOW-ORG/modflow6-examples
+        path: modflow6-examples
+
+    - name: Setup GNU Fortran
+      uses: fortran-lang/setup-fortran@v1
+      with:
+        compiler: gcc
+        version: 13
+
+    - name: Setup pixi
+      uses: prefix-dev/setup-pixi@v0.9.5
+      with:
+        pixi-version: v0.41.4
+        manifest-path: modflow6/pixi.toml
+
+    - name: Install dependencies
+      working-directory: modflow6
+      run: pixi run install
+
+    - name: Install FloPy
+      working-directory: flopy
+      run: |
+        pixi run --manifest-path=../modflow6/pixi.toml pip install --no-deps -e .
+        pixi run --manifest-path=../modflow6/pixi.toml python -m flopy.mf6.utils.generate_classes --dfnpath ../modflow6/doc/mf6io/mf6ivar/dfn
+
+    - name: Install executables
+      uses: modflowpy/install-modflow-action@v1
+
+    - name: Build and install MF6
+      working-directory: modflow6
+      run: |
+        pixi run meson setup builddir --buildtype=debugoptimized --prefix=$(pwd) --libdir=bin
+        pixi run meson install -C builddir
+        pixi run meson test --verbose --no-rebuild -C builddir
+        cp bin/* ~/.local/bin/modflow/
+
+    - name: Test MF6 examples
+      working-directory: modflow6-examples/autotest
+      run: pixi run --manifest-path=../../modflow6/pixi.toml pytest -v -n=auto --durations=0 test_scripts.py

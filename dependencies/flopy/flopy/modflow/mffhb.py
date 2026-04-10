@@ -210,7 +210,7 @@ class ModflowFhb(Package):
                 ds5 = ds5.to_records(index=False)
             # convert numpy array to a recarray
             if ds5.dtype != dtype:
-                ds5 = np.core.records.fromarrays(ds5.transpose(), dtype=dtype)
+                ds5 = np.rec.fromarrays(ds5.transpose(), dtype=dtype)
 
         # assign dataset 5
         self.ds5 = ds5
@@ -229,7 +229,7 @@ class ModflowFhb(Package):
                 ds7 = ds7.to_records(index=False)
             # convert numpy array to a recarray
             if ds7.dtype != dtype:
-                ds7 = np.core.records.fromarrays(ds7.transpose(), dtype=dtype)
+                ds7 = np.rec.fromarrays(ds7.transpose(), dtype=dtype)
 
         # assign dataset 7
         self.ds7 = ds7
@@ -237,7 +237,7 @@ class ModflowFhb(Package):
         # perform some simple verification
         if len(self.bdtime) != self.nbdtim:
             raise ValueError(
-                "bdtime has {} entries but requires " "{} entries.".format(
+                "bdtime has {} entries but requires {} entries.".format(
                     len(self.bdtime), self.nbdtim
                 )
             )
@@ -250,7 +250,7 @@ class ModflowFhb(Package):
 
             if self.ds5.shape[0] != self.nflw:
                 raise ValueError(
-                    "dataset 5 has {} rows but requires " "{} rows.".format(
+                    "dataset 5 has {} rows but requires {} rows.".format(
                         self.ds5.shape[0], self.nflw
                     )
                 )
@@ -261,8 +261,9 @@ class ModflowFhb(Package):
                 nc += 2
             if len(self.ds5.dtype.names) != nc:
                 raise ValueError(
-                    "dataset 5 has {} columns but requires "
-                    "{} columns.".format(len(self.ds5.dtype.names), nc)
+                    "dataset 5 has {} columns but requires {} columns.".format(
+                        len(self.ds5.dtype.names), nc
+                    )
                 )
 
         if self.nhed > 0:
@@ -272,7 +273,7 @@ class ModflowFhb(Package):
                 )
             if self.ds7.shape[0] != self.nhed:
                 raise ValueError(
-                    "dataset 7 has {} rows but requires " "{} rows.".format(
+                    "dataset 7 has {} rows but requires {} rows.".format(
                         self.ds7.shape[0], self.nhed
                     )
                 )
@@ -283,8 +284,9 @@ class ModflowFhb(Package):
                 nc += 2
             if len(self.ds7.dtype.names) != nc:
                 raise ValueError(
-                    "dataset 7 has {} columns but requires "
-                    "{} columns.".format(len(self.ds7.dtype.names), nc)
+                    "dataset 7 has {} columns but requires {} columns.".format(
+                        len(self.ds7.dtype.names), nc
+                    )
                 )
 
         self.parent.add_package(self)
@@ -335,7 +337,6 @@ class ModflowFhb(Package):
         """
         nrow, ncol, nlay, nper = self.parent.nrow_ncol_nlay_nper
         f = open(self.fn_path, "w")
-        # f.write('{0:s}\n'.format(self.heading))
 
         # Data set 1
         f.write(f"{self.nbdtim} ")
@@ -371,7 +372,7 @@ class ModflowFhb(Package):
             for n in range(self.nflw):
                 for name in self.ds5.dtype.names:
                     v = self.ds5[n][name]
-                    if name in ["k", "i", "j", "node"]:
+                    if name in {"k", "i", "j", "node"}:
                         v += 1
                     f.write(f"{v} ")
                 f.write("\n")
@@ -391,7 +392,7 @@ class ModflowFhb(Package):
             for n in range(self.nhed):
                 for name in self.ds7.dtype.names:
                     v = self.ds7[n][name]
-                    if name in ["k", "i", "j", "node"]:
+                    if name in {"k", "i", "j", "node"}:
                         v += 1
                     f.write(f"{v} ")
                 f.write("\n")
@@ -571,10 +572,7 @@ class ModflowFhb(Package):
                 for naux in range(nfhbx1):
                     if model.verbose:
                         print(f"loading fhb dataset 6a - aux {naux + 1}")
-                    print(
-                        "dataset 6a will not be preserved in "
-                        "the created fhb object."
-                    )
+                    print("dataset 6a will not be preserved in the created fhb object.")
                     # Dataset 6a IFHBUN CNSTM IFHBPT
                     line = f.readline()
                     raw = line.strip().split()
@@ -590,10 +588,7 @@ class ModflowFhb(Package):
 
                     if model.verbose:
                         print(f"loading fhb dataset 6b - aux {naux + 1}")
-                    print(
-                        "dataset 6b will not be preserved in "
-                        "the created fhb object."
-                    )
+                    print("dataset 6b will not be preserved in the created fhb object.")
                     current = np.recarray(nflw, dtype=dtype)
                     for n in range(nflw):
                         ds6b = read1d(f, np.zeros((nbdtim,)))
@@ -628,7 +623,10 @@ class ModflowFhb(Package):
                 structured=model.structured,
             )
             for n in range(nhed):
-                tds7 = read1d(f, np.empty((nbdtim + 4,)))
+                if model.structured:
+                    tds7 = read1d(f, np.empty((nbdtim + 4,)))
+                else:
+                    tds7 = read1d(f, np.empty((nbdtim + 2,)))
                 ds7[n] = tuple(tds7)
 
             if model.structured:
@@ -648,10 +646,7 @@ class ModflowFhb(Package):
                 for naux in range(nfhbx1):
                     if model.verbose:
                         print(f"loading fhb dataset 8a - aux {naux + 1}")
-                    print(
-                        "dataset 8a will not be preserved in "
-                        "the created fhb object."
-                    )
+                    print("dataset 8a will not be preserved in the created fhb object.")
                     # Dataset 6a IFHBUN CNSTM IFHBPT
                     line = f.readline()
                     raw = line.strip().split()
@@ -668,10 +663,7 @@ class ModflowFhb(Package):
 
                     if model.verbose:
                         print(f"loading fhb dataset 8b - aux {naux + 1}")
-                    print(
-                        "dataset 8b will not be preserved in "
-                        "the created fhb object."
-                    )
+                    print("dataset 8b will not be preserved in the created fhb object.")
                     current = np.recarray(nflw, dtype=dtype)
                     for n in range(nhed):
                         ds8b = read1d(f, np.zeros((nbdtim,)))
@@ -689,9 +681,7 @@ class ModflowFhb(Package):
                 ext_unit_dict, filetype=ModflowFhb._ftype()
             )
         if ipakcb > 0:
-            iu, filenames[1] = model.get_ext_dict_attr(
-                ext_unit_dict, unit=ipakcb
-            )
+            iu, filenames[1] = model.get_ext_dict_attr(ext_unit_dict, unit=ipakcb)
             model.add_pop_key_list(ipakcb)
 
         # auxiliary data are not passed to load instantiation

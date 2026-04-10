@@ -1,0 +1,11 @@
+name transform parchglim value lower_bound upper_bound group scale offset dercom extra counter
+dkx1 log factor 1.0 1e-10 10000000000.0 k 1.0 0.0 1  1
+dkx2 log factor 1.0 1e-10 10000000000.0 k 1.0 0.0 1  1
+dkx3 log factor 1.0 1e-10 10000000000.0 k 1.0 0.0 1  1
+dkx4 log factor 1.0 1e-10 10000000000.0 k 1.0 0.0 1  1
+dkx5 log factor 1.0 1e-10 10000000000.0 k 1.0 0.0 1  1
+dkx6 log factor 1.0 1e-10 10000000000.0 k 1.0 0.0 1  1
+dkx7 log factor 1.0 1e-10 10000000000.0 k 1.0 0.0 1  1
+dkx8 log factor 1.0 1e-10 10000000000.0 k 1.0 0.0 1  1
+dkx9 log factor 1.0 1e-10 10000000000.0 k 1.0 0.0 1  1
+

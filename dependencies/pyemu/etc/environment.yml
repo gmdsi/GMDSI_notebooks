@@ -1,0 +1,33 @@
+name: pyemu
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  # required
+  - python >= 3.10
+  - libopenblas < 0.3.30
+  - numpy
+  - pandas
+  # optional
+  - matplotlib
+  - pyshp
+  - jinja2
+  - shapely
+  - pyproj
+  - flopy
+  - scikit-learn
+  - pip
+  - ffmpeg
+  - jupyter
+  - jupytext
+  - jupyterlab
+  # tests
+#  - coveralls
+  - flaky
+  - pytest
+  - pytest-cov
+  - pytest-xdist
+  - pytest-timeout
+  - nbval
+  - modflow-devtools
+

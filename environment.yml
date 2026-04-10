@@ -5,13 +5,13 @@ dependencies:
   - python=3.11
   - pip
   - pandas>=2.0
-  - numpy<2 
-  - matplotlib 
+  - numpy
+  - matplotlib
   - openpyxl
   - xlrd
-  - jupyter 
-  - notebook 
-  - scipy 
+  - jupyter
+  - notebook
+  - scipy
   - shapely
   - rtree
   - pyproj>=2.0
@@ -19,9 +19,8 @@ dependencies:
   - psutil
   - git
   - nbconvert
+  - modflow-devtools
   - pip:
        - -e ./dependencies/flopy
        - -e ./dependencies/pyemu
        - pypestutils
-
-

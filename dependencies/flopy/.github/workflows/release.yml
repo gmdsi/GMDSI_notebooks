@@ -1,0 +1,225 @@
+name: Release
+on:
+  push:
+    branches:
+      - master
+      - v[0-9]+.[0-9]+.[0-9]+*
+  release:
+    types:
+      - published
+jobs:
+  prep:
+    name: Prepare release
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref_name != 'master' }}
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: bash
+    steps:
+
+      - name: Checkout release branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: false
+
+      - name: Install FloPy
+        run: uv sync --all-extras
+
+      - name: Install MODFLOW
+        run: |
+          mkdir -p ~/.local/bin
+          uv run get-modflow ~/.local/bin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # NOTE: assumes the MF6 module has been generated already.
+      # we do that manually to exclude models under development.
+      # if this becomes unnecessary, uncomment the lines below.
+      # - name: Sync MF6 module
+      #   run: uv run python -m flopy.mf6.utils.generate_classes
+
+      - name: Update version numbers
+        id: version
+        run: |
+          # extract version from branch name
+          ref="${{ github.ref_name }}"
+          ver="${ref#"v"}"
+
+          # update version files
+          if [[ "$ver" == *"rc"* ]]; then
+            uv run scripts/update_version.py -v "${ver%"rc"}"
+          else
+            uv run scripts/update_version.py -v "$ver"
+          fi
+
+          # show version and set output
+          uv run python -c "import flopy; print(f'FloPy version: {flopy.__version__}')"
+          echo "version=${ver#"v"}" >> $GITHUB_OUTPUT
+
+      - name: Format and lint Python files
+        run: |
+          uvx ruff format
+          uvx ruff check --fix
+          uvx ruff format flopy/mf6/modflow/*.py
+          uvx ruff check --fix flopy/mf6/modflow/*.py
+
+      - name: Run tests
+        working-directory: autotest
+        run: uv run pytest -v -m="not example and not regression" -n=auto --durations=0 --keep-failed=.failed --dist loadfile
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload failed test outputs
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: failed-outputs-${{ github.run_id }}
+          path: |
+            ./autotest/.failed/**
+
+      - name: Generate changelog
+        id: cliff
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: --verbose --unreleased --tag ${{ steps.version.outputs.version }}
+        env:
+          OUTPUT: CHANGELOG.md
+
+      - name: Update changelog
+        run: |
+          # substitute full group names
+          sed -i 's/#### Ci/#### Continuous integration/' CHANGELOG.md
+          sed -i 's/#### Feat/#### New features/' CHANGELOG.md
+          sed -i 's/#### Fix/#### Bug fixes/' CHANGELOG.md
+          sed -i 's/#### Refactor/#### Refactoring/' CHANGELOG.md
+          sed -i 's/#### Test/#### Testing/' CHANGELOG.md
+
+          # prepend release changelog to cumulative changelog
+          clog=".docs/md/version_changes.md"
+          temp="version_changes.md"
+          echo "$(tail -n +2 $clog)" > $clog
+          cat CHANGELOG.md $clog > $temp
+          sudo mv $temp $clog
+          sed -i '1i # Changelog' $clog
+
+      - name: Upload changelog
+        uses: actions/upload-artifact@v7
+        with:
+          name: changelog
+          path: CHANGELOG.md
+
+      - name: Push release branch
+        run: |
+          rm CHANGELOG.md
+          git config core.sharedRepository true
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add flopy docs .docs CITATION.cff README.md version.txt
+          git commit -m "ci(release): set version to ${{ steps.version.outputs.version }}, update components from DFN files, update changelog"
+          git push origin "${{ github.ref_name }}"
+
+  pr:
+    name: Draft release PR
+    needs: prep
+    if: ${{ github.event_name == 'push' && !(contains(github.ref_name, 'rc')) }}
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      pull-requests: write
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+
+      - name: Checkout release branch
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Draft pull request
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          ref="${{ github.ref_name }}"
+          ver="${ref#"v"}"
+          title="Release $ver"
+          body='
+          # FloPy '$ver'
+
+          The release can be approved by merging this pull request into `master`. This will trigger a final job to publish the release to PyPI.
+          '
+          gh pr create -B "master" -H "$ref" --title "$title" --draft --body "$body"
+
+  release:
+    name: Draft release
+    # runs only when changes are merged to master
+    if: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+
+      - name: Checkout master branch
+        uses: actions/checkout@v6
+        with:
+          ref: master
+
+      # actions/download-artifact won't look at previous workflow runs but we need to in order to get changelog
+      - name: Download artifacts
+        uses: dawidd6/action-download-artifact@v20
+
+      - name: Draft release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          version=$(cat version.txt)
+          title="FloPy $version"
+          notes=$(cat changelog/CHANGELOG.md)
+          gh release create "$version" \
+            --target master \
+            --title "$title" \
+            --notes "$notes" \
+            --draft \
+            --latest
+
+  publish:
+    name: Publish package
+    # runs only after release is published (manually promoted from draft)
+    if: ${{ github.event_name == 'release' }}
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write  # mandatory for trusted publishing
+    environment:  # requires a 'release' environment in repo settings
+      name: release
+      url: https://pypi.org/p/flopy
+    steps:
+
+      - name: Checkout master branch
+        uses: actions/checkout@v6
+        with:
+          ref: master
+
+      - name: Setup Python
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: false
+
+      - name: Build package
+        run: uv build
+
+      - name: Check package
+        run: uvx twine check --strict dist/*
+
+      - name: Publish package
+        run: uv publish --verbose --trusted-publishing always

@@ -8,3 +8,12 @@ prior_cov.jcb
 *.pyc
 .DS_Store
 */*.egg-info/*
+
+# Tutorial generated directories
+tutorials/*/freyberg6_template/
+tutorials/*/master_*/
+tutorials/*/template/
+tutorials/*/*.log
+tutorials/*/freyberg_mf6/
+tutorials/*/pest_files/
+--version.*

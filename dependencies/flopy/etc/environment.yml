@@ -1,0 +1,66 @@
+name: flopy
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - pip
+
+  # required
+  - python>=3.10
+  - numpy>=1.20.3
+  - matplotlib>=1.4.0
+  - pandas>=2.0.0,<3
+
+  # codegen
+  - boltons>=1.0
+  - Jinja2>=3.0
+  - modflow-devtools>=1.7.0,!=1.9.0,<2
+  - tomli
+  - tomli-w
+
+  # lint
+  - cffconvert
+  - codespell>=2.2.2
+  - ruff
+
+  # test
+  - coverage!=7.6.5
+  - flaky
+  - filelock
+  - jupyter
+  - jupyter_client>=8.4.0
+  - jupytext
+  - modflow-devtools>=1.7.0
+  - pip:
+      - tach
+  - pytest!=8.1.0
+  - pytest-benchmark
+  - pytest-cov
+  - pytest-dotenv
+  - pytest-xdist
+  - pyzmq>=25.1.2
+  - syrupy<5.0.0
+  - virtualenv
+
+  # optional
+  - affine
+  - descartes
+  - fiona
+  - geojson
+  - geopandas
+  - GitPython
+  - imageio
+  - netcdf4
+  - pooch
+  - pymetis
+  - pyproj
+  - pyshp
+  - pyvista
+  - rasterio
+  - rasterstats
+  - scipy
+  - shapely>=2.0
+  - vtk
+  - xmipy
+  - h5py
+  - scikit-learn

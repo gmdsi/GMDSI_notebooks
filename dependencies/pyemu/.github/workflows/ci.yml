@@ -1,0 +1,116 @@
+name: pyemu continuous integration
+
+on: 
+  schedule:
+    - cron: '0 8 * * *' # run at 8 AM UTC (12 AM PST, 8 PM NZST)
+  push:
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+  workflow_dispatch:
+jobs:
+  pyemuCI:
+    name: autotests
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: [
+          "3.10",
+          "3.11",
+          "3.12",
+          "3.13",
+          "3.14"
+        ]
+        run-type: [std]
+        test-path: ["autotest"]
+        include:
+          - os: macos-latest
+            python-version: 3.13
+            run-type: std
+            test-path: "autotest"
+
+    steps:
+    - name: Checkout repo
+      uses:  actions/checkout@v5 # checksout this repo
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install the project [with TensorFlow]
+      if: ${{ matrix.python-version <= 3.13 }}
+      run: |
+        uv sync --locked --extra optional --extra tests --extra tf
+        uv pip list
+
+    - name: Install the project [without TensorFlow]
+      if: ${{ matrix.python-version > 3.13 }}
+      run: |
+        uv sync --locked --extra optional --extra tests
+        uv pip list
+
+    - name: Install Modflow executables
+      uses: modflowpy/install-modflow-action@v1
+
+    - name: Add executables directory to path
+      # need to explicitly use bash shell to get $GITHUB_PATH to work
+      shell: bash
+      run: |
+        echo "adding bin dir '$MODFLOW_BIN_PATH' to path"
+        echo "$MODFLOW_BIN_PATH" >> $GITHUB_PATH
+        echo "adding bin dir '$HOME/.local/bin' to path"
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    # order may matter for this step - after setting path to executables
+    - name: Install PEST++ suite using get-pestpp
+      # again think we need bash to get path expansion to work
+      shell: bash -l {0}
+      run: |
+        uv run get-pestpp --owner pestpp --repo pestpp-nightly-builds :home
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Verify PEST++ installation
+      shell: bash
+      run: |
+        echo "PATH: $PATH"
+        ls $HOME/.local/bin
+
+    - name: Run tests
+#       For example, using `pytest`
+      # once again need bash (I think) -- windows will run through mingw
+      shell: bash -l {0}
+      run: |
+        uv run pytest ${{ matrix.test-path }} \
+        -n=auto \
+        -rA -vv --tb=native \
+        --durations=20 \
+        --timeout=1200 \
+        --cov=pyemu --cov-report=xml
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Test Notebooks
+      if: ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == 3.13 }}
+      shell: bash -l {0}
+      run: |
+        uv run pytest examples/*.ipynb \
+        -rA -vv --tb=native \
+        --nbval-lax --dist loadscope \
+        --cov=pyemu --cov-report=xml --cov-append
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        fail_ci_if_error: false
+        token: ${{ secrets.CODECOV_TOKEN }}

@@ -26,7 +26,7 @@ __license__ = "CC0"
 
 from typing import Dict, List, Tuple
 
-default_owner = "MODFLOW-USGS"
+default_owner = "MODFLOW-ORG"
 default_repo = "executables"
 # key is the repo name, value is the renamed file prefix for the download
 renamed_prefix = {
@@ -35,7 +35,6 @@ renamed_prefix = {
     "modflow6-nightly-build": "modflow6_nightly",
 }
 available_repos = list(renamed_prefix.keys())
-available_ostags = ["linux", "mac", "macarm", "win32", "win64", "win64par"]
 max_http_tries = 3
 
 # Check if this is running from flopy
@@ -62,21 +61,20 @@ def get_ostag() -> str:
     elif sys.platform.startswith("win"):
         return "win" + ("64" if sys.maxsize > 2**32 else "32")
     elif sys.platform.startswith("darwin"):
-        return "mac"
+        arch = processor()
+        return "mac" + (arch if arch == "arm" else "")
     raise ValueError(f"platform {sys.platform!r} not supported")
 
 
 def get_suffixes(ostag) -> Tuple[str, str]:
-    if ostag in ["win32", "win64", "win64par"]:
+    if ostag.startswith("win"):
         return ".exe", ".dll"
     elif ostag == "linux":
         return "", ".so"
     elif "mac" in ostag:
         return "", ".dylib"
     else:
-        raise KeyError(
-            f"unrecognized ostag {ostag!r}; choose one of {available_ostags}"
-        )
+        raise KeyError(f"unrecognized ostag {ostag!r}")
 
 
 def get_request(url, params={}):
@@ -96,9 +94,7 @@ def get_request(url, params={}):
     return urllib.request.Request(url, headers=headers)
 
 
-def get_releases(
-    owner=None, repo=None, quiet=False, per_page=None
-) -> List[str]:
+def get_releases(owner=None, repo=None, quiet=False, per_page=None) -> List[str]:
     """Get list of available releases."""
     owner = default_owner if owner is None else owner
     repo = default_repo if repo is None else repo
@@ -125,7 +121,7 @@ def get_releases(
                 raise ValueError(
                     f"use GITHUB_TOKEN env to bypass rate limit ({err})"
                 ) from err
-            elif err.code in (404, 503) and num_tries < max_http_tries:
+            elif err.code in {404, 503} and num_tries < max_http_tries:
                 # GitHub sometimes returns this error for valid URLs, so retry
                 print(f"URL request {num_tries} did not work ({err})")
                 continue
@@ -159,8 +155,8 @@ def get_release(owner=None, repo=None, tag="latest", quiet=False) -> dict:
         try:
             with urllib.request.urlopen(request, timeout=10) as resp:
                 result = resp.read()
-                remaining = int(resp.headers["x-ratelimit-remaining"])
-                if remaining <= 10:
+                remaining = resp.headers.get("x-ratelimit-remaining", None)
+                if remaining and int(remaining) <= 10:
                     warnings.warn(
                         f"Only {remaining} GitHub API requests remaining "
                         "before rate-limiting"
@@ -206,9 +202,7 @@ def columns_str(items, line_chars=79) -> str:
     lines = []
     for row_num in range(num_rows):
         row_items = items[row_num::num_rows]
-        lines.append(
-            " ".join(item.ljust(item_chars) for item in row_items).rstrip()
-        )
+        lines.append(" ".join(item.ljust(item_chars) for item in row_items).rstrip())
     return "\n".join(lines)
 
 
@@ -221,9 +215,7 @@ def get_bindir_options(previous=None) -> Dict[str, Tuple[Path, str]]:
     if within_flopy:  # don't check is_dir() or access yet
         options[":flopy"] = (flopy_appdata_path / "bin", "used by FloPy")
     # Python bin (same for standard or conda varieties)
-    py_bin = Path(sys.prefix) / (
-        "Scripts" if get_ostag().startswith("win") else "bin"
-    )
+    py_bin = Path(sys.prefix) / ("Scripts" if get_ostag().startswith("win") else "bin")
     if py_bin.is_dir() and os.access(py_bin, os.W_OK):
         options[":python"] = (py_bin, "used by Python")
     home_local_bin = Path.home() / ".local" / "bin"
@@ -233,9 +225,7 @@ def get_bindir_options(previous=None) -> Dict[str, Tuple[Path, str]]:
     if local_bin.is_dir() and os.access(local_bin, os.W_OK):
         options[":system"] = (local_bin, "system local bindir")
     # Windows user
-    windowsapps_dir = Path(
-        os.path.expandvars(r"%LOCALAPPDATA%\Microsoft\WindowsApps")
-    )
+    windowsapps_dir = Path(os.path.expandvars(r"%LOCALAPPDATA%\Microsoft\WindowsApps"))
     if windowsapps_dir.is_dir() and os.access(windowsapps_dir, os.W_OK):
         options[":windowsapps"] = (windowsapps_dir, "User App path")
 
@@ -247,28 +237,25 @@ def get_bindir_options(previous=None) -> Dict[str, Tuple[Path, str]]:
 
 
 def select_bindir(bindir, previous=None, quiet=False, is_cli=False) -> Path:
-    """Resolve an install location if provided, or prompt interactive user to select one."""
+    """Resolve an install location if provided, or prompt interactive user to
+    select one."""
     options = get_bindir_options(previous)
 
     if len(bindir) > 1:  # auto-select mode
         # match one option that starts with input, e.g. :Py -> :python
-        sel = list(opt for opt in options if opt.startswith(bindir.lower()))
+        sel = [opt for opt in options if opt.startswith(bindir.lower())]
         if len(sel) != 1:
             opt_avail = ", ".join(
-                f"'{opt}' for '{optpath}'"
-                for opt, (optpath, _) in options.items()
+                f"'{opt}' for '{optpath}'" for opt, (optpath, _) in options.items()
             )
-            raise ValueError(
-                f"invalid option '{bindir}', choose from: {opt_avail}"
-            )
+            raise ValueError(f"invalid option '{bindir}', choose from: {opt_avail}")
         if not quiet:
             print(f"auto-selecting option {sel[0]!r} for 'bindir'")
         return Path(options[sel[0]][0]).resolve()
     else:
         if not is_cli:
             opt_avail = ", ".join(
-                f"'{opt}' for '{optpath}'"
-                for opt, (optpath, _) in options.items()
+                f"'{opt}' for '{optpath}'" for opt, (optpath, _) in options.items()
             )
             raise ValueError(f"specify the option, choose from: {opt_avail}")
 
@@ -289,9 +276,7 @@ def select_bindir(bindir, previous=None, quiet=False, is_cli=False) -> Path:
                 if num_tries < 2:
                     print("invalid option, try choosing option again")
                 else:
-                    raise RuntimeError(
-                        "invalid option, too many attempts"
-                    ) from None
+                    raise RuntimeError("invalid option, too many attempts") from None
 
 
 def run_main(
@@ -314,7 +299,7 @@ def run_main(
         Writable path to extract executables. Auto-select options start with a
         colon character. See error message or other documentation for further
         information on auto-select options.
-    owner : str, default "MODFLOW-USGS"
+    owner : str, default "MODFLOW-ORG"
         Name of GitHub repository owner (user or organization).
     repo : str, default "executables"
         Name of GitHub repository. Choose one of "executables" (default),
@@ -375,16 +360,26 @@ def run_main(
     if ostag is None:
         ostag = get_ostag()
 
+    if ostag == "win64par":
+        warnings.warn(
+            "The parallel build is deprecated and will no longer "
+            "be published: 'win64ext' replaces 'win64par'."
+        )
+
     exe_suffix, lib_suffix = get_suffixes(ostag)
 
     # select bindir if path not provided
-    if bindir.startswith(":"):
-        bindir = select_bindir(
-            bindir, previous=prev_bindir, quiet=quiet, is_cli=_is_cli
-        )
-    elif not isinstance(bindir, (str, Path)):
+    if isinstance(bindir, str):
+        if bindir.startswith(":"):
+            bindir = select_bindir(
+                bindir, previous=prev_bindir, quiet=quiet, is_cli=_is_cli
+            )  # returns resolved Path
+        else:
+            bindir = Path(bindir).resolve()
+    elif isinstance(bindir, Path):
+        bindir = bindir.resolve()
+    else:
         raise ValueError("Invalid bindir option (expected string or Path)")
-    bindir = Path(bindir).resolve()
 
     # make sure bindir exists
     if bindir == flopy_bin:
@@ -400,26 +395,14 @@ def run_main(
 
     # make sure repo option is valid
     if repo not in available_repos:
-        raise KeyError(
-            f"repo {repo!r} not supported; choose one of {available_repos}"
-        )
+        raise KeyError(f"repo {repo!r} not supported; choose one of {available_repos}")
 
     # get the selected release
     release = get_release(owner, repo, release_id, quiet)
     assets = release.get("assets", [])
-    asset_names = [a["name"] for a in assets]
     for asset in assets:
         asset_name = asset["name"]
         if ostag in asset_name:
-            # temporary hack for nightly gfortran build for ARM macs
-            # todo: clean up if/when all repos have an ARM mac build
-            if (
-                repo == "modflow6-nightly-build"
-                and "macarm.zip" in asset_names
-                and processor() == "arm"
-                and ostag == "mac.zip"
-            ):
-                continue
             break
     else:
         raise ValueError(
@@ -433,9 +416,7 @@ def run_main(
         dst_fname = "-".join([repo, release["tag_name"], ostag]) + asset_suffix
     else:
         # change local download name so it is more unique
-        dst_fname = "-".join(
-            [renamed_prefix[repo], release["tag_name"], asset_name]
-        )
+        dst_fname = "-".join([renamed_prefix[repo], release["tag_name"], asset_name])
     tmpdir = None
     if downloads_dir is None:
         downloads_dir = Path.home() / "Downloads"
@@ -445,13 +426,9 @@ def run_main(
     else:  # check user-defined
         downloads_dir = Path(downloads_dir)
         if not downloads_dir.is_dir():
-            raise OSError(
-                f"downloads directory '{downloads_dir}' does not exist"
-            )
+            raise OSError(f"downloads directory '{downloads_dir}' does not exist")
         elif not os.access(downloads_dir, os.W_OK):
-            raise OSError(
-                f"downloads directory '{downloads_dir}' is not writable"
-            )
+            raise OSError(f"downloads directory '{downloads_dir}' is not writable")
     download_pth = downloads_dir / dst_fname
     if download_pth.is_file() and not force:
         if not quiet:
@@ -546,25 +523,18 @@ def run_main(
             for key in sorted(code):
                 if code[key].get("shared_object"):
                     fname = f"{key}{lib_suffix}"
-                    if nosub or (
-                        subset and (key in subset or fname in subset)
-                    ):
+                    if nosub or (subset and (key in subset or fname in subset)):
                         add_item(key, fname, do_chmod=False)
                 else:
                     fname = f"{key}{exe_suffix}"
-                    if nosub or (
-                        subset and (key in subset or fname in subset)
-                    ):
+                    if nosub or (subset and (key in subset or fname in subset)):
                         add_item(key, fname, do_chmod=True)
                     # check if double version exists
                     fname = f"{key}dbl{exe_suffix}"
                     if (
                         code[key].get("double_switch", True)
                         and fname in files
-                        and (
-                            nosub
-                            or (subset and (key in subset or fname in subset))
-                        )
+                        and (nosub or (subset and (key in subset or fname in subset)))
                     ):
                         add_item(key, fname, do_chmod=True)
 
@@ -599,7 +569,7 @@ def run_main(
             bindir_path.replace(bindir / fpath.name)
             rmdirs.add(fpath.parent)
         # clean up directories, starting with the longest
-        for rmdir in reversed(sorted(rmdirs)):
+        for rmdir in sorted(rmdirs, reverse=True):
             bindir_path = bindir / rmdir
             bindir_path.rmdir()
             for subdir in rmdir.parents:
@@ -608,7 +578,7 @@ def run_main(
                     break
                 shutil.rmtree(str(bindir_path))
 
-    if ostag in ["linux", "mac", "macarm"]:
+    if "win" not in ostag:
         # similar to "chmod +x fname" for each executable
         for fname in chmod:
             pth = bindir / fname
@@ -722,7 +692,6 @@ Examples:
     )
     parser.add_argument(
         "--ostag",
-        choices=available_ostags,
         help="Operating system tag; default is to automatically choose.",
     )
     parser.add_argument(
@@ -740,9 +709,7 @@ Examples:
         help="Force re-download archive. Default behavior will use archive if "
         "previously downloaded in downloads-dir.",
     )
-    parser.add_argument(
-        "--quiet", action="store_true", help="Show fewer messages."
-    )
+    parser.add_argument("--quiet", action="store_true", help="Show fewer messages.")
     args = vars(parser.parse_args())
     try:
         run_main(**args, _is_cli=True)

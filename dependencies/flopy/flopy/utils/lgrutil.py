@@ -1,12 +1,21 @@
+import warnings
+
 import numpy as np
 
 from ..discretization import StructuredGrid
 from ..modflow import Modflow
+from .cvfdutil import get_disv_gridprops, gridlist_to_verts
 from .util_array import Util2d, Util3d
 
 
-class SimpleRegularGrid:
+class SimpleRegularGrid(StructuredGrid):
     """
+    Deprecated: Use StructuredGrid instead.
+
+    .. deprecated:: 3.9
+        SimpleRegularGrid is deprecated and will be removed in version 3.10.
+        Use :class:`flopy.discretization.StructuredGrid` instead.
+
     Simple object for representing regular MODFLOW grid information.
 
     Parameters
@@ -46,6 +55,13 @@ class SimpleRegularGrid:
         xorigin,
         yorigin,
     ):
+        warnings.warn(
+            "SimpleRegularGrid is deprecated and will be removed in version 3.10. "
+            "Use StructuredGrid instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
         # enforce compliance
         assert delr.shape == (ncol,)
         assert delc.shape == (nrow,)
@@ -53,32 +69,62 @@ class SimpleRegularGrid:
         assert botm.shape == (nlay, nrow, ncol)
         assert idomain.shape == (nlay, nrow, ncol)
 
-        self.nlay = nlay
-        self.nrow = nrow
-        self.ncol = ncol
-        self.delr = delr
-        self.delc = delc
-        self.top = top
-        self.botm = botm
-        self.idomain = idomain
+        # Initialize parent StructuredGrid
+        super().__init__(
+            delc=delc,
+            delr=delr,
+            top=top,
+            botm=botm,
+            idomain=idomain,
+            xoff=xorigin,
+            yoff=yorigin,
+        )
+
+        # Store xorigin/yorigin for backward compatibility
+        # (StructuredGrid uses xoffset/yoffset internally)
         self.xorigin = xorigin
         self.yorigin = yorigin
-        return
 
     @property
     def modelgrid(self):
-        mg = StructuredGrid(
-            delc=self.delc,
-            delr=self.delr,
-            top=self.top,
-            botm=self.botm,
-            idomain=self.idomain,
-            xoff=self.xorigin,
-            yoff=self.yorigin,
+        """
+        Deprecated: SimpleRegularGrid now inherits from StructuredGrid.
+
+        .. deprecated:: 3.9
+            The modelgrid property is deprecated. SimpleRegularGrid now
+            inherits from StructuredGrid, so you can use the instance directly.
+
+        Returns
+        -------
+        StructuredGrid
+            Returns self (which is a StructuredGrid instance)
+        """
+        warnings.warn(
+            "The modelgrid property is deprecated. "
+            "SimpleRegularGrid now inherits from StructuredGrid, "
+            "so you can use the instance directly.",
+            DeprecationWarning,
+            stacklevel=2,
         )
-        return mg
+        return self
 
     def get_gridprops_dis6(self):
+        """
+        Get grid properties for MODFLOW 6 DIS package.
+
+        .. deprecated:: 3.9
+            get_gridprops_dis6 is deprecated and will be removed in version 3.10.
+
+        Returns
+        -------
+        dict
+            Dictionary of grid properties
+        """
+        warnings.warn(
+            "get_gridprops_dis6 is deprecated and will be removed in version 3.10.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         gridprops = {
             "xorigin": self.xorigin,
             "yorigin": self.yorigin,
@@ -104,11 +150,13 @@ class Lgr:
         delcp,
         topp,
         botmp,
-        idomainp,
+        refine_mask=None,
         ncpp=3,
         ncppl=1,
         xllp=0.0,
         yllp=0.0,
+        *,
+        idomainp=None,
     ):
         """
 
@@ -128,12 +176,20 @@ class Lgr:
             parent top array (nrowp, ncolp)
         botmp : ndarray
             parent botm array (nlayp, nrowp, ncolp)
-        idomainp : ndarray
-            parent idomain array used to create the child grid.  Ones indicate
-            a parent cell and zeros indicate a child cell.  The domain of the
-            child grid will span a rectangular region that spans all idomain
-            cells with a value of zero. idomain must be of shape
-            (nlayp, nrowp, ncolp)
+        refine_mask : ndarray
+            Array indicating which parent cells to refine (shape: nlay, nrow, ncol).
+            Cells with value 0 will be refined, with value 1 remain as parent cells.
+
+            When a parent cell is marked to be refined, it will be deactivated in
+            the parent model using idomain functionality. Refined parent cells will
+            correspond to active cells in the child model.
+
+            The child grid spans a rectangular bounding box around the cells marked
+            for refinement in the parent. If the refinement region is not regularly
+            shaped (non-rectangular), some child cells will be marked inactive such
+            that no region is active in both the parent and child grid. In general,
+            child cells are active (1) in refined parent cells (refine_mask=0) and
+            inactive (0) where coinciding with active parent cells (refine_mask=1).
         ncpp : int
             number of child cells along the face of a parent cell
         ncppl : list of ints
@@ -142,6 +198,12 @@ class Lgr:
             x location of parent grid lower left corner
         yllp : float
             y location of parent grid lower left corner
+        idomainp : ndarray, optional
+            parent idomain array used to create the child grid.  Ones indicate
+            a parent cell and zeros indicate a child cell.  The domain of the
+            child grid will span a rectangular region that spans all idomain
+            cells with a value of zero. idomain must be of shape
+            (nlayp, nrowp, ncolp). Deprecated/renamed, use refine_mask instead.
 
         """
 
@@ -154,17 +216,35 @@ class Lgr:
         self.delrp = Util2d(m, (ncolp,), np.float32, delrp, "delrp").array
         self.delcp = Util2d(m, (nrowp,), np.float32, delcp, "delcp").array
         self.topp = Util2d(m, (nrowp, ncolp), np.float32, topp, "topp").array
-        self.botmp = Util3d(
-            m, (nlayp, nrowp, ncolp), np.float32, botmp, "botmp"
-        ).array
+        self.botmp = Util3d(m, (nlayp, nrowp, ncolp), np.float32, botmp, "botmp").array
 
-        # idomain
-        assert idomainp.shape == (nlayp, nrowp, ncolp)
-        self.idomain = idomainp
-        idxl, idxr, idxc = np.where(idomainp == 0)
-        assert idxl.shape[0] > 1, "no zero values found in idomain"
+        # refinement mask
+        if idomainp is not None:
+            import warnings
 
-        # # child cells per parent and child cells per parent layer
+            warnings.warn(
+                "The 'idomainp' parameter is deprecated and will be removed in "
+                "version 3.10. Use 'refine_mask' instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            if refine_mask is not None:
+                raise ValueError(
+                    "Provide either refine_mask or idomainp, not both. "
+                    "Prefer refine_mask as idomainp is deprecated."
+                )
+            refine_mask = idomainp
+        elif refine_mask is None:
+            raise ValueError(
+                "Need either refine_mask or idomainp. "
+                "Prefer refine_mask as idomainp is deprecated."
+            )
+        assert refine_mask.shape == (nlayp, nrowp, ncolp)
+        self.refine_mask = refine_mask
+        idxl, idxr, idxc = np.asarray(refine_mask == 0).nonzero()
+        assert idxl.shape[0] > 0, "no zero values found in refine_mask"
+
+        # child cells per parent and child cells per parent layer
         self.ncpp = ncpp
         self.ncppl = Util2d(m, (nlayp,), np.int32, ncppl, "ncppl").array
 
@@ -198,6 +278,79 @@ class Lgr:
         self.top, self.botm = self.get_top_botm()
         self.xll = xllp + float(self.delrp[0 : self.npcbeg].sum())
         self.yll = yllp + float(self.delcp[self.nprend + 1 :].sum())
+
+    @property
+    def idomain(self):
+        """
+        .. deprecated:: 3.9
+            The `idomain` attribute is deprecated. Use `refine_mask` instead.
+            Will be removed in version 3.10.
+        """
+        import warnings
+
+        warnings.warn(
+            "The 'idomain' attribute is deprecated and will be removed in "
+            "version 3.10. Use 'refine_mask' instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.refine_mask
+
+    @classmethod
+    def from_parent_grid(cls, parent_grid, refine_mask, ncpp=3, ncppl=1):
+        """
+        Create an Lgr instance from a parent StructuredGrid.
+
+        Parameters
+        ----------
+        parent_grid : StructuredGrid
+            The parent grid
+        refine_mask : ndarray
+            Array indicating which parent cells to refine (shape: nlay, nrow, ncol).
+            Cells with value 0 will be refined, with value 1 remain as parent cells.
+
+            When a parent cell is marked to be refined, it will be deactivated in
+            the parent model using idomain functionality. Refined parent cells will
+            correspond to active cells in the child model.
+
+            The child grid spans a rectangular bounding box around the cells marked
+            for refinement in the parent. If the refinement region is not regularly
+            shaped (non-rectangular), some child cells will be marked inactive such
+            that no region is active in both the parent and child grid. In general,
+            child cells are active (1) in refined parent cells (refine_mask=0) and
+            inactive (0) where coinciding with active parent cells (refine_mask=1).
+        ncpp : int
+            Number of child cells per parent cell face (default 3)
+        ncppl : int or list of ints
+            Number of child layers per parent layer (default 1)
+
+        Returns
+        -------
+        Lgr
+            Local grid refinement instance
+
+        Examples
+        --------
+        >>> # Create refinement mask - refine center 3x3 cells
+        >>> refine_mask = np.ones((nlay, nrow, ncol))
+        >>> refine_mask[:, 2:5, 2:5] = 0
+        >>> lgr = Lgr.from_parent_grid(parent_grid, refine_mask, ncpp=3)
+
+        """
+        return cls(
+            nlayp=parent_grid.nlay,
+            nrowp=parent_grid.nrow,
+            ncolp=parent_grid.ncol,
+            delrp=parent_grid.delr,
+            delcp=parent_grid.delc,
+            topp=parent_grid.top,
+            botmp=parent_grid.botm,
+            refine_mask=refine_mask,
+            ncpp=ncpp,
+            ncppl=ncppl,
+            xllp=parent_grid.xoffset,
+            yllp=parent_grid.yoffset,
+        )
 
     def get_shape(self):
         """
@@ -263,12 +416,7 @@ class Lgr:
                     dz = (top - bot) / self.ncppl[kp]
                     for _ in range(self.ncppl[kp]):
                         botm[kc, icrowstart:icrowend, iccolstart:iccolend] = (
-                            botm[
-                                kc - 1,
-                                icrowstart:icrowend,
-                                iccolstart:iccolend,
-                            ]
-                            - dz
+                            botm[kc - 1, icrowstart:icrowend, iccolstart:iccolend] - dz
                         )
                         kc += 1
         return botm[0], botm[1:]
@@ -292,9 +440,7 @@ class Lgr:
 
         """
         assert parent_array.shape == (self.nrowp, self.ncolp)
-        child_array = np.empty(
-            (self.nrow, self.ncol), dtype=parent_array.dtype
-        )
+        child_array = np.empty((self.nrow, self.ncol), dtype=parent_array.dtype)
         for ip in range(self.nprbeg, self.nprend + 1):
             for jp in range(self.npcbeg, self.npcend + 1):
                 icrowstart = (ip - self.nprbeg) * self.ncpp
@@ -307,15 +453,19 @@ class Lgr:
 
     def get_idomain(self):
         """
-        Return the idomain array for the child model.  This will normally
-        be all ones unless the idomain array for the parent model is
-        non-rectangular and irregularly shaped.  Then, parts of the child
-        model will have idomain zero cells.
+        Return the idomain array for the child model.
+
+        The child grid spans a rectangular bounding box around the cells marked
+        for refinement in the parent. If the refinement region is not regularly
+        shaped (non-rectangular), some child cells will be marked inactive such
+        that no region is active in both the parent and child grid. In general,
+        child cells are active (1) in refined parent cells (refine_mask=0) and
+        inactive (0) where coinciding with active parent cells (refine_mask=1).
 
         Returns
         -------
         idomain : ndarray
-            idomain array for the child model
+            Child idomain array (shape: nlay, nrow, ncol)
 
         """
         idomain = np.ones((self.nlay, self.nrow, self.ncol), dtype=int)
@@ -323,7 +473,7 @@ class Lgr:
             for ic in range(self.nrow):
                 for jc in range(self.ncol):
                     kp, ip, jp = self.get_parent_indices(kc, ic, jc)
-                    if self.idomain[kp, ip, jp] == 1:
+                    if self.refine_mask[kp, ip, jp] == 1:
                         idomain[kc, ic, jc] = 0
         return idomain
 
@@ -362,25 +512,25 @@ class Lgr:
         # parent cell to left
         if jc % self.ncpp == 0:
             if jp - 1 >= 0:
-                if self.idomain[kp, ip, jp - 1] != 0:
+                if self.refine_mask[kp, ip, jp - 1] != 0:
                     parentlist.append(((kp, ip, jp - 1), -1))
 
         # parent cell to right
         if (jc + 1) % self.ncpp == 0:
             if jp + 1 < self.ncolp:
-                if self.idomain[kp, ip, jp + 1] != 0:
+                if self.refine_mask[kp, ip, jp + 1] != 0:
                     parentlist.append(((kp, ip, jp + 1), 1))
 
         # parent cell to back
         if ic % self.ncpp == 0:
             if ip - 1 >= 0:
-                if self.idomain[kp, ip - 1, jp] != 0:
+                if self.refine_mask[kp, ip - 1, jp] != 0:
                     parentlist.append(((kp, ip - 1, jp), 2))
 
         # parent cell to front
         if (ic + 1) % self.ncpp == 0:
             if ip + 1 < self.nrowp:
-                if self.idomain[kp, ip + 1, jp] != 0:
+                if self.refine_mask[kp, ip + 1, jp] != 0:
                     parentlist.append(((kp, ip + 1, jp), -2))
 
         # parent cell to top is not possible
@@ -388,7 +538,7 @@ class Lgr:
         # parent cell to bottom
         if kc + 1 == self.ibcl[kp]:
             if kp + 1 < self.nlayp:
-                if self.idomain[kp + 1, ip, jp] != 0:
+                if self.refine_mask[kp + 1, ip, jp] != 0:
                     parentlist.append(((kp + 1, ip, jp), -3))
 
         return parentlist
@@ -511,14 +661,7 @@ class Lgr:
                                 y2 = float(yp[ip, jp])
                                 cd = np.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 
-                        exg = [
-                            (kp, ip, jp),
-                            (kc, ic, jc),
-                            ihc,
-                            cl1,
-                            cl2,
-                            hwva,
-                        ]
+                        exg = [(kp, ip, jp), (kc, ic, jc), ihc, cl1, cl2, hwva]
                         if angldegx:
                             exg.append(float(angle))
                         if cdist:
@@ -545,7 +688,7 @@ class Lgr:
             self.delcp,
             self.topp,
             self.botmp,
-            self.idomain,
+            self.refine_mask,
             self.xllp,
             self.yllp,
         )
@@ -573,15 +716,456 @@ class Lgr:
         xorigin = self.xll
         yorigin = self.yll
         simple_regular_grid = SimpleRegularGrid(
-            nlayc,
-            nrowc,
-            ncolc,
-            delrc,
-            delcc,
-            topc,
-            botmc,
-            idomainc,
-            xorigin,
-            yorigin,
+            nlayc, nrowc, ncolc, delrc, delcc, topc, botmc, idomainc, xorigin, yorigin
         )
         return simple_regular_grid
+
+    def to_disv_gridprops(self):
+        """
+        Create and return a gridprops dictionary that can be
+        used to create a disv grid (instead of a separate parent
+        and child representation).  The gridprops dictionary can
+        be unpacked into the flopy.mf6.Modflowdisv() constructor
+        and flopy.discretization.VertexGrid() constructor.
+
+        Note that export capability will only work if the parent
+        and child models have corresponding layers.
+
+        Returns
+        -------
+        gridprops : dict
+            Dictionary containing ncpl, nvert, vertices, cell2d,
+            nlay, top, and botm
+
+        """
+        return LgrToDisv(self).get_disv_gridprops()
+
+
+class LgrToDisv:
+    def __init__(self, lgr):
+        """
+        Helper class used to convert an Lgr() object into
+        the grid properties needed to create a disv vertex
+        nested grid.  After instantiation, self.verts and
+        self.iverts are available.
+
+        The primary work of this class is to identify hanging
+        vertices along the shared parent-child boundary and
+        include these hanging vertices in the vertex incidence
+        list for parent cells.
+
+        Parameters
+        ----------
+        lgr : Lgr instance
+            Lgr() object describing a parent-child relation
+
+        """
+
+        # store information
+        self.lgr = lgr
+        # SimpleRegularGrid now inherits from StructuredGrid, use directly
+        self.pgrid = lgr.parent
+        self.cgrid = lgr.child
+
+        # count active parent and child cells
+        self.ncpl_parent = np.count_nonzero(self.pgrid.idomain[0] > 0)
+        self.ncpl_child = np.count_nonzero(self.cgrid.idomain[0] > 0)
+        self.ncpl = self.ncpl_child + self.ncpl_parent
+
+        # initialize dicts for mappings and child vertices
+        self.parent_ij_to_global = {}
+        self.child_ij_to_global = {}
+        self.right_face_hanging = {}
+        self.left_face_hanging = {}
+        self.front_face_hanging = {}
+        self.back_face_hanging = {}
+        self.find_hanging_vertices()
+
+        # build global verts and iverts keeping only idomain > 0
+        self.verts = None
+        self.iverts = None
+        self.build_verts_iverts()
+
+        # todo: remove unused vertices?
+
+    def find_hanging_vertices(self):
+        """
+        Hanging vertices are vertices that must be included
+        along the edge of parent cells.  These hanging vertices
+        mark the locations of corners of adjacent child cells.
+        Hanging vertices are not strictly
+        necessary to define the shape of a parent cell, but they are
+        required by modflow to describe connections between
+        parent and child cells.
+
+        This routine finds hanging vertices parent cells along
+        a parent-child boundary.  These hanging vertices are
+        stored in 4 member dictionaries, called right_face_hanging,
+        left_face_hanging, front_face_hanging, and back_face_hanging.
+        These dictionaries are used subsequently to insert
+        hanging vertices into the iverts array.
+
+        """
+
+        # create dictionaries for parent left, right, back, and front
+        # faces that have a key that is parent (row, col)
+        # and a value that is a list of child vertex numbers
+
+        # this list of child vertex numbers will be ordered from
+        # left to right (back/front) and from back to front (left/right)
+        # so when they are used later, two of them will need to be
+        # reversed so that clockwise ordering is maintained
+
+        nrowc = self.lgr.nrow
+        ncolc = self.lgr.ncol
+        iverts = self.cgrid.iverts
+        cidomain = self.lgr.get_idomain()
+
+        self.right_face_hanging = {}
+        self.left_face_hanging = {}
+        self.front_face_hanging = {}
+        self.back_face_hanging = {}
+
+        # map (i, j) to global cell number
+        self.parent_ij_to_global = {}
+        self.child_ij_to_global = {}
+
+        kc = 0
+        nodec = 0
+        for ic in range(nrowc):
+            for jc in range(ncolc):
+                plist = self.lgr.get_parent_connections(kc, ic, jc)
+                for (kp, ip, jp), idir in plist:
+                    if cidomain[kc, ic, jc] == 0:
+                        continue
+
+                    if idir == -1:  # left child face connected to right parent face
+                        # child vertices 0 and 3 added as hanging nodes
+                        if (ip, jp) in self.right_face_hanging:
+                            hlist = self.right_face_hanging.pop((ip, jp))
+                        else:
+                            hlist = []
+                        ivlist = iverts[nodec]
+                        for iv in (ivlist[0], ivlist[3]):
+                            if iv not in hlist:
+                                hlist.append(iv)
+                        self.right_face_hanging[ip, jp] = hlist
+
+                    elif idir == 1:
+                        # child vertices 1 and 2 added as hanging nodes
+                        if (ip, jp) in self.left_face_hanging:
+                            hlist = self.left_face_hanging.pop((ip, jp))
+                        else:
+                            hlist = []
+                        ivlist = iverts[nodec]
+                        for iv in (ivlist[1], ivlist[2]):
+                            if iv not in hlist:
+                                hlist.append(iv)
+                        self.left_face_hanging[ip, jp] = hlist
+
+                    elif idir == 2:
+                        # child vertices 0 and 1 added as hanging nodes
+                        if (ip, jp) in self.front_face_hanging:
+                            hlist = self.front_face_hanging.pop((ip, jp))
+                        else:
+                            hlist = []
+                        ivlist = iverts[nodec]
+                        for iv in (ivlist[0], ivlist[1]):
+                            if iv not in hlist:
+                                hlist.append(iv)
+                        self.front_face_hanging[ip, jp] = hlist
+
+                    elif idir == -2:
+                        # child vertices 3 and 2 added as hanging nodes
+                        if (ip, jp) in self.back_face_hanging:
+                            hlist = self.back_face_hanging.pop((ip, jp))
+                        else:
+                            hlist = []
+                        ivlist = iverts[nodec]
+                        for iv in (ivlist[3], ivlist[2]):
+                            if iv not in hlist:
+                                hlist.append(iv)
+                        self.back_face_hanging[ip, jp] = hlist
+
+                nodec += 1
+
+    def build_verts_iverts(self):
+        """
+        Build the verts and iverts members.  self.verts is a 2d
+        numpy array of size (nvert, 2).  Column 1 is x and column 2
+        is y.  self.iverts is a list of size ncpl (number of cells
+        per layer) with each entry being the list of vertex indices
+        that define the cell.
+
+        """
+
+        # stack vertex arrays; these will have more points than necessary,
+        # because parent and child vertices will overlap at corners
+        # (duplicates are filtered at the end of this method)
+        pverts = self.pgrid.verts
+        cverts = self.cgrid.verts
+        nverts_parent = pverts.shape[0]
+        nverts_child = cverts.shape[0]
+        verts = np.vstack((pverts, cverts))
+
+        # build iverts list first with active parent cells
+        iverts = []
+        iglo = 0
+        for i in range(self.pgrid.nrow):
+            for j in range(self.pgrid.ncol):
+                if self.pgrid.idomain[0, i, j] > 0:
+                    ivlist = self.pgrid._build_structured_iverts(i, j)
+
+                    # merge hanging vertices if they exist
+                    ivlist = self.merge_hanging_vertices(i, j, ivlist)
+
+                    iverts.append(ivlist)
+                    self.parent_ij_to_global[i, j] = iglo
+                    iglo += 1
+
+        # now add active child cells
+        for i in range(self.cgrid.nrow):
+            for j in range(self.cgrid.ncol):
+                if self.cgrid.idomain[0, i, j] > 0:
+                    ivlist = [
+                        iv + nverts_parent
+                        for iv in self.cgrid._build_structured_iverts(i, j)
+                    ]
+                    iverts.append(ivlist)
+                    self.child_ij_to_global[i, j] = iglo
+                    iglo += 1
+
+        # Deduplicate vertices - map old indices to new indices
+        # Use dictionary to identify duplicate coordinates (round to 9 decimals
+        # to match legacy gridlist_to_verts behavior)
+        vertex_dict = {}  # maps (x, y) tuple to new vertex index
+        old_to_new = {}  # maps old vertex index to new vertex index
+        new_verts_list = []  # list of deduplicated vertices
+        new_vertex_idx = 0
+
+        for old_idx in range(verts.shape[0]):
+            x, y = verts[old_idx]
+            coord = (round(x, 9), round(y, 9))
+
+            if coord in vertex_dict:
+                # This coordinate already exists, map to existing vertex
+                old_to_new[old_idx] = vertex_dict[coord]
+            else:
+                # New coordinate, add it
+                vertex_dict[coord] = new_vertex_idx
+                old_to_new[old_idx] = new_vertex_idx
+                new_verts_list.append([x, y])
+                new_vertex_idx += 1
+
+        # Convert deduplicated vertices to numpy array
+        verts_dedup = np.array(new_verts_list)
+
+        # Update all iverts lists to use deduplicated indices
+        iverts_dedup = []
+        for ivlist in iverts:
+            ivlist_dedup = [old_to_new[iv] for iv in ivlist]
+            iverts_dedup.append(ivlist_dedup)
+
+        self.verts = verts_dedup
+        self.iverts = iverts_dedup
+
+    def merge_hanging_vertices(self, ip, jp, ivlist):
+        """
+        Given a list of vertices (ivlist) for parent row and column
+        (ip, jp) merge hanging vertices from adjacent child cells
+        into ivlist.
+
+        Parameters
+        ----------
+        ip : int
+            parent cell row number
+
+        jp : int
+            parent cell column number
+
+        ivlist : list of ints
+            list of vertex indices that define the parent
+            cell (ip, jp)
+
+        Returns
+        -------
+        ivlist : list of ints
+            modified list of vertices that now also contains
+            any hanging vertices needed to properly define
+            a parent cell adjacent to child cells
+
+        """
+        assert len(ivlist) == 4
+        child_ivlist_offset = self.pgrid.verts.shape[0]
+
+        # construct back edge
+        idx = 0
+        reverse = False
+        face_hanging = self.back_face_hanging
+        back_edge = [ivlist[idx]]
+        if (ip, jp) in face_hanging:
+            hlist = face_hanging[ip, jp]
+            if len(hlist) > 2:
+                hlist = hlist[1:-1]  # do not include two ends
+                hlist = [h + child_ivlist_offset for h in hlist]
+                if reverse:
+                    hlist = hlist[::-1]
+            else:
+                hlist = []
+            back_edge = [ivlist[idx]] + hlist
+
+        # construct right edge
+        idx = 1
+        reverse = False
+        face_hanging = self.right_face_hanging
+        right_edge = [ivlist[idx]]
+        if (ip, jp) in face_hanging:
+            hlist = face_hanging[ip, jp]
+            if len(hlist) > 2:
+                hlist = hlist[1:-1]  # do not include two ends
+                hlist = [h + child_ivlist_offset for h in hlist]
+                if reverse:
+                    hlist = hlist[::-1]
+            else:
+                hlist = []
+            right_edge = [ivlist[idx]] + hlist
+
+        # construct front edge
+        idx = 2
+        reverse = True
+        face_hanging = self.front_face_hanging
+        front_edge = [ivlist[idx]]
+        if (ip, jp) in face_hanging:
+            hlist = face_hanging[ip, jp]
+            if len(hlist) > 2:
+                hlist = hlist[1:-1]  # do not include two ends
+                hlist = [h + child_ivlist_offset for h in hlist]
+                if reverse:
+                    hlist = hlist[::-1]
+            else:
+                hlist = []
+            front_edge = [ivlist[idx]] + hlist
+
+        # construct left edge
+        idx = 3
+        reverse = True
+        face_hanging = self.left_face_hanging
+        left_edge = [ivlist[idx]]
+        if (ip, jp) in face_hanging:
+            hlist = face_hanging[ip, jp]
+            if len(hlist) > 2:
+                hlist = hlist[1:-1]  # do not include two ends
+                hlist = [h + child_ivlist_offset for h in hlist]
+                if reverse:
+                    hlist = hlist[::-1]
+            else:
+                hlist = []
+            left_edge = [ivlist[idx]] + hlist
+
+        ivlist = back_edge + right_edge + front_edge + left_edge
+
+        return ivlist
+
+    def get_xcyc(self):
+        """
+        Construct a 2d array of size (nvert, 2) that
+        contains the cell centers.
+
+        Returns
+        -------
+        xcyc : ndarray
+            2d array of x, y positions for cell centers
+
+        """
+        xcyc = np.empty((self.ncpl, 2))
+        pidx = self.pgrid.idomain[0] > 0
+        cidx = self.cgrid.idomain[0] > 0
+        px = self.pgrid.xcellcenters[pidx].flatten()
+        cx = self.cgrid.xcellcenters[cidx].flatten()
+        xcyc[:, 0] = np.vstack((np.atleast_2d(px).T, np.atleast_2d(cx).T)).flatten()
+        py = self.pgrid.ycellcenters[pidx].flatten()
+        cy = self.cgrid.ycellcenters[cidx].flatten()
+        xcyc[:, 1] = np.vstack((np.atleast_2d(py).T, np.atleast_2d(cy).T)).flatten()
+        return xcyc
+
+    def get_top(self):
+        """
+        Construct a 1d array of size (ncpl) that
+        contains the cell tops.
+
+        Returns
+        -------
+        top : ndarray
+            1d array of top elevations
+
+        """
+        top = np.empty((self.ncpl,))
+        pidx = self.pgrid.idomain[0] > 0
+        cidx = self.cgrid.idomain[0] > 0
+        pa = self.pgrid.top[pidx].flatten()
+        ca = self.cgrid.top[cidx].flatten()
+        top[:] = np.hstack((pa, ca))
+        return top
+
+    def get_botm(self):
+        """
+        Construct a 2d array of size (nlay, ncpl) that
+        contains the cell bottoms.
+
+        Returns
+        -------
+        botm : ndarray
+            2d array of bottom elevations
+
+        """
+        botm = np.empty((self.lgr.nlay, self.ncpl))
+        pidx = self.pgrid.idomain[0] > 0
+        cidx = self.cgrid.idomain[0] > 0
+        for k in range(self.lgr.nlay):
+            pa = self.pgrid.botm[k, pidx].flatten()
+            ca = self.cgrid.botm[k, cidx].flatten()
+            botm[k, :] = np.hstack((pa, ca))
+        return botm
+
+    def get_disv_gridprops(self):
+        """
+        Create and return a gridprops dictionary that can be
+        used to create a disv grid (instead of a separate parent
+        and child representation).  The gridprops dictionary can
+        be unpacked into the flopy.mf6.Modflowdisv() constructor
+        and flopy.discretization.VertexGrid() constructor.
+
+        Note that export capability will only work if the parent
+        and child models have corresponding layers.
+
+        Returns
+        -------
+        gridprops : dict
+            Dictionary containing ncpl, nvert, vertices, cell2d,
+            nlay, top, and botm
+
+        """
+
+        # check
+        assert self.lgr.ncppl.min() == self.lgr.ncppl.max(), (
+            "Exporting disv grid properties requires ncppl to be 1."
+        )
+        assert self.lgr.nlayp == self.lgr.nlay, (
+            "Exporting disv grid properties requires parent and child models "
+            "to have the same number of layers."
+        )
+        for k in range(self.lgr.nlayp - 1):
+            assert np.allclose(self.lgr.idomain[k], self.lgr.idomain[k + 1]), (
+                "Exporting disv grid properties requires parent idomain "
+                "is same for all layers."
+            )
+
+        # get information and build gridprops
+        xcyc = self.get_xcyc()
+        top = self.get_top()
+        botm = self.get_botm()
+        gridprops = get_disv_gridprops(self.verts, self.iverts, xcyc=xcyc)
+        gridprops["nlay"] = self.lgr.nlay
+        gridprops["top"] = top
+        gridprops["botm"] = botm
+        return gridprops

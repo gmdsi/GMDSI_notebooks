@@ -74,7 +74,7 @@ class MfUsgBcf(ModflowBcf):
         is the vertical hydraulic conductivity of the cell and the leakance is
         computed for each vertical connection.
     sf1 : float or array of floats (nlay, nrow, ncol)
-        specific storage (confined) or storage coefficient (unconfined),
+        specific storage (confined) or specific yield (unconfined),
         read when there is at least one transient stress period.
         (default is 1e-5)
     sf2 : float or array of floats (nlay, nrow, ncol)
@@ -138,6 +138,12 @@ class MfUsgBcf(ModflowBcf):
         ihdwet=0,
         ikvflag=0,
         ikcflag=0,
+        tabrich=False,
+        nuzones=0,
+        nutabrows=0,
+        bubblept=False,
+        fullydry=False,
+        altsto=False,
         tran=1.0,
         hy=1.0,
         vcont=1.0,
@@ -194,6 +200,13 @@ class MfUsgBcf(ModflowBcf):
 
         self.ikvflag = ikvflag
         self.ikcflag = ikcflag
+        self.tabrich = tabrich
+        self.nuzones = nuzones
+        self.nutabrows = nutabrows
+        self.bubblept = bubblept
+        self.fullydry = fullydry
+        self.altsto = altsto
+
         self.kv = kv
         self.anglex = anglex
         self.ksat = ksat
@@ -201,12 +214,7 @@ class MfUsgBcf(ModflowBcf):
         if not structured:
             njag = dis.njag
             self.anglex = Util2d(
-                model,
-                (njag,),
-                np.float32,
-                anglex,
-                "anglex",
-                locat=self.unit_number[0],
+                model, (njag,), np.float32, anglex, "anglex", locat=self.unit_number[0]
             )
 
         # item 1
@@ -220,12 +228,7 @@ class MfUsgBcf(ModflowBcf):
         )
         if not structured:
             self.ksat = Util2d(
-                model,
-                (njag,),
-                np.float32,
-                ksat,
-                "ksat",
-                locat=self.unit_number[0],
+                model, (njag,), np.float32, ksat, "ksat", locat=self.unit_number[0]
             )
 
         if add_package:
@@ -253,17 +256,25 @@ class MfUsgBcf(ModflowBcf):
 
         # Item 1: ipakcb, HDRY, IWDFLG, WETFCT, IWETIT, IHDWET, IKVFLAG, IKCFLAG
         f_obj.write(
-            f" {self.ipakcb:9d} {self.hdry:9.3G} {self.iwdflg:9d}"
-            f" {self.wetfct:9.3G} {self.iwetit:9d} {self.ihdwet:9d}"
-            f" {self.ikvflag:9d} {self.ikcflag:9d}\n"
+            f" {self.ipakcb:9d} {self.hdry:9.3e} {self.iwdflg:9d}"
+            f" {self.wetfct:9.3e} {self.iwetit:9d} {self.ihdwet:9d}"
+            f" {self.ikvflag:9d} {self.ikcflag:9d}"
         )
+
+        if self.tabrich:
+            f_obj.write(f" TABRICH {self.nuzones:9d} {self.nutabrows:9d}")
+        if self.bubblept:
+            f_obj.write(" BUBBLEPT")
+        if self.fullydry:
+            f_obj.write(" FULLYDRY")
+        if self.altsto:
+            f_obj.write(" ALTSTO")
+        f_obj.write("\n")
 
         # LAYCON array
         for layer in range(nlay):
             if self.intercellt[layer] > 0:
-                f_obj.write(
-                    f"{self.intercellt[layer]:1d} {self.laycon[layer]:1d} "
-                )
+                f_obj.write(f"{self.intercellt[layer]:1d} {self.laycon[layer]:1d} ")
             else:
                 f_obj.write(f"0{self.laycon[layer]:1d} ")
         f_obj.write("\n")
@@ -284,10 +295,10 @@ class MfUsgBcf(ModflowBcf):
             if self.ikcflag == 0:
                 self._write_hy_tran_vcont_kv(f_obj, layer)
 
-            if transient and (self.laycon[layer] in [2, 3, 4]):
+            if transient and (self.laycon[layer] in {2, 3, 4}):
                 f_obj.write(self.sf2[layer].get_file_entry())
 
-            if (self.iwdflg != 0) and (self.laycon[layer] in [1, 3]):
+            if (self.iwdflg != 0) and (self.laycon[layer] in {1, 3}):
                 f_obj.write(self.wetdry[layer].get_file_entry())
 
         # <KSAT> (if ikcflag==1)
@@ -305,7 +316,7 @@ class MfUsgBcf(ModflowBcf):
         f_obj : open file object.
         k : model layer index (base 0)
         """
-        if self.laycon[layer] in [0, 2]:
+        if self.laycon[layer] in {0, 2}:
             f_obj.write(self.tran[layer].get_file_entry())
         else:
             f_obj.write(self.hy[layer].get_file_entry())
@@ -344,7 +355,8 @@ class MfUsgBcf(ModflowBcf):
         >>> import flopy
         >>> m = flopy.mfusg.MfUsg()
         >>> disu = flopy.mfusg.MfUsgDisU(
-            model=m, nlay=1, nodes=1, iac=[1], njag=1,ja=np.array([0]), fahl=[1.0], cl12=[1.0])
+        ...     model=m, nlay=1, nodes=1, iac=[1], njag=1,ja=np.array([0]),
+        ...     fahl=[1.0], cl12=[1.0])
         >>> bcf = flopy.mfusg.MfUsgBcf.load('test.bcf', m)
         """
         msg = (
@@ -384,12 +396,39 @@ class MfUsgBcf(ModflowBcf):
             int(text_list[5]),
         )
 
-        ikvflag = type_from_iterable(
-            text_list, index=6, _type=int, default_val=0
-        )
-        ikcflag = type_from_iterable(
-            text_list, index=7, _type=int, default_val=0
-        )
+        ikvflag = type_from_iterable(text_list, index=6, _type=int, default_val=0)
+        ikcflag = type_from_iterable(text_list, index=7, _type=int, default_val=0)
+
+        # options
+        if "TABRICH" in text_list:
+            idx = text_list.index("TABRICH")
+            tabrich = True
+            nuzones = float(text_list[idx + 1])
+            nutabrows = float(text_list[idx + 2])
+        else:
+            tabrich = False
+            nuzones = None
+            nutabrows = None
+
+        if "BUBBLEPT" in text_list:
+            bubblept = True
+        else:
+            bubblept = False
+
+        if "FULLYDRY" in text_list:
+            fullydry = True
+        else:
+            fullydry = False
+
+        if "ALTSTO" in text_list:
+            altsto = True
+        else:
+            altsto = False
+
+        # item 1c and d  -- Not implemented
+        if tabrich:
+            iuzontab = []
+            retcrvs = []
 
         # LAYCON array
         laycon, intercellt = cls._load_laycon(f_obj, model)
@@ -397,9 +436,7 @@ class MfUsgBcf(ModflowBcf):
         # TRPY array
         if model.verbose:
             print("   loading TRPY...")
-        trpy = Util2d.load(
-            f_obj, model, (nlay,), np.float32, "trpy", ext_unit_dict
-        )
+        trpy = Util2d.load(f_obj, model, (nlay,), np.float32, "trpy", ext_unit_dict)
 
         # property data for each layer based on options
         transient = not dis.steady.all()
@@ -430,9 +467,7 @@ class MfUsgBcf(ModflowBcf):
         if (not model.structured) and abs(ikcflag == 1):
             if model.verbose:
                 print("   loading ksat (njag)...")
-            ksat = Util2d.load(
-                f_obj, model, (njag,), np.float32, "ksat", ext_unit_dict
-            )
+            ksat = Util2d.load(f_obj, model, (njag,), np.float32, "ksat", ext_unit_dict)
 
         f_obj.close()
 
@@ -455,6 +490,12 @@ class MfUsgBcf(ModflowBcf):
             ihdwet=ihdwet,
             ikvflag=ikvflag,
             ikcflag=ikcflag,
+            tabrich=tabrich,
+            nuzones=nuzones,
+            nutabrows=nutabrows,
+            bubblept=bubblept,
+            fullydry=fullydry,
+            altsto=altsto,
             tran=tran,
             hy=hy,
             vcont=vcont,
@@ -595,12 +636,7 @@ class MfUsgBcf(ModflowBcf):
                 if model.verbose:
                     print(f"   loading sf1 layer {layer + 1:3d}...")
                 sf1[layer] = Util2d.load(
-                    f_obj,
-                    model,
-                    util2d_shape,
-                    np.float32,
-                    "sf1",
-                    ext_unit_dict,
+                    f_obj, model, util2d_shape, np.float32, "sf1", ext_unit_dict
                 )
 
             # hy/tran, and kv/vcont
@@ -621,29 +657,19 @@ class MfUsgBcf(ModflowBcf):
                     vcont[layer] = vcont_k
 
             # sf2
-            if transient and (laycon[layer] in [2, 3, 4]):
+            if transient and (laycon[layer] in {2, 3, 4}):
                 if model.verbose:
                     print(f"   loading sf2 layer {layer + 1:3d}...")
                 sf2[layer] = Util2d.load(
-                    f_obj,
-                    model,
-                    util2d_shape,
-                    np.float32,
-                    "sf2",
-                    ext_unit_dict,
+                    f_obj, model, util2d_shape, np.float32, "sf2", ext_unit_dict
                 )
 
             # wetdry
-            if (iwdflg != 0) and (laycon[layer] in [1, 3]):
+            if (iwdflg != 0) and (laycon[layer] in {1, 3}):
                 if model.verbose:
                     print(f"   loading sf2 layer {layer + 1:3d}...")
                 wetdry[layer] = Util2d.load(
-                    f_obj,
-                    model,
-                    util2d_shape,
-                    np.float32,
-                    "wetdry",
-                    ext_unit_dict,
+                    f_obj, model, util2d_shape, np.float32, "wetdry", ext_unit_dict
                 )
 
         return sf1, tran, hy, vcont, sf2, wetdry, kv
@@ -677,45 +703,35 @@ class MfUsgBcf(ModflowBcf):
         util2d_shape = get_util2d_shape_for_layer(model, layer=layer)
 
         # hy or tran
-        _tran = 0
-        _hy = 0
-        if laycon_k in [0, 2]:
+        tran = 0
+        hy = 0
+        if laycon_k in {0, 2}:
             if model.verbose:
                 print(f"   loading tran layer {layer + 1:3d}...")
-            _tran = Util2d.load(
-                f_obj,
-                model,
-                util2d_shape,
-                np.float32,
-                "tran",
-                ext_unit_dict,
+            tran = Util2d.load(
+                f_obj, model, util2d_shape, np.float32, "tran", ext_unit_dict
             )
         else:
             if model.verbose:
                 print(f"   loading hy layer {layer + 1:3d}...")
-            _hy = Util2d.load(
+            hy = Util2d.load(
                 f_obj, model, util2d_shape, np.float32, "hy", ext_unit_dict
             )
 
         # kv or vcont
-        _kv = 0
-        _vcont = 0
+        kv = 0
+        vcont = 0
         if layer < (model.nlay - 1):
             if model.verbose:
                 print(f"   loading vcont layer {layer + 1:3d}...")
-            _vcont = Util2d.load(
-                f_obj,
-                model,
-                util2d_shape,
-                np.float32,
-                "vcont",
-                ext_unit_dict,
+            vcont = Util2d.load(
+                f_obj, model, util2d_shape, np.float32, "vcont", ext_unit_dict
             )
         elif (ikvflag == 1) and (model.nlay > 1):
             if model.verbose:
                 print(f"   loading kv layer {layer + 1:3d}...")
-            _kv = Util2d.load(
+            kv = Util2d.load(
                 f_obj, model, util2d_shape, np.float32, "kv", ext_unit_dict
             )
 
-        return _hy, _tran, _kv, _vcont
+        return hy, tran, kv, vcont
