@@ -7,6 +7,7 @@ mf module.  Contains the ModflowGlobal, ModflowList, and Modflow classes.
 import os
 import warnings
 from inspect import getfullargspec
+from os import PathLike, curdir
 from pathlib import Path
 from typing import Optional, Union
 
@@ -35,8 +36,7 @@ class ModflowGlobal(Package):
         return "Global Package class"
 
     def write_file(self):
-        # Not implemented for global class
-        return
+        raise NotImplementedError
 
 
 class ModflowList(Package):
@@ -53,8 +53,7 @@ class ModflowList(Package):
         return "List Package class"
 
     def write_file(self):
-        # Not implemented for list class
-        return
+        raise NotImplementedError
 
 
 class Modflow(BaseModel):
@@ -77,13 +76,21 @@ class Modflow(BaseModel):
         Specify if model grid is structured (default) or unstructured.
     listunit : int, default 2
         Unit number for the list file.
-    model_ws : str or PathLike, default "."
+    model_ws : str or PathLike, default "." (curdir)
         Model workspace.  Directory name to create model data sets.
-        (default is the present working directory).
     external_path : str or PathLike, optional
         Location for external files.
     verbose : bool, default False
         Print additional information to the screen.
+    extra_pkgs : dict, optional
+        Add custom packages classes to mfnam_packages. Allows for loading models
+        with custom packages not contained in the standard flopy distribution.
+    free_format_npl : int, optional
+        Number of values per line when writing free-format arrays. When set
+        (e.g., ``free_format_npl=10``), arrays are written with that many
+        values per line instead of all values on a single line. This produces
+        block-format output, improving readability for large models.
+        Default is None (all values on one line).
 
     Attributes
     ----------
@@ -109,12 +116,14 @@ class Modflow(BaseModel):
         modelname="modflowtest",
         namefile_ext="nam",
         version="mf2005",
-        exe_name: Union[str, os.PathLike] = "mf2005",
+        exe_name: Union[str, PathLike] = "mf2005",
         structured=True,
         listunit=2,
-        model_ws: Union[str, os.PathLike] = os.curdir,
-        external_path: Optional[Union[str, os.PathLike]] = None,
+        model_ws: Union[str, PathLike] = curdir,
+        external_path: Union[str, PathLike, None] = None,
         verbose=False,
+        extra_pkgs: Optional[dict] = None,
+        free_format_npl=None,
         **kwargs,
     ):
         super().__init__(
@@ -124,6 +133,7 @@ class Modflow(BaseModel):
             model_ws,
             structured=structured,
             verbose=verbose,
+            free_format_npl=free_format_npl,
             **kwargs,
         )
         self.version_types = {
@@ -142,16 +152,13 @@ class Modflow(BaseModel):
         # -- check if unstructured is specified for something
         # other than mfusg is specified
         if not self.structured:
-            assert (
-                "mfusg" in self.version
-            ), "structured=False can only be specified for mfusg models"
+            assert "mfusg" in self.version, (
+                "structured=False can only be specified for mfusg models"
+            )
 
         # external option stuff
         self.array_free_format = True
         self.array_format = "modflow"
-        # self.external_fnames = []
-        # self.external_units = []
-        # self.external_binflag = []
 
         self.load_fail = False
         # the starting external data unit number
@@ -229,25 +236,16 @@ class Modflow(BaseModel):
             "vdf": flopy.seawat.SeawatVdf,
             "vsc": flopy.seawat.SeawatVsc,
         }
+        if extra_pkgs:
+            self.mfnam_packages.update(extra_pkgs)
 
     def __repr__(self):
         nrow, ncol, nlay, nper = self.get_nrow_ncol_nlay_nper()
         # structured case
-        s = (
-            "MODFLOW {} layer(s) {} row(s) {} column(s) "
-            "{} stress period(s)".format(nlay, nrow, ncol, nper)
+        s = "MODFLOW {} layer(s) {} row(s) {} column(s) {} stress period(s)".format(
+            nlay, nrow, ncol, nper
         )
         return s
-
-    #
-    # def next_ext_unit(self):
-    #     """
-    #     Function to encapsulate next_ext_unit attribute
-    #
-    #     """
-    #     next_unit = self.__next_ext_unit + 1
-    #     self.__next_ext_unit += 1
-    #     return next_unit
 
     @property
     def modeltime(self):
@@ -255,17 +253,14 @@ class Modflow(BaseModel):
             dis = self.disu
         else:
             dis = self.dis
-        # build model time
-        data_frame = {
-            "perlen": dis.perlen.array,
-            "nstp": dis.nstp.array,
-            "tsmult": dis.tsmult.array,
-        }
+
         self._model_time = ModelTime(
-            data_frame,
-            dis.itmuni_dict[dis.itmuni],
-            dis.start_datetime,
-            dis.steady.array,
+            perlen=dis.perlen.array,
+            nstp=dis.nstp.array,
+            tsmult=dis.tsmult.array,
+            time_units=dis.itmuni,
+            start_datetime=dis.start_datetime,
+            steady_state=dis.steady.array,
         )
         return self._model_time
 
@@ -279,11 +274,7 @@ class Modflow(BaseModel):
         else:
             ibound = None
         # take the first non-None entry
-        crs = (
-            self._modelgrid.crs
-            or self._modelgrid.proj4
-            or self._modelgrid.epsg
-        )
+        crs = self._modelgrid.crs or self._modelgrid.proj4 or self._modelgrid.epsg
         common_kwargs = {
             "crs": crs,
             "xoff": self._modelgrid.xoffset,
@@ -307,10 +298,7 @@ class Modflow(BaseModel):
                 ja=self.disu.ja.array,
                 **common_kwargs,
             )
-            print(
-                "WARNING: Model grid functionality limited for unstructured "
-                "grid."
-            )
+            print("WARNING: Model grid functionality limited for unstructured grid.")
         else:
             # build structured grid
             self._modelgrid = StructuredGrid(
@@ -464,16 +452,12 @@ class Modflow(BaseModel):
             if self.glo.unit_number[0] > 0:
                 f_nam.write(
                     "{:14s} {:5d}  {}\n".format(
-                        self.glo.name[0],
-                        self.glo.unit_number[0],
-                        self.glo.file_name[0],
+                        self.glo.name[0], self.glo.unit_number[0], self.glo.file_name[0]
                     )
                 )
         f_nam.write(
             "{:14s} {:5d}  {}\n".format(
-                self.lst.name[0],
-                self.lst.unit_number[0],
-                self.lst.file_name[0],
+                self.lst.name[0], self.lst.unit_number[0], self.lst.file_name[0]
             )
         )
         f_nam.write(str(self.get_name_file_entries()))
@@ -498,9 +482,7 @@ class Modflow(BaseModel):
                 f_nam.write(f"DATA           {u:5d}  {f}\n")
 
         # write the output files
-        for u, f, b in zip(
-            self.output_units, self.output_fnames, self.output_binflag
-        ):
+        for u, f, b in zip(self.output_units, self.output_fnames, self.output_binflag):
             if u == 0:
                 continue
             if b:
@@ -655,12 +637,13 @@ class Modflow(BaseModel):
         cls,
         f: str,
         version="mf2005",
-        exe_name: Union[str, os.PathLike] = "mf2005",
+        exe_name: Union[str, PathLike] = "mf2005",
         verbose=False,
-        model_ws: Union[str, os.PathLike] = os.curdir,
+        model_ws: Union[str, PathLike] = curdir,
         load_only=None,
         forgive=False,
         check=True,
+        extra_pkgs: Optional[dict] = None,
     ):
         """
         Load an existing MODFLOW model.
@@ -677,8 +660,8 @@ class Modflow(BaseModel):
             MODFLOW executable name or path.
         verbose : bool, default False
             Show messages that can be useful for debugging.
-        model_ws : str or PathLike, default "."
-            Model workspace path. Default is the current directory.
+        model_ws : str or PathLike, default "." (curdir)
+            Model workspace path.
         load_only : list, str or None
             List of case insensitive packages to load, e.g. ["bas6", "lpf"].
             One package can also be specified, e.g. "rch". Default is None,
@@ -690,6 +673,10 @@ class Modflow(BaseModel):
             useful for debugging. Default False.
         check : boolean, optional
             Check model input for common errors. Default True.
+        extra_pkgs : dict, optional
+            Add custom packages classes to mfnam_packages. Allows for loading models
+            with custom packages not contained in the standard flopy distribution.
+
 
         Returns
         -------
@@ -721,6 +708,7 @@ class Modflow(BaseModel):
             exe_name=exe_name,
             verbose=verbose,
             model_ws=model_ws,
+            extra_pkgs=extra_pkgs,
             **attribs,
         )
 
@@ -759,7 +747,8 @@ class Modflow(BaseModel):
         # DEPRECATED since version 3.3.4
         if ml.version == "mfusg":
             raise ValueError(
-                "flopy.modflow.Modflow no longer supports mfusg; use flopy.mfusg.MfUsg() instead"
+                "flopy.modflow.Modflow no longer supports mfusg; "
+                "use flopy.mfusg.MfUsg() instead"
             )
 
         # reset unit number for glo file
@@ -855,21 +844,15 @@ class Modflow(BaseModel):
                                 )
                             else:
                                 item.package.load(
-                                    item.filehandle,
-                                    ml,
-                                    ext_unit_dict=ext_unit_dict,
+                                    item.filehandle, ml, ext_unit_dict=ext_unit_dict
                                 )
                             files_successfully_loaded.append(item.filename)
                             if ml.verbose:
-                                print(
-                                    f"   {item.filetype:4s} package load...success"
-                                )
+                                print(f"   {item.filetype:4s} package load...success")
                         except Exception as e:
                             ml.load_fail = True
                             if ml.verbose:
-                                print(
-                                    f"   {item.filetype:4s} package load...failed"
-                                )
+                                print(f"   {item.filetype:4s} package load...failed")
                                 print(f"   {e!s}")
                             files_not_loaded.append(item.filename)
                     else:
@@ -882,15 +865,11 @@ class Modflow(BaseModel):
                             )
                         else:
                             item.package.load(
-                                item.filehandle,
-                                ml,
-                                ext_unit_dict=ext_unit_dict,
+                                item.filehandle, ml, ext_unit_dict=ext_unit_dict
                             )
                         files_successfully_loaded.append(item.filename)
                         if ml.verbose:
-                            print(
-                                f"   {item.filetype:4s} package load...success"
-                            )
+                            print(f"   {item.filetype:4s} package load...success")
                 else:
                     if ml.verbose:
                         print(f"   {item.filetype:4s} package load...skipped")
@@ -908,9 +887,7 @@ class Modflow(BaseModel):
                     if key not in ml.external_units:
                         ml.external_fnames.append(item.filename)
                         ml.external_units.append(key)
-                        ml.external_binflag.append(
-                            "binary" in item.filetype.lower()
-                        )
+                        ml.external_binflag.append("binary" in item.filetype.lower())
                         ml.external_output.append(False)
             else:
                 raise KeyError(f"unhandled case: {key}, {item}")

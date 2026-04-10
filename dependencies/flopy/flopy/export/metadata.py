@@ -62,41 +62,29 @@ class acdd:
 
         # recommended global attributes
         self.naming_authority = "ScienceBase"  # org. that provides the id
-        # self.history = None # This is a character array with a line for each invocation of a program that has modified the dataset.
         # Well-behaved generic netCDF applications should append a line containing:
         # date, time of day, user name, program name and command arguments.
-        self.source = (
-            model.model_ws
-        )  # The method of production of the original data.
+        self.source = model.model_ws  # The method of production of the original data.
         # If it was model-generated, source should name the model and its version.
-        # self.processing_level = None # 	A textual description of the processing (or quality control) level of the data.
-        # self.comment = None #	Miscellaneous information about the data, not captured elsewhere.
         # This attribute is defined in the CF Conventions.
         self.acknowledgement = self._get_xml_attribute("datacred")
-        # self.license = None #
-        # self.standard_name_vocabulary = None
-        self.date_created = self.sb["provenance"]["linkProcess"].get(
-            "dateCreated"
-        )
+        self.date_created = self.sb["provenance"]["linkProcess"].get("dateCreated")
         self.creator_name = self.creator.get("name")
         self.creator_email = self.creator.get("email")
-        # self.creator_url = self.sb['webLinks'][0].get('uri')
-        self.creator_institution = self.creator["organization"].get(
-            "displayText"
-        )
-        self.institution = (
-            self.creator_institution
-        )  # also in CF convention for global attributes
+        self.creator_institution = self.creator["organization"].get("displayText")
+        # also in CF convention for global attributes
+        self.institution = self.creator_institution
         self.project = self.sb["title"]
-        self.publisher_name = [
+        self.publisher_name = next(
             d.get("name")
             for d in self.sb["contacts"]
             if "publisher" in d.get("type").lower()
-        ][0]
-        self.publisher_email = self.sb["provenance"]["linkProcess"].get(
-            "processedBy"
         )
-        self.publisher_url = "https://www2.usgs.gov/water/"  # self.sb['provenance']['linkProcess'].get('linkReference')
+        self.publisher_email = self.sb["provenance"]["linkProcess"].get("processedBy")
+        # TODO: should publisher_url be obtained from linkReference?
+        # publisher_url = self.sb['provenance']['linkProcess'].get('linkReference')
+        publisher_url = "https://www2.usgs.gov/water/"
+        self.publisher_url = publisher_url
         self.geospatial_bounds_crs = "EPSG:4326"
         self.geospatial_lat_min = self.bounds.get("minY")
         self.geospatial_lat_max = self.bounds.get("maxY")
@@ -117,7 +105,7 @@ class acdd:
 
     def _get_xml_attribute(self, attr):
         try:
-            return list(self.xmlroot.iter(attr))[0].text
+            return next(iter(self.xmlroot.iter(attr))).text
         except:
             return None
 
@@ -127,11 +115,9 @@ class acdd:
 
     @property
     def creator(self):
-        return [
-            d
-            for d in self.sb["contacts"]
-            if "point of contact" in d["type"].lower()
-        ][0]
+        return next(
+            d for d in self.sb["contacts"] if "point of contact" in d["type"].lower()
+        )
 
     @property
     def creator_url(self):
@@ -178,9 +164,7 @@ class acdd:
         """
         r = [self.citation]
         links = [
-            d.get("uri")
-            for d in self.sb["webLinks"]
-            if "link" in d.get("type").lower()
+            d.get("uri") for d in self.sb["webLinks"] if "link" in d.get("type").lower()
         ]
         return r + links
 
@@ -196,9 +180,7 @@ class acdd:
         l = self.sb["dates"]
         tc = {}
         for t in ["start", "end"]:
-            tc[t] = [d.get("dateString") for d in l if t in d["type"].lower()][
-                0
-            ]
+            tc[t] = next(d.get("dateString") for d in l if t in d["type"].lower())
         if not np.all(self.model_time.steady_state) and pd is not None:
             # replace with times from model reference
             tc["start"] = self.model_time.start_datetime
@@ -206,7 +188,7 @@ class acdd:
             mlen = self.model_time.perlen.sum()
             tunits = self.model_time.time_units
             tc["duration"] = f"{mlen} {tunits}"
-            end = strt + pd.Timedelta(mlen, unit="d")
+            end = strt + pd.Timedelta(mlen, unit="D")
             tc["end"] = str(end)
         return tc
 

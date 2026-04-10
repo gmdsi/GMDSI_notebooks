@@ -60,141 +60,91 @@ class ModflowAg(Package):
 
     """
 
-    _options = dict(
-        [
-            ("noprint", OptionBlock.simple_flag),
-            (
-                "irrigation_diversion",
-                {
-                    OptionBlock.dtype: np.bool_,
-                    OptionBlock.nested: True,
-                    OptionBlock.n_nested: 2,
-                    OptionBlock.vars: dict(
-                        [
-                            ("numirrdiversions", OptionBlock.simple_int),
-                            ("maxcellsdiversion", OptionBlock.simple_int),
-                        ]
-                    ),
-                },
-            ),
-            (
-                "irrigation_well",
-                {
-                    OptionBlock.dtype: np.bool_,
-                    OptionBlock.nested: True,
-                    OptionBlock.n_nested: 2,
-                    OptionBlock.vars: dict(
-                        [
-                            ("numirrwells", OptionBlock.simple_int),
-                            ("maxcellswell", OptionBlock.simple_int),
-                        ]
-                    ),
-                },
-            ),
-            (
-                "supplemental_well",
-                {
-                    OptionBlock.dtype: np.bool_,
-                    OptionBlock.nested: True,
-                    OptionBlock.n_nested: 2,
-                    OptionBlock.vars: dict(
-                        [
-                            ("numsupwells", OptionBlock.simple_int),
-                            ("maxdiversions", OptionBlock.simple_int),
-                        ]
-                    ),
-                },
-            ),
-            (
-                "maxwells",
-                {
-                    OptionBlock.dtype: np.bool_,
-                    OptionBlock.nested: True,
-                    OptionBlock.n_nested: 1,
-                    OptionBlock.vars: dict(
-                        [("nummaxwell", OptionBlock.simple_int)]
-                    ),
-                },
-            ),
-            ("tabfiles", OptionBlock.simple_tabfile),
-            ("phiramp", OptionBlock.simple_flag),
-            (
-                "etdemand",
-                {
-                    OptionBlock.dtype: np.bool_,
-                    OptionBlock.nested: True,
-                    OptionBlock.n_nested: 1,
-                    OptionBlock.vars: {
-                        "accel": {
-                            OptionBlock.dtype: float,
-                            OptionBlock.nested: False,
-                            OptionBlock.optional: True,
-                        }
-                    },
-                },
-            ),
-            ("trigger", OptionBlock.simple_flag),
-            ("timeseries_diversion", OptionBlock.simple_flag),
-            ("timeseries_well", OptionBlock.simple_flag),
-            ("timeseries_diversionet", OptionBlock.simple_flag),
-            ("timeseries_wellet", OptionBlock.simple_flag),
-            (
-                "diversionlist",
-                {
-                    OptionBlock.dtype: np.bool_,
-                    OptionBlock.nested: True,
-                    OptionBlock.n_nested: 1,
-                    OptionBlock.vars: dict(
-                        [("unit_diversionlist", OptionBlock.simple_int)]
-                    ),
-                },
-            ),
-            (
-                "welllist",
-                {
-                    OptionBlock.dtype: np.bool_,
-                    OptionBlock.nested: True,
-                    OptionBlock.n_nested: 1,
-                    OptionBlock.vars: dict(
-                        [("unit_welllist", OptionBlock.simple_int)]
-                    ),
-                },
-            ),
-            (
-                "wellirrlist",
-                {
-                    OptionBlock.dtype: np.bool_,
-                    OptionBlock.nested: True,
-                    OptionBlock.n_nested: 1,
-                    OptionBlock.vars: dict(
-                        [("unit_wellirrlist", OptionBlock.simple_int)]
-                    ),
-                },
-            ),
-            (
-                "diversionirrlist",
-                {
-                    OptionBlock.dtype: np.bool_,
-                    OptionBlock.nested: True,
-                    OptionBlock.n_nested: 1,
-                    OptionBlock.vars: dict(
-                        [("unit_diversionirrlist", OptionBlock.simple_int)]
-                    ),
-                },
-            ),
-            (
-                "wellcbc",
-                {
-                    OptionBlock.dtype: np.bool_,
-                    OptionBlock.nested: True,
-                    OptionBlock.n_nested: 1,
-                    OptionBlock.vars: dict(
-                        [("unitcbc", OptionBlock.simple_int)]
-                    ),
-                },
-            ),
-        ]
-    )
+    _options = {
+        "noprint": OptionBlock.simple_flag,
+        "irrigation_diversion": {
+            OptionBlock.dtype: np.bool_,
+            OptionBlock.nested: True,
+            OptionBlock.n_nested: 2,
+            OptionBlock.vars: {
+                "numirrdiversions": OptionBlock.simple_int,
+                "maxcellsdiversion": OptionBlock.simple_int,
+            },
+        },
+        "irrigation_well": {
+            OptionBlock.dtype: np.bool_,
+            OptionBlock.nested: True,
+            OptionBlock.n_nested: 2,
+            OptionBlock.vars: {
+                "numirrwells": OptionBlock.simple_int,
+                "maxcellswell": OptionBlock.simple_int,
+            },
+        },
+        "supplemental_well": {
+            OptionBlock.dtype: np.bool_,
+            OptionBlock.nested: True,
+            OptionBlock.n_nested: 2,
+            OptionBlock.vars: {
+                "numsupwells": OptionBlock.simple_int,
+                "maxdiversions": OptionBlock.simple_int,
+            },
+        },
+        "maxwells": {
+            OptionBlock.dtype: np.bool_,
+            OptionBlock.nested: True,
+            OptionBlock.n_nested: 1,
+            OptionBlock.vars: {"nummaxwell": OptionBlock.simple_int},
+        },
+        "tabfiles": OptionBlock.simple_tabfile,
+        "phiramp": OptionBlock.simple_flag,
+        "etdemand": {
+            OptionBlock.dtype: np.bool_,
+            OptionBlock.nested: True,
+            OptionBlock.n_nested: 1,
+            OptionBlock.vars: {
+                "accel": {
+                    OptionBlock.dtype: float,
+                    OptionBlock.nested: False,
+                    OptionBlock.optional: True,
+                }
+            },
+        },
+        "trigger": OptionBlock.simple_flag,
+        "timeseries_diversion": OptionBlock.simple_flag,
+        "timeseries_well": OptionBlock.simple_flag,
+        "timeseries_diversionet": OptionBlock.simple_flag,
+        "timeseries_wellet": OptionBlock.simple_flag,
+        "diversionlist": {
+            OptionBlock.dtype: np.bool_,
+            OptionBlock.nested: True,
+            OptionBlock.n_nested: 1,
+            OptionBlock.vars: {"unit_diversionlist": OptionBlock.simple_int},
+        },
+        "welllist": {
+            OptionBlock.dtype: np.bool_,
+            OptionBlock.nested: True,
+            OptionBlock.n_nested: 1,
+            OptionBlock.vars: {"unit_welllist": OptionBlock.simple_int},
+        },
+        "wellirrlist": {
+            OptionBlock.dtype: np.bool_,
+            OptionBlock.nested: True,
+            OptionBlock.n_nested: 1,
+            OptionBlock.vars: {"unit_wellirrlist": OptionBlock.simple_int},
+        },
+        "diversionirrlist": {
+            OptionBlock.dtype: np.bool_,
+            OptionBlock.nested: True,
+            OptionBlock.n_nested: 1,
+            OptionBlock.vars: {"unit_diversionirrlist": OptionBlock.simple_int},
+        },
+        "wellcbc": {
+            OptionBlock.dtype: np.bool_,
+            OptionBlock.nested: True,
+            OptionBlock.n_nested: 1,
+            OptionBlock.vars: {"unitcbc": OptionBlock.simple_int},
+        },
+    }
 
     def __init__(
         self,
@@ -211,9 +161,7 @@ class ModflowAg(Package):
         nper=0,
     ):
         if "nwt" not in model.version:
-            raise AssertionError(
-                "Model version must be mfnwt to use the AG package"
-            )
+            raise AssertionError("Model version must be mfnwt to use the AG package")
 
         # setup the package parent class
         if unitnumber is None:
@@ -325,12 +273,12 @@ class ModflowAg(Package):
         for key, ctx in options._context.items():
             if key in options.__dict__:
                 val = options.__dict__[key]
-                self.__setattr__(key, val)
+                setattr(self, key, val)
                 if ctx[OptionBlock.nested]:
                     for k2, _ in ctx[OptionBlock.vars].items():
                         if k2 in options.__dict__:
                             v2 = options.__dict__[k2]
-                            self.__setattr__(k2, v2)
+                            setattr(self, k2, v2)
 
     def write_file(self, check=False):
         """
@@ -356,10 +304,8 @@ class ModflowAg(Package):
                 fmt = "{}   {:d}   {:d}\n"
                 foo.write("TIME SERIES \n")
                 for record in self.time_series:
-                    if record["keyword"] in ("welletall", "wellall"):
-                        foo.write(
-                            f"{record['keyword']}   {record['unit']}\n".upper()
-                        )
+                    if record["keyword"] in {"welletall", "wellall"}:
+                        foo.write(f"{record['keyword']}   {record['unit']}\n".upper())
                     else:
                         foo.write(fmt.format(*record).upper())
 
@@ -450,9 +396,7 @@ class ModflowAg(Package):
                                     )
                                 else:
                                     foo.write(
-                                        fmt20.format(
-                                            rec["segid"], rec["numcell"]
-                                        )
+                                        fmt20.format(rec["segid"], rec["numcell"])
                                     )
 
                                 for i in range(num):
@@ -503,9 +447,7 @@ class ModflowAg(Package):
                                     )
                                 else:
                                     foo.write(
-                                        fmt24.format(
-                                            rec["wellid"] + 1, rec["numcell"]
-                                        )
+                                        fmt24.format(rec["wellid"] + 1, rec["numcell"])
                                     )
 
                                 for i in range(num):
@@ -540,9 +482,7 @@ class ModflowAg(Package):
                                 num = rec["numcell"]
 
                                 foo.write(
-                                    fmt28.format(
-                                        rec["wellid"] + 1, rec["numcell"]
-                                    )
+                                    fmt28.format(rec["wellid"] + 1, rec["numcell"])
                                 )
 
                                 for i in range(num):
@@ -558,8 +498,7 @@ class ModflowAg(Package):
                                     else:
                                         foo.write(
                                             "{:d}   {:f}\n".format(
-                                                rec[f"segid{i}"],
-                                                rec[f"fracsup{i}"],
+                                                rec[f"segid{i}"], rec[f"fracsup{i}"]
                                             )
                                         )
 
@@ -623,21 +562,10 @@ class ModflowAg(Package):
             dtype : (list, tuple)
         """
         if block == "well":
-            dtype = [
-                ("k", int),
-                ("i", int),
-                ("j", int),
-                ("flux", float),
-            ]
+            dtype = [("k", int), ("i", int), ("j", int), ("flux", float)]
 
         elif block == "tabfile_well":
-            dtype = [
-                ("unit", int),
-                ("tabval", int),
-                ("k", int),
-                ("i", int),
-                ("j", int),
-            ]
+            dtype = [("unit", int), ("tabval", int), ("k", int), ("i", int), ("j", int)]
 
         elif block == "time series":
             dtype = [("keyword", object), ("id", int), ("unit", int)]
@@ -746,7 +674,7 @@ class ModflowAg(Package):
                 time_series = ModflowAg.get_empty(nrec, block="time series")
 
                 for ix, rec in enumerate(t):
-                    if rec[0] in ("welletall", "wellall"):
+                    if rec[0] in {"welletall", "wellall"}:
                         time_series[ix] = (rec[0], -999, rec[-1])
                     else:
                         time_series[ix] = tuple(rec[:3])
@@ -940,13 +868,13 @@ def _read_block_21_25_or_29(fobj, nrec, recarray, block):
     for _ in range(nrec):
         t1 = []
         ll = multi_line_strip(fobj).split()
-        if block in (21,):
+        if block == 21:
             # do not zero adjust segid
             ll[0] = int(ll[0])
         else:
             ll[0] = int(ll[0]) - 1
 
-        if block in (21, 25):
+        if block in {21, 25}:
             # correct list length if not using trigger factor
             if len(ll) == 2:
                 ll += [0, 0]

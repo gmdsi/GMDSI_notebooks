@@ -32,7 +32,7 @@ class VertexGrid(Grid):
         The value can be anything accepted by
         :meth:`pyproj.CRS.from_user_input() <pyproj.crs.CRS.from_user_input>`,
         such as an authority string (eg "EPSG:26916") or a WKT string.
-    prjfile : str or pathlike, optional if `crs` is specified
+    prjfile : str or PathLike, optional if `crs` is specified
         ESRI-style projection file with well-known text defining the CRS
         for the model grid (must be projected; geographic CRS are not supported).
     xoff : float
@@ -49,7 +49,7 @@ class VertexGrid(Grid):
         .. deprecated:: 3.5
            The following keyword options will be removed for FloPy 3.6:
 
-             - ``prj`` (str or pathlike): use ``prjfile`` instead.
+             - ``prj`` (str or PathLike): use ``prjfile`` instead.
              - ``epsg`` (int): use ``crs`` instead.
              - ``proj4`` (str): use ``crs`` instead.
 
@@ -61,7 +61,7 @@ class VertexGrid(Grid):
         returns list of cells and their vertices
 
     Methods
-    ----------
+    -------
     get_cell_vertices(cellid)
         returns vertices for a single cell at cellid.
 
@@ -140,7 +140,10 @@ class VertexGrid(Grid):
         if self._cell1d is not None:
             return len(self._cell1d)
         if self._botm is not None:
-            return len(self._botm[0])
+            if self._botm.ndim == 2:  # (nlay, ncpl)
+                return self._botm.shape[1]
+            elif self._botm.ndim == 1:  # (ncpl,)
+                return self._botm.shape[0]
         if self._cell2d is not None and self._nlay is None:
             return len(self._cell2d)
         else:
@@ -164,16 +167,12 @@ class VertexGrid(Grid):
     @property
     def cell1d(self):
         if self._cell1d is not None:
-            return [
-                [ivt for ivt in t if ivt is not None] for t in self._cell2d
-            ]
+            return [[ivt for ivt in t if ivt is not None] for t in self._cell1d]
 
     @property
     def cell2d(self):
         if self._cell2d is not None:
-            return [
-                [ivt for ivt in t if ivt is not None] for t in self._cell2d
-            ]
+            return [[ivt for ivt in t if ivt is not None] for t in self._cell2d]
 
     @property
     def verts(self):
@@ -190,7 +189,6 @@ class VertexGrid(Grid):
     @property
     def top_botm(self):
         new_top = np.expand_dims(self._top, 0)
-        # new_botm = np.expand_dims(self._botm, 0)
         return np.concatenate((new_top, self._botm), axis=0)
 
     @property
@@ -219,15 +217,28 @@ class VertexGrid(Grid):
         xgrid = self.xvertices
         ygrid = self.yvertices
 
+        # close the cell by connecting the last vertex with the first
+        close_cell = True
+        if self.cell1d is not None:
+            close_cell = False
+
+        # go through each cell and create a line segment for each face
         lines = []
-        for ncell, verts in enumerate(xgrid):
-            for ix, vert in enumerate(verts):
+        ncpl = len(xgrid)
+        for icpl in range(ncpl):
+            xcoords = xgrid[icpl]
+            ycoords = ygrid[icpl]
+            npoints = len(xcoords)
+            for ipoint in range(npoints - 1):
                 lines.append(
                     [
-                        (xgrid[ncell][ix - 1], ygrid[ncell][ix - 1]),
-                        (xgrid[ncell][ix], ygrid[ncell][ix]),
+                        (xcoords[ipoint], ycoords[ipoint]),
+                        (xcoords[ipoint + 1], ycoords[ipoint + 1]),
                     ]
                 )
+            if close_cell:
+                lines.append([(xcoords[-1], ycoords[-1]), (xcoords[0], ycoords[0])])
+
         self._copy_cache = True
         return lines
 
@@ -289,8 +300,7 @@ class VertexGrid(Grid):
 
         return copy.copy(self._polygons)
 
-    @property
-    def geo_dataframe(self):
+    def to_geodataframe(self):
         """
         Returns a geopandas GeoDataFrame of the model grid
 
@@ -298,9 +308,63 @@ class VertexGrid(Grid):
         -------
             GeoDataFrame
         """
-        polys = [[self.get_cell_vertices(nn)] for nn in range(self.ncpl)]
-        gdf = super().geo_dataframe(polys)
+        cache_index = "gdf_polys"
+        if (
+            cache_index not in self._cache_dict
+            or self._cache_dict[cache_index].out_of_date
+        ):
+            polys = [[self.get_cell_vertices(nn)] for nn in range(self.ncpl)]
+            self._cache_dict[cache_index] = CachedData(polys)
+        else:
+            polys = self._cache_dict[cache_index].data_nocopy
+
+        featuretype = "Polygon"
+        if self._cell1d is not None:
+            featuretype = "multilinestring"
+        gdf = super().to_geodataframe(polys, featuretype)
+        if self.idomain is not None:
+            active = np.sum(
+                self.idomain.reshape(
+                    (self.nlay, self.ncpl),
+                ),
+                axis=0,
+            )
+            active = np.where(active > 0, 1, 0)
+            gdf["active"] = active
+        else:
+            gdf["active"] = 1
         return gdf
+
+    def grid_line_geodataframe(self):
+        """
+        Method to get a GeoDataFrame of grid lines
+
+        Returns
+        -------
+            GeoDataFrame
+        """
+        gdf = super().to_geodataframe(self.grid_lines, featuretype="LineString")
+        gdf = gdf.rename(columns={"node": "number"})
+        return gdf
+
+    @property
+    def geo_dataframe(self):
+        """
+        DEPRECATED -- Use to_geodataframe() instead. Will be removed in 3.11
+
+        Returns a geopandas GeoDataFrame of the model grid
+
+        Returns
+        -------
+            GeoDataFrame
+        """
+        import warnings
+
+        warnings.warn(
+            "geo_dataframe has been deprecated, use to_geodataframe() instead",
+            DeprecationWarning,
+        )
+        return self.to_geodataframe()
 
     def convert_grid(self, factor):
         """
@@ -316,13 +380,9 @@ class VertexGrid(Grid):
         """
         if self.is_complete:
             return VertexGrid(
-                vertices=[
-                    [i[0], i[1] * factor, i[2] * factor]
-                    for i in self._vertices
-                ],
+                vertices=[[i[0], i[1] * factor, i[2] * factor] for i in self._vertices],
                 cell2d=[
-                    [i[0], i[1] * factor, i[2] * factor] + i[3:]
-                    for i in self._cell2d
+                    [i[0], i[1] * factor, i[2] * factor] + i[3:] for i in self._cell2d
                 ],
                 top=self.top * factor,
                 botm=self.botm * factor,
@@ -332,9 +392,7 @@ class VertexGrid(Grid):
                 angrot=self.angrot,
             )
         else:
-            raise AssertionError(
-                "Grid is not complete and cannot be converted"
-            )
+            raise AssertionError("Grid is not complete and cannot be converted")
 
     def intersect(self, x, y, z=None, local=False, forgive=False):
         """
@@ -343,14 +401,16 @@ class VertexGrid(Grid):
         When the point is on the edge of two cells, the cell with the lowest
         CELL2D number is returned.
 
+        Supports both scalar and array inputs for vectorized operations.
+
         Parameters
         ----------
-        x : float
-            The x-coordinate of the requested point
-        y : float
-            The y-coordinate of the requested point
-        z : float, None
-            optional, z-coordiante of the requested point will return
+        x : float or array-like
+            The x-coordinate(s) of the requested point(s)
+        y : float or array-like
+            The y-coordinate(s) of the requested point(s)
+        z : float, array-like, or None
+            optional, z-coordinate(s) of the requested point(s) will return
             (lay, icell2d)
         local: bool (optional)
             If True, x and y are in local coordinates (defaults to False)
@@ -360,70 +420,229 @@ class VertexGrid(Grid):
 
         Returns
         -------
-        icell2d : int
-            The CELL2D number
+        icell2d : int or ndarray
+            The CELL2D number(s). Returns int for scalar input,
+            ndarray for array input.
+        lay : int or ndarray (only if z is provided)
+            The layer number(s). Returns int for scalar input,
+            ndarray for array input.
 
         """
+        # Check if inputs are scalar
+        x_is_scalar = np.isscalar(x)
+        y_is_scalar = np.isscalar(y)
+        z_is_scalar = z is None or np.isscalar(z)
+        is_scalar_input = x_is_scalar and y_is_scalar and z_is_scalar
+
+        # Convert to arrays for uniform processing
+        x = np.atleast_1d(x)
+        y = np.atleast_1d(y)
+        if z is not None:
+            z = np.atleast_1d(z)
+
+        # Validate array shapes
+        if len(x) != len(y):
+            raise ValueError("x and y must have the same length")
+        if z is not None and len(z) != len(x):
+            raise ValueError("z must have the same length as x and y")
+
         if local:
             # transform x and y to real-world coordinates
             x, y = super().get_coords(x, y)
+
         xv, yv, zv = self.xyzvertices
-        for icell2d in range(self.ncpl):
-            xa = np.array(xv[icell2d])
-            ya = np.array(yv[icell2d])
-            # x and y at least have to be within the bounding box of the cell
-            if (
-                np.any(x <= xa)
-                and np.any(x >= xa)
-                and np.any(y <= ya)
-                and np.any(y >= ya)
-            ):
-                path = Path(np.stack((xa, ya)).transpose())
-                # use a small radius, so that the edge of the cell is included
-                if is_clockwise(xa, ya):
-                    radius = -1e-9
+
+        # Initialize result arrays
+        n_points = len(x)
+        results = np.full(n_points, np.nan if forgive else -1, dtype=float)
+        if z is not None:
+            lays = np.full(n_points, np.nan if forgive else -1, dtype=float)
+
+        # Process each point
+        for i in range(n_points):
+            xi, yi = x[i], y[i]
+            found = False
+
+            # Check each cell
+            for icell2d in range(self.ncpl):
+                xa = np.array(xv[icell2d])
+                ya = np.array(yv[icell2d])
+                # x and y at least have to be within the bounding box of the cell
+                if (
+                    np.any(xi <= xa)
+                    and np.any(xi >= xa)
+                    and np.any(yi <= ya)
+                    and np.any(yi >= ya)
+                ):
+                    path = Path(np.stack((xa, ya)).transpose())
+                    # use a small radius, so that the edge of the cell is included
+                    if is_clockwise(xa, ya):
+                        radius = -1e-9
+                    else:
+                        radius = 1e-9
+                    if path.contains_point((xi, yi), radius=radius):
+                        results[i] = icell2d
+                        found = True
+
+                        if z is not None:
+                            zi = z[i]
+                            for lay in range(self.nlay):
+                                if (
+                                    self.top_botm[lay, icell2d]
+                                    >= zi
+                                    >= self.top_botm[lay + 1, icell2d]
+                                ):
+                                    lays[i] = lay
+                                    break
+
+                        break
+
+            if not found and not forgive:
+                raise ValueError(
+                    f"point given is outside of the model area: ({xi}, {yi})"
+                )
+
+        # Return results
+        if z is None:
+            if is_scalar_input:
+                result = results[0]
+                return int(result) if not np.isnan(result) else np.nan
+            else:
+                valid_mask = ~np.isnan(results)
+                return results.astype(int) if np.all(valid_mask) else results
+        else:
+            if is_scalar_input:
+                lay, icell2d = lays[0], results[0]
+                if not np.isnan(lay) and not np.isnan(icell2d):
+                    return int(lay), int(icell2d)
                 else:
-                    radius = 1e-9
-                if path.contains_point((x, y), radius=radius):
-                    if z is None:
-                        return icell2d
+                    return np.nan, np.nan
+            else:
+                valid_mask = ~np.isnan(lays) & ~np.isnan(results)
+                return (
+                    lays.astype(int) if np.all(valid_mask) else lays,
+                    results.astype(int) if np.all(valid_mask) else results,
+                )
 
-                    for lay in range(self.nlay):
-                        if (
-                            self.top_botm[lay, icell2d]
-                            >= z
-                            >= self.top_botm[lay + 1, icell2d]
-                        ):
-                            return lay, icell2d
-
-        if forgive:
-            icell2d = np.nan
-            if z is not None:
-                return np.nan, icell2d
-
-            return icell2d
-
-        raise Exception("point given is outside of the model area")
-
-    def get_cell_vertices(self, cellid):
+    def get_cell_vertices(self, cellid=None, node=None):
         """
-        Method to get a set of cell vertices for a single cell
-            used in the Shapefile export utilities
-        :param cellid: (int) cellid number
+        Get a set of cell vertices for a single cell.
+
+        Parameters
+        ----------
+        cellid : int or tuple, optional
+            Cell identifier. Can be:
+            - cell2d index (int, 0 to ncpl-1)
+            - node number (int, >= ncpl) - will be converted to cell2d
+            - (cell2d,) single-element tuple
+            - (layer, cell2d) tuple (layer is ignored, vertices are 2D)
+        node : int, optional
+            Node number, mutually exclusive with cellid
+
         Returns
-        ------- list of x,y cell vertices
-        """
-        while cellid >= self.ncpl:
-            if cellid > self.nnodes:
-                err = f"cellid {cellid} out of index for size {self.nnodes}"
-                raise IndexError(err)
+        -------
+        list
+            list of (x, y) cell vertex coordinates
 
-            cellid -= self.ncpl
+        Examples
+        --------
+        >>> import flopy
+        >>> from flopy.utils.gridutil import get_disv_kwargs
+        >>> disv_props = get_disv_kwargs(1, 10, 10, 1.0, 1.0, 1.0, [0.0])
+        >>> vg = flopy.discretization.VertexGrid(**disv_props)
+        >>> vg.get_cell_vertices(5)  # cell2d index
+        >>> vg.get_cell_vertices((0, 5))  # (layer, cell2d) tuple
+        >>> vg.get_cell_vertices(node=105)  # node number
+        >>> vg.get_cell_vertices(cellid=(1, 5))  # explicit cellid kwarg
+        """
+        # Handle arguments
+        if cellid is not None and node is not None:
+            raise ValueError("cellid and node are mutually exclusive")
+
+        if cellid is None and node is None:
+            raise TypeError("expected cellid or node argument")
+
+        # Use cellid if provided, otherwise use node
+        if node is not None:
+            idx = node
+        else:
+            idx = cellid
+
+        # Handle tuple forms
+        if isinstance(idx, (tuple, list)):
+            if len(idx) == 1:
+                # (cell2d,) or (node,)
+                idx = idx[0]
+            elif len(idx) == 2:
+                # (layer, cell2d) - ignore layer since vertices are 2D
+                _, idx = idx
+            else:
+                raise ValueError(
+                    f"cellid tuple must have 1 or 2 elements, got {len(idx)}"
+                )
+
+        # Convert node to cell2d if necessary
+        while idx >= self.ncpl:
+            if idx > self.nnodes:
+                raise IndexError(
+                    f"node number {idx} exceeds grid node count {self.nnodes}"
+                )
+            idx -= self.ncpl
 
         self._copy_cache = False
-        cell_verts = list(zip(self.xvertices[cellid], self.yvertices[cellid]))
+        cell_verts = list(zip(self.xvertices[idx], self.yvertices[idx]))
         self._copy_cache = True
         return cell_verts
+
+    def get_node(self, cellids, node2d=False):
+        """
+        Get node number from a list of zero-based MODFLOW
+        (layer, cell2d) tuples.
+
+        Parameters
+        ----------
+        cellid_list : tuple of int or list of tuple of int
+            Zero-based (layer, cell2d) tuples
+        node2d : bool, optional
+            If True, return 2D node numbers (cell2d values).
+            If False (default), return 3D node numbers.
+
+        Returns
+        -------
+        list
+            list of MODFLOW nodes for each (layer, cell2d) tuple
+            in the input list
+
+        Examples
+        --------
+        >>> import flopy
+        >>> vg = flopy.discretization.VertexGrid(nlay=3, ncpl=100, ...)
+        >>> vg.get_node((0, 5))
+        [5]
+        >>> vg.get_node((1, 5))
+        [105]
+        >>> vg.get_node([(0, 5), (1, 5)], node2d=True)
+        [5, 5]
+        """
+        if not isinstance(cellids, list):
+            cellids = [cellids]
+
+        # Validate
+        for cellid in cellids:
+            if len(cellid) != 2:
+                raise ValueError("VertexGrid cellid must be (layer, cell2d) tuple")
+
+        if node2d:
+            return [cell2d for lay, cell2d in cellids]
+        else:
+            nodes = []
+            for lay, cell2d in cellids:
+                if lay < 0 or lay >= self.nlay:
+                    raise IndexError(f"Layer {lay} out of range [0, {self.nlay})")
+                if cell2d < 0 or cell2d >= self.ncpl:
+                    raise IndexError(f"Cell2d {cell2d} out of range [0, {self.ncpl})")
+                nodes.append(lay * self.ncpl + cell2d)
+            return nodes
 
     def plot(self, **kwargs):
         """
@@ -456,12 +675,12 @@ class VertexGrid(Grid):
         if self._cell1d is not None:
             zcenters = []
             zvertices = []
-            vertexdict = {v[0]: [v[1], v[2], v[3]] for v in self._vertices}
+            vertexdict = {v[0]: [v[1], v[2]] for v in self._vertices}
             for cell1d in self.cell1d:
                 cell1d = tuple(cell1d)
                 xcenters.append(cell1d[1])
                 ycenters.append(cell1d[2])
-                zcenters.append(cell1d[3])
+                zcenters.append(0.0)
 
                 vert_number = []
                 for i in cell1d[3:]:
@@ -473,7 +692,7 @@ class VertexGrid(Grid):
                 for ix in vert_number:
                     xcellvert.append(vertexdict[ix][0])
                     ycellvert.append(vertexdict[ix][1])
-                    zcellvert.append(vertexdict[ix][2])
+                    zcellvert.append(0.0)
                 xvertices.append(xcellvert)
                 yvertices.append(ycellvert)
                 zvertices.append(zcellvert)

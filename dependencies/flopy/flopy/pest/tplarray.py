@@ -1,7 +1,6 @@
 import numpy as np
 
-from ..utils.util_array import Transient2d as Transient2d
-from ..utils.util_array import Util3d as Util3d
+from ..utils.util_array import Transient2d, Util3d
 
 
 def get_template_array(pakarray):
@@ -122,8 +121,7 @@ class Util3dTpl:
         if "layers" in p.span and "idx" in p.span:
             if p.span["idx"] is not None:
                 raise Exception(
-                    "For a Util3d object, cannot have layers and "
-                    "idx in parameter.span"
+                    "For a Util3d object, cannot have layers and idx in parameter.span"
                 )
 
         if "layers" in p.span:

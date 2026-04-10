@@ -4,7 +4,17 @@ abstract classes that should not be directly accessed.
 
 """
 
-import os
+# in LayerFile, the recordarray attribute begins its life as
+# a list, which is appended to in subclasses' build_index(),
+# then finally becomes an array, after which it's accessed
+# in this file by column name. this probably deserves some
+# attention, but in the meantime, disable the pylint rule
+# to appease codacy.
+#
+# pylint: disable=invalid-sequence-index
+
+import warnings
+from os import PathLike
 from pathlib import Path
 from typing import Union
 
@@ -42,7 +52,7 @@ class Header:
                         ("kper", "i4"),
                         ("pertim", floattype),
                         ("totim", floattype),
-                        ("text", "a16"),
+                        ("text", "S16"),
                         ("ncol", "i4"),
                         ("nrow", "i4"),
                         ("ilay", "i4"),
@@ -55,7 +65,7 @@ class Header:
                         ("kper", "i4"),
                         ("pertim", floattype),
                         ("totim", floattype),
-                        ("text", "a16"),
+                        ("text", "S16"),
                         ("ncol", "i4"),
                         ("nrow", "i4"),
                         ("ilay", "i4"),
@@ -68,7 +78,7 @@ class Header:
                         ("kstp", "i4"),
                         ("kper", "i4"),
                         ("totim", floattype),
-                        ("text", "a16"),
+                        ("text", "S16"),
                         ("ncol", "i4"),
                         ("nrow", "i4"),
                         ("ilay", "i4"),
@@ -81,7 +91,7 @@ class Header:
                         ("kper", "i4"),
                         ("pertim", floattype),
                         ("totim", floattype),
-                        ("text", "a16"),
+                        ("text", "S16"),
                         ("m1", "i4"),
                         ("m2", "i4"),
                         ("m3", "i4"),
@@ -94,7 +104,7 @@ class Header:
                         ("kper", "i4"),
                         ("pertim", floattype),
                         ("totim", floattype),
-                        ("text", "a16"),
+                        ("text", "S16"),
                         ("m1", "i4"),
                         ("m2", "i4"),
                         ("m3", "i4"),
@@ -107,7 +117,7 @@ class Header:
                         ("kper", "i4"),
                         ("pertim", floattype),
                         ("totim", floattype),
-                        ("text", "a16"),
+                        ("text", "S16"),
                         ("m1", "i4"),
                         ("m2", "i4"),
                         ("m3", "i4"),
@@ -119,8 +129,9 @@ class Header:
             self.dtype = None
             self.header = None
             print(
-                "Specified {} type is not available. "
-                "Available types are:".format(self.header_type)
+                "Specified {} type is not available. Available types are:".format(
+                    self.header_type
+                )
             )
             for idx, t in enumerate(self.header_types):
                 print(f"  {idx + 1} {t}")
@@ -155,9 +166,7 @@ class LayerFile:
 
     """
 
-    def __init__(
-        self, filename: Union[str, os.PathLike], precision, verbose, kwargs
-    ):
+    def __init__(self, filename: Union[str, PathLike], precision, verbose, **kwargs):
         from ..discretization.structuredgrid import StructuredGrid
 
         self.filename = Path(filename).expanduser().absolute()
@@ -184,46 +193,104 @@ class LayerFile:
         elif precision == "double":
             self.realtype = np.float64
         else:
-            raise Exception(f"Unknown precision specified: {precision}")
+            raise ValueError(f"Unknown precision specified: {precision}")
 
         self.model = None
         self.dis = None
-        self.mg = None
+        self.modelgrid = None
         if "model" in kwargs.keys():
             self.model = kwargs.pop("model")
-            self.mg = self.model.modelgrid
+            self.modelgrid = self.model.modelgrid
             self.dis = self.model.dis
         if "dis" in kwargs.keys():
             self.dis = kwargs.pop("dis")
-            self.mg = self.dis.parent.modelgrid
+            self.modelgrid = self.dis.parent.modelgrid
         if "tdis" in kwargs.keys():
             self.tdis = kwargs.pop("tdis")
         if "modelgrid" in kwargs.keys():
-            self.mg = kwargs.pop("modelgrid")
+            self.modelgrid = kwargs.pop("modelgrid")
         if len(kwargs.keys()) > 0:
             args = ",".join(kwargs.keys())
-            raise Exception(f"LayerFile error: unrecognized kwargs: {args}")
+            raise ValueError(f"LayerFile error: unrecognized kwargs: {args}")
 
         # read through the file and build the pointer index
         self._build_index()
 
         # now that we read the data and know nrow and ncol,
-        # we can make a generic mg if needed
-        if self.mg is None:
-            self.mg = StructuredGrid(
+        # we can make a generic modelgrid if needed
+        if self.modelgrid is None:
+            self.modelgrid = StructuredGrid(
                 delc=np.ones((self.nrow,)),
-                delr=np.ones(
-                    self.ncol,
-                ),
+                delr=np.ones(self.ncol),
                 nlay=self.nlay,
                 xoff=0.0,
                 yoff=0.0,
                 angrot=0.0,
             )
 
+    def __len__(self):
+        """
+        Return the number of records (headers) in the file.
+        """
+        return len(self.recordarray)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        self.close()
+
+    def to_geodataframe(
+        self, gdf=None, modelgrid=None, kstpkper=None, totim=None, attrib_name=None
+    ):
+        """
+        Generate a GeoDataFrame with data from a LayerFile instance
+
+        Parameters
+        ----------
+        gdf : GeoDataFrame
+            optional, existing geodataframe with NCPL geometries
+        modelgrid : Grid
+            optional modelgrid instance to generate a GeoDataFrame from
+        kstpkper : tuple of ints
+            A tuple containing the time step and stress period (kstp, kper).
+            These are zero-based kstp and kper values.
+        totim : float
+            The simulation time.
+        attrib_name : str
+            optional base name of attribute columns. (default is text attribute)
+
+
+        Returns
+        -------
+            GeoDataFrame
+        """
+        if gdf is None:
+            if modelgrid is None:
+                if self.modelgrid is None:
+                    raise AssertionError(
+                        "A geodataframe or modelgrid instance must be supplied"
+                    )
+                modelgrid = self.modelgrid
+
+            gdf = modelgrid.to_geodataframe()
+
+        array = np.atleast_3d(
+            self.get_data(kstpkper=kstpkper, totim=totim).transpose()
+        ).transpose()
+
+        if attrib_name is None:
+            attrib_name = self.text.decode()
+
+        for ix, arr in enumerate(array):
+            name = f"{attrib_name}_{ix}"
+            gdf[name] = np.ravel(arr)
+
+        return gdf
+
     def to_shapefile(
         self,
-        filename: Union[str, os.PathLike],
+        filename: Union[str, PathLike],
         kstpkper=None,
         totim=None,
         mflay=None,
@@ -252,7 +319,7 @@ class LayerFile:
             Whether to print verbose output
 
         Returns
-        ----------
+        -------
         None
 
         See Also
@@ -268,11 +335,12 @@ class LayerFile:
         >>> times = hdobj.get_times()
         >>> hdobj.to_shapefile('test_heads_sp6.shp', totim=times[-1])
         """
-
+        warnings.warn(
+            "to_shapefile() is deprecated and is being replaced by to_geodataframe()",
+            DeprecationWarning,
+        )
         plotarray = np.atleast_3d(
-            self.get_data(
-                kstpkper=kstpkper, totim=totim, mflay=mflay
-            ).transpose()
+            self.get_data(kstpkper=kstpkper, totim=totim, mflay=mflay).transpose()
         ).transpose()
         if mflay is not None:
             attrib_dict = {f"{attrib_name}{mflay}": plotarray[0, :, :]}
@@ -284,7 +352,7 @@ class LayerFile:
 
         from ..export.shapefile_utils import write_grid_shapefile
 
-        write_grid_shapefile(filename, self.mg, attrib_dict, verbose)
+        write_grid_shapefile(filename, self.modelgrid, attrib_dict, verbose)
 
     def plot(
         self,
@@ -341,7 +409,7 @@ class LayerFile:
                 if filename_base is not None. (default is 'png')
 
         Returns
-        ----------
+        -------
         None
 
         See Also
@@ -381,15 +449,11 @@ class LayerFile:
             else:
                 i0 = 0
                 i1 = self.nlay
-            filenames = [
-                f"{filename_base}_Layer{k + 1}.{fext}" for k in range(i0, i1)
-            ]
+            filenames = [f"{filename_base}_Layer{k + 1}.{fext}" for k in range(i0, i1)]
 
         # make sure we have a (lay,row,col) shape plotarray
         plotarray = np.atleast_3d(
-            self.get_data(
-                kstpkper=kstpkper, totim=totim, mflay=mflay
-            ).transpose()
+            self.get_data(kstpkper=kstpkper, totim=totim, mflay=mflay).transpose()
         ).transpose()
 
         from ..plot.plotutil import PlotUtilities
@@ -400,7 +464,7 @@ class LayerFile:
             axes=axes,
             filenames=filenames,
             mflay=mflay,
-            modelgrid=self.mg,
+            modelgrid=self.modelgrid,
             **kwargs,
         )
 
@@ -409,7 +473,7 @@ class LayerFile:
         Build the recordarray and iposarray, which maps the header information
         to the position in the formatted file.
         """
-        raise Exception(
+        raise NotImplementedError(
             "Abstract method _build_index called in LayerFile.  "
             "This method needs to be overridden."
         )
@@ -417,17 +481,30 @@ class LayerFile:
     def list_records(self):
         """
         Print a list of all of the records in the file
-        obj.list_records()
 
+        .. deprecated:: 3.8.0
+           Use :attr:`headers` instead.
         """
+        warnings.warn(
+            "list_records() is deprecated; use headers instead.",
+            DeprecationWarning,
+        )
         for header in self.recordarray:
             print(header)
         return
 
     def get_nrecords(self):
-        if isinstance(self.recordarray, np.recarray):
-            return self.recordarray.shape[0]
-        return 0
+        """
+        Return the number of records (headers) in the file.
+
+        .. deprecated:: 3.8.0
+           Use :meth:`len` instead.
+        """
+        warnings.warn(
+            "get_nrecords is deprecated; use len(obj) instead.",
+            DeprecationWarning,
+        )
+        return len(self)
 
     def _get_data_array(self, totim=0):
         """
@@ -437,12 +514,11 @@ class LayerFile:
         """
 
         if totim >= 0.0:
-            keyindices = np.where(self.recordarray["totim"] == totim)[0]
+            keyindices = np.asarray(self.recordarray["totim"] == totim).nonzero()[0]
             if len(keyindices) == 0:
-                msg = f"totim value ({totim}) not found in file..."
-                raise Exception(msg)
+                raise ValueError(f"totim value ({totim}) not found in file")
         else:
-            raise Exception("Data not found...")
+            raise ValueError("Data not found")
 
         # initialize head with nan and then fill it
         idx = keyindices[0]
@@ -468,7 +544,7 @@ class LayerFile:
         Get a list of unique times in the file
 
         Returns
-        ----------
+        -------
         out : list of floats
             List contains unique simulation times (totim) in binary file.
 
@@ -505,7 +581,7 @@ class LayerFile:
            all layers will be included. (Default is None.)
 
         Returns
-        ----------
+        -------
         data : numpy array
             Array has size (nlay, nrow, ncol) if mflay is None or it has size
             (nrow, ncol) if mlay is specified.
@@ -519,14 +595,12 @@ class LayerFile:
         if kstpkper is not None:
             kstp1 = kstpkper[0] + 1
             kper1 = kstpkper[1] + 1
-            idx = np.where(
+            idx = np.asarray(
                 (self.recordarray["kstp"] == kstp1)
                 & (self.recordarray["kper"] == kper1)
-            )
+            ).nonzero()
             if idx[0].shape[0] == 0:
-                raise Exception(
-                    f"get_data() error: kstpkper not found:{kstpkper}"
-                )
+                raise ValueError(f"get_data() error: kstpkper not found: {kstpkper}")
             totim1 = self.recordarray[idx]["totim"][0]
         elif totim is not None:
             totim1 = totim
@@ -538,8 +612,10 @@ class LayerFile:
         data = self._get_data_array(totim1)
         if mflay is None:
             return data
+        elif isinstance(data, list):  # unstructured model, list form
+            return data[mflay]
         else:
-            return data[mflay, :, :]
+            return data[mflay, :, :]  # structured model, np.array form
 
     def get_alldata(self, mflay=None, nodata=-9999):
         """
@@ -556,7 +632,7 @@ class LayerFile:
            nodata value will be assigned np.nan.
 
         Returns
-        ----------
+        -------
         data : numpy array
             Array has size (ntimes, nlay, nrow, ncol) if mflay is None or it
             has size (ntimes, nrow, ncol) if mlay is specified.
@@ -584,34 +660,112 @@ class LayerFile:
         Read data from file
 
         """
-        raise Exception(
+        raise NotImplementedError(
             "Abstract method _read_data called in LayerFile.  "
             "This method needs to be overridden."
         )
 
     def _build_kijlist(self, idx):
-        if isinstance(idx, list):
-            kijlist = idx
-        elif isinstance(idx, tuple):
-            kijlist = [idx]
-        else:
-            raise Exception("Could not build kijlist from ", idx)
+        """Build normalized cell index list based on grid type.
 
-        # Check to make sure that k, i, j are within range, otherwise
-        # the seek approach won't work.  Can't use k = -1, for example.
-        for k, i, j in kijlist:
-            fail = False
-            if k < 0 or k > self.nlay - 1:
-                fail = True
-            if i < 0 or i > self.nrow - 1:
-                fail = True
-            if j < 0 or j > self.ncol - 1:
-                fail = True
-            if fail:
-                raise Exception(
-                    "Invalid cell index. Cell {} not within model grid: "
-                    "{}".format((k, i, j), (self.nlay, self.nrow, self.ncol))
-                )
+        Accepts natural index formats for each grid type:
+        - DIS (structured): (k, i, j) or list of such
+        - DISV (vertex): (k, cellid) or list of such
+        - DISU (unstructured): node or list of such
+
+        For backwards compatibility, also accepts old 3-tuple format with
+        dummy values: (k, dummy, cellid) for DISV and (dummy, dummy, node) for DISU.
+
+        Returns:
+        - DIS: list of 3-tuples (k, i, j)
+        - DISV: list of 2-tuples (k, cellid)
+        - DISU: list of integers (node)
+        """
+        # Determine grid type
+        grid_type = "structured" if self.modelgrid is None else self.modelgrid.grid_type
+
+        # Normalize idx to a list
+        if isinstance(idx, int):
+            idx_list = [idx]
+        elif isinstance(idx, tuple):
+            idx_list = [idx]
+        elif isinstance(idx, list):
+            idx_list = idx
+        else:
+            raise ValueError(f"Could not build kijlist from {idx}")
+
+        kijlist = []
+        for item in idx_list:
+            if grid_type == "structured":
+                # DIS: expect 3-tuple (k, i, j)
+                if not isinstance(item, tuple) or len(item) != 3:
+                    raise ValueError(
+                        f"DIS structured grid requires 3-tuple (layer, row, col), "
+                        f"got: {item}"
+                    )
+                k, i, j = item
+                # Validate ranges
+                if k < 0 or k > self.nlay - 1:
+                    raise ValueError(f"Layer index {k} out of range [0, {self.nlay})")
+                if i < 0 or i > self.nrow - 1:
+                    raise ValueError(f"Row index {i} out of range [0, {self.nrow})")
+                if j < 0 or j > self.ncol - 1:
+                    raise ValueError(f"Column index {j} out of range [0, {self.ncol})")
+                kijlist.append((k, i, j))
+            elif grid_type == "vertex":
+                if isinstance(item, tuple):
+                    if len(item) == 2:
+                        # proper format: (layer, cellid)
+                        k, cell = item
+                    elif len(item) == 3:
+                        # old format: (layer, dummy, cellid)
+                        k, cell = item[0], item[2]
+                    else:
+                        raise ValueError(
+                            f"DISV vertex grid requires 2-tuple (layer, cellid) "
+                            f"or 3-tuple (layer, dummy, cellid), got: {item}"
+                        )
+                else:
+                    raise ValueError(
+                        f"DISV vertex grid requires 2-tuple (layer, cellid) "
+                        f"or 3-tuple (layer, dummy, cellid), got: {item}"
+                    )
+                if k < 0 or k >= self.nlay:
+                    raise ValueError(f"Layer index {k} out of range [0, {self.nlay})")
+                if cell < 0 or cell >= self.modelgrid.ncpl:
+                    raise ValueError(
+                        f"Cell index {cell} out of range [0, {self.modelgrid.ncpl})"
+                    )
+                # Store as 2-tuple for DISV
+                kijlist.append((k, cell))
+            else:
+                if isinstance(item, (int, np.integer)):
+                    # proper format: just the node number
+                    node = int(item)
+                elif isinstance(item, tuple):
+                    if len(item) == 3:
+                        # old format: (dummy, dummy, node)
+                        node = int(item[2])
+                    elif len(item) == 1:
+                        # Also support single-element tuple
+                        node = int(item[0])
+                    else:
+                        raise ValueError(
+                            f"DISU unstructured grid requires integer node index "
+                            f"or 3-tuple (dummy, dummy, node), got: {item}"
+                        )
+                else:
+                    raise ValueError(
+                        f"DISU unstructured grid requires integer node index "
+                        f"or 3-tuple (dummy, dummy, node), got: {item}"
+                    )
+                if node < 0 or node >= self.modelgrid.nnodes:
+                    raise ValueError(
+                        f"Node index {node} out of range [0, {self.modelgrid.nnodes})"
+                    )
+                # Store as integer for DISU
+                kijlist.append(node)
+
         return kijlist
 
     def _get_nstation(self, idx, kijlist):
@@ -619,6 +773,10 @@ class LayerFile:
             return len(kijlist)
         elif isinstance(idx, tuple):
             return 1
+        elif isinstance(idx, (int, np.integer)):
+            return 1  # Single DISU node
+        else:
+            return None
 
     def _init_result(self, nstation):
         # Initialize result array and put times in first column

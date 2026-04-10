@@ -6,8 +6,10 @@ pakbase module
 """
 
 import abc
-import os
+import os.path
 import webbrowser as wb
+from itertools import takewhile
+from os import PathLike
 from typing import Union
 
 import numpy as np
@@ -211,18 +213,14 @@ class PackageInterface:
                 kparams[kp] = name
         if "hk" in self.__dict__:
             if self.hk.shape[1] is None:
-                hk = np.asarray(
-                    [a.array.flatten() for a in self.hk], dtype=object
-                )
+                hk = np.asarray([a.array.flatten() for a in self.hk], dtype=object)
             else:
                 hk = self.hk.array.copy()
         else:
             hk = self.k.array.copy()
         if "vka" in self.__dict__ and self.layvka.sum() > 0:
             if self.vka.shape[1] is None:
-                vka = np.asarray(
-                    [a.array.flatten() for a in self.vka], dtype=object
-                )
+                vka = np.asarray([a.array.flatten() for a in self.vka], dtype=object)
             else:
                 vka = self.vka.array
             vka_param = kparams.pop("vka")
@@ -263,11 +261,7 @@ class PackageInterface:
                 for l in range(vka.shape[0]):
                     vka[l] *= hk[l] if self.layvka.array[l] != 0 else 1
             self._check_thresholds(
-                chk,
-                vka,
-                active,
-                chk.property_threshold_values["vka"],
-                vka_param,
+                chk, vka, active, chk.property_threshold_values["vka"], vka_param
             )
 
         for kp, name in kparams.items():
@@ -279,7 +273,7 @@ class PackageInterface:
                     chk.property_threshold_values[kp],
                     name,
                 )
-        if self.name[0] in ["UPW", "LPF"]:
+        if self.name[0] in {"UPW", "LPF"}:
             storage_coeff = "STORAGECOEFFICIENT" in self.options or (
                 "storagecoefficient" in self.__dict__
                 and self.storagecoefficient.get_data()
@@ -294,18 +288,18 @@ class PackageInterface:
 
         Parameters
         ----------
-        f : str or file handle
+        f : str, PathLike or file handle, optional
             String defining file name or file handle for summary file
             of check method output. If a string is passed a file handle
             is created. If f is None, check method does not write
             results to a summary file. (default is None)
-        verbose : bool
+        verbose : bool, default True
             Boolean flag used to determine if check method results are
             written to the screen
-        level : int
+        level : int, default 1
             Check method analysis level. If level=0, summary checks are
             performed. If level=1, full checks are performed.
-        checktype : check
+        checktype : check, optional
             Checker type to be used. By default class check is used from
             check.py.
 
@@ -330,9 +324,7 @@ class PackageInterface:
         ):
             chk = self._check_oc(f, verbose, level, checktype)
         # check property values in upw and lpf packages
-        elif self.name[0] in ["UPW", "LPF"] or self.package_type.upper() in [
-            "NPF"
-        ]:
+        elif self.name[0] in ["UPW", "LPF"] or self.package_type.upper() in ["NPF"]:
             chk = self._check_flowp(f, verbose, level, checktype)
         elif self.package_type.upper() in ["STO"]:
             chk = self._get_check(f, verbose, level, checktype)
@@ -343,7 +335,7 @@ class PackageInterface:
         else:
             txt = f"check method not implemented for {self.name[0]} Package."
             if f is not None:
-                if isinstance(f, str):
+                if isinstance(f, (str, PathLike)):
                     pth = os.path.join(self.parent.model_ws, f)
                     f = open(pth, "w")
                     f.write(txt)
@@ -386,7 +378,7 @@ class PackageInterface:
                     [
                         (
                             True
-                            if l > 0 or l < 0 and "THICKSTRT" in self.options
+                            if l > 0 or (l < 0 and "THICKSTRT" in self.options)
                             else False
                         )
                         for l in self.laytyp
@@ -394,7 +386,8 @@ class PackageInterface:
                 )
                 if inds.any():
                     if self.sy.shape[1] is None:
-                        # unstructured; build flat nodal property array slicers (by layer)
+                        # unstructured;
+                        # build flat nodal property array slicers (by layer)
                         node_to = np.cumsum([s.array.size for s in self.ss])
                         node_from = np.array([0] + list(node_to[:-1]))
                         node_k_slices = np.array(
@@ -417,19 +410,14 @@ class PackageInterface:
             else:
                 iconvert = self.iconvert.array
                 inds = np.array(
-                    [
-                        True if l > 0 or l < 0 else False
-                        for l in iconvert.flatten()
-                    ]
+                    [True if l > 0 or l < 0 else False for l in iconvert.flatten()]
                 )
                 if not inds.any():
                     skip_sy_check = True
 
                 for ishape in np.ndindex(active.shape):
                     if active[ishape]:
-                        active[ishape] = (
-                            iconvert[ishape] > 0 or iconvert[ishape] < 0
-                        )
+                        active[ishape] = iconvert[ishape] > 0 or iconvert[ishape] < 0
             if not skip_sy_check:
                 chk.values(
                     sarrays["sy"],
@@ -527,22 +515,19 @@ class Package(PackageInterface):
             # Oc88 but is not a MfList
             spd = getattr(self, "stress_period_data")
             if isinstance(item, MfList):
-                if not isinstance(item, list) and not isinstance(item, tuple):
-                    msg = (
-                        f"package.__getitem__() kper {item} not in data.keys()"
-                    )
+                if not isinstance(item, (list, tuple)):
+                    msg = f"package.__getitem__() kper {item} not in data.keys()"
                     assert item in list(spd.data.keys()), msg
                     return spd[item]
 
                 if item[1] not in self.dtype.names:
                     raise Exception(
-                        "package.__getitem(): item {} not in dtype names "
-                        "{}".format(item, self.dtype.names)
+                        "package.__getitem(): item {} not in dtype names {}".format(
+                            item, self.dtype.names
+                        )
                     )
 
-                msg = (
-                    f"package.__getitem__() kper {item[0]} not in data.keys()"
-                )
+                msg = f"package.__getitem__() kper {item[0]} not in data.keys()"
                 assert item[0] in list(spd.data.keys()), msg
 
                 if spd.vtype[item[0]] == np.recarray:
@@ -663,7 +648,7 @@ class Package(PackageInterface):
         for attr in attrs:
             if "__" in attr or "data_list" in attr:
                 continue
-            dl.append(self.__getattribute__(attr))
+            dl.append(getattr(self, attr))
         return dl
 
     def export(self, f, **kwargs):
@@ -688,6 +673,67 @@ class Package(PackageInterface):
         from . import export
 
         return export.utils.package_export(f, self, **kwargs)
+
+    def to_geodataframe(
+        self, gdf=None, kper=0, full_grid=True, shorten_attr=False, **kwargs
+    ):
+        """
+        Method to create a GeoDataFrame from a modflow package
+
+        Parameters
+        ----------
+        gdf : GeoDataFrame
+            optional geopandas geodataframe object to add data to. Default is None
+        kper : int
+            stress period to get transient data from
+        full_grid : bool
+            boolean flag for full grid dataframe construction. Default is True.
+            If False, geodataframe will only include active cells
+        shorten_attr : bool
+            method to truncate attribute names for shapefile restrictions
+
+        Returns
+        -------
+            gdf : GeoDataFrame
+        """
+        from .mbase import BaseModel
+
+        if gdf is None:
+            if isinstance(self.parent, BaseModel):
+                modelgrid = self.parent.modelgrid
+                if modelgrid is not None:
+                    gdf = modelgrid.to_geodataframe()
+                else:
+                    raise AttributeError(
+                        "model does not have a grid instance, "
+                        "please supply a geodataframe"
+                    )
+            else:
+                raise AssertionError(
+                    "Package does not have a model instance, "
+                    "please supply a geodataframe"
+                )
+
+        for attr, value in self.__dict__.items():
+            if callable(getattr(value, "to_geodataframe", None)):
+                if isinstance(value, (BaseModel, PackageInterface)):
+                    continue
+                # do not pass sparse in here, make sparse after all data has been
+                #  added to geodataframe
+                gdf = value.to_geodataframe(
+                    gdf,
+                    kper=kper,
+                    full_grid=True,
+                    shorten_attr=shorten_attr,
+                    forgive=True,
+                )
+
+        if not full_grid:
+            col_names = [i for i in gdf if i not in ("geometry", "node", "row", "col")]
+            gdf = gdf.dropna(subset=col_names, how="all")
+            gdf = gdf.dropna(axis="columns", how="all")
+
+        return gdf
 
     def _generate_heading(self):
         """Generate heading."""
@@ -756,13 +802,12 @@ class Package(PackageInterface):
             if option.lower() == "thickstrt":
                 thickstrt = True
         for i, l in enumerate(self.laytyp.array.tolist()):
-            if l == 0 or l < 0 and thickstrt:
+            if l == 0 or (l < 0 and thickstrt):
                 confined = True
                 continue
             if confined and l > 0:
                 desc = (
-                    "\r    LAYTYP: unconfined (convertible) "
-                    "layer below confined layer"
+                    "\r    LAYTYP: unconfined (convertible) layer below confined layer"
                 )
                 chk._add_to_summary(type="Warning", desc=desc)
 
@@ -812,7 +857,7 @@ class Package(PackageInterface):
                 MfList dictionary key. (default is None)
 
         Returns
-        ----------
+        -------
         axes : list
             Empty list is returned if filename_base is not None. Otherwise
             a list of matplotlib.pyplot.axis are returned.
@@ -838,37 +883,10 @@ class Package(PackageInterface):
         axes = PlotUtilities._plot_package_helper(self, **kwargs)
         return axes
 
-    def to_shapefile(self, filename, **kwargs):
-        """
-        Export 2-D, 3-D, and transient 2-D model data to shapefile (polygons).
-        Adds an attribute for each layer in each data array
-
-        Parameters
-        ----------
-        filename : str
-            Shapefile name to write
-
-        Returns
-        ----------
-        None
-
-        See Also
-        --------
-
-        Notes
-        -----
-
-        Examples
-        --------
-        >>> import flopy
-        >>> ml = flopy.modflow.Modflow.load('test.nam')
-        >>> ml.lpf.to_shapefile('test_hk.shp')
-
-        """
-        import warnings
-
-        warnings.warn("to_shapefile() is deprecated. use .export()")
-        self.export(filename)
+    def to_shapefile(self, *args, **kwargs):
+        """Raises AttributeError, use :meth:`export`."""
+        # deprecated 3.2.4, changed to raise AttributeError version 3.8
+        raise AttributeError(".to_shapefile() was removed; use .export()")
 
     def webdoc(self):
         """Open the web documentation."""
@@ -888,12 +906,11 @@ class Package(PackageInterface):
         Every Package needs its own write_file function
 
         """
-        print("IMPLEMENTATION ERROR: write_file must be overloaded")
-        return
+        raise NotImplementedError("write_file must be overloaded")
 
     @staticmethod
     def load(
-        f: Union[str, bytes, os.PathLike],
+        f: Union[str, bytes, PathLike],
         model,
         pak_type,
         ext_unit_dict=None,
@@ -953,9 +970,7 @@ class Package(PackageInterface):
             if nppak > 0:
                 mxl = int(t[2])
                 if model.verbose:
-                    print(
-                        f"   Parameters detected. Number of parameters = {nppak}"
-                    )
+                    print(f"   Parameters detected. Number of parameters = {nppak}")
             line = f.readline()
 
         # dataset 2a
@@ -978,9 +993,7 @@ class Package(PackageInterface):
                 mxl = int(t[3])
                 imax += 1
                 if model.verbose:
-                    print(
-                        f"   Parameters detected. Number of parameters = {nppak}"
-                    )
+                    print(f"   Parameters detected. Number of parameters = {nppak}")
 
         options = []
         aux_names = []
@@ -995,10 +1008,10 @@ class Package(PackageInterface):
                     aux_names.append(t[it + 1].lower())
                     it += 1
                 if "mfusgwel" in pak_type_str:
-                    if toption.lower() == "autoflowreduce":
+                    if toption.lower() in {"autoflowreduce", "wellbot"}:
                         options.append(toption.lower())
                     elif toption.lower() == "iunitafr":
-                        options.append(f"{toption.lower()} {t[it+1]}")
+                        options.append(f"{toption.lower()} {t[it + 1]}")
                         it += 1
                 it += 1
 
@@ -1019,6 +1032,14 @@ class Package(PackageInterface):
         partype = ["cond"]
         if "modflowwel" in pak_type_str:
             partype = ["flux"]
+        wellbot = False
+        usg_args = {}
+        if "mfusgwel" in pak_type_str:
+            partype = ["flux"]
+            if "wellbot" in options:
+                wellbot = True
+                usg_args["wellbot"] = wellbot
+                partype += ["wellbot"]
 
         # check for "standard" single line options from mfnwt
         if "nwt" in model.version.lower():
@@ -1050,11 +1071,9 @@ class Package(PackageInterface):
         # read parameter data
         if nppak > 0:
             dt = pak_type.get_empty(
-                1, aux_names=aux_names, structured=model.structured
+                1, aux_names=aux_names, structured=model.structured, **usg_args
             ).dtype
-            pak_parms = mfparbc.load(
-                f, nppak, dt, model, ext_unit_dict, model.verbose
-            )
+            pak_parms = mfparbc.load(f, nppak, dt, model, ext_unit_dict, model.verbose)
 
         if nper is None:
             nrow, ncol, nlay, nper = model.get_nrow_ncol_nlay_nper()
@@ -1079,8 +1098,17 @@ class Package(PackageInterface):
             if nppak > 0:
                 itmpp = int(t[1])
 
-            if len(t) > 1:
-                t = t[:2]  # trap cases with text followed by digits (eg SP 5)
+            if not str(t[0]).lstrip("-").isnumeric():
+                raise Exception(
+                    f"{pak_type_str}: Non-numeric ITMP value {t[0]}\
+                    encountered (kper {iper + 1:5d})"
+                )
+            t = t[
+                : len(
+                    list(takewhile(lambda tval: str(tval).lstrip("-").isnumeric(), t))
+                )
+            ]  # trap cases with text followed by digits (eg SP 5)
+
             itmp_cln = 0
             if "mfusgwel" in pak_type_str:
                 try:
@@ -1092,15 +1120,13 @@ class Package(PackageInterface):
             if itmp == 0:
                 bnd_output = None
                 current = pak_type.get_empty(
-                    itmp, aux_names=aux_names, structured=model.structured
+                    itmp, aux_names=aux_names, structured=model.structured, **usg_args
                 )
             elif itmp > 0:
                 current = pak_type.get_empty(
-                    itmp, aux_names=aux_names, structured=model.structured
+                    itmp, aux_names=aux_names, structured=model.structured, **usg_args
                 )
-                current = ulstrd(
-                    f, itmp, current, model, sfac_columns, ext_unit_dict
-                )
+                current = ulstrd(f, itmp, current, model, sfac_columns, ext_unit_dict)
                 if model.structured:
                     current["k"] -= 1
                     current["i"] -= 1
@@ -1117,19 +1143,14 @@ class Package(PackageInterface):
             if itmp_cln == 0:
                 bnd_output_cln = None
                 current_cln = pak_type.get_empty(
-                    itmp_cln, aux_names=aux_names, structured=False
+                    itmp_cln, aux_names=aux_names, structured=False, **usg_args
                 )
             elif itmp_cln > 0:
                 current_cln = pak_type.get_empty(
-                    itmp_cln, aux_names=aux_names, structured=False
+                    itmp_cln, aux_names=aux_names, structured=False, **usg_args
                 )
                 current_cln = ulstrd(
-                    f,
-                    itmp_cln,
-                    current_cln,
-                    model,
-                    sfac_columns,
-                    ext_unit_dict,
+                    f, itmp_cln, current_cln, model, sfac_columns, ext_unit_dict
                 )
                 current_cln["node"] -= 1
                 bnd_output_cln = np.recarray.copy(current_cln)
@@ -1154,15 +1175,13 @@ class Package(PackageInterface):
                         iname = "static"
                 except:
                     if model.verbose:
-                        print(
-                            f"  implicit static instance for parameter {pname}"
-                        )
+                        print(f"  implicit static instance for parameter {pname}")
 
                 par_dict, current_dict = pak_parms.get(pname)
                 data_dict = current_dict[iname]
 
                 par_current = pak_type.get_empty(
-                    par_dict["nlst"], aux_names=aux_names
+                    par_dict["nlst"], aux_names=aux_names, **usg_args
                 )
 
                 #  get appropriate parval
@@ -1177,9 +1196,7 @@ class Package(PackageInterface):
                 # fill current parameter data (par_current)
                 for ibnd, t in enumerate(data_dict):
                     t = tuple(t)
-                    par_current[ibnd] = tuple(
-                        t[: len(par_current.dtype.names)]
-                    )
+                    par_current[ibnd] = tuple(t[: len(par_current.dtype.names)])
 
                 if model.structured:
                     par_current["k"] -= 1
@@ -1211,7 +1228,7 @@ class Package(PackageInterface):
                 stress_period_data_cln[iper] = bnd_output_cln
 
         dtype = pak_type.get_empty(
-            0, aux_names=aux_names, structured=model.structured
+            0, aux_names=aux_names, structured=model.structured, **usg_args
         ).dtype
 
         if openfile:
@@ -1224,14 +1241,12 @@ class Package(PackageInterface):
                 ext_unit_dict, filetype=pak_type._ftype()
             )
             if ipakcb > 0:
-                iu, filenames[1] = model.get_ext_dict_attr(
-                    ext_unit_dict, unit=ipakcb
-                )
+                iu, filenames[1] = model.get_ext_dict_attr(ext_unit_dict, unit=ipakcb)
                 model.add_pop_key_list(ipakcb)
 
         if "mfusgwel" in pak_type_str:
             cln_dtype = pak_type.get_empty(
-                0, aux_names=aux_names, structured=False
+                0, aux_names=aux_names, structured=False, **usg_args
             ).dtype
             pak = pak_type(
                 model,
@@ -1255,11 +1270,7 @@ class Package(PackageInterface):
                 filenames=filenames,
             )
         if check:
-            pak.check(
-                f=f"{pak.name[0]}.chk",
-                verbose=pak.parent.verbose,
-                level=0,
-            )
+            pak.check(f=f"{pak.name[0]}.chk", verbose=pak.parent.verbose, level=0)
         return pak
 
     def set_cbc_output_file(self, ipakcb, model, fname):

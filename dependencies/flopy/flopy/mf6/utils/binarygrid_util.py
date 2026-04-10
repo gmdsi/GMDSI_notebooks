@@ -59,7 +59,7 @@ class MfGrdFile(FlopyBinaryData):
         super().__init__()
 
         # set attributes
-        self.set_float(precision=precision)
+        self.precision = precision
         self.verbose = verbose
         self._initial_len = 50
         self._recorddict = {}
@@ -83,7 +83,7 @@ class MfGrdFile(FlopyBinaryData):
         t = line.split()
         self._version = t[1]
 
-        # version
+        # ntxt
         line = self.read_text(self._initial_len).strip()
         t = line.split()
         self._ntxt = int(t[1])
@@ -96,6 +96,8 @@ class MfGrdFile(FlopyBinaryData):
         # read text strings
         for idx in range(self._ntxt):
             line = self.read_text(self._lentxt).strip()
+            if line.startswith("#"):
+                continue
             t = line.split()
             key = t[0]
             dt = t[1]
@@ -105,6 +107,8 @@ class MfGrdFile(FlopyBinaryData):
                 dtype = np.float32
             elif dt == "DOUBLE":
                 dtype = np.float64
+            elif dt == "CHARACTER":
+                dtype = str
             else:
                 dtype = None
             nd = int(t[3])
@@ -122,7 +126,7 @@ class MfGrdFile(FlopyBinaryData):
                 print(f"  File contains data for {key} with shape {s}")
 
         if self.verbose:
-            print(f"Attempting to read {self._ntxt} records from {filename}")
+            print(f"Attempting to read {len(self._recordkeys)} records from {filename}")
 
         for key in self._recordkeys:
             if self.verbose:
@@ -133,15 +137,18 @@ class MfGrdFile(FlopyBinaryData):
                 count = 1
                 for v in shp:
                     count *= v
-                v = self.read_record(count=count, dtype=dt)
+                if dt == str:
+                    v = self.read_text(nchar=count)
+                else:
+                    v = self.read_record(count=count, dtype=dt)
             # read variable data
             else:
                 if dt == np.int32:
                     v = self.read_integer()
                 elif dt == np.float32:
-                    v = self.read_real()
+                    v = self._read_values(dt, 1)[0]
                 elif dt == np.float64:
-                    v = self.read_real()
+                    v = self._read_values(dt, 1)[0]
             self._datadict[key] = v
 
             if self.verbose:
@@ -154,20 +161,20 @@ class MfGrdFile(FlopyBinaryData):
         self.file.close()
 
         # initialize the model grid to None
-        self.__modelgrid = None
+        self._modelgrid = None
 
         # set ia and ja
-        self.__set_iaja()
+        self._set_iaja()
 
     # internal functions
-    def __set_iaja(self):
+    def _set_iaja(self):
         """
         Set ia and ja from _datadict.
         """
         self._ia = self._datadict["IA"] - 1
         self._ja = self._datadict["JA"] - 1
 
-    def __set_modelgrid(self):
+    def _set_modelgrid(self):
         """
         Define structured, vertex, or unstructured grid based on MODFLOW 6
         discretization type.
@@ -246,11 +253,11 @@ class MfGrdFile(FlopyBinaryData):
         except:
             print(f"could not set model grid for {self.file.name}")
 
-        self.__modelgrid = modelgrid
+        self._modelgrid = modelgrid
 
         return
 
-    def __build_vertices_cell2d(self):
+    def _build_vertices_cell2d(self):
         """
         Build the mf6 vertices and cell2d array to generate a VertexGrid
 
@@ -268,7 +275,7 @@ class MfGrdFile(FlopyBinaryData):
         ]
         return vertices, cell2d
 
-    def __get_iverts(self):
+    def _get_iverts(self):
         """
         Get a list of the vertices that define each model cell.
 
@@ -280,13 +287,10 @@ class MfGrdFile(FlopyBinaryData):
         """
         iverts = None
         if "IAVERT" in self._datadict:
-            if self._grid_type == "DISV":
-                nsize = self.ncpl
-            elif self._grid_type == "DISU":
-                nsize = self.nodes
             iverts = []
             iavert = self.iavert
             javert = self.javert
+            nsize = iavert.shape[0] - 1
             for ivert in range(nsize):
                 i0 = iavert[ivert]
                 i1 = iavert[ivert + 1]
@@ -295,7 +299,7 @@ class MfGrdFile(FlopyBinaryData):
                 print(f"returning iverts from {self.file.name}")
         return iverts
 
-    def __get_verts(self):
+    def _get_verts(self):
         """
         Get a list of the x, y pair for each vertex from the data in the
         binary grid file.
@@ -313,14 +317,13 @@ class MfGrdFile(FlopyBinaryData):
             if self._grid_type == "DISU":
                 # modify verts
                 verts = [
-                    [idx, verts[idx, 0], verts[idx, 1]]
-                    for idx in range(shpvert[0])
+                    [idx, verts[idx, 0], verts[idx, 1]] for idx in range(shpvert[0])
                 ]
             if self.verbose:
                 print(f"returning verts from {self.file.name}")
         return verts
 
-    def __get_cellcenters(self):
+    def _get_cellcenters(self):
         """
         Get the cell centers centroids for a MODFLOW 6 GWF model that uses
         the DISV or DISU discretization.
@@ -692,7 +695,7 @@ class MfGrdFile(FlopyBinaryData):
         -------
         iverts : list of lists of ints
         """
-        return self.__get_iverts()
+        return self._get_iverts()
 
     @property
     def verts(self):
@@ -703,7 +706,7 @@ class MfGrdFile(FlopyBinaryData):
         -------
         verts : ndarray of floats
         """
-        return self.__get_verts()
+        return self._get_verts()
 
     @property
     def cellcenters(self):
@@ -714,7 +717,7 @@ class MfGrdFile(FlopyBinaryData):
         -------
         cellcenters : ndarray of floats
         """
-        return self.__get_cellcenters()
+        return self._get_cellcenters()
 
     @property
     def modelgrid(self):
@@ -725,9 +728,9 @@ class MfGrdFile(FlopyBinaryData):
         -------
         modelgrid : StructuredGrid, VertexGrid, UnstructuredGrid
         """
-        if self.__modelgrid is None:
-            self.__set_modelgrid()
-        return self.__modelgrid
+        if self._modelgrid is None:
+            self._set_modelgrid()
+        return self._modelgrid
 
     @property
     def cell2d(self):
@@ -739,7 +742,192 @@ class MfGrdFile(FlopyBinaryData):
         cell2d : list of lists
         """
         if self._grid_type in ("DISV", "DISV2D", "DISV1D"):
-            vertices, cell2d = self.__build_vertices_cell2d()
+            vertices, cell2d = self._build_vertices_cell2d()
         else:
             vertices, cell2d = None, None
         return vertices, cell2d
+
+    def export(self, filename, precision=None, version=1, verbose=False):
+        """
+        Export the binary grid file to a new file.
+
+        Parameters
+        ----------
+        filename : str or PathLike
+            Path to output .grb file
+        precision : str, optional
+            'single' or 'double'. If None, uses the precision from the
+            original file (default None)
+        version : int, optional
+            Grid file version (default 1)
+        verbose : bool, optional
+            Print progress messages (default False)
+
+        Examples
+        --------
+        >>> from flopy.mf6.utils import MfGrdFile
+        >>> grb = MfGrdFile('model.dis.grb')
+        >>> grb.export('model_copy.dis.grb')
+        >>> # Convert to single precision
+        >>> grb.export('model_single.dis.grb', precision='single')
+        """
+        if precision is None:
+            precision = self.precision
+
+        # Build data dictionary from instance
+        data_dict = {}
+        for key in self._recordkeys:
+            if key in ("IA", "JA"):
+                # Use original 1-based arrays
+                data_dict[key] = self._datadict[key]
+            elif key == "TOP":
+                data_dict[key] = self.top
+            elif key == "BOTM":
+                data_dict[key] = self.bot
+            elif key in self._datadict:
+                data_dict[key] = self._datadict[key]
+
+        # Define variable metadata based on grid type
+        float_type = "SINGLE" if precision.lower() == "single" else "DOUBLE"
+
+        if self.grid_type == "DIS":
+            var_list = [
+                ("NCELLS", "INTEGER", 0, []),
+                ("NLAY", "INTEGER", 0, []),
+                ("NROW", "INTEGER", 0, []),
+                ("NCOL", "INTEGER", 0, []),
+                ("NJA", "INTEGER", 0, []),
+                ("XORIGIN", float_type, 0, []),
+                ("YORIGIN", float_type, 0, []),
+                ("ANGROT", float_type, 0, []),
+                ("DELR", float_type, 1, [self.ncol]),
+                ("DELC", float_type, 1, [self.nrow]),
+                ("TOP", float_type, 1, [self.nodes]),
+                ("BOTM", float_type, 1, [self.nodes]),
+                ("IA", "INTEGER", 1, [self.nodes + 1]),
+                ("JA", "INTEGER", 1, [self.nja]),
+                ("IDOMAIN", "INTEGER", 1, [self.nodes]),
+                ("ICELLTYPE", "INTEGER", 1, [self.nodes]),
+            ]
+        elif self.grid_type == "DISV":
+            # Get dimensions for DISV arrays
+            nvert = self._datadict["NVERT"]
+            njavert = self._datadict["NJAVERT"]
+            var_list = [
+                ("NCELLS", "INTEGER", 0, []),
+                ("NLAY", "INTEGER", 0, []),
+                ("NCPL", "INTEGER", 0, []),
+                ("NVERT", "INTEGER", 0, []),
+                ("NJAVERT", "INTEGER", 0, []),
+                ("NJA", "INTEGER", 0, []),
+                ("XORIGIN", float_type, 0, []),
+                ("YORIGIN", float_type, 0, []),
+                ("ANGROT", float_type, 0, []),
+                ("TOP", float_type, 1, [self.nodes]),
+                ("BOTM", float_type, 1, [self.nodes]),
+                ("VERTICES", float_type, 2, [nvert, 2]),
+                ("CELLX", float_type, 1, [self.nodes]),
+                ("CELLY", float_type, 1, [self.nodes]),
+                ("IAVERT", "INTEGER", 1, [self.nodes + 1]),
+                ("JAVERT", "INTEGER", 1, [njavert]),
+                ("IA", "INTEGER", 1, [self.nodes + 1]),
+                ("JA", "INTEGER", 1, [self.nja]),
+                ("IDOMAIN", "INTEGER", 1, [self.nodes]),
+                ("ICELLTYPE", "INTEGER", 1, [self.nodes]),
+            ]
+        elif self.grid_type == "DISU":
+            var_list = [
+                ("NODES", "INTEGER", 0, []),
+                ("NJA", "INTEGER", 0, []),
+                ("XORIGIN", float_type, 0, []),
+                ("YORIGIN", float_type, 0, []),
+                ("ANGROT", float_type, 0, []),
+                ("TOP", float_type, 1, [self.nodes]),
+                ("BOT", float_type, 1, [self.nodes]),
+                ("IA", "INTEGER", 1, [self.nodes + 1]),
+                ("JA", "INTEGER", 1, [self.nja]),
+                ("ICELLTYPE", "INTEGER", 1, [self.nodes]),
+            ]
+            # IDOMAIN is optional for DISU
+            if "IDOMAIN" in self._datadict:
+                var_list.insert(-1, ("IDOMAIN", "INTEGER", 1, [self.nodes]))
+        else:
+            raise NotImplementedError(
+                f"Grid type {self.grid_type} not yet implemented. "
+                "Supported grid types: DIS, DISV, DISU"
+            )
+
+        ntxt = len(var_list)
+        lentxt = 100
+
+        if verbose:
+            print(f"Writing binary grid file: {filename}")
+            print(f"  Grid type: {self.grid_type}")
+            print(f"  Version: {version}")
+            print(f"  Number of variables: {ntxt}")
+
+        # Create writer with appropriate precision
+        writer = FlopyBinaryData()
+        writer.precision = precision
+
+        with open(filename, "wb") as f:
+            writer.file = f
+
+            # Write text header lines (50 chars each, newline terminated)
+            header_len = 50
+            writer.write_text(f"GRID {self.grid_type}\n", header_len)
+            writer.write_text(f"VERSION {version}\n", header_len)
+            writer.write_text(f"NTXT {ntxt}\n", header_len)
+            writer.write_text(f"LENTXT {lentxt}\n", header_len)
+
+            # Write variable definition lines (100 chars each)
+            for name, dtype_str, ndim, dims in var_list:
+                if ndim == 0:
+                    line = f"{name} {dtype_str} NDIM {ndim}\n"
+                else:
+                    dims_str = " ".join(
+                        str(d) for d in dims[::-1]
+                    )  # Reverse for Fortran order
+                    line = f"{name} {dtype_str} NDIM {ndim} {dims_str}\n"
+                writer.write_text(line, lentxt)
+
+            # Write binary data for each variable
+            for name, dtype_str, ndim, dims in var_list:
+                if name not in data_dict:
+                    raise ValueError(f"Required variable '{name}' not found in grid file")
+
+                value = data_dict[name]
+
+                if verbose:
+                    if ndim == 0:
+                        print(f"  Writing {name} = {value}")
+                    else:
+                        if hasattr(value, "min"):
+                            print(
+                                f"  Writing {name}: min = {value.min()} max = {value.max()}"
+                            )
+                        else:
+                            print(f"  Writing {name}")
+
+                # Write scalar or array data
+                if ndim == 0:
+                    # Scalar value
+                    if dtype_str == "INTEGER":
+                        writer.write_integer(int(value))
+                    elif dtype_str in ("DOUBLE", "SINGLE"):
+                        writer.write_real(float(value))
+                else:
+                    # Array data
+                    arr = np.asarray(value)
+                    if dtype_str == "INTEGER":
+                        arr = arr.astype(np.int32)
+                    elif dtype_str == "DOUBLE":
+                        arr = arr.astype(np.float64)
+                    elif dtype_str == "SINGLE":
+                        arr = arr.astype(np.float32)
+
+                    # Write array in column-major (Fortran) order
+                    writer.write_record(arr.flatten(order="F"), dtype=arr.dtype)
+
+        if verbose:
+            print(f"Successfully wrote {filename}")
