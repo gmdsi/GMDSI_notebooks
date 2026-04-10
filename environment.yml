@@ -5,7 +5,7 @@ dependencies:
   - python=3.11
   - pip
   - pandas>=2.0
-  - numpy<2 
+  - numpy
   - matplotlib 
   - openpyxl
   - xlrd
