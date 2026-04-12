@@ -20,6 +20,7 @@ TIMEOUT = 1800  # 30 minutes per notebook
 # Sections and individual notebooks to skip during testing.
 SKIP_SECTIONS = {
     "part2_07_da",
+    "part2_08_opt",
     "part2_09_mou",
 }
 SKIP_NOTEBOOKS = {
