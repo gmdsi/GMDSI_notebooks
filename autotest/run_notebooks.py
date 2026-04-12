@@ -23,6 +23,13 @@ SKIP_SECTIONS = {
     "part2_09_mou",
 }
 SKIP_NOTEBOOKS = {
+    # interactive widgets don't work in headless CI
+    "understanding_variograms_and_realizations.ipynb",
+    "intro_to_svd.ipynb",
+    "simple_bayes_demo.ipynb",
+    "intro_to_bayes.ipynb",
+    "intro_to_regression.ipynb",
+    # ies notebooks incompatible with reduced noptmax
     "freyberg_ies_2_localization.ipynb",
     "freyberg_ies_3_restarting.ipynb",
 }
@@ -114,7 +121,7 @@ def get_notebooks(section_dir):
 def patch_ies_notebook(nb_path):
     """Patch IES notebooks to use fewer realizations and iterations for CI."""
     import json
-    with open(nb_path, "r") as f:
+    with open(nb_path, "r", encoding="utf-8") as f:
         nb = json.load(f)
     changed = False
     for cell in nb["cells"]:
@@ -142,7 +149,7 @@ def patch_ies_notebook(nb_path):
             new_source.append(line)
         cell["source"] = new_source
     if changed:
-        with open(nb_path, "w") as f:
+        with open(nb_path, "w", encoding="utf-8") as f:
             json.dump(nb, f, indent=1)
         print(f"  Patched IES settings in {nb_path.name}")
     return changed
