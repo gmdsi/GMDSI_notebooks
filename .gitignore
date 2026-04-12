@@ -8,3 +8,4 @@ prior_cov.jcb
 *.pyc
 .DS_Store
 */*.egg-info/*
+bin/

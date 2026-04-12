@@ -82,19 +82,30 @@ def prep_deps(template_ws, dep_dir=None):
     return
 
 
-if "linux" in platform.platform().lower():
-    bin_path = os.path.join("..","..", "bin_new", "linux")
-elif "darwin" in platform.platform().lower() or "macos" in platform.platform().lower():
-    bin_path = os.path.join("..","..", "bin_new", "mac")
-else:
-    bin_path = os.path.join("..", "..", "bin_new", "win")
+bin_path = os.path.join("..", "..", "bin")
+
+_bins_downloaded = False
+
+def _ensure_bins():
+    global _bins_downloaded
+    if _bins_downloaded:
+        return
+    abs_bin = os.path.abspath(bin_path)
+    os.makedirs(abs_bin, exist_ok=True)
+    existing = [f for f in os.listdir(abs_bin) if not f.startswith(".")]
+    if len(existing) < 2:
+        flopy.utils.get_modflow(abs_bin)
+        pyemu.utils.get_pestpp(abs_bin, release_id="5.2.25")
+    _bins_downloaded = True
 
 def prep_bins(dest_path):
-    files = os.listdir(bin_path)
+    _ensure_bins()
+    abs_bin = os.path.abspath(bin_path)
+    files = os.listdir(abs_bin)
     for f in files:
-        if os.path.exists(os.path.join(dest_path,f)):
-            os.remove(os.path.join(dest_path,f))
-        shutil.copy2(os.path.join(bin_path,f),os.path.join(dest_path,f))
+        if os.path.exists(os.path.join(dest_path, f)):
+            os.remove(os.path.join(dest_path, f))
+        shutil.copy2(os.path.join(abs_bin, f), os.path.join(dest_path, f))
 
 def run_notebook(notebook_filename, path):
     notebook_filename = os.path.join(path,notebook_filename)
@@ -209,7 +220,7 @@ def make_truth(truth_d):
     obs_data.set_index('site', inplace=True)
 
     # add particle time obs
-    mp_obs = pd.read_csv(os.path.join(truth_d, 'freyberg_mp.mpend'), skiprows=6, header=None, usecols=[3,5], delim_whitespace=True)
+    mp_obs = pd.read_csv(os.path.join(truth_d, 'freyberg_mp.mpend'), skiprows=6, header=None, usecols=[3,5], sep=r'\s+')
     obs_data.loc['part_time', ['time', 'value']] = '', mp_obs.iloc[:,-1].values[0]
     obs_data.to_csv(os.path.join(truth_d, 'obs_data.csv'))
     
@@ -437,7 +448,8 @@ def add_ppoints(tmp_d='freyberg_mf6'):
     for filename in wel_spd_files[1:12]:
         with open(os.path.join(tmp_d, filename+'.tpl'), 'w+')as f:
             f.write("ptf ~\n")
-        df = pd.read_csv(os.path.join(tmp_d, filename),delim_whitespace=True, header=None)
+        df = pd.read_csv(os.path.join(tmp_d, filename), sep=r'\s+', header=None)
+        df = df.astype({3: object})
         df.iloc[:-1, 3] = [f"~     wel{i}   ~" for i in df.iloc[:-1].index.values]
         df.to_csv(os.path.join(tmp_d, filename+'.tpl'), index=False, header=None, sep="\t", mode='a')
         # add parameters from tpl
@@ -468,7 +480,7 @@ def add_ppoints(tmp_d='freyberg_mf6'):
 
     v = pyemu.geostats.ExpVario(contribution=1.0, a=2500, anisotropy=1, bearing=0)
     gs = pyemu.geostats.GeoStruct(variograms=v,nugget=0.0)
-    ok = pyemu.geostats.OrdinaryKrige(gs,df_pp)
+    ok = pyemu.geostats.OrdinaryKrigeOrg(gs,df_pp)
     df = ok.calc_factors_grid(sr,var_filename="freyberg.k.ref", minpts_interp=1,maxpts_interp=10, )
     ok.to_grid_factors_file(pp_file_hk+".fac")
 
@@ -794,7 +806,7 @@ def get_sorted_ppoint_names(par, tmp_d):
     ij['y'] = cy[ij.i,ij.j]
 
     pp_file=os.path.join(tmp_d,"hkpp.dat")
-    df_pp = pd.read_csv(pp_file, delim_whitespace=True, header=None, names=['name','x','y','zone','parval1'])
+    df_pp = pd.read_csv(pp_file, sep=r'\s+', header=None, names=['name','x','y','zone','parval1'])
     df_pp = pd.merge(df_pp, ij, on=["x",'y'])
     df_pp.set_index("parnme", inplace=True)
     sorted_pnames = df_pp.index.values
@@ -811,7 +823,7 @@ def plot_arr2grid(ident_vals, tmp_d, title='Identifiability'):
 
     pp_file=os.path.join(tmp_d,"hkpp.dat")
     new_ppfile = os.path.join(tmp_d,"identpp.dat")
-    df_pp = pd.read_csv(pp_file, delim_whitespace=True, header=None, names=['name','x','y','zone','parval1'])
+    df_pp = pd.read_csv(pp_file, sep=r'\s+', header=None, names=['name','x','y','zone','parval1'])
 
     # generate random values
     df_pp.loc[:,"parval1"] = ident_vals
