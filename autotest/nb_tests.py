@@ -1,4 +1,5 @@
 import os
+import subprocess
 import sys
 import time
 cwd = os.getcwd()
@@ -11,20 +12,35 @@ timings = []
 failures = []
 
 def run_nb(nb_file, nb_dir):
-    assert nb_dir
-    assert os.path.join(nb_dir, nb_file)
+    if not os.path.isdir(nb_dir):
+        raise FileNotFoundError(f"Notebook directory does not exist: {nb_dir}")
+    nb_path = os.path.join(nb_dir, nb_file)
+    if not os.path.isfile(nb_path):
+        raise FileNotFoundError(f"Notebook file does not exist: {nb_path}")
     os.chdir(nb_dir)
-    t0 = time.time()
-    ret = os.system(f"jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800 --inplace {nb_file}")
-    elapsed = time.time() - t0
-    timings.append((nb_file, elapsed))
-    if ret != 0:
-        failures.append(nb_file)
-        print(f'FAILED: {nb_file} ({elapsed/60:.1f} min)')
-    else:
-        print(f'ran: {nb_file} ({elapsed/60:.1f} min)')
-    os.system(f"jupyter nbconvert --ClearOutputPreprocessor.enabled=True --ClearMetadataPreprocessor.enabled=True --inplace {nb_file}")
-    os.chdir(cwd)
+    try:
+        t0 = time.time()
+        result = subprocess.run(
+            ["jupyter", "nbconvert", "--execute",
+             "--ExecutePreprocessor.timeout=1800", "--inplace", nb_file],
+            check=False
+        )
+        elapsed = time.time() - t0
+        timings.append((nb_file, elapsed))
+        if result.returncode != 0:
+            failures.append(nb_file)
+            print(f'FAILED: {nb_file} ({elapsed/60:.1f} min)')
+        else:
+            print(f'ran: {nb_file} ({elapsed/60:.1f} min)')
+        subprocess.run(
+            ["jupyter", "nbconvert",
+             "--ClearOutputPreprocessor.enabled=True",
+             "--ClearMetadataPreprocessor.enabled=True",
+             "--inplace", nb_file],
+            check=False
+        )
+    finally:
+        os.chdir(cwd)
     return
 
 # part0 - theory notebooks
