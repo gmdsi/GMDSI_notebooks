@@ -17,8 +17,8 @@ def run_nb(nb_file, nb_dir):
     nb_path = os.path.join(nb_dir, nb_file)
     if not os.path.isfile(nb_path):
         raise FileNotFoundError(f"Notebook file does not exist: {nb_path}")
-    os.chdir(nb_dir)
     try:
+        os.chdir(nb_dir)
         t0 = time.time()
         result = subprocess.run(
             ["jupyter", "nbconvert", "--execute",
