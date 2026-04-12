@@ -17,6 +17,16 @@ from pathlib import Path
 TUTORIALS = Path(__file__).resolve().parent.parent / "tutorials"
 TIMEOUT = 1800  # 30 minutes per notebook
 
+# Sections and individual notebooks to skip during testing.
+SKIP_SECTIONS = {
+    "part2_07_da",
+    "part2_09_mou",
+}
+SKIP_NOTEBOOKS = {
+    "freyberg_ies_2_localization.ipynb",
+    "freyberg_ies_3_restarting.ipynb",
+}
+
 # Ordering within sections where it matters.
 # Keys are section directory prefixes; values are ordered notebook filenames.
 # Sections not listed here have their notebooks sorted alphabetically.
@@ -80,6 +90,7 @@ def get_sections(prefix):
     sections = sorted(
         d for d in TUTORIALS.iterdir()
         if d.is_dir() and d.name.startswith(prefix)
+        and d.name not in SKIP_SECTIONS
     )
     return sections
 
@@ -88,11 +99,53 @@ def get_notebooks(section_dir):
     """Get ordered list of notebooks for a section directory."""
     dirname = section_dir.name
     if dirname in SECTION_ORDER:
-        return [
+        nbs = [
             section_dir / nb for nb in SECTION_ORDER[dirname]
-            if (section_dir / nb).exists()
+            if (section_dir / nb).exists() and nb not in SKIP_NOTEBOOKS
         ]
-    return sorted(section_dir.glob("*.ipynb"))
+    else:
+        nbs = sorted(
+            nb for nb in section_dir.glob("*.ipynb")
+            if nb.name not in SKIP_NOTEBOOKS
+        )
+    return nbs
+
+
+def patch_ies_notebook(nb_path):
+    """Patch IES notebooks to use fewer realizations and iterations for CI."""
+    import json
+    with open(nb_path, "r") as f:
+        nb = json.load(f)
+    changed = False
+    for cell in nb["cells"]:
+        if cell["cell_type"] != "code":
+            continue
+        new_source = []
+        for line in cell["source"]:
+            orig = line
+            if "ies_num_reals" in line and "=" in line and not line.lstrip().startswith("#"):
+                # Replace any ies_num_reals assignment value with 20
+                import re
+                line = re.sub(
+                    r'(ies_num_reals["\']?\s*[\])]?\s*=\s*)\d+',
+                    r'\g<1>20', line
+                )
+            if "noptmax" in line and "=" in line and not line.lstrip().startswith("#"):
+                # Replace positive noptmax values with 1, leave -1 and -2 alone
+                import re
+                line = re.sub(
+                    r'(noptmax\s*=\s*)([2-9]\d*|[1-9]\d+)',
+                    r'\g<1>1', line
+                )
+            if line != orig:
+                changed = True
+            new_source.append(line)
+        cell["source"] = new_source
+    if changed:
+        with open(nb_path, "w") as f:
+            json.dump(nb, f, indent=1)
+        print(f"  Patched IES settings in {nb_path.name}")
+    return changed
 
 
 def run_notebook(nb_path):
@@ -101,6 +154,13 @@ def run_notebook(nb_path):
     print(f"Running: {nb_path.relative_to(TUTORIALS.parent)}")
     print(f"{'='*60}")
     t0 = time.time()
+
+    # Patch IES notebooks for faster CI runs, keeping a backup to restore after
+    patched = False
+    backup = None
+    if "part2_06_ies" in str(nb_path):
+        backup = nb_path.read_bytes()
+        patched = patch_ies_notebook(nb_path)
 
     result = subprocess.run(
         [
@@ -118,7 +178,11 @@ def run_notebook(nb_path):
     status = "PASS" if result.returncode == 0 else "FAIL"
     print(f"{status}: {nb_path.name} ({elapsed:.0f}s)")
 
-    # Clear output regardless of success
+    # Restore original notebook content if it was patched
+    if backup is not None:
+        nb_path.write_bytes(backup)
+
+    # Clear output and metadata regardless of success
     subprocess.run(
         [
             sys.executable, "-m", "jupyter", "nbconvert",

@@ -80,15 +80,15 @@ jobs:
         run: |
           python autotest/run_notebooks.py part1
 
-  # ── Part 2 Layer 1: pest setup (foundation for all part2) ──
-  part2-setup:
+  # ── Part 2 notebooks (run sequentially: setup -> mid -> final) ──
+  part2:
     strategy:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
-    name: part2-setup-${{ matrix.os }}
+    name: part2-${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 60
+    timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
 
@@ -110,114 +110,7 @@ jobs:
           cp bin_new/$d/* "$HOME/.local/bin/"
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-      - name: Run part2_01 and part2_02
+      - name: Run part2 notebooks
         shell: bash -l {0}
         run: |
-          python autotest/run_notebooks.py part2_01 part2_02
-
-      - name: Upload part2 setup artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: part2-setup-${{ matrix.os }}
-          path: |
-            tutorials/part2_01_pstfrom_pest_setup/
-            tutorials/part2_02_obs_and_weights/
-          retention-days: 1
-
-  # ── Part 2 Layer 2: independent groups that only need part2_02 output ──
-  part2-mid:
-    needs: part2-setup
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
-    name: part2-mid-${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 120
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: mamba-org/setup-micromamba@v2
-        with:
-          environment-file: environment.yml
-          environment-name: gmdsitut
-          create-args: python=3.11
-          cache-downloads: true
-          cache-environment: true
-
-      - name: Add binaries to PATH
-        shell: bash -l {0}
-        run: |
-          mkdir -p "$HOME/.local/bin"
-          if [ "$RUNNER_OS" == "Windows" ]; then d="win"
-          elif [ "$RUNNER_OS" == "macOS" ]; then d="mac"
-          else d="linux"; fi
-          cp bin_new/$d/* "$HOME/.local/bin/"
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-      - name: Download part2 setup artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: part2-setup-${{ matrix.os }}
-          path: tutorials
-
-      - name: Run part2 mid-layer notebooks
-        shell: bash -l {0}
-        run: |
-          python autotest/run_notebooks.py part2_03 part2_04 part2_06 part2_07
-
-      - name: Upload part2 mid artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: part2-mid-${{ matrix.os }}
-          path: |
-            tutorials/part2_01_pstfrom_pest_setup/
-            tutorials/part2_02_obs_and_weights/
-            tutorials/part2_03_global_sensitivity_analysis/
-            tutorials/part2_03_prior_monte_carlo/
-            tutorials/part2_04_glm/
-            tutorials/part2_06_ies/
-            tutorials/part2_07_da/
-          retention-days: 1
-
-  # ── Part 2 Layer 3: depends on glm and/or ies results ──
-  part2-final:
-    needs: part2-mid
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
-    name: part2-final-${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 120
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: mamba-org/setup-micromamba@v2
-        with:
-          environment-file: environment.yml
-          environment-name: gmdsitut
-          create-args: python=3.11
-          cache-downloads: true
-          cache-environment: true
-
-      - name: Add binaries to PATH
-        shell: bash -l {0}
-        run: |
-          mkdir -p "$HOME/.local/bin"
-          if [ "$RUNNER_OS" == "Windows" ]; then d="win"
-          elif [ "$RUNNER_OS" == "macOS" ]; then d="mac"
-          else d="linux"; fi
-          cp bin_new/$d/* "$HOME/.local/bin/"
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-      - name: Download part2 mid artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: part2-mid-${{ matrix.os }}
-          path: tutorials
-
-      - name: Run part2 final-layer notebooks
-        shell: bash -l {0}
-        run: |
-          python autotest/run_notebooks.py part2_05 part2_08 part2_09 part2_10
+          python autotest/run_notebooks.py part2
