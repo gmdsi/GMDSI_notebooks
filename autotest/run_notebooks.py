@@ -135,7 +135,7 @@ def patch_ies_notebook(nb_path):
                 import re
                 line = re.sub(
                     r'(noptmax\s*=\s*)([2-9]\d*|[1-9]\d+)',
-                    r'\g<1>1', line
+                    r'\g<1>3', line
                 )
             if line != orig:
                 changed = True
