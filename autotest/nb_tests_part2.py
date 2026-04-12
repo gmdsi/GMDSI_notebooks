@@ -11,8 +11,13 @@ timings = []
 failures = []
 
 def run_nb(nb_file, nb_dir):
-    assert nb_dir
-    assert os.path.join(nb_dir, nb_file)
+    if not nb_dir:
+        raise ValueError("Notebook directory must be provided")
+    if not os.path.isdir(nb_dir):
+        raise FileNotFoundError(f"Notebook directory does not exist: {nb_dir}")
+    nb_path = os.path.join(nb_dir, nb_file)
+    if not os.path.isfile(nb_path):
+        raise FileNotFoundError(f"Notebook file does not exist: {nb_path}")
     os.chdir(nb_dir)
     t0 = time.time()
     ret = os.system(f"jupyter nbconvert --execute --ExecutePreprocessor.timeout=1800 --inplace {nb_file}")
