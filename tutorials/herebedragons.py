@@ -528,8 +528,6 @@ def add_ppoints(tmp_d='freyberg_mf6'):
     pst.model_command = ['python forward_run.py']
 
     pst.control_data.pestmode = "estimation"
-    pst.pestpp_options["n_iter_base"] = 1
-    pst.pestpp_options["n_iter_super"] = 3
 
     pst.write(os.path.join(tmp_d, 'freyberg_pp.pst'))
     return print("new control file: 'freyberg_pp.pst'")
