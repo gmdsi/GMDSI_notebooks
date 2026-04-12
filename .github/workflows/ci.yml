@@ -159,6 +159,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: part2-setup-${{ matrix.os }}
+          path: tutorials
 
       - name: Run part2 mid-layer notebooks
         shell: bash -l {0}
@@ -214,6 +215,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: part2-mid-${{ matrix.os }}
+          path: tutorials
 
       - name: Run part2 final-layer notebooks
         shell: bash -l {0}
