@@ -2279,7 +2279,7 @@ def _get_xy_from_any(targets):
         x = np.array(targets['x'])
         y = np.array(targets['y'])
         return x, y
-    except (AttributeError, TypeError, KeyError):
+    except (AttributeError, TypeError, KeyError, IndexError):
         pass
     try:
         # dict of cellid: coords
