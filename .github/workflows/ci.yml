@@ -2,6 +2,8 @@
 name: repo ci
 
 on:
+  schedule:
+    - cron: '0 8 1 * *'  # 1st of each month at 8 AM UTC
   pull_request:
     branches:
       - "**"
@@ -18,10 +20,12 @@ jobs:
         os: ["windows-latest", "ubuntu-latest", "macos-latest"]
         python-version: ["3.11"]
         test-path: [
-              "nb_tests.py"
+              "nb_tests_part0.py",
+              "nb_tests_part1.py",
+              "nb_tests_part2.py"
                   ]
 
-    name: ${{ matrix.os }}-${{ matrix.python-version }}
+    name: ${{ matrix.os }}-${{ matrix.test-path }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
