@@ -47,4 +47,5 @@ jobs:
         shell: bash -l {0}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MPLBACKEND: Agg
         run: python ./autotest/${{ matrix.test-path }}
