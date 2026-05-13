@@ -316,7 +316,7 @@ class DataStorage:
         self.data_structure_type = data_structure_type
         package_dim = self.data_dimensions.package_dim
         self.in_model = (
-            self.data_dimensions is not None
+            package_dim is not None
             and len(package_dim.package_path) > 1
             and package_dim.model_dim[0].model_name is not None
             and package_dim.model_dim[0].model_name.lower()
@@ -1019,7 +1019,8 @@ class DataStorage:
             if isinstance(data, np.ndarray):
                 # try to store while preserving the structure of the
                 # existing record
-                if self.layer_storage.get_total_size() > 1:
+                is_aux = self.data_dimensions.structure.name == "aux"
+                if not is_aux and self.layer_storage.get_total_size() > 1:
                     if len(data) == self.layer_storage.get_total_size():
                         # break ndarray into layers and store
                         success = self._set_array_by_layer(
@@ -1597,15 +1598,6 @@ class DataStorage:
             self._verify_list(new_data)
         return new_data
 
-    def _get_cellid_size(self, data_item_name):
-        model_num = DatumUtil.cellid_model_num(
-            data_item_name,
-            self.data_dimensions.structure.model_data,
-            self.data_dimensions.package_dim.model_dim,
-        )
-        model_grid = self.data_dimensions.get_model_grid(model_num=model_num)
-        return model_grid.get_num_spatial_coordinates()
-
     def make_tuple_cellids(self, data):
         # convert cellids from individual layer, row, column fields into
         # tuples (layer, row, column)
@@ -1616,7 +1608,7 @@ class DataStorage:
             new_line = []
             for item, is_cellid in zip(line, self.recarray_cellid_list_ex):
                 if is_cellid:
-                    cellid_size = self._get_cellid_size(
+                    cellid_size = self.data_dimensions.get_cellid_size(
                         self._recarray_type_list[data_idx][0],
                     )
                     current_cellid += (item,)
@@ -1761,10 +1753,7 @@ class DataStorage:
                         self._stress_period,
                     )
                     file_access.write_binary_file(
-                        self.layer_storage.first_item().internal_data,
-                        fp,
-                        self._model_or_sim.modeldiscrit,
-                        precision="double",
+                        self.layer_storage.first_item().internal_data, fp
                     )
                 else:
                     # make sure folder exists
@@ -1802,15 +1791,6 @@ class DataStorage:
                 # set as external data
                 self.layer_storage.first_item().internal_data = None
             else:
-                # if self.layer_storage.in_shape(layer_new):
-                #    factor = self.layer_storage[layer_new].factor
-                # if preserve_record:
-                #    adjustment = multiplier / factor
-                #    if adjustment != 1.0:
-                # convert numbers to be multiplied by the
-                # original factor
-                #        data = data * adjustment
-
                 # store data externally in file
                 data_size = self.get_data_size(layer_new)
                 data_type = data_dim.structure.data_item_structures[0].type
@@ -2030,9 +2010,7 @@ class DataStorage:
                 self._stress_period,
             )
             if self.layer_storage[layer].binary:
-                data = file_access.read_binary_data_from_file(
-                    read_file, self._model_or_sim.modeldiscrit
-                )
+                data = file_access.read_binary_data_from_file(read_file)
                 data_out = self._build_recarray(data, layer, False)
             else:
                 with open(read_file) as fd_read_file:
@@ -2144,7 +2122,7 @@ class DataStorage:
             return False
         if arr_line is None:
             return False
-        cellid_size = self._get_cellid_size(data_item.name)
+        cellid_size = self.data_dimensions.get_cellid_size(data_item.name)
         model_grid = self.data_dimensions.get_model_grid()
         if cellid_size + data_index > len(arr_line):
             return False
@@ -2291,7 +2269,7 @@ class DataStorage:
                         # this is a cell id.  verify that it contains the
                         # correct number of integers
                         if cellid_size is None:
-                            cellid_size = self._get_cellid_size(
+                            cellid_size = self.data_dimensions.get_cellid_size(
                                 self._recarray_type_list[index][0]
                             )
                         if (
@@ -2558,7 +2536,7 @@ class DataStorage:
             data_array = np.ndarray(shape=dimensions, dtype=np_dtype)
             # fill array
             for index in ArrayIndexIter(dimensions):
-                data_array.itemset(index, next(data_iter))
+                data_array[index] = next(data_iter)
             return data_array
         elif self.data_structure_type == DataStructureType.scalar:
             return next(data_iter)
@@ -2691,6 +2669,7 @@ class DataStorage:
         resolve_data_shape=True,
         key=None,
         nseg=None,
+        surf_rate_specified=False,
         cellid_expanded=False,
         min_size=False,
         overwrite_existing_type_list=True,
@@ -2734,6 +2713,25 @@ class DataStorage:
                                     aux_var_name, data_type, False
                                 )
 
+                elif self._dependent_opt(data_item):
+                    nval = self._optional_nval(data_item)
+                    if data_item.name == "petm0":
+                        if surf_rate_specified or nval == 1:
+                            self._append_type_lists(
+                                data_item.name, data_type, False
+                            )
+                    elif (
+                        data_item.name == "pxdp"
+                        or data_item.name == "petm"
+                    ):
+                        if (nseg and nseg > 1) or nval > 0:
+                            if nseg is None:
+                                nseg = nval + 1
+                            if nseg > 1:
+                                for seg in range(nseg - 1):
+                                    self._append_type_lists(
+                                        f"{data_item.name}{seg+1}", data_type, False
+                                    )
                 elif data_item.type == DatumType.record:
                     # record within a record, recurse
                     self.build_type_list(data_item, True, data)
@@ -2833,6 +2831,7 @@ class DataStorage:
                                     data_item,
                                     data_set,
                                     data,
+                                    data_item_num=index,
                                     repeating_key=key,
                                     min_size=min_size,
                                 )
@@ -2873,7 +2872,9 @@ class DataStorage:
                             ):
                                 # A cellid is a single entry (tuple) in the
                                 # recarray.  Adjust dimensions accordingly.
-                                size = self._get_cellid_size(data_item.name)
+                                size = self.data_dimensions.get_cellid_size(
+                                    data_item.name
+                                )
                                 data_item.remove_cellid(resolved_shape, size)
                         if not data_item.optional or not min_size:
                             for index in range(0, resolved_shape[0]):
@@ -2897,6 +2898,28 @@ class DataStorage:
                 self._recarray_type_list_ex = existing_type_list_ex
             return new_type_list
 
+    def _optional_nval(self, data_item):
+        file_access = MFFileAccessList(
+            self.data_dimensions.structure,
+            self.data_dimensions,
+            self._simulation_data,
+            self._data_path,
+            self._stress_period,
+        )
+
+        return file_access._optional_nval(data_item)
+
+    def _dependent_opt(self, data_item):
+        file_access = MFFileAccessList(
+            self.data_dimensions.structure,
+            self.data_dimensions,
+            self._simulation_data,
+            self._data_path,
+            self._stress_period,
+        )
+
+        return file_access._dependent_opt(data_item)
+
     def get_default_mult(self):
         if self._data_type == DatumType.integer:
             return 1
@@ -2910,7 +2933,7 @@ class DataStorage:
         if iscellid and self._model_or_sim.model_type is not None:
             # write each part of the cellid out as a separate entry
             # to _recarray_list_list_ex
-            cellid_size = self._get_cellid_size(name)
+            cellid_size = self.data_dimensions.get_cellid_size(name)
             # determine header for different grid types
             if cellid_size == 1:
                 self._do_ex_list_append(name, int, iscellid)
@@ -2968,8 +2991,10 @@ class DataStorage:
 
     def get_data_dimensions(self, layer):
         data_dimensions = self.data_dimensions.get_data_shape()[0]
+        is_aux = self.data_dimensions.structure.name == "aux"
         if (
-            layer is not None
+            not is_aux
+            and layer is not None
             and self.layer_storage.get_total_size() > 1
             and self._has_layer_dim()
         ):

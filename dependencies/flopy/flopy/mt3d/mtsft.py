@@ -382,11 +382,7 @@ class Mt3dSft(Package):
         # Item 1
         f.write(
             "{:10d}{:10d}{:10d}{:10d}{:10d}".format(
-                self.nsfinit,
-                self.mxsfbc,
-                self.icbcsf,
-                self.ioutobs,
-                self.ietsfr,
+                self.nsfinit, self.mxsfbc, self.icbcsf, self.ioutobs, self.ietsfr
             )
             + 30 * " "
             + "# nsfinit, mxsfbc, icbcsf, ioutobs, ietsfr\n"
@@ -428,7 +424,8 @@ class Mt3dSft(Package):
                 f.write(line)
 
         # Items 7, 8
-        # Loop through each stress period and assign source & sink concentrations to stream features
+        # Loop through each stress period and assign source & sink
+        # concentrations to stream features
         nper = self.parent.nper
         for kper in range(nper):
             if f.closed:
@@ -445,9 +442,7 @@ class Mt3dSft(Package):
         return
 
     @classmethod
-    def load(
-        cls, f, model, nsfinit=None, nper=None, ncomp=None, ext_unit_dict=None
-    ):
+    def load(cls, f, model, nsfinit=None, nper=None, ncomp=None, ext_unit_dict=None):
         """
         Load an existing package.
 
@@ -558,21 +553,18 @@ class Mt3dSft(Package):
             print(f"   IETSFR {ietsfr}")
             if ietsfr == 0:
                 print(
-                    "   Mass does not exit the model via simulated "
-                    "stream evaporation "
+                    "   Mass does not exit the model via simulated stream evaporation "
                 )
             else:
                 print(
-                    "   Mass exits the stream network via simulated "
-                    "stream evaporation "
+                    "   Mass exits the stream network via simulated stream evaporation "
                 )
 
         # Item 2 (ISFSOLV, WIMP, WUPS, CCLOSESF, MXITERSF, CRNTSF, IPRTXMD)
         line = f.readline()
         if model.verbose:
             print(
-                "   loading isfsolv, wimp, wups, cclosesf, mxitersf, "
-                "crntsf, iprtxmd..."
+                "   loading isfsolv, wimp, wups, cclosesf, mxitersf, crntsf, iprtxmd..."
             )
 
         vals = line.strip().split()
@@ -606,15 +598,9 @@ class Mt3dSft(Package):
             print("   loading COLDSF...")
 
             if model.free_format:
-                print(
-                    "   Using MODFLOW style array reader utilities to "
-                    "read COLDSF"
-                )
+                print("   Using MODFLOW style array reader utilities to read COLDSF")
             elif model.array_format == "mt3d":
-                print(
-                    "   Using historic MT3DMS array reader utilities to "
-                    "read COLDSF"
-                )
+                print("   Using historic MT3DMS array reader utilities to read COLDSF")
 
         coldsf = Util2d.load(
             f,
@@ -646,15 +632,9 @@ class Mt3dSft(Package):
         # Item 4 (DISPSF(NRCH)) Reach-by-reach dispersion
         if model.verbose:
             if model.free_format:
-                print(
-                    "   Using MODFLOW style array reader utilities to "
-                    "read DISPSF"
-                )
+                print("   Using MODFLOW style array reader utilities to read DISPSF")
             elif model.array_format == "mt3d":
-                print(
-                    "   Using historic MT3DMS array reader utilities to "
-                    "read DISPSF"
-                )
+                print("   Using historic MT3DMS array reader utilities to read DISPSF")
 
         dispsf = Util2d.load(
             f,

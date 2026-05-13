@@ -2,7 +2,7 @@ pcf version=2
 * control data keyword
 pestmode                             regularization
 noptmax                                 0
-svdmode                                 1
+svdmode                                 0
 maxsing                                48
 eigthresh                           1e-06
 eigwrite                                1

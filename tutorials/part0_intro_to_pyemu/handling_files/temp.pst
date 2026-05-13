@@ -1112,17 +1112,17 @@ vol_wells_19800101    -8.6963960000E+06     0.0000000000E+00      vol_wells
 * model command line
 python forward_run.py
 * model input/output
-freyberg.mpbas.tpl freyberg.mpbas
-freyberg.rch.tpl freyberg.rch
-freyberg.sfr.tpl freyberg.sfr
-hkpp.dat.tpl hkpp.dat
-WEL_0001.dat.temp.tpl WEL_0001.dat.temp
-WEL_0002.dat.temp.tpl WEL_0002.dat.temp
-flux.dat.ins flux.dat
-freyberg.hyd.bin.dat.ins freyberg.hyd.bin.dat
-freyberg.sfo.processed.ins freyberg.sfo.processed
-freyberg.travel.ins freyberg.travel
-vol.dat.ins vol.dat
+ freyberg.mpbas.tpl   freyberg.mpbas 
+ freyberg.rch.tpl   freyberg.rch 
+ freyberg.sfr.tpl   freyberg.sfr 
+ hkpp.dat.tpl   hkpp.dat 
+ WEL_0001.dat.temp.tpl   WEL_0001.dat.temp 
+ WEL_0002.dat.temp.tpl   WEL_0002.dat.temp 
+ flux.dat.ins   flux.dat 
+ freyberg.hyd.bin.dat.ins   freyberg.hyd.bin.dat 
+ freyberg.sfo.processed.ins   freyberg.sfo.processed 
+ freyberg.travel.ins   freyberg.travel 
+ vol.dat.ins   vol.dat 
 * prior information
 rch_0                 1.0 * log(rch_0) = 0.000000E+00         1.6609640474E+00     regulrch             
 rch_1                 1.0 * log(rch_1) = 0.000000E+00         9.2662840803E-01     regulrch             

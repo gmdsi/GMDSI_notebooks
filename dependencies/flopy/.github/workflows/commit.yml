@@ -1,0 +1,199 @@
+name: Commit continuous integration
+on:
+  push:
+  pull_request:
+    branches:
+      - master
+      - develop
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: false
+
+      - name: Build package
+        run: uv build
+
+      - name: Check package
+        run: uvx twine check --strict dist/*
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: false
+
+      - name: Lint
+        run: uvx ruff check
+
+      - name: Check format
+        run: uvx ruff format --check
+
+      - name: Check spelling
+        run: uvx codespell
+
+      - name: Check CITATION.cff
+        run: |
+          uvx cffconvert --validate
+          uvx cffconvert -f apalike
+          uvx cffconvert -f bibtex
+
+  smoke:
+    name: Smoke test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    timeout-minutes: 10
+    env:
+      PYTHON_VERSION: '3.10'
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: astral-sh/setup-uv@v7
+        with:
+          cache-dependency-glob: "**/pyproject.toml"
+
+      - name: Install Python dependencies
+        run: uv sync --all-extras
+
+      - name: Install Modflow executables
+        uses: modflowpy/install-modflow-action@v1
+
+      - name: Smoke test
+        working-directory: autotest
+        run: uv run pytest -v -n=auto --smoke --cov=flopy --cov-report=xml --durations=0 --keep-failed=.failed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload failed test outputs
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: failed-smoke-${{ runner.os }}-${{ env.PYTHON_VERSION }}
+          path: autotest/.failed/**
+
+      - name: Upload coverage
+        if: github.repository_owner == 'modflowpy' && (github.event_name == 'push' || github.event_name == 'pull_request')
+        uses: codecov/codecov-action@v6
+        with:
+          files: autotest/coverage.xml
+
+  test:
+    name: Test
+    needs: smoke
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        python-version: [ "3.10", "3.11", "3.12" ]
+    defaults:
+      run:
+        shell: bash -l {0}
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+        with:
+          path: flopy
+
+      - name: Checkout MODFLOW 6
+        uses: actions/checkout@v6
+        with:
+          repository: MODFLOW-ORG/modflow6
+          path: modflow6
+
+      - name: Install Modflow-related executables
+        uses: modflowpy/install-modflow-action@v1
+
+      - name: Install triangle (macOS workaround)
+        if: runner.os == 'macOS'
+        uses: modflowpy/install-modflow-action@v1
+        with:
+          repo: executables
+          ostag: mac
+          subset: triangle
+
+      - name: Setup GNU Fortran
+        uses: fortran-lang/setup-fortran@v1
+        with:
+          compiler: gcc
+          version: 13
+
+      - name: Setup pixi
+        uses: prefix-dev/setup-pixi@v0.9.5
+        with:
+          pixi-version: v0.41.4
+          manifest-path: modflow6/pixi.toml
+
+      - name: Install dependencies
+        working-directory: modflow6
+        run: |
+          pixi run install
+          pixi run pip install coverage pytest-cov netcdf4
+
+      - name: Install FloPy
+        working-directory: flopy
+        run: |
+          pixi run --manifest-path=../modflow6/pixi.toml pip install --no-deps -e .
+          pixi run --manifest-path=../modflow6/pixi.toml python -m flopy.mf6.utils.generate_classes --dfnpath ../modflow6/doc/mf6io/mf6ivar/dfn
+
+      - name: Build MF6
+        working-directory: modflow6
+        run: |
+          pixi run meson setup builddir --buildtype=debugoptimized --prefix=$(pwd) --libdir=bin
+          pixi run meson install -C builddir
+          pixi run meson test --verbose --no-rebuild -C builddir
+
+      - name: Run tests
+        working-directory: flopy/autotest
+        run: |
+          pixi run --manifest-path=../../modflow6/pixi.toml pytest -v -m="not example" -n=auto --cov=flopy --cov-append --cov-report=xml --durations=0 --keep-failed=.failed --dist loadfile
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Report coverage
+        working-directory: flopy/autotest
+        run: pixi run --manifest-path=../../modflow6/pixi.toml coverage report
+
+      - name: Upload failed test outputs
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: failed-${{ matrix.os }}-${{ matrix.python-version }}
+          path: flopy/autotest/.failed/**
+
+      - name: Upload coverage
+        if: github.repository_owner == 'modflowpy' && (github.event_name == 'push' || github.event_name == 'pull_request')
+        uses: codecov/codecov-action@v6
+        with:
+          files: flopy/autotest/coverage.xml

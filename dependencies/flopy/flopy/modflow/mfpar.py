@@ -284,8 +284,8 @@ class ModflowPar:
 
         for lpf and upw:
 
-        >>> data = flopy.modflow.mfpar.ModflowPar.parameter_fill(m, (nrow, ncol), 'vkcb',
-        >>> .....................................................parm_dict, findlayer=1)
+        >>> data = flopy.modflow.mfpar.ModflowPar.parameter_fill(
+        ...             m, (nrow, ncol), 'vkcb', parm_dict, findlayer=1)
 
 
         """
@@ -301,10 +301,8 @@ class ModflowPar:
                     pv = float(model.mfpar.pval.pval_dict[key.lower()])
                 except:
                     pv = float(parval)
-            # print partyp, parval, nclu, clusters
             if partyp == findkey:
                 for [layer, mltarr, zonarr, izones] in clusters:
-                    # print layer, mltarr, zonarr, izones
                     foundlayer = False
                     if findlayer is None:
                         foundlayer = True
@@ -317,16 +315,12 @@ class ModflowPar:
                         if mltarr.lower() == "none":
                             mult = np.ones(shape, dtype=dtype)
                         else:
-                            mult = model.mfpar.mult.mult_dict[mltarr.lower()][
-                                :, :
-                            ]
+                            mult = model.mfpar.mult.mult_dict[mltarr.lower()][:, :]
                         if zonarr.lower() == "all":
                             cluster_data = pv * mult
                         else:
                             mult_save = np.copy(mult)
-                            za = model.mfpar.zone.zone_dict[zonarr.lower()][
-                                :, :
-                            ]
+                            za = model.mfpar.zone.zone_dict[zonarr.lower()][:, :]
                             # build a multiplier for all of the izones
                             mult = np.zeros(shape, dtype=dtype)
                             for iz in izones:

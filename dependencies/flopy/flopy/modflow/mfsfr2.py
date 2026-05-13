@@ -3,6 +3,7 @@ __author__ = "aleaf"
 import copy
 import os
 import warnings
+from os import PathLike
 
 import numpy as np
 import pandas as pd
@@ -269,46 +270,33 @@ class ModflowSfr2(Package):
 
     """
 
-    _options = dict(
-        [
-            ("reachinput", OptionBlock.simple_flag),
-            ("transroute", OptionBlock.simple_flag),
-            ("tabfiles", OptionBlock.simple_tabfile),
-            (
-                "lossfactor",
-                {
-                    OptionBlock.dtype: np.bool_,
-                    OptionBlock.nested: True,
-                    OptionBlock.n_nested: 1,
-                    OptionBlock.vars: {"factor": OptionBlock.simple_float},
-                },
-            ),
-            (
-                "strhc1kh",
-                {
-                    OptionBlock.dtype: np.bool_,
-                    OptionBlock.nested: True,
-                    OptionBlock.n_nested: 1,
-                    OptionBlock.vars: {"factorkh": OptionBlock.simple_float},
-                },
-            ),
-            (
-                "strhc1kv",
-                {
-                    OptionBlock.dtype: np.bool_,
-                    OptionBlock.nested: True,
-                    OptionBlock.n_nested: 1,
-                    OptionBlock.vars: {"factorkv": OptionBlock.simple_float},
-                },
-            ),
-        ]
-    )
+    _options = {
+        "reachinput": OptionBlock.simple_flag,
+        "transroute": OptionBlock.simple_flag,
+        "tabfiles": OptionBlock.simple_tabfile,
+        "lossfactor": {
+            OptionBlock.dtype: np.bool_,
+            OptionBlock.nested: True,
+            OptionBlock.n_nested: 1,
+            OptionBlock.vars: {"factor": OptionBlock.simple_float},
+        },
+        "strhc1kh": {
+            OptionBlock.dtype: np.bool_,
+            OptionBlock.nested: True,
+            OptionBlock.n_nested: 1,
+            OptionBlock.vars: {"factorkh": OptionBlock.simple_float},
+        },
+        "strhc1kv": {
+            OptionBlock.dtype: np.bool_,
+            OptionBlock.nested: True,
+            OptionBlock.n_nested: 1,
+            OptionBlock.vars: {"factorkv": OptionBlock.simple_float},
+        },
+    }
 
     nsfrpar = 0
     default_value = 0.0
-    # LENUNI = {"u": 0, "f": 1, "m": 2, "c": 3}
     len_const = {1: 1.486, 2: 1.0, 3: 100.0}
-    # {"u": 0, "s": 1, "m": 2, "h": 3, "d": 4, "y": 5}
     time_const = {1: 1.0, 2: 60.0, 3: 3600.0, 4: 86400.0, 5: 31557600.0}
 
     def __init__(
@@ -368,10 +356,7 @@ class ModflowSfr2(Package):
                 if fname is None:
                     fname = f"{model.name}.sfr.{ext}"
                 model.add_output_file(
-                    abs(istcb2),
-                    fname=fname,
-                    binflag=binflag,
-                    package=self._ftype(),
+                    abs(istcb2), fname=fname, binflag=binflag, package=self._ftype()
                 )
         else:
             istcb2 = 0
@@ -415,9 +400,7 @@ class ModflowSfr2(Package):
         # number of reaches, negative value is flag for unsat.
         # flow beneath streams and/or transient routing
         self._nstrm = (
-            np.sign(nstrm) * len(reach_data)
-            if reach_data is not None
-            else nstrm
+            np.sign(nstrm) * len(reach_data) if reach_data is not None else nstrm
         )
         if segment_data is not None:
             # segment_data is a zero-d array
@@ -429,23 +412,22 @@ class ModflowSfr2(Package):
                 nss = len(segment_data)
                 segment_data = {0: segment_data}
             nss = len(set(reach_data["iseg"]))
-        else:
-            pass
         # use atleast_1d for length since segment_data might be a 0D array
-        # this seems to be OK, because self.segment_data is produced by the constructor (never 0D)
+        # this seems to be OK, because self.segment_data is produced by the
+        # constructor (never 0D)
         self.nsfrpar = nsfrpar
         self.nparseg = nparseg
-        # conversion factor used in calculating stream depth for stream reach (icalc = 1 or 2)
+        # conversion factor used in calculating stream depth for stream reach
+        # (icalc = 1 or 2)
         self._const = const if const is not None else None
-        self.dleak = (
-            dleak  # tolerance level of stream depth used in computing leakage
-        )
+        self.dleak = dleak  # tolerance level of stream depth used in computing leakage
 
         # flag; unit number for writing table of SFR output to text file
         self.istcb2 = istcb2
 
         # if nstrm < 0
-        # defines the format of the input data and whether or not unsaturated flow is simulated
+        # defines the format of the input data and whether or not unsaturated
+        # flow is simulated
         self.isfropt = isfropt
 
         # if isfropt > 1
@@ -476,9 +458,7 @@ class ModflowSfr2(Package):
                 self.reach_data[n] = reach_data[n]
 
         # assign node numbers if there are none (structured grid)
-        if np.diff(
-            self.reach_data.node
-        ).max() == 0 and self.parent.has_package("DIS"):
+        if np.diff(self.reach_data.node).max() == 0 and self.parent.has_package("DIS"):
             # first make kij list
             lrc = np.array(self.reach_data)[["k", "i", "j"]].tolist()
             self.reach_data["node"] = self.parent.dis.get_node(lrc)
@@ -511,7 +491,6 @@ class ModflowSfr2(Package):
                 nseg = len(segment_data[i])
                 self.segment_data[i] = self.get_empty_segment_data(nseg)
                 for n in segment_data[i].dtype.names:
-                    # inds = (segment_data[i]['nseg'] -1).astype(int)
                     self.segment_data[i][n] = segment_data[i][n]
         # compute outreaches if nseg and outseg columns have non-default values
         if (
@@ -524,12 +503,7 @@ class ModflowSfr2(Package):
                 self.reach_data["iseg"] = 1
 
             consistent_seg_numbers = (
-                len(
-                    set(self.reach_data.iseg).difference(
-                        set(self.graph.keys())
-                    )
-                )
-                == 0
+                len(set(self.reach_data.iseg).difference(set(self.graph.keys()))) == 0
             )
             if not consistent_seg_numbers:
                 warnings.warn(
@@ -538,9 +512,7 @@ class ModflowSfr2(Package):
 
             # first convert any not_a_segment_values to 0
             for v in self.not_a_segment_values:
-                self.segment_data[0].outseg[
-                    self.segment_data[0].outseg == v
-                ] = 0
+                self.segment_data[0].outseg[self.segment_data[0].outseg == v] = 0
             self.set_outreaches()
         self.channel_geometry_data = channel_geometry_data
         self.channel_flow_data = channel_flow_data
@@ -557,7 +529,7 @@ class ModflowSfr2(Package):
         # nested dictionary of format {per: {segment: outlet}}
         self.outlets = {}
         # input format checks:
-        assert isfropt in [0, 1, 2, 3, 4, 5]
+        assert isfropt in {0, 1, 2, 3, 4, 5}
 
         # derived attributes
         self._paths = None
@@ -600,9 +572,7 @@ class ModflowSfr2(Package):
     @property
     def nper(self):
         nper = self.parent.nrow_ncol_nlay_nper[-1]
-        nper = (
-            1 if nper == 0 else nper
-        )  # otherwise iterations from 0, nper won't run
+        nper = 1 if nper == 0 else nper  # otherwise iterations from 0, nper won't run
         return nper
 
     @property
@@ -640,7 +610,7 @@ class ModflowSfr2(Package):
         nseg = np.array(sorted(self._paths.keys()), dtype=int)
         nseg = nseg[nseg > 0].copy()
         outseg = np.array([self._paths[k][1] for k in nseg])
-        existing_nseg = sorted(list(self.graph.keys()))
+        existing_nseg = sorted(self.graph.keys())
         existing_outseg = [self.graph[k] for k in existing_nseg]
         if not np.array_equal(nseg, existing_nseg) or not np.array_equal(
             outseg, existing_outseg
@@ -652,15 +622,50 @@ class ModflowSfr2(Package):
     def df(self):
         return pd.DataFrame(self.reach_data)
 
+    def to_geodataframe(self, gdf=None, full_grid=False, **kwargs):
+        """
+        Method to export SFR reach data to a GeoDataFrame
+
+        Parameters
+        ----------
+        gdf : GeoDataFrame
+            optional GeoDataFrame instance. If GeoDataFrame is None, one will be
+            constructed from modelgrid information
+        full_grid : bool
+            boolean flag for sparse dataframe construction. Default is False
+        """
+        modelgrid = self.parent.modelgrid
+        if modelgrid is None:
+            return gdf
+
+        if gdf is None:
+            gdf = modelgrid.to_geodataframe()
+
+        df = self.df
+        if "k" in list(df):
+            df["node"] = df["node"] - (modelgrid.ncpl * df["k"])
+            df = df.drop(columns=["k", "i", "j"])
+
+        df["node"] += 1
+        gdf = gdf.merge(df, how="left", on="node")
+
+        if not full_grid:
+            col_names = [col for col in list(df) if col != "node"]
+            gdf = gdf.dropna(subset=col_names, how="all")
+            gdf = gdf.dropna(axis="columns", how="all")
+        else:
+            gdf = gdf.drop_duplicates(subset=["node"])
+            gdf = gdf.reset_index(drop=True)
+
+        return gdf
+
     def _make_graph(self):
         # get all segments and their outseg
         graph = {}
         for recarray in self.segment_data.values():
             graph.update(dict(zip(recarray["nseg"], recarray["outseg"])))
 
-        outlets = set(graph.values()).difference(
-            set(graph.keys())
-        )  # including lakes
+        outlets = set(graph.values()).difference(set(graph.keys()))  # including lakes
         graph.update({o: 0 for o in outlets if o != 0})
         return graph
 
@@ -696,9 +701,7 @@ class ModflowSfr2(Package):
         dtype = ModflowSfr2.get_default_segment_dtype()
         if aux_names is not None:
             dtype = Package.add_to_dtype(dtype, aux_names, np.float32)
-        d = create_empty_recarray(
-            nsegments, dtype, default_value=default_value
-        )
+        d = create_empty_recarray(nsegments, dtype, default_value=default_value)
         return d
 
     @staticmethod
@@ -799,9 +802,8 @@ class ModflowSfr2(Package):
         structured = model.structured
         if nper is None:
             nper = model.nper
-            nper = (
-                1 if nper == 0 else nper
-            )  # otherwise iterations from 0, nper won't run
+            nper = 1 if nper == 0 else nper
+            # otherwise iterations from 0, nper won't run
 
         openfile = not hasattr(f, "read")
         if openfile:
@@ -875,9 +877,7 @@ class ModflowSfr2(Package):
         # set column names, dtypes
         names = _get_item2_names(nstrm, reachinput, isfropt, structured)
         dtypes = [
-            d
-            for d in ModflowSfr2.get_default_reach_dtype().descr
-            if d[0] in names
+            d for d in ModflowSfr2.get_default_reach_dtype().descr if d[0] in names
         ]
 
         lines = []
@@ -891,9 +891,8 @@ class ModflowSfr2(Package):
         # initialize full reach_data array with all possible columns
         reach_data = ModflowSfr2.get_empty_reach_data(len(lines))
         for n in names:
-            reach_data[n] = tmp[
-                n
-            ]  # not sure if there's a way to assign multiple columns
+            # not sure if there's a way to assign multiple columns
+            reach_data[n] = tmp[n]
 
         # zero-based convention
         inds = ["k", "i", "j"] if structured else ["node"]
@@ -917,10 +916,10 @@ class ModflowSfr2(Package):
                 )
                 # container to hold any auxiliary variables
                 current_aux = {}
-                # these could also be implemented as structured arrays with a column for segment number
+                # these could also be implemented as structured arrays with
+                # a column for segment number
                 current_6d = {}
                 current_6e = {}
-                # print(i,icalc,nstrm,isfropt,reachinput)
                 for j in range(itmp):
                     dataset_6a = _parse_6a(f.readline(), option)
                     current_aux[j] = dataset_6a[-1]
@@ -934,9 +933,9 @@ class ModflowSfr2(Package):
                     # of this logic
                     # https://water.usgs.gov/ogw/modflow-nwt/MODFLOW-NWT-Guide/sfr.htm
                     dataset_6b, dataset_6c = (0,) * 9, (0,) * 9
-                    if not (
-                        isfropt in [2, 3] and icalc == 1 and i > 1
-                    ) and not (isfropt in [1, 2, 3] and icalc >= 2):
+                    if not (isfropt in {2, 3} and icalc == 1 and i > 1) and not (
+                        isfropt in {1, 2, 3} and icalc >= 2
+                    ):
                         dataset_6b = _parse_6bc(
                             f.readline(),
                             icalc,
@@ -957,20 +956,13 @@ class ModflowSfr2(Package):
 
                     if icalc == 2:
                         # ATL: not sure exactly how isfropt logic functions for this
-                        # dataset 6d description suggests that this line isn't read for isfropt > 1
-                        # but description of icalc suggest that icalc=2 (8-point channel) can be used with any isfropt
-                        if (
-                            i == 0
-                            or nstrm > 0
-                            and not reachinput
-                            or isfropt <= 1
-                        ):
+                        # dataset 6d description suggests that this line isn't read for
+                        # isfropt > 1 but description of icalc suggest that icalc=2
+                        # (8-point channel) can be used with any isfropt
+                        if i == 0 or (nstrm > 0 and not reachinput) or isfropt <= 1:
                             dataset_6d = []
                             for _ in range(2):
-                                dataset_6d.append(
-                                    _get_dataset(f.readline(), [0.0] * 8)
-                                )
-                                # dataset_6d.append(list(map(float, f.readline().strip().split())))
+                                dataset_6d.append(_get_dataset(f.readline(), [0.0] * 8))
                             current_6d[temp_nseg] = dataset_6d
                     if icalc == 4:
                         nstrpts = dataset_6a[5]
@@ -990,9 +982,7 @@ class ModflowSfr2(Package):
 
             if tabfiles and i == 0:
                 for j in range(numtab):
-                    segnum, numval, iunit = map(
-                        int, f.readline().strip().split()[:3]
-                    )
+                    segnum, numval, iunit = map(int, f.readline().strip().split()[:3])
                     tabfiles_dict[segnum] = {"numval": numval, "inuit": iunit}
 
             else:
@@ -1058,7 +1048,7 @@ class ModflowSfr2(Package):
 
         Parameters
         ----------
-        f : str or file handle
+        f : str, PathLike or file handle
             String defining file name or file handle for summary file
             of check method output. If a string is passed a file handle
             is created. If f is None, check method does not write
@@ -1091,11 +1081,11 @@ class ModflowSfr2(Package):
         chk.slope()
 
         if f is not None:
-            if isinstance(f, str):
+            if isinstance(f, (str, PathLike)):
                 pth = os.path.join(self.parent.model_ws, f)
                 f = open(pth, "w")
             f.write(f"{chk.txt}\n")
-            # f.close()
+            f.close()
         return chk
 
     def assign_layers(self, adjust_botms=False, pad=1.0):
@@ -1148,12 +1138,8 @@ class ModflowSfr2(Package):
                 print("Fixing elevation conflicts...")
                 botm = self.parent.dis.botm.array.copy()
                 for ib, jb in zip(below_i, below_j):
-                    inds = (self.reach_data.i == ib) & (
-                        self.reach_data.j == jb
-                    )
+                    inds = (self.reach_data.i == ib) & (self.reach_data.j == jb)
                     botm[-1, ib, jb] = streambotms[inds].min() - pad
-                    # l.append(botm[-1, ib, jb])
-                # botm[-1, below_i, below_j] = streambotms[below] - pad
                 l.append(botm[-1, below_i, below_j])
                 header += ",new_model_botm"
                 self.parent.dis.botm = botm
@@ -1205,82 +1191,16 @@ class ModflowSfr2(Package):
                 per > 0 > self.dataset_5[per][0]
             ):  # skip stress periods where seg data not defined
                 continue
-            # segments = self.segment_data[per].nseg
-            # outsegs = self.segment_data[per].outseg
-            #
-            # all_outsegs = np.vstack([segments, outsegs])
-            # max_outseg = all_outsegs[-1].max()
-            # knt = 1
-            # while max_outseg > 0:
-            #
-            #     nextlevel = np.array([outsegs[s - 1] if s > 0 and s < 999999 else 0
-            #                           for s in all_outsegs[-1]])
-            #
-            #     all_outsegs = np.vstack([all_outsegs, nextlevel])
-            #     max_outseg = nextlevel.max()
-            #     if max_outseg == 0:
-            #         break
-            #     knt += 1
-            #     if knt > self.nss:
-            #         # subset outsegs map to only include rows with outseg number > 0 in last column
-            #         circular_segs = all_outsegs.T[all_outsegs[-1] > 0]
-            #
-            #         # only retain one instance of each outseg number at iteration=nss
-            #         vals = []  # append outseg values to vals after they've appeared once
-            #         mask = [(True, vals.append(v))[0]
-            #                 if v not in vals
-            #                 else False for v in circular_segs[-1]]
-            #         circular_segs = circular_segs[:, np.array(mask)]
-            #
-            #         # cull the circular segments array to remove duplicate instances of routing circles
-            #         circles = []
-            #         duplicates = []
-            #         for i in range(np.shape(circular_segs)[0]):
-            #             # find where values in the row equal the last value;
-            #             # record the index of the second to last instance of last value
-            #             repeat_start_ind = np.where(circular_segs[i] == circular_segs[i, -1])[0][-2:][0]
-            #             # use that index to slice out the repeated segment sequence
-            #             circular_seq = circular_segs[i, repeat_start_ind:].tolist()
-            #             # keep track of unique sequences of repeated segments
-            #             if set(circular_seq) not in circles:
-            #                 circles.append(set(circular_seq))
-            #                 duplicates.append(False)
-            #             else:
-            #                 duplicates.append(True)
-            #         circular_segs = circular_segs[~np.array(duplicates), :]
-            #
-            #         txt += '{0} instances where an outlet was not found after {1} consecutive segments!\n' \
-            #             .format(len(circular_segs), self.nss)
-            #         if level == 1:
-            #             txt += '\n'.join([' '.join(map(str, row)) for row in circular_segs]) + '\n'
-            #         else:
-            #             f = 'circular_routing.csv'
-            #             np.savetxt(f, circular_segs, fmt='%d', delimiter=',', header=txt)
-            #             txt += 'See {} for details.'.format(f)
-            #         if verbose:
-            #             print(txt)
-            #         break
-            # # the array of segment sequence is useful for other other operations,
-            # # such as plotting elevation profiles
-            # self.outsegs[per] = all_outsegs
-            #
+
             # use graph instead of above loop
             nrow = len(self.segment_data[per].nseg)
-            ncol = np.max(
-                [len(v) if v is not None else 0 for v in self.paths.values()]
-            )
+            ncol = np.max([len(v) if v is not None else 0 for v in self.paths.values()])
             all_outsegs = np.zeros((nrow, ncol), dtype=int)
             for i, (k, v) in enumerate(self.paths.items()):
                 if k > 0:
                     all_outsegs[i, : len(v)] = v
             all_outsegs.sort(axis=0)
             self.outsegs[per] = all_outsegs
-            # create a dictionary listing outlets associated with each segment
-            # outlet is the last value in each row of outseg array that is != 0 or 999999
-            # self.outlets[per] = {i + 1: r[(r != 0) & (r != 999999)][-1]
-            # if len(r[(r != 0) & (r != 999999)]) > 0
-            # else i + 1
-            #                     for i, r in enumerate(all_outsegs.T)}
             self.outlets[per] = {
                 k: self.paths[k][-1] if k in self.paths else k
                 for k in self.segment_data[per].nseg
@@ -1290,7 +1210,7 @@ class ModflowSfr2(Package):
     def reset_reaches(self):
         self.reach_data.sort(order=["iseg", "ireach"])
         reach_data = self.reach_data
-        segment_data = list(set(self.reach_data.iseg))  # self.segment_data[0]
+        segment_data = list(set(self.reach_data.iseg))
         reach_counts = np.bincount(reach_data.iseg)[1:]
         reach_counts = dict(zip(range(1, len(reach_counts) + 1), reach_counts))
         ireach = [list(range(1, reach_counts[s] + 1)) for s in segment_data]
@@ -1310,18 +1230,14 @@ class ModflowSfr2(Package):
         self.repair_outsegs()
         rd = self.reach_data
         outseg = self.graph
-        reach1IDs = dict(
-            zip(rd[rd.ireach == 1].iseg, rd[rd.ireach == 1].reachID)
-        )
+        reach1IDs = dict(zip(rd[rd.ireach == 1].iseg, rd[rd.ireach == 1].reachID))
         outreach = []
         for i in range(len(rd)):
             # if at the end of reach data or current segment
             if i + 1 == len(rd) or rd.ireach[i + 1] == 1:
                 nextseg = outseg[rd.iseg[i]]  # get next segment
                 if nextseg > 0:  # current reach is not an outlet
-                    nextrchid = reach1IDs[
-                        nextseg
-                    ]  # get reach 1 of next segment
+                    nextrchid = reach1IDs[nextseg]  # get reach 1 of next segment
                 else:
                     nextrchid = 0
             else:  # otherwise, it's the next reachID
@@ -1329,9 +1245,7 @@ class ModflowSfr2(Package):
             outreach.append(nextrchid)
         self.reach_data["outreach"] = outreach
 
-    def get_slopes(
-        self, default_slope=0.001, minimum_slope=0.0001, maximum_slope=1.0
-    ):
+    def get_slopes(self, default_slope=0.001, minimum_slope=0.0001, maximum_slope=1.0):
         """
         Compute slopes by reach using values in strtop (streambed top)
         and rchlen (reach length) columns of reach_data. The slope for a
@@ -1409,9 +1323,8 @@ class ModflowSfr2(Package):
                 for o in np.unique(segment_data.outseg)
             }
 
-            outsegs = [
-                k for k in list(upsegs.keys()) if k > 0
-            ]  # exclude 0, which is the outlet designator
+            # exclude 0, which is the outlet designator
+            outsegs = [k for k in list(upsegs.keys()) if k > 0]
 
             # for each outseg key, for each upseg, check for more upsegs,
             # append until headwaters has been reached
@@ -1443,24 +1356,16 @@ class ModflowSfr2(Package):
             all_data[inds, per] = self.segment_data[per][varname]
             dtype.append((f"{varname}{per}", float))
         isvar = all_data.sum(axis=1) != 0
-        ra = np.core.records.fromarrays(
-            all_data[isvar].transpose().copy(), dtype=dtype
-        )
+        ra = np.rec.fromarrays(all_data[isvar].transpose().copy(), dtype=dtype)
         segs = self.segment_data[0].nseg[isvar]
-        isseg = np.array(
-            [True if s in segs else False for s in self.reach_data.iseg]
-        )
+        isseg = np.array([True if s in segs else False for s in self.reach_data.iseg])
         isinlet = isseg & (self.reach_data.ireach == 1)
-        rd = np.array(self.reach_data[isinlet])[
-            ["k", "i", "j", "iseg", "ireach"]
-        ]
+        rd = np.array(self.reach_data[isinlet])[["k", "i", "j", "iseg", "ireach"]]
         ra = recfunctions.merge_arrays([rd, ra], flatten=True, usemask=False)
         return ra.view(np.recarray)
 
     def repair_outsegs(self):
-        isasegment = np.in1d(
-            self.segment_data[0].outseg, self.segment_data[0].nseg
-        )
+        isasegment = np.isin(self.segment_data[0].outseg, self.segment_data[0].nseg)
         isasegment = isasegment | (self.segment_data[0].outseg < 0)
         self.segment_data[0]["outseg"][~isasegment] = 0.0
         self._graph = None
@@ -1476,7 +1381,7 @@ class ModflowSfr2(Package):
         r : dictionary mapping old segment numbers to new
         """
 
-        nseg = sorted(list(self.graph.keys()))
+        nseg = sorted(self.graph.keys())
         outseg = [self.graph[k] for k in nseg]
 
         # explicitly fix any gaps in the numbering
@@ -1549,9 +1454,7 @@ class ModflowSfr2(Package):
                 d2 = None
             return d2
 
-        self.channel_geometry_data = renumber_channel_data(
-            self.channel_geometry_data
-        )
+        self.channel_geometry_data = renumber_channel_data(self.channel_geometry_data)
         self.channel_flow_data = renumber_channel_data(self.channel_flow_data)
         return r
 
@@ -1584,7 +1487,7 @@ class ModflowSfr2(Package):
 
         # slice the path
         path = np.array(self.paths[start_seg])
-        endidx = np.where(path == end_seg)[0]
+        endidx = np.asarray(path == end_seg).nonzero()[0]
         endidx = endidx if len(endidx) > 0 else None
         path = path[: np.squeeze(endidx)]
         path = [s for s in path if s > 0]  # skip lakes for now
@@ -1596,7 +1499,7 @@ class ModflowSfr2(Package):
         dist = np.cumsum(tmp.rchlen.values) * to_miles.get(mfunits, 1.0)
 
         # segment starts
-        starts = dist[np.where(tmp.ireach.values == 1)[0]]
+        starts = dist[np.asarray(tmp.ireach.values == 1).nonzero()[0]]
 
         ax = plt.subplots(figsize=(11, 8.5))[-1]
         ax.plot(dist, tops, label="Model top")
@@ -1652,9 +1555,7 @@ class ModflowSfr2(Package):
             One dimensional array listing all headwater segments.
         """
         upsegs = [
-            self.segment_data[per]
-            .nseg[self.segment_data[per].outseg == s]
-            .tolist()
+            self.segment_data[per].nseg[self.segment_data[per].outseg == s].tolist()
             for s in self.segment_data[0].nseg
         ]
         return self.segment_data[per].nseg[
@@ -1740,47 +1641,32 @@ class ModflowSfr2(Package):
             )
         )
         if self.reachinput:
-            self.nstrm = abs(
-                self.nstrm
-            )  # see explanation for dataset 1c in online guide
+            # see explanation for dataset 1c in online guide
+            self.nstrm = abs(self.nstrm)
             f_sfr.write(f"{self.isfropt:.0f} ")
             if self.isfropt > 1:
-                f_sfr.write(
-                    f"{self.nstrail:.0f} {self.isuzn:.0f} {self.nsfrsets:.0f} "
-                )
+                f_sfr.write(f"{self.nstrail:.0f} {self.isuzn:.0f} {self.nsfrsets:.0f} ")
         if self.nstrm < 0:
             f_sfr.write(f"{self.isfropt:.0f} ")
             if self.isfropt > 1:
-                f_sfr.write(
-                    f"{self.nstrail:.0f} {self.isuzn:.0f} {self.nsfrsets:.0f} "
-                )
+                f_sfr.write(f"{self.nstrail:.0f} {self.isuzn:.0f} {self.nsfrsets:.0f} ")
         if self.nstrm < 0 or self.transroute:
             f_sfr.write(f"{self.irtflg:.0f} ")
             if self.irtflg > 0:
-                f_sfr.write(
-                    f"{self.numtim:.0f} {self.weight:.8f} {self.flwtol:.8f} "
-                )
+                f_sfr.write(f"{self.numtim:.0f} {self.weight:.8f} {self.flwtol:.8f} ")
         f_sfr.write("\n")
 
     def _write_reach_data(self, f_sfr):
         # Write the recarray (data) to the file (or file handle) f
-        assert isinstance(
-            self.reach_data, np.recarray
-        ), "MfList.__tofile() data arg not a recarray"
-
-        # decide which columns to write
-        # columns = self._get_item2_names()
-        columns = _get_item2_names(
-            self.nstrm,
-            self.reachinput,
-            self.isfropt,
-            structured=self.parent.structured,
+        assert isinstance(self.reach_data, np.recarray), (
+            "MfList.__tofile() data arg not a recarray"
         )
 
-        # Add one to the kij indices
-        # names = self.reach_data.dtype.names
-        # lnames = []
-        # [lnames.append(name.lower()) for name in names]
+        # decide which columns to write
+        columns = _get_item2_names(
+            self.nstrm, self.reachinput, self.isfropt, structured=self.parent.structured
+        )
+
         # --make copy of data for multiple calls
         d = np.array(self.reach_data)
         for idx in ["k", "i", "j", "node"]:
@@ -1832,28 +1718,22 @@ class ModflowSfr2(Package):
             bwdth,
         ) = (0 if v == self.default_value else v for v in seg_dat)
 
-        f_sfr.write(
-            " ".join(fmts[0:4]).format(nseg, icalc, outseg, iupseg) + " "
-        )
+        f_sfr.write(" ".join(fmts[0:4]).format(nseg, icalc, outseg, iupseg) + " ")
 
         if iupseg > 0:
             f_sfr.write(fmts[4].format(iprior) + " ")
         if icalc == 4:
             f_sfr.write(fmts[5].format(nstrpts) + " ")
 
-        f_sfr.write(
-            " ".join(fmts[6:10]).format(flow, runoff, etsw, pptsw) + " "
-        )
+        f_sfr.write(" ".join(fmts[6:10]).format(flow, runoff, etsw, pptsw) + " ")
 
-        if icalc in [1, 2]:
+        if icalc in {1, 2}:
             f_sfr.write(fmts[10].format(roughch) + " ")
         if icalc == 2:
             f_sfr.write(fmts[11].format(roughbk) + " ")
 
         if icalc == 3:
-            f_sfr.write(
-                " ".join(fmts[12:16]).format(cdpth, fdpth, awdth, bwdth) + " "
-            )
+            f_sfr.write(" ".join(fmts[12:16]).format(cdpth, fdpth, awdth, bwdth) + " ")
         f_sfr.write("\n")
 
         self._write_6bc(
@@ -1898,56 +1778,43 @@ class ModflowSfr2(Package):
             0 if v == self.default_value else v for v in seg_dat
         )
 
-        if self.isfropt in [0, 4, 5] and icalc <= 0:
+        if self.isfropt in {0, 4, 5} and icalc <= 0:
             f_sfr.write(
-                " ".join(fmts[0:5]).format(
-                    hcond, thickm, elevupdn, width, depth
-                )
-                + " "
+                " ".join(fmts[0:5]).format(hcond, thickm, elevupdn, width, depth) + " "
             )
 
-        elif self.isfropt in [0, 4, 5] and icalc == 1:
+        elif self.isfropt in {0, 4, 5} and icalc == 1:
             f_sfr.write(fmts[0].format(hcond) + " ")
 
             if i == 0:
-                f_sfr.write(
-                    " ".join(fmts[1:4]).format(thickm, elevupdn, width) + " "
-                )
-                if self.isfropt in [4, 5]:
-                    f_sfr.write(
-                        " ".join(fmts[5:8]).format(thts, thti, eps) + " "
-                    )
+                f_sfr.write(" ".join(fmts[1:4]).format(thickm, elevupdn, width) + " ")
+                if self.isfropt in {4, 5}:
+                    f_sfr.write(" ".join(fmts[5:8]).format(thts, thti, eps) + " ")
 
                 if self.isfropt == 5:
                     f_sfr.write(fmts[8].format(uhc) + " ")
 
             elif i > 0 and self.isfropt == 0:
-                f_sfr.write(
-                    " ".join(fmts[1:4]).format(thickm, elevupdn, width) + " "
-                )
+                f_sfr.write(" ".join(fmts[1:4]).format(thickm, elevupdn, width) + " ")
 
-        elif self.isfropt in [0, 4, 5] and icalc >= 2:
+        elif self.isfropt in {0, 4, 5} and icalc >= 2:
             f_sfr.write(fmts[0].format(hcond) + " ")
 
-            if self.isfropt in [4, 5] and i > 0 and icalc == 2:
+            if self.isfropt in {4, 5} and i > 0 and icalc == 2:
                 pass
             else:
                 f_sfr.write(" ".join(fmts[1:3]).format(thickm, elevupdn) + " ")
 
-                if self.isfropt in [4, 5] and icalc == 2 and i == 0:
-                    f_sfr.write(
-                        " ".join(fmts[3:6]).format(thts, thti, eps) + " "
-                    )
+                if self.isfropt in {4, 5} and icalc == 2 and i == 0:
+                    f_sfr.write(" ".join(fmts[3:6]).format(thts, thti, eps) + " ")
 
                     if self.isfropt == 5:
                         f_sfr.write(fmts[8].format(uhc) + " ")
-                else:
-                    pass
         elif self.isfropt == 1 and icalc <= 1:
             f_sfr.write(fmts[3].format(width) + " ")
             if icalc <= 0:
                 f_sfr.write(fmts[4].format(depth) + " ")
-        elif self.isfropt in [2, 3]:
+        elif self.isfropt in {2, 3}:
             if icalc <= 0:
                 f_sfr.write(fmts[3].format(width) + " ")
                 f_sfr.write(fmts[4].format(depth) + " ")
@@ -1973,10 +1840,6 @@ class ModflowSfr2(Package):
 
         """
 
-        # tabfiles = False
-        # tabfiles_dict = {}
-        # transroute = False
-        # reachinput = False
         if filename is not None:
             self.fn_path = filename
 
@@ -1986,18 +1849,13 @@ class ModflowSfr2(Package):
         f_sfr.write(f"{self.heading}\n")
 
         # Item 1
-        if (
-            isinstance(self.options, OptionBlock)
-            and self.parent.version == "mfnwt"
-        ):
+        if isinstance(self.options, OptionBlock) and self.parent.version == "mfnwt":
             self.options.update_from_package(self)
             self.options.write_options(f_sfr)
         elif isinstance(self.options, OptionBlock):
             self.options.update_from_package(self)
             self.options.block = False
             self.options.write_options(f_sfr)
-        else:
-            pass
 
         self._write_1c(f_sfr)
 
@@ -2022,19 +1880,15 @@ class ModflowSfr2(Package):
                         # or isfropt <= 1:
                         if (
                             i == 0
-                            or self.nstrm > 0
-                            and not self.reachinput
+                            or (self.nstrm > 0 and not self.reachinput)
                             or self.isfropt <= 1
                         ):
                             for k in range(2):
-                                for d in self.channel_geometry_data[i][nseg][
-                                    k
-                                ]:
+                                for d in self.channel_geometry_data[i][nseg][k]:
                                     f_sfr.write(f"{d:.2f} ")
                                 f_sfr.write("\n")
 
                     if icalc == 4:
-                        # nstrpts = self.segment_data[i][j][5]
                         for k in range(3):
                             for d in self.channel_flow_data[i][nseg][k]:
                                 f_sfr.write(f"{d:.2f} ")
@@ -2053,6 +1907,8 @@ class ModflowSfr2(Package):
         f_sfr.close()
 
     def export(self, f, **kwargs):
+        if isinstance(f, PathLike):
+            f = str(f)
         if isinstance(f, str) and f.lower().endswith(".shp"):
             from ..export.shapefile_utils import recarray2shp
             from ..utils.geometry import Polygon
@@ -2076,8 +1932,10 @@ class ModflowSfr2(Package):
         reaches can be used to filter for the longest connections in a GIS.
 
         """
-        from ..export.shapefile_utils import recarray2shp
         from ..utils.geometry import LineString
+        from ..utils.utl_import import import_optional_dependency
+
+        gpd = import_optional_dependency("geopandas")
 
         rd = self.reach_data.copy()
         m = self.parent
@@ -2103,15 +1961,16 @@ class ModflowSfr2(Package):
             lengths.append(np.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2))
         lengths = np.array(lengths)
 
-        # append connection lengths for filtering in GIS
-        rd = recfunctions.append_fields(
-            rd,
-            names=["length"],
-            data=[lengths],
-            usemask=False,
-            asrecarray=True,
-        )
-        recarray2shp(rd, geoms, f, **kwargs)
+        gdf = gpd.GeoDataFrame(data=rd, geometry=geoms)
+        gdf["length"] = lengths
+        crs = kwargs.pop("crs", None)
+        if crs is None:
+            try:
+                crs = self.parent.modelgrid.crs
+            except AttributeError:
+                pass
+        gdf = gdf.set_crs(crs)
+        gdf.to_file(f)
 
     def export_outlets(self, f, **kwargs):
         """
@@ -2119,8 +1978,10 @@ class ModflowSfr2(Package):
         the model (outset=0).
 
         """
-        from ..export.shapefile_utils import recarray2shp
         from ..utils.geometry import Point
+        from ..utils.utl_import import import_optional_dependency
+
+        gpd = import_optional_dependency("geopandas")
 
         rd = self.reach_data
         if np.min(rd.outreach) == np.max(rd.outreach):
@@ -2134,7 +1995,15 @@ class ModflowSfr2(Package):
         x0 = mg.xcellcenters[rd.i, rd.j]
         y0 = mg.ycellcenters[rd.i, rd.j]
         geoms = [Point(x, y) for x, y in zip(x0, y0)]
-        recarray2shp(rd, geoms, f, **kwargs)
+        gdf = gpd.GeoDataFrame(data=rd, geometry=geoms)
+        crs = kwargs.pop("crs", None)
+        if crs is None:
+            try:
+                crs = self.parent.modelgrid.crs
+            except AttributeError:
+                pass
+        gdf = gdf.set_crs(crs)
+        gdf.to_file(f)
 
     def export_transient_variable(self, f, varname, **kwargs):
         """
@@ -2153,8 +2022,10 @@ class ModflowSfr2(Package):
             Variable in SFR Package dataset 6a (see SFR package documentation)
 
         """
-        from ..export.shapefile_utils import recarray2shp
         from ..utils.geometry import Point
+        from ..utils.utl_import import import_optional_dependency
+
+        gpd = import_optional_dependency("geopandas")
 
         rd = self.reach_data
         if np.min(rd.outreach) == np.max(rd.outreach):
@@ -2167,7 +2038,15 @@ class ModflowSfr2(Package):
         x0 = mg.xcellcenters[ra.i, ra.j]
         y0 = mg.ycellcenters[ra.i, ra.j]
         geoms = [Point(x, y) for x, y in zip(x0, y0)]
-        recarray2shp(ra, geoms, f, **kwargs)
+        gdf = gpd.GeoDataFrame(data=ra, geometry=geoms)
+        crs = kwargs.pop("crs", None)
+        if crs is None:
+            try:
+                crs = self.parent.modelgrid.crs
+            except AttributeError:
+                pass
+        gdf = gdf.set_crs(crs)
+        gdf.to_file(f)
 
     @staticmethod
     def _ftype():
@@ -2198,12 +2077,14 @@ class check:
 
     Daniel Feinstein's top 10 SFR problems (7/16/2014):
     1) cell gaps btw adjacent reaches in a single segment
-    2) cell gaps btw routed segments. possibly because of re-entry problems at domain edge
+    2) cell gaps btw routed segments. possibly because of re-entry problems at
+       domain edge
     3) adjacent reaches with STOP sloping the wrong way
     4) routed segments with end/start sloping the wrong way
     5) STOP>TOP1 violations, i.e.,floaters
     6) STOP<<TOP1 violations, i.e., exaggerated incisions
-    7) segments that end within one diagonal cell distance from another segment, inviting linkage
+    7) segments that end within one diagonal cell distance from another
+       segment, inviting linkage
     8) circular routing of segments
     9) multiple reaches with non-zero conductance in a single cell
     10) reaches in inactive cells
@@ -2300,9 +2181,7 @@ class check:
                 cols = [
                     c
                     for c in failed_info.dtype.names
-                    if failed_info[c].sum() != 0
-                    and c != "diff"
-                    and "tmp" not in c
+                    if failed_info[c].sum() != 0 and c != "diff" and "tmp" not in c
                 ]
                 failed_info = recfunctions.append_fields(
                     failed_info[cols].copy(),
@@ -2319,9 +2198,7 @@ class check:
             txt += "\n"
         return txt
 
-    def _txt_footer(
-        self, headertxt, txt, testname, passed=False, warning=True
-    ):
+    def _txt_footer(self, headertxt, txt, testname, passed=False, warning=True):
         if len(txt) == 0 or passed:
             txt += "passed."
             self.passed.append(testname)
@@ -2351,9 +2228,7 @@ class check:
             isnan = np.any(np.isnan(np.array(sd.tolist())), axis=1)
             nansd = sd[isnan]
             if np.any(isnan):
-                txt += (
-                    f"Per {per}: found {len(nanreaches)} segments with nans:\n"
-                )
+                txt += f"Per {per}: found {len(nanreaches)} segments with nans:\n"
                 if self.level == 1:
                     txt += _print_rec_array(nansd, delimiter=" ")
         if len(txt) == 0:
@@ -2368,9 +2243,7 @@ class check:
         Checks for continuity in segment and reach numbering
         """
 
-        headertxt = (
-            "Checking for continuity in segment and reach numbering...\n"
-        )
+        headertxt = "Checking for continuity in segment and reach numbering...\n"
         if self.verbose:
             print(headertxt.strip())
         txt = ""
@@ -2400,19 +2273,21 @@ class check:
             warning=False,
         )
 
-        headertxt = "Checking for increasing segment numbers in downstream direction...\n"
+        headertxt = (
+            "Checking for increasing segment numbers in downstream direction...\n"
+        )
         txt = ""
         passed = False
         if self.verbose:
             print(headertxt.strip())
-        # for per, segment_data in self.segment_data.items():
 
         inds = (sd.outseg < sd.nseg) & (sd.outseg > 0)
 
         if len(txt) == 0 and np.any(inds):
             decreases = np.array(sd[inds])[["nseg", "outseg"]]
-            txt += "Found {} segment numbers decreasing in the downstream direction.\n".format(
-                len(decreases)
+            txt += (
+                f"Found {len(decreases)} segment numbers decreasing "
+                "in the downstream direction.\n"
             )
             txt += "MODFLOW will run but convergence may be slowed:\n"
             if self.level == 1:
@@ -2436,22 +2311,18 @@ class check:
         if self.verbose:
             print(headertxt.strip())
 
-        # txt += self.sfr.get_outlets(level=self.level, verbose=False)  # will print twice if verbose=True
         # simpler check method using paths from routing graph
         circular_segs = [k for k, v in self.sfr.paths.items() if v is None]
         if len(circular_segs) > 0:
-            txt += "{} instances where an outlet was not found after {} consecutive segments!\n".format(
-                len(circular_segs), self.sfr.nss
+            txt += (
+                f"{len(circular_segs)} instances where an outlet was "
+                f"not found after {self.sfr.nss} consecutive segments!\n"
             )
             if self.level == 1:
                 txt += " ".join(map(str, circular_segs)) + "\n"
             else:
-                f = os.path.join(
-                    self.sfr.parent._model_ws, "circular_routing.chk.csv"
-                )
-                np.savetxt(
-                    f, circular_segs, fmt="%d", delimiter=",", header=txt
-                )
+                f = os.path.join(self.sfr.parent._model_ws, "circular_routing.chk.csv")
+                np.savetxt(f, circular_segs, fmt="%d", delimiter=",", header=txt)
                 txt += f"See {f} for details."
             if self.verbose:
                 print(txt)
@@ -2496,7 +2367,7 @@ class check:
             # max node with * a tolerance
             # 1.25 * hyp is greater than distance of two diagonally adjacent nodes
             # where one is 1.5x larger than the other
-            breaks = np.where(dist > hyp * 1.25)
+            breaks = np.asarray(dist > hyp * 1.25).nonzero()
             breaks_reach_data = rd[breaks]
             segments_with_breaks = set(breaks_reach_data.iseg)
             if len(breaks) > 0:
@@ -2509,8 +2380,7 @@ class check:
                     txt += " ".join(map(str, segments_with_breaks)) + "\n"
                 else:
                     fpath = os.path.join(
-                        self.sfr.parent._model_ws,
-                        "reach_connection_gaps.chk.csv",
+                        self.sfr.parent._model_ws, "reach_connection_gaps.chk.csv"
                     )
                     with open(fpath, "w") as fp:
                         fp.write(",".join(rd.dtype.names) + "\n")
@@ -2518,14 +2388,9 @@ class check:
                     txt += f"See {fpath} for details."
                 if self.verbose:
                     print(txt)
-            self._txt_footer(
-                headertxt, txt, "reach connections", warning=False
-            )
+            self._txt_footer(headertxt, txt, "reach connections", warning=False)
         else:
-            txt += (
-                "No DIS package or modelgrid object; cannot "
-                "check reach proximities."
-            )
+            txt += "No DIS package or modelgrid object; cannot check reach proximities."
             self._txt_footer(headertxt, txt, "")
 
     def overlapping_conductance(self, tol=1e-6):
@@ -2535,8 +2400,7 @@ class check:
 
         """
         headertxt = (
-            "Checking for model cells with multiple non-zero "
-            "SFR conductances...\n"
+            "Checking for model cells with multiple non-zero SFR conductances...\n"
         )
         txt = ""
         if self.verbose:
@@ -2551,10 +2415,8 @@ class check:
         uniquerc = {}
         for i, (r, c) in enumerate(reach_data[["i", "j"]]):
             if (r, c) not in uniquerc:
-                uniquerc[(r, c)] = i + 1
-        reach_data["node"] = [
-            uniquerc[(r, c)] for r, c in reach_data[["i", "j"]]
-        ]
+                uniquerc[r, c] = i + 1
+        reach_data["node"] = [uniquerc[r, c] for r, c in reach_data[["i", "j"]]]
 
         K = reach_data["strhc1"]
         if K.max() == 0:
@@ -2580,9 +2442,7 @@ class check:
             conductances.sort()
 
             # list nodes with multiple non-zero SFR reach conductances
-            if conductances[-1] != 0.0 and (
-                conductances[0] / conductances[-1] > tol
-            ):
+            if conductances[-1] != 0.0 and (conductances[0] / conductances[-1] > tol):
                 nodes_with_multiple_conductance.update({node})
 
         if len(nodes_with_multiple_conductance) > 0:
@@ -2601,7 +2461,7 @@ class check:
                     c
                     for c in reach_data.dtype.names
                     if c
-                    in [
+                    in {
                         "k",
                         "i",
                         "j",
@@ -2612,7 +2472,7 @@ class check:
                         "strhc1",
                         "width",
                         "conductance",
-                    ]
+                    }
                 ]
 
                 reach_data = recfunctions.append_fields(
@@ -2640,23 +2500,23 @@ class check:
         with model grid
 
         """
-        headertxt = (
-            f"Checking for streambed tops of less than {min_strtop}...\n"
-        )
+        headertxt = f"Checking for streambed tops of less than {min_strtop}...\n"
         txt = ""
         if self.verbose:
             print(headertxt.strip())
 
         passed = False
-        if self.sfr.isfropt in [1, 2, 3]:
+        if self.sfr.isfropt in {1, 2, 3}:
             if np.diff(self.reach_data.strtop).max() == 0:
                 txt += "isfropt setting of 1,2 or 3 requires strtop information!\n"
             else:
                 is_less = self.reach_data.strtop < min_strtop
                 if np.any(is_less):
                     below_minimum = self.reach_data[is_less]
-                    txt += "{} instances of streambed top below minimum found.\n".format(
-                        len(below_minimum)
+                    txt += (
+                        "{} instances of streambed top below minimum found.\n".format(
+                            len(below_minimum)
+                        )
                     )
                     if self.level == 1:
                         txt += "Reaches with low strtop:\n"
@@ -2668,20 +2528,15 @@ class check:
             passed = True
         self._txt_footer(headertxt, txt, "minimum streambed top", passed)
 
-        headertxt = (
-            f"Checking for streambed tops of greater than {max_strtop}...\n"
-        )
+        headertxt = f"Checking for streambed tops of greater than {max_strtop}...\n"
         txt = ""
         if self.verbose:
             print(headertxt.strip())
 
         passed = False
-        if self.sfr.isfropt in [1, 2, 3]:
+        if self.sfr.isfropt in {1, 2, 3}:
             if np.diff(self.reach_data.strtop).max() == 0:
-                txt += (
-                    "isfropt setting of 1,2 or 3 "
-                    "requires strtop information!\n"
-                )
+                txt += "isfropt setting of 1,2 or 3 requires strtop information!\n"
             else:
                 is_greater = self.reach_data.strtop > max_strtop
                 if np.any(is_greater):
@@ -2701,8 +2556,7 @@ class check:
         self._txt_footer(headertxt, txt, "maximum streambed top", passed)
 
         headertxt = (
-            "Checking segment_data for "
-            "downstream rises in streambed elevation...\n"
+            "Checking segment_data for downstream rises in streambed elevation...\n"
         )
         txt = ""
         if self.verbose:
@@ -2711,7 +2565,7 @@ class check:
         # decide whether to check elevup and elevdn from items 6b/c
         # (see online guide to SFR input; Data Set 6b description)
         passed = False
-        if self.sfr.isfropt in [0, 4, 5]:
+        if self.sfr.isfropt in {0, 4, 5}:
             pers = sorted(self.segment_data.keys())
             for per in pers:
                 segment_data = self.segment_data[per][
@@ -2721,16 +2575,10 @@ class check:
                 # enforce consecutive increasing segment numbers (for indexing)
                 segment_data.sort(order="nseg")
                 t = _check_numbers(
-                    len(segment_data),
-                    segment_data.nseg,
-                    level=1,
-                    datatype="Segment",
+                    len(segment_data), segment_data.nseg, level=1, datatype="Segment"
                 )
                 if len(t) > 0:
-                    txt += (
-                        "Elevation check requires "
-                        "consecutive segment numbering."
-                    )
+                    txt += "Elevation check requires consecutive segment numbering."
                     self._txt_footer(headertxt, txt, "")
                     return
 
@@ -2752,15 +2600,9 @@ class check:
 
                 # next check for rises between segments
                 non_outlets = segment_data.outseg > 0
-                non_outlets_seg_data = segment_data[
-                    non_outlets
-                ]  # lake outsegs are < 0
+                non_outlets_seg_data = segment_data[non_outlets]  # lake outsegs are < 0
                 outseg_elevup = np.array(
-                    [
-                        segment_data.elevup[o - 1]
-                        for o in segment_data.outseg
-                        if o > 0
-                    ]
+                    [segment_data.elevup[o - 1] for o in segment_data.outseg if o > 0]
                 )
                 d_elev2 = outseg_elevup - segment_data.elevdn[non_outlets]
                 non_outlets_seg_data = recfunctions.append_fields(
@@ -2773,13 +2615,7 @@ class check:
 
                 txt += self._boolean_compare(
                     non_outlets_seg_data[
-                        [
-                            "nseg",
-                            "outseg",
-                            "elevdn",
-                            "outseg_elevup",
-                            "d_elev2",
-                        ]
+                        ["nseg", "outseg", "elevdn", "outseg_elevup", "d_elev2"]
                     ],
                     col1="d_elev2",
                     col2=np.zeros(len(non_outlets_seg_data)),
@@ -2800,18 +2636,16 @@ class check:
         self._txt_footer(headertxt, txt, "segment elevations", passed)
 
         headertxt = (
-            "Checking reach_data for "
-            "downstream rises in streambed elevation...\n"
+            "Checking reach_data for downstream rises in streambed elevation...\n"
         )
         txt = ""
         if self.verbose:
             print(headertxt.strip())
         passed = False
-        if (
-            self.sfr.nstrm < 0
-            or self.sfr.reachinput
-            and self.sfr.isfropt in [1, 2, 3]
-        ):  # see SFR input instructions
+        if self.sfr.nstrm < 0 or (
+            self.sfr.reachinput and self.sfr.isfropt in {1, 2, 3}
+        ):
+            # see SFR input instructions
             # compute outreaches if they aren't there already
             if np.diff(self.sfr.reach_data.outreach).max() == 0:
                 self.sfr.set_outreaches()
@@ -2831,17 +2665,13 @@ class check:
                 ]
             )
 
-            reach_data = (
-                self.sfr.reach_data
-            )  # inconsistent with other checks that work with
-            # reach_data attribute of check class. Want to have get_outreaches as a method of sfr class
-            # (for other uses). Not sure if other check methods should also copy reach_data directly from
+            # inconsistent with other checks that work with
+            # reach_data attribute of check class. Want to have get_outreaches
+            # as a method of sfr class (for other uses). Not sure if other
+            # check methods should also copy reach_data directly from
             # SFR package instance for consistency.
+            reach_data = self.sfr.reach_data
 
-            # use outreach values to get downstream elevations
-            # non_outlets = reach_data[reach_data.outreach != 0]
-            # outreach_elevdn = np.array([reach_data.strtop[o - 1] for o in reach_data.outreach])
-            # d_strtop = outreach_elevdn[reach_data.outreach != 0] - non_outlets.strtop
             rd = recfunctions.append_fields(
                 rd,
                 names=["strtopdn", "d_strtop"],
@@ -2866,33 +2696,35 @@ class check:
                 ],
                 col1="d_strtop",
                 col2=np.zeros(len(rd)),
-                level0txt="{} reaches encountered with strtop < strtop of downstream reach.",
+                level0txt="{} reaches encountered with strtop < strtop of downstream reach.",  # noqa
                 level1txt="Elevation rises:",
             )
             if len(txt) == 0:
                 passed = True
         else:
-            txt += "Reach strtop not specified for nstrm={}, reachinput={} and isfropt={}\n".format(
-                self.sfr.nstrm, self.sfr.reachinput, self.sfr.isfropt
+            txt += (
+                f"Reach strtop not specified for nstrm={self.sfr.nstrm}, "
+                f"reachinput={self.sfr.reachinput} and isfropt={self.sfr.isfropt}\n"
             )
             passed = True
         self._txt_footer(headertxt, txt, "reach elevations", passed)
 
-        headertxt = "Checking reach_data for inconsistencies between streambed elevations and the model grid...\n"
+        headertxt = "Checking reach_data for inconsistencies between streambed elevations and the model grid...\n"  # noqa
         if self.verbose:
             print(headertxt.strip())
         txt = ""
         if self.sfr.parent.dis is None:
-            txt += "No DIS file supplied; cannot check SFR elevations against model grid."
+            txt += (
+                "No DIS file supplied; cannot check SFR elevations against model grid."
+            )
             self._txt_footer(headertxt, txt, "")
             return
         passed = False
         warning = True
-        if (
-            self.sfr.nstrm < 0
-            or self.sfr.reachinput
-            and self.sfr.isfropt in [1, 2, 3]
-        ):  # see SFR input instructions
+        if self.sfr.nstrm < 0 or (
+            self.sfr.reachinput and self.sfr.isfropt in {1, 2, 3}
+        ):
+            # see SFR input instructions
             reach_data = np.array(self.reach_data)
             i, j, k = reach_data["i"], reach_data["j"], reach_data["k"]
 
@@ -2924,21 +2756,15 @@ class check:
                 ],
                 col1="layerbot",
                 col2="strbot",
-                level0txt="{} reaches encountered with streambed bottom below layer bottom.",
+                level0txt="{} reaches encountered with streambed bottom below layer bottom.",  # noqa
                 level1txt="Layer bottom violations:",
             )
             if len(txt) > 0:
-                warning = (
-                    False  # this constitutes an error (MODFLOW won't run)
-                )
+                warning = False  # this constitutes an error (MODFLOW won't run)
             # check streambed elevations in relation to model top
             tops = self.sfr.parent.dis.top.array[i, j]
             reach_data = recfunctions.append_fields(
-                reach_data,
-                names="modeltop",
-                data=tops,
-                usemask=False,
-                asrecarray=False,
+                reach_data, names="modeltop", data=tops, usemask=False, asrecarray=False
             )
 
             txt += self._boolean_compare(
@@ -2964,8 +2790,9 @@ class check:
             if len(txt) == 0:
                 passed = True
         else:
-            txt += "Reach strtop, strthick not specified for nstrm={}, reachinput={} and isfropt={}\n".format(
-                self.sfr.nstrm, self.sfr.reachinput, self.sfr.isfropt
+            txt += (
+                f"Reach strtop, strthick not specified for nstrm={self.sfr.nstrm}, "
+                f"reachinput={self.sfr.reachinput} and isfropt={self.sfr.isfropt}\n"
             )
             passed = True
         self._txt_footer(
@@ -2987,7 +2814,7 @@ class check:
         if self.verbose:
             print(headertxt.strip())
         passed = False
-        if self.sfr.isfropt in [0, 4, 5]:
+        if self.sfr.isfropt in {0, 4, 5}:
             reach_data = self.reach_data
             pers = sorted(self.segment_data.keys())
             for per in pers:
@@ -2998,10 +2825,7 @@ class check:
                 # enforce consecutive increasing segment numbers (for indexing)
                 segment_data.sort(order="nseg")
                 t = _check_numbers(
-                    len(segment_data),
-                    segment_data.nseg,
-                    level=1,
-                    datatype="Segment",
+                    len(segment_data), segment_data.nseg, level=1, datatype="Segment"
                 )
                 if len(t) > 0:
                     raise Exception(
@@ -3031,16 +2855,7 @@ class check:
 
             txt += self._boolean_compare(
                 segment_ends[
-                    [
-                        "k",
-                        "i",
-                        "j",
-                        "iseg",
-                        "strtop",
-                        "modeltop",
-                        "diff",
-                        "reachID",
-                    ]
+                    ["k", "i", "j", "iseg", "strtop", "modeltop", "diff", "reachID"]
                 ].copy(),
                 col1=np.zeros(len(segment_ends)),
                 col2="diff",
@@ -3051,38 +2866,34 @@ class check:
             if len(txt) == 0:
                 passed = True
         else:
-            txt += "Segment elevup and elevdn not specified for nstrm={} and isfropt={}\n".format(
-                self.sfr.nstrm, self.sfr.isfropt
+            txt += (
+                f"Segment elevup and elevdn not specified for nstrm={self.sfr.nstrm} "
+                f"and isfropt={self.sfr.isfropt}\n"
             )
             passed = True
-        self._txt_footer(
-            headertxt, txt, "segment elevations vs. model grid", passed
-        )
+        self._txt_footer(headertxt, txt, "segment elevations vs. model grid", passed)
 
     def slope(self, minimum_slope=1e-4, maximum_slope=1.0):
-        """Checks that streambed slopes are greater than or equal to a specified minimum value.
-        Low slope values can cause "backup" or unrealistic stream stages with icalc options
-        where stage is computed.
+        """Checks that streambed slopes are greater than or equal to a
+        specified minimum value.  Low slope values can cause "backup" or
+        unrealistic stream stages with icalc options where stage is computed.
         """
-        headertxt = (
-            f"Checking for streambed slopes of less than {minimum_slope}...\n"
-        )
+        headertxt = f"Checking for streambed slopes of less than {minimum_slope}...\n"
         txt = ""
         if self.verbose:
             print(headertxt.strip())
 
         passed = False
-        if self.sfr.isfropt in [1, 2, 3]:
+        if self.sfr.isfropt in {1, 2, 3}:
             if np.diff(self.reach_data.slope).max() == 0:
-                txt += (
-                    "isfropt setting of 1,2 or 3 requires slope information!\n"
-                )
+                txt += "isfropt setting of 1,2 or 3 requires slope information!\n"
             else:
                 is_less = self.reach_data.slope < minimum_slope
                 if np.any(is_less):
                     below_minimum = self.reach_data[is_less]
-                    txt += "{} instances of streambed slopes below minimum found.\n".format(
-                        len(below_minimum)
+                    txt += (
+                        f"{len(below_minimum)} instances of streambed slopes "
+                        "below minimum found.\n"
                     )
                     if self.level == 1:
                         txt += "Reaches with low slopes:\n"
@@ -3094,24 +2905,25 @@ class check:
             passed = True
         self._txt_footer(headertxt, txt, "minimum slope", passed)
 
-        headertxt = f"Checking for streambed slopes of greater than {maximum_slope}...\n"
+        headertxt = (
+            f"Checking for streambed slopes of greater than {maximum_slope}...\n"
+        )
         txt = ""
         if self.verbose:
             print(headertxt.strip())
 
         passed = False
-        if self.sfr.isfropt in [1, 2, 3]:
+        if self.sfr.isfropt in {1, 2, 3}:
             if np.diff(self.reach_data.slope).max() == 0:
-                txt += (
-                    "isfropt setting of 1,2 or 3 requires slope information!\n"
-                )
+                txt += "isfropt setting of 1,2 or 3 requires slope information!\n"
             else:
                 is_greater = self.reach_data.slope > maximum_slope
 
                 if np.any(is_greater):
                     above_max = self.reach_data[is_greater]
-                    txt += "{} instances of streambed slopes above maximum found.\n".format(
-                        len(above_max)
+                    txt += (
+                        f"{len(above_max)} instances of streambed slopes "
+                        "above maximum found.\n"
                     )
                     if self.level == 1:
                         txt += "Reaches with high slopes:\n"
@@ -3204,9 +3016,8 @@ def _get_duplicates(a):
     method https://stackoverflow.com/q/11528078/
     """
     s = np.sort(a, axis=None)
-    equal_to_previous_item = np.append(
-        s[1:] == s[:-1], False
-    )  # maintain same dimension for boolean array
+    # maintain same dimension for boolean array
+    equal_to_previous_item = np.append(s[1:] == s[:-1], False)
     return np.unique(s[equal_to_previous_item])
 
 
@@ -3234,9 +3045,9 @@ def _get_item2_names(nstrm, reachinput, isfropt, structured=False):
         names += ["node"]
     names += ["iseg", "ireach", "rchlen"]
     if nstrm < 0 or reachinput:
-        if isfropt in [1, 2, 3]:
+        if isfropt in {1, 2, 3}:
             names += ["strtop", "slope", "strthick", "strhc1"]
-            if isfropt in [2, 3]:
+            if isfropt in {2, 3}:
                 names += ["thts", "thti", "eps"]
                 if isfropt == 3:
                     names += ["uhc"]
@@ -3257,9 +3068,9 @@ def _fmt_string_list(array, float_format="{!s}"):
             float_format = "{!s}"
         elif vtype == "s":
             raise ValueError(
-                "'str' type found in dtype for {!r}. "
+                f"'str' type found in dtype for {name!r}. "
                 "This gives unpredictable results when "
-                "recarray to file - change to 'object' type".format(name)
+                "recarray to file - change to 'object' type"
             )
         else:
             raise ValueError(f"unknown dtype for {name!r}: {vtype!r}")
@@ -3320,8 +3131,6 @@ def _parse_1c(line, reachinput, transroute):
 
     """
     na = 0
-    # line = _get_dataset(line, [0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 1, 30, 1, 2, 0.75, 0.0001, []])
-    # line = line.strip().split()
     line = line_parse(line)
 
     nstrm = int(line.pop(0))
@@ -3357,11 +3166,7 @@ def _parse_1c(line, reachinput, transroute):
             flwtol = float(line.pop(0))
 
     # auxiliary variables (MODFLOW-LGR)
-    option = [
-        line[i]
-        for i in np.arange(1, len(line))
-        if "aux" in line[i - 1].lower()
-    ]
+    option = [line[i] for i in np.arange(1, len(line)) if "aux" in line[i - 1].lower()]
 
     return (
         nstrm,
@@ -3398,7 +3203,6 @@ def _parse_6a(line, option):
     -------
         a list of length 13 containing all variables for Data Set 6a
     """
-    # line = line.strip().split()
     line = line_parse(line)
 
     xyz = []
@@ -3427,7 +3231,7 @@ def _parse_6a(line, option):
     roughch = na
     roughbk = na
 
-    if icalc in [1, 2]:
+    if icalc in {1, 2}:
         roughch = _pop_item(line)
     if icalc == 2:
         roughbk = _pop_item(line)
@@ -3471,20 +3275,20 @@ def _parse_6bc(line, icalc, nstrm, isfropt, reachinput, per=0):
         a list of length 9 containing all variables for Data Set 6b
 
     """
-    nvalues = sum([_isnumeric(s) for s in line_parse(line)])
+    nvalues = sum(_isnumeric(s) for s in line_parse(line))
     line = _get_dataset(line, [0] * nvalues)
 
     hcond, thickm, elevupdn, width, depth, thts, thti, eps, uhc = [0.0] * 9
 
-    if isfropt in [0, 4, 5] and icalc <= 0:
+    if isfropt in {0, 4, 5} and icalc <= 0:
         hcond = line.pop(0)
         thickm = line.pop(0)
         elevupdn = line.pop(0)
         width = line.pop(0)
         depth = line.pop(0)
-    elif isfropt in [0, 4, 5] and icalc == 1:
+    elif isfropt in {0, 4, 5} and icalc == 1:
         hcond = line.pop(0)
-        if isfropt in [4, 5] and per > 0:
+        if isfropt in {4, 5} and per > 0:
             pass
         else:
             thickm = line.pop(0)
@@ -3496,28 +3300,26 @@ def _parse_6bc(line, icalc, nstrm, isfropt, reachinput, per=0):
             eps = _pop_item(line)
         if isfropt == 5 and per == 0:
             uhc = line.pop(0)
-    elif isfropt in [0, 4, 5] and icalc >= 2:
+    elif isfropt in {0, 4, 5} and icalc >= 2:
         hcond = line.pop(0)
-        if isfropt in [4, 5] and per > 0 and icalc == 2:
+        if isfropt in {4, 5} and per > 0 and icalc == 2:
             pass
         else:
             thickm = line.pop(0)
             elevupdn = line.pop(0)
-            if isfropt in [4, 5] and per == 0:
-                # table in online guide suggests that the following items should be present in this case
-                # but in the example
+            if isfropt in {4, 5} and per == 0:
+                # table in online guide suggests that the following items
+                # should be present in this case but in the example
                 thts = _pop_item(line)
                 thti = _pop_item(line)
                 eps = _pop_item(line)
                 if isfropt == 5:
                     uhc = _pop_item(line)
-            else:
-                pass
     elif isfropt == 1 and icalc <= 1:
         width = line.pop(0)
         if icalc <= 0:
             depth = line.pop(0)
-    elif isfropt in [2, 3]:
+    elif isfropt in {2, 3}:
         if icalc <= 0:
             width = line.pop(0)
             depth = line.pop(0)
@@ -3528,10 +3330,6 @@ def _parse_6bc(line, icalc, nstrm, isfropt, reachinput, per=0):
             else:
                 width = line.pop(0)
 
-        else:
-            pass
-    else:
-        pass
     return hcond, thickm, elevupdn, width, depth, thts, thti, eps, uhc
 
 
@@ -3562,7 +3360,7 @@ def _find_path(graph, start, end=0, path=None):
     dictionary (graph) so that the recursion works.
     """
     if path is None:
-        path = list()
+        path = []
     path = path + [start]
     if start == end:
         return path

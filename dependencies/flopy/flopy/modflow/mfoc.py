@@ -200,10 +200,10 @@ class ModflowOc(Package):
                 icnt = save_start
                 for kstp in range(dis.nstp[kper]):
                     if icnt == save_every:
-                        stress_period_data[(kper, kstp)] = save_types
+                        stress_period_data[kper, kstp] = save_types
                         icnt = 0
                     else:
-                        stress_period_data[(kper, kstp)] = []
+                        stress_period_data[kper, kstp] = []
                     icnt += 1
 
         # set output unit numbers based on oc settings
@@ -338,9 +338,7 @@ class ModflowOc(Package):
         if dis is None:
             dis = self.parent.get_package("DISU")
         if dis is None:
-            chk._add_to_summary(
-                "Error", package="OC", desc="DIS package not available"
-            )
+            chk._add_to_summary("Error", package="OC", desc="DIS package not available")
         else:
             # generate possible actions expected
             expected_actions = []
@@ -363,13 +361,13 @@ class ModflowOc(Package):
                             if len(words) < 2:
                                 chk._add_to_summary(
                                     "Warning",
-                                    package="OC",  # value=kperkstp,
+                                    package="OC",
                                     desc=f"action {action!r} ignored; too few words",
                                 )
                             elif words[0:2] not in expected_actions:
                                 chk._add_to_summary(
                                     "Warning",
-                                    package="OC",  # value=kperkstp,
+                                    package="OC",
                                     desc=f"action {action!r} ignored",
                                 )
                             # TODO: check data list of layers for some actions
@@ -377,7 +375,7 @@ class ModflowOc(Package):
                 # repeat as many times as remaining keys not used
                 chk._add_to_summary(
                     "Warning",
-                    package="OC",  # value=kperkstp,
+                    package="OC",
                     desc="action(s) defined in OC stress_period_data ignored "
                     "as they are not part the stress periods defined by DIS",
                 )
@@ -569,9 +567,7 @@ class ModflowOc(Package):
         for pp in self.parent.packagelist:
             if hasattr(pp, "ipakcb"):
                 pp.ipakcb = self.iubud
-                self.parent.add_output_file(
-                    pp.ipakcb, fname=fname, package=pp.name
-                )
+                self.parent.add_output_file(pp.ipakcb, fname=fname, package=pp.name)
 
         return
 
@@ -675,7 +671,6 @@ class ModflowOc(Package):
                 # dataset 2
                 elif "PERIOD" in lnlst[0].upper():
                     break
-        #
         if ext_unit_dict is not None:
             if ihedun in ext_unit_dict:
                 fhead = ext_unit_dict[ihedun]
@@ -689,9 +684,7 @@ class ModflowOc(Package):
         return ihedun, fhead, iddnun, fddn
 
     @classmethod
-    def load(
-        cls, f, model, nper=None, nstp=None, nlay=None, ext_unit_dict=None
-    ):
+    def load(cls, f, model, nper=None, nstp=None, nlay=None, ext_unit_dict=None):
         """
         Load an existing package.
 
@@ -831,7 +824,7 @@ class ModflowOc(Package):
                     # use print options from the last time step
                     else:
                         if len(lines) > 0:
-                            stress_period_data[(iperoc, itsoc)] = list(lines)
+                            stress_period_data[iperoc, itsoc] = list(lines)
                         continue
                     # set print and save budget flags
                     if ibudfl != 0:
@@ -877,7 +870,7 @@ class ModflowOc(Package):
                             lines.append(f"SAVE HEAD{headsave}")
                         if len(ddnsave) > 0:
                             lines.append(f"SAVE DRAWDOWN{ddnsave}")
-                    stress_period_data[(iperoc, itsoc)] = list(lines)
+                    stress_period_data[iperoc, itsoc] = list(lines)
         else:
             iperoc, itsoc = 0, 0
             while True:
@@ -888,7 +881,8 @@ class ModflowOc(Package):
                 if line[0] == "#":
                     continue
 
-                # added by JJS 12/12/14 to avoid error when there is a blank line in the OC file
+                # added by JJS 12/12/14 to avoid error when there is a
+                # blank line in the OC file
                 if lnlst == []:
                     continue
                 # end add

@@ -1,6 +1,7 @@
 import os
-from pathlib import Path
-from typing import Optional, Union
+from os import PathLike
+from typing import Union
+from warnings import warn
 
 import numpy as np
 from numpy.lib import recfunctions
@@ -95,7 +96,7 @@ class check:
     def __init__(
         self,
         package,
-        f: Optional[Union[str, os.PathLike]] = None,
+        f: Union[str, PathLike, None] = None,
         verbose=True,
         level=1,
         property_threshold_values={},
@@ -122,7 +123,7 @@ class check:
 
         self.f = None
         if f is not None:
-            if isinstance(f, (str, os.PathLike)):
+            if isinstance(f, (str, PathLike)):
                 if os.path.split(f)[0] == "":
                     self.summaryfile = os.path.join(self.model.model_ws, f)
                 else:  # if a path is supplied with summary file, save there
@@ -149,9 +150,7 @@ class check:
         col_list += [k, i, j] if self.structured else [node]
         col_list += [value, desc]
         sa = self._get_summary_array(np.array(col_list))
-        self.summary_array = np.append(self.summary_array, sa).view(
-            np.recarray
-        )
+        self.summary_array = np.append(self.summary_array, sa).view(np.recarray)
 
     def _boolean_compare(
         self,
@@ -229,17 +228,12 @@ class check:
                 cols = [
                     c
                     for c in failed_info.dtype.names
-                    if failed_info[c].sum() != 0
-                    and c != "diff"
-                    and "tmp" not in c
+                    if failed_info[c].sum() != 0 and c != "diff" and "tmp" not in c
                 ]
                 # currently failed_info[cols] results in a warning. Not sure
                 # how to do this properly with a recarray.
                 failed_info = recfunctions.append_fields(
-                    failed_info[cols].copy(),
-                    names="diff",
-                    data=diff,
-                    asrecarray=True,
+                    failed_info[cols].copy(), names="diff", data=diff, asrecarray=True
                 )
                 failed_info.sort(order="diff", axis=0)
                 if not sort_ascending:
@@ -254,13 +248,9 @@ class check:
         if array is None:
             return np.recarray((0), dtype=dtype)
         ra = recarray(array, dtype)
-        # at = array.transpose()
-        # a = np.core.records.fromarrays(at, dtype=dtype)
         return ra
 
-    def _txt_footer(
-        self, headertxt, txt, testname, passed=False, warning=True
-    ):
+    def _txt_footer(self, headertxt, txt, testname, passed=False, warning=True):
         """
         if len(txt) == 0 or passed:
             txt += 'passed.'
@@ -288,9 +278,7 @@ class check:
                 error_name="invalid BC index",
                 error_type="Error",
             )
-            self.summary_array = np.append(self.summary_array, sa).view(
-                np.recarray
-            )
+            self.summary_array = np.append(self.summary_array, sa).view(np.recarray)
             spd_inds_valid = False
             self.remove_passed("BC indices valid")
         if spd_inds_valid:
@@ -315,9 +303,7 @@ class check:
                 error_name="Not a number",
                 error_type="Error",
             )
-            self.summary_array = np.append(self.summary_array, sa).view(
-                np.recarray
-            )
+            self.summary_array = np.append(self.summary_array, sa).view(np.recarray)
             self.remove_passed("not a number (Nan) entries")
         else:
             self.append_passed("not a number (Nan) entries")
@@ -334,14 +320,9 @@ class check:
 
             if np.any(ibnd == 0):
                 sa = self._list_spd_check_violations(
-                    stress_period_data,
-                    ibnd == 0,
-                    error_name=msg,
-                    error_type="Warning",
+                    stress_period_data, ibnd == 0, error_name=msg, error_type="Warning"
                 )
-                self.summary_array = np.append(self.summary_array, sa).view(
-                    np.recarray
-                )
+                self.summary_array = np.append(self.summary_array, sa).view(np.recarray)
                 self.remove_passed(f"{msg}s")
             else:
                 self.append_passed(f"{msg}s")
@@ -360,9 +341,6 @@ class check:
         stress_period_data where criteria=True.
         """
         inds_col = self._get_cell_inds_names()
-        # inds = stress_period_data[criteria][inds_col]\
-        #    .reshape(stress_period_data[criteria].shape + (-1,))
-        # inds = np.atleast_2d(np.squeeze(inds.tolist()))
         inds = stress_period_data[criteria]
         a = self._get_cellid_cols(inds, inds_col)
         inds = a.view(int)
@@ -458,9 +436,7 @@ class check:
             # make ibound of same shape as thicknesses/botm for quasi-3D models
             active = self.model.bas6.ibound.array != 0
             if include_cbd and dis.laycbd.sum() > 0:
-                laycbd = np.flatnonzero(
-                    dis.laycbd.array > 0
-                )  # cbd layer index
+                laycbd = np.flatnonzero(dis.laycbd.array > 0)  # cbd layer index
                 active = np.insert(active, laycbd, active[laycbd], axis=0)
 
         else:  # if bas package is missing
@@ -489,15 +465,6 @@ class check:
         name, k,i,j indices, values, and description of error for each row in
         stress_period_data where criteria=True.
         """
-        # check for valid cell indices
-        # self._stress_period_data_valid_indices(stress_period_data)
-
-        # first check for and list nan values
-        # self._stress_period_data_nans(stress_period_data)
-
-        # next check for BCs in inactive cells
-        # self._stress_period_data_inactivecells(stress_period_data)
-
         if np.any(criteria):
             # list the values that met the criteria
             sa = self._list_spd_check_violations(
@@ -507,9 +474,7 @@ class check:
                 error_name=error_name,
                 error_type=error_type,
             )
-            self.summary_array = np.append(self.summary_array, sa).view(
-                np.recarray
-            )
+            self.summary_array = np.append(self.summary_array, sa).view(np.recarray)
             self.remove_passed(error_name)
         else:
             self.append_passed(error_name)
@@ -521,7 +486,7 @@ class check:
         True value in criteria.
         """
         if np.any(criteria):
-            inds = np.where(criteria)
+            inds = np.asarray(criteria).nonzero()
             v = a[inds]  # works with structured or unstructured
             pn = [self.package.name] * len(v)
             en = [error_name] * len(v)
@@ -531,14 +496,10 @@ class check:
             # but indsT will only have two columns if a 2-D array is being compared
             # pad indsT with a column of zeros for k
             if indsT.shape[1] == 2:
-                indsT = np.column_stack(
-                    [np.zeros(indsT.shape[0], dtype=int), indsT]
-                )
+                indsT = np.column_stack([np.zeros(indsT.shape[0], dtype=int), indsT])
             sa = np.column_stack([tp, pn, indsT, v, en])
             sa = self._get_summary_array(sa)
-            self.summary_array = np.append(self.summary_array, sa).view(
-                np.recarray
-            )
+            self.summary_array = np.append(self.summary_array, sa).view(np.recarray)
             self.remove_passed(error_name)
         else:
             self.append_passed(error_name)
@@ -587,11 +548,7 @@ class check:
         if txt == "":
             txt += "  No errors or warnings encountered.\n"
 
-        elif (
-            self.f is not None
-            and self.verbose
-            and self.summary_array.shape[0] > 0
-        ):
+        elif self.f is not None and self.verbose and self.summary_array.shape[0] > 0:
             txt += f"  see {relpath_safe(self.summaryfile, scrub=scrub)} for details.\n"
 
         # print checks that passed for higher levels
@@ -617,7 +574,7 @@ class check:
             print("Errors and/or Warnings encountered.")
             if self.f is not None:
                 print(
-                    f"  see {relpath_safe(self.summaryfile, scrub=scrub)} for details.\n"
+                    f"  see {relpath_safe(self.summaryfile, scrub=scrub)} for details.\n"  # noqa
                 )
 
     # start of older model specific code
@@ -627,8 +584,7 @@ class check:
         ) != {"k", "i", "j"}:
             self._add_to_summary(
                 type="Error",
-                desc="\r    Stress period data missing k, "
-                "i, j for structured grid.",
+                desc="\r    Stress period data missing k, i, j for structured grid.",
             )
             return False
         elif (
@@ -709,9 +665,9 @@ class check:
                     tmp[1:-1, 0:-2, 1:-1].ravel(),  # i-1
                     tmp[1:-1, 2:, 1:-1].ravel(),  # i+1
                     tmp[1:-1, 1:-1, :-2].ravel(),  # j-1
-                    tmp[1:-1, 1:-1, 2:].ravel(),
+                    tmp[1:-1, 1:-1, 2:].ravel(),  # j+1
                 ]
-            )  # j+1
+            )
             return neighbors.reshape(6, nk, ni, nj)
         else:
             if "DISU" in self.model.get_package_list():
@@ -720,9 +676,7 @@ class check:
                 if isinstance(a, Util3d):
                     a = a.array
                 pad_value = int(-1e9)
-                n_max = (
-                    np.max(disu.iac.array) - 1
-                )  # -1 for self, removed below
+                n_max = np.max(disu.iac.array) - 1  # -1 for self, removed below
                 arr_neighbors = [
                     np.pad(
                         a[n - 1],
@@ -732,9 +686,7 @@ class check:
                     )
                     for n in neighbors
                 ]
-                arr_neighbors = np.where(
-                    arr_neighbors == -1e9, np.nan, arr_neighbors
-                )
+                arr_neighbors = np.where(arr_neighbors == -1e9, np.nan, arr_neighbors)
                 neighbors = arr_neighbors.T
             else:
                 # if no disu, we can't define neighbours for this ugrid
@@ -759,9 +711,7 @@ def _fmt_string_list(array, float_format="{}"):
                 "recarray to file - change to 'object' type"
             )
         else:
-            raise Exception(
-                f"MfList.fmt_string error: unknown vtype in dtype:{vtype}"
-            )
+            raise Exception(f"MfList.fmt_string error: unknown vtype in dtype:{vtype}")
     return fmt_string
 
 
@@ -813,6 +763,15 @@ def fields_view(arr, fields):
 
 
 class mf6check(check):
+    """
+    Check an mf6 package for common errors.
+
+    .. deprecated:: 3.9
+        The MF6 check mechanism is deprecated pending reimplementation
+        in a future release. While the checks API will remain in place
+        through 3.x, it may be unstable, and will likely change in 4.x.
+    """
+
     def __init__(
         self,
         package,
@@ -821,6 +780,12 @@ class mf6check(check):
         level=1,
         property_threshold_values={},
     ):
+        warn(
+            "The MF6 check mechanism is deprecated pending reimplementation "
+            "in a future release. While the checks API will remain in place "
+            "through 3.x, it may be unstable, and will likely change in 4.x.",
+            category=DeprecationWarning,
+        )
         super().__init__(package, f, verbose, level, property_threshold_values)
         if hasattr(package, "model_or_sim"):
             self.model = package.model_or_sim
@@ -841,9 +806,7 @@ class mf6check(check):
 
         for item in zip(*cellid):
             hnames += (
-                np.ndarray(
-                    shape=(len(item),), buffer=np.array(item), dtype=np.int32
-                ),
+                np.ndarray(shape=(len(item),), buffer=np.array(item), dtype=np.int32),
             )
         return hnames
 

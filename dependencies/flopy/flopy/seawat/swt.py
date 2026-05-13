@@ -1,4 +1,5 @@
 import os
+from os import PathLike, curdir
 from typing import Union
 
 from ..discretization.modeltime import ModelTime
@@ -24,8 +25,7 @@ class SeawatList(Package):
         return "List package class"
 
     def write_file(self):
-        # Not implemented for list class
-        return
+        raise NotImplementedError
 
 
 class Seawat(BaseModel):
@@ -51,9 +51,8 @@ class Seawat(BaseModel):
         Specify if model grid is structured (default) or unstructured.
     listunit : int, default 2
         Unit number for the list file.
-    model_ws : str, default "."
+    model_ws : str or PathLike, default "." (curdir)
         Model workspace.  Directory name to create model data sets.
-        Default is the present working directory.
     external_path : str, optional
         Location for external files.
     verbose : bool, default False
@@ -92,7 +91,7 @@ class Seawat(BaseModel):
         exe_name="swtv4",
         structured=True,
         listunit=2,
-        model_ws=".",
+        model_ws=curdir,
         external_path=None,
         verbose=False,
         load=True,
@@ -142,14 +141,10 @@ class Seawat(BaseModel):
         # the starting external data unit number
         self._next_ext_unit = 3000
         if external_path is not None:
-            assert (
-                model_ws == "."
-            ), "ERROR: external cannot be used with model_ws"
+            assert model_ws == ".", "ERROR: external cannot be used with model_ws"
 
-            # external_path = os.path.join(model_ws, external_path)
             if os.path.exists(external_path):
                 print(f"Note: external_path {external_path} already exists")
-            # assert os.path.exists(external_path),'external_path does not exist'
             else:
                 os.mkdir(external_path)
             self.external = True
@@ -171,16 +166,13 @@ class Seawat(BaseModel):
     @property
     def modeltime(self):
         # build model time
-        data_frame = {
-            "perlen": self.dis.perlen.array,
-            "nstp": self.dis.nstp.array,
-            "tsmult": self.dis.tsmult.array,
-        }
         self._model_time = ModelTime(
-            data_frame,
-            self.dis.itmuni_dict[self.dis.itmuni],
-            self.dis.start_datetime,
-            self.dis.steady.array,
+            perlen=self.dis.perlen.array,
+            nstp=self.dis.nstp.array,
+            tsmult=self.dis.tsmult.array,
+            time_units=self.dis.itmuni_dict,
+            start_datetime=self.dis.start_datetime,
+            steady_state=self.dis.steady.array,
         )
         return self._model_time
 
@@ -295,21 +287,12 @@ class Seawat(BaseModel):
         # Overrides BaseModel's setter for name property
         super()._set_name(value)
 
-        # for i in range(len(self.lst.extension)):
-        #    self.lst.file_name[i] = self.name + '.' + self.lst.extension[i]
-        # return
-
     def change_model_ws(self, new_pth=None, reset_external=False):
         # if hasattr(self,"_mf"):
         if self._mf is not None:
-            self._mf.change_model_ws(
-                new_pth=new_pth, reset_external=reset_external
-            )
-        # if hasattr(self,"_mt"):
+            self._mf.change_model_ws(new_pth=new_pth, reset_external=reset_external)
         if self._mt is not None:
-            self._mt.change_model_ws(
-                new_pth=new_pth, reset_external=reset_external
-            )
+            self._mt.change_model_ws(new_pth=new_pth, reset_external=reset_external)
         super().change_model_ws(new_pth=new_pth, reset_external=reset_external)
 
     def write_name_file(self):
@@ -331,17 +314,13 @@ class Seawat(BaseModel):
             if self.glo.unit_number[0] > 0:
                 f_nam.write(
                     "{:14s} {:5d}  {}\n".format(
-                        self.glo.name[0],
-                        self.glo.unit_number[0],
-                        self.glo.file_name[0],
+                        self.glo.name[0], self.glo.unit_number[0], self.glo.file_name[0]
                     )
                 )
         # Write list file entry
         f_nam.write(
             "{:14s} {:5d}  {}\n".format(
-                self.lst.name[0],
-                self.lst.unit_number[0],
-                self.lst.file_name[0],
+                self.lst.name[0], self.lst.unit_number[0], self.lst.file_name[0]
             )
         )
 
@@ -408,9 +387,7 @@ class Seawat(BaseModel):
             f_nam.write(f"{tag:14s} {u:5d}  {f}\n")
 
         # write the output files
-        for u, f, b in zip(
-            self.output_units, self.output_fnames, self.output_binflag
-        ):
+        for u, f, b in zip(self.output_units, self.output_fnames, self.output_binflag):
             if u == 0:
                 continue
             if b:
@@ -426,9 +403,9 @@ class Seawat(BaseModel):
         cls,
         f: str,
         version="seawat",
-        exe_name: Union[str, os.PathLike] = "swtv4",
+        exe_name: Union[str, PathLike] = "swtv4",
         verbose=False,
-        model_ws: Union[str, os.PathLike] = os.curdir,
+        model_ws: Union[str, PathLike] = curdir,
         load_only=None,
     ):
         """
@@ -444,9 +421,8 @@ class Seawat(BaseModel):
             The name of the executable to use.
         verbose : bool, default False
             Print additional information to the screen.
-        model_ws : str or PathLike, default "."
+        model_ws : str or PathLike, default "." (curdir)
             Model workspace.  Directory to create model data sets.
-            Default is the present working directory.
         load_only : list of str, optional
             Packages to load (e.g. ["lpf", "adv"]). Default None
             means that all packages will be loaded.
@@ -496,6 +472,7 @@ class Seawat(BaseModel):
             exe_name=None,
             verbose=verbose,
             model_ws=model_ws,
+            load_only=load_only,
             forgive=False,
         )
 

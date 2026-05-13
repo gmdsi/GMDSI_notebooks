@@ -3,10 +3,6 @@ Mfusgwel module.
 
 Contains the MfUsgWel class. Note that the user can access
 the MfUsgWel class as `flopy.mfusg.MfUsgWel`.
-
-Additional information for this MODFLOW package can be found at the `Online
-MODFLOW Guide
-<https://water.usgs.gov/ogw/modflow/MODFLOW-2005-Guide/wel.html>`_.
 """
 
 from ..modflow.mfwel import ModflowWel
@@ -229,9 +225,7 @@ class MfUsgWel(ModflowWel):
         if dtype is not None:
             self.dtype = dtype
         else:
-            self.dtype = self.get_default_dtype(
-                structured=self.parent.structured
-            )
+            self.dtype = self.get_default_dtype(structured=self.parent.structured)
 
         # determine if any aux variables in dtype
         options = self._check_for_aux(options)
@@ -239,19 +233,57 @@ class MfUsgWel(ModflowWel):
         self.options = options
 
         # initialize MfList
-        self.stress_period_data = MfList(
-            self, stress_period_data, binary=binary
-        )
+        self.stress_period_data = MfList(self, stress_period_data, binary=binary)
 
         if add_package:
             self.parent.add_package(self)
 
+    @staticmethod
+    def get_empty(ncells=0, aux_names=None, structured=True, wellbot=False):
+        """Get empty recarray for MFUSG wells.
+
+        Parameters
+        ----------
+        ncells : int
+            Number of cells
+        aux_names : list
+            Auxiliary variable names
+        structured : bool
+            Whether grid is structured
+        wellbot : bool
+            Whether WELLBOT option is used
+
+        Returns
+        -------
+        recarray
+            Empty recarray for well data
+        """
+        import numpy as np
+
+        from ..modflow.mfwel import ModflowWel
+        from ..pakbase import Package
+        from ..utils import create_empty_recarray
+
+        # Get base dtype
+        dtype = ModflowWel.get_default_dtype(structured=structured)
+
+        # Add wellbot field if specified
+        if wellbot:
+            dtype = Package.add_to_dtype(dtype, ["wellbot"], np.float32)
+
+        # Add auxiliary fields
+        if aux_names is not None:
+            dtype = Package.add_to_dtype(dtype, aux_names, np.float32)
+
+        return create_empty_recarray(ncells, dtype, default_value=-1.0e10)
+
     def _check_for_aux(self, options, cln=False):
         """Check dtype for auxiliary variables, and add to options.
 
-        Parameters:
+        Parameters
         ----------
-            options: (list) package options
+        options: list
+            package options
 
         Returns
         -------
@@ -278,9 +310,10 @@ class MfUsgWel(ModflowWel):
     def write_file(self, f=None):
         """Write the package file.
 
-        Parameters:
+        Parameters
         ----------
-            f: (str) optional file name
+        f : str, optional
+            file name
 
         Returns
         -------
@@ -295,9 +328,7 @@ class MfUsgWel(ModflowWel):
 
         f_wel.write(f"{self.heading}\n")
 
-        mxact = (
-            self.stress_period_data.mxact + self.cln_stress_period_data.mxact
-        )
+        mxact = self.stress_period_data.mxact + self.cln_stress_period_data.mxact
 
         line = f" {mxact:9d} {self.ipakcb:9d} "
         if self.options is None:

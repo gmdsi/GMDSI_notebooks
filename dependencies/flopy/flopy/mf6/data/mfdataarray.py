@@ -323,6 +323,86 @@ class MFArray(MFMultiDimVar):
         """Returns array data.  Calls get_data with default parameters."""
         return self._get_data()
 
+    def to_geodataframe(self, gdf=None, full_grid=True, shorten_attr=False, **kwargs):
+        """
+        Method to add an input array to a geopandas GeoDataFrame
+
+        Parameters
+        ----------
+        gdf : GeoDataFrame
+            optional GeoDataFrame object
+        name : str
+            optional attribute name, default uses util2d name
+        full_grid : bool
+            boolean flag for full grid dataframe construction. Default is True.
+            If False, geodataframe will only include active cells
+        shorten_attr : bool
+            method to truncate attribute names for shapefile restrictions
+        **kwargs :
+            name : str
+                optional array name base. If not provided, method uses the .name
+                attribute
+            forgive : bool
+                optional flag to continue if data shape not compatible with GeoDataFrame
+
+
+        Returns
+        -------
+            geopandas GeoDataFrame
+        """
+        from ...export.shapefile_utils import shape_attr_name
+
+        if self.model is None:
+            return gdf
+        else:
+            name = kwargs.pop("name", None)
+            forgive = kwargs.pop("forgive", False)
+
+            modelgrid = self.model.modelgrid
+            if gdf is None:
+                if modelgrid is None:
+                    return gdf
+                gdf = modelgrid.to_geodataframe()
+
+            if modelgrid is not None:
+                if modelgrid.grid_type != "unstructured":
+                    ncpl = modelgrid.ncpl
+                else:
+                    ncpl = modelgrid.nnodes
+            else:
+                ncpl = len(gdf)
+
+            if name is None:
+                name = self.name
+
+            data = self.array
+            if data is None:
+                return gdf
+
+            if shorten_attr:
+                name = shape_attr_name(name=name)
+
+            if data.size == ncpl:
+                gdf[name] = data.ravel()
+
+            elif data.size % ncpl == 0:
+                data = data.reshape((-1, ncpl))
+                for ix, arr in enumerate(data):
+                    aname = f"{name}_{ix}"
+                    gdf[aname] = arr
+            elif forgive:
+                return gdf
+            else:
+                raise ValueError(
+                    f"Data size {data.size} not compatible with dataframe length {ncpl}"
+                )
+
+            if not full_grid:
+                if "active" in list(gdf):
+                    gdf = gdf[gdf["active"] > 0]
+
+            return gdf
+
     def new_simulation(self, sim_data):
         """Initialize MFArray object for a new simulation
 
@@ -536,9 +616,12 @@ class MFArray(MFMultiDimVar):
             if isinstance(data, str) and self._tas_info(data)[0] is not None:
                 # data must not be time array series information
                 continue
+            # Check if dimensions are well-defined. For arrays with unknown
+            # shape (e.g., TAS arrays with shape="(unknown)"), allow external
+            # storage if we have actual numpy array data at runtime
             if storage.get_data_dimensions(current_layer)[0] == -9999:
-                # data must have well defined dimensions to make external
-                continue
+                if not isinstance(data, np.ndarray):
+                    continue
             try:
                 # store layer's data in external file
                 if (
@@ -733,7 +816,7 @@ class MFArray(MFMultiDimVar):
                     "array" in kwargs
                     and kwargs["array"]
                     and isinstance(self, MFTransientArray)
-                    and data is not []
+                    and data is not []  # noqa: F632
                 ):
                     data = np.expand_dims(data, 0)
                 return data
@@ -1063,7 +1146,10 @@ class MFArray(MFMultiDimVar):
             external_file_info=None,
         )
         self._resync()
-        if self.structure.layered:
+        if (
+            self.structure.layered
+            and self.structure.name.lower() != "aux"
+        ):
             try:
                 model_grid = self.data_dimensions.get_model_grid()
             except Exception as ex:
@@ -1238,16 +1324,32 @@ class MFArray(MFMultiDimVar):
 
                 layer_min = layer
                 layer_max = shape_ml.inc_shape_idx(layer)
-            for layer in shape_ml.indexes(layer_min, layer_max):
-                file_entry_array.append(
-                    self._get_file_entry_layer(
-                        layer,
-                        data_indent,
-                        data_storage.layer_storage[layer].data_storage_type,
-                        ext_file_action,
-                        layered_aux,
-                    )
+            if layered_aux:
+                aux_var_names = (
+                    self.data_dimensions.package_dim.get_aux_variables()[0]
                 )
+                for layer in range(0, len(aux_var_names)-1):
+                    file_entry_array.append(
+                        self._get_file_entry_layer(
+                            [layer],
+                            data_indent,
+                            data_storage.layer_storage[layer].data_storage_type,
+                            ext_file_action,
+                            layered_aux,
+                        )
+                    )
+
+            else:
+                for layer in shape_ml.indexes(layer_min, layer_max):
+                    file_entry_array.append(
+                        self._get_file_entry_layer(
+                            layer,
+                            data_indent,
+                            data_storage.layer_storage[layer].data_storage_type,
+                            ext_file_action,
+                            layered_aux,
+                        )
+                    )
         else:
             # data is not layered
             if not self.structure.data_item_structures[0].just_data:
@@ -1531,7 +1633,7 @@ class MFArray(MFMultiDimVar):
                 List of unique values to be excluded from the plot.
 
         Returns
-        ----------
+        -------
         out : list
             Empty list is returned if filename_base is not None. Otherwise
             a list of matplotlib.pyplot.axis is returned.
@@ -1688,7 +1790,7 @@ class MFTransientArray(MFArray, MFTransient):
 
         """
         # store each stress period in separate file(s)
-        for sp in self._data_storage.keys():
+        for idx, sp in enumerate(sorted(self._data_storage.keys()), start=1):
             self._current_key = sp
             layer_storage = self._get_storage_obj().layer_storage
             if (
@@ -1697,10 +1799,7 @@ class MFTransientArray(MFArray, MFTransient):
                 != DataStorageType.external_file
             ):
                 fname, ext = os.path.splitext(external_file_path)
-                if DatumUtil.is_int(sp):
-                    full_name = f"{fname}_{sp + 1}{ext}"
-                else:
-                    full_name = f"{fname}_{sp}{ext}"
+                full_name = f"{fname}_{idx}{ext}"
                 super().store_as_external_file(
                     full_name,
                     layer,
@@ -1753,33 +1852,61 @@ class MFTransientArray(MFArray, MFTransient):
         """
         data = None
         output = None
-        for sp in range(0, num_sp):
-            if sp in self._data_storage:
-                self.get_data_prep(sp)
+
+        # Check if we have float-type keys (e.g., TAS data with time values)
+        # vs. integer-type stress period keys
+        if self._data_storage:
+            has_float_keys = any(
+                isinstance(key, float)
+                for key in self._data_storage.keys()
+            )
+        else:
+            has_float_keys = False
+
+        if has_float_keys:
+            # For TAS-style data with floating-point time keys,
+            # iterate through actual keys in sorted order
+            sorted_keys = sorted(self._data_storage.keys())
+            for key in sorted_keys:
+                self.get_data_prep(key)
                 data = super().get_data(apply_mult=apply_mult, **kwargs)
                 data = np.expand_dims(data, 0)
-            else:
-                # if there is no previous data provide array of
-                # zeros, otherwise provide last array of data found
-                if data is None:
-                    # get any data
-                    data_dimensions = None
-                    for key in self._data_storage.keys():
-                        self.get_data_prep(key)
-                        data = super().get_data(
-                            apply_mult=apply_mult, **kwargs
-                        )
-                        break
-                    if data is not None:
-                        if self.structure.type == DatumType.integer:
-                            data = np.full_like(data, 1)
-                        else:
-                            data = np.full_like(data, 0.0)
-                        data = np.expand_dims(data, 0)
-            if output is None or data is None:
-                output = data
-            else:
-                output = np.concatenate((output, data))
+
+                if output is None:
+                    output = data
+                else:
+                    output = np.concatenate((output, data))
+        else:
+            # For standard stress period data with integer keys,
+            # iterate through stress periods and fill missing ones
+            for sp in range(0, num_sp):
+                if sp in self._data_storage:
+                    self.get_data_prep(sp)
+                    data = super().get_data(apply_mult=apply_mult, **kwargs)
+                    data = np.expand_dims(data, 0)
+                else:
+                    # if there is no previous data provide array of
+                    # zeros, otherwise provide last array of data found
+                    if data is None:
+                        # get any data
+                        data_dimensions = None
+                        for key in self._data_storage.keys():
+                            self.get_data_prep(key)
+                            data = super().get_data(
+                                apply_mult=apply_mult, **kwargs
+                            )
+                            break
+                        if data is not None:
+                            if self.structure.type == DatumType.integer:
+                                data = np.full_like(data, 1)
+                            else:
+                                data = np.full_like(data, 0.0)
+                            data = np.expand_dims(data, 0)
+                if output is None or data is None:
+                    output = data
+                else:
+                    output = np.concatenate((output, data))
+
         return output
 
     def has_data(self, layer=None):
@@ -1871,7 +1998,85 @@ class MFTransientArray(MFArray, MFTransient):
                     output[sp] = data
         return output
 
-    def set_record(self, data_record):
+    def to_geodataframe(self, gdf=None, kper=0, full_grid=True, shorten_attr=False, **kwargs):
+        """
+        Method to add an input array to a geopandas GeoDataFrame
+
+        Parameters
+        ----------
+        gdf : GeoDataFrame
+            optional GeoDataFrame object
+        kper : int
+            stress period number
+        full_grid : bool
+            boolean flag for full grid dataframe construction. Default is True.
+            If False, geodataframe will only include active cells
+        shorten_attr : bool
+            method to truncate attribute names for shapefile restrictions
+        **kwargs
+            forgive : bool
+                optional flag to continue if data shape not compatible with GeoDataFrame
+
+        Returns
+        -------
+            geopandas GeoDataFrame
+        """
+        from ...export.shapefile_utils import shape_attr_name
+
+        if self.model is None:
+            return gdf
+        else:
+            forgive = kwargs.pop("forgive", False)
+
+            modelgrid = self.model.modelgrid
+            if gdf is None:
+                if modelgrid is None:
+                    return gdf
+                gdf = modelgrid.to_geodataframe()
+
+            if modelgrid is not None:
+                if modelgrid.grid_type != "unstructured":
+                    ncpl = modelgrid.ncpl
+                else:
+                    ncpl = modelgrid.nnodes
+            else:
+                ncpl = len(gdf)
+
+            if self.array is None:
+                return gdf
+
+            if shorten_attr:
+                name = shape_attr_name(self.name, length=4)
+            else:
+                name = f"{self.path[1]}_{self.name}"
+
+            data = self.get_data(key=kper, apply_mult=True)
+            if data.size == ncpl:
+                name = f"{name}_{kper}"
+                gdf[name] = data.ravel()
+
+            elif data.size % ncpl == 0:
+                data = data.reshape((-1, ncpl))
+                for ix, arr in enumerate(data):
+                    if shorten_attr:
+                        aname = f"{name}{ix}{kper}"
+                    else:
+                        aname = f"{name}_{ix}_{kper}"
+                    gdf[aname] = arr
+            elif forgive:
+                return gdf
+            else:
+                raise ValueError(
+                    f"Data size {data.size} not compatible with dataframe length {ncpl}"
+                )
+
+            if not full_grid:
+                if "active" in gdf:
+                    gdf = gdf[gdf["active"] > 0]
+
+            return gdf
+
+    def set_record(self, data_record, replace=False):
         """Sets data and metadata at layer `layer` and time `key` to
         `data_record`.  For unlayered data do not pass in `layer`.
 
@@ -1883,10 +2088,15 @@ class MFTransientArray(MFArray, MFTransient):
                 and metadata (factor, iprn, filename, binary, data) for a given
                 stress period.  How to define the dictionary of data and
                 metadata is described in the MFData class's set_record method.
+            replace : bool
+                Perform the operation with replacement semantics: all existing
+                stress period keys not present in the new dictionary will be
+                removed. If False, existing keys not in the new dictionary
+                will be preserved. Defaults False for backwards compatibility.
         """
-        self._set_data_record(data_record, is_record=True)
+        self._set_data_record(data_record, is_record=True, replace=replace)
 
-    def set_data(self, data, multiplier=None, layer=None, key=None):
+    def set_data(self, data, multiplier=None, layer=None, key=None, replace=False):
         """Sets the contents of the data at layer `layer` and time `key` to
         `data` with multiplier `multiplier`. For unlayered data do not pass
         in `layer`.
@@ -1907,15 +2117,30 @@ class MFTransientArray(MFArray, MFTransient):
             key : int
                 Zero based stress period to assign data too.  Does not apply
                 if `data` is a dictionary.
+            replace : bool
+                If True and `data` is a dictionary, perform the operation
+                with replacement semantics: all existing stress period keys
+                not present in the new dictionary will be removed. If False,
+                existing keys not in the new dictionary will be preserved.
+                Defaults False for backwards compatibility.
         """
-        self._set_data_record(data, multiplier, layer, key)
+        self._set_data_record(data, multiplier, layer, key, replace=replace)
 
     def _set_data_record(
-        self, data, multiplier=None, layer=None, key=None, is_record=False
+        self, data, multiplier=None, layer=None, key=None, is_record=False, replace=False
     ):
         if isinstance(data, dict):
             # each item in the dictionary is a list for one stress period
             # the dictionary key is the stress period the list is for
+
+            # If replacing, remove keys not in the new data
+            if replace and self._data_storage:
+                keys_to_remove = set(self._data_storage.keys()) - set(data.keys())
+                for k in keys_to_remove:
+                    self.remove_transient_key(k)
+                    if k in self.empty_keys:
+                        del self.empty_keys[k]
+
             del_keys = []
             for key, list_item in data.items():
                 if list_item is None:
@@ -2100,7 +2325,7 @@ class MFTransientArray(MFArray, MFTransient):
                 extracted. (default is zero).
 
         Returns
-        ----------
+        -------
         axes : list
             Empty list is returned if filename_base is not None. Otherwise
             a list of matplotlib.pyplot.axis is returned.

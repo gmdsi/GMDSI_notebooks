@@ -1,0 +1,74 @@
+# This workflow tests flopy with random subsets of optional dependencies.
+# Flopy should not crash due to the absence of any optional dependencies,
+# rather it should gracefully raise an ImportError if absent when needed.
+name: Optional dependency testing
+on:
+  schedule:
+    - cron: '0 8 * * *' # run at 8 AM UTC (12 am PST)
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    timeout-minutes: 10
+    env:
+      PYTHON_VERSION: '3.10'
+    strategy:
+      fail-fast: false
+      matrix:
+        optdeps:
+          # - "all optional dependencies"
+          - "no optional dependencies"
+          - "some optional dependencies"
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: astral-sh/setup-uv@v7
+        with:
+          cache-dependency-glob: "**/pyproject.toml"
+
+      - name: Install FloPy
+        run: uv sync --extra test
+
+      - name: Install other dependencies
+        run: |
+          # Install optional dependencies according to matrix.optdeps.
+          # If matrix.optdeps is "some" remove 3 optional dependencies
+          # selected randomly using the current date as the seed.
+          if [[ ! "${{ matrix.optdeps }}" == *"no"* ]]; then
+            uv pip install ".[optional]"
+          fi
+          if [[ "${{ matrix.optdeps }}" == *"some"* ]]; then
+            deps=$(sed '/optional =/,/]/!d' pyproject.toml | sed -e '1d;$d' -e 's/\"//g' -e 's/,//g' | tr -d ' ' | cut -f 1 -d ';')
+            rmvd=$(echo $deps | tr ' ' '\n' | shuf --random-source <(yes date +%d.%m.%y) | head -n 3)
+            echo "Removing optional dependencies: $rmvd" >> removed_dependencies.txt
+            cat removed_dependencies.txt
+            uv pip uninstall --yes $rmvd
+          fi
+
+      - name: Upload removed dependencies log
+        uses: actions/upload-artifact@v7
+        with:
+          name: smoke-test-removed-dependencies
+          path: ./removed_dependencies.txt
+
+      - name: Install Modflow executables
+        uses: modflowpy/install-modflow-action@v1
+
+      - name: Smoke test (${{ matrix.optdeps }})
+        working-directory: autotest
+        run: uv run pytest -v -n=auto -m "not regression and not example" --cov=flopy --cov-report=xml --durations=0 --keep-failed=.failed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload failed test outputs
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: failed-smoke-${{ runner.os }}-${{ env.PYTHON_VERSION }}
+          path: ./autotest/.failed/**

@@ -29,22 +29,17 @@ class OptionBlock:
     vars = "vars"
     optional = "optional"
 
-    simple_flag = dict([(dtype, np.bool_), (nested, False), (optional, False)])
-    simple_str = dict([(dtype, str), (nested, False), (optional, False)])
-    simple_float = dict([(dtype, float), (nested, False), (optional, False)])
-    simple_int = dict([(dtype, int), (nested, False), (optional, False)])
+    simple_flag = {dtype: np.bool_, nested: False, optional: False}
+    simple_str = {dtype: str, nested: False, optional: False}
+    simple_float = {dtype: float, nested: False, optional: False}
+    simple_int = {dtype: int, nested: False, optional: False}
 
-    simple_tabfile = dict(
-        [
-            (dtype, np.bool_),
-            (nested, True),
-            (n_nested, 2),
-            (
-                vars,
-                dict([("numtab", simple_int), ("maxval", simple_int)]),
-            ),
-        ]
-    )
+    simple_tabfile = {
+        dtype: np.bool_,
+        nested: True,
+        n_nested: 2,
+        vars: {"numtab": simple_int, "maxval": simple_int},
+    }
 
     def __init__(self, options_line, package, block=True):
         self._context = package._options
@@ -59,10 +54,10 @@ class OptionBlock:
         self._set_attributes()
 
     def __getattr__(self, key):
-        if key == "auxillary":  # catch typo from older version
+        if key == "auxillary":  # catch typo from older version - codespell:ignore
             key = "auxiliary"
             warnings.warn(
-                "the atttribute 'auxillary' is deprecated, use 'auxiliary' instead",
+                "the attribute 'auxillary' is deprecated, use 'auxiliary' instead",
                 category=DeprecationWarning,
             )
         return super().__getattribute__(key)
@@ -96,12 +91,12 @@ class OptionBlock:
         for key, ctx in self._context.items():
             if key in pak.__dict__:
                 val = pak.__dict__[key]
-                self.__setattr__(key, val)
+                setattr(self, key, val)
                 if ctx[OptionBlock.nested]:
                     for k2, ctx2 in ctx[OptionBlock.vars].items():
                         if k2 in pak.__dict__:
                             v2 = pak.__dict__[k2]
-                            self.__setattr__(k2, v2)
+                            setattr(self, k2, v2)
 
     def __repr__(self):
         """
@@ -132,9 +127,7 @@ class OptionBlock:
                             if v == "None" and d[OptionBlock.optional]:
                                 pass
                             else:
-                                val.append(
-                                    str(object.__getattribute__(self, k))
-                                )
+                                val.append(str(object.__getattribute__(self, k)))
 
                 if "None" in val:
                     pass
@@ -161,15 +154,15 @@ class OptionBlock:
                 is consistent with the attribute data type
 
         """
-        if key == "auxillary":  # catch typo from older version
+        if key == "auxillary":  # catch typo from older version - codespell:ignore
             key = "auxiliary"
             warnings.warn(
-                "the atttribute 'auxillary' is deprecated, use 'auxiliary' instead",
+                "the attribute 'auxillary' is deprecated, use 'auxiliary' instead",
                 category=DeprecationWarning,
             )
 
         err_msg = "Data type must be compatible with {}"
-        if key in ("_context", "_attr_types", "options_line"):
+        if key in {"_context", "_attr_types", "options_line"}:
             self.__dict__[key] = value
 
         elif value is None:
@@ -210,7 +203,7 @@ class OptionBlock:
         recarray if the user calls <.tabfiles>
 
         """
-        if item in ("__dict__", "_context", "package"):
+        if item in {"__dict__", "_context", "package"}:
             value = object.__getattribute__(self, item)
 
         elif item in object.__getattribute__(self, "_context"):
@@ -259,17 +252,17 @@ class OptionBlock:
         """
         # set up all attributes for the class!
         for key, ctx in self._context.items():
+            val = None
             if ctx[OptionBlock.dtype] in (np.bool_, bool):
-                self.__setattr__(key, False)
-            else:
-                self.__setattr__(key, None)
+                val = False
+            setattr(self, key, val)
 
             if ctx[OptionBlock.nested]:
                 for k, d in ctx[OptionBlock.vars].items():
+                    val = None
                     if d[OptionBlock.dtype] in (np.bool_, bool):
-                        self.__setattr__(k, False)
-                    else:
-                        self.__setattr__(k, None)
+                        val = False
+                    setattr(self, k, val)
 
         t = self.options_line.split()
         nested = False
@@ -285,9 +278,10 @@ class OptionBlock:
                     OptionUtil.isvalid(dtype, t[ix])
 
                     if dtype == np.bool_:
-                        self.__setattr__(key, True)
+                        val = True
                     else:
-                        self.__setattr__(key, dtype(t[ix]))
+                        val = dtype(t[ix])
+                    setattr(self, key, val)
 
                     ix += 1
 
@@ -312,9 +306,10 @@ class OptionBlock:
                     OptionUtil.isvalid(dtype, t[ix])
 
                     if dtype == np.bool_:
-                        self.__setattr__(key, True)
+                        val = True
                     else:
-                        self.__setattr__(key, dtype(t[ix]))
+                        val = dtype(t[ix])
+                    setattr(self, key, val)
 
                     ix += 1
 
@@ -406,7 +401,9 @@ class OptionBlock:
                                 valid = True
 
                             if not valid:
-                                err_msg = f"Invalid type set to variable {k} in option block"
+                                err_msg = (
+                                    f"Invalid type set to variable {k} in option block"
+                                )
                                 raise TypeError(err_msg)
 
                             option_line += t[ix] + " "
@@ -489,8 +486,6 @@ class OptionUtil:
                 valid = OptionUtil.isint(val)
             elif dtype == float:
                 valid = OptionUtil.isfloat(val)
-            else:
-                pass
 
         if not valid:
             err_msg = f"Invalid type set to variable {val} in option block"

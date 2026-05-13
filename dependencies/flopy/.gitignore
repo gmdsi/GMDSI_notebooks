@@ -1,0 +1,115 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# test coverage reports
+htmlcov/
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# benchmarking/profiling reports
+**/.benchmarks
+**/.profile
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+
+# shell stuff
+#*.sh
+
+# Sphinx documentation
+.docs/_build/
+
+# PyBuilder
+.idea/
+target/
+flopy/.idea
+
+.docs/Notebooks/data
+.docs/Notebooks/temp
+# tutorials are currently converted from .py to .ipynb by jupytext
+.docs/Notebooks/*.ipynb
+.docs/scripts/data
+
+# ignore all .ipynb_checkpoints
+.ipynb_checkpoints
+
+autotest/*.bin
+autotest/*.dat
+autotest/temp
+autotest/tempbin
+autotest/.noseids
+autotest/.temp
+autotest/.failed
+
+*.chk
+*.chk.csv
+
+.docs/.working
+.docs/_build
+.docs/_static
+.docs/_templates
+.docs/source
+.docs/.bin
+.docs/_temp
+
+*.bak
+
+# environment files
+**.env
+venv
+app
+
+# IDE files
+.vscode
+.vs
+
+# mac files
+**.DS_Store
+
+# DFN backups
+flopy/mf6/data/dfn_backup/
+
+# DFN TOML dir
+flopy/mf6/data/toml/
+
+# uv lockfile
+uv.lock
