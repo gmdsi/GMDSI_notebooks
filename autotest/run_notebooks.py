@@ -8,7 +8,6 @@ Usage:
 Notebooks within each section are sorted and run sequentially.
 Sections are run in the order given on the command line.
 """
-import os
 import subprocess
 import sys
 import time
@@ -156,6 +155,52 @@ def patch_ies_notebook(nb_path):
     return changed
 
 
+def uses_panther(nb):
+    """Return True if any code cell in the loaded notebook invokes start_workers."""
+    for cell in nb["cells"]:
+        if cell["cell_type"] != "code":
+            continue
+        for line in cell["source"]:
+            if "start_workers" in line and not line.lstrip().startswith("#"):
+                return True
+    return False
+
+
+def patch_overdue_giveup_fac(nb_path):
+    """Inject overdue_giveup_fac=1e10 before each pst.write call in notebooks that
+    use the panther parallel run manager. Avoids spurious agent timeouts on slow
+    runners (e.g. GitHub Actions macOS)."""
+    import json
+    import re
+    with open(nb_path, "r", encoding="utf-8") as f:
+        nb = json.load(f)
+    if not uses_panther(nb):
+        return False
+    changed = False
+    pattern = re.compile(r'^(\s*)pst\.write\(')
+    for cell in nb["cells"]:
+        if cell["cell_type"] != "code":
+            continue
+        new_source = []
+        for line in cell["source"]:
+            stripped = line.lstrip()
+            if not stripped.startswith("#"):
+                m = pattern.match(line)
+                if m:
+                    indent = m.group(1)
+                    new_source.append(
+                        f'{indent}pst.pestpp_options["overdue_giveup_fac"] = 1e10\n'
+                    )
+                    changed = True
+            new_source.append(line)
+        cell["source"] = new_source
+    if changed:
+        with open(nb_path, "w", encoding="utf-8") as f:
+            json.dump(nb, f, indent=1)
+        print(f"  Injected overdue_giveup_fac into {nb_path.name}")
+    return changed
+
+
 def run_notebook(nb_path):
     """Execute a notebook in place and clear output. Returns True on success."""
     print(f"\n{'='*60}")
@@ -163,12 +208,13 @@ def run_notebook(nb_path):
     print(f"{'='*60}")
     t0 = time.time()
 
-    # Patch IES notebooks for faster CI runs, keeping a backup to restore after
-    patched = False
-    backup = None
+    # Patch notebooks for testing, keeping a backup to restore after.
+    # IES-specific (reduced realizations/iterations) is path-scoped; the panther
+    # overdue_giveup_fac injection is content-scoped via uses_panther().
+    backup = nb_path.read_bytes()
     if "part2_06_ies" in str(nb_path):
-        backup = nb_path.read_bytes()
-        patched = patch_ies_notebook(nb_path)
+        patch_ies_notebook(nb_path)
+    patch_overdue_giveup_fac(nb_path)
 
     result = subprocess.run(
         [
@@ -186,9 +232,8 @@ def run_notebook(nb_path):
     status = "PASS" if result.returncode == 0 else "FAIL"
     print(f"{status}: {nb_path.name} ({elapsed:.0f}s)")
 
-    # Restore original notebook content if it was patched
-    if backup is not None:
-        nb_path.write_bytes(backup)
+    # Restore original notebook content (reverts any patching above)
+    nb_path.write_bytes(backup)
 
     # Clear output and metadata regardless of success
     subprocess.run(
