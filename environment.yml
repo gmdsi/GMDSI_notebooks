@@ -4,7 +4,7 @@ channels:
 dependencies:
   - python=3.11
   - pip
-  - pandas>=2.0
+  - pandas>=2.0,<3.0
   - numpy<2 
   - matplotlib 
   - openpyxl
