@@ -1,6 +1,185 @@
 import numpy as np
 
 
+class _GridAdapter:
+    """
+    Temporary workaround to normalize grid-specific array access patterns.
+
+    Different grid types (DIS, DISV, DISU) store arrays in different shapes.
+    Adapters provide a uniformly shaped interface, (nlay, ncells_per_layer).
+
+    Currently this is used only in get_transmissivities(). It should not be
+    necessary anymore in 4.x.
+    """
+
+    def __init__(self, model, dis_package, nlay):
+        self.model = model
+        self.dis = dis_package
+        self.nlay = nlay
+
+    def reshape_if_needed(self, array, target_shape):
+        """Reshape 1D array to 2D if needed."""
+        if array.ndim == 1 and len(target_shape) == 2:
+            return array.reshape(target_shape)
+        return array
+
+    def get_k_array(self, paklist):
+        """
+        Return hydraulic conductivity array in shape (nlay, ncells_per_layer).
+
+        Parameters
+        ----------
+        paklist : list
+            List of package names in the model
+        """
+        # Check for flow packages in order of preference
+        if "LPF" in paklist:
+            return self.model.lpf.hk.array
+        elif "UPW" in paklist:
+            return self.model.upw.hk.array
+        elif "NPF" in paklist:
+            return self._get_npf_k_array()
+        else:
+            raise ValueError("No LPF, UPW, or NPF package.")
+
+    def _get_npf_k_array(self):
+        """Get NPF k array. Subclasses may override for grid-specific handling."""
+        return self.model.npf.k.array
+
+    def get_bottom_array(self):
+        """Return bottom elevation array in shape (nlay, ncells_per_layer)."""
+        raise NotImplementedError
+
+    def get_top_for_slice(self, indices, grid_type):
+        """Return model top elevation for the given cell indices."""
+        raise NotImplementedError
+
+    def get_layer_tops(self, botm_sliced, indices, grid_type):
+        """Return top elevation for each layer at the given indices."""
+        raise NotImplementedError
+
+    def normalize_heads_array(self, heads):
+        """
+        Normalize heads array to (nlay, ncells_per_layer) shape if needed.
+
+        Parameters
+        ----------
+        heads : ndarray
+            Heads array in any valid format for this grid type
+
+        Returns
+        -------
+        ndarray
+            Heads array in (nlay, ncells_per_layer) shape
+        """
+        # Default: no normalization needed
+        return heads
+
+
+class _DisAdapter(_GridAdapter):
+    """Adapter for structured (DIS) grids."""
+
+    def get_bottom_array(self):
+        return self.dis.botm.array
+
+    def get_top_for_slice(self, indices, grid_type):
+        return self.dis.top.array[indices]
+
+    def get_layer_tops(self, botm_sliced, indices, grid_type):
+        tops = np.empty_like(botm_sliced, dtype=float)
+        tops[0, :] = self.dis.top.array[indices]
+        tops[1:, :] = botm_sliced[:-1]
+        return tops
+
+
+class _DisvAdapter(_GridAdapter):
+    """Adapter for vertex (DISV) grids."""
+
+    def get_bottom_array(self):
+        return self.dis.botm.array
+
+    def get_top_for_slice(self, indices, grid_type):
+        # DISV top is (ncpl,), indices is a tuple with one element
+        return self.dis.top.array[indices[0]]
+
+    def get_layer_tops(self, botm_sliced, indices, grid_type):
+        tops = np.empty_like(botm_sliced, dtype=float)
+        tops[0, :] = self.dis.top.array[indices[0]]
+        tops[1:, :] = botm_sliced[:-1]
+        return tops
+
+
+class _DisuAdapter(_GridAdapter):
+    """Adapter for unstructured (DISU) grids."""
+
+    def _get_npf_k_array(self):
+        """Get NPF k array, reshaping from (nodes,) to (nlay, ncpl) if needed."""
+        k_array = self.model.npf.k.array
+        if k_array.ndim == 1:
+            return k_array.reshape((self.nlay, -1))
+        return k_array
+
+    def get_bottom_array(self):
+        bot_array = self.dis.bot.array
+        if bot_array.ndim == 1:
+            return bot_array.reshape((self.nlay, -1))
+        return bot_array
+
+    def get_top_for_slice(self, indices, grid_type):
+        # DISU top is per-node (nodes,), reshape to (nlay, ncpl) and get layer 0
+        top_array = self.dis.top.array
+        if top_array.ndim == 1:
+            top_array = top_array.reshape((self.nlay, -1))
+        return top_array[0, indices[0]]
+
+    def get_layer_tops(self, botm_sliced, indices, grid_type):
+        # DISU has per-node tops, so each layer has different top values
+        tops = np.empty_like(botm_sliced, dtype=float)
+        top_array = self.dis.top.array
+        if top_array.ndim == 1:
+            top_array = top_array.reshape((self.nlay, -1))
+        tops[0, :] = top_array[0, indices[0]]
+        tops[1:, :] = botm_sliced[:-1]
+        return tops
+
+    def normalize_heads_array(self, heads):
+        """Normalize heads from flat (nnodes,) to (nlay, ncpl) if needed."""
+        if heads.ndim == 1:
+            return heads.reshape((self.nlay, -1))
+        return heads
+
+
+def _get_grid_adapter(model, nlay):
+    """
+    Get the appropriate grid adapter for the model.
+
+    Parameters
+    ----------
+    model : flopy.modflow.Modflow or flopy.mf6.ModflowGwf object
+        Model object
+    nlay : int
+        Number of layers
+
+    Returns
+    -------
+    adapter : _GridAdapter subclass instance
+        Grid-specific adapter
+    dis_package : discretization package
+        The DIS, DISV, or DISU package
+    """
+    paklist = model.get_package_list()
+
+    if "DISU" in paklist:
+        return _DisuAdapter(model, model.disu, nlay)
+    elif "DISV" in paklist:
+        return _DisvAdapter(model, model.disv, nlay)
+    elif "DIS" in paklist:
+        return _DisAdapter(model, model.dis, nlay)
+    else:
+        # For older MODFLOW versions, default to DIS adapter
+        return _DisAdapter(model, model.dis, nlay)
+
+
 def get_transmissivities(
     heads,
     m,
@@ -23,17 +202,21 @@ def get_transmissivities(
     ----------
     heads : 2D array OR 3D array
         numpy array of shape nlay by n locations (2D) OR complete heads array
-        of the model for one time (3D)
-    m : flopy.modflow.Modflow object
-        Must have dis and lpf or upw packages.
+        with the correct shape for structured grids (nlay, nrow, ncol) or for
+        vertex grids (nlay, ncpl) or unstructured grids (nnodes).
+        If None, the system is assumed to be fully saturated (heads at layer tops).
+    m : flopy.modflow.Modflow or flopy.mf6.ModflowGwf object
+        Must have dis, disv, or disu and lpf, upw, or npf packages.
     r : 1D array-like of ints, of length n locations
-        row indices (optional; alternately specify x, y)
+        row indices (optional; alternately specify x, y).
+        Only valid for structured grids.
     c : 1D array-like of ints, of length n locations
-        column indices (optional; alternately specify x, y)
+        column indices (optional; alternately specify x, y).
+        Only valid for structured grids.
     x : 1D array-like of floats, of length n locations
-        x locations in real world coordinates (optional)
+        x locations in real world coordinates (optional).
     y : 1D array-like of floats, of length n locations
-        y locations in real world coordinates (optional)
+        y locations in real world coordinates (optional).
     sctop : 1D array-like of floats, of length n locations
         open interval tops (optional; default is model top)
     scbot : 1D array-like of floats, of length n locations
@@ -46,42 +229,89 @@ def get_transmissivities(
     T : 2D array of same shape as heads (nlay x n locations)
         Transmissivities in each layer at each location
 
+    Notes
+    -----
+    For structured grids, locations can be specified with either:
+    - r, c (row, column indices)
+    - x, y (real world coordinates)
+
+    For vertex and unstructured grids, only x, y coordinates are supported.
+
+    When heads=None, the system is interpreted as fully saturated, with heads
+    set to the model top for all layers. This represents maximum possible
+    saturation and is useful for calculating maximum transmissivities.
+
+    Examples
+    --------
+    >>> T = get_transmissivities(heads, model, r=[0, 1], c=[0, 1])
+    >>> T = get_transmissivities(heads, model, x=[100.0, 200.0], y=[50.0, 150.0])
+    >>> T = get_transmissivities(None, model, r=[0, 1], c=[0, 1])  # fully saturated
     """
+
+    # get grid dims
+    if (modelgrid := getattr(m, "modelgrid", None)) is not None:
+        grid_type = modelgrid.grid_type
+        nlay = m.modelgrid.nlay
+        if grid_type == "structured":
+            nrow = m.modelgrid.nrow
+            ncol = m.modelgrid.ncol
+        elif (ncpl := getattr(m.modelgrid, "ncpl", None)) is None:
+            raise ValueError(f"Unsupported grid type: {grid_type}")
+    else:
+        grid_type = "structured"
+        nlay = m.nlay
+        nrow = m.nrow
+        ncol = m.ncol
+
+    # get grid adapter
+    adapter = _get_grid_adapter(m, nlay)
+
+    # get slicing indices
     if r is not None and c is not None:
-        pass
+        if grid_type != "structured":
+            raise ValueError("r, c parameters only valid for structured grids")
+        indices = (np.atleast_1d(r), np.atleast_1d(c))
     elif x is not None and y is not None:
-        # get row, col for observation locations
-        r, c = m.modelgrid.intersect(x, y)
+        points = zip(np.atleast_1d(x), np.atleast_1d(y))
+        if grid_type == "structured":
+            indices = [m.modelgrid.intersect(xi, yi) for xi, yi in points]
+            indices = tuple(np.array(idcs) for idcs in zip(*indices))
+        else:
+            indices = (np.array([m.modelgrid.intersect(xi, yi) for xi, yi in points]),)
     else:
-        raise ValueError("Must specify row, column or x, y locations.")
+        raise ValueError("Must specify r, c indices or x, y locations.")
 
-    # get k-values and botms at those locations
+    # get k array using adapter (handles all flow packages)
     paklist = m.get_package_list()
-    if "LPF" in paklist:
-        hk = m.lpf.hk.array[:, r, c]
-    elif "UPW" in paklist:
-        hk = m.upw.hk.array[:, r, c]
-    else:
-        raise ValueError("No LPF or UPW package.")
+    k_array = adapter.get_k_array(paklist)
+    hk = k_array[(slice(None),) + indices]
 
-    botm = m.dis.botm.array[:, r, c]
+    # get and slice bottom array
+    botm_array = adapter.get_bottom_array()
+    botm = botm_array[(slice(None),) + indices]
 
-    if heads.shape == (m.nlay, m.nrow, m.ncol):
-        heads = heads[:, r, c]
+    # handle fully saturated case (heads=None)
+    if heads is None:
+        model_top = adapter.get_top_for_slice(indices, grid_type)
+        heads = np.tile(model_top, (nlay, 1))
 
-    msg = "Shape of heads array must be nlay x nhyd"
-    assert heads.shape == botm.shape, msg
+    # normalize and slice heads using adapter
+    heads = adapter.normalize_heads_array(heads)
 
-    # set open interval tops/bottoms to model top/bottom if None
+    if grid_type == "structured" and heads.shape == (nlay, nrow, ncol):
+        heads = heads[(slice(None),) + indices]
+    elif grid_type != "structured" and heads.shape == (nlay, ncpl):
+        heads = heads[(slice(None),) + indices]
+    if heads.shape != botm.shape:
+        raise ValueError("Shape of heads array must be nlay x nhyd")
+
+    # open interval tops/bottoms default to model top/bottom
     if sctop is None:
-        sctop = m.dis.top.array[r, c]
+        sctop = adapter.get_top_for_slice(indices, grid_type)
     if scbot is None:
-        scbot = m.dis.botm.array[-1, r, c]
+        scbot = botm[-1, :]
 
-    # make an array of layer tops
-    tops = np.empty_like(botm, dtype=float)
-    tops[0, :] = m.dis.top.array[r, c]
-    tops[1:, :] = botm[:-1]
+    tops = adapter.get_layer_tops(botm, indices, grid_type)
 
     # expand top and bottom arrays to be same shape as botm, thickness, etc.
     # (so we have an open interval value for each layer)
@@ -295,9 +525,7 @@ def get_extended_budget(
         matched_name = [s for s in rec_names if budget_term in s]
         if not matched_name:
             raise RuntimeError(budget_term + err_msg)
-        frf = cbf.get_data(
-            idx=idx, kstpkper=kstpkper, totim=totim, text=budget_term
-        )
+        frf = cbf.get_data(idx=idx, kstpkper=kstpkper, totim=totim, text=budget_term)
         Qx_ext[:, :, 1:] = frf[0]
         # SWI2 package
         budget_term_swi = "SWIADDTOFRF"
@@ -315,9 +543,7 @@ def get_extended_budget(
         matched_name = [s for s in rec_names if budget_term in s]
         if not matched_name:
             raise RuntimeError(budget_term + err_msg)
-        fff = cbf.get_data(
-            idx=idx, kstpkper=kstpkper, totim=totim, text=budget_term
-        )
+        fff = cbf.get_data(idx=idx, kstpkper=kstpkper, totim=totim, text=budget_term)
         Qy_ext[:, 1:, :] = -fff[0]
         # SWI2 package
         budget_term_swi = "SWIADDTOFFF"
@@ -335,9 +561,7 @@ def get_extended_budget(
         matched_name = [s for s in rec_names if budget_term in s]
         if not matched_name:
             raise RuntimeError(budget_term + err_msg)
-        flf = cbf.get_data(
-            idx=idx, kstpkper=kstpkper, totim=totim, text=budget_term
-        )
+        flf = cbf.get_data(idx=idx, kstpkper=kstpkper, totim=totim, text=budget_term)
         Qz_ext[1:, :, :] = -flf[0]
         # SWI2 package
         budget_term_swi = "SWIADDTOFLF"
@@ -352,9 +576,7 @@ def get_extended_budget(
     if boundary_ifaces is not None:
         # need calculated heads for some stresses and to check hnoflo and hdry
         if hdsfile is None:
-            raise ValueError(
-                "hdsfile must be provided when using boundary_ifaces"
-            )
+            raise ValueError("hdsfile must be provided when using boundary_ifaces")
         if isinstance(hdsfile, (bf.HeadFile, fm.FormattedHeadFile)):
             hds = hdsfile
         else:
@@ -366,9 +588,7 @@ def get_extended_budget(
 
         # get hnoflo and hdry values
         if model is None:
-            raise ValueError(
-                "model must be provided when using boundary_ifaces"
-            )
+            raise ValueError("model must be provided when using boundary_ifaces")
         noflo_or_dry = np.logical_or(head == model.hnoflo, head == model.hdry)
 
         for budget_term, iface_info in boundary_ifaces.items():
@@ -410,9 +630,7 @@ def get_extended_budget(
                         np.logical_not(noflo_or_dry[lay, :, :]),
                         np.logical_not(already_found),
                     )
-                    already_found = np.logical_or(
-                        already_found, water_table[lay, :, :]
-                    )
+                    already_found = np.logical_or(already_found, water_table[lay, :, :])
                 Q_stress[np.logical_not(water_table)] = 0.0
 
             # case where the same iface is assigned to all cells
@@ -532,9 +750,7 @@ def get_extended_budget(
                     elif iface == 6:
                         Qz_ext[lay, row, col] -= Q_stress_cell
             else:
-                raise TypeError(
-                    "boundary_ifaces value must be either int or list."
-                )
+                raise TypeError("boundary_ifaces value must be either int or list.")
 
     return Qx_ext, Qy_ext, Qz_ext
 
@@ -600,16 +816,13 @@ def get_specific_discharge(
 
         if vectors[ix].shape == modelgrid.shape:
             tqx = np.zeros(
-                (modelgrid.nlay, modelgrid.nrow, modelgrid.ncol + 1),
-                dtype=np.float32,
+                (modelgrid.nlay, modelgrid.nrow, modelgrid.ncol + 1), dtype=np.float32
             )
             tqy = np.zeros(
-                (modelgrid.nlay, modelgrid.nrow + 1, modelgrid.ncol),
-                dtype=np.float32,
+                (modelgrid.nlay, modelgrid.nrow + 1, modelgrid.ncol), dtype=np.float32
             )
             tqz = np.zeros(
-                (modelgrid.nlay + 1, modelgrid.nrow, modelgrid.ncol),
-                dtype=np.float32,
+                (modelgrid.nlay + 1, modelgrid.nrow, modelgrid.ncol), dtype=np.float32
             )
             if vectors[0] is not None:
                 tqx[:, :, 1:] = vectors[0]
@@ -628,8 +841,7 @@ def get_specific_discharge(
 
         else:
             raise IndexError(
-                "Classical budget components must have "
-                "the same shape as the modelgrid"
+                "Classical budget components must have the same shape as the modelgrid"
             )
     else:
         spdis = vectors
@@ -652,9 +864,7 @@ def get_specific_discharge(
         if modelgrid._idomain is None:
             modelgrid._idomain = model.dis.ibound
         if head is not None:
-            noflo_or_dry = np.logical_or(
-                head == model.hnoflo, head == model.hdry
-            )
+            noflo_or_dry = np.logical_or(head == model.hnoflo, head == model.hdry)
             modelgrid._idomain[noflo_or_dry] = 0
 
         # get cross section areas along x
@@ -675,26 +885,16 @@ def get_specific_discharge(
             cross_area_x = (
                 delc[:]
                 * 0.5
-                * (
-                    saturated_thickness[:, :, :-1]
-                    + saturated_thickness[:, :, 1:]
-                )
+                * (saturated_thickness[:, :, :-1] + saturated_thickness[:, :, 1:])
             )
             cross_area_y = (
                 delr
                 * 0.5
-                * (
-                    saturated_thickness[:, 1:, :]
-                    + saturated_thickness[:, :-1, :]
-                )
+                * (saturated_thickness[:, 1:, :] + saturated_thickness[:, :-1, :])
             )
-            qx[:, :, 1:] = (
-                0.5 * (tqx[:, :, 2:] + tqx[:, :, 1:-1]) / cross_area_x
-            )
+            qx[:, :, 1:] = 0.5 * (tqx[:, :, 2:] + tqx[:, :, 1:-1]) / cross_area_x
             qx[:, :, 0] = 0.5 * tqx[:, :, 1] / cross_area_x[:, :, 0]
-            qy[:, 1:, :] = (
-                0.5 * (tqy[:, 2:, :] + tqy[:, 1:-1, :]) / cross_area_y
-            )
+            qy[:, 1:, :] = 0.5 * (tqy[:, 2:, :] + tqy[:, 1:-1, :]) / cross_area_y
             qy[:, 0, :] = 0.5 * tqy[:, 1, :] / cross_area_y[:, 0, :]
             qz = 0.5 * (tqz[1:, :, :] + tqz[:-1, :, :]) / cross_area_z
 

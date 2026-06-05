@@ -149,8 +149,7 @@ class SeawatVsc(Package):
     ):
         if len(list(kwargs.keys())) > 0:
             raise Exception(
-                "VSC error: unrecognized kwargs: "
-                + " ".join(list(kwargs.keys()))
+                "VSC error: unrecognized kwargs: " + " ".join(list(kwargs.keys()))
             )
 
         if unitnumber is None:
@@ -227,14 +226,6 @@ class SeawatVsc(Package):
         if self.mt3dmuflg == -1:
             f_vsc.write(f"{self.viscref}\n")
             f_vsc.write(f"{self.nsmueos} {self.mutempopt}\n")
-            # if self.nsmueos == 1:
-            #     f_vsc.write('{} {} {}\n'.format(self.mtmuspec, self.dmudc,
-            #                                   self.cmuref))
-            # else:
-            #     for iwr in range(self.nsmueos):
-            #         f_vsc.write('{} {} {}\n'.format(self.mtmuspec[iwr],
-            #                                         self.dmudc[iwr],
-            #                                         self.cmuref[iwr]))
             if self.nsmueos > 0:
                 for iwr in range(self.nsmueos):
                     f_vsc.write(
@@ -439,12 +430,7 @@ class SeawatVsc(Package):
                 if invisc > 0:
                     name = f"VISC_StressPeriod_{iper}"
                     t = Util3d.load(
-                        f,
-                        model,
-                        (nlay, nrow, ncol),
-                        np.float32,
-                        name,
-                        ext_unit_dict,
+                        f, model, (nlay, nrow, ncol), np.float32, name, ext_unit_dict
                     )
                     if invisc == 2:
                         t = t.array

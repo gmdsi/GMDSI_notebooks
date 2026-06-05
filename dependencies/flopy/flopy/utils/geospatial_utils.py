@@ -1,4 +1,4 @@
-import os
+from os import PathLike
 from pathlib import Path
 
 import numpy as np
@@ -49,9 +49,7 @@ class GeoSpatialUtil:
     """
 
     def __init__(self, obj, shapetype=None):
-        self.__shapefile = import_optional_dependency(
-            "shapefile", errors="silent"
-        )
+        self.__shapefile = import_optional_dependency("shapefile", errors="silent")
         self.__obj = obj
         self.__geo_interface = {}
         self._geojson = None
@@ -165,7 +163,7 @@ class GeoSpatialUtil:
         """
         if self._points is None:
             pts = self.__geo_interface["coordinates"]
-            if self.__geo_interface["type"] in ("Polygon", "MultiPolygon"):
+            if self.__geo_interface["type"] in {"Polygon", "MultiPolygon"}:
                 self._points = []
                 for t in pts:
                     tmp = [tuple(x) for x in t]
@@ -212,9 +210,7 @@ class GeoSpatialUtil:
         """
         if self.__shapefile is not None:
             if self._shape is None:
-                self._shape = self.__shapefile.Shape._from_geojson(
-                    self.__geo_interface
-                )
+                self._shape = self.__shapefile.Shape._from_geojson(self.__geo_interface)
             return self._shape
 
     @property
@@ -260,14 +256,10 @@ class GeoSpatialCollection:
     """
 
     def __init__(self, obj, shapetype=None):
-        self.__shapefile = import_optional_dependency(
-            "shapefile", errors="silent"
-        )
+        self.__shapefile = import_optional_dependency("shapefile", errors="silent")
         gpd = import_optional_dependency("geopandas", errors="silent")
 
-        shapely_geo = import_optional_dependency(
-            "shapely.geometry", errors="silent"
-        )
+        shapely_geo = import_optional_dependency("shapely.geometry", errors="silent")
 
         self.__obj = obj
         self.__collection = []
@@ -317,12 +309,10 @@ class GeoSpatialCollection:
                     shapetype = [shapetype] * len(obj)
 
                 for ix, geom in enumerate(obj):
-                    self.__collection.append(
-                        GeoSpatialUtil(geom, shapetype[ix])
-                    )
+                    self.__collection.append(GeoSpatialUtil(geom, shapetype[ix]))
 
         elif self.__shapefile is not None:
-            if isinstance(obj, (str, os.PathLike)):
+            if isinstance(obj, (str, PathLike)):
                 with self.__shapefile.Reader(
                     str(Path(obj).expanduser().absolute())
                 ) as r:
@@ -399,6 +389,28 @@ class GeoSpatialCollection:
         yield from self.__collection
 
     @property
+    def __geo_interface__(self):
+        """
+        Method to get a geo interface object for the collection. See
+        see https://gist.github.com/sgillies/2217756 for more information
+
+        Returns
+        -------
+            dict : standardized __geo_interface__
+        """
+        geo_interface = {
+            "type": "FeatureCollection",
+        }
+        features = [
+            {"id": f"{ix}", "geometry": feat.__geo_interface__, "properties": {}}
+            for ix, feat in enumerate(self.__collection)
+        ]
+
+        geo_interface["features"] = features
+
+        return geo_interface
+
+    @property
     def shapetype(self):
         """
         Returns a list of shapetypes to the user
@@ -443,6 +455,20 @@ class GeoSpatialCollection:
     @property
     def geo_dataframe(self):
         """
+        DEPRECATED - use `.geodataframe` instead. Remove in version 3.11
+
+        Returns
+        -------
+            geopandas.GeoDataFrame
+        """
+        import warnings
+
+        warnings.warn("Deprecated, use .geodataframe instead", DeprecationWarning)
+        return self.geodataframe
+
+    @property
+    def geodataframe(self):
+        """
         Property that returns a geopandas DataFrame
 
         Returns
@@ -450,11 +476,10 @@ class GeoSpatialCollection:
             geopandas.GeoDataFrame
         """
         gpd = import_optional_dependency("geopandas")
-        data = {"geometry": self.shapely.geoms}
+        gdf = gpd.GeoDataFrame.from_features(self.__geo_interface__)
         if self.__attributes is not None:
             for k, v in self.__attributes.items():
-                data[k] = v
-        gdf = gpd.GeoDataFrame(data)
+                gdf[k] = v
         return gdf
 
     @property

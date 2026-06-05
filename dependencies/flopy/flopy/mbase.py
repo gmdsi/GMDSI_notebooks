@@ -14,10 +14,11 @@ import sys
 import threading
 import warnings
 from datetime import datetime
+from os import PathLike, curdir
 from pathlib import Path
 from shutil import which
 from subprocess import PIPE, STDOUT, Popen
-from typing import List, Optional, Tuple, Union
+from typing import Optional, Union
 from warnings import warn
 
 import numpy as np
@@ -36,7 +37,7 @@ else:
     flopy_bin = os.path.join(os.path.expanduser("~"), ".local/share/flopy/bin")
 os.environ["PATH"] = os.environ.get("PATH", "") + os.path.pathsep + flopy_bin
 
-## Global variables
+# Global variables
 # Multiplier for individual array elements in integer and real arrays read by
 # MODFLOW's U2DREL, U1DREL and U2DINT.
 iconst = 1
@@ -45,66 +46,71 @@ iprn = -1
 
 
 def resolve_exe(
-    exe_name: Union[str, os.PathLike], forgive: bool = False
-) -> str:
+    exe_name: Union[str, PathLike], forgive: bool = False
+) -> Union[str, None]:
     """
-    Resolves the absolute path of the executable, raising FileNotFoundError if the executable
-    cannot be found (set forgive to True to return None and warn instead of raising an error).
+    Resolves the absolute path of the executable, raising FileNotFoundError
+    if the executable cannot be found (set forgive to True to return None
+    and warn instead of raising an error).
 
     Parameters
     ----------
     exe_name : str or PathLike
         The executable's name or path. If only the name is provided,
         the executable must be on the system path.
-    forgive : bool
+    forgive : bool, default False
         If True and executable cannot be found, return None and warn
         rather than raising a FileNotFoundError. Defaults to False.
 
     Returns
     -------
-        str: absolute path to the executable
+    str or None
+        Absolute path to the executable, or None if not found and
+        ``forgive=True``.
     """
 
-    def _resolve(exe_name):
-        exe = which(exe_name)
-        if exe is not None:
-            # if which() returned a relative path, resolve it
-            exe = which(str(Path(exe).resolve()))
-        else:
-            if exe_name.lower().endswith(".exe"):
-                # try removing .exe suffix
-                exe = which(exe_name[:-4])
-            if exe is not None:
-                # in case which() returned a relative path, resolve it
-                exe = which(str(Path(exe).resolve()))
-            else:
-                # try tilde-expanded abspath
-                exe = which(Path(exe_name).expanduser().absolute())
-            if exe is None and exe_name.lower().endswith(".exe"):
-                # try tilde-expanded abspath without .exe suffix
-                exe = which(Path(exe_name[:-4]).expanduser().absolute())
-        return exe
+    def _resolve(exe_name, checked=set()):
+        exe_pth = Path(exe_name)
+        exe_name = str(exe_name)
 
-    name = str(exe_name)
-    exe_path = _resolve(name)
-    if exe_path is None and on_windows and Path(name).suffix == "":
-        # try adding .exe suffix on windows (for portability from other OS)
-        exe_path = _resolve(f"{name}.exe")
+        # Prevent infinite recursion by checking if exe_name has been checked
+        if exe_name in checked:
+            return None
+        checked.add(exe_name)
+
+        # exe_name is found (not None), ensure absolute path is returned
+        if exe := which(exe_name):
+            return which(str(Path(exe).resolve()))
+
+        # exe_name is relative path
+        if not exe_pth.is_absolute() and (
+            exe := which(str(exe_pth.expanduser().resolve()), mode=0)
+        ):
+            # expanduser() in case of ~ in path
+            # mode=0 effectively allows which() to find exe without suffix in windows
+            return exe
+
+        # try adding/removing .exe suffix
+        if exe_name.lower().endswith(".exe"):
+            return _resolve(exe_name[:-4], checked)
+        elif on_windows and "." not in exe_pth.stem:
+            return _resolve(f"{exe_name}.exe", checked)
+
+    # return path if found
+    if exe_path := _resolve(exe_name):
+        return str(exe_path)
 
     # raise if we are unforgiving, otherwise return None
-    if exe_path is None:
-        if forgive:
-            warn(
-                f"The program {exe_name} does not exist or is not executable.",
-                category=UserWarning,
-            )
-            return None
-
-        raise FileNotFoundError(
-            f"The program {exe_name} does not exist or is not executable."
+    if forgive:
+        warn(
+            f"The program {exe_name} does not exist or is not executable.",
+            category=UserWarning,
         )
+        return None
 
-    return exe_path
+    raise FileNotFoundError(
+        f"The program {exe_name} does not exist or is not executable."
+    )
 
 
 # external exceptions for users
@@ -140,9 +146,7 @@ class FileData:
                 ipop.append(idx)
 
         self.file_data.append(
-            FileDataEntry(
-                fname, unit, binflag=binflag, output=output, package=package
-            )
+            FileDataEntry(fname, unit, binflag=binflag, output=output, package=package)
         )
         return
 
@@ -314,10 +318,7 @@ class ModelInterface:
         for p in self.packagelist:
             if chk.package_check_levels.get(p.name[0].lower(), 0) <= level:
                 results[p.name[0]] = p.check(
-                    f=None,
-                    verbose=False,
-                    level=level - 1,
-                    checktype=chk.__class__,
+                    f=None, verbose=False, level=level - 1, checktype=chk.__class__
                 )
 
         # model level checks
@@ -342,12 +343,11 @@ class ModelInterface:
 
         # add package check results to model level check summary
         for r in results.values():
-            if (
-                r is not None and r.summary_array is not None
-            ):  # currently SFR doesn't have one
-                chk.summary_array = np.append(
-                    chk.summary_array, r.summary_array
-                ).view(np.recarray)
+            if r is not None and r.summary_array is not None:
+                # currently SFR doesn't have one
+                chk.summary_array = np.append(chk.summary_array, r.summary_array).view(
+                    np.recarray
+                )
                 chk.passed += [
                     f"{r.package.name[0]} package: {psd}" for psd in r.passed
                 ]
@@ -368,13 +368,19 @@ class BaseModel(ModelInterface):
     exe_name : str or PathLike, default "mf2005"
         Name or path of the modflow executable. If a name is provided,
         the executable must be on the system path.
-    model_ws : str or PathLike, optional, default "."
+    model_ws : str or PathLike, default "." (curdir)
         Path to the model workspace.  Model files will be created in this
         directory.  Default is the current working directory.
     structured : bool, default True
         Specify if model grid is structured (default) or unstructured.
     verbose : bool, default False
         Print additional information to the screen.
+    free_format_npl : int, optional
+        Number of values per line when writing free-format arrays. When set
+        (e.g., ``free_format_npl=10``), arrays are written with that many
+        values per line instead of all values on a single line. This produces
+        block-format output, improving readability for large models.
+        Default is None (all values on one line).
     **kwargs : dict, optional
         Used to define: ``xll``/``yll`` for the x- and y-coordinates of
         the lower-left corner of the grid, ``xul``/``yul`` for the
@@ -389,10 +395,11 @@ class BaseModel(ModelInterface):
         self,
         modelname="modflowtest",
         namefile_ext="nam",
-        exe_name: Union[str, os.PathLike] = "mf2005",
-        model_ws: Union[str, os.PathLike] = os.curdir,
+        exe_name: Union[str, PathLike] = "mf2005",
+        model_ws: Union[str, PathLike] = curdir,
         structured=True,
         verbose=False,
+        free_format_npl=None,
         **kwargs,
     ):
         """Initialize BaseModel."""
@@ -403,9 +410,7 @@ class BaseModel(ModelInterface):
         self._packagelist = []
         self.heading = ""
         self.exe_name = (
-            "mf2005"
-            if exe_name is None
-            else resolve_exe(exe_name, forgive=True)
+            "mf2005" if exe_name is None else resolve_exe(exe_name, forgive=True)
         )
         self._verbose = verbose
         self.external_path = None
@@ -439,10 +444,7 @@ class BaseModel(ModelInterface):
         self._start_datetime = kwargs.pop("start_datetime", "1-1-1970")
 
         if kwargs:
-            warn(
-                f"unhandled keywords: {kwargs}",
-                category=UserWarning,
-            )
+            warn(f"unhandled keywords: {kwargs}", category=UserWarning)
 
         # build model discretization objects
         self._modelgrid = Grid(
@@ -458,6 +460,7 @@ class BaseModel(ModelInterface):
         # external option stuff
         self.array_free_format = True
         self.free_format_input = True
+        self.free_format_npl = free_format_npl
         self.parameter_load = False
         self.array_format = None
         self.external_fnames = []
@@ -506,7 +509,7 @@ class BaseModel(ModelInterface):
         return self._model_ws
 
     @model_ws.setter
-    def model_ws(self, model_ws: Union[str, os.PathLike]):
+    def model_ws(self, model_ws: Union[str, PathLike]):
         self._model_ws = str(Path(model_ws).expanduser().absolute())
 
     @property
@@ -570,37 +573,6 @@ class BaseModel(ModelInterface):
         except AttributeError:
             return None
 
-    # we don't need these - no need for controlled access to array_free_format
-    # def set_free_format(self, value=True):
-    #     """
-    #     Set the free format flag for the model instance
-    #
-    #     Parameters
-    #     ----------
-    #     value : bool
-    #         Boolean value to set free format flag for model. (default is True)
-    #
-    #     Returns
-    #     -------
-    #
-    #     """
-    #     if not isinstance(value, bool):
-    #         print('Error: set_free_format passed value must be a boolean')
-    #         return False
-    #     self.array_free_format = value
-    #
-    # def get_free_format(self):
-    #     """
-    #     Return the free format flag for the model
-    #
-    #     Returns
-    #     -------
-    #     out : bool
-    #         Free format flag for the model
-    #
-    #     """
-    #     return self.array_free_format
-
     def next_unit(self, i=None):
         if i is not None:
             self.__onunit__ = i - 1
@@ -617,7 +589,7 @@ class BaseModel(ModelInterface):
         self._next_ext_unit += 1
         return next_unit
 
-    def export(self, f: Union[str, os.PathLike], **kwargs):
+    def export(self, f: Union[str, PathLike], **kwargs):
         """
         Method to export a model to netcdf or shapefile based on the
         extension of the file name (.shp for shapefile, .nc for netcdf)
@@ -700,9 +672,7 @@ class BaseModel(ModelInterface):
                     if iu in self.package_units:
                         self.package_units.remove(iu)
                 return
-        raise StopIteration(
-            "Package name " + pname + " not found in Package list"
-        )
+        raise StopIteration("Package name " + pname + " not found in Package list")
 
     def __getattr__(self, item):
         """
@@ -723,8 +693,7 @@ class BaseModel(ModelInterface):
         Returns
         -------
         object, str, int or None
-            Package object of type :class:`flopy.pakbase.Package`,
-            :class:`flopy.utils.reference.TemporalReference`, str, int or None.
+            Package object of type :class:`flopy.pakbase.Package`, str, int, or None
 
         Raises
         ------
@@ -740,12 +709,6 @@ class BaseModel(ModelInterface):
         if item == "output_packages" or not hasattr(self, "output_packages"):
             raise AttributeError(item)
 
-        if item == "tr":
-            if self.dis is not None:
-                return self.dis.tr
-            else:
-                return None
-
         if item == "nper":
             # most subclasses have a nper property, but ModflowAg needs this
             if self.dis is not None:
@@ -759,13 +722,8 @@ class BaseModel(ModelInterface):
             else:
                 return None
 
-        # return self.get_package(item)
         # to avoid infinite recursion
-        if (
-            item == "_packagelist"
-            or item == "packagelist"
-            or item == "mfnam_packages"
-        ):
+        if item == "_packagelist" or item == "packagelist" or item == "mfnam_packages":
             raise AttributeError(item)
         pckg = self.get_package(item)
         if pckg is not None or item in self.mfnam_packages:
@@ -810,10 +768,58 @@ class BaseModel(ModelInterface):
             f"{txt2} the output list."
         )
 
+    def to_geodataframe(self, gdf=None, kper=0, package_names=None, shorten_attr=False):
+        """
+        Method to build a Geodataframe from model inputs. Note: transient data
+        will only be exported for a single stress period.
+
+        Parameters
+        ----------
+        gdf : GeoDataFrame
+            optional geopandas geodataframe object to add data to. Default is None
+        kper : int
+            stress period to get transient data from
+        package_names : list
+            optional list of package names
+        shorten_attr : bool
+            method to shorten attribute names for shapefile attribute name length
+            restrictions
+
+        Returns
+        -------
+            gdf : GeoDataFrame
+        """
+        if gdf is None:
+            modelgrid = self.modelgrid
+            if modelgrid is not None:
+                gdf = modelgrid.to_geodataframe()
+            else:
+                raise AttributeError(
+                    "model does not have a grid instance, please supply a geodataframe"
+                )
+
+        if package_names is None:
+            package_names = [pak.name[0] for pak in self.packagelist]
+        else:
+            pass
+
+        for package in self.packagelist:
+            if package.package_type in ("hfb6",):
+                continue
+            if package.name[0] not in package_names:
+                # todo: this needs testing
+                continue
+            if callable(getattr(package, "to_geodataframe", None)):
+                gdf = package.to_geodataframe(
+                    gdf, kper=kper, full_grid=True, shorten_attr=shorten_attr
+                )
+
+        return gdf
+
     def add_output_file(
         self,
         unit,
-        fname: Optional[Union[str, os.PathLike]] = None,
+        fname: Union[str, PathLike, None] = None,
         extension="cbc",
         binflag=True,
         package=None,
@@ -879,7 +885,7 @@ class BaseModel(ModelInterface):
             self.add_output(fname, unit, binflag=binflag, package=package)
 
     def add_output(
-        self, fname: Union[str, os.PathLike], unit, binflag=False, package=None
+        self, fname: Union[str, PathLike], unit, binflag=False, package=None
     ):
         """
         Assign an external array so that it will be listed as a DATA or
@@ -922,9 +928,7 @@ class BaseModel(ModelInterface):
         if self.verbose:
             self._output_msg(-1, add=True)
 
-    def remove_output(
-        self, fname: Optional[Union[str, os.PathLike]] = None, unit=None
-    ):
+    def remove_output(self, fname: Union[str, PathLike, None] = None, unit=None):
         """
         Remove an output file from the model by specifying either the
         file name or the unit number.
@@ -956,12 +960,10 @@ class BaseModel(ModelInterface):
                     self.output_binflag.pop(i)
                     self.output_packages.pop(i)
         else:
-            msg = " either fname or unit must be passed to remove_output()"
-            raise Exception(msg)
+            msg = "either fname or unit must be passed to remove_output()"
+            raise TypeError(msg)
 
-    def get_output(
-        self, fname: Optional[Union[str, os.PathLike]] = None, unit=None
-    ):
+    def get_output(self, fname: Union[str, PathLike, None] = None, unit=None):
         """
         Get an output file from the model by specifying either the
         file name or the unit number.
@@ -985,12 +987,12 @@ class BaseModel(ModelInterface):
                     return self.output_fnames[i]
             return None
         else:
-            msg = " either fname or unit must be passed to get_output()"
-            raise Exception(msg)
+            msg = "either fname or unit must be passed to get_output()"
+            raise TypeError(msg)
 
     def set_output_attribute(
         self,
-        fname: Optional[Union[str, os.PathLike]] = None,
+        fname: Union[str, PathLike, None] = None,
         unit=None,
         attr=None,
     ):
@@ -1020,11 +1022,9 @@ class BaseModel(ModelInterface):
                     idx = i
                     break
         else:
-            msg = (
-                " either fname or unit must be passed "
-                "to set_output_attribute()"
+            raise TypeError(
+                "either fname or unit must be passed to set_output_attribute()"
             )
-            raise Exception(msg)
         if attr is not None:
             if idx is not None:
                 for key, value in attr.items:
@@ -1037,7 +1037,7 @@ class BaseModel(ModelInterface):
 
     def get_output_attribute(
         self,
-        fname: Optional[Union[str, os.PathLike]] = None,
+        fname: Union[str, PathLike, None] = None,
         unit=None,
         attr=None,
     ):
@@ -1065,9 +1065,8 @@ class BaseModel(ModelInterface):
                     idx = i
                     break
         else:
-            raise Exception(
-                " either fname or unit must be passed "
-                "to set_output_attribute()"
+            raise TypeError(
+                "either fname or unit must be passed to set_output_attribute()"
             )
         v = None
         if attr is not None:
@@ -1081,7 +1080,7 @@ class BaseModel(ModelInterface):
         return v
 
     def add_external(
-        self, fname: Union[str, os.PathLike], unit, binflag=False, output=False
+        self, fname: Union[str, PathLike], unit, binflag=False, output=False
     ):
         """
         Assign an external array so that it will be listed as a DATA or
@@ -1110,7 +1109,9 @@ class BaseModel(ModelInterface):
             self.external_output.pop(idx)
         if unit in self.external_units:
             if self.verbose:
-                msg = f"BaseModel.add_external() warning: replacing existing unit {unit}"
+                msg = (
+                    f"BaseModel.add_external() warning: replacing existing unit {unit}"
+                )
                 print(msg)
             idx = self.external_units.index(unit)
             self.external_fnames.pop(idx)
@@ -1123,9 +1124,7 @@ class BaseModel(ModelInterface):
         self.external_binflag.append(binflag)
         self.external_output.append(output)
 
-    def remove_external(
-        self, fname: Optional[Union[str, os.PathLike]] = None, unit=None
-    ):
+    def remove_external(self, fname: Union[str, PathLike, None] = None, unit=None):
         """
         Remove an external file from the model by specifying either the
         file name or the unit number.
@@ -1147,8 +1146,8 @@ class BaseModel(ModelInterface):
                 if u == unit:
                     plist.append(i)
         else:
-            msg = " either fname or unit must be passed to remove_external()"
-            raise Exception(msg)
+            msg = "either fname or unit must be passed to remove_external()"
+            raise TypeError(msg)
         # remove external file
         j = 0
         for i in plist:
@@ -1161,7 +1160,7 @@ class BaseModel(ModelInterface):
 
     def add_existing_package(
         self,
-        filename: Union[str, os.PathLike],
+        filename: Union[str, PathLike],
         ptype=None,
         copy_to_model_ws=True,
     ):
@@ -1188,10 +1187,6 @@ class BaseModel(ModelInterface):
             ptype = filename.split(".")[-1]
         ptype = str(ptype).upper()
 
-        # for pak in self.packagelist:
-        #     if ptype in pak.name:
-        #         print("BaseModel.add_existing_package() warning: " +\
-        #               "replacing existing package {0}".format(ptype))
         class Obj:
             pass
 
@@ -1302,7 +1297,7 @@ class BaseModel(ModelInterface):
 
     def change_model_ws(
         self,
-        new_pth: Optional[Union[str, os.PathLike]] = os.curdir,
+        new_pth: Union[str, PathLike] = curdir,
         reset_external=False,
     ):
         """
@@ -1310,10 +1305,9 @@ class BaseModel(ModelInterface):
 
         Parameters
         ----------
-        new_pth : str or PathLike
+        new_pth : str or PathLike, default "." (curdir)
             Path of the new model workspace. If this path does not exist,
-            it will be created. If no value (None) is given, the default
-            is the present working directory.
+            it will be created. The default is the present working directory.
 
         Returns
         -------
@@ -1323,27 +1317,22 @@ class BaseModel(ModelInterface):
 
         """
         if new_pth is None:
-            new_pth = os.curdir
+            new_pth = curdir
         if not os.path.exists(new_pth):
             try:
                 print(
-                    f"\ncreating model workspace...\n   {flopy_io.relpath_safe(new_pth)}"
+                    "\ncreating model workspace...\n   "
+                    + flopy_io.relpath_safe(new_pth)
                 )
                 os.makedirs(new_pth)
             except:
                 raise OSError(f"{new_pth} not valid, workspace-folder")
-                # line = '\n{} not valid, workspace-folder '.format(new_pth) + \
-                #        'was changed to {}\n'.format(os.getcwd())
-                # print(line)
-                # new_pth = os.getcwd()
 
         # --reset the model workspace
         old_pth = self._model_ws
         self._model_ws = new_pth
         if self.verbose:
-            print(
-                f"\nchanging model workspace...\n   {flopy_io.relpath_safe(new_pth)}"
-            )
+            print(f"\nchanging model workspace...\n   {flopy_io.relpath_safe(new_pth)}")
         # reset the paths for each package
         for pp in self.packagelist:
             pp.fn_path = os.path.join(self.model_ws, pp.file_name[0])
@@ -1352,9 +1341,7 @@ class BaseModel(ModelInterface):
         if (
             hasattr(self, "external_path")
             and self.external_path is not None
-            and not os.path.exists(
-                os.path.join(self._model_ws, self.external_path)
-            )
+            and not os.path.exists(os.path.join(self._model_ws, self.external_path))
         ):
             pth = os.path.join(self._model_ws, self.external_path)
             os.makedirs(pth)
@@ -1366,17 +1353,11 @@ class BaseModel(ModelInterface):
 
     def _reset_external(self, pth, old_pth):
         new_ext_fnames = []
-        for ext_file, output in zip(
-            self.external_fnames, self.external_output
-        ):
-            # new_ext_file = os.path.join(pth, os.path.split(ext_file)[-1])
+        for ext_file, output in zip(self.external_fnames, self.external_output):
             # this is a wicked mess
             if output:
-                # new_ext_file = os.path.join(pth, os.path.split(ext_file)[-1])
                 new_ext_file = ext_file
             else:
-                # fpth = os.path.abspath(os.path.join(old_pth, ext_file))
-                # new_ext_file = os.path.relpath(fpth, os.path.abspath(pth))
                 fdir = os.path.dirname(ext_file)
                 if fdir == "":
                     fpth = os.path.abspath(os.path.join(old_pth, ext_file))
@@ -1384,7 +1365,7 @@ class BaseModel(ModelInterface):
                     fpth = ext_file
                 ao = os.path.abspath(os.path.dirname(fpth))
                 ep = os.path.abspath(pth)
-                relp = os.path.relpath(ao, ep)
+                relp = flopy_io.relpath_safe(ao, ep)
                 new_ext_file = os.path.join(relp, os.path.basename(ext_file))
             new_ext_fnames.append(new_ext_file)
         self.external_fnames = new_ext_fnames
@@ -1408,31 +1389,17 @@ class BaseModel(ModelInterface):
 
     def __setattr__(self, key, value):
         if key == "free_format_input":
-            # if self.bas6 is not None:
-            #    self.bas6.ifrefm = value
             super().__setattr__(key, value)
         elif key == "name":
             self._set_name(value)
         elif key == "model_ws":
             self.change_model_ws(value)
-        elif key == "tr":
-            assert isinstance(
-                value, discretization.reference.TemporalReference
-            )
-            if self.dis is not None:
-                self.dis.tr = value
-            else:
-                raise Exception(
-                    "cannot set TemporalReference - ModflowDis not found"
-                )
         elif key == "start_datetime":
             if self.dis is not None:
                 self.dis.start_datetime = value
-                self.tr.start_datetime = value
+                self.modeltime.start_datetime = value
             else:
-                raise Exception(
-                    "cannot set start_datetime - ModflowDis not found"
-                )
+                raise Exception("cannot set start_datetime - ModflowDis not found")
         else:
             super().__setattr__(key, value)
 
@@ -1442,7 +1409,7 @@ class BaseModel(ModelInterface):
         pause=False,
         report=False,
         normal_msg="normal termination",
-    ) -> Tuple[bool, List[str]]:
+    ) -> tuple[bool, list[str]]:
         """
         This method will run the model using subprocess.Popen.
 
@@ -1476,10 +1443,8 @@ class BaseModel(ModelInterface):
             normal_msg=normal_msg,
         )
 
-    def load_results(self):
-        print("load_results not implemented")
-
-        return None
+    def load_results(self, **kwargs):
+        raise NotImplementedError("load_results not implemented")
 
     def write_input(self, SelPackList=False, check=False):
         """
@@ -1536,25 +1501,20 @@ class BaseModel(ModelInterface):
             print(" ")
         # write name file
         self.write_name_file()
-        # os.chdir(org_dir)
 
     def write_name_file(self):
         """
         Every Package needs its own writenamefile function
 
         """
-        raise Exception(
-            "IMPLEMENTATION ERROR: writenamefile must be overloaded"
-        )
+        raise NotImplementedError("write_name_file must be overloaded")
 
     def set_model_units(self):
         """
         Every model needs its own set_model_units method
 
         """
-        raise Exception(
-            "IMPLEMENTATION ERROR: set_model_units must be overloaded"
-        )
+        raise NotImplementedError("set_model_units must be overloaded")
 
     @property
     def name(self):
@@ -1591,7 +1551,7 @@ class BaseModel(ModelInterface):
 
     def check(
         self,
-        f: Optional[Union[str, os.PathLike]] = None,
+        f: Union[str, PathLike, None] = None,
         verbose=True,
         level=1,
     ):
@@ -1600,7 +1560,7 @@ class BaseModel(ModelInterface):
 
         Parameters
         ----------
-        f : str or PathLike, optional, default None
+        f : str or PathLike, optional
             String defining file name or file handle for summary file
             of check method output. If a string is passed a file handle
             is created. If f is None, check method does not write
@@ -1634,11 +1594,9 @@ class BaseModel(ModelInterface):
                 if p.unit_number[i] != 0:
                     if p.unit_number[i] in package_units.values():
                         duplicate_units[p.name[i]] = p.unit_number[i]
-                        otherpackage = [
-                            k
-                            for k, v in package_units.items()
-                            if v == p.unit_number[i]
-                        ][0]
+                        otherpackage = next(
+                            k for k, v in package_units.items() if v == p.unit_number[i]
+                        )
                         duplicate_units[otherpackage] = p.unit_number[i]
         if len(duplicate_units) > 0:
             for k, v in duplicate_units.items():
@@ -1678,7 +1636,7 @@ class BaseModel(ModelInterface):
                 MfList dictionary key. (default is None)
 
         Returns
-        ----------
+        -------
         axes : list
             Empty list is returned if filename_base is not None. Otherwise
             a list of matplotlib.pyplot.axis are returned.
@@ -1698,45 +1656,19 @@ class BaseModel(ModelInterface):
         """
         from .plot import PlotUtilities
 
-        axes = PlotUtilities._plot_model_helper(
-            self, SelPackList=SelPackList, **kwargs
-        )
+        axes = PlotUtilities._plot_model_helper(self, SelPackList=SelPackList, **kwargs)
         return axes
 
-    def to_shapefile(
-        self, filename: Union[str, os.PathLike], package_names=None, **kwargs
-    ):
-        """
-        Wrapper function for writing a shapefile for the model grid.  If
-        package_names is not None, then search through the requested packages
-        looking for arrays that can be added to the shapefile as attributes
-
-        Parameters
-        ----------
-        filename : str or PathLike
-            Path of the shapefile to write
-        package_names : list of package names (e.g. ["dis","lpf"])
-            Packages to export data arrays to shapefile. (default is None)
-
-        Returns
-        -------
-        None
-
-        Examples
-        --------
-        >>> import flopy
-        >>> m = flopy.modflow.Modflow()
-        >>> m.to_shapefile('model.shp', SelPackList)
-
-        """
-        warnings.warn("to_shapefile() is deprecated. use .export()")
-        self.export(filename, package_names=package_names)
+    def to_shapefile(self, *args, **kwargs):
+        """Raises AttributeError, use :meth:`export`."""
+        # deprecated 3.2.4, changed to raise AttributeError version 3.8
+        raise AttributeError(".to_shapefile() was removed; use .export()")
 
 
 def run_model(
-    exe_name: Union[str, os.PathLike],
+    exe_name: Union[str, PathLike],
     namefile: Optional[str],
-    model_ws: Union[str, os.PathLike] = os.curdir,
+    model_ws: Union[str, PathLike] = curdir,
     silent=False,
     pause=False,
     report=False,
@@ -1745,7 +1677,7 @@ def run_model(
     use_async=False,
     cargs=None,
     custom_print=None,
-) -> Tuple[bool, List[str]]:
+) -> tuple[bool, list[str]]:
     """
     Run the model using subprocess.Popen, optionally collecting stdout and printing
     timestamped progress. Model workspace, namefile, executable to use, and several
@@ -1761,9 +1693,8 @@ def run_model(
     namefile : str, optional
         Name of the name file of model to run. The name may be None
         to run models that don't require a control file (name file)
-    model_ws : str or PathLike, optional, default '.'
-        Path to the parent directory of the namefile. (default is the
-        current working directory '.')
+    model_ws : str or PathLike, default "." (curdir)
+        Path to the parent directory of the namefile.
     silent : boolean, default True
         Whether to suppress model output. (Default is True)
     pause : boolean, optional, default False
@@ -1814,13 +1745,12 @@ def run_model(
     exe_path = resolve_exe(exe_name)
     if not silent:
         print(
-            f"FloPy is using the following executable to run the model: {flopy_io.relpath_safe(exe_path, model_ws)}"
+            "FloPy is using the following executable to run the model: "
+            + flopy_io.relpath_safe(exe_path, model_ws)
         )
 
     # make sure namefile exists
-    if namefile is not None and not os.path.isfile(
-        os.path.join(model_ws, namefile)
-    ):
+    if namefile is not None and not os.path.isfile(os.path.join(model_ws, namefile)):
         raise FileNotFoundError(
             f"The namefile for this model does not exist: {namefile}"
         )
@@ -1829,8 +1759,6 @@ def run_model(
     def q_output(output, q):
         for line in iter(output.readline, b""):
             q.put(line)
-            # time.sleep(1)
-            # output.close()
 
     # create a list of arguments to pass to Popen
     if processors is not None:

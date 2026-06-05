@@ -11,7 +11,7 @@ MODFLOW Guide
 import os
 from os import PathLike
 from pathlib import Path, PurePosixPath, PureWindowsPath
-from typing import List, Tuple, Union
+from typing import Optional, Union
 
 
 class NamData:
@@ -295,11 +295,12 @@ def attribs_from_namfile_header(namefile):
 
 def get_entries_from_namefile(
     path: Union[str, PathLike],
-    ftype: str = None,
-    unit: int = None,
-    extension: str = None,
-) -> List[Tuple]:
-    """Get entries from an MF6 namefile. Can select using FTYPE, UNIT, or file extension.
+    ftype: Optional[str] = None,
+    unit: Optional[int] = None,
+    extension: Optional[str] = None,
+) -> list[tuple]:
+    """Get entries from an MF6 namefile. Can select using FTYPE, UNIT, or file
+    extension.
     This function only supports MF6 namefiles.
 
     Parameters
@@ -389,7 +390,7 @@ def get_input_files(namefile):
         ll = line.strip().split()
         if len(ll) < 2:
             continue
-        if line.strip()[0] in ["#", "!"]:
+        if line.strip()[0] in {"#", "!"}:
             continue
         ext = os.path.splitext(ll[2])[1]
         if ext.lower() not in ignore_ext:
@@ -411,7 +412,7 @@ def get_input_files(namefile):
                 ll = line.strip().split()
                 if len(ll) < 2:
                     continue
-                if line.strip()[0] in ["#", "!"]:
+                if line.strip()[0] in {"#", "!"}:
                     continue
 
                 if "OPEN/CLOSE" in line.upper():
@@ -480,7 +481,7 @@ def get_mf6_nper(tdisfile):
     """
     with open(tdisfile) as f:
         lines = f.readlines()
-    line = [line for line in lines if "NPER" in line.upper()][0]
+    line = next(line for line in lines if "NPER" in line.upper())
     nper = line.strip().split()[1]
     return nper
 
@@ -505,7 +506,7 @@ def get_mf6_mshape(disfile):
         ll = line.strip().split()
         if len(ll) < 2:
             continue
-        if line.strip()[0] in ["#", "!"]:
+        if line.strip()[0] in {"#", "!"}:
             continue
 
         for key in ["NODES", "NCPL", "NLAY", "NROW", "NCOL"]:
@@ -555,7 +556,7 @@ def get_mf6_files(mfnamefile):
         ll = line.strip().split()
         if len(ll) < 2:
             continue
-        if line.strip()[0] in ["#", "!"]:
+        if line.strip()[0] in {"#", "!"}:
             continue
 
         for key in filekeys:
@@ -589,7 +590,7 @@ def get_mf6_files(mfnamefile):
                 ll = line.strip().split()
                 if len(ll) < 2:
                     continue
-                if line.strip()[0] in ["#", "!"]:
+                if line.strip()[0] in {"#", "!"}:
                     continue
                 filelist.append(ll[1])
 
@@ -608,7 +609,6 @@ def get_mf6_files(mfnamefile):
         if len(olist) > 0:
             outplist = outplist + olist
         # terminate loop if no additional files
-        # if len(flist) < 1 and len(olist) < 1:
         if len(flist) < 1:
             break
 
@@ -639,7 +639,7 @@ def _get_mf6_external_files(srcdir, outplist, files):
                 ll = line.strip().split()
                 if len(ll) < 2:
                     continue
-                if line.strip()[0] in ["#", "!"]:
+                if line.strip()[0] in {"#", "!"}:
                     continue
 
                 if "OPEN/CLOSE" in line.upper():
@@ -733,7 +733,7 @@ def get_mf6_ftypes(namefile, ftypekeys):
         ll = line.strip().split()
         if len(ll) < 2:
             continue
-        if line.strip()[0] in ["#", "!"]:
+        if line.strip()[0] in {"#", "!"}:
             continue
 
         for key in ftypekeys:

@@ -1,4 +1,5 @@
 import os
+from os import curdir
 
 import numpy as np
 
@@ -36,8 +37,7 @@ class Mt3dList(Package):
         return "List package class"
 
     def write_file(self):
-        # Not implemented for list class
-        return
+        raise NotImplementedError
 
 
 class Mt3dms(BaseModel):
@@ -69,9 +69,8 @@ class Mt3dms(BaseModel):
         Unit number for the list file.
     ftlunit : int, default 10
         Unit number for flow-transport link file.
-    model_ws : str, optional
+    model_ws : str or PathLike, default "." (curdir)
         Model workspace.  Directory name to create model data sets.
-        Default is the present working directory.
     external_path : str, optional
         Location for external files.
     verbose : bool, default False
@@ -113,7 +112,7 @@ class Mt3dms(BaseModel):
         structured=True,
         listunit=16,
         ftlunit=10,
-        model_ws=".",
+        model_ws=curdir,
         external_path=None,
         verbose=False,
         load=True,
@@ -148,9 +147,7 @@ class Mt3dms(BaseModel):
 
         # Check whether specified ftlfile exists in model directory; if not,
         # warn user
-        if os.path.isfile(
-            os.path.join(self.model_ws, f"{modelname}.{namefile_ext}")
-        ):
+        if os.path.isfile(os.path.join(self.model_ws, f"{modelname}.{namefile_ext}")):
             with open(
                 os.path.join(self.model_ws, f"{modelname}.{namefile_ext}")
             ) as nm_file:
@@ -181,10 +178,7 @@ class Mt3dms(BaseModel):
                 ):
                     pass
                 else:
-                    print(
-                        "Specified value of ftlfree conflicts with FTL "
-                        "file format"
-                    )
+                    print("Specified value of ftlfree conflicts with FTL file format")
                     print(
                         f"Switching ftlfree from {self.ftlfree} to {not self.ftlfree}"
                     )
@@ -201,13 +195,8 @@ class Mt3dms(BaseModel):
         # the starting external data unit number
         self._next_ext_unit = 2000
         if external_path is not None:
-            # assert model_ws == '.', "ERROR: external cannot be used " + \
-            #                        "with model_ws"
-
-            # external_path = os.path.join(model_ws, external_path)
             if os.path.exists(external_path):
                 print(f"Note: external_path {external_path} already exists")
-            # assert os.path.exists(external_path),'external_path does not exist'
             else:
                 os.mkdir(external_path)
             self.external = True
@@ -238,16 +227,13 @@ class Mt3dms(BaseModel):
     @property
     def modeltime(self):
         # build model time
-        data_frame = {
-            "perlen": self.mf.dis.perlen.array,
-            "nstp": self.mf.dis.nstp.array,
-            "tsmult": self.mf.dis.tsmult.array,
-        }
         self._model_time = ModelTime(
-            data_frame,
-            self.mf.dis.itmuni_dict[self.mf.dis.itmuni],
-            self.dis.start_datetime,
-            self.dis.steady.array,
+            perlen=self.mf.dis.perlen.array,
+            nstp=self.mf.dis.nstp.array,
+            tsmult=self.mf.dis.tsmult.array,
+            time_units=self.mf.dis.itmuni_dict,
+            start_datetime=self.dis.start_datetime,
+            steady_state=self.dis.steady.array,
         )
         return self._model_time
 
@@ -393,18 +379,14 @@ class Mt3dms(BaseModel):
         f_nam.write(f"{self.heading}\n")
         f_nam.write(
             "{:14s} {:5d}  {}\n".format(
-                self.lst.name[0],
-                self.lst.unit_number[0],
-                self.lst.file_name[0],
+                self.lst.name[0], self.lst.unit_number[0], self.lst.file_name[0]
             )
         )
         if self.ftlfilename is not None:
             ftlfmt = ""
             if self.ftlfree:
                 ftlfmt = "FREE"
-            f_nam.write(
-                f"{'FTL':14s} {self.ftlunit:5d}  {self.ftlfilename} {ftlfmt}\n"
-            )
+            f_nam.write(f"{'FTL':14s} {self.ftlunit:5d}  {self.ftlfilename} {ftlfmt}\n")
         # write file entries in name file
         f_nam.write(str(self.get_name_file_entries()))
 
@@ -413,9 +395,7 @@ class Mt3dms(BaseModel):
             f_nam.write(f"DATA           {u:5d}  {f}\n")
 
         # write the output files
-        for u, f, b in zip(
-            self.output_units, self.output_fnames, self.output_binflag
-        ):
+        for u, f, b in zip(self.output_units, self.output_fnames, self.output_binflag):
             if u == 0:
                 continue
             if b:
@@ -436,7 +416,7 @@ class Mt3dms(BaseModel):
         version="mt3dms",
         exe_name="mt3dms",
         verbose=False,
-        model_ws=".",
+        model_ws=curdir,
         load_only=None,
         forgive=False,
         modflowmodel=None,
@@ -454,8 +434,8 @@ class Mt3dms(BaseModel):
             The name of the executable to use.
         verbose : bool, default False
             Print information on the load process if True.
-        model_ws : str, default "."
-            Model workspace path. Default is the current directory.
+        model_ws : str or PathLike, default "." (curdir)
+            Model workspace path.
         load_only : list of str, optional
             Packages to load (e.g. ['btn', 'adv']). Default None
             means that all packages will be loaded.
@@ -510,12 +490,7 @@ class Mt3dms(BaseModel):
                 namefile_path, mt.mfnam_packages, verbose=verbose
             )
         except Exception as e:
-            # print("error loading name file entries from file")
-            # print(str(e))
-            # return None
-            raise Exception(
-                f"error loading name file entries from file:\n{e!s}"
-            )
+            raise Exception(f"error loading name file entries from file:\n{e!s}")
 
         if mt.verbose:
             print(
@@ -561,9 +536,7 @@ class Mt3dms(BaseModel):
             return None
 
         try:
-            pck = btn.package.load(
-                btn.filename, mt, ext_unit_dict=ext_unit_dict
-            )
+            pck = btn.package.load(btn.filename, mt, ext_unit_dict=ext_unit_dict)
         except Exception as e:
             raise Exception(f"error loading BTN: {e!s}")
         files_successfully_loaded.append(btn.filename)
@@ -611,15 +584,11 @@ class Mt3dms(BaseModel):
                     if forgive:
                         try:
                             pck = item.package.load(
-                                item.filehandle,
-                                mt,
-                                ext_unit_dict=ext_unit_dict,
+                                item.filehandle, mt, ext_unit_dict=ext_unit_dict
                             )
                             files_successfully_loaded.append(item.filename)
                             if mt.verbose:
-                                print(
-                                    f"   {pck.name[0]:4s} package load...success"
-                                )
+                                print(f"   {pck.name[0]:4s} package load...success")
                         except BaseException as o:
                             if mt.verbose:
                                 print(
@@ -633,9 +602,7 @@ class Mt3dms(BaseModel):
                         )
                         files_successfully_loaded.append(item.filename)
                         if mt.verbose:
-                            print(
-                                f"   {pck.name[0]:4s} package load...success"
-                            )
+                            print(f"   {pck.name[0]:4s} package load...success")
                 else:
                     if mt.verbose:
                         print(f"   {item.filetype:4s} package load...skipped")
@@ -660,9 +627,7 @@ class Mt3dms(BaseModel):
                 elif key not in mt.pop_key_list:
                     mt.external_fnames.append(item.filename)
                     mt.external_units.append(key)
-                    mt.external_binflag.append(
-                        "binary" in item.filetype.lower()
-                    )
+                    mt.external_binflag.append("binary" in item.filetype.lower())
                     mt.external_output.append(False)
 
         # pop binary output keys and any external file units that are now
@@ -683,8 +648,9 @@ class Mt3dms(BaseModel):
         # write message indicating packages that were successfully loaded
         if mt.verbose:
             print(
-                "\n   The following {} packages were "
-                "successfully loaded.".format(len(files_successfully_loaded))
+                "\n   The following {} packages were successfully loaded.".format(
+                    len(files_successfully_loaded)
+                )
             )
             for fname in files_successfully_loaded:
                 print(f"      {os.path.basename(fname)}")
@@ -747,7 +713,9 @@ class Mt3dms(BaseModel):
         r : np.ndarray
 
         """
-        firstline = "STEP   TOTAL TIME             LOCATION OF OBSERVATION POINTS (K,I,J)"
+        firstline = (
+            "STEP   TOTAL TIME             LOCATION OF OBSERVATION POINTS (K,I,J)"
+        )
         dtype = [("step", int), ("time", float)]
         nobs = 0
         obs = []

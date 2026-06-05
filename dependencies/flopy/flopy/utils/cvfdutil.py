@@ -1,3 +1,5 @@
+import warnings
+
 import numpy as np
 import pandas as pd
 
@@ -26,8 +28,35 @@ class Point:
         self.y = y
         return
 
+    def offset(self, x0, y0):
+        self.x -= x0
+        self.y -= y0
+
+    def normalize(self, dx, dy):
+        if dx > 0.0:
+            self.x /= dx
+        if dy > 0.0:
+            self.y /= dy
+
+
+def normalize_points(a, b, c):
+    x0, y0 = min(a.x, b.x), min(a.y, b.y)
+    xl, yl = abs(a.x - b.x), abs(a.y - b.y)
+
+    a.offset(x0, y0)
+    b.offset(x0, y0)
+    c.offset(x0, y0)
+
+    a.normalize(xl, yl)
+    b.normalize(xl, yl)
+    c.normalize(xl, yl)
+
+    return a, b, c
+
 
 def isBetween(a, b, c, epsilon=0.001):
+    a, b, c = normalize_points(a, b, c)
+
     crossproduct = (c.y - a.y) * (b.x - a.x) - (c.x - a.x) * (b.y - a.y)
     if abs(crossproduct) > epsilon:
         return False  # (or != 0 if using integers)
@@ -93,12 +122,12 @@ def segment_face(ivert, ivlist1, ivlist2, vertices):
 
     for face in faces_to_check:
         iva, ivb = face
-        x, y = vertices[iva]
-        a = Point(x, y)
-        x, y = vertices[ivb]
-        b = Point(x, y)
+        xa, ya = vertices[iva]
+        xb, yb = vertices[ivb]
         for ivc in points_to_check:
             if ivc not in face:
+                a = Point(xa, ya)
+                b = Point(xb, yb)
                 x, y = vertices[ivc]
                 c = Point(x, y)
                 if isBetween(a, b, c):
@@ -118,6 +147,7 @@ def to_cvfd(
     skip_hanging_node_check=False,
     duplicate_decimals=9,
     verbose=False,
+    detect_non_convergence=True,
 ):
     """
     Convert a vertex dictionary into verts and iverts
@@ -125,25 +155,39 @@ def to_cvfd(
     Parameters
     ----------
     vertdict
-        vertdict is a dictionary {icell: [(x1, y1), (x2, y2), (x3, y3), ...]}
+        A dictionary {icell: [(x1, y1), (x2, y2), (x3, y3), ...]}
 
     nodestart : int
-        starting node number. (default is zero)
+        Starting node number. (default is zero)
 
     nodestop : int
-        ending node number up to but not including. (default is len(vertdict))
+        Ending node number up to but not including. (default is len(vertdict))
 
     skip_hanging_node_check : bool
-        skip the hanging node check.  this may only be necessary for quad-based
-        grid refinement. (default is False)
+        Skip the hanging node check. The hanging node check is designed for
+        quad-based grid refinement (e.g., quadtree grids) where larger cells
+        are subdivided, creating "hanging nodes" that need to be added to
+        neighboring cells. The check may not converge for grids with floating
+        point precision artifacts like nearly duplicate vertices. Set this
+        option True to avoid this. If False and non-convergence is detected
+        (assuming detect_non_convergence is True), a warning will be issued.
 
     duplicate_decimals : int
-        decimals to round duplicate vertex checks.  GRIDGEN can occasionally
+        Decimals to round duplicate vertex checks.  GRIDGEN can occasionally
         produce very-nearly overlapping vertices, this can be used to change
         the sensitivity for filtering out duplicates. (default is 9)
 
     verbose : bool
-        print messages to the screen. (default is False)
+        Print messages to the screen. (default is False)
+
+    detect_non_convergence : bool
+        Enable automatic detection of non-convergent hanging node checks.
+        When enabled, the algorithm monitors segmentation counts across
+        iterations. If counts remain high and are flat or increasing, stop
+        early and issue a warning. This prevents infinite loops while still
+        allowing slow-but-steady decrease to converge for complex grids.
+        Set False to disable this check and allow unlimited iterations.
+        (default is True)
 
     Returns
     -------
@@ -221,13 +265,21 @@ def to_cvfd(
     # Now, go through each vertex and look at the cells that use the vertex.
     # For quadtree-like grids, there may be a need to add a new hanging node
     # vertex to the larger cell.
+    vertexdict_keys = list(vertexdict.keys())
     if not skip_hanging_node_check:
         if verbose:
             print("Checking for hanging nodes.")
-        vertexdict_keys = list(vertexdict.keys())
+
         finished = False
+        iteration = 0
+        segmentation_history = []
+        non_convergence_threshold = 3
+
         while not finished:
             finished = True
+            iteration += 1
+            segmentations_this_iter = 0
+
             for ivert, cell_list in vertex_cell_dict.items():
                 for icell1 in cell_list:
                     for icell2 in cell_list:
@@ -243,12 +295,48 @@ def to_cvfd(
 
                         # don't share a face, so need to segment if necessary
                         segmented = segment_face(
-                            ivert, ivertlist1, ivertlist2, vertexdict_keys
+                            ivert,
+                            ivertlist1,
+                            ivertlist2,
+                            vertexdict_keys,
                         )
                         if segmented:
                             finished = False
+                            segmentations_this_iter += 1
+
+            segmentation_history.append(segmentations_this_iter)
+
+            if (
+                detect_non_convergence
+                and len(segmentation_history) >= non_convergence_threshold
+            ):
+                recent_counts = segmentation_history[-non_convergence_threshold:]
+                first_count = recent_counts[0]
+                last_count = recent_counts[-1]
+
+                # Check if the count is flat or increasing
+                # but only if we're doing substantial work
+                min_segmentations_threshold = 50
+                if (
+                    first_count >= min_segmentations_threshold
+                    and last_count >= first_count
+                ):
+                    warnings.warn(
+                        f"Hanging node check stopped after {iteration} iterations "
+                        f"due to non-convergence (segmentation counts are flat or "
+                        f"increasing at {segmentations_this_iter} per iteration). "
+                        f"This typically occurs with complex Voronoi or other "
+                        f"unstructured grids. Set skip_hanging_node_check=True "
+                        f"for these grid types.",
+                        UserWarning,
+                    )
+                    break
+
         if verbose:
-            print("Done checking for hanging nodes.")
+            if finished:
+                print(f"Done checking for hanging nodes after {iteration} iterations.")
+            else:
+                print(f"Aborted hanging node check after {iteration} iterations.")
 
     verts = np.array(vertexdict_keys)
     iverts = vertexlist
@@ -324,7 +412,7 @@ def gridlist_to_verts(gridlist):
     vertdict = {}
     icell = 0
     for sg in gridlist:
-        ilays, irows, icols = np.where(sg.idomain > 0)
+        ilays, irows, icols = np.asarray(sg.idomain > 0).nonzero()
         for _, i, j in zip(ilays, irows, icols):
             v = sg.get_cell_vertices(i, j)
             vertdict[icell] = v + [v[0]]
@@ -358,9 +446,7 @@ def get_disv_gridprops(verts, iverts, xcyc=None):
     if xcyc is None:
         xcyc = np.empty((ncpl, 2), dtype=float)
         for icell in range(ncpl):
-            vlist = [
-                (verts[ivert, 0], verts[ivert, 1]) for ivert in iverts[icell]
-            ]
+            vlist = [(verts[ivert, 0], verts[ivert, 1]) for ivert in iverts[icell]]
             xcyc[icell, 0], xcyc[icell, 1] = centroid_of_polygon(vlist)
     else:
         assert xcyc.shape == (ncpl, 2)
@@ -369,40 +455,10 @@ def get_disv_gridprops(verts, iverts, xcyc=None):
         vertices.append((i, verts[i, 0], verts[i, 1]))
     cell2d = []
     for i in range(ncpl):
-        cell2d.append(
-            [i, xcyc[i, 0], xcyc[i, 1], len(iverts[i])]
-            + [iv for iv in iverts[i]]
-        )
+        cell2d.append([i, xcyc[i, 0], xcyc[i, 1], len(iverts[i])] + list(iverts[i]))
     gridprops = {}
     gridprops["ncpl"] = ncpl
     gridprops["nvert"] = nvert
     gridprops["vertices"] = vertices
     gridprops["cell2d"] = cell2d
-    return gridprops
-
-
-def gridlist_to_disv_gridprops(gridlist):
-    """
-
-    Take a list of flopy structured model grids and convert them into a
-    dictionary that can be passed into the modflow6 disv package.  Cells from a
-    child grid will patched in to make a single set of vertices.  Cells will
-    be numbered according to consecutive numbering of active cells in the
-    grid list.
-
-    Parameters
-    ----------
-    gridlist : list
-        List of flopy.discretization.modelgrid.  Must be of type structured
-        grids
-
-    Returns
-    -------
-    gridprops : dict
-        Dictionary containing entries that can be passed directly into the
-        modflow6 disv package.
-
-    """
-    verts, iverts = gridlist_to_verts(gridlist)
-    gridprops = get_disv_gridprops(verts, iverts)
     return gridprops

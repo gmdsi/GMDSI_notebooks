@@ -5,17 +5,21 @@ shapefiles are also included.
 
 """
 
-import os
+import os.path
 import warnings
 from itertools import repeat
+from os import PathLike
 from typing import Union
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from flopy.discretization.grid import Grid
+
 from ..datbase import DataInterface, DataType
 from ..utils import Util3d, import_optional_dependency
+from ..utils.faceutil import get_shared_face, get_shared_face_3d, is_vertical
 
 warnings.simplefilter("ignore", RuntimeWarning)
 
@@ -30,6 +34,7 @@ bc_color_dict = {
     "SFR": "teal",
     "UZF": "peru",
     "LAK": "royalblue",
+    "HFB": "orange",
 }
 
 
@@ -346,9 +351,7 @@ class PlotUtilities:
                         )
 
             elif isinstance(value, DataInterface):
-                if (
-                    value.data_type == DataType.transientlist
-                ):  # isinstance(value, (MfList, MFTransientList)):
+                if value.data_type == DataType.transientlist:
                     if package.parent.verbose:
                         print(
                             "plotting {} package MfList instance: {}".format(
@@ -358,10 +361,7 @@ class PlotUtilities:
                     if defaults["key"] is None:
                         names = [
                             "{} {} location stress period {} layer {}".format(
-                                model_name,
-                                package.name[0],
-                                defaults["kper"] + 1,
-                                k + 1,
+                                model_name, package.name[0], defaults["kper"] + 1, k + 1
                             )
                             for k in range(package.parent.modelgrid.nlay)
                         ]
@@ -404,9 +404,7 @@ class PlotUtilities:
                     if ax is not None:
                         caxs.append(ax)
 
-                elif (
-                    value.data_type == DataType.array3d
-                ):  # isinstance(value, Util3d):
+                elif value.data_type == DataType.array3d:
                     if value.array is not None:
                         if package.parent.verbose:
                             print(
@@ -414,7 +412,6 @@ class PlotUtilities:
                                     package.name[0], item
                                 )
                             )
-                        # fignum = list(range(ifig, ifig + inc))
                         fignum = list(
                             range(
                                 defaults["initial_fig"],
@@ -438,9 +435,7 @@ class PlotUtilities:
                             )
                         )
 
-                elif (
-                    value.data_type == DataType.array2d
-                ):  # isinstance(value, Util2d):
+                elif value.data_type == DataType.array2d:
                     if value.array is not None:
                         if len(value.array.shape) == 2:  # is this necessary?
                             if package.parent.verbose:
@@ -470,9 +465,7 @@ class PlotUtilities:
                                 )
                             )
 
-                elif (
-                    value.data_type == DataType.transient2d
-                ):  # isinstance(value, Transient2d):
+                elif value.data_type == DataType.transient2d:
                     if value.array is not None:
                         if package.parent.verbose:
                             print(
@@ -500,12 +493,6 @@ class PlotUtilities:
                                 **kwargs,
                             )
                         )
-
-                else:
-                    pass
-
-            else:
-                pass
 
             # unroll nested lists os axes into a single list of axes
             if isinstance(caxs, list):
@@ -632,11 +619,7 @@ class PlotUtilities:
             else:
                 names = [
                     "{}{} {} stress period: {} layer: {}".format(
-                        model_name,
-                        mflist.package.name[0],
-                        key,
-                        kper + 1,
-                        k + 1,
+                        model_name, mflist.package.name[0], key, kper + 1, k + 1
                     )
                     for k in range(mflist.model.modelgrid.nlay)
                 ]
@@ -850,8 +833,7 @@ class PlotUtilities:
             name = [name] * nplottable_layers
 
         names = [
-            f"{model_name}{name[k]} layer {k + 1}"
-            for k in range(nplottable_layers)
+            f"{model_name}{name[k]} layer {k + 1}" for k in range(nplottable_layers)
         ]
 
         filenames = None
@@ -976,7 +958,7 @@ class PlotUtilities:
         name = transient2d.name.replace("_", "").upper()
         axes = []
         for idx, kper in enumerate(range(k0, k1)):
-            title = f"{name} stress period {kper + 1 :d}"
+            title = f"{name} stress period {kper + 1:d}"
 
             if filename_base is not None:
                 filename = f"{filename_base}_{name}_{kper + 1:05d}.{fext}"
@@ -997,9 +979,7 @@ class PlotUtilities:
         return axes
 
     @staticmethod
-    def _plot_scalar_helper(
-        scalar, filename_base=None, file_extension=None, **kwargs
-    ):
+    def _plot_scalar_helper(scalar, filename_base=None, file_extension=None, **kwargs):
         """
         Helper method to plot scalar objects
 
@@ -1162,9 +1142,7 @@ class PlotUtilities:
 
         for idx, k in enumerate(range(i0, i1)):
             fig = plt.figure(num=fignum[idx])
-            pmv = PlotMapView(
-                ax=axes[idx], model=model, modelgrid=modelgrid, layer=k
-            )
+            pmv = PlotMapView(ax=axes[idx], model=model, modelgrid=modelgrid, layer=k)
             if defaults["pcolor"]:
                 cm = pmv.plot_array(
                     plotarray,
@@ -1292,11 +1270,7 @@ class PlotUtilities:
             pmv = PlotMapView(ax=axes[idx], model=model, layer=k)
             fig = plt.figure(num=fignum[idx])
             pmv.plot_bc(
-                ftype=ftype,
-                package=package,
-                kper=kper,
-                ax=axes[idx],
-                color=color,
+                ftype=ftype, package=package, kper=kper, ax=axes[idx], color=color
             )
 
             if defaults["grid"]:
@@ -1644,8 +1618,6 @@ class UnstructuredPlotUtilities:
                             cvert_ix.append(vx - 1)
                         elif cpv[vx - 1] == 0 and cpv[vx] == 0:
                             cvert_ix += [vx - 1, vx]
-                        else:
-                            pass
 
                     if cvert_ix:
                         cells.append(cell)
@@ -1656,9 +1628,8 @@ class UnstructuredPlotUtilities:
             numb = (x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)
             denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1)
             ua = np.ones(denom.shape, dtype=denom.dtype) * np.nan
-            idx = np.where(denom != 0.0)
+            idx = np.asarray(denom != 0.0).nonzero()
             ua[idx] = numa[idx] / denom[idx]
-            # ub = numb / denom
             del numa
             del numb
             del denom
@@ -1669,12 +1640,7 @@ class UnstructuredPlotUtilities:
             for iix, cell in enumerate(cells):
                 xc = x[cell]
                 yc = y[cell]
-                verts = [
-                    (xt, yt)
-                    for xt, yt in zip(
-                        xc[cell_vertex_ix[iix]], yc[cell_vertex_ix[iix]]
-                    )
-                ]
+                verts = list(zip(xc[cell_vertex_ix[iix]], yc[cell_vertex_ix[iix]]))
 
                 if cell in vdict:
                     for i in verts:
@@ -1719,6 +1685,47 @@ class UnstructuredPlotUtilities:
                     if t:
                         vdict[cell] = t
 
+        return vdict
+
+    @staticmethod
+    def filter_line_segments(vdict, threshold=1e-2):
+        """
+        Method to filter out artifact intersections due to epsilon perturbation
+        of line segments. This method gets the distance of intersection
+        and then filters by a user provided threshold
+
+        Parameters
+        ----------
+        vdict : dict
+            dictionary of node number, intersection vertices (line segment)
+        threshold : float
+            user provided thresholding value
+
+        Returns
+        -------
+            vdict
+        """
+        from ..utils.geometry import distance
+
+        nodes = list(vdict.keys())
+        dists = []
+
+        for node in nodes:
+            points = vdict[node]
+            if len(points) < 2:
+                dist = 0
+            else:
+                pt0 = points[0]
+                pt1 = points[1]
+                dist = distance(pt0[0], pt0[1], pt1[0], pt1[1])
+
+            dists.append(dist)
+
+        dists = np.array(dists)
+        ixs = np.where(dists < threshold)[0]
+        for ix in ixs:
+            node = nodes[ix]
+            vdict.pop(node)
         return vdict
 
     @staticmethod
@@ -1884,9 +1891,7 @@ class SwiConcentration:
         pct = {}
         for isrf in range(self.__nsrf):
             z = zeta[isrf]
-            pct[isrf] = (self.__botm[:-1, :, :] - z[:, :, :]) / self.__b[
-                :, :, :
-            ]
+            pct[isrf] = (self.__botm[:-1, :, :] - z[:, :, :]) / self.__b[:, :, :]
         for isrf in range(self.__nsrf):
             p = pct[isrf]
             if self.__istrat == 1:
@@ -1970,18 +1975,18 @@ def shapefile_get_vertices(shp):
     vertices = []
     for n in range(nshp):
         st = shapes[n].shapeType
-        if st in [1, 8, 11, 21]:
+        if st in {1, 8, 11, 21}:
             # points
             for p in shapes[n].points:
                 vertices.append([(p[0], p[1])])
-        elif st in [3, 13, 23]:
+        elif st in {3, 13, 23}:
             # line
             line = []
             for p in shapes[n].points:
                 line.append((p[0], p[1]))
             line = np.array(line)
             vertices.append(line)
-        elif st in [5, 25, 31]:
+        elif st in {5, 25, 31}:
             # polygons
             pts = np.array(shapes[n].points)
             prt = shapes[n].parts
@@ -1991,9 +1996,7 @@ def shapefile_get_vertices(shp):
     return vertices
 
 
-def shapefile_to_patch_collection(
-    shp: Union[str, os.PathLike], radius=500.0, idx=None
-):
+def shapefile_to_patch_collection(shp: Union[str, PathLike], radius=500.0, idx=None):
     """
     Create a patch collection from the shapes in a shapefile
 
@@ -2029,11 +2032,11 @@ def shapefile_to_patch_collection(
         idx = range(nshp)
     for n in idx:
         st = shapes[n].shapeType
-        if st in [1, 8, 11, 21]:
+        if st in {1, 8, 11, 21}:
             # points
             for p in shapes[n].points:
                 ptchs.append(Circle((p[0], p[1]), radius=radius))
-        elif st in [3, 13, 23]:
+        elif st in {3, 13, 23}:
             # line
             vertices = []
             for p in shapes[n].points:
@@ -2041,7 +2044,7 @@ def shapefile_to_patch_collection(
             vertices += vertices[::-1]
             vertices = np.array(vertices)
             ptchs.append(Polygon(vertices))
-        elif st in [5, 25, 31]:
+        elif st in {5, 25, 31}:
             # polygons
             pts = np.array(shapes[n].points)
             prt = shapes[n].parts
@@ -2119,7 +2122,7 @@ def plot_shapefile(
 
     Parameters
     ----------
-    shp : string or os.PathLike
+    shp : str or PathLike
         Path of the shapefile to plot.
     ax : matplolib.pyplot.axes object
 
@@ -2235,21 +2238,21 @@ def advanced_package_bc_helper(pkg, modelgrid, kper):
     Returns
     -------
     """
-    if pkg.package_type in ("sfr", "uzf"):
+    if pkg.package_type in {"sfr", "uzf"}:
         if pkg.parent.version == "mf6":
             mflist = pkg.packagedata.array
             idx = np.array([list(i) for i in mflist["cellid"]], dtype=int).T
         else:
             iuzfbnd = pkg.iuzfbnd.array
-            idx = np.where(iuzfbnd != 0)
+            idx = np.asarray(iuzfbnd != 0).nonzero()
             idx = np.append([[0] * idx[-1].size], idx, axis=0)
-    elif pkg.package_type in ("lak", "maw"):
+    elif pkg.package_type in {"lak", "maw"}:
         if pkg.parent.version == "mf6":
             mflist = pkg.connectiondata.array
             idx = np.array([list(i) for i in mflist["cellid"]], dtype=int).T
         else:
             lakarr = pkg.lakarr.array[kper]
-            idx = np.where(lakarr != 0)
+            idx = np.asarray(lakarr != 0).nonzero()
             idx = np.array(idx)
     else:
         raise NotImplementedError(
@@ -2354,9 +2357,7 @@ def intersect_modpath_with_crosssection(
         xp, yp, zp = "x0", "y0", "z0"
 
     if not isinstance(recarrays, list):
-        recarrays = [
-            recarrays,
-        ]
+        recarrays = [recarrays]
 
     if projection == "x":
         v_opp = yvertices
@@ -2417,9 +2418,7 @@ def intersect_modpath_with_crosssection(
                     oppts[cell],
                 )
                 idx = [
-                    i
-                    for i, (x, y) in enumerate(zip(m0[0], m1[0]))
-                    if x == y == True
+                    i for i, (x, y) in enumerate(zip(m0[0], m1[0])) if x == y == True
                 ]
             else:
                 idx = [i for i, x in enumerate(m0[0]) if x == True]
@@ -2488,17 +2487,13 @@ def reproject_modpath_to_crosssection(
             line = xypts[tcell]
             if len(line) < 2:
                 continue
-            if projection == "x":
-                d0 = np.min([i[0] for i in projpts[cell]])
-            else:
-                d0 = np.max([i[0] for i in projpts[cell]])
+            d0 = np.min([i[0] for i in projpts[cell]])
             for rec in recarrays:
                 pts = list(zip(rec[xp], rec[yp]))
-                x, y = geometry.project_point_onto_xc_line(
-                    line, pts, d0, projection
+                xc_dist = geometry.project_point_onto_xc_line(
+                    line, pts, d0=d0, calc_dist=True
                 )
-                rec[xp] = x
-                rec[yp] = y
+                rec[proj] = xc_dist
                 pid = rec["particleid"][0]
                 pline = list(zip(rec[proj], rec[zp], rec["time"]))
                 if pid not in ptdict:
@@ -2562,7 +2557,7 @@ def parse_modpath_selection_options(
     # selection of endpoints
     if selection is not None:
         if isinstance(selection, int):
-            selection = tuple((selection,))
+            selection = (selection,)
         try:
             if len(selection) == 1:
                 node = selection[0]
@@ -2722,9 +2717,7 @@ def to_mp7_pathlines(
 
     # return early if already in MP7 format
     if "t" not in dt:
-        return (
-            data if ret_type == pd.DataFrame else data.to_records(index=False)
-        )
+        return data if ret_type == pd.DataFrame else data.to_records(index=False)
 
     # return early if empty
     if data.empty:
@@ -2742,7 +2735,7 @@ def to_mp7_pathlines(
     data = data.to_records(index=False)
 
     # build mp7 format recarray
-    ret = np.core.records.fromarrays(
+    ret = np.rec.fromarrays(
         [
             data[seqn_key],
             data["iprp"],
@@ -2795,9 +2788,7 @@ def to_mp7_endpoints(
     # check format
     dt = data.dtypes
     if all(n in dt for n in MP7_ENDPOINT_DTYPE.names):
-        return (
-            data if ret_type == pd.DataFrame else data.to_records(index=False)
-        )
+        return data if ret_type == pd.DataFrame else data.to_records(index=False)
     if not (
         all(n in dt for n in MIN_PARTICLE_TRACK_DTYPE.names)
         or all(n in dt for n in PRT_PATHLINE_DTYPE.names)
@@ -2821,12 +2812,8 @@ def to_mp7_endpoints(
     data[seqn_key] = particles.ngroup()
 
     # select startpoints and endpoints, sorting by sequencenumber
-    startpts = (
-        data.sort_values("t").groupby(seqn_key).head(1).sort_values(seqn_key)
-    )
-    endpts = (
-        data.sort_values("t").groupby(seqn_key).tail(1).sort_values(seqn_key)
-    )
+    startpts = data.sort_values("t").groupby(seqn_key).head(1).sort_values(seqn_key)
+    endpts = data.sort_values("t").groupby(seqn_key).tail(1).sort_values(seqn_key)
 
     # add columns for
     pairings = [
@@ -2851,7 +2838,7 @@ def to_mp7_endpoints(
     endpts = endpts.to_records(index=False)
 
     # build mp7 format recarray
-    ret = np.core.records.fromarrays(
+    ret = np.rec.fromarrays(
         [
             endpts["sequencenumber"],
             endpts["iprp"],
@@ -2925,9 +2912,7 @@ def to_prt_pathlines(
 
     # return early if already in PRT format
     if "t" in dt:
-        return (
-            data if ret_type == pd.DataFrame else data.to_records(index=False)
-        )
+        return data if ret_type == pd.DataFrame else data.to_records(index=False)
 
     # return early if empty
     if data.empty:
@@ -2938,7 +2923,7 @@ def to_prt_pathlines(
     data = data.to_records(index=False)
 
     # build prt format recarray
-    ret = np.core.records.fromarrays(
+    ret = np.rec.fromarrays(
         [
             data["stressperiod"],
             data["timestep"],

@@ -4,6 +4,8 @@ import errno
 import inspect
 import os
 import sys
+import warnings
+from os import PathLike
 
 import numpy as np
 
@@ -11,6 +13,7 @@ from ..mbase import ModelInterface
 from ..pakbase import PackageInterface
 from ..utils import datautil
 from ..utils.check import mf6check
+from ..utils.utl_import import import_optional_dependency
 from ..version import __version__
 from .coordinates import modeldimensions
 from .data import (
@@ -258,7 +261,7 @@ class MFBlockHeader:
             if len(self.data_items) > 1:
                 for data_item in self.data_items[1:]:
                     entry = data_item.get_file_entry(values_only=True)
-                    fd.write("%s" % (entry.rstrip()))
+                    fd.write(str(entry).rstrip())
         if self.get_comment().text:
             fd.write(" ")
             self.get_comment().write(fd)
@@ -851,7 +854,13 @@ class MFBlock:
             )
 
         # handle special readasarrays case
-        if self._container_package.structure.read_as_arrays:
+        if (
+            self._container_package.structure.read_as_arrays
+            or (
+                hasattr(self._container_package, "aux")
+                and self._container_package.aux.structure.layered
+            )
+        ):
             # auxiliary variables may appear with aux variable name as keyword
             aux_vars = self._container_package.auxiliary.get_data()
             if aux_vars is not None:
@@ -1277,6 +1286,37 @@ class MFBlock:
             return
         if self.structure.repeating():
             repeating_datasets = self._find_repeating_datasets()
+
+            # First, collect active keys from ALL datasets in this block
+            # This is important for blocks with multiple datasets (e.g., storage package
+            # has both "steady-state" and "transient" datasets) that share block_headers.
+            # We need to preserve headers that are active in ANY dataset, not just the
+            # current one being processed.
+            all_active_keys = set()
+            for repeating_dataset in repeating_datasets:
+                for key_data in repeating_dataset.get_active_key_list():
+                    all_active_keys.add(key_data[0])
+                for key, value in repeating_dataset.empty_keys.items():
+                    if value:
+                        all_active_keys.add(key)
+
+            # Clean up stale block headers once, using combined active keys from all datasets
+            # Only clean up if we have multiple headers and active data.
+            # This avoids breaking the initial write case where block_headers
+            # may have a template header with transient_key=None. Otherwise we
+            # get IndexError when _build_repeating_header tries to use index -1.
+            if len(self.block_headers) > 1 and all_active_keys:
+                headers_to_remove = []
+                for i, header in enumerate(self.block_headers):
+                    k = header.get_transient_key()
+                    if k is not None and k not in all_active_keys:
+                        headers_to_remove.append(i)
+
+                # Remove in reverse order to preserve indices
+                for i in reversed(headers_to_remove):
+                    del self.block_headers[i]
+
+            # Now add missing block headers for each dataset
             for repeating_dataset in repeating_datasets:
                 # resolve any missing block headers
                 self._add_missing_block_headers(repeating_dataset)
@@ -1326,10 +1366,25 @@ class MFBlock:
         check_data=True,
         external_data_folder=None,
         binary=False,
+        replace_existing=False,
     ):
         """Sets the block's list and array data to be stored externally,
         base_name is external file name's prefix, check_data determines
         if data error checking is enabled during this process.
+
+        Warning
+        -------
+        The MF6 check mechanism is deprecated pending reimplementation
+        in a future release. While the checks API will remain in place
+        through 3.x, it may be unstable, and will likely change in 4.x.
+
+        Note
+        ----
+        External files are written immediately when this method is called,
+        using the current value of max_columns_of_data and other formatting
+        settings. If you need to change these settings, do so BEFORE calling
+        this method. Changing settings afterward will not affect already-written
+        external files unless you call this method again with replace_existing=True.
 
         Parameters
         ----------
@@ -1341,8 +1396,14 @@ class MFBlock:
                 Folder where external data will be stored
             binary: bool
                 Whether file will be stored as binary
+            replace_existing: bool
+                Whether to replace existing external files. If True, existing
+                external files will be rewritten with current settings
+                (e.g., max_columns_of_data). If False, existing external files
+                will not be rewritten. Default is False.
 
         """
+
         for key, dataset in self.datasets.items():
             lst_data = isinstance(dataset, mfdatalist.MFList) or isinstance(
                 dataset, mfdataplist.MFPandasList
@@ -1364,7 +1425,7 @@ class MFBlock:
                 else:
                     ext = "bin"
                 file_path = f"{base_name}_{dataset.structure.name}.{ext}"
-                replace_existing_external = False
+                replace_existing_external = replace_existing
                 if external_data_folder is not None:
                     # get simulation root path
                     root_path = self._simulation_data.mfpath.get_sim_path()
@@ -1396,12 +1457,19 @@ class MFBlock:
         check_data determines if data error checking is enabled during this
         process.
 
+        Warning
+        -------
+        The MF6 check mechanism is deprecated pending reimplementation
+        in a future release. While the checks API will remain in place
+        through 3.x, it may be unstable, and will likely change in 4.x.
+
         Parameters
         ----------
             check_data : bool
                 Whether to do data error checking.
 
         """
+
         for key, dataset in self.datasets.items():
             if (
                 isinstance(dataset, mfdataarray.MFArray)
@@ -1473,7 +1541,6 @@ class MFBlock:
                     if basic_list:
                         ext_fname = dataset.external_file_name()
                         if ext_fname is not None:
-                            # if dataset.has_modified_ext_data():
                             binary = dataset.binary_ext_data()
                             # write block contents to external file
                             fd_main, fd = self._prepare_external(
@@ -1503,7 +1570,6 @@ class MFBlock:
                     if basic_list:
                         ext_fname = dataset.external_file_name(transient_key)
                         if ext_fname is not None:
-                            # if dataset.has_modified_ext_data(transient_key):
                             binary = dataset.binary_ext_data(transient_key)
                             # write block contents to external file
                             fd_main, fd = self._prepare_external(
@@ -1645,7 +1711,9 @@ class MFBlock:
         return True
 
     def is_valid(self):
-        """Returns true of the block is valid."""
+        """
+        Returns true if the block is valid.
+        """
         # check data sets
         for dataset in self.datasets.values():
             # Non-optional datasets must be enabled
@@ -1665,25 +1733,27 @@ class MFBlock:
                     return False
 
 
-class MFPackage(PackageContainer, PackageInterface):
+class MFPackage(PackageInterface):
     """
     Provides an interface for the user to specify data to build a package.
 
     Parameters
     ----------
     parent : MFModel, MFSimulation, or MFPackage
-        The parent model, simulation, or package containing this package
+        The parent model, simulation, or package containing this package.
     package_type : str
-        String defining the package type
-    filename : str or PathLike
-        Name or path of file where this package is stored
+        String defining the package type.
+    filename : str or PathLike, optional
+        Name or path of file where this package is stored.
     quoted_filename : str
         Filename with quotes around it when there is a space in the name
-    pname : str
-        Package name
-    loading_package : bool
+    pname : str, optional
+        Package name.
+    loading_package : bool, default False
         Whether or not to add this package to the parent container's package
         list during initialization
+    **kwargs
+        Extra keyword arguments.
 
     Attributes
     ----------
@@ -1757,9 +1827,10 @@ class MFPackage(PackageContainer, PackageInterface):
                 self.model_or_sim.simulation_data.debug,
             )
 
-        super().__init__(self.model_or_sim.simulation_data, self.model_name)
-
-        self._simulation_data = self.model_or_sim.simulation_data
+        self._package_container = PackageContainer(
+            self.model_or_sim.simulation_data
+        )
+        self.simulation_data = self.model_or_sim.simulation_data
 
         self.blocks = {}
         self.container_type = []
@@ -1801,11 +1872,10 @@ class MFPackage(PackageContainer, PackageInterface):
                 # filename uses model base name
                 self._filename = f"{self.model_or_sim.name}.{package_type}"
         else:
-            if not isinstance(filename, (str, os.PathLike)):
+            if not isinstance(filename, (str, PathLike)):
                 message = (
-                    "Invalid fname parameter. Expecting type str. "
-                    'Instead type "{}" was '
-                    "given.".format(type(filename))
+                    "Invalid fname parameter. Expecting type str or PathLike. "
+                    f'Instead type "{type(filename)}" was given.'
                 )
                 type_, value_, traceback_ = sys.exc_info()
                 raise MFDataException(
@@ -1831,7 +1901,7 @@ class MFPackage(PackageContainer, PackageInterface):
 
         if self.path is None:
             if (
-                self._simulation_data.verbosity_level.value
+                self.simulation_data.verbosity_level.value
                 >= VerbosityLevel.normal.value
             ):
                 print(
@@ -1872,7 +1942,6 @@ class MFPackage(PackageContainer, PackageInterface):
     def __init_subclass__(cls):
         """Register package type"""
         super().__init_subclass__()
-        PackageContainer.modflow_packages.append(cls)
         PackageContainer.packages_by_abbr[cls.package_abbr] = cls
 
     def __setattr__(self, name, value):
@@ -1992,14 +2061,189 @@ class MFPackage(PackageContainer, PackageInterface):
         # return [data_object, data_object, ...]
         return self._data_list
 
-    def _add_package(self, package, path):
+    @property
+    def package_key_dict(self):
+        """
+        .. deprecated:: 3.9
+            This method is for internal use only and will be deprecated.
+        """
+        warnings.warn(
+            "This method is for internal use only and will be deprecated.",
+            category=DeprecationWarning,
+        )
+        return self._package_container.package_type_dict
+
+    @property
+    def package_names(self):
+        """Returns a list of package names.
+
+        .. deprecated:: 3.9
+            This method is for internal use only and will be deprecated.
+        """
+        warnings.warn(
+            "This method is for internal use only and will be deprecated.",
+            category=DeprecationWarning,
+        )
+        return self._package_container.package_names
+
+    @property
+    def package_dict(self):
+        """
+        .. deprecated:: 3.9
+            This method is for internal use only and will be deprecated.
+        """
+        warnings.warn(
+            "This method is for internal use only and will be deprecated.",
+            category=DeprecationWarning,
+        )
+        return self._package_container.package_dict
+
+    @property
+    def package_type_dict(self):
+        """
+        .. deprecated:: 3.9
+            This method is for internal use only and will be deprecated.
+        """
+        warnings.warn(
+            "This method is for internal use only and will be deprecated.",
+            category=DeprecationWarning,
+        )
+        return self._package_container.package_type_dict
+
+    @property
+    def package_name_dict(self):
+        """
+        .. deprecated:: 3.9
+            This method is for internal use only and will be deprecated.
+        """
+        warnings.warn(
+            "This method is for internal use only and will be deprecated.",
+            category=DeprecationWarning,
+        )
+        return self._package_container.package_name_dict
+
+    @property
+    def package_filename_dict(self):
+        """
+        .. deprecated:: 3.9
+            This method is for internal use only and will be deprecated.
+        """
+        warnings.warn(
+            "This method is for internal use only and will be deprecated.",
+            category=DeprecationWarning,
+        )
+        return self._package_container.package_filename_dict
+
+    def to_geodataframe(self, gdf=None, kper=0, full_grid=True, shorten_attr=False, **kwargs):
+        """
+        Method to create a GeoDataFrame from a modflow package
+
+        Parameters
+        ----------
+        gdf : GeoDataFrame
+            optional geopandas geodataframe object to add data to. Default is None
+        kper : int
+            stress period to get transient data from
+        full_grid : bool
+            boolean flag for full grid dataframe construction. Default is True.
+            If False, geodataframe will only include active cells
+        shorten_attr : bool
+            method to truncate attribute names for shapefile restrictions
+
+        Returns
+        -------
+            gdf : GeoDataFrame
+        """
+        if gdf is None:
+            if isinstance(self.parent, ModelInterface):
+                modelgrid = self.parent.modelgrid
+                if modelgrid is not None:
+                    if self.package_type == "hfb":
+                        gpd = import_optional_dependency("geopandas")
+                        from ..utils.faceutil import hfb_data_to_linework
+
+                        recarray = self.stress_period_data.data[kper]
+                        lines = hfb_data_to_linework(recarray, modelgrid)
+                        geo_interface = {"type": "FeatureCollection"}
+                        features = [
+                            {
+                                "id": f"{ix}",
+                                "geometry": {"coordinates": line, "type": "LineString"},
+                                "properties": {}
+                            }
+                            for ix, line in enumerate(lines)
+                        ]
+                        geo_interface["features"] = features
+                        gdf = gpd.GeoDataFrame.from_features(geo_interface)
+
+                        for name in recarray.dtype.names:
+                            gdf[name] = recarray[name]
+
+                        return gdf
+
+                    else:
+                        gdf = modelgrid.to_geodataframe()
+                else:
+                    raise AttributeError(
+                        "model does not have a grid instance, "
+                        "please supply a geodataframe"
+                    )
+            else:
+                raise AssertionError(
+                    "Package does not have a model instance, "
+                    "please supply a geodataframe"
+                )
+
+        for attr, value in self.__dict__.items():
+            if callable(getattr(value, "to_geodataframe", None)):
+                if isinstance(value, (ModelInterface, PackageInterface)):
+                    continue
+                # do not pass sparse in here, "sparsify" after all data has been
+                #  added to geodataframe
+                gdf = value.to_geodataframe(
+                    gdf, kper=kper, full_grid=True, shorten_attr=shorten_attr, forgive=True
+                )
+
+        if not full_grid:
+            col_names = [i for i in gdf if i not in ("geometry", "node", "row", "col")]
+            gdf = gdf.dropna(subset=col_names, how="all")
+            gdf = gdf.dropna(axis="columns", how="all")
+
+        return gdf
+
+
+    def get_package(self, name=None, type_only=False, name_only=False):
+        """
+        Finds a package by package name, package key, package type, or partial
+        package name. returns either a single package, a list of packages,
+        or None.
+
+        Parameters
+        ----------
+        name : str
+            Name or type of the package, 'my-riv-1, 'RIV', 'LPF', etc.
+        type_only : bool
+            Search for package by type only
+        name_only : bool
+            Search for package by name only
+
+        Returns
+        -------
+        pp : Package object
+
+        """
+        return self._package_container.get_package(name, type_only, name_only)
+
+    def add_package(self, package):
         pkg_type = package.package_type.lower()
-        if pkg_type in self.package_type_dict:
-            for existing_pkg in self.package_type_dict[pkg_type]:
+        if pkg_type in self._package_container.package_type_dict:
+            for existing_pkg in self._package_container.package_type_dict[
+                pkg_type
+            ]:
                 if existing_pkg is package:
                     # do not add the same package twice
                     return
-        super()._add_package(package, path)
+        self._package_container.add_package(package)
 
     def _get_aux_data(self, aux_names):
         if hasattr(self, "stress_period_data"):
@@ -2033,7 +2277,16 @@ class MFPackage(PackageContainer, PackageInterface):
         return False
 
     def check(self, f=None, verbose=True, level=1, checktype=None):
-        """Data check, returns True on success."""
+        """
+        Data check, returns True on success.
+
+        Warning
+        -------
+        The MF6 check mechanism is deprecated pending reimplementation
+        in a future release. While the checks API will remain in place
+        through 3.x, it may be unstable, and will likely change in 4.x.
+        """
+
         if checktype is None:
             checktype = mf6check
         # do general checks
@@ -2198,7 +2451,7 @@ class MFPackage(PackageContainer, PackageInterface):
         header_variable_strs = []
         arr_clean_line = line.strip().split()
         header_comment = MFComment(
-            "", path + (arr_clean_line[1],), self._simulation_data, 0
+            "", path + (arr_clean_line[1],), self.simulation_data, 0
         )
         # break header into components
         if len(arr_clean_line) < 2:
@@ -2218,14 +2471,14 @@ class MFPackage(PackageContainer, PackageInterface):
                 value_,
                 traceback_,
                 message,
-                self._simulation_data.debug,
+                self.simulation_data.debug,
             )
         elif len(arr_clean_line) == 2:
             return MFBlockHeader(
                 arr_clean_line[1],
                 header_variable_strs,
                 header_comment,
-                self._simulation_data,
+                self.simulation_data,
                 path,
             )
         else:
@@ -2245,7 +2498,7 @@ class MFPackage(PackageContainer, PackageInterface):
                 arr_clean_line[1],
                 header_variable_strs,
                 header_comment,
-                self._simulation_data,
+                self.simulation_data,
                 path,
             )
 
@@ -2306,7 +2559,7 @@ class MFPackage(PackageContainer, PackageInterface):
 
                             # informational message to the user
                             if (
-                                self._simulation_data.verbosity_level.value
+                                self.simulation_data.verbosity_level.value
                                 >= VerbosityLevel.normal.value
                             ):
                                 print(
@@ -2539,21 +2792,25 @@ class MFPackage(PackageContainer, PackageInterface):
         """Builds a container object for any child packages.  This method is
         only intended for FloPy internal use."""
         # get package class
-        package_obj = self.package_factory(
+        package_obj = PackageContainer.package_factory(
             pkg_type, self.model_or_sim.model_type
         )
         # create child package object
         child_pkgs_name = f"utl{pkg_type}packages"
-        child_pkgs_obj = self.package_factory(child_pkgs_name, "")
+        child_pkgs_obj = PackageContainer.package_factory(child_pkgs_name, "")
         if child_pkgs_obj is None and self.model_or_sim.model_type is None:
             # simulation level object, try just the package type in the name
             child_pkgs_name = f"{pkg_type}packages"
-            child_pkgs_obj = self.package_factory(child_pkgs_name, "")
+            child_pkgs_obj = PackageContainer.package_factory(
+                child_pkgs_name, ""
+            )
         if child_pkgs_obj is None:
             # see if the package is part of one of the supported model types
-            for model_type in MFStructure().sim_struct.model_types:
+            for model_type in MFStructure().sim_spec.model_types:
                 child_pkgs_name = f"{model_type}{pkg_type}packages"
-                child_pkgs_obj = self.package_factory(child_pkgs_name, "")
+                child_pkgs_obj = PackageContainer.package_factory(
+                    child_pkgs_name, ""
+                )
                 if child_pkgs_obj is not None:
                     break
         child_pkgs = child_pkgs_obj(
@@ -2583,7 +2840,7 @@ class MFPackage(PackageContainer, PackageInterface):
             # build child package file name
             child_path = package_group.next_default_file_path()
             # create new empty child package
-            package_obj = self.package_factory(
+            package_obj = PackageContainer.package_factory(
                 pkg_type, self.model_or_sim.model_type
             )
             package = package_obj(
@@ -2658,7 +2915,7 @@ class MFPackage(PackageContainer, PackageInterface):
             if var_name in block.data_structures:
                 if block.name not in self.blocks:
                     self.blocks[block.name] = MFBlock(
-                        self._simulation_data,
+                        self.simulation_data,
                         self.dimensions,
                         block,
                         self.path + (key,),
@@ -2688,7 +2945,7 @@ class MFPackage(PackageContainer, PackageInterface):
             value_,
             traceback_,
             message,
-            self._simulation_data.debug,
+            self.simulation_data.debug,
         )
 
     def set_model_relative_path(self, model_ws):
@@ -2704,7 +2961,7 @@ class MFPackage(PackageContainer, PackageInterface):
         for key, block in self.blocks.items():
             block.set_model_relative_path(model_ws)
         # update sub-packages
-        for package in self._packagelist:
+        for package in self._package_container.packagelist:
             package.set_model_relative_path(model_ws)
 
     def set_all_data_external(
@@ -2713,8 +2970,17 @@ class MFPackage(PackageContainer, PackageInterface):
         external_data_folder=None,
         base_name=None,
         binary=False,
+        replace_existing=False,
     ):
         """Sets the package's list and array data to be stored externally.
+
+        Note
+        ----
+        External files are written immediately when this method is called,
+        using the current value of max_columns_of_data and other formatting
+        settings. If you need to change these settings, do so BEFORE calling
+        this method. Changing settings afterward will not affect already-written
+        external files unless you call this method again with replace_existing=True.
 
         Parameters
         ----------
@@ -2726,6 +2992,11 @@ class MFPackage(PackageContainer, PackageInterface):
                 Base file name prefix for all files
             binary: bool
                 Whether file will be stored as binary
+            replace_existing: bool
+                Whether to replace existing external files. If True, existing
+                external files will be rewritten with current settings
+                (e.g., max_columns_of_data). If False, existing external files
+                will not be rewritten. Default is False.
         """
         # set blocks
         for key, block in self.blocks.items():
@@ -2737,14 +3008,16 @@ class MFPackage(PackageContainer, PackageInterface):
                 check_data,
                 external_data_folder,
                 binary,
+                replace_existing,
             )
         # set sub-packages
-        for package in self._packagelist:
+        for package in self._package_container.packagelist:
             package.set_all_data_external(
                 check_data,
                 external_data_folder,
                 base_name,
                 binary,
+                replace_existing,
             )
 
     def set_all_data_internal(self, check_data=True):
@@ -2760,7 +3033,7 @@ class MFPackage(PackageContainer, PackageInterface):
         for key, block in self.blocks.items():
             block.set_all_data_internal(check_data)
         # set sub-packages
-        for package in self._packagelist:
+        for package in self._package_container.packagelist:
             package.set_all_data_internal(check_data)
 
     def load(self, strict=True):
@@ -2798,7 +3071,7 @@ class MFPackage(PackageContainer, PackageInterface):
                     value_,
                     traceback_,
                     message,
-                    self._simulation_data.debug,
+                    self.simulation_data.debug,
                 )
 
         try:
@@ -2844,11 +3117,11 @@ class MFPackage(PackageContainer, PackageInterface):
 
     def _load_blocks(self, fd_input_file, strict=True, max_blocks=sys.maxsize):
         # init
-        self._simulation_data.mfdata[self.path + ("pkg_hdr_comments",)] = (
-            MFComment("", self.path, self._simulation_data)
+        self.simulation_data.mfdata[self.path + ("pkg_hdr_comments",)] = (
+            MFComment("", self.path, self.simulation_data)
         )
         self.post_block_comments = MFComment(
-            "", self.path, self._simulation_data
+            "", self.path, self.simulation_data
         )
 
         blocks_read = 0
@@ -2883,7 +3156,7 @@ class MFPackage(PackageContainer, PackageInterface):
                         value_,
                         traceback_,
                         message,
-                        self._simulation_data.debug,
+                        self.simulation_data.debug,
                         mfde,
                     )
 
@@ -2938,7 +3211,7 @@ class MFPackage(PackageContainer, PackageInterface):
                         ].repeating():
                             # warn and skip block
                             if (
-                                self._simulation_data.verbosity_level.value
+                                self.simulation_data.verbosity_level.value
                                 >= VerbosityLevel.normal.value
                             ):
                                 warning_str = (
@@ -2957,7 +3230,7 @@ class MFPackage(PackageContainer, PackageInterface):
                         and len(bhval) > 0
                         and bhs[0].name == "iper"
                     ):
-                        nper = self._simulation_data.mfdata[
+                        nper = self.simulation_data.mfdata[
                             ("tdis", "dimensions", "nper")
                         ].get_data()
                         bhval_int = datautil.DatumUtil.is_int(bhval[0])
@@ -2976,7 +3249,7 @@ class MFPackage(PackageContainer, PackageInterface):
                             )
                         # reset comments
                         self.post_block_comments = MFComment(
-                            "", self.path, self._simulation_data
+                            "", self.path, self.simulation_data
                         )
 
                         cur_block.load(
@@ -2984,7 +3257,7 @@ class MFPackage(PackageContainer, PackageInterface):
                         )
 
                         # write post block comment
-                        self._simulation_data.mfdata[
+                        self.simulation_data.mfdata[
                             cur_block.block_headers[-1].blk_post_comment_path
                         ] = self.post_block_comments
 
@@ -3008,7 +3281,7 @@ class MFPackage(PackageContainer, PackageInterface):
                                 self.post_block_comments.add_text(
                                     str(line), True
                                 )
-                        self._simulation_data.mfdata[
+                        self.simulation_data.mfdata[
                             cur_block.block_headers[-1].blk_post_comment_path
                         ] = self.post_block_comments
 
@@ -3072,7 +3345,7 @@ class MFPackage(PackageContainer, PackageInterface):
         if self.container_type[0] == PackageContainerType.model:
             model_dims = [
                 modeldimensions.ModelDimensions(
-                    self.path[0], self._simulation_data
+                    self.path[0], self.simulation_data
                 )
             ]
         else:
@@ -3080,7 +3353,7 @@ class MFPackage(PackageContainer, PackageInterface):
             # model.  figure out which model to use and return a dimensions
             # object for that model
             if self.dfn_file_name[0:3] == "exg":
-                exchange_rec_array = self._simulation_data.mfdata[
+                exchange_rec_array = self.simulation_data.mfdata[
                     ("nam", "exchanges", "exchanges")
                 ].get_data()
                 if exchange_rec_array is None:
@@ -3089,10 +3362,10 @@ class MFPackage(PackageContainer, PackageInterface):
                     if exchange[1].lower() == self._filename.lower():
                         model_dims = [
                             modeldimensions.ModelDimensions(
-                                exchange[2], self._simulation_data
+                                exchange[2], self.simulation_data
                             ),
                             modeldimensions.ModelDimensions(
-                                exchange[3], self._simulation_data
+                                exchange[3], self.simulation_data
                             ),
                         ]
                         break
@@ -3138,10 +3411,10 @@ class MFPackage(PackageContainer, PackageInterface):
                 # assign models to gnc package
                 model_dims = [
                     modeldimensions.ModelDimensions(
-                        model_1, self._simulation_data
+                        model_1, self.simulation_data
                     ),
                     modeldimensions.ModelDimensions(
-                        model_2, self._simulation_data
+                        model_2, self.simulation_data
                     ),
                 ]
             elif self.parent_file is not None:
@@ -3150,14 +3423,12 @@ class MFPackage(PackageContainer, PackageInterface):
                     model_name = md.model_name
                     model_dims.append(
                         modeldimensions.ModelDimensions(
-                            model_name, self._simulation_data
+                            model_name, self.simulation_data
                         )
                     )
             else:
                 model_dims = [
-                    modeldimensions.ModelDimensions(
-                        None, self._simulation_data
-                    )
+                    modeldimensions.ModelDimensions(None, self.simulation_data)
                 ]
         return modeldimensions.PackageDimensions(
             model_dims, self.structure, self.path
@@ -3168,7 +3439,7 @@ class MFPackage(PackageContainer, PackageInterface):
         if found_first_block:
             self.post_block_comments.text += line
         else:
-            self._simulation_data.mfdata[
+            self.simulation_data.mfdata[
                 self.path + ("pkg_hdr_comments",)
             ].text += line
 
@@ -3192,13 +3463,13 @@ class MFPackage(PackageContainer, PackageInterface):
                 value_,
                 traceback_,
                 message,
-                self._simulation_data.debug,
+                self.simulation_data.debug,
             )
 
         # write initial comments
         pkg_hdr_comments_path = self.path + ("pkg_hdr_comments",)
-        if pkg_hdr_comments_path in self._simulation_data.mfdata:
-            self._simulation_data.mfdata[
+        if pkg_hdr_comments_path in self.simulation_data.mfdata:
+            self.simulation_data.mfdata[
                 self.path + ("pkg_hdr_comments",)
             ].write(fd, False)
 
@@ -3221,14 +3492,14 @@ class MFPackage(PackageContainer, PackageInterface):
         -------
         file path : str
         """
-        if self.path[0] in self._simulation_data.mfpath.model_relative_path:
+        if self.path[0] in self.simulation_data.mfpath.model_relative_path:
             return os.path.join(
-                self._simulation_data.mfpath.get_model_path(self.path[0]),
+                self.simulation_data.mfpath.get_model_path(self.path[0]),
                 self._filename,
             )
         else:
             return os.path.join(
-                self._simulation_data.mfpath.get_sim_path(), self._filename
+                self.simulation_data.mfpath.get_sim_path(), self._filename
             )
 
     def export(self, f, **kwargs):
@@ -3279,7 +3550,7 @@ class MFPackage(PackageContainer, PackageInterface):
                 MfList dictionary key. (default is None)
 
         Returns
-        ----------
+        -------
         axes : list
             Empty list is returned if filename_base is not None. Otherwise
             a list of matplotlib.pyplot.axis are returned.
@@ -3325,7 +3596,6 @@ class MFChildPackages:
     def __init_subclass__(cls):
         """Register package"""
         super().__init_subclass__()
-        PackageContainer.modflow_packages.append(cls)
         PackageContainer.packages_by_abbr[cls.package_abbr] = cls
 
     def __getattr__(self, attr):

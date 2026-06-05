@@ -209,7 +209,7 @@ def make_truth(truth_d):
     obs_data.set_index('site', inplace=True)
 
     # add particle time obs
-    mp_obs = pd.read_csv(os.path.join(truth_d, 'freyberg_mp.mpend'), skiprows=6, header=None, usecols=[3,5], delim_whitespace=True)
+    mp_obs = pd.read_csv(os.path.join(truth_d, 'freyberg_mp.mpend'), skiprows=6, header=None, usecols=[3,5], sep=r'\s+')
     obs_data.loc['part_time', ['time', 'value']] = '', mp_obs.iloc[:,-1].values[0]
     obs_data.to_csv(os.path.join(truth_d, 'obs_data.csv'))
     
@@ -230,12 +230,8 @@ def make_ins_from_csv(csvfile, tmp_d):
                 line+= f'~,~ !{i}:{row_time}! ' 
             line+='\n'
             f.write(line)
-    try:
-        pyemu.utils.run(f'inschek {csvfile}.ins {csvfile}', cwd=tmp_d)
-        print(f'ins file for {csvfile} prepared.')
-    except: 
-        print('something is wrong with the observation & instruction pair. See INSCHEK.')
-    return 
+    print(f'ins file for {csvfile} prepared.')
+    return
 
 def clean_pst4pestchek(pstfile, par):
     """Hack to bypass NUMCOM/DERCOM conflict with PESTCHEK 
@@ -402,8 +398,6 @@ def prep_pest(tmp_d):
     # write and run pst check
     pstfile = os.path.join(tmp_d,'freyberg.pst')
     pst.write(pstfile)
-    clean_pst4pestchek(pstfile, par)
-    #pyemu.utils.run(f'pestchek {os.path.basename(pstfile)}', cwd=tmp_d)
     print(f'written pest control file: {pstfile}')
 
     return pst
@@ -437,7 +431,8 @@ def add_ppoints(tmp_d='freyberg_mf6'):
     for filename in wel_spd_files[1:12]:
         with open(os.path.join(tmp_d, filename+'.tpl'), 'w+')as f:
             f.write("ptf ~\n")
-        df = pd.read_csv(os.path.join(tmp_d, filename),delim_whitespace=True, header=None)
+        df = pd.read_csv(os.path.join(tmp_d, filename),sep=r'\s+', header=None)
+        df[3] = df[3].astype(object)
         df.iloc[:-1, 3] = [f"~     wel{i}   ~" for i in df.iloc[:-1].index.values]
         df.to_csv(os.path.join(tmp_d, filename+'.tpl'), index=False, header=None, sep="\t", mode='a')
         # add parameters from tpl
@@ -468,7 +463,7 @@ def add_ppoints(tmp_d='freyberg_mf6'):
 
     v = pyemu.geostats.ExpVario(contribution=1.0, a=2500, anisotropy=1, bearing=0)
     gs = pyemu.geostats.GeoStruct(variograms=v,nugget=0.0)
-    ok = pyemu.geostats.OrdinaryKrige(gs,df_pp)
+    ok = pyemu.geostats.OrdinaryKrigeOrg(gs,df_pp)
     df = ok.calc_factors_grid(sr,var_filename="freyberg.k.ref", minpts_interp=1,maxpts_interp=10, )
     ok.to_grid_factors_file(pp_file_hk+".fac")
 
@@ -516,8 +511,6 @@ def add_ppoints(tmp_d='freyberg_mf6'):
     pst.model_command = ['python forward_run.py']
 
     pst.control_data.pestmode = "estimation"
-    pst.pestpp_options["n_iter_base"] = 1
-    pst.pestpp_options["n_iter_super"] = 3
 
     pst.write(os.path.join(tmp_d, 'freyberg_pp.pst'))
     return print("new control file: 'freyberg_pp.pst'")
@@ -794,7 +787,7 @@ def get_sorted_ppoint_names(par, tmp_d):
     ij['y'] = cy[ij.i,ij.j]
 
     pp_file=os.path.join(tmp_d,"hkpp.dat")
-    df_pp = pd.read_csv(pp_file, delim_whitespace=True, header=None, names=['name','x','y','zone','parval1'])
+    df_pp = pd.read_csv(pp_file, sep=r'\s+', header=None, names=['name','x','y','zone','parval1'])
     df_pp = pd.merge(df_pp, ij, on=["x",'y'])
     df_pp.set_index("parnme", inplace=True)
     sorted_pnames = df_pp.index.values
@@ -811,7 +804,7 @@ def plot_arr2grid(ident_vals, tmp_d, title='Identifiability'):
 
     pp_file=os.path.join(tmp_d,"hkpp.dat")
     new_ppfile = os.path.join(tmp_d,"identpp.dat")
-    df_pp = pd.read_csv(pp_file, delim_whitespace=True, header=None, names=['name','x','y','zone','parval1'])
+    df_pp = pd.read_csv(pp_file, sep=r'\s+', header=None, names=['name','x','y','zone','parval1'])
 
     # generate random values
     df_pp.loc[:,"parval1"] = ident_vals
@@ -890,8 +883,8 @@ def prep_mc(tmp_d):
     # when phimlim changes so should phimaccept, and is usually 5-10% higher than phimlim
     pst.reg_data.phimaccept = 1.1 * pst.reg_data.phimlim
 
-    pst.pestpp_options.pop('n_iter_base')
-    pst.pestpp_options.pop('n_iter_super')
+    pst.pestpp_options.pop('n_iter_base', None)
+    pst.pestpp_options.pop('n_iter_super', None)
 
     #update parameter data
     par = pst.parameter_data

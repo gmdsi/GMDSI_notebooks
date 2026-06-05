@@ -51,9 +51,7 @@ class MtListBudget:
 
         return
 
-    def parse(
-        self, forgive=True, diff=True, start_datetime=None, time_unit="d"
-    ):
+    def parse(self, forgive=True, diff=True, start_datetime=None, time_unit="D"):
         """
         Main entry point for parsing the list file.
 
@@ -111,10 +109,8 @@ class MtListBudget:
                         self._parse_sw(f, line)
                 elif self.tkstp_key in line:
                     try:
-                        self.tkstp_overflow = (
-                            self._extract_number_between_strings(
-                                line, self.tkstp_key, "in"
-                            )
+                        self.tkstp_overflow = self._extract_number_between_strings(
+                            line, self.tkstp_key, "in"
                         )
                     except Exception as e:
                         warnings.warn(
@@ -135,13 +131,6 @@ class MtListBudget:
             self.gw_data[i] = lst[:min_len]
         df_gw = pd.DataFrame(self.gw_data)
         df_gw.loc[:, "totim"] = df_gw.pop("totim_1")
-
-        # if cumulative:
-        #     keep = [c for c in df_gw.columns if "_flx" not in c]
-        #     df_gw = df_gw.loc[:,keep]
-        # else:
-        #     keep = [c for c in df_gw.columns if "_cum" not in c]
-        #     df_gw = df_gw.loc[:, keep]
 
         if diff:
             df_gw = self._diff(df_gw)
@@ -166,13 +155,6 @@ class MtListBudget:
             df_sw = pd.DataFrame(self.sw_data)
             df_sw.loc[:, "totim"] = df_gw.totim.iloc[:min_len].values
 
-            # if cumulative:
-            #     keep = [c for c in df_sw.columns if "_flx" not in c]
-            #     df_sw = df_sw.loc[:, keep]
-            # else:
-            #     keep = [c for c in df_sw.columns if "_cum" not in c]
-            #     df_sw = df_sw.loc[:, keep]
-
             if diff:
                 df_sw = self._diff(df_sw)
             if start_datetime is not None:
@@ -189,15 +171,9 @@ class MtListBudget:
         return df_gw, df_sw
 
     def _diff(self, df):
-        out_cols = [
-            c for c in df.columns if "_out" in c and not c.startswith("net_")
-        ]
-        in_cols = [
-            c for c in df.columns if "_in" in c and not c.startswith("net_")
-        ]
-        add_cols = [
-            c for c in df.columns if c not in out_cols + in_cols + ["totim"]
-        ]
+        out_cols = [c for c in df.columns if "_out" in c and not c.startswith("net_")]
+        in_cols = [c for c in df.columns if "_in" in c and not c.startswith("net_")]
+        add_cols = [c for c in df.columns if c not in out_cols + in_cols + ["totim"]]
         out_base = [c.replace("_out_", "_") for c in out_cols]
         in_base = [c.replace("_in_", "_") for c in in_cols]
         map_names = {
@@ -216,8 +192,8 @@ class MtListBudget:
             else:
                 out_base_mapped.append(base)
         out_base = out_base_mapped
-        in_dict = {ib: ic for ib, ic in zip(in_base, in_cols)}
-        out_dict = {ib: ic for ib, ic in zip(out_base, out_cols)}
+        in_dict = dict(zip(in_base, in_cols))
+        out_dict = dict(zip(out_base, out_cols))
         in_base = set(in_base)
         out_base = set(out_base)
         out_base.update(in_base)
@@ -254,15 +230,11 @@ class MtListBudget:
         for _ in range(7):
             line = self._readline(f)
             if line is None:
-                raise Exception(
-                    "EOF while reading from component header to totim"
-                )
+                raise Exception("EOF while reading from component header to totim")
         try:
             totim = float(line.split()[-2])
         except Exception as e:
-            raise Exception(
-                f"error parsing totim on line {self.lcount}: {e!s}"
-            )
+            raise Exception(f"error parsing totim on line {self.lcount}: {e!s}")
 
         for _ in range(3):
             line = self._readline(f)
@@ -273,9 +245,7 @@ class MtListBudget:
             for _ in range(4):
                 line = self._readline(f)
                 if line is None:
-                    raise Exception(
-                        "EOF while reading from time step to particles"
-                    )
+                    raise Exception("EOF while reading from time step to particles")
 
         try:
             kper = int(line[-6:-1])
@@ -315,9 +285,7 @@ class MtListBudget:
             try:
                 item, ival, oval = self._parse_gw_line(line)
             except Exception as e:
-                raise Exception(
-                    f"error parsing GW items on line {self.lcount}: {e!s}"
-                )
+                raise Exception(f"error parsing GW items on line {self.lcount}: {e!s}")
             self._add_to_gw_data(item, ival, oval, comp)
             if break_next:
                 break
@@ -338,13 +306,11 @@ class MtListBudget:
                 else:
                     continue
             else:
-                blank_count = 0  #
+                blank_count = 0
             try:
                 item, ival, oval = self._parse_gw_line(line)
             except Exception as e:
-                raise Exception(
-                    f"error parsing GW items on line {self.lcount}: {e!s}"
-                )
+                raise Exception(f"error parsing GW items on line {self.lcount}: {e!s}")
             self._add_to_gw_data(item, ival, oval, comp)
             if "discrepancy" in item:
                 # can't rely on blank lines following block
@@ -463,10 +429,8 @@ class MtListBudget:
                     f"error parsing 'out' SW items on line {self.lcount}: {e!s}"
                 )
             self._add_to_sw_data("net", item, cval, fval, comp)
-        # out_tots = self._parse_sw_line(line)
 
     def _parse_sw_line(self, line):
-        # print(line)
         raw = line.strip().split("=")
         citem = raw[0].strip().strip(r"[\|]").replace(" ", "_")
         cval = float(raw[1].split()[0])
@@ -476,7 +440,6 @@ class MtListBudget:
         else:
             fitem = raw[1].split()[-1].replace(" ", "_")
             fval = float(raw[2])
-        # assert citem == fitem,"{0}, {1}".format(citem,fitem)
         return citem, cval, fval
 
     def _add_to_sw_data(self, inout, item, cval, fval, comp):
@@ -494,12 +457,8 @@ class MtListBudget:
             self.sw_data[iitem].append(val)
 
     @staticmethod
-    def _extract_number_between_strings(
-        input_string, start_string, end_string
-    ):
-        pattern = (
-            rf"{re.escape(start_string)}\s*(\d+)\s*{re.escape(end_string)}"
-        )
+    def _extract_number_between_strings(input_string, start_string, end_string):
+        pattern = rf"{re.escape(start_string)}\s*(\d+)\s*{re.escape(end_string)}"
         match = re.search(pattern, input_string)
 
         if match:
@@ -507,5 +466,6 @@ class MtListBudget:
             return extracted_number
         else:
             raise Exception(
-                f"Error extracting number between {start_string} and {end_string} in {input_string}"
+                "Error extracting number between "
+                f"{start_string} and {end_string} in {input_string}"
             )

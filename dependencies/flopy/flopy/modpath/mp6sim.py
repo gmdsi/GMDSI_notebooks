@@ -150,17 +150,6 @@ class Modpath6Sim(Package):
         self.retard_fac = retard_fac
         self.retard_fcCB = retard_fcCB
 
-        # self.mask_nlay = Util3d(model,(nlay,nrow,ncol),np.int32,\
-        # mask_nlay,name='mask_nlay',locat=self.unit_number[0])
-        # self.mask_1lay = Util3d(model,(nlay,nrow,ncol),np.int32,\
-        # mask_1lay,name='mask_1lay',locat=self.unit_number[0])
-        # self.stop_zone = Util3d(model,(nlay,nrow,ncol),np.int32,\
-        # stop_zone,name='stop_zone',locat=self.unit_number[0])
-        # self.retard_fac = Util3d(model,(nlay,nrow,ncol),np.float32,\
-        # retard_fac,name='retard_fac',locat=self.unit_number[0])
-        # self.retard_fcCB = Util3d(model,(nlay,nrow,ncol),np.float32,\
-        # retard_fcCB,name='retard_fcCB',locat=self.unit_number[0])
-
         self.parent.add_package(self)
 
     def check(self, f=None, verbose=True, level=1, checktype=None):
@@ -215,7 +204,8 @@ class Modpath6Sim(Package):
         None
 
         """
-        # item numbers and CamelCase variable names correspond to Modpath 6 documentation
+        # item numbers and CamelCase variable names correspond to
+        # Modpath 6 documentation
         nrow, ncol, nlay, nper = self.parent.nrow_ncol_nlay_nper
 
         f_sim = open(self.fn_path, "w")
@@ -284,23 +274,13 @@ class Modpath6Sim(Package):
                 )
                 # item 14
                 if ReleaseOption == 2:
-                    (
-                        ReleasePeriodLength,
-                        ReleaseEventCount,
-                    ) = self.release_times[i]
-                    f_sim.write(
-                        f"{ReleasePeriodLength:f} {ReleaseEventCount}\n"
-                    )
+                    (ReleasePeriodLength, ReleaseEventCount) = self.release_times[i]
+                    f_sim.write(f"{ReleasePeriodLength:f} {ReleaseEventCount}\n")
                 # item 15
                 if GridCellRegionOption == 1:
-                    (
-                        MinLayer,
-                        MinRow,
-                        MinColumn,
-                        MaxLayer,
-                        MaxRow,
-                        MaxColumn,
-                    ) = self.group_region[i]
+                    (MinLayer, MinRow, MinColumn, MaxLayer, MaxRow, MaxColumn) = (
+                        self.group_region[i]
+                    )
                     f_sim.write(
                         "{:d} {:d} {:d} {:d} {:d} {:d}\n".format(
                             MinLayer + 1,
@@ -324,26 +304,18 @@ class Modpath6Sim(Package):
                     f_sim.write(f"{self.face_ct[i]}\n")
                     # item 20
                     for j in range(self.face_ct[i]):
-                        (
-                            IFace,
-                            ParticleRowCount,
-                            ParticleColumnCount,
-                        ) = self.ifaces[i][j]
+                        IFace, ParticleRowCount, ParticleColumnCount = self.ifaces[i][j]
                         f_sim.write(
                             f"{IFace} {ParticleRowCount} {ParticleColumnCount}\n"
                         )
                 # item 21
                 elif PlacementOption == 2:
-                    (
-                        ParticleLayerCount,
-                        ParticleRowCount,
-                        ParticleColumnCount,
-                    ) = self.particle_cell_cnt[i]
+                    (ParticleLayerCount, ParticleRowCount, ParticleColumnCount) = (
+                        self.particle_cell_cnt[i]
+                    )
                     f_sim.write(
                         "{:d} {:d} {:d} \n".format(
-                            ParticleLayerCount,
-                            ParticleRowCount,
-                            ParticleColumnCount,
+                            ParticleLayerCount, ParticleRowCount, ParticleColumnCount
                         )
                     )
 
@@ -376,9 +348,7 @@ class Modpath6Sim(Package):
                 # item 27
                 for k in range(self.cell_bd_ct):
                     Grid, Layer, Row, Column = self.bud_loc[k]
-                    f_sim.write(
-                        f"{Grid} {Layer + 1} {Row + 1} {Column + 1} \n"
-                    )
+                    f_sim.write(f"{Grid} {Layer + 1} {Row + 1} {Column + 1} \n")
             if self.options_dict["BudgetOutputOption"] == 4:
                 # item 28
                 f_sim.write(f"{self.trace_file}\n")
@@ -410,7 +380,8 @@ class StartingLocationsFile(Package):
         The model object (of type :class:`flopy.modpath.mp.Modpath`) to which
         this package will be added.
     inputstyle : 1
-        Input style described in MODPATH6 manual (currently only input style 1 is supported)
+        Input style described in MODPATH6 manual
+        (currently only input style 1 is supported)
     extension : string
         Filename extension (default is 'loc')
     use_pandas: bool, default True
@@ -429,9 +400,7 @@ class StartingLocationsFile(Package):
 
         self.model = model
         self.use_pandas = use_pandas
-        self.heading = (
-            "# Starting locations file for Modpath, generated by Flopy."
-        )
+        self.heading = "# Starting locations file for Modpath, generated by Flopy."
         self.input_style = inputstyle
         if inputstyle != 1:
             raise NotImplementedError
@@ -473,7 +442,8 @@ class StartingLocationsFile(Package):
         Parameters
         ----------
         npt : int
-            Number of particles. Particles in array will be numbered consecutively from 1 to npt.
+            Number of particles.
+            Particles in array will be numbered consecutively from 1 to npt.
 
         """
         dtype = StartingLocationsFile.get_dtypes()
@@ -511,11 +481,9 @@ class StartingLocationsFile(Package):
                           'initialtime', 'label']
         :param save_group_mapper bool, if true, save a groupnumber to group name mapper as well.
         :return:
-        """
+        """  # noqa
         # convert float format string to pandas float format
-        float_format = (
-            float_format.replace("{", "").replace("}", "").replace(":", "%")
-        )
+        float_format = float_format.replace("{", "").replace("}", "").replace(":", "%")
         data = pd.DataFrame(data)
         if len(data) == 0:
             return
@@ -526,12 +494,11 @@ class StartingLocationsFile(Package):
             data.loc[:, "groupname"] = data.groupname.str.decode("UTF-8")
 
         # write loc file with pandas to save time
-        # simple speed test writing particles with flopy and running model took 30 min, writing with pandas took __min
+        # simple speed test writing particles with flopy and running model took 30 min,
+        # writing with pandas took __min
         loc_path = self.fn_path
         # write groups
-        group_dict = dict(
-            data[["particlegroup", "groupname"]].itertuples(False, None)
-        )
+        group_dict = dict(data[["particlegroup", "groupname"]].itertuples(False, None))
 
         # writing group loc data
         groups = (
@@ -541,13 +508,9 @@ class StartingLocationsFile(Package):
             .reset_index()
             .rename(columns={"groupname": "count"})
         )
-        groups.loc[:, "groupname"] = groups.loc[:, "particlegroup"].replace(
-            group_dict
-        )
+        groups.loc[:, "groupname"] = groups.loc[:, "particlegroup"].replace(group_dict)
         group_count = len(groups.index)
-        groups = pd.Series(
-            groups[["groupname", "count"]].astype(str).values.flatten()
-        )
+        groups = pd.Series(groups[["groupname", "count"]].astype(str).values.flatten())
         with open(loc_path, "w") as f:
             f.write(f"{self.heading}\n")
             f.write(f"{self.input_style:d}\n")

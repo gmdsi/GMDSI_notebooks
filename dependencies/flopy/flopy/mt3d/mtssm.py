@@ -205,9 +205,8 @@ class Mt3dSsm(Package):
             for i, label in enumerate(SsmLabels):
                 mfpack = mf.get_package(label)
                 ssmpack = SsmPackage(label, mfpack, (i < 6))
-                self.__SsmPackages.append(
-                    ssmpack
-                )  # First 6 need T/F flag in file line 1
+                # First 6 need T/F flag in file line 1
+                self.__SsmPackages.append(ssmpack)
 
         if dtype is not None:
             self.dtype = dtype
@@ -218,10 +217,7 @@ class Mt3dSsm(Package):
             self.stress_period_data = None
         else:
             self.stress_period_data = MfList(
-                self,
-                model=model,
-                data=stress_period_data,
-                list_free_format=False,
+                self, model=model, data=stress_period_data, list_free_format=False
             )
 
         if mxss is None and mf is None:
@@ -242,9 +238,7 @@ class Mt3dSsm(Package):
             if self.stress_period_data is not None:
                 for i in range(nper):
                     if i in self.stress_period_data.data:
-                        mxss_kper += np.sum(
-                            self.stress_period_data.data[i].itype == -1
-                        )
+                        mxss_kper += np.sum(self.stress_period_data.data[i].itype == -1)
                         mxss_kper += np.sum(
                             self.stress_period_data.data[i].itype == -15
                         )
@@ -304,28 +298,11 @@ class Mt3dSsm(Package):
                         array_free_format=False,
                     )
                     self.crch.append(t2d)
-        # else:
-        #     try:
-        #         if model.mf.rch is not None:
-        #             print("found 'rch' in modflow model, resetting crch to 0.0")
-        #             self.crch = [Transient2d(model, (nrow, ncol), np.float32,
-        #                           0, name='crch1',
-        #                           locat=self.unit_number[0],
-        #                           array_free_format=False)]
-        #
-        #         else:
-        #             self.crch = None
-        #     except:
-        #         self.crch = None
 
         self.cevt = None
         try:
-            if cevt is None and (
-                model.mf.evt is not None or model.mf.ets is not None
-            ):
-                print(
-                    "found 'ets'/'evt' in modflow model, resetting cevt to 0.0"
-                )
+            if cevt is None and (model.mf.evt is not None or model.mf.ets is not None):
+                print("found 'ets'/'evt' in modflow model, resetting cevt to 0.0")
                 cevt = 0.0
         except:
             if model.verbose:
@@ -366,24 +343,9 @@ class Mt3dSsm(Package):
                     )
                     self.cevt.append(t2d)
 
-        # else:
-        #     try:
-        #         if model.mf.evt is not None or model.mf.ets is not None:
-        #             print("found 'ets'/'evt' in modflow model, resetting cevt to 0.0")
-        #             self.cevt = [Transient2d(model, (nrow, ncol), np.float32,
-        #                                     0, name='cevt1',
-        #                                     locat=self.unit_number[0],
-        #                                     array_free_format=False)]
-        #
-        #         else:
-        #             self.cevt = None
-        #     except:
-        #         self.cevt = None
-
         if len(list(kwargs.keys())) > 0:
             raise Exception(
-                "SSM error: unrecognized kwargs: "
-                + " ".join(list(kwargs.keys()))
+                "SSM error: unrecognized kwargs: " + " ".join(list(kwargs.keys()))
             )
 
         # Add self to parent and return
@@ -575,9 +537,7 @@ class Mt3dSsm(Package):
 
         # Item D1: Dummy input line - line already read above
         if model.verbose:
-            print(
-                "   loading FWEL, FDRN, FRCH, FEVT, FRIV, FGHB, (FNEW(n), n=1,4)..."
-            )
+            print("   loading FWEL, FDRN, FRCH, FEVT, FRIV, FGHB, (FNEW(n), n=1,4)...")
         fwel = line[0:2]
         fdrn = line[2:4]
         frch = line[4:6]
@@ -755,10 +715,7 @@ class Mt3dSsm(Package):
 
             # Item D8: KSS, ISS, JSS, CSS, ITYPE, (CSSMS(n),n=1,NCOMP)
             if model.verbose:
-                print(
-                    "   loading KSS, ISS, JSS, CSS, ITYPE, "
-                    "(CSSMS(n),n=1,NCOMP)..."
-                )
+                print("   loading KSS, ISS, JSS, CSS, ITYPE, (CSSMS(n),n=1,NCOMP)...")
             if nss > 0:
                 current = np.empty((nss), dtype=dtype)
                 for ibnd in range(nss):

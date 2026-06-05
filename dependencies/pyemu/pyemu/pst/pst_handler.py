@@ -1,10 +1,12 @@
 from __future__ import print_function, division
 import os
 import glob
+import shlex
 import re
 import copy
 import shutil
 import time
+import string
 import warnings
 import numpy as np
 import pandas as pd
@@ -1174,7 +1176,7 @@ class Pst(object):
                         )
                     template_files, input_files = [], []
                     for i in range(self.control_data.ntplfle):
-                        raw = section_lines[i].strip().split()
+                        raw = shlex.split(section_lines[i].strip(),posix=False)
                         template_files.append(raw[0])
                         input_files.append(raw[1])
                     self.model_input_data = pd.DataFrame(
@@ -1184,7 +1186,7 @@ class Pst(object):
 
                     instruction_files, output_files = [], []
                     for j in range(self.control_data.ninsfle):
-                        raw = section_lines[i + j + 1].strip().split()
+                        raw = shlex.split(section_lines[i + j + 1].strip(),posix=False)
                         instruction_files.append(raw[0])
                         output_files.append(raw[1])
                     self.model_output_data = pd.DataFrame(
@@ -1208,7 +1210,7 @@ class Pst(object):
                     else:
                         template_files, input_files = [], []
                         for line in section_lines:
-                            raw = line.split()
+                            raw = shlex.split(line,posix=False)
                             template_files.append(raw[0])
                             input_files.append(raw[1])
                         self.model_input_data = pd.DataFrame(
@@ -1232,7 +1234,7 @@ class Pst(object):
                     else:
                         instruction_files, output_files = [], []
                         for iline, line in enumerate(section_lines):
-                            raw = line.split()
+                            raw = shlex.split(line,posix=False)
                             instruction_files.append(raw[0])
                             output_files.append(raw[1])
                         self.model_output_data = pd.DataFrame(
@@ -1898,10 +1900,7 @@ class Pst(object):
         print(vstring)
 
         if version is None:
-            if self.npar > 10000:
-                version = 2
-            else:
-                version = 1
+            version = self._decide_version()
 
         if version == 1:
             return self._write_version1(new_filename=new_filename)
@@ -1911,6 +1910,22 @@ class Pst(object):
             raise Exception(
                 "Pst.write() error: version must be 1 or 2, not '{0}'".format(version)
             )
+
+    def _decide_version(self):
+        if self.npar > 10000:
+            return 2
+        if self.nobs > 10000:
+            return 2
+        key_cols = ["standard_deviation","upper_bound","lower_bound", 
+                    "cycle", "state_par_link","drop_violations",
+                    "greater_than","less_than","link_to"]
+        for col in key_cols:
+            if col in self.parameter_data.columns:
+                return 2
+            if col in self.observation_data.columns:
+                return 2
+
+        return 1
 
     def _rectify_parchglim(self):
         """private method to just fix the parchglim vs cross zero issue"""
@@ -2012,11 +2027,25 @@ class Pst(object):
         for tplfle, infle in zip(
             self.model_input_data.pest_file, self.model_input_data.model_file
         ):
-            f_out.write("{0} {1}\n".format(tplfle, infle))
+            tplfle = str(tplfle).replace("\'",'').replace("\"",'')
+            infle = str(infle).replace("\'", '').replace("\"", '')
+            q = ' '
+            if True in [c in tplfle for c in string.whitespace] or\
+               True in [c in infle for c in string.whitespace]:
+                 q = "\"" 
+
+            f_out.write("{2}{0}{2} {2}{1}{2}\n".format(tplfle, infle, q))
         for insfle, outfle in zip(
             self.model_output_data.pest_file, self.model_output_data.model_file
         ):
-            f_out.write("{0} {1}\n".format(insfle, outfle))
+            insfle = str(insfle).replace("\'", '').replace("\"", '')
+            outfle = str(outfle).replace("\'", '').replace("\"", '')
+            q = ' '
+            if True in [c in insfle for c in string.whitespace] or\
+               True in [c in outfle for c in string.whitespace]:
+                 q = "\"" 
+
+            f_out.write("{2}{0}{2} {2}{1}{2}\n".format(insfle, outfle, q))
 
         if self.nprior > 0:
             name = "pi_data"
@@ -2737,8 +2766,12 @@ class Pst(object):
             isfixed, "parval1"
         ]
 
-    def add_transform_columns(self):
+    def add_transform_columns(self,include_offset_and_scale=False):
         """add transformed values to the `Pst.parameter_data` attribute
+
+        Args:
+            include_offset_and_scale (bool): flag to apply the scale and offset values before
+            applying the log transform.  Default is False
 
         Note:
             adds `parval1_trans`, `parlbnd_trans` and `parubnd_trans` to
@@ -2756,9 +2789,12 @@ class Pst(object):
         for col in ["parval1", "parlbnd", "parubnd", "increment"]:
             if col not in self.parameter_data.columns:
                 continue
-            self.parameter_data.loc[:, col + "_trans"] = (
-                self.parameter_data.loc[:, col] * self.parameter_data.scale
-            ) + self.parameter_data.offset
+            if include_offset_and_scale:
+                self.parameter_data.loc[:, col + "_trans"] = (
+                    self.parameter_data.loc[:, col] * self.parameter_data.scale
+                ) + self.parameter_data.offset
+            else:
+                self.parameter_data.loc[:, col + "_trans"] = self.parameter_data.loc[:, col]
             # isnotfixed = self.parameter_data.partrans != "fixed"
             islog = self.parameter_data.partrans == "log"
             self.parameter_data.loc[islog, col + "_trans"] = \
@@ -3862,7 +3898,8 @@ class Pst(object):
                 unique_keys = meta_dict.columns.difference(fieldnames)
                 df[unique_keys] = meta_dict[unique_keys]
             except Exception as e:
-                print("error parsing metadata from '{0}', continuing".format(name))
+                #print("error parsing metadata from '{0}', continuing".format(name))
+                pass
 
     def rename_parameters(self, name_dict, pst_path=".", tplmap=None):
         """rename parameters in the control and template files
@@ -3952,7 +3989,7 @@ class Pst(object):
                               file_obsparmap=insmap, pst_path=pst_path)
 
 
-    def add_pars_as_obs(self,pst_path='.'):
+    def add_pars_as_obs(self,pst_path='.',par_sigma_range=4,name_prefix=""):
         """add all parameter values as observation values by creating a new
         template and instruction file and adding them to the control file
 
@@ -3960,14 +3997,21 @@ class Pst(object):
             pst_path (str): the path to the control file from where python
                 is running.  Default is "." (python is running in the
                 same directory as the control file)
+            par_sigma_range (int):  number of standard deviations implied by the 
+                distance between the parameter bounds.  Used to set the weights
+                for the range observations
+            name_prefix (str): a tag to prepend to the observation names and the 
+                cooresponding I/O files
+        Returns:
+            DataFrame: info for the new observations
 
 
         """
         in_fname = os.path.join(pst_path,"pars_as_obs.txt")
-        tpl_fname = in_fname + ".tpl"
-        ins_fname = in_fname + ".ins"
+        tpl_fname = os.path.join(pst_path,name_prefix+"pars_as_obs.txt.tpl")
+        ins_fname = os.path.join(pst_path,name_prefix+"pars_as_obs.txt.ins")
 
-        for name in [in_fname,tpl_fname,ins_fname]:
+        for name in [tpl_fname,ins_fname]:
             assert not os.path.exists(name)
         parval1 = self.parameter_data.parval1.copy()
         parval1.to_csv(in_fname)
@@ -3981,9 +4025,71 @@ class Pst(object):
             f.write("pif ~\n")
             f.write("l1\n")
             for name in parval1.index:
-                f.write("l1 ~,~  !{0}!\n".format(name))
-        self.add_parameters(tpl_fname,in_fname,pst_path='.')
-        self.add_observations(ins_fname,in_fname,pst_path='.')
+                f.write("l1 ~,~  !{0}!\n".format(name_prefix+name))
+        pdf = self.add_parameters(tpl_fname,in_fname,pst_path='.')
+        df = self.add_observations(ins_fname,in_fname,pst_path='.')
+        self.add_transform_columns()
+        obs = self.observation_data
+        par = self.parameter_data
+        if "greater_than" not in obs.columns:
+            obs["greater_than"] = np.nan
+        if "less_than" not in obs.columns:
+            obs["less_than"] = np.nan
+
+        
+        obs.loc[df.obsnme,"greater_than"] = par.loc[parval1.index,"parlbnd"].values
+        obs.loc[df.obsnme,"less_than"] = par.loc[parval1.index,"parubnd"].values
+
+        log_idx = par.loc[parval1.index,"partrans"] == "log"
+        stdev = np.abs(par.loc[parval1.index,"parubnd_trans"] - par.loc[parval1.index,"parlbnd_trans"]) / par_sigma_range
+        stdev.loc[log_idx] = 10**stdev.loc[log_idx]
+        if np.any(pd.isna(stdev)):
+            print("warning: nans in bound-implied stdev, filling with 1.0")
+            stdev.loc[pd.isna(stdev)] = 1.0
+        obs.loc[df.obsnme,"weight"] = 1.0 / stdev.values 
+        obs.loc[df.obsnme,"obgnme"] = name_prefix+"parbounds"
+        return df
+        
+
+    def dialate_par_bounds(self,dialate_factor,center=True):
+        """ increase the distance between the parameter bounds while respecting the 
+            log transformation status
+
+        Args:
+            dialate_factor (varies): a factor to increase the distance between parameter
+                bounds.  Can be a float or a dict of str-float pars.
+            center (bool): flag to dialate from the center point between the bounds.  If 
+                False, then the dialation is from the `parval1` values.  Beware that using
+                center False can have produce the some strange results...
+        """
+
+        if isinstance(dialate_factor,float):
+            temp = {}
+            for name in self.par_names:
+                temp[name] = dialate_factor
+            dialate_factor = temp
+            temp = None
+        self.add_transform_columns()
+
+        par = self.parameter_data
+        par['dialate_factor'] = [dialate_factor.get(name,1.0) for name in par.parnme.values]
+        log_idx = par.partrans == "log"
+        par["bnd_center"] = par.parlbnd_trans + ((par.parubnd_trans - par.parlbnd_trans) / 2.0)
+        if center:
+            par["center_point"] = par["bnd_center"] 
+        else:
+            par["center_point"] = par.parval1_trans.copy()
+        
+        par["parubnd_org"] = par.parubnd.copy()
+        par["ubdist"] = par.parubnd_trans - par.bnd_center
+        par["parubnd"] = par.center_point + (par.ubdist * par.dialate_factor)
+
+        par["parlbnd_org"] = par.parlbnd.copy()
+        par["lbdist"] = par.bnd_center - par.parlbnd_trans
+        par["parlbnd"] = par.center_point - (par.lbdist * par.dialate_factor)
+        
+        par.loc[log_idx,"parubnd"] = 10**par.loc[log_idx,"parubnd"]
+        par.loc[log_idx,"parlbnd"] = 10**par.loc[log_idx,"parlbnd"]
 
 
 def _replace_str_in_files(filelist, name_dict, file_obsparmap=None, pst_path='.'):

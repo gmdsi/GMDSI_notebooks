@@ -1,0 +1,683 @@
+interfaces = []
+exclude = [
+    "**/*__pycache__",
+    "**/*egg-info",
+    "autotest",
+    "docs",
+]
+source_roots = [
+    ".",
+]
+
+[[modules]]
+path = "flopy.datbase"
+depends_on = []
+
+[[modules]]
+path = "flopy.discretization.grid"
+depends_on = [
+    "flopy.export.shapefile_utils",
+    "flopy.utils.crs",
+    "flopy.utils.geometry",
+    "flopy.utils.geospatial_utils",
+    "flopy.utils.gridutil",
+]
+
+[[modules]]
+path = "flopy.discretization.modeltime"
+depends_on = []
+
+[[modules]]
+path = "flopy.discretization.structuredgrid"
+depends_on = [
+    "flopy.discretization.grid",
+    "flopy.mf6.utils.binarygrid_util",
+]
+
+[[modules]]
+path = "flopy.discretization.unstructuredgrid"
+depends_on = [
+    "flopy.discretization.grid",
+    "flopy.mf6.utils.binarygrid_util",
+    "flopy.utils.geometry",
+    "flopy.utils.gridgen",
+]
+
+[[modules]]
+path = "flopy.discretization.vertexgrid"
+depends_on = [
+    "flopy.discretization.grid",
+    "flopy.mf6.utils.binarygrid_util",
+    "flopy.utils.geometry",
+]
+
+[[modules]]
+path = "flopy.export.longnames"
+depends_on = []
+
+[[modules]]
+path = "flopy.export.metadata"
+depends_on = [
+    "flopy.utils.flopy_io",
+]
+
+[[modules]]
+path = "flopy.export.netcdf"
+depends_on = [
+    "flopy.export.longnames",
+    "flopy.export.metadata",
+    "flopy.utils.crs",
+    "flopy.utils.parse_version",
+]
+
+[[modules]]
+path = "flopy.export.shapefile_utils"
+depends_on = [
+    "flopy.datbase",
+    "flopy.discretization.grid",
+    "flopy.utils.crs",
+    "flopy.utils.flopy_io",
+    "flopy.utils.geospatial_utils",
+]
+
+[[modules]]
+path = "flopy.export.unitsformat"
+depends_on = []
+
+[[modules]]
+path = "flopy.export.utils"
+depends_on = [
+    "flopy.datbase",
+    "flopy.export.longnames",
+    "flopy.export.netcdf",
+    "flopy.export.shapefile_utils",
+    "flopy.export.unitsformat",
+    "flopy.export.vtk",
+    "flopy.mbase",
+    "flopy.pakbase",
+    "flopy.utils.crs",
+    "flopy.utils.flopy_io",
+    "flopy.utils.geometry",
+]
+
+[[modules]]
+path = "flopy.export.vtk"
+depends_on = [
+    "flopy.datbase",
+]
+
+[[modules]]
+path = "flopy.mbase"
+depends_on = [
+    "flopy.discretization.grid",
+    "flopy.export.utils",
+    "flopy.utils.flopy_io",
+]
+
+[[modules]]
+path = "flopy.mf6.coordinates.modeldimensions"
+depends_on = [
+    "flopy.mf6.coordinates.modelgrid",
+    "flopy.mf6.coordinates.simulationtime",
+    "flopy.mf6.data.mfstructure",
+    "flopy.mf6.mfbase",
+    "flopy.mf6.utils.mfenums",
+    "flopy.utils.datautil",
+]
+
+[[modules]]
+path = "flopy.mf6.coordinates.modelgrid"
+depends_on = [
+    "flopy.mf6.data.mfstructure",
+    "flopy.mf6.utils.mfenums",
+]
+
+[[modules]]
+path = "flopy.mf6.coordinates.simulationtime"
+depends_on = [
+    "flopy.mf6.mfbase",
+]
+
+[[modules]]
+path = "flopy.mf6.data.mfdata"
+depends_on = [
+    "flopy.datbase",
+    "flopy.export.utils",
+    "flopy.mbase",
+    "flopy.mf6.coordinates.modeldimensions",
+    "flopy.mf6.data.mfdatastorage",
+    "flopy.mf6.data.mfdatautil",
+    "flopy.mf6.data.mfstructure",
+    "flopy.mf6.mfbase",
+    "flopy.utils.datautil",
+]
+
+[[modules]]
+path = "flopy.mf6.data.mfdataarray"
+depends_on = [
+    "flopy.datbase",
+    "flopy.mf6.data.mfdata",
+    "flopy.mf6.data.mfdatastorage",
+    "flopy.mf6.data.mffileaccess",
+    "flopy.mf6.data.mfstructure",
+    "flopy.mf6.mfbase",
+    "flopy.mf6.utils.mfenums",
+    "flopy.plot.plotutil",
+    "flopy.utils.datautil",
+]
+
+[[modules]]
+path = "flopy.mf6.data.mfdatalist"
+depends_on = [
+    "flopy.datbase",
+    "flopy.mbase",
+    "flopy.mf6.data.mfdata",
+    "flopy.mf6.data.mfdatastorage",
+    "flopy.mf6.data.mfdatautil",
+    "flopy.mf6.data.mffileaccess",
+    "flopy.mf6.data.mfstructure",
+    "flopy.mf6.mfbase",
+    "flopy.mf6.utils.mfenums",
+    "flopy.utils.datautil",
+]
+
+[[modules]]
+path = "flopy.mf6.data.mfdataplist"
+depends_on = [
+    "flopy.datbase",
+    "flopy.discretization.structuredgrid",
+    "flopy.discretization.unstructuredgrid",
+    "flopy.discretization.vertexgrid",
+    "flopy.mf6.data.mfdata",
+    "flopy.mf6.data.mfdatalist",
+    "flopy.mf6.data.mfdatastorage",
+    "flopy.mf6.data.mfdatautil",
+    "flopy.mf6.data.mffileaccess",
+    "flopy.mf6.data.mfstructure",
+    "flopy.mf6.mfbase",
+    "flopy.mf6.utils.mfenums",
+    "flopy.utils.datautil",
+]
+
+[[modules]]
+path = "flopy.mf6.data.mfdatascalar"
+depends_on = [
+    "flopy.datbase",
+    "flopy.mf6.data.mfdata",
+    "flopy.mf6.data.mfdatastorage",
+    "flopy.mf6.data.mfdatautil",
+    "flopy.mf6.data.mffileaccess",
+    "flopy.mf6.data.mfstructure",
+    "flopy.mf6.mfbase",
+    "flopy.plot.plotutil",
+    "flopy.utils.datautil",
+]
+
+[[modules]]
+path = "flopy.mf6.data.mfdatastorage"
+depends_on = [
+    "flopy.mf6.data.mfdatautil",
+    "flopy.mf6.data.mffileaccess",
+    "flopy.mf6.data.mfstructure",
+    "flopy.mf6.mfbase",
+    "flopy.utils.datautil",
+]
+
+[[modules]]
+path = "flopy.mf6.data.mfdatautil"
+depends_on = [
+    "flopy.mf6.coordinates.modeldimensions",
+    "flopy.mf6.data.mfdatastorage",
+    "flopy.mf6.data.mfstructure",
+    "flopy.mf6.mfbase",
+    "flopy.utils.datautil",
+]
+
+[[modules]]
+path = "flopy.mf6.data.mffileaccess"
+depends_on = [
+    "flopy.mf6.data.mfdatautil",
+    "flopy.mf6.data.mfstructure",
+    "flopy.mf6.mfbase",
+    "flopy.utils.binaryfile",
+    "flopy.utils.datautil",
+]
+
+[[modules]]
+path = "flopy.mf6.data.mfstructure"
+depends_on = [
+    "flopy.mf6.mfbase",
+]
+
+[[modules]]
+path = "flopy.mf6.mfbase"
+depends_on = []
+
+[[modules]]
+path = "flopy.mf6.mfmodel"
+depends_on = [
+    "flopy.discretization.grid",
+    "flopy.discretization.modeltime",
+    "flopy.discretization.structuredgrid",
+    "flopy.discretization.unstructuredgrid",
+    "flopy.discretization.vertexgrid",
+    "flopy.export.utils",
+    "flopy.mbase",
+    "flopy.mf6.coordinates.modeldimensions",
+    "flopy.mf6.data.mfdata",
+    "flopy.mf6.data.mfdatalist",
+    "flopy.mf6.data.mfdatautil",
+    "flopy.mf6.data.mfstructure",
+    "flopy.mf6.mfbase",
+    "flopy.mf6.mfpackage",
+    "flopy.mf6.utils.mfenums",
+    "flopy.mf6.utils.output_util",
+    "flopy.plot.plotutil",
+    "flopy.utils.check",
+    "flopy.utils.datautil",
+]
+
+[[modules]]
+path = "flopy.mf6.mfpackage"
+depends_on = [
+    "flopy.mbase",
+    "flopy.mf6.coordinates.modeldimensions",
+    "flopy.mf6.data.mfdata",
+    "flopy.mf6.data.mfdataarray",
+    "flopy.mf6.data.mfdatalist",
+    "flopy.mf6.data.mfdataplist",
+    "flopy.mf6.data.mfdatascalar",
+    "flopy.mf6.data.mfdatautil",
+    "flopy.mf6.data.mfstructure",
+    "flopy.mf6.mfbase",
+    "flopy.mf6.utils.output_util",
+    "flopy.pakbase",
+    "flopy.plot.plotutil",
+    "flopy.utils.check",
+    "flopy.utils.datautil",
+]
+
+[[modules]]
+path = "flopy.mf6.mfsimbase"
+depends_on = [
+    "flopy.mbase",
+    "flopy.mf6.data.mfdata",
+    "flopy.mf6.data.mfdatalist",
+    "flopy.mf6.data.mfdatautil",
+    "flopy.mf6.data.mfstructure",
+    "flopy.mf6.mfbase",
+    "flopy.mf6.mfmodel",
+    "flopy.mf6.mfpackage",
+    "flopy.mf6.utils.binaryfile_utils",
+    "flopy.mf6.utils.mfobservation",
+]
+
+[[modules]]
+path = "flopy.mf6.modflow.mfgwe"
+depends_on = [
+    "flopy.mf6.data.mfdatautil",
+    "flopy.mf6.mfmodel",
+]
+
+[[modules]]
+path = "flopy.mf6.modflow.mfgwedisu"
+depends_on = [
+    "flopy.mf6.data.mfdatautil",
+    "flopy.mf6.mfpackage",
+]
+
+[[modules]]
+path = "flopy.mf6.modflow.mfsimulation"
+depends_on = [
+    "flopy.mf6.mfsimbase",
+]
+
+[[modules]]
+path = "flopy.mf6.utils.binaryfile_utils"
+depends_on = [
+    "flopy.utils.binaryfile",
+]
+
+[[modules]]
+path = "flopy.mf6.utils.binarygrid_util"
+depends_on = [
+    "flopy.discretization.structuredgrid",
+    "flopy.discretization.unstructuredgrid",
+    "flopy.discretization.vertexgrid",
+    "flopy.utils.utils_def",
+]
+
+[[modules]]
+path = "flopy.mf6.utils.codegen"
+depends_on = []
+
+[[modules]]
+path = "flopy.mf6.utils.generate_classes"
+
+[[modules]]
+path = "flopy.mf6.utils.lakpak_utils"
+depends_on = []
+
+[[modules]]
+path = "flopy.mf6.utils.mfenums"
+depends_on = []
+
+[[modules]]
+path = "flopy.mf6.utils.mfobservation"
+depends_on = []
+
+[[modules]]
+path = "flopy.mf6.utils.mfsimlistfile"
+depends_on = []
+
+[[modules]]
+path = "flopy.mf6.utils.model_splitter"
+depends_on = [
+    "flopy.mf6.data.mfdataarray",
+    "flopy.mf6.data.mfdatalist",
+    "flopy.mf6.data.mfdataplist",
+    "flopy.mf6.data.mfdatascalar",
+    "flopy.mf6.mfbase",
+    "flopy.plot.plotutil",
+]
+
+[[modules]]
+path = "flopy.mf6.utils.output_util"
+depends_on = [
+    "flopy.mbase",
+    "flopy.pakbase",
+    "flopy.utils.observationfile",
+]
+
+[[modules]]
+path = "flopy.mf6.utils.postprocessing"
+depends_on = [
+    "flopy.mf6.utils.binarygrid_util",
+]
+
+[[modules]]
+path = "flopy.mf6.utils.reference"
+depends_on = []
+
+[[modules]]
+path = "flopy.mf6.utils.testutils"
+depends_on = [
+    "flopy.utils.datautil",
+]
+
+[[modules]]
+path = "flopy.pakbase"
+depends_on = [
+    "flopy.utils.check",
+    "flopy.utils.flopy_io",
+]
+
+[[modules]]
+path = "flopy.plot.crosssection"
+depends_on = [
+    "flopy.plot.plotutil",
+    "flopy.utils.geometry",
+    "flopy.utils.geospatial_utils",
+]
+
+[[modules]]
+path = "flopy.plot.map"
+depends_on = [
+    "flopy.plot.plotutil",
+    "flopy.utils.geometry",
+]
+
+[[modules]]
+path = "flopy.plot.mplstyle"
+depends_on = []
+
+[[modules]]
+path = "flopy.plot.plotutil"
+depends_on = [
+    "flopy.datbase",
+    "flopy.plot.map",
+    "flopy.utils.geometry",
+    "flopy.utils.geospatial_utils",
+    "flopy.utils.particletrackfile",
+]
+
+[[modules]]
+path = "flopy.plot.styles"
+depends_on = []
+
+[[modules]]
+path = "flopy.utils.binaryfile"
+depends_on = [
+    "flopy.utils.datafile",
+    "flopy.utils.gridutil",
+]
+
+[[modules]]
+path = "flopy.utils.check"
+depends_on = [
+    "flopy.utils.flopy_io",
+    "flopy.utils.recarray_utils",
+    "flopy.utils.util_array",
+]
+
+[[modules]]
+path = "flopy.utils.compare"
+depends_on = [
+    "flopy.utils.mfreadnam",
+]
+
+[[modules]]
+path = "flopy.utils.crs"
+depends_on = []
+
+[[modules]]
+path = "flopy.utils.cvfdutil"
+depends_on = [
+    "flopy.utils.utl_import",
+]
+
+[[modules]]
+path = "flopy.utils.datafile"
+depends_on = [
+    "flopy.discretization.structuredgrid",
+    "flopy.export.shapefile_utils",
+    "flopy.plot.plotutil",
+]
+
+[[modules]]
+path = "flopy.utils.datautil"
+depends_on = []
+
+[[modules]]
+path = "flopy.utils.flopy_io"
+depends_on = [
+    "flopy.utils.util_list",
+]
+
+[[modules]]
+path = "flopy.utils.formattedfile"
+depends_on = [
+    "flopy.utils.datafile",
+]
+
+[[modules]]
+path = "flopy.utils.geometry"
+depends_on = [
+    "flopy.utils.geospatial_utils",
+]
+
+[[modules]]
+path = "flopy.utils.geospatial_utils"
+depends_on = [
+    "flopy.utils.geometry",
+]
+
+[[modules]]
+path = "flopy.utils.get_modflow"
+depends_on = []
+
+[[modules]]
+path = "flopy.utils.gridgen"
+depends_on = [
+    "flopy.export.shapefile_utils",
+    "flopy.mbase",
+    "flopy.utils.cvfdutil",
+    "flopy.utils.flopy_io",
+    "flopy.utils.geospatial_utils",
+    "flopy.utils.util_array",
+]
+
+[[modules]]
+path = "flopy.utils.gridintersect"
+depends_on = [
+    "flopy.utils.geometry",
+    "flopy.utils.geospatial_utils",
+    "flopy.utils.utl_import",
+]
+
+[[modules]]
+path = "flopy.utils.gridutil"
+depends_on = [
+    "flopy.utils.cvfdutil",
+]
+
+[[modules]]
+path = "flopy.utils.lgrutil"
+depends_on = [
+    "flopy.utils.cvfdutil",
+    "flopy.utils.util_array",
+]
+
+[[modules]]
+path = "flopy.utils.mflistfile"
+depends_on = [
+    "flopy.utils.flopy_io",
+    "flopy.utils.observationfile",
+    "flopy.utils.utils_def",
+]
+
+[[modules]]
+path = "flopy.utils.mfreadnam"
+depends_on = []
+
+[[modules]]
+path = "flopy.utils.modpathfile"
+depends_on = [
+    "flopy.export.shapefile_utils",
+    "flopy.utils.flopy_io",
+    "flopy.utils.geometry",
+    "flopy.utils.particletrackfile",
+]
+
+[[modules]]
+path = "flopy.utils.mtlistfile"
+depends_on = []
+
+[[modules]]
+path = "flopy.utils.observationfile"
+depends_on = [
+    "flopy.utils.flopy_io",
+    "flopy.utils.utils_def",
+]
+
+[[modules]]
+path = "flopy.utils.optionblock"
+depends_on = [
+    "flopy.utils.flopy_io",
+]
+
+[[modules]]
+path = "flopy.utils.parse_version"
+depends_on = []
+
+[[modules]]
+path = "flopy.utils.particletrackfile"
+depends_on = [
+    "flopy.export.shapefile_utils",
+    "flopy.utils.geometry",
+]
+
+[[modules]]
+path = "flopy.utils.postprocessing"
+depends_on = [
+    "flopy.utils.binaryfile",
+    "flopy.utils.formattedfile",
+]
+
+[[modules]]
+path = "flopy.utils.rasters"
+depends_on = [
+    "flopy.utils.geometry",
+    "flopy.utils.geospatial_utils",
+    "flopy.utils.utl_import",
+]
+
+[[modules]]
+path = "flopy.utils.recarray_utils"
+depends_on = []
+
+[[modules]]
+path = "flopy.utils.reference"
+depends_on = []
+
+[[modules]]
+path = "flopy.utils.sfroutputfile"
+depends_on = []
+
+[[modules]]
+path = "flopy.utils.swroutputfile"
+depends_on = [
+    "flopy.utils.utils_def",
+]
+
+[[modules]]
+path = "flopy.utils.triangle"
+depends_on = [
+    "flopy.mbase",
+    "flopy.utils.cvfdutil",
+    "flopy.utils.geospatial_utils",
+]
+
+[[modules]]
+path = "flopy.utils.util_array"
+depends_on = [
+    "flopy.datbase",
+    "flopy.utils.binaryfile",
+    "flopy.utils.flopy_io",
+]
+
+[[modules]]
+path = "flopy.utils.util_list"
+depends_on = [
+    "flopy.datbase",
+    "flopy.utils.recarray_utils",
+]
+
+[[modules]]
+path = "flopy.utils.utils_def"
+depends_on = []
+
+[[modules]]
+path = "flopy.utils.utl_import"
+depends_on = [
+    "flopy.utils.parse_version",
+]
+
+[[modules]]
+path = "flopy.utils.voronoi"
+depends_on = [
+    "flopy.utils.cvfdutil",
+    "flopy.utils.geometry",
+    "flopy.utils.triangle",
+    "flopy.utils.utl_import",
+]
+
+[[modules]]
+path = "flopy.utils.zonbud"
+depends_on = [
+    "flopy.export.utils",
+    "flopy.mbase",
+    "flopy.utils.binaryfile",
+    "flopy.utils.flopy_io",
+    "flopy.utils.utils_def",
+]

@@ -51,8 +51,7 @@ class _Modpath7ParticleGroup:
 
         if releasedata is None:
             raise ValueError(
-                "releasedata must be provided to instantiate "
-                "a MODPATH 7 particle group"
+                "releasedata must be provided to instantiate a MODPATH 7 particle group"
             )
 
         # convert releasedata to a list, if required
@@ -86,9 +85,7 @@ class _Modpath7ParticleGroup:
             releasetimecount = int(releasedata[0])
             releaseinterval = 0
             # convert releasetimes list or tuple to a numpy array
-            if isinstance(releasedata[1], list) or isinstance(
-                releasedata[1], tuple
-            ):
+            if isinstance(releasedata[1], list) or isinstance(releasedata[1], tuple):
                 releasedata[1] = np.array(releasedata[1])
             if releasedata[1].shape[0] != releasetimecount:
                 raise ValueError(
@@ -144,9 +141,7 @@ class _Modpath7ParticleGroup:
             # item 29
             fp.write(
                 "{} {} {}\n".format(
-                    self.releasetimecount,
-                    self.releasetimes[0],
-                    self.releaseinterval,
+                    self.releasetimecount, self.releasetimes[0], self.releaseinterval
                 )
             )
         elif self.releaseoption == 3:
@@ -154,9 +149,7 @@ class _Modpath7ParticleGroup:
             fp.write(f"{self.releasetimecount}\n")
             # item 31
             tp = self.releasetimes
-            v = Util2d(
-                self, (tp.shape[0],), np.float32, tp, name="temp", locat=0
-            )
+            v = Util2d(None, (tp.shape[0],), np.float32, tp, name="temp", locat=0)
             fp.write(v.string)
 
         # item 32
@@ -220,9 +213,7 @@ class ParticleGroup(_Modpath7ParticleGroup):
         """
 
         # instantiate base class
-        _Modpath7ParticleGroup.__init__(
-            self, particlegroupname, filename, releasedata
-        )
+        _Modpath7ParticleGroup.__init__(self, particlegroupname, filename, releasedata)
         self.name = "ParticleGroup"
 
         # create default node-based particle data if not passed
@@ -305,9 +296,7 @@ class _ParticleGroupTemplate(_Modpath7ParticleGroup):
 
         """
         # instantiate base class
-        _Modpath7ParticleGroup.__init__(
-            self, particlegroupname, filename, releasedata
-        )
+        _Modpath7ParticleGroup.__init__(self, particlegroupname, filename, releasedata)
 
     def write(self, fp=None, ws="."):
         """
@@ -370,9 +359,7 @@ class ParticleGroupLRCTemplate(_ParticleGroupTemplate):
         self.name = "ParticleGroupLRCTemplate"
 
         # instantiate base class
-        _ParticleGroupTemplate.__init__(
-            self, particlegroupname, filename, releasedata
-        )
+        _ParticleGroupTemplate.__init__(self, particlegroupname, filename, releasedata)
         # validate particledata
         if particledata is None:
             particledata = NodeParticleData()
@@ -468,9 +455,7 @@ class ParticleGroupNodeTemplate(_ParticleGroupTemplate):
         self.name = "ParticleGroupNodeTemplate"
 
         # instantiate base class
-        _ParticleGroupTemplate.__init__(
-            self, particlegroupname, filename, releasedata
-        )
+        _ParticleGroupTemplate.__init__(self, particlegroupname, filename, releasedata)
         # validate particledata
         if particledata is None:
             particledata = NodeParticleData()

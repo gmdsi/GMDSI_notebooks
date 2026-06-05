@@ -190,6 +190,52 @@ class MFFileAccess:
         else:
             return None, None
 
+    def _optional_nval(self, data_item):
+        # return in scope number of values associated
+        # with optional parameter that also returns
+        # true from _dependent_opt()
+        nval = 0
+
+        # set nval per managed optional param
+        if self.structure.get_package() == "evt":
+            if data_item.name == "petm0":
+                if len(self._path) > 1:
+                    key = (
+                        self._path[0],
+                        self._path[1],
+                        "options",
+                        "surf_rate_specified",
+                    )
+                    if (
+                        key in self._simulation_data.mfdata
+                        and self._simulation_data.mfdata[key].get_data()
+                    ):
+                        nval = 1
+            elif data_item.name == "pxdp" or data_item.name == "petm":
+                shape, rule = self._data_dimensions.get_data_shape(
+                    data_item, self._data_dimensions.structure
+                )
+                if len(shape) == 1:
+                    nval = shape[0]
+
+        return nval
+
+    def _dependent_opt(self, data_item):
+        # return true if this is a managed dependent
+        # option other than aux, boundname. These options
+        # should return a value from _optional_nval()
+        dep_opt = False
+
+        if self.structure.get_package() == "evt":
+            if (
+                data_item.name == "petm0"
+                or data_item.name == "pxdp"
+                or data_item.name == "petm"
+            ):
+                dep_opt = True
+
+        return dep_opt
+
 
 class MFFileAccessArray(MFFileAccess):
     def __init__(
@@ -1046,18 +1092,14 @@ class MFFileAccessList(MFFileAccess):
         self._last_line_info = []
         self.simple_line = False
 
-    def read_binary_data_from_file(
-        self, read_file, modelgrid, precision="double", build_cellid=True
-    ):
+    def read_binary_data_from_file(self, read_file, build_cellid=True):
         # read from file
-        header, int_cellid_indexes, ext_cellid_indexes = self._get_header(
-            modelgrid, precision
-        )
+        header, int_cellid_indexes, ext_cellid_indexes = self._get_header()
         file_array = np.fromfile(read_file, dtype=header, count=-1)
         if not build_cellid:
             return file_array
         # build data list for recarray
-        cellid_size = len(self._get_cell_header(modelgrid))
+        cellid_size = {}
         data_list = []
         for record in file_array:
             data_record = ()
@@ -1067,9 +1109,18 @@ class MFFileAccessList(MFFileAccess):
                 if index in ext_cellid_indexes:
                     current_cellid += (data_item - 1,)
                     current_cellid_size += 1
-                    if current_cellid_size == cellid_size:
-                        data_record += current_cellid
-                        data_record = (data_record,)
+                    rec_len = len(data_record)
+                    if rec_len not in cellid_size:
+                        data_item_struct = self.structure.data_item_structures[
+                            rec_len
+                        ]
+                        cellid_size[rec_len] = (
+                            self._data_dimensions.get_cellid_size(
+                                data_item_struct.name
+                            )
+                        )
+                    if current_cellid_size == cellid_size[rec_len]:
+                        data_record += (current_cellid,)
                         current_cellid = ()
                         current_cellid_size = 0
                 else:
@@ -1077,18 +1128,14 @@ class MFFileAccessList(MFFileAccess):
             data_list.append(data_record)
         return data_list
 
-    def write_binary_file(
-        self, data, fname, modelgrid=None, precision="double"
-    ):
+    def write_binary_file(self, data, fname):
         fd = self._open_ext_file(fname, binary=True, write=True)
-        data_array = self._build_data_array(data, modelgrid, precision)
+        data_array = self._build_data_array(data)
         data_array.tofile(fd)
         fd.close()
 
-    def _build_data_array(self, data, modelgrid, precision):
-        header, int_cellid_indexes, ext_cellid_indexes = self._get_header(
-            modelgrid, precision
-        )
+    def _build_data_array(self, data):
+        header, int_cellid_indexes, ext_cellid_indexes = self._get_header()
         data_list = []
         for record in data:
             new_record = ()
@@ -1104,7 +1151,8 @@ class MFFileAccessList(MFFileAccess):
             data_list.append(new_record)
         return np.array(data_list, dtype=header)
 
-    def _get_header(self, modelgrid, precision):
+    def _get_header(self):
+        np_int_type = np.int32
         np_flt_type = np.float64
         header = []
         int_cellid_indexes = {}
@@ -1112,33 +1160,64 @@ class MFFileAccessList(MFFileAccess):
         ext_index = 0
         for index, di_struct in enumerate(self.structure.data_item_structures):
             if di_struct.is_cellid:
-                cell_header = self._get_cell_header(modelgrid)
+                cell_header = self._get_cell_header(
+                    di_struct,
+                    self.structure.data_item_structures,
+                    index,
+                )
                 header += cell_header
                 int_cellid_indexes[index] = True
                 for index in range(ext_index, ext_index + len(cell_header)):
                     ext_cellid_indexes[index] = True
                 ext_index += len(cell_header)
             elif not di_struct.optional:
-                header.append((di_struct.name, np_flt_type))
+                if di_struct.type == DatumType.integer:
+                    header.append((di_struct.name, np_int_type))
+                else:
+                    header.append((di_struct.name, np_flt_type))
                 ext_index += 1
-            elif di_struct.name == "aux":
-                aux_var_names = (
-                    self._data_dimensions.package_dim.get_aux_variables()
-                )
-                if aux_var_names is not None:
-                    for aux_var_name in aux_var_names[0]:
-                        if aux_var_name.lower() != "auxiliary":
-                            header.append((aux_var_name, np_flt_type))
+            else:
+                # optional tags
+                if di_struct.name == "aux":
+                    aux_var_names = (
+                        self._data_dimensions.package_dim.get_aux_variables()
+                    )
+                    if aux_var_names is not None:
+                        for aux_var_name in aux_var_names[0]:
+                            if aux_var_name.lower() != "auxiliary":
+                                header.append((aux_var_name, np_flt_type))
+                                ext_index += 1
+                elif self._dependent_opt(di_struct):
+                    nval = self._optional_nval(di_struct)
+                    if nval == 1:
+                        header.append((di_struct.name, np_flt_type))
+                        ext_index += 1
+                    elif nval > 1:
+                        for val in range(nval):
+                            header.append(
+                                (
+                                    f"{di_struct.name}_{val+1}",
+                                    np_flt_type,
+                                )
+                            )
                             ext_index += 1
         return header, int_cellid_indexes, ext_cellid_indexes
 
-    def _get_cell_header(self, modelgrid):
-        if modelgrid.grid_type == "structured":
-            return [("layer", np.int32), ("row", np.int32), ("col", np.int32)]
-        elif modelgrid.grid_type == "vertex":
-            return [("layer", np.int32), ("ncpl", np.int32)]
+    def _get_cell_header(self, data_item, data_set, index):
+        cellid_size = self._data_dimensions.get_cellid_size(data_item.name)
+        if cellid_size == 3:
+            return [
+                (f"{data_item.name}_layer", np.int32),
+                (f"{data_item.name}_row", np.int32),
+                (f"{data_item.name}_column", np.int32),
+            ]
+        elif cellid_size == 2:
+            return [
+                (f"{data_item.name}_layer", np.int32),
+                (f"{data_item.name}_cell", np.int32),
+            ]
         else:
-            return [("nodes", np.int32)]
+            return [(f"{data_item.name}_nodes", np.int32)]
 
     def load_from_package(
         self, first_line, file_handle, storage, pre_data_comments=None
@@ -1941,6 +2020,11 @@ class MFFileAccessList(MFFileAccess):
                                             zero_based=zero_based,
                                         )
                                         data_item.type = di_type
+                                    if (
+                                        self._dependent_opt(data_item)
+                                        and self._optional_nval(data_item) == 0
+                                    ):
+                                        break
                                     (
                                         data_index,
                                         more_data_expected,

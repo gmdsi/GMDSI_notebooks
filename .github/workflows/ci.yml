@@ -1,97 +1,122 @@
-# ripped from pyemu repo
-name: repo ci
+name: notebook ci
 
-on: 
-  #schedule:
-  #  - cron: '0 8 * * *' # run at 8 AM UTC (12 am PST)
-  pull_request:  
-    branches:    
+on:
+  pull_request:
+    branches:
       - "**"
   push:
     branches:
       - "**"
 
-env:
-  CACHE_NUMBER: 0  # increase to reset cache manually
-
 jobs:
-  build:
 
+  # ── Part 0 notebooks (no inter-dependencies, no executables needed for most) ──
+  part0:
     strategy:
       fail-fast: false
       matrix:
-        os: ["windows-latest", "ubuntu-latest", "macos-latest"]
-        python-version: ["3.11"]
-        test-path: [
-              "nb_tests.py"
-                  ]      
-
-    name: ${{ matrix.os }}-${{ matrix.python-version }}
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    name: part0-${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Conda environment using micromamba
-        uses: mamba-org/setup-micromamba@v1
+      - uses: mamba-org/setup-micromamba@v2
         with:
-            environment-file: environment.yml
-            environment-name: gmdsitut
-            create-args: >-
-              python=${{ matrix.python-version }}
-            cache-downloads: true
-            cache-environment: true
-            cache-environment-key: environment-${{ steps.date.outputs.date }}
-            cache-downloads-key: downloads-${{ steps.date.outputs.date }}
+          environment-file: environment.yml
+          environment-name: gmdsitut
+          create-args: python=3.11
+          cache-downloads: true
+          cache-environment: true
 
-      # - name: Set cache environment variables
-      #   shell: bash -l {0}
-      #   run: |
-      #     echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
-      #     CONDA_PREFIX=$(python -c "import sys; print(sys.prefix)")
-      #     echo "CONDA_PREFIX=$CONDA_PREFIX" >> $GITHUB_ENV
-
-
-      # make the cache
-
-      # - uses: actions/cache@v4
-      #   with:
-      #     path: ${{ env.CONDA_PREFIX }}
-      #     key: ${{ matrix.os }}-${{matrix.python-version}}-conda-${{ hashFiles('environment.yml') }}-${{ env.DATE }}-${{ env.CACHE_NUMBER }}
-      #   id: cache
-      
-      # # update the cache if ncessary
-      # - name: Update environment
-      #   run: micromamba create --name gmdsitut --file environment.yml
-      #   if: steps.cache.outputs.cache-hit != 'true'
-
-      # add exes to path so that they run in non-win OSs
-      - name: PESTPP exe install
+      - name: Add binaries to PATH
         shell: bash -l {0}
         run: |
-          if [[ ! -d "$HOME/.local/bin" ]]; then
-              mkdir -p "$HOME/.local/bin";
-          fi
-          # copy bins to local dir to add to PATH later
-          if [ "$RUNNER_OS" == "Windows" ]; then
-              d="win"
-          elif [ "$RUNNER_OS" == "macOS" ]; then
-              d="mac"
-          elif [ "$RUNNER_OS" == "Linux" ]; then
-              d="linux"
-          else
-              d="unexpectedos"
-              exit 1
-          fi
-          cp -r bin_new/$d/. "$HOME/.local/bin/"
-          
-          # do we also need to cp to os specific within .local/bin/? probs...
-          #find bin -maxdepth 1 -type f -exec cp {} $HOME/.local/bin/. \;
-          # cp -r bin ../bin
-          cd ..
+          mkdir -p "$HOME/.local/bin"
+          if [ "$RUNNER_OS" == "Windows" ]; then d="win"
+          elif [ "$RUNNER_OS" == "macOS" ]; then d="mac"
+          else d="linux"; fi
+          cp bin_new/$d/* "$HOME/.local/bin/"
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-
-
-      # run .py that calls nb's
-      - name: Run tests
+      - name: Run part0 notebooks
         shell: bash -l {0}
-        run: python ./autotest/${{ matrix.test-path }}
+        env:
+          MPLBACKEND: Agg
+        run: |
+          python autotest/run_notebooks.py part0
+
+  # ── Part 1 notebooks (mostly independent, only fosm depends on pilotpoints) ──
+  part1:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    name: part1-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-file: environment.yml
+          environment-name: gmdsitut
+          create-args: python=3.11
+          cache-downloads: true
+          cache-environment: true
+
+      - name: Add binaries to PATH
+        shell: bash -l {0}
+        run: |
+          mkdir -p "$HOME/.local/bin"
+          if [ "$RUNNER_OS" == "Windows" ]; then d="win"
+          elif [ "$RUNNER_OS" == "macOS" ]; then d="mac"
+          else d="linux"; fi
+          cp bin_new/$d/* "$HOME/.local/bin/"
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Run part1 notebooks
+        shell: bash -l {0}
+        env:
+          MPLBACKEND: Agg
+        run: |
+          python autotest/run_notebooks.py part1
+
+  # ── Part 2 notebooks (run sequentially: setup -> mid -> final) ──
+  part2:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    name: part2-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-file: environment.yml
+          environment-name: gmdsitut
+          create-args: python=3.11
+          cache-downloads: true
+          cache-environment: true
+
+      - name: Add binaries to PATH
+        shell: bash -l {0}
+        run: |
+          mkdir -p "$HOME/.local/bin"
+          if [ "$RUNNER_OS" == "Windows" ]; then d="win"
+          elif [ "$RUNNER_OS" == "macOS" ]; then d="mac"
+          else d="linux"; fi
+          cp bin_new/$d/* "$HOME/.local/bin/"
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Run part2 notebooks
+        shell: bash -l {0}
+        env:
+          MPLBACKEND: Agg
+        run: |
+          python autotest/run_notebooks.py part2
