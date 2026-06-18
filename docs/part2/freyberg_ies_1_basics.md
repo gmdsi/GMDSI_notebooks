@@ -478,7 +478,7 @@ Check the outcomes from the first iteration:
 
 ```python
 iter_to_use_as_posterior = 1
-pt_oe_iter = pyemu.ObservationEnsemble.from_csv(pst=pst,filename=os.path.join(m_d,"freyberg_mf6.{0}.obs.csv".\
+pt_oe_iter = pyemu.ObservationEnsemble.from_csv(pst=pst,filename=os.path.join(m_d,"freyberg_mf6.{0}.obs.csv"..\
                                                                          format(iter_to_use_as_posterior)))
 
 ```

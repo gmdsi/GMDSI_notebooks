@@ -1,0 +1,36 @@
+/* TACC/CORE-STYLES */
+/* https://github.com/TACC/Core-Styles */
+
+
+
+/* COLOR */
+/* https://cep.tacc.utexas.edu/static/ui/components/detail/color--docs.html */
+
+@import url('https://cdn.jsdelivr.net/gh/TACC/Core-Styles@v2.37.2/dist/settings/color.css');
+@import url('https://cdn.jsdelivr.net/gh/TACC/Core-Styles@v2.37.2/dist/settings/color--docs.css');
+@import url('https://cdn.jsdelivr.net/gh/TACC/Core-Styles@v2.37.2/dist/core-styles.theme.default.css');
+
+
+
+/* FONT */
+
+@import url('https://cdn.jsdelivr.net/gh/TACC/Core-Styles@v2.37.2/dist/settings/font.css');
+@import url('https://cdn.jsdelivr.net/gh/TACC/Core-Styles@v2.37.2/dist/settings/font--docs.css');
+@import url('https://cdn.jsdelivr.net/gh/TACC/Core-Styles@v2.37.2/src/lib/_imports/generics/fonts.css');
+
+:root {
+  /* To reduce TACC font sizes because MD root font size is so large */
+  /* FAQ: MD 1rem = 20px, but TACC assumes 1rem = 10px */
+  --global-font-size--x-small: calc(1.2rem / 2);
+  --global-font-size--small: calc(1.4rem / 2);
+  --global-font-size--medium: calc(1.6rem / 2);
+  --global-font-size--large: calc(1.8rem / 2);
+  --global-font-size--x-large: calc(2.1rem / 2);
+  --global-font-size--xx-large: calc(2.8rem / 2);
+  --global-font-size--xxx-large: calc(3.2rem / 2);
+}
+
+
+
+/* MISC. */
+@import url('https://cdn.jsdelivr.net/gh/TACC/Core-Styles@v2.37.2/dist/settings/border.css');

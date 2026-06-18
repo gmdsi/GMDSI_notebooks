@@ -1,0 +1,188 @@
+/* TACC/CORE-STYLES */
+/* https://github.com/TACC/Core-Styles */
+
+/* To import TACC's `--global-...` variables */
+@import url('tacc/core-styles.css');
+
+
+
+
+
+/* MKDOCS MATERIAL */
+/* https://github.com/squidfunk/mkdocs-material/blob/9.5.48/src/templates/assets/stylesheets/main/ */
+
+
+
+/* COLOR SCHEMES */
+/* https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/?h=dark+mode#color-scheme */
+/* https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/?h=palette#custom-colors */
+
+/* LIGHT MODE */
+/* https://github.com/squidfunk/mkdocs-material/blob/9.5.48/src/templates/assets/stylesheets/main/_colors.scss */
+[data-md-color-scheme="default"] {
+
+  /* Primary color shades */
+  --md-primary-fg-color:              var(--global-color-accent--normal);
+  --md-primary-fg-color--light:       var(--global-color-accent--light);
+  --md-primary-fg-color--dark:        var(--global-color-accent--dark);
+  --md-primary-bg-color:              var(--global-color-primary--xx-light);
+  --md-primary-bg-color--light:       rgb( from var(--md-primary-bg-color) r g b / 0.7 ); /* to mimic MD transparency rather than force opaque TACC color */
+
+  /* Accent color shades */
+  --md-accent-fg-color:               var(--global-color-accent--normal);
+  --md-accent-fg-color--transparent:  rgb( from var(--md-accent-fg-color) / 0.1); /* to mimic MD transparency rather than force opaque TACC color */
+  --md-accent-bg-color:               var(--global-color-primary--xx-light);
+  --md-accent-bg-color--light:        rgb( from var(--md-accent-bg-color) r g b / 0.7 ); /* to mimic MD transparency rather than force opaque TACC color */
+
+  /* Typeset `a` color shades */
+  --md-typeset-a-color:                var(--global-color-accent--normal);
+}
+
+/* DARK MODE */
+/* https://github.com/squidfunk/mkdocs-material/blob/9.5.48/src/templates/assets/stylesheets/palette/_scheme.scss#L27-L92 */
+@media screen {
+  [data-md-color-scheme="slate"] {
+
+    /* To desaturate the colors */
+
+    --md-default-fg-color:             hsla(var(--md-hue), 0%, 90%, 0.82);
+    --md-default-fg-color--light:      hsla(var(--md-hue), 0%, 90%, 0.56);
+    --md-default-fg-color--lighter:    hsla(var(--md-hue), 0%, 90%, 0.32);
+    --md-default-fg-color--lightest:   hsla(var(--md-hue), 0%, 90%, 0.12);
+    --md-default-bg-color:             hsla(var(--md-hue), 0%, 14%, 1);
+    --md-default-bg-color--light:      hsla(var(--md-hue), 0%, 14%, 0.54);
+    --md-default-bg-color--lighter:    hsla(var(--md-hue), 0%, 14%, 0.26);
+    --md-default-bg-color--lightest:   hsla(var(--md-hue), 0%, 14%, 0.07);
+
+    --md-code-fg-color:                hsla(var(--md-hue), 0%, 86%, 0.82);
+    --md-code-bg-color:                hsla(var(--md-hue), 0%, 18%, 1);
+
+    --md-typeset-kbd-color:            hsla(var(--md-hue), 0%, 90%, 0.12);
+    --md-typeset-kbd-accent-color:     hsla(var(--md-hue), 0%, 90%, 0.2);
+    --md-typeset-kbd-border-color:     hsla(var(--md-hue), 0%, 14%, 1);
+
+    --md-typeset-table-color:          hsla(var(--md-hue), 0%, 95%, 0.12);
+    --md-typeset-table-color--light:   hsla(var(--md-hue), 0%, 95%, 0.035);
+
+    --md-footer-bg-color:              hsla(var(--md-hue), 0%, 10%, 0.87);
+    --md-footer-bg-color--dark:        hsla(var(--md-hue), 0%, 8%, 1);
+  }
+}
+
+
+
+/* TYPESET */
+
+/* Headings */
+.md-typeset {
+  & :is(h1, h5, h6) {
+    color: inherit;
+  }
+  /* https://cep.tacc.utexas.edu/static/ui/components/detail/headings--docs.html */
+  & h1 {
+      font-size: var(--global-font-size--xxx-large);
+      font-weight: var(--black);
+      text-transform: uppercase; /* mimics headings--cms.css */
+  }
+  & h2 {
+      font-size: var(--global-font-size--xx-large);
+      font-weight: var(--bold);
+  }
+  & h3 {
+      font-size: var(--global-font-size--x-large);
+      font-weight: var(--bold);
+  }
+  /* WARNING: No design available; these are just developer guesswork */
+  & h4 {
+      font-size: var(--global-font-size--large);
+      font-weight: var(--bold);
+  }
+  /* To  deter use of "smaller" headings by making them match body font */
+  & h5,
+  & h6 {
+      font-size: inherit;
+      font-weight: var(--normal);
+  }
+}
+
+/* Links */
+.md-typeset a {
+  text-decoration: none;
+  text-decoration-thickness: var(--global-border-width--normal);
+  text-underline-offset: .2em;
+
+  &:focus,
+  &:hover {
+    color: var(--global-color-accent--normal);
+  }
+  &:hover:not(.headerlink) {
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+  }
+  &:active:not(.headerlink) {
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+  }
+}
+
+
+
+/* HEADER */
+
+.md-header {
+  color: var(--header-text-color);
+  background-color: var(--header-bkgd-color);
+}
+
+.md-header__button:hover {
+  opacity: unset;
+  color: var(--global-color-secondary--light);
+}
+
+
+
+/* SEARCH */
+
+[data-md-toggle="search"]:not(:checked) ~ .md-header .md-search__input {
+  background-color: var(--header-search-bkgd-color);
+  border: var(--global-border-width--normal) solid var(--header-search-brdr-color);
+  border-radius: 5px;
+  color: var(--header-text-color);
+}
+
+@media screen and (min-width: 60em) {
+  .md-search__input+.md-search__icon {
+    color: var(--header-text-color);
+  }
+}
+
+
+
+/* NAV */
+
+@media screen and (max-width: 76.234375em) {
+  .md-nav--primary .md-nav__title[for=__drawer] {
+    background-color: var(--header-bkgd-color);
+    color: var(--header-text-color);
+  }
+}
+
+
+
+/* TABS */
+
+.md-tabs {
+  color: var(--header-text-color);
+  background-color: var(--header-bkgd-color);
+}
+.md-tabs__link {
+  opacity: 1;
+
+  &:focus,
+  &:hover {
+    opacity: unset;
+  }
+  .md-tabs__item:has(&:hover) {
+    border-bottom: 4px solid var(--global-color-secondary--light);
+  }
+}

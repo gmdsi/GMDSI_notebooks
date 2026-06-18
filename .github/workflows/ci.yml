@@ -1,97 +1,28 @@
-# ripped from pyemu repo
-name: repo ci
-
-on: 
-  #schedule:
-  #  - cron: '0 8 * * *' # run at 8 AM UTC (12 am PST)
-  pull_request:  
-    branches:    
-      - "**"
+name: ci 
+on:
   push:
     branches:
-      - "**"
-
-env:
-  CACHE_NUMBER: 0  # increase to reset cache manually
-
+      - main
+permissions:
+  contents: write
 jobs:
-  build:
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: ["windows-latest", "ubuntu-latest", "macos-latest"]
-        python-version: ["3.11"]
-        test-path: [
-              "nb_tests.py"
-                  ]      
-
-    name: ${{ matrix.os }}-${{ matrix.python-version }}
-    runs-on: ${{ matrix.os }}
+  deploy:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install Conda environment using micromamba
-        uses: mamba-org/setup-micromamba@v1
-        with:
-            environment-file: environment.yml
-            environment-name: gmdsitut
-            create-args: >-
-              python=${{ matrix.python-version }}
-            cache-downloads: true
-            cache-environment: true
-            cache-environment-key: environment-${{ steps.date.outputs.date }}
-            cache-downloads-key: downloads-${{ steps.date.outputs.date }}
-
-      # - name: Set cache environment variables
-      #   shell: bash -l {0}
-      #   run: |
-      #     echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
-      #     CONDA_PREFIX=$(python -c "import sys; print(sys.prefix)")
-      #     echo "CONDA_PREFIX=$CONDA_PREFIX" >> $GITHUB_ENV
-
-
-      # make the cache
-
-      # - uses: actions/cache@v4
-      #   with:
-      #     path: ${{ env.CONDA_PREFIX }}
-      #     key: ${{ matrix.os }}-${{matrix.python-version}}-conda-${{ hashFiles('environment.yml') }}-${{ env.DATE }}-${{ env.CACHE_NUMBER }}
-      #   id: cache
-      
-      # # update the cache if ncessary
-      # - name: Update environment
-      #   run: micromamba create --name gmdsitut --file environment.yml
-      #   if: steps.cache.outputs.cache-hit != 'true'
-
-      # add exes to path so that they run in non-win OSs
-      - name: PESTPP exe install
-        shell: bash -l {0}
+      - name: Configure Git Credentials
         run: |
-          if [[ ! -d "$HOME/.local/bin" ]]; then
-              mkdir -p "$HOME/.local/bin";
-          fi
-          # copy bins to local dir to add to PATH later
-          if [ "$RUNNER_OS" == "Windows" ]; then
-              d="win"
-          elif [ "$RUNNER_OS" == "macOS" ]; then
-              d="mac"
-          elif [ "$RUNNER_OS" == "Linux" ]; then
-              d="linux"
-          else
-              d="unexpectedos"
-              exit 1
-          fi
-          cp -r bin_new/$d/. "$HOME/.local/bin/"
-          
-          # do we also need to cp to os specific within .local/bin/? probs...
-          #find bin -maxdepth 1 -type f -exec cp {} $HOME/.local/bin/. \;
-          # cp -r bin ../bin
-          cd ..
-
-
-
-      # run .py that calls nb's
-      - name: Run tests
-        shell: bash -l {0}
-        run: python ./autotest/${{ matrix.test-path }}
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
+      - uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+      - run: pip install -r requirements.txt
+      - run: mkdocs gh-deploy --force

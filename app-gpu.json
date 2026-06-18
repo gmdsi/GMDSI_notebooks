@@ -1,0 +1,160 @@
+{
+  "id": "cookbook-jupyter-template-gpu",
+  "version": "0.0.2",
+  "description": "Jupyter Lab environment for GPU",
+  "owner": "${apiUserId}",
+  "enabled": true,
+  "runtime": "SINGULARITY",
+  "runtimeVersion": null,
+  "runtimeOptions": ["SINGULARITY_RUN"],
+  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/cookbook-jupyter-template-gpu:0.0.2",
+  "jobType": "BATCH",
+  "maxJobs": -1,
+  "maxJobsPerUser": -1,
+  "strictFileInputs": true,
+  "jobAttributes": {
+    "description": null,
+    "dynamicExecSystem": false,
+    "execSystemConstraints": null,
+    "execSystemId": "ls6",
+    "execSystemExecDir": "${JobWorkingDir}",
+    "execSystemInputDir": "${JobWorkingDir}",
+    "execSystemOutputDir": "${JobWorkingDir}/output",
+    "execSystemLogicalQueue": "gpu-a100",
+    "archiveSystemId": "cloud.data",
+    "archiveSystemDir": "HOST_EVAL($HOME)/tapis-jobs-archive/${JobCreateDate}/${JobName}-${JobUUID}",
+    "archiveOnAppError": true,
+    "isMpi": false,
+    "mpiCmd": null,
+    "cmdPrefix": "mkdir $PWD/work $PWD/home $PWD/scratch;",
+    "parameterSet": {
+      "appArgs": [
+        {
+          "name": "Update cookbook",
+          "description": "Control whether the system will update the existing cookbook with the latest version available. This option is irrelevant if you are running the cookbook for the first time.",
+          "inputMode": "REQUIRED",
+          "arg": "false",
+          "notes": {
+            "enum_values": [
+              {
+                "true": "Update to latest version"
+              },
+              {
+                "false": "Keep current version"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Update conda environment",
+          "description": "Control whether the system will update the existing conda environment with the latest version available. This option is irrelevant if you are running the cookbook for the first time.",
+          "inputMode": "REQUIRED",
+          "arg": "false",
+          "notes": {
+            "enum_values": [
+              {
+                "true": "Update to latest version."
+              },
+              {
+                "false": "Keep current version"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Git branch",
+          "description": "The branch of the git repository to clone.",
+          "inputMode": "REQUIRED",
+          "arg": "main",
+          "notes": {
+            "isHidden": true,
+            "enum_values": [
+              {
+                "jupyterenv": "Jupyter Lab environment"
+              },
+              {
+                "dev": "Development"
+              },
+              {
+                "main": "main"
+              }
+            ]
+          }
+        }
+      ],
+      "containerArgs": [
+        {
+          "name": "Jupyter Mounts",
+          "description": "Mount for TAP functions and user dirs",
+          "inputMode": "FIXED",
+          "arg": "--bind /share,$WORK:$PWD/work,$HOME:$PWD/home,$SCRATCH:$PWD/scratch",
+          "notes": {
+            "isHidden": true
+          }
+        },
+        {
+          "name": "NVIDIA Flag",
+          "description": "Flag to enable NVIDIA cuda",
+          "inputMode": "FIXED",
+          "arg": "--nv",
+          "notes": {
+            "isHidden": true
+          }
+        }
+      ],
+      "schedulerOptions": [
+        {
+          "name": "TACC Scheduler Profile",
+          "description": "Scheduler profile for HPC clusters at TACC",
+          "inputMode": "FIXED",
+          "arg": "--tapis-profile tacc-apptainer",
+          "notes": {
+            "isHidden": true
+          }
+        },
+        {
+          "name": "TAP Session Substring",
+          "description": "TAP Functions require the substring 'tap_' and in the slurm job name in order to function.",
+          "inputMode": "FIXED",
+          "arg": "--job-name ${JobName}-tap_",
+          "notes": {
+            "isHidden": true
+          }
+        }
+      ],
+      "envVariables": [
+        {
+          "key": "APPTAINER_PWD",
+          "value": "/home/jovyan/work",
+          "description": "Start terminals in the working directory where host volumes are mounted.",
+          "inputMode": "FIXED",
+          "notes": {
+            "isHidden": true
+          }
+        }
+      ],
+      "archiveFilter": {
+        "includes": [],
+        "excludes": [],
+        "includeLaunchFiles": true
+      }
+    },
+    "fileInputs": [],
+    "fileInputArrays": [],
+    "nodeCount": 1,
+    "coresPerNode": 16,
+    "memoryMB": 128000,
+    "maxMinutes": 120,
+    "subscriptions": [],
+    "tags": []
+  },
+  "tags": ["portalName: ALL"],
+  "notes": {
+    "label": "Cookbook - Jupyter Lab (GPU)",
+    "hideNodeCountAndCoresPerNode": true,
+    "isInteractive": true,
+    "icon": "jupyter",
+    "category": "Data Processing",
+    "queueFilter": ["gpu-a100", "gpu-a100-dev", "gpu-a100-small"]
+  }
+}

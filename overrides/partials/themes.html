@@ -1,0 +1,233 @@
+<style>
+
+
+    .theme-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+	    align-content: center;
+      justify-content: center;
+    }
+    .row-reverse {
+        flex-direction: row-reverse;
+    }
+    @media screen and (max-width: 800px) {
+      .theme-section {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+	    align-content: center;
+      justify-content: center;
+      }
+      .theme-item {
+        flex: 1 1 0px;
+      }
+    }
+
+    .theme-item{
+      text-align: center;
+      flex:1;
+      padding:50px;
+      flex-basis: 100%;
+      min-height: 360px;
+    }
+    
+    .theme-text{
+	    align-content: center;
+    }
+    .theme-name{
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+    .theme-description{
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .theme-link{
+      font-size:2em;
+      justify-content: flex-end;
+    }
+    .theme-link p{
+      margin-left: auto;
+    }
+
+    .cards{
+      display: flex;   
+      justify-content: space-between;
+      flex-wrap: wrap;
+      /* align-items: stretch; */
+    }
+    .card {
+      flex: 0 1 32%;
+      margin: 10px;
+      padding:15px;
+      border: 1px solid #ccc;
+      box-shadow: 2px 2px 6px 0px  rgba(0,0,0,0.3);
+    } 
+
+    .img-flip{
+      -webkit-transform: scaleX(-1);
+      transform: scaleX(-1);
+    }
+ 
+  </style>
+
+<section class="md-container" >
+
+  <div class="centered">
+    <div class="cards"> 
+      <article class="card">
+        <img src="images/pt2050/gear.svg" class="img-flip" alt="Sample photo">
+        <div class="theme-text">
+          <div class="theme-name">
+            Discovery
+          </div>
+          <div class="theme-description">
+            Data Discovery language
+          </div>
+          <div class="theme-link">
+            <p>
+                <a
+                href="integrated-solutions/"
+                aria-label="Built-in search"
+                >
+                    <span>
+                        Learn more
+                    </span>
+                    
+                </a>
+            </p>
+        </div>
+        </div>
+      </article>
+      <article class="card">
+        <img src="images/pt2050/circles.svg" alt="Sample photo">
+        <div class="theme-text">
+          <div class="theme-name">
+            Integration
+          </div>
+          <div class="theme-description">
+            Model Integration as a Service! Dynamo is a dynamic modelling modelling platform that allows modelers to leverage HPC to facilitate running models
+          </div>
+          <div class="theme-link">
+            <p>
+                <a
+                href="integrated-solutions/"
+                aria-label="Built-in search"
+                >
+                    <span>
+                        Learn more
+                    </span>
+                    
+                </a>
+            </p>
+        </div>
+        </div>
+      </article>
+      <article class="card">
+        <img src="images/pt2050/tris.svg" alt="Sample photo">
+        <div class="theme-text">
+          <div class="theme-name">
+            Management
+          </div>
+          <div class="theme-description">
+            Classification, Categorization & Ingest of Data and Metadata at scale
+          </div>
+          <div class="theme-link">
+            <p>
+                <a
+                href="integrated-solutions/"
+                aria-label="Built-in search"
+                >
+                    <span>
+                        Learn more
+                    </span>
+                    
+                </a>
+            </p>
+        </div>
+        </div>
+      </article>
+    </div> 
+  </div>
+  <!-- <div class="theme-container">
+    <div class="theme-section "> 
+      <div class="theme-item theme-text"> 
+        <div class="theme-name">
+          DOLCE
+        </div>
+        <div class="theme-description">
+          Classification, Categorization & Ingest of Data and Metadata at scale
+        </div>
+        <div class="theme-link">
+            <p>
+                <a
+                href="integrated-solutions/"
+                aria-label="Built-in search"
+                >
+                    <span>
+                        Learn more
+                    </span>
+                    
+                </a>
+            </p>
+        </div>
+      </div>
+      <div class="theme-item theme-photo rgv-image" >
+      </div>
+    </div>
+    <div class="theme-section row-reverse"> 
+      <div class="theme-item theme-text"> 
+        <div class="theme-name">
+          DYNAMO
+        </div>
+        <div class="theme-description">
+          Model Integration as a Service! Dynamo is a dynamic modelling modelling platform that allows modelers to leverage HPC to facilitate running models
+        </div>
+        <div class="theme-link">
+            <p>
+                <a
+                href="integrated-solutions/"
+                aria-label="Built-in search"
+                >
+                    <span>
+                        Learn more
+                    </span>
+                    
+                </a>
+            </p>
+        </div>
+      </div>
+      <div class="theme-item theme-photo rgv-image" >
+      </div>
+    </div>
+    <div class="theme-section "> 
+      <div class="theme-item theme-text"> 
+        <div class="theme-name">
+          Digital Twins
+        </div>
+        <div class="theme-description">
+          Digital Twins are poised to revolutionize simulations. The REDI team is developing tools that streamline the creation and orchestration of Digital Twins using physics-based information to support participatory processes
+        </div>
+        <div class="theme-link">
+            <p>
+                <a
+                href="integrated-solutions/"
+                aria-label="Built-in search"
+                >
+                    <span>
+                        Learn more
+                    </span>
+                    
+                </a>
+            </p>
+        </div>
+      </div>
+      <div class="theme-item theme-photo rgv-image" >
+      </div>
+    </div>
+  </div> -->
+
+
+   
+</section>

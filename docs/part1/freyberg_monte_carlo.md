@@ -14,7 +14,7 @@ On a more practical standpoint, the underlying theory for FOSM and why it result
 
 Here's a flowchart from Anderson et al. (2015):
 
-<img src="freyberg_monte_carlo_files/Fig10.14_MC_workflow.png" style="float: center">
+<img src="../freyberg_monte_carlo_files/Fig10.14_MC_workflow.png" style="float: center">
 
 
 ## The Current Tutorial

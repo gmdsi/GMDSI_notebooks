@@ -1,0 +1,1 @@
+ipyfilechooser==0.6.0

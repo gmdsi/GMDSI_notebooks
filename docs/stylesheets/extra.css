@@ -1,0 +1,13 @@
+/* For styles independent of TACC skin */
+
+[data-md-color-scheme="argo"] {
+  --md-primary-fg-color:        #171730;
+  --md-primary-fg-color--light: #AFAFB3;
+  --md-primary-fg-color--dark:  #101015;
+}
+
+[data-md-color-scheme="utexas"] {
+  --md-primary-fg-color:        #bf5700;
+  --md-primary-fg-color--light: #ffffff;
+  --md-primary-fg-color--dark:  #333f48;
+}

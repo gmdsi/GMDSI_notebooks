@@ -1,0 +1,27 @@
+name: gmdsitut
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - pandas>=2.0
+  - numpy<2 
+  - matplotlib 
+  - openpyxl
+  - xlrd
+  - jupyter 
+  - notebook 
+  - scipy 
+  - shapely
+  - rtree
+  - pyproj>=2.0
+  - pyshp
+  - psutil
+  - git
+  - nbconvert
+  - pip:
+       - -e ./dependencies/flopy
+       - -e ./dependencies/pyemu
+       - pypestutils
+
+

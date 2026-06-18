@@ -1,0 +1,128 @@
+# Project Information
+site_name: Groundwater Modeling Decision Support
+site_url: https://github.com/In-For-Disaster-Analytics/GMDSI_notebooks
+site_author: GMDSI Team
+site_description:  >-
+  Information in support of the Groundwater Decision Support Modeling tutorials. (Forked Repo)
+
+  Hugman, R., White, J.T., Fienen, M.N., and Hunt, R.J., 2022, Parameter Estimation, Uncertainty Analysis, and Optimization with the PEST++ Family of codes: Tutorial Jupyter Notebooks: U.S. Geological Survey data release, https://doi.org/10.5066/P901F9G0.
+
+# Repository
+repo_name: In-For-Disaster-Analytics/GMDSI_notebooks
+repo_url: https://github.com/In-For-Disaster-Analytics/GMDSI_notebooks
+
+# Configuration
+theme:
+  logo: assets/pt2050/pillar1.svg 
+  # https://cdn.jsdelivr.net/gh/TACC/Core-CMS-Custom@813aa7c/ptdatax_assets/logo.png
+  name: material
+  custom_dir: overrides
+  features:
+    - content.code.annotate 
+    - content.code.copy
+    - content.code.select
+    - header.autohide
+    - navigation.expand
+    # - navigation.footer
+    - navigation.indexes
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    - navigation.path
+    - navigation.tabs    
+    - navigation.tabs.sticky
+    - navigation.top
+    - toc.follow
+    # - toc.integrate
+  font:
+    text: "'Benton Sans', 'Open Sans'" # "Benton Sans" available via tacc/core-styles.css
+    code: Roboto
+  favicon: https://cdn.jsdelivr.net/gh/TACC/Core-CMS-Custom@813aa7c/ptdatax_assets/favicon.ico
+
+  palette: 
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode        
+  
+    
+extra_css:
+  - stylesheets/tacc.css
+  - stylesheets/extra.css
+   
+extra_javascript:
+  - javascripts/extra.js  
+  # - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.blocks.html
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.snippets:
+      url_download: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - tables
+  - toc:
+      permalink: true          
+
+plugins:
+  - awesome-pages:
+      # filename: .index
+      collapse_single_pages: true
+      strict: false
+      order: asc
+      sort_type: natural
+      # order_by: title
+  # - mkdocs-pdf
+  # - multirepo:
+  #     # (optional) tells multirepo to cleanup the temporary directory after site is built.
+  #     cleanup: true
+  #     # if set the docs directory will not be removed when importing docs.
+  #     # When using this with a nav section in an imported repo you must keep the
+  #     # docs directory in the path (e.g., docs/path/to/file.md).
+  #     keep_docs_dir: true
+  - privacy:
+      assets: false
+      external_links_attr_map:
+        target: _blank
+  - search
