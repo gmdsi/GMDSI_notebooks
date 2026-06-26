@@ -21,3 +21,5 @@ tutorials/**/*_respsurf/
 tutorials/**/glm_*/
 tutorials/**/freyberg6_*/
 tutorials/**/dsi_template/
+tutorials/**/pls_template/
+tutorials/**/gpr_bo_template/
