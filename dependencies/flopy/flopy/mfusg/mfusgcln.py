@@ -1,4 +1,3 @@
-# pylint: disable=E1101
 """
 Mfusgcln module.
 
@@ -14,7 +13,7 @@ Panday, S., 2021; USG-Transport Version 1.7.0: The Block-Centered Transport
 Process for MODFLOW-USG, GSI Environmental, March, 2021
 
 Panday, Sorab, Langevin, C.D., Niswonger, R.G., Ibaraki, Motomu, and Hughes,
-J.D., 2013, MODFLOW–USG version 1: An unstructured grid version of MODFLOW
+J.D., 2013, MODFLOW-USG version 1: An unstructured grid version of MODFLOW
 for simulating groundwater flow and tightly coupled processes using a control
 volume finite-difference formulation: U.S. Geological Survey Techniques and
 Methods, book 6, chap. A45, 66 p.
@@ -34,133 +33,131 @@ class MfUsgCln(Package):
 
     Parameters
     ----------
-    model : model object
-        The model object (of type :class:`flopy.modflowusg.mf.Modflow`) to which
-        this package will be added.
-    ncln : int
-        is a flag or the number of CLN segments. If NCLN = 0, this flag
-        indicates that the CLN domain connectivity is input in a general IA-JA
-        manner as is used for the GWF Process.If NCLN > 0, linear CLN segments
-        (for instance multi-aquifer wells) or simple CLN networks are simulated
-        and NCLN is the total number of CLN segments in the domain.
-    iclnnds : int
-        is a flag or number of CLN-nodes simulated in the model. Multiple
-        CLN-nodes constitute a segment.If ICLNNDS < 0, the CLN-nodes are
-        ordered in a sequential manner from the first CLN node to the last
-        CLN node. Therefore, only linear CLN segments are simulated since a
-        CLN segment does not share any of its nodes with another CLN segment.
-        If ICLNNDS > 0, CLN networks can be simulated and ICLNNDS is
-        the total number of CLN-nodes simulated by the model (NCLNNDS). CLN
-        nodes can be shared among CLN segments and therefore, the CLN-nodal
+    model : flopy.mfusg.MfUsg
+        The model object to which this package will be added.
+    ncln : int, optional
+        A flag or number of CLN segments.
+
+        * If NCLN = 0, this flag indicates that the CLN domain connectivity is
+          input in a general IA-JA manner as is used for the GWF Process.
+        * If NCLN > 0, linear CLN segments (for instance multi-aquifer wells)
+          or simple CLN networks are simulated and NCLN is the total number of
+          CLN segments in the domain.
+    iclnnds : int, optional
+        A flag or number of CLN-nodes simulated in the model. Multiple
+        CLN-nodes constitute a segment.
+
+        * If ICLNNDS < 0, the CLN-nodes are ordered in a sequential manner from
+          the first CLN node to the last CLN node. Therefore, only linear
+          CLN segments are simulated since a CLN segment does not share any of
+          its nodes with another CLN segment.
+        * If ICLNNDS > 0, CLN networks can be simulated and ICLNNDS is
+          the total number of CLN-nodes simulated by the model (NCLNNDS).
+        CLN nodes can be shared among CLN segments and therefore, the CLN-nodal
         connectivity for the network is also required as input.
-    nndcln : list of int
-        is the number of CLN-nodes that are associated with each CLN segment.
+    nndcln : int, optional
+        The number of CLN-nodes that are associated with each CLN segment.
         Only read if NCLN > 0. If ICLNNDS < 0, sum of nndcln is the total number
-        of CLN-nodes (NCLNNDS)
-    clncon : list of list
-        are the CLN-node numbers associated with each CLN segment. Only read
+        of CLN-nodes (NCLNNDS).
+    clncon : list of list, optional
+        The CLN-node numbers associated with each CLN segment. Only read
         if NCLN > 0 and ICLNNDS > 0. It is read NCLN times, once for each CLN
         segment. The number of entries for each sublist is the number of CLN
         cells (NNDCLN) associated with each CLN segment
-    nja_cln : int
-        is the total number of connections of the CLN domain. NJA_CLN is used
+    nja_cln : int, optional
+        The total number of connections of the CLN domain. NJA_CLN is used
         to dimension the sparse matrix in a compressed row storage format.
-    iac_cln : list of int
-        is a matrix indicating the number of connections plus 1 for each CLN
+    iac_cln : list of int, optional
+        A matrix indicating the number of connections plus 1 for each CLN
         node to another CLN node. Note that the IAC_CLN array is only supplied
         for the CLN cells; the IAC_CLN array is internally expanded to include
         other domains if present in a simulation. sum(IAC)=NJAG
-    ja_cln : list of list
-        is a list of CLN cell number (n) followed by its connecting CLN cell
+    ja_cln : list of list, optional
+        A list of CLN cell number (n) followed by its connecting CLN cell
         numbers (m) for each of the m CLN cells connected to CLN cell n. This
         list is sequentially provided for the first to the last CLN cell.
         Note that the cell and its connections are only supplied for the CLN
         cells and their connections to the other CLN cells using the local CLN
         cell numbers.
-    node_prop : matrix
+    node_prop : matrix, optional
         [IFNO IFTYP IFDIR FLENG FELEV FANGLE IFLIN ICCWADI X1 Y1 Z1 X2 Y2 Z2]
-        is a table of the node properties. Total rows equal the total number
+        A table of the node properties. Total rows equal the total number
         of CLN-nodes (NCLNNDS). The first 6 fields is required for running
         model. Rest of fields have default value of 0.
-    nclngwc : int
+    nclngwc : int, optional
         is the number of CLN to porous-medium grid-block connections present
         in the model. A CLN node need not be connected to any groundwater node.
         Conversely, a CLN node may be connected to multiple groundwater nodes,
         or multiple CLN nodes may be connected to the same porous medium mode.
-    cln_gwc : matrix
-        unstructured: [IFNOD IGWNOD IFCON FSKIN FLENGW FANISO ICGWADI]
-        structured: [IFNOD IGWLAY IGWROW IGWFCOL IFCON FSKIN FLENGW FANISO
-                     ICGWADI]
-        is a table define connections between CLN nodes and groundwater cells.
+    cln_gwc : matrix, optional
+        * unstructured: [IFNOD IGWNOD IFCON FSKIN FLENGW FANISO ICGWADI]
+        * structured: [IFNOD IGWLAY IGWROW IGWFCOL IFCON FSKIN FLENGW FANISO ICGWADI]
+        A table define connections between CLN nodes and groundwater cells.
         Total rows of the table equals nclngwc.
-    nconduityp : int
-        is the number of circular conduit-geometry types.
-    cln_circ :
+    nconduityp : int, default 1
+        The number of circular conduit-geometry types.
+    cln_circ : optional
         [ICONDUITYP FRAD CONDUITK TCOND TTHK TCFLUID TCONV]
-        is a table define the circular conduit properties. Total rows of the
+        A table that defines the circular conduit properties. Total rows of the
         table equals nconduityp. Last 4 fields only needed for heat transport
         simulation.
-    ibound : 1-D array
-        is the boundary array for CLN-nodes. Length equal NCLNNDS
-    strt : 1-D array
-        is initial head at the beginning of the simulation in CLN nodes.
-        Length equal NCLNNDS
-    transient : bool
-        if there is transient IBOUND for each stress period
-    printiaja : bool
-        whether to print IA_CLN and JA_CLN to listing file
-    nrectyp : int
-        is the number of rectangular conduit-geometry types.
-    cln_rect : rectangular fracture properties
+    ibound : int or array_like, default 1
+        The boundary array for CLN-nodes. Length equal NCLNNDS.
+    strt : float or array_like, default 1.0
+        Initial head at the beginning of the simulation in CLN nodes.
+        Length equal NCLNNDS.
+    transient : bool, default False
+        Specifies if there is transient IBOUND for each stress period.
+    printiaja : bool, default False
+        Whether to print IA_CLN and JA_CLN to listing file.
+    nrectyp : int, default 0
+        The number of rectangular conduit-geometry types.
+    cln_rect : rectangular fracture properties, optional
         [IRECTYP FLENGTH FHEIGHT CONDUITK TCOND TTHK TCFLUID TCONV]
-        is read for each rectangular conduit.  Total rows of the table equals
+        Read for each rectangular conduit.  Total rows of the table equals
         nrectyp. Last 4 fields only needed for heat transport simulation.
-    bhe : bool
-        is a flag indicating that bhe details are also included in a heat transport
+    bhe : bool, default False
+        A flag indicating that bhe details are also included in a heat transport
         model. Specifically, the thermal conductance and bhe tube thickness are
         included in transfer of heat between groundwater and CLN cells along with
         the heat conductivity of the bhe fluid and the convective heat transfer
         coefficient.
-    grav : float
+    grav : float, optional
         is the gravitational acceleration constant in model simulation units.
         The value of the constant follows the keyword GRAVITY. Note that the
         constant value is 9.81 m/s2 in SI units; 32.2 ft/s2 in fps units.
-    visk : float
-        is the kinematic viscosity of water in model simulation units [L2/T].
+    visk : float, optional
+        The kinematic viscosity of water in model simulation units [L2/T].
         The value of kinematic viscosity follows the keyword VISCOSITY. Note
         that the constant value is 1.787 x 10-6 m2/s in SI units;
         1.924 x 10-5 ft2/s in fps units.
-    extension : list of strings
-        (default is ['cln','clncb','clnhd','clndd','clnib','clncn','clnmb']).
-    unitnumber : list of int
-        File unit number for the package and the output files.
-        (default is [71, 0, 0, 0, 0, 0, 0] ).
-    filenames : list of str
+    extension : list of str, default ['cln', 'clncb', 'clnhd', 'clndd', \
+    'clnib', 'clncn', 'clnmb']
+        List of seven output file extensions.
+    unitnumber : list of int, optional
+        File unit number for the package and the seven output files.
+        Default None uses ``[71, 0, 0, 0, 0, 0, 0]``.
+    filenames : list of str, optional
         Filenames to use for the package and the output files. If filenames
-        = None the package name will be created using the model name and package
-        extensions.
-
-    Attributes
-    ----------
-
-    Methods
-    -------
-
-    See Also
-    --------
-
-    Notes
-    -----
+        is None, the package name will be created using the model name and
+        package extensions.
 
     Examples
     --------
-
     >>> import flopy
     >>> ml = flopy.mfusg.MfUsg()
-    >>> node_prop = [[1,1,0,10.0,-110.0,1.57,0,0],[2,1,0,10.0,-130.0,1.57,0,0]]
-    >>> cln_gwc = [[1,1,50,50,0,0,10.0,1.0,0],[2,2,50,50,0,0,10.0,1.0,0]]
+    >>> node_prop = [
+    ...     [1, 1, 0, 10.0, -110.0, 1.57, 0, 0],
+    ...     [2, 1, 0, 10.0, -130.0, 1.57, 0, 0],
+    ... ]
+    >>> cln_gwc = [
+    ...     [1, 1, 50, 50, 0, 0, 10.0, 1.0, 0],
+    ...     [2, 2, 50, 50, 0, 0, 10.0, 1.0, 0],
+    ... ]
+    >>> cln_circ = [[1, 0.5, 3.23e10]]
     >>> cln = flopy.mfusg.MfUsgCln(ml, ncln=1, iclnnds=-1, nndcln=2,
-            nclngwc = 2, node_prop =node_prop, cln_gwc =cln_gwc)"""
+    ...     nclngwc=2, node_prop=node_prop, cln_gwc=cln_gwc, cln_circ=cln_circ)
+    """
 
     def __init__(
         self,
@@ -186,17 +183,10 @@ class MfUsgCln(Package):
         bhe=False,  # OPTIONS2: borehole heat exchanger (BHE)
         grav=None,  # OPTIONS2: gravitational acceleration constant
         visk=None,  # OPTIONS2: kinematic viscosity of water
-        extension=(
-            "cln",
-            "clncb",
-            "clnhd",
-            "clndd",
-            "clnib",
-            "clncn",
-            "clnmb",
-        ),
+        extension=["cln", "clncb", "clnhd", "clndd", "clnib", "clncn", "clnmb"],
         unitnumber=None,
         filenames=None,
+        **kwargs,
     ):
         """Package constructor."""
         msg = (
@@ -207,7 +197,7 @@ class MfUsgCln(Package):
 
         # set default unit number of one is not specified
         if unitnumber is None:
-            self.unitnumber = self._defaultunit()
+            unitnumber = self._defaultunit()
         elif isinstance(unitnumber, list):
             if len(unitnumber) < 7:
                 for idx in range(len(unitnumber), 7):
@@ -274,9 +264,7 @@ class MfUsgCln(Package):
             raise Exception("mfcln: CLN-GW connections not provided")
 
         if len(cln_gwc) != nclngwc:
-            raise Exception(
-                "mfcln: Number of CLN-GW connections not equal to nclngwc"
-            )
+            raise Exception("mfcln: Number of CLN-GW connections not equal to nclngwc")
 
         structured = self.parent.structured
 
@@ -314,6 +302,98 @@ class MfUsgCln(Package):
             locat=self.unit_number[0],
         )
 
+        # Transport parameters
+        bct = model.get_package("BCT")
+        if bct is not None:
+            if bct.icbndflg == 0:
+                icbund = kwargs.pop("icbund", None)
+                self.icbund = Util2d(
+                    model,
+                    (self.nclnnds,),
+                    np.int32,
+                    icbund,
+                    name="icbund",
+                    locat=self.unit_number[0],
+                )
+            if bct.idisp:
+                dll = kwargs.pop("dll", None)
+                self.dll = Util2d(
+                    model,
+                    (self.nclnnds,),
+                    np.float32,
+                    dll,
+                    name="dll",
+                    locat=self.unit_number[0],
+                )
+                dlm = kwargs.pop("dlm", None)
+                self.dlm = Util2d(
+                    model,
+                    (self.nclnnds,),
+                    np.float32,
+                    dlm,
+                    name="dlm",
+                    locat=self.unit_number[0],
+                )
+
+            mcomp = bct.mcomp
+            self.sptlrct = [0] * mcomp
+            self.zodrw = [0] * mcomp
+            self.fodrw = [0] * mcomp
+            self.conc = [0] * mcomp
+
+            if bct.spatialreact:
+                sptlrct = kwargs.pop("sptlrct", None)
+                if isinstance(sptlrct, (int, float)):
+                    sptlrct = [sptlrct] * mcomp
+            if bct.izod:
+                zodrw = kwargs.pop("zodrw", None)
+                if isinstance(zodrw, (int, float)):
+                    zodrw = [zodrw] * mcomp
+            if bct.ifod:
+                fodrw = kwargs.pop("fodrw", None)
+                if isinstance(fodrw, (int, float)):
+                    fodrw = [fodrw] * mcomp
+            conc = kwargs.pop("conc", None)
+            if isinstance(conc, (int, float)):
+                conc = [conc] * mcomp
+
+            for icomp in range(mcomp):
+                if bct.spatialreact:
+                    self.sptlrct[icomp] = Util2d(
+                        model,
+                        (self.nclnnds,),
+                        np.float32,
+                        sptlrct[icomp],
+                        name="sptlrct",
+                        locat=self.unit_number[0],
+                    )
+                if bct.izod:
+                    self.zodrw[icomp] = Util2d(
+                        model,
+                        (self.nclnnds,),
+                        np.float32,
+                        zodrw[icomp],
+                        name="zodrw",
+                        locat=self.unit_number[0],
+                    )
+                if bct.ifod:
+                    self.fodrw[icomp] = Util2d(
+                        model,
+                        (self.nclnnds,),
+                        np.float32,
+                        fodrw[icomp],
+                        name="fodrw",
+                        locat=self.unit_number[0],
+                    )
+                self.conc[icomp] = Util2d(
+                    model,
+                    (self.nclnnds,),
+                    np.float32,
+                    conc[icomp],
+                    name="conc",
+                    locat=self.unit_number[0],
+                )
+
         self.parent.add_package(self)
 
     @staticmethod
@@ -335,15 +415,12 @@ class MfUsgCln(Package):
             raise Exception("mfcln: CLN network not defined")
 
         if self.ncln < 0:
-            raise Exception(
-                "mfcln: negative number of CLN segments in CLN package"
-            )
+            raise Exception("mfcln: negative number of CLN segments in CLN package")
 
         if self.ncln > 0:  # Linear CLN segments
             if self.nndcln is None:
                 raise Exception(
-                    "mfcln: number of nodes for each CLN segment must be "
-                    "provided"
+                    "mfcln: number of nodes for each CLN segment must be provided"
                 )
             self.nndcln = Util2d(
                 model,
@@ -361,9 +438,8 @@ class MfUsgCln(Package):
             # Node number provided for each segment to simulate CLN networks
             elif self.iclnnds > 0:
                 self.nclnnds = self.iclnnds
-                self.nodeno = (
-                    np.asarray(set(self.clncon), dtype=object) + 1
-                )  # can be jagged
+                # can be jagged
+                self.nodeno = np.asarray(set(self.clncon), dtype=object) + 1
             else:
                 raise Exception("mfcln: Node number = 0")
 
@@ -392,9 +468,7 @@ class MfUsgCln(Package):
             if self.ja_cln is None:
                 raise Exception("mfcln: ja_cln must be provided")
             if abs(self.ja_cln[0]) != 1:
-                raise Exception(
-                    "mfcln: first ja_cln entry (node 1) is not 1 or -1."
-                )
+                raise Exception("mfcln: first ja_cln entry (node 1) is not 1 or -1.")
             self.ja_cln = Util2d(
                 model,
                 (self.nja_cln,),
@@ -408,14 +482,10 @@ class MfUsgCln(Package):
         """Initialises CLN geometry types."""
         # Circular conduit geometry types
         if self.nconduityp <= 0 or self.cln_circ is None:
-            raise Exception(
-                "mfcln: Circular conduit properties must be provided"
-            )
+            raise Exception("mfcln: Circular conduit properties must be provided")
 
         if len(self.cln_circ) != self.nconduityp:
-            raise Exception(
-                "mfcln: Number of circular properties not equal nconduityp"
-            )
+            raise Exception("mfcln: Number of circular properties not equal nconduityp")
 
         self.cln_circ = self._make_recarray(
             self.cln_circ, dtype=MfUsgClnDtypes.get_clncirc_dtype(self.bhe)
@@ -473,32 +543,29 @@ class MfUsgCln(Package):
             f_cln.write(self.iac_cln.get_file_entry())
             f_cln.write(self.ja_cln.get_file_entry())
 
+        free = self.parent.free_format_input
         np.savetxt(
-            f_cln, self.node_prop, fmt=fmt_string(self.node_prop), delimiter=""
+            f_cln, self.node_prop, fmt=fmt_string(self.node_prop, free), delimiter=""
         )
 
         np.savetxt(
-            f_cln, self.cln_gwc, fmt=fmt_string(self.cln_gwc), delimiter=""
+            f_cln, self.cln_gwc, fmt=fmt_string(self.cln_gwc, free), delimiter=""
         )
 
         if self.nconduityp > 0:
             np.savetxt(
-                f_cln,
-                self.cln_circ,
-                fmt=fmt_string(self.cln_circ),
-                delimiter="",
+                f_cln, self.cln_circ, fmt=fmt_string(self.cln_circ, free), delimiter=""
             )
 
         if self.nrectyp > 0:
             np.savetxt(
-                f_cln,
-                self.cln_rect,
-                fmt=fmt_string(self.cln_rect),
-                delimiter="",
+                f_cln, self.cln_rect, fmt=fmt_string(self.cln_rect, free), delimiter=""
             )
 
         f_cln.write(self.ibound.get_file_entry())
         f_cln.write(self.strt.get_file_entry())
+
+        self._write_transport(f_cln)
 
         f_cln.close()
 
@@ -519,18 +586,36 @@ class MfUsgCln(Package):
         )
 
         if self.nrectyp > 0:
-            f_cln.write(f"RECTANGULAR {self.nrectyp:d}")
+            f_cln.write(f" RECTANGULAR {self.nrectyp:d}")
         if self.bhe:
-            f_cln.write("BHEDETAIL ")
+            f_cln.write(" BHEDETAIL ")
         if self.iclncn != 0:
-            f_cln.write(f"SAVECLNCON {self.iclncn:d}")
+            f_cln.write(f" SAVECLNCON {self.iclncn:d}")
         if self.iclnmb != 0:
-            f_cln.write(f"SAVECLNMAS {self.iclnmb:d}")
+            f_cln.write(f" SAVECLNMAS {self.iclnmb:d}")
         if self.grav is not None:
-            f_cln.write(f"GRAVITY {self.grav:f}")
+            f_cln.write(f" GRAVITY {self.grav:f}")
         if self.visk is not None:
-            f_cln.write(f"VISCOSITY {self.visk:f}")
+            f_cln.write(f" VISCOSITY {self.visk:f}")
         f_cln.write("\n")
+
+    def _write_transport(self, f_cln):
+        bct = self.parent.get_package("BCT")
+
+        if bct is not None:
+            if bct.icbndflg == 0:
+                f_cln.write(self.icbund.get_file_entry())
+            if bct.idisp:
+                f_cln.write(self.dll.get_file_entry())
+                f_cln.write(self.dlm.get_file_entry())
+            for icomp in range(bct.mcomp):
+                if bct.spatialreact:
+                    f_cln.write(self.sptlrct[icomp].get_file_entry())
+                if bct.izod:
+                    f_cln.write(self.zodrw[icomp].get_file_entry())
+                if bct.ifod:
+                    f_cln.write(self.fodrw[icomp].get_file_entry())
+                f_cln.write(self.conc[icomp].get_file_entry())
 
     @classmethod
     def load(cls, f, model, pak_type="cln", ext_unit_dict=None, **kwargs):
@@ -597,14 +682,9 @@ class MfUsgCln(Package):
         ) = cls._load_items_0_1(f, model)
 
         # Items 3, or 4/5/6
-        (
-            nndcln,
-            clncon,
-            nja_cln,
-            iac_cln,
-            ja_cln,
-            nclnnds,
-        ) = cls._load_items_3to6(f, model, ncln, iclnnds, ext_unit_dict)
+        (nndcln, clncon, nja_cln, iac_cln, ja_cln, nclnnds) = cls._load_items_3to6(
+            f, model, ncln, iclnnds, ext_unit_dict
+        )
 
         if model.verbose:
             print("  Reading node_prop...")
@@ -625,15 +705,25 @@ class MfUsgCln(Package):
 
         if model.verbose:
             print("   Reading ibound...")
-        ibound = Util2d.load(
-            f, model, (nclnnds, 1), np.int32, "ibound", ext_unit_dict
-        )
+        ibound = Util2d.load(f, model, (nclnnds, 1), np.int32, "ibound", ext_unit_dict)
 
         if model.verbose:
             print("   Reading strt...")
-        strt = Util2d.load(
-            f, model, (nclnnds, 1), np.float32, "strt", ext_unit_dict
-        )
+        strt = Util2d.load(f, model, (nclnnds, 1), np.float32, "strt", ext_unit_dict)
+
+        bct = model.get_package("BCT")
+        if bct is not None:
+            if model.verbose:
+                print("loading transport parameters...")
+            (
+                kwargs["icbund"],
+                kwargs["dll"],
+                kwargs["dlm"],
+                kwargs["sptlrct"],
+                kwargs["zodrw"],
+                kwargs["fodrw"],
+                kwargs["conc"],
+            ) = cls._load_transport(f, model, nclnnds, bct, ext_unit_dict)
 
         if hasattr(f, "read"):
             f.close()
@@ -650,10 +740,9 @@ class MfUsgCln(Package):
             funcs = [abs] + [int] * 3 + [abs] * 2
             for idx, (item, func) in enumerate(zip(file_unit_items, funcs)):
                 if item > 0:
-                    (
-                        unitnumber[idx + 1],
-                        filenames[idx + 1],
-                    ) = model.get_ext_dict_attr(ext_unit_dict, unit=func(item))
+                    (unitnumber[idx + 1], filenames[idx + 1]) = model.get_ext_dict_attr(
+                        ext_unit_dict, unit=func(item)
+                    )
                     model.add_pop_key_list(func(item))
 
         # create dis object instance
@@ -682,6 +771,7 @@ class MfUsgCln(Package):
             bhe=bhe,
             unitnumber=unitnumber,
             filenames=filenames,
+            **kwargs,
         )
 
         # return dis object instance
@@ -705,16 +795,9 @@ class MfUsgCln(Package):
         line_text = line.strip().split()
 
         line_text[:8] = [int(item) for item in line_text[:8]]
-        (
-            ncln,
-            iclnnds,
-            iclncb,
-            iclnhd,
-            iclndd,
-            iclnib,
-            nclngwc,
-            nconduityp,
-        ) = line_text[:8]
+        (ncln, iclnnds, iclncb, iclnhd, iclndd, iclnib, nclngwc, nconduityp) = (
+            line_text[:8]
+        )
 
         # Options keywords
         nrectyp = 0
@@ -827,6 +910,51 @@ class MfUsgCln(Package):
             raise Exception("mfcln: negative number of CLN segments")
 
         return nndcln, clncon, nja_cln, iac_cln, ja_cln, nclnnds
+
+    def _load_transport(f_obj, model, nclnnds, bct, ext_unit_dict):
+        """Loads cln items 3, or 4,5,6 from filehandle f."""
+
+        icbund = None
+        if bct.icbndflg == 0:
+            icbund = Util2d.load(
+                f_obj, model, (nclnnds, 1), np.int32, "icbund", ext_unit_dict
+            )
+
+        dll = None
+        dlm = None
+        if bct.idisp:
+            dll = Util2d.load(
+                f_obj, model, (nclnnds, 1), np.float32, "dll", ext_unit_dict
+            )
+            dlm = Util2d.load(
+                f_obj, model, (nclnnds, 1), np.float32, "dlm", ext_unit_dict
+            )
+
+        mcomp = bct.mcomp
+
+        sptlrct = [0] * mcomp
+        zodrw = [0] * mcomp
+        fodrw = [0] * mcomp
+        conc = [0] * mcomp
+
+        for icomp in range(mcomp):
+            if bct.spatialreact:
+                sptlrct[icomp] = Util2d.load(
+                    f_obj, model, (nclnnds, 1), np.float32, "sptlrct", ext_unit_dict
+                )
+            if bct.izod:
+                zodrw[icomp] = Util2d.load(
+                    f_obj, model, (nclnnds, 1), np.float32, "zodrw", ext_unit_dict
+                )
+            if bct.ifod:
+                fodrw[icomp] = Util2d.load(
+                    f_obj, model, (nclnnds, 1), np.float32, "fodrw", ext_unit_dict
+                )
+            conc[icomp] = Util2d.load(
+                f_obj, model, (nclnnds, 1), np.float32, "conc", ext_unit_dict
+            )
+
+        return icbund, dll, dlm, sptlrct, zodrw, fodrw, conc
 
     @staticmethod
     def _ftype():

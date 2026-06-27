@@ -543,7 +543,7 @@ def pick_truth(m_d,t_d):
 def prep_obs_data(truth_d):
     hds_df = pd.read_csv(os.path.join(truth_d, 'heads.csv'))
     sfr_df = pd.read_csv(os.path.join(truth_d, 'sfr.csv'))
-    mp_obs = pd.read_csv(os.path.join(truth_d, 'freyberg_mp.mpend'), skiprows=6, header=None, usecols=[3,5], delim_whitespace=True)
+    mp_obs = pd.read_csv(os.path.join(truth_d, 'freyberg_mp.mpend'), skiprows=6, header=None, usecols=[3,5], sep=r'\s+')
     
     # prep calib obs
     obs_sites = ['GAGE-1','TRGW-0-26-6','TRGW-2-26-6','TRGW-0-3-8','TRGW-2-3-8']

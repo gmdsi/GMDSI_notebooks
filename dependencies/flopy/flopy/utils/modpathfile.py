@@ -3,8 +3,8 @@ Support for MODPATH output files.
 """
 
 import itertools
-import os
-from typing import List, Optional, Tuple, Union
+from os import PathLike
+from typing import Optional, Union
 
 import numpy as np
 from numpy.lib.recfunctions import append_fields, repack_fields
@@ -12,28 +12,23 @@ from numpy.lib.recfunctions import append_fields, repack_fields
 from flopy.utils.particletrackfile import ParticleTrackFile
 
 from ..utils.flopy_io import loadtxt
+from ..utils.utl_import import import_optional_dependency
 
 
 class ModpathFile(ParticleTrackFile):
     """Provides MODPATH output file support."""
 
-    def __init__(
-        self, filename: Union[str, os.PathLike], verbose: bool = False
-    ):
+    def __init__(self, filename: Union[str, PathLike], verbose: bool = False):
         super().__init__(filename, verbose)
         self.output_type = self.__class__.__name__.lower().replace("file", "")
-        (
-            self.modpath,
-            self.compact,
-            self.skiprows,
-            self.version,
-            self.direction,
-        ) = self.parse(filename, self.output_type)
+        (self.modpath, self.compact, self.skiprows, self.version, self.direction) = (
+            self.parse(filename, self.output_type)
+        )
 
     @staticmethod
     def parse(
-        file_path: Union[str, os.PathLike], file_type: str
-    ) -> Tuple[bool, int, int, Optional[int]]:
+        file_path: Union[str, PathLike], file_type: str
+    ) -> tuple[bool, int, int, Optional[int]]:
         """
         Extract preliminary information from a MODPATH output file:
             - whether in compact format
@@ -67,10 +62,7 @@ class ModpathFile(ParticleTrackFile):
                 if skiprows < 1:
                     if f"MODPATH_{file_type.upper()}_FILE 6" in line.upper():
                         version = 6
-                    elif (
-                        f"MODPATH_{file_type.upper()}_FILE         7"
-                        in line.upper()
-                    ):
+                    elif f"MODPATH_{file_type.upper()}_FILE         7" in line.upper():
                         version = 7
                     elif "MODPATH 5.0" in line.upper():
                         version = 5
@@ -81,7 +73,7 @@ class ModpathFile(ParticleTrackFile):
                     if version is None:
                         modpath = False
                 skiprows += 1
-                if version in [6, 7]:
+                if version in {6, 7}:
                     if file_type.lower() == "endpoint":
                         if idx == 1:
                             direction = 1
@@ -95,16 +87,15 @@ class ModpathFile(ParticleTrackFile):
 
         return modpath, compact, skiprows, version, direction
 
-    def intersect(
-        self, cells, to_recarray
-    ) -> Union[List[np.recarray], np.recarray]:
+    def intersect(self, cells, to_recarray) -> Union[list[np.recarray], np.recarray]:
         if self.version < 7:
             try:
                 raslice = self._data[["k", "i", "j"]]
             except (KeyError, ValueError):
                 raise KeyError(
-                    "could not extract 'k', 'i', and 'j' keys "
-                    "from {} data".format(self.output_type.lower())
+                    "could not extract 'k', 'i', and 'j' keys from {} data".format(
+                        self.output_type.lower()
+                    )
                 )
         else:
             try:
@@ -124,12 +115,12 @@ class ModpathFile(ParticleTrackFile):
                         cells = t
 
         cells = np.array(cells, dtype=raslice.dtype)
-        inds = np.in1d(raslice, cells)
+        inds = np.isin(raslice, cells)
         epdest = self._data[inds].copy().view(np.recarray)
 
         if to_recarray:
             # use particle ids to get the rest of the paths
-            inds = np.in1d(self._data["particleid"], epdest.particleid)
+            inds = np.isin(self._data["particleid"], epdest.particleid)
             series = self._data[inds].copy()
             series.sort(order=["particleid", "time"])
             series = series.view(np.recarray)
@@ -232,14 +223,12 @@ class PathlineFile(ModpathFile):
         "sequencenumber",
     ]
 
-    def __init__(
-        self, filename: Union[str, os.PathLike], verbose: bool = False
-    ):
+    def __init__(self, filename: Union[str, PathLike], verbose: bool = False):
         super().__init__(filename, verbose=verbose)
         self.dtype, self._data = self._load()
         self.nid = np.unique(self._data["particleid"])
 
-    def _load(self) -> Tuple[np.dtype, np.ndarray]:
+    def _load(self) -> tuple[np.dtype, np.ndarray]:
         dtype = self.dtypes[self.version]
         if self.version == 7:
             dtyper = np.dtype(
@@ -278,16 +267,8 @@ class PathlineFile(ModpathFile):
                     sequencenumber, group, particleid, pathlinecount = t[0:4]
                     nrows += pathlinecount
                     # read in the particle data
-                    d = np.loadtxt(
-                        itertools.islice(f, 0, pathlinecount), dtype=dtyper
-                    )
-                    key = (
-                        idx,
-                        sequencenumber,
-                        group,
-                        particleid,
-                        pathlinecount,
-                    )
+                    d = np.loadtxt(itertools.islice(f, 0, pathlinecount), dtype=dtyper)
+                    key = (idx, sequencenumber, group, particleid, pathlinecount)
                     particle_pathlines[key] = d.copy()
                     idx += 1
 
@@ -297,9 +278,7 @@ class PathlineFile(ModpathFile):
             # fill data
             ipos0 = 0
             for key, value in particle_pathlines.items():
-                idx, sequencenumber, group, particleid, pathlinecount = key[
-                    0:5
-                ]
+                idx, sequencenumber, group, particleid, pathlinecount = key[0:5]
                 ipos1 = ipos0 + pathlinecount
                 # fill constant items for particle
                 # particleid is not necessarily unique for all pathlines - use
@@ -387,7 +366,8 @@ class PathlineFile(ModpathFile):
             .get_alldata() (if None, .get_alldata() is exported).
 
             .. deprecated:: 3.7
-                The ``timeseries_data`` option will be removed for FloPy 4. Use ``data`` instead.
+                The ``timeseries_data`` option will be removed for FloPy 4.
+                Use ``data`` instead.
         one_per_particle : boolean (default True)
             True writes a single LineString with a single set of attribute
             data for each particle. False writes a record/geometry for each
@@ -556,14 +536,12 @@ class EndpointFile(ModpathFile):
         "zone",
     ]
 
-    def __init__(
-        self, filename: Union[str, os.PathLike], verbose: bool = False
-    ):
+    def __init__(self, filename: Union[str, PathLike], verbose: bool = False):
         super().__init__(filename, verbose)
         self.dtype, self._data = self._load()
         self.nid = np.unique(self._data["particleid"])
 
-    def _load(self) -> Tuple[np.dtype, np.ndarray]:
+    def _load(self) -> tuple[np.dtype, np.ndarray]:
         dtype = self.dtypes[self.version]
         data = loadtxt(self.fname, dtype=dtype, skiprows=self.skiprows)
 
@@ -585,7 +563,7 @@ class EndpointFile(ModpathFile):
         Get the maximum travel time.
 
         Returns
-        ----------
+        -------
         out : float
             Maximum travel time.
 
@@ -600,7 +578,7 @@ class EndpointFile(ModpathFile):
         ----------
 
         Returns
-        ----------
+        -------
         data : numpy record array
             A numpy recarray with the endpoint particle data
 
@@ -665,9 +643,7 @@ class EndpointFile(ModpathFile):
                 raslice = repack_fields(data[keys])
             except (KeyError, ValueError):
                 raise KeyError(
-                    "could not extract "
-                    + "', '".join(keys)
-                    + " from endpoint data."
+                    "could not extract " + "', '".join(keys) + " from endpoint data."
                 )
         else:
             if source:
@@ -693,8 +669,63 @@ class EndpointFile(ModpathFile):
         dtype = np.dtype(dtype)
         dest_cells = np.array(dest_cells, dtype=dtype)
 
-        inds = np.in1d(raslice, dest_cells)
+        inds = np.isin(raslice, dest_cells)
         return data[inds].copy().view(np.recarray)
+
+    def to_geodataframe(
+        self,
+        modelgrid,
+        data=None,
+        direction="ending",
+    ):
+        """
+        Create a geodataframe of particle starting / ending locations.
+
+        Parameters
+        ----------
+        modelgrid : flopy.discretization.grid instance
+            Used to scale and rotate Global x,y,z values in MODPATH Endpoint
+            file.
+        data : np.recarray
+            Record array of same form as that returned by EndpointFile.get_alldata.
+            (if none, EndpointFile.get_alldata() is exported).
+        direction : str
+            String defining if 'starting' or 'ending' particle locations should be
+            considered. (default is 'ending')
+        """
+        from ..utils import geometry
+
+        gpd = import_optional_dependency("geopandas")
+        shapely_geo = import_optional_dependency("shapely.geometry")
+        if data is None:
+            data = self.get_alldata()
+
+        if direction.lower() == "ending":
+            xcol, ycol, zcol = "x", "y", "z"
+        elif direction.lower() == "starting":
+            xcol, ycol, zcol = "x0", "y0", "z0"
+        else:
+            raise Exception(
+                'flopy.map.plot_endpoint direction must be "ending" or "starting".'
+            )
+        x, y = geometry.transform(
+            data[xcol],
+            data[ycol],
+            xoff=modelgrid.xoffset,
+            yoff=modelgrid.yoffset,
+            angrot_radians=modelgrid.angrot_radians,
+        )
+        z = data[zcol]
+
+        geoms = [shapely_geo.Point(p) for p in zip(x, y, z)]
+        gdf = gpd.GeoDataFrame(data, geometry=geoms, crs=modelgrid.crs)
+
+        # adjust to 1 based node numbers
+        for col in list(gdf):
+            if col in self.kijnames:
+                gdf[col] += 1
+
+        return gdf
 
     def write_shapefile(
         self,
@@ -717,7 +748,8 @@ class EndpointFile(ModpathFile):
             (if none, EndpointFile.get_alldata() is exported).
 
             .. deprecated:: 3.7
-                The ``endpoint_data`` option will be removed for FloPy 4. Use ``data`` instead.
+                The ``endpoint_data`` option will be removed for FloPy 4.
+                Use ``data`` instead.
         shpname : str
             File path for shapefile
         direction : str
@@ -739,45 +771,21 @@ class EndpointFile(ModpathFile):
                 - ``epsg`` (int): use ``crs`` instead.
 
         """
-        from ..discretization import StructuredGrid
-        from ..export.shapefile_utils import recarray2shp
-        from ..utils import geometry
-        from ..utils.geometry import Point
+        import warnings
 
+        warnings.warn(
+            "write_shapefile is Deprecated, please use to_geodataframe() in the future"
+        )
         epd = (data if data is not None else endpoint_data).copy()
-        if epd is None:
-            epd = self.get_alldata()
+        gdf = self.to_geodataframe(modelgrid=mg, data=epd, direction=direction)
 
-        if direction.lower() == "ending":
-            xcol, ycol, zcol = "x", "y", "z"
-        elif direction.lower() == "starting":
-            xcol, ycol, zcol = "x0", "y0", "z0"
-        else:
-            raise Exception(
-                'flopy.map.plot_endpoint direction must be "ending" '
-                'or "starting".'
-            )
-        if mg is None:
-            raise ValueError("A modelgrid object was not provided.")
+        if crs is not None:
+            if gdf.crs is None:
+                gdf = gdf.set_crs(crs)
+            else:
+                gdf = gdf.to_crs(crs)
 
-        if isinstance(mg, StructuredGrid):
-            x, y = geometry.transform(
-                epd[xcol],
-                epd[ycol],
-                xoff=mg.xoffset,
-                yoff=mg.yoffset,
-                angrot_radians=mg.angrot_radians,
-            )
-        else:
-            x, y = mg.get_coords(epd[xcol], epd[ycol])
-        z = epd[zcol]
-
-        geoms = [Point(x[i], y[i], z[i]) for i in range(len(epd))]
-        # convert back to one-based
-        for n in self.kijnames:
-            if n in epd.dtype.names:
-                epd[n] += 1
-        recarray2shp(epd, geoms, shpname=shpname, crs=crs, **kwargs)
+        gdf.to_file(shpname)
 
 
 class TimeseriesFile(ModpathFile):
@@ -873,9 +881,9 @@ class TimeseriesFile(ModpathFile):
         self.dtype, self._data = self._load()
         self.nid = np.unique(self._data["particleid"])
 
-    def _load(self) -> Tuple[np.dtype, np.ndarray]:
+    def _load(self) -> tuple[np.dtype, np.ndarray]:
         dtype = self.dtypes[self.version]
-        if self.version in [3, 5] and not self.compact:
+        if self.version in {3, 5} and not self.compact:
             dtype = np.dtype(
                 [
                     ("timestepindex", np.int32),
@@ -956,7 +964,8 @@ class TimeseriesFile(ModpathFile):
             is exported).
 
             .. deprecated:: 3.7
-                The ``timeseries_data`` option will be removed for FloPy 4. Use ``data`` instead.
+                The ``timeseries_data`` option will be removed for FloPy 4.
+                Use ``data`` instead.
         one_per_particle : boolean (default True)
             True writes a single LineString with a single set of attribute
             data for each particle. False writes a record/geometry for each

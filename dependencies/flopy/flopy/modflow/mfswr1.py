@@ -55,9 +55,7 @@ class ModflowSwr1(Package):
 
     """
 
-    def __init__(
-        self, model, extension="swr", unitnumber=None, filenames=None
-    ):
+    def __init__(self, model, extension="swr", unitnumber=None, filenames=None):
         # set default unit number of one is not specified
         if unitnumber is None:
             unitnumber = ModflowSwr1._defaultunit()
@@ -87,15 +85,12 @@ class ModflowSwr1(Package):
         """
         Write the package file.
 
-        Returns
-        -------
-        None
+        Raises
+        ------
+        NotImplementedError
 
         """
-        print("SWR1 write method not implemented yet")
-        # f = open(self.fn_path, 'w')
-        # f.write('{0}\n'.format(self.heading))
-        # f.close()
+        raise NotImplementedError("SWR1 write method not implemented yet")
 
     @classmethod
     def load(cls, f, model, ext_unit_dict=None):
@@ -144,9 +139,7 @@ class ModflowSwr1(Package):
             filename = f
             f = open(filename, "r")
 
-        print(
-            "Warning: load method not completed. default swr1 object created."
-        )
+        print("Warning: load method not completed. default swr1 object created.")
 
         if openfile:
             f.close()

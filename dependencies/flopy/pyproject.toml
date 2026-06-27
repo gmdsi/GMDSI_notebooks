@@ -1,8 +1,6 @@
 [build-system]
-requires = [
-    "setuptools >=61",
-]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling", "hatch-fancy-pypi-readme"]
+build-backend = "hatchling.build"
 
 [project]
 name = "flopy"
@@ -20,42 +18,49 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Hydrology",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = [
-    "numpy >=1.15.0,<2.0.0",
+    "numpy>=1.20.3,<3.0",
     "matplotlib >=1.4.0",
-    "pandas >=2.0.0"
+    "pandas >=2.0.0",
 ]
 dynamic = ["version", "readme"]
 
 [project.optional-dependencies]
-dev = ["flopy[lint,test,optional,doc]"]
-lint = [
-    "cffconvert",
-    "ruff"
+dev = ["flopy[codegen,lint,test,optional,doc]", "tach"]
+codegen = [
+    "Jinja2>=3.0",
+    "boltons",
+    "modflow-devtools>=1.7.0,!=1.9.0,<2",
+    "tomli",
+    "tomli-w"
 ]
+lint = ["cffconvert", "codespell[toml] >=2.2.2", "ruff"]
 test = [
     "flopy[lint]",
-    "coverage",
+    "boltons",
+    "coverage !=7.6.5",
     "flaky",
     "filelock",
     "jupyter",
+    "jupyter_client >=8.4.0", # avoid datetime.utcnow() deprecation warning
     "jupytext",
-    "modflow-devtools",
+    "modflow-devtools>=1.7.0,!=1.9.0,<2",
     "pytest !=8.1.0",
     "pytest-benchmark",
     "pytest-cov",
     "pytest-dotenv",
     "pytest-xdist",
     "pyzmq >=25.1.2",
-    "syrupy",
+    "syrupy <5.0.0",
+    "tomli",
+    "tomli-w",
     "virtualenv"
 ]
 optional = [
@@ -64,8 +69,10 @@ optional = [
     "fiona",
     "geojson",
     "geopandas",
+    "GitPython",
     "imageio",
     "netcdf4",
+    "pooch",
     "pymetis ; platform_system != 'Windows'",
     "pyproj",
     "pyshp",
@@ -73,9 +80,11 @@ optional = [
     "rasterio",
     "rasterstats",
     "scipy",
-    "shapely >=1.8",
-    "vtk",
+    "shapely >=2.0",
+    "vtk >=9.4.0",
     "xmipy",
+    "h5py",
+    "scikit-learn"
 ]
 doc = [
     "flopy[optional]",
@@ -99,24 +108,31 @@ Documentation = "https://flopy.readthedocs.io"
 "Bug Tracker" = "https://github.com/modflowpy/flopy/issues"
 "Source Code" = "https://github.com/modflowpy/flopy"
 
-[tool.setuptools]
-include-package-data = true
-zip-safe = false
+[tool.hatch.build.targets.sdist]
+only-include = [
+    "CITATION.cff",
+    "README.md",
+    "docs",
+    "flopy",
+]
 
-[tool.setuptools.dynamic]
-version = {attr = "flopy.version.__version__"}
-readme = {file = ["docs/PyPI_release.md", "LICENSE.md"], content-type = "text/markdown"}
+[tool.hatch.build.targets.wheel]
+packages = ["flopy"]
 
-[tool.setuptools.packages.find]
-include = ["flopy", "flopy.*"]
+[tool.hatch.metadata.hooks.fancy-pypi-readme]
+content-type = "text/markdown"
 
-[tool.setuptools.package-data]
-"flopy.mf6.data" = ["dfn/*.dfn"]
-"flopy.plot" = ["mplstyle/*.mplstyle"]
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+path = "docs/PyPI_release.md"
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+path = "LICENSE.md"
+
+[tool.hatch.version]
+path = "flopy/version.py"
 
 [tool.ruff]
-line-length = 79
-target-version = "py38"
+line-length = 88
 include = [
     "pyproject.toml",
     "flopy/**/*.py",
@@ -129,18 +145,76 @@ extend-include = [
     "examples/**/*.ipynb"
 ]
 
+[tool.ruff.format]
+exclude = [
+    "flopy/mf6/**/*.py",
+]
+
 [tool.ruff.lint]
-select = ["F", "E", "I001"]
+select = [
+    "C4",   # flake8 comprehensions
+    "D409", # pydocstyle - section-underline-matches-section-length
+    "E",    # pycodestyle error
+    "F",    # Pyflakes
+    "I001", # isort - unsorted-imports
+    # "ISC001",  # implicitly concatenated string literals
+    "PLC",  # Pylint - Convention
+    "PLE",  # Pylint - Error
+    "PLR0402", # Pylint - Refactor - manual-from-import
+    "PLR2044", # Pylint - Refactor - empty-comment
+    "PLW",  # Pylint - Warning
+    "RUF",  # Ruff-specific rules
+]
 ignore = [
     "E402", # module level import not at top of file
-    "E501", # line too long TODO FIXME
     "E712", # Avoid equality comparisons to `True`
     "E722", # do not use bare `except`
+    "E721", # use `is`/`is not` for type comparisons
     "E741", # ambiguous variable name
     "F401", # unused import
     "F403", # unable to detect undefined names (star imports)
     "F524", # `.format` missing argument(s) for placeholder(s)
     "F811", # Redefinition of unused variable
-    "F821", # undefined name TODO FIXME
     "F841", # local variable assigned but never used
+    "PLC0415", # `import` should be at the top-level of a file
+    "PLC1901", # `var == ""` can be simplified to `not var` as an empty string
+    "PLW1514", # `open` in text mode without explicit `encoding` argument
+    "PLW1641", # Object does not implement `__hash__` method
+    "PLW2901", # `for` loop variable `col` overwritten by assignment target
+    "RUF005", # collection literal concatenation
+    "RUF012", # mutable class default
+    "RUF017", # quadratic-list-summation
+    "RUF059", # Unpacked variable `name` is never used
+    "RUF100", # Unused `noqa` directive
+]
+
+[tool.ruff.lint.per-file-ignores]
+".docs/**/*.py" = ["E501"]
+"flopy/mf6/**/*.py" = ["C4", "E", "F", "ISC", "RUF"]
+"flopy/utils/geometry.py" = ["PLW3201"]
+"flopy/utils/geospatial_utils.py" = ["PLW3201"]
+
+[tool.codespell]
+skip = "cliff.toml,./examples/data/*,./autotest/test_modeltime.py"
+ignore-words-list = [
+    "alltime",
+    "dum",
+    "inout",
+    "intot",
+    "delt",
+    "gage",
+    "gages",
+    "datbase",
+    "wel",
+    "nam",
+    "lke",
+    "ist",
+    "ninj",
+    "drob",
+    "thck",
+    "vor",
+    "yur",
+    "localy",
+    "vertx",
+    "nd",
 ]

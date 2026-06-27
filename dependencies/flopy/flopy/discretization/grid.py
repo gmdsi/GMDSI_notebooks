@@ -3,6 +3,7 @@ import os
 import re
 import warnings
 from collections import defaultdict
+from os import PathLike
 
 import numpy as np
 
@@ -87,7 +88,7 @@ class Grid:
         .. deprecated:: 3.5
            The following keyword options will be removed for FloPy 3.6:
 
-             - ``prj`` (str or pathlike): use ``prjfile`` instead.
+             - ``prj`` (str or PathLike): use ``prjfile`` instead.
              - ``epsg`` (int): use ``crs`` instead.
              - ``proj4`` (str): use ``crs`` instead.
 
@@ -128,7 +129,7 @@ class Grid:
         ndarrays for the x, y, and z coordinates
 
     Methods
-    ----------
+    -------
     get_coords(x, y)
         transform point or array of points x, y from model coordinates to
         spatial coordinates
@@ -381,7 +382,7 @@ class Grid:
         if prjfile is None:
             self._prjfile = None
             return
-        if not isinstance(prjfile, (str, os.PathLike)):
+        if not isinstance(prjfile, (str, PathLike)):
             raise ValueError("prjfile property must be str, PathLike or None")
         self._prjfile = prjfile
         # If crs was previously unset, use .prj file input
@@ -425,9 +426,7 @@ class Grid:
     def thick(self):
         """Raises AttributeError, use :meth:`cell_thickness`."""
         # DEPRECATED since version 3.4.0
-        raise AttributeError(
-            "'thick' has been removed; use 'cell_thickness()'"
-        )
+        raise AttributeError("'thick' has been removed; use 'cell_thickness()'")
 
     def saturated_thickness(self, array, mask=None):
         """
@@ -455,15 +454,15 @@ class Grid:
         bot = self.remove_confining_beds(bot)
         array = self.remove_confining_beds(array)
 
-        idx = np.where((array < top) & (array > bot))
+        idx = np.asarray((array < top) & (array > bot)).nonzero()
         thickness[idx] = array[idx] - bot[idx]
-        idx = np.where(array <= bot)
+        idx = np.asarray(array <= bot).nonzero()
         thickness[idx] = 0.0
         if mask is not None:
             if isinstance(mask, (float, int)):
                 mask = [float(mask)]
             for mask_value in mask:
-                thickness[np.where(array == mask_value)] = np.nan
+                thickness[np.asarray(array == mask_value).nonzero()] = np.nan
         return thickness
 
     def saturated_thick(self, array, mask=None):
@@ -563,8 +562,7 @@ class Grid:
     @property
     def xyzcellcenters(self):
         raise NotImplementedError(
-            "must define get_cellcenters in child "
-            "class to use this base class"
+            "must define get_cellcenters in child class to use this base class"
         )
 
     @property
@@ -591,16 +589,11 @@ class Grid:
     def xyzvertices(self):
         raise NotImplementedError("must define xyzvertices in child class")
 
-    # @property
-    # def indices(self):
-    #    raise NotImplementedError(
-    #        'must define indices in child '
-    #        'class to use this base class')
     @property
     def cross_section_vertices(self):
         return self.xyzvertices[0], self.xyzvertices[1]
 
-    def geo_dataframe(self, polys):
+    def to_geodataframe(self, features, featuretype="Polygon"):
         """
         Method returns a geopandas GeoDataFrame of the Grid
 
@@ -608,12 +601,38 @@ class Grid:
         -------
             GeoDataFrame
         """
-        from ..utils.geospatial_utils import GeoSpatialCollection
+        from ..utils.utl_import import import_optional_dependency
 
-        gc = GeoSpatialCollection(
-            polys, shapetype=["Polygon" for _ in range(len(polys))]
-        )
-        gdf = gc.geo_dataframe
+        gpd = import_optional_dependency("geopandas")
+        shp_geom = import_optional_dependency("shapely.geometry")
+
+        if featuretype.lower() == "polygon":
+            cache_index = "grid_polygons"
+            if (
+                cache_index not in self._cache_dict
+                or self._cache_dict[cache_index].out_of_date
+            ):
+                geoms = [shp_geom.Polygon(i[0]) for i in features]
+                self._cache_dict[cache_index] = CachedData(geoms)
+            else:
+                geoms = self._cache_dict[cache_index].data_nocopy
+            gdf = gpd.GeoDataFrame(data=None, geometry=geoms)
+
+        elif featuretype.lower() == "linestring":
+            cache_index = "grid_linestrings"
+            if (
+                cache_index not in self._cache_dict
+                or self._cache_dict[cache_index].out_of_date
+            ):
+                geoms = [shp_geom.LineString(i) for i in features]
+                self._cache_dict[cache_index] = CachedData(geoms)
+            else:
+                geoms = self._cache_dict[cache_index].data_nocopy
+            gdf = gpd.GeoDataFrame(data=None, geometry=geoms)
+        else:
+            raise NotImplementedError(f"{featuretype} is not currently supported")
+
+        gdf["node"] = gdf.index + 1
         if self.crs is not None:
             gdf = gdf.set_crs(crs=self.crs)
 
@@ -631,9 +650,7 @@ class Grid:
         -------
             Grid object
         """
-        raise NotImplementedError(
-            "convert_grid must be defined in the child class"
-        )
+        raise NotImplementedError("convert_grid must be defined in the child class")
 
     def _set_neighbors(self, reset=False, method="rook"):
         """
@@ -643,7 +660,7 @@ class Grid:
         ----------
         reset : bool
             flag to recalculate neighbors
-        method: str
+        method : str
             "rook" for shared edges and "queen" for shared vertex
 
         Returns
@@ -652,8 +669,8 @@ class Grid:
         """
         if self._neighbors is None or reset:
             node_num = 0
-            neighbors = {i: list() for i in range(len(self.iverts))}
-            edge_set = {i: list() for i in range(len(self.iverts))}
+            neighbors = {i: [] for i in range(len(self.iverts))}
+            edge_set = {i: [] for i in range(len(self.iverts))}
             geoms = []
             node_nums = []
             if method == "rook":
@@ -691,9 +708,7 @@ class Grid:
                             pass
 
             # convert use dict to create a set that preserves insertion order
-            self._neighbors = {
-                i: list(dict.fromkeys(v)) for i, v in neighbors.items()
-            }
+            self._neighbors = {i: list(dict.fromkeys(v)) for i, v in neighbors.items()}
             self._edge_set = edge_set
 
     def neighbors(self, node=None, **kwargs):
@@ -719,6 +734,7 @@ class Grid:
         """
         method = kwargs.pop("method", None)
         reset = kwargs.pop("reset", False)
+
         if method is None:
             self._set_neighbors(reset=reset)
         else:
@@ -740,6 +756,32 @@ class Grid:
             return neighbors
 
         return self._neighbors
+
+    def get_shared_edge(self, node0, node1, iverts=True):
+        """
+        Method to get the shared iverts or vertices between two cells. The shared
+        edge defines the shared cell face.
+
+        Parameters
+        ----------
+        node0 : int
+        node1 : int
+        iverts : bool
+            boolean flag to return shared iverts (True) or shared vertices (False)
+
+        Returns
+        -------
+            tuple : iverts or vertices that define the shared face
+        """
+        iv0 = set(self.iverts[node0])
+        iv1 = set(self.iverts[node1])
+        shared = tuple(iv0 & iv1)
+
+        if iverts:
+            return tuple(shared)
+        else:
+            verts = [self.verts[shared[0]], self.verts[shared[1]]]
+            return tuple(verts)
 
     def remove_confining_beds(self, array):
         """
@@ -883,7 +925,7 @@ class Grid:
 
     def get_lni(self, nodes):
         """
-        Get the layer index and within-layer node index (both 0-based) for the given nodes
+        Get the 0-based layer index and within-layer node index for the given nodes
 
         Parameters
         ----------
@@ -944,9 +986,7 @@ class Grid:
 
         x += self._xoff
         y += self._yoff
-        return geometry.rotate(
-            x, y, self._xoff, self._yoff, self.angrot_radians
-        )
+        return geometry.rotate(x, y, self._xoff, self._yoff, self.angrot_radians)
 
     def get_local_coords(self, x, y):
         """
@@ -962,8 +1002,6 @@ class Grid:
         x, y = geometry.transform(
             x, y, self._xoff, self._yoff, self.angrot_radians, inverse=True
         )
-        # x -= self._xoff
-        # y -= self._yoff
 
         return x, y
 
@@ -999,7 +1037,7 @@ class Grid:
             The value can be anything accepted by
             :meth:`pyproj.CRS.from_user_input() <pyproj.crs.CRS.from_user_input>`,
             such as an authority string (eg "EPSG:26916") or a WKT string.
-        prjfile : str or pathlike, optional
+        prjfile : str or PathLike, optional
             ESRI-style projection file with well-known text defining the CRS
             for the model grid (must be projected; geographic CRS are not
             supported).
@@ -1225,9 +1263,7 @@ class Grid:
         if self.top is not None and self.botm is not None:
             zcenters = []
             top_3d = np.expand_dims(self.top, 0)
-            zbdryelevs = np.concatenate(
-                (top_3d, np.atleast_2d(self.botm)), axis=0
-            )
+            zbdryelevs = np.concatenate((top_3d, np.atleast_2d(self.botm)), axis=0)
 
             for ix in range(1, len(zbdryelevs)):
                 zcenters.append((zbdryelevs[ix - 1] + zbdryelevs[ix]) / 2.0)
@@ -1237,9 +1273,7 @@ class Grid:
         return zbdryelevs, zcenters
 
     # Exporting
-    def write_shapefile(
-        self, filename="grid.shp", crs=None, prjfile=None, **kwargs
-    ):
+    def write_shapefile(self, filename="grid.shp", crs=None, prjfile=None, **kwargs):
         """
         Write a shapefile of the grid with just the row and column attributes.
 
@@ -1269,6 +1303,4 @@ class Grid:
     # initialize grid from a grb file
     @classmethod
     def from_binary_grid_file(cls, file_path, verbose=False):
-        raise NotImplementedError(
-            "must define from_binary_grid_file in child class"
-        )
+        raise NotImplementedError("must define from_binary_grid_file in child class")

@@ -1,6 +1,7 @@
 name: gmdsitut
 channels:
   - conda-forge
+  - nodefaults
 dependencies:
   - python=3.11
   - pip
@@ -9,9 +10,9 @@ dependencies:
   - matplotlib 
   - openpyxl
   - xlrd
-  - jupyter 
-  - notebook 
-  - scipy 
+  - jupyter
+  - notebook
+  - scipy
   - shapely
   - rtree
   - pyproj>=2.0
@@ -19,9 +20,8 @@ dependencies:
   - psutil
   - git
   - nbconvert
+  - modflow-devtools
   - pip:
        - -e ./dependencies/flopy
        - -e ./dependencies/pyemu
        - pypestutils
-
-

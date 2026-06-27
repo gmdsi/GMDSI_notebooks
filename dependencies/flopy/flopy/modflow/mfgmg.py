@@ -272,13 +272,9 @@ class ModflowGmg(Package):
         f_gmg = open(self.fn_path, "w")
         f_gmg.write(f"{self.heading}\n")
         # dataset 0
-        f_gmg.write(
-            f"{self.rclose} {self.iiter} {self.hclose} {self.mxiter}\n"
-        )
+        f_gmg.write(f"{self.rclose} {self.iiter} {self.hclose} {self.mxiter}\n")
         # dataset 1
-        f_gmg.write(
-            f"{self.damp} {self.iadamp} {self.ioutgmg} {self.iunitmhc}\n"
-        )
+        f_gmg.write(f"{self.damp} {self.iadamp} {self.ioutgmg} {self.iunitmhc}\n")
         # dataset 2
         f_gmg.write(f"{self.ism} {self.isc} ")
         if self.iadamp == 2:
@@ -340,7 +336,12 @@ class ModflowGmg(Package):
         hclose = float(t[2])
         mxiter = int(t[3])
         # dataset 1
-        line = f.readline()
+        # Skip comments
+        while True:
+            line = f.readline()
+            if line[0] != "#":
+                break
+
         t = line.strip().split()
         damp = float(t[0])
         iadamp = int(t[1])
@@ -350,7 +351,12 @@ class ModflowGmg(Package):
         except:
             iunitmhc = 0
         # dataset 2
-        line = f.readline()
+        # Skip comments
+        while True:
+            line = f.readline()
+            if line[0] != "#":
+                break
+
         t = line.strip().split()
         ism = int(t[0])
         isc = int(t[1])
@@ -360,7 +366,12 @@ class ModflowGmg(Package):
             dlow = float(t[3])
             chglimit = float(t[4])
         # dataset 3
-        line = f.readline()
+        # Skip comments
+        while True:
+            line = f.readline()
+            if line[0] != "#":
+                break
+
         t = line.strip().split()
         relax = 1.0
         if ism == 4:
@@ -377,9 +388,7 @@ class ModflowGmg(Package):
                 ext_unit_dict, filetype=ModflowGmg._ftype()
             )
             if iunitmhc > 0:
-                iu, filenames[1] = model.get_ext_dict_attr(
-                    ext_unit_dict, unit=iunitmhc
-                )
+                iu, filenames[1] = model.get_ext_dict_attr(ext_unit_dict, unit=iunitmhc)
                 model.add_pop_key_list(iunitmhc)
 
         return cls(

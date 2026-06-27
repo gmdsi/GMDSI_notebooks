@@ -12,14 +12,15 @@ import collections
 import itertools
 import re
 import warnings
-from typing import Callable, Iterator, SupportsInt, Tuple, Union
+from collections.abc import Iterator
+from typing import Callable, SupportsInt, Union
 
 __all__ = [
-    "parse",
-    "Version",
-    "LegacyVersion",
-    "InvalidVersion",
     "VERSION_PATTERN",
+    "InvalidVersion",
+    "LegacyVersion",
+    "Version",
+    "parse",
 ]
 
 
@@ -88,28 +89,28 @@ NegativeInfinity = NegativeInfinityType()
 
 
 InfiniteTypes = Union[InfinityType, NegativeInfinityType]
-PrePostDevType = Union[InfiniteTypes, Tuple[str, int]]
+PrePostDevType = Union[InfiniteTypes, tuple[str, int]]
 SubLocalType = Union[InfiniteTypes, int, str]
 LocalType = Union[
     NegativeInfinityType,
-    Tuple[
+    tuple[
         Union[
             SubLocalType,
-            Tuple[SubLocalType, str],
-            Tuple[NegativeInfinityType, SubLocalType],
+            tuple[SubLocalType, str],
+            tuple[NegativeInfinityType, SubLocalType],
         ],
         ...,
     ],
 ]
-CmpKey = Tuple[
+CmpKey = tuple[
     int,
-    Tuple[int, ...],
+    tuple[int, ...],
     PrePostDevType,
     PrePostDevType,
     PrePostDevType,
     LocalType,
 ]
-LegacyCmpKey = Tuple[int, Tuple[str, ...]]
+LegacyCmpKey = tuple[int, tuple[str, ...]]
 VersionComparisonMethod = Callable[
     [Union[CmpKey, LegacyCmpKey], Union[CmpKey, LegacyCmpKey]], bool
 ]
@@ -245,9 +246,7 @@ class LegacyVersion(_BaseVersion):
         return False
 
 
-_legacy_version_component_re = re.compile(
-    r"(\d+ | [a-z]+ | \.| -)", re.VERBOSE
-)
+_legacy_version_component_re = re.compile(r"(\d+ | [a-z]+ | \.| -)", re.VERBOSE)
 
 _legacy_version_replacement_map = {
     "pre": "c",
@@ -336,9 +335,7 @@ VERSION_PATTERN = r"""
 
 
 class Version(_BaseVersion):
-    _regex = re.compile(
-        r"^\s*" + VERSION_PATTERN + r"\s*$", re.VERBOSE | re.IGNORECASE
-    )
+    _regex = re.compile(r"^\s*" + VERSION_PATTERN + r"\s*$", re.VERBOSE | re.IGNORECASE)
 
     def __init__(self, version: str) -> None:
         # Validate the version and parse it into pieces
@@ -350,16 +347,11 @@ class Version(_BaseVersion):
         self._version = _Version(
             epoch=int(match.group("epoch")) if match.group("epoch") else 0,
             release=tuple(int(i) for i in match.group("release").split(".")),
-            pre=_parse_letter_version(
-                match.group("pre_l"), match.group("pre_n")
-            ),
+            pre=_parse_letter_version(match.group("pre_l"), match.group("pre_n")),
             post=_parse_letter_version(
-                match.group("post_l"),
-                match.group("post_n1") or match.group("post_n2"),
+                match.group("post_l"), match.group("post_n1") or match.group("post_n2")
             ),
-            dev=_parse_letter_version(
-                match.group("dev_l"), match.group("dev_n")
-            ),
+            dev=_parse_letter_version(match.group("dev_l"), match.group("dev_n")),
             local=_parse_local_version(match.group("local")),
         )
 
@@ -406,18 +398,18 @@ class Version(_BaseVersion):
 
     @property
     def epoch(self) -> int:
-        _epoch: int = self._version.epoch
-        return _epoch
+        epoch: int = self._version.epoch
+        return epoch
 
     @property
     def release(self) -> tuple[int, ...]:
-        _release: tuple[int, ...] = self._version.release
-        return _release
+        release: tuple[int, ...] = self._version.release
+        return release
 
     @property
     def pre(self) -> tuple[str, int] | None:
-        _pre: tuple[str, int] | None = self._version.pre
-        return _pre
+        pre: tuple[str, int] | None = self._version.pre
+        return pre
 
     @property
     def post(self) -> int | None:
@@ -495,9 +487,9 @@ def _parse_letter_version(
             letter = "a"
         elif letter == "beta":
             letter = "b"
-        elif letter in ["c", "pre", "preview"]:
+        elif letter in {"c", "pre", "preview"}:
             letter = "rc"
-        elif letter in ["rev", "r"]:
+        elif letter in {"rev", "r"}:
             letter = "post"
 
         return letter, int(number)
@@ -539,10 +531,8 @@ def _cmpkey(
     # leading zeros until we come to something non zero, then take the rest
     # re-reverse it back into the correct order and make it a tuple and use
     # that for our sorting key.
-    _release = tuple(
-        reversed(
-            list(itertools.dropwhile(lambda x: x == 0, reversed(release)))
-        )
+    release_ = tuple(
+        reversed(list(itertools.dropwhile(lambda x: x == 0, reversed(release))))
     )
 
     # We need to "trick" the sorting algorithm to put 1.0.dev0 before 1.0a0.
@@ -550,31 +540,31 @@ def _cmpkey(
     # if there is not a pre or a post segment. If we have one of those then
     # the normal sorting rules will handle this case correctly.
     if pre is None and post is None and dev is not None:
-        _pre: PrePostDevType = NegativeInfinity
+        pre_: PrePostDevType = NegativeInfinity
     # Versions without a pre-release (except as noted above) should sort after
     # those with one.
     elif pre is None:
-        _pre = Infinity
+        pre_ = Infinity
     else:
-        _pre = pre
+        pre_ = pre
 
     # Versions without a post segment should sort before those with one.
     if post is None:
-        _post: PrePostDevType = NegativeInfinity
+        post_: PrePostDevType = NegativeInfinity
 
     else:
-        _post = post
+        post_ = post
 
     # Versions without a development segment should sort after those with one.
     if dev is None:
-        _dev: PrePostDevType = Infinity
+        dev_: PrePostDevType = Infinity
 
     else:
-        _dev = dev
+        dev_ = dev
 
     if local is None:
         # Versions without a local segment should sort before those with one.
-        _local: LocalType = NegativeInfinity
+        local_: LocalType = NegativeInfinity
     else:
         # Versions with a local segment need that segment parsed to implement
         # the sorting rules in PEP440.
@@ -583,9 +573,8 @@ def _cmpkey(
         # - Numeric segments sort numerically
         # - Shorter versions sort before longer versions when the prefixes
         #   match exactly
-        _local = tuple(
-            (i, "") if isinstance(i, int) else (NegativeInfinity, i)
-            for i in local
+        local_ = tuple(
+            (i, "") if isinstance(i, int) else (NegativeInfinity, i) for i in local
         )
 
-    return epoch, _release, _pre, _post, _dev, _local
+    return epoch, release_, pre_, post_, dev_, local_

@@ -8,12 +8,15 @@ MODFLOW Guide
 
 """
 
+import pathlib as pl
+
 import numpy as np
 from numpy.lib.recfunctions import stack_arrays
 
 from ..pakbase import Package
 from ..utils.flopy_io import line_parse
 from ..utils.recarray_utils import create_empty_recarray
+from ..utils.utl_import import import_optional_dependency
 from .mfparbc import ModflowParBc as mfparbc
 
 
@@ -179,6 +182,47 @@ class ModflowHfb(Package):
         """
         return self.nhfbnp
 
+    def _get_hfb_lines(self):
+        """
+        Method to get hfb lines. Lines are ordered by recarray index
+
+        Returns
+        -------
+            list : list of hfb lines
+        """
+        from ..utils.faceutil import hfb_data_to_linework
+
+        return hfb_data_to_linework(self.hfb_data, self.parent.modelgrid)
+
+    def to_geodataframe(self, **kwargs):
+        """
+        Method to create a LineString based geodataframe of horizontal flow barriers
+
+        Returns
+        -------
+            GeoDataFrame
+
+        """
+        gpd = import_optional_dependency("geopandas")
+
+        lines = self._get_hfb_lines()
+        geo_interface = {"type": "FeatureCollection"}
+        features = [
+            {
+                "id": f"{ix}",
+                "geometry": {"coordinates": line, "type": "LineString"},
+                "properties": {},
+            }
+            for ix, line in enumerate(lines)
+        ]
+        geo_interface["features"] = features
+        gdf = gpd.GeoDataFrame.from_features(geo_interface)
+        hfbs = self.hfb_data
+        for name in hfbs.dtype.names:
+            gdf[name] = hfbs[name]
+
+        return gdf
+
     def write_file(self):
         """
         Write the package file.
@@ -195,19 +239,36 @@ class ModflowHfb(Package):
         for option in self.options:
             f_hfb.write(f"  {option}")
         f_hfb.write("\n")
+
+        openclose = False
+        if self.parent.external_path is not None:
+            openclose = True
+            fpth = pl.Path(self.parent.external_path) / "hfb.ref"
+            f_hfb.write(f"OPEN/CLOSE {fpth}\n")
+            f = open(fpth, "w")
+        else:
+            f = f_hfb
+
         for a in self.hfb_data:
+            line = ""
             if structured:
-                f_hfb.write(
-                    "{:10d}{:10d}{:10d}{:10d}{:10d}{:13.6g}\n".format(
-                        a[0] + 1, a[1] + 1, a[2] + 1, a[3] + 1, a[4] + 1, a[5]
-                    )
-                )
+                for ipos, v in enumerate(a):
+                    if ipos < 5:
+                        line += f"{v + 1:10d}"
+                    else:
+                        line += f"{v:13.6g}\n"
             else:
-                f_hfb.write(
-                    "{:10d}{:10d}{:13.6g}\n".format(a[0] + 1, a[1] + 1, a[2])
-                )
+                for ipos, v in enumerate(a):
+                    if ipos < 2:
+                        line += f"{v + 1:10d}"
+                    else:
+                        line += f"{v:13.6g}\n"
+            f.write(line)
         f_hfb.write(f"{self.nacthfb:10d}")
         f_hfb.close()
+
+        if openclose:
+            f.close()
 
     @staticmethod
     def get_empty(ncells=0, aux_names=None, structured=True):
@@ -313,7 +374,6 @@ class ModflowHfb(Package):
             it = 2
             while it < len(t):
                 toption = t[it]
-                # print it, t[it]
                 if toption.lower() == "noprint":
                     options.append(toption)
                 elif "aux" in toption.lower():
@@ -334,16 +394,25 @@ class ModflowHfb(Package):
             )
         # data set 4
         bnd_output = None
+        openclose = False
         if nhfbnp > 0:
             specified = ModflowHfb.get_empty(nhfbnp, structured=structured)
+            ipos = f.tell()
+            line = f.readline()
+            if "open/close" in line.lower():
+                openclose = True
+                fname = line.split()[1]
+                ff = open(pl.Path(model.model_ws) / fname, "r")
+            else:
+                f.seek(ipos)
+                ff = f
             for ibnd in range(nhfbnp):
-                line = f.readline()
-                if "open/close" in line.lower():
-                    raise NotImplementedError(
-                        "load() method does not support 'open/close'"
-                    )
+                line = ff.readline()
                 t = line.strip().split()
                 specified[ibnd] = tuple(t[: len(specified.dtype.names)])
+
+            if openclose:
+                ff.close()
 
             # convert indices to zero-based
             if structured:
@@ -374,7 +443,6 @@ class ModflowHfb(Package):
                     par_dict["nlst"], structured=structured
                 )
 
-                #
                 if model.mfpar.pval is None:
                     parval = float(par_dict["parval"])
                 else:
@@ -386,9 +454,7 @@ class ModflowHfb(Package):
                 # fill current parameter data (par_current)
                 for ibnd, t in enumerate(data_dict):
                     t = tuple(t)
-                    par_current[ibnd] = tuple(
-                        t[: len(par_current.dtype.names)]
-                    )
+                    par_current[ibnd] = tuple(t[: len(par_current.dtype.names)])
 
                 # convert indices to zero-based
                 if structured:

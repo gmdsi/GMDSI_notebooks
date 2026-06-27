@@ -3,7 +3,8 @@ mp7 module.  Contains the Modpath7List and Modpath7 classes.
 
 """
 
-import os
+import os.path
+from os import curdir
 
 import numpy as np
 
@@ -29,13 +30,12 @@ class Modpath7List(Package):
 
         # call base package constructor
         super().__init__(model, extension, "LIST", unitnumber)
-        # self.parent.add_package(self) This package is not added to the base
+        # This package is not added to the base
         # model so that it is not included in get_name_file_entries()
         return
 
     def write_file(self):
-        # Not implemented for list class
-        return
+        raise NotImplementedError
 
 
 class Modpath7(BaseModel):
@@ -64,9 +64,8 @@ class Modpath7(BaseModel):
         Filename of the MODFLOW output cell-by-cell budget file.
         If budgetfilename is not provided then it will be set
         from the flowmodel.
-    model_ws : str, default "."
+    model_ws : str or PathLike, default "." (curdir)
         Model workspace.  Directory name to create model data sets.
-        Default is the current working directory.
     verbose : bool, default False
         Print additional information to the screen.
 
@@ -88,7 +87,7 @@ class Modpath7(BaseModel):
         flowmodel=None,
         headfilename=None,
         budgetfilename=None,
-        model_ws=None,
+        model_ws=curdir,
         verbose=False,
     ):
         super().__init__(
@@ -111,26 +110,21 @@ class Modpath7(BaseModel):
             raise TypeError(
                 "Modpath7: flow model is not an instance of "
                 "flopy.modflow.Modflow or flopy.mf6.MFModel. "
-                "Passed object of type {}".format(type(flowmodel))
+                f"Passed object of type {type(flowmodel)}"
             )
 
         # if a MFModel instance ensure flowmodel is a MODFLOW 6 GWF model
         if isinstance(flowmodel, MFModel):
-            if (
-                flowmodel.model_type != "gwf"
-                and flowmodel.model_type != "gwf6"
-            ):
+            if flowmodel.model_type != "gwf" and flowmodel.model_type != "gwf6":
                 raise TypeError(
                     "Modpath7: flow model type must be gwf. "
-                    "Passed model_type is {}.".format(flowmodel.model_type)
+                    f"Passed model_type is {flowmodel.model_type}."
                 )
 
         # set flowmodel and flow_version attributes
         self.flowmodel = flowmodel
         self.flow_version = self.flowmodel.version
-        self._flowmodel_ws = os.path.relpath(
-            flowmodel.model_ws, self._model_ws
-        )
+        self._flowmodel_ws = os.path.relpath(flowmodel.model_ws, self._model_ws)
 
         if self.flow_version == "mf6":
             # get discretization package
@@ -143,20 +137,14 @@ class Modpath7(BaseModel):
                 )
             else:
                 if dis.package_name.lower() == "dis":
-                    nlay, nrow, ncol = (
-                        dis.nlay.array,
-                        dis.nrow.array,
-                        dis.ncol.array,
-                    )
+                    nlay, nrow, ncol = (dis.nlay.array, dis.nrow.array, dis.ncol.array)
                     shape = (nlay, nrow, ncol)
                 elif dis.package_name.lower() == "disv":
                     nlay, ncpl = dis.nlay.array, dis.ncpl.array
                     shape = (nlay, ncpl)
                 elif dis.package_name.lower() == "disu":
                     nodes = dis.nodes.array
-                    shape = tuple(
-                        nodes,
-                    )
+                    shape = (nodes,)
                 else:
                     raise TypeError(
                         "DIS, DISV, or DISU packages must be "
@@ -185,8 +173,7 @@ class Modpath7(BaseModel):
             tdis = self.flowmodel.simulation.get_package("TDIS")
             if tdis is None:
                 raise Exception(
-                    "TDIS package must be "
-                    "included in the passed MODFLOW 6 model"
+                    "TDIS package must be included in the passed MODFLOW 6 model"
                 )
             tdis_file = tdis.filename
 
@@ -210,9 +197,7 @@ class Modpath7(BaseModel):
 
                 # set budget file name
                 if budgetfilename is None:
-                    budgetfilename = oc.budget_filerecord.array["budgetfile"][
-                        0
-                    ]
+                    budgetfilename = oc.budget_filerecord.array["budgetfile"][0]
         else:
             shape = None
             # extract data from DIS or DISU files and set shape
@@ -224,8 +209,7 @@ class Modpath7(BaseModel):
                 shape = (nlay, nrow, ncol)
             if dis is None:
                 raise Exception(
-                    "DIS, or DISU packages must be "
-                    "included in the passed MODFLOW model"
+                    "DIS, or DISU packages must be included in the passed MODFLOW model"
                 )
             elif dis is not None and shape is None:
                 nlay, nodes = dis.nlay, dis.nodes
@@ -318,8 +302,7 @@ class Modpath7(BaseModel):
             )
         if self.dis_file is None and self.grbdis_file is None:
             raise ValueError(
-                "the dis file in the MODFLOW model or passed "
-                "to __init__ cannot be None"
+                "the dis file in the MODFLOW model or passed to __init__ cannot be None"
             )
 
         # set ib and ibound
@@ -340,10 +323,7 @@ class Modpath7(BaseModel):
     def laytyp(self):
         if self.flowmodel.version == "mf6":
             icelltype = self.flowmodel.npf.icelltype.array
-            laytyp = [
-                icelltype[k].max()
-                for k in range(self.flowmodel.modelgrid.nlay)
-            ]
+            laytyp = [icelltype[k].max() for k in range(self.flowmodel.modelgrid.nlay)]
         else:
             p = self.flowmodel.get_package("BCF6")
             if p is None:
@@ -384,12 +364,10 @@ class Modpath7(BaseModel):
             f.write(f"DIS        {self.dis_file}\n")
         if self.grbdis_file is not None:
             f.write(
-                f"{self.grbtag:10s} {os.path.join(self._flowmodel_ws, self.grbdis_file)}\n"
+                f"{self.grbtag:10s} {os.path.join(self._flowmodel_ws, self.grbdis_file)}\n"  # noqa
             )
         if self.tdis_file is not None:
-            f.write(
-                f"TDIS       {os.path.join(self._flowmodel_ws, self.tdis_file)}\n"
-            )
+            f.write(f"TDIS       {os.path.join(self._flowmodel_ws, self.tdis_file)}\n")
         if self.headfilename is not None:
             f.write(
                 f"HEAD       {os.path.join(self._flowmodel_ws, self.headfilename)}\n"
@@ -407,12 +385,13 @@ class Modpath7(BaseModel):
         trackdir="forward",
         flowmodel=None,
         exe_name="mp7",
-        model_ws=".",
+        model_ws=curdir,
         verbose=False,
         columncelldivisions=2,
         rowcelldivisions=2,
         layercelldivisions=2,
         nodes=None,
+        porosity=0.30,
     ):
         """
         Create a default MODPATH 7 model using a passed flowmodel with
@@ -432,9 +411,8 @@ class Modpath7(BaseModel):
             MODFLOW model
         exe_name : str
             The name of the executable to use (the default is 'mp7').
-        model_ws : str
+        model_ws : str or PathLike, default "." (curdir)
             model workspace.  Directory name to create model data sets.
-            (default is the current working directory).
         verbose : bool
             Print additional information to the screen (default is False).
         columncelldivisions : int
@@ -448,6 +426,8 @@ class Modpath7(BaseModel):
             direction (default is 2).
         nodes : int, list of ints, tuple of ints, or np.ndarray
             Nodes (zero-based) with particles. If  (default is node 0).
+        porosity: float or array of floats (nlay, nrow, ncol)
+            The porosity array (the default is 0.30).
 
         Returns
         -------
@@ -478,7 +458,7 @@ class Modpath7(BaseModel):
 
         # create MODPATH 7 basic file and add to the MODPATH 7
         # model instance (mp)
-        Modpath7Bas(mp, defaultiface=defaultiface)
+        Modpath7Bas(mp, porosity=porosity, defaultiface=defaultiface)
 
         # create particles
         if nodes is None:

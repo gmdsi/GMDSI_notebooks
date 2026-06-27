@@ -41,15 +41,13 @@ class SwrFile(FlopyBinaryData):
 
     """
 
-    def __init__(
-        self, filename, swrtype="stage", precision="double", verbose=False
-    ):
+    def __init__(self, filename, swrtype="stage", precision="double", verbose=False):
         """
         Class constructor.
 
         """
         super().__init__()
-        self.set_float(precision=precision)
+        self.precision = precision
         self.header_dtype = np.dtype(
             [
                 ("totim", self.floattype),
@@ -109,7 +107,7 @@ class SwrFile(FlopyBinaryData):
         ----------
 
         Returns
-        ----------
+        -------
         data : numpy array
             Array has size (nrecord, 3). None is returned if swrtype is not
             'flow'
@@ -134,7 +132,7 @@ class SwrFile(FlopyBinaryData):
         Get the number of records in the file
 
         Returns
-        ----------
+        -------
         out : tuple of int
             A tuple with the number of records and number of flow items
             in the file. The number of flow items is non-zero only if
@@ -149,7 +147,7 @@ class SwrFile(FlopyBinaryData):
         in the file
 
         Returns
-        ----------
+        -------
         out : list of (kswr, kstp, kper) tuples
             List of unique kswr, kstp, kper combinations in binary file.
             kswr, kstp, and kper values are zero-based.
@@ -162,7 +160,7 @@ class SwrFile(FlopyBinaryData):
         Get the number of times in the file
 
         Returns
-        ----------
+        -------
         out : int
             The number of simulation times (totim) in binary file.
 
@@ -174,7 +172,7 @@ class SwrFile(FlopyBinaryData):
         Get a list of unique times in the file
 
         Returns
-        ----------
+        -------
         out : list of floats
             List contains unique simulation times (totim) in binary file.
 
@@ -186,7 +184,7 @@ class SwrFile(FlopyBinaryData):
         Get a list of unique record names in the file
 
         Returns
-        ----------
+        -------
         out : list of strings
             List of unique text names in the binary file.
 
@@ -210,7 +208,7 @@ class SwrFile(FlopyBinaryData):
             The simulation time. (default is None)
 
         Returns
-        ----------
+        -------
         data : numpy record array
             Array has size (nitems).
 
@@ -231,11 +229,11 @@ class SwrFile(FlopyBinaryData):
             kper1 = kswrkstpkper[2]
 
             totim1 = self._recordarray[
-                np.where(
+                np.asarray(
                     (self._recordarray["kswr"] == kswr1)
                     & (self._recordarray["kstp"] == kstp1)
                     & (self._recordarray["kper"] == kper1)
-                )
+                ).nonzero()
             ]["totim"][0]
         elif totim is not None:
             totim1 = totim
@@ -288,7 +286,7 @@ class SwrFile(FlopyBinaryData):
             (default is 0)
 
         Returns
-        ----------
+        -------
         out : numpy recarray
             Array has size (ntimes, nitems).  The first column in the
             data array will contain time (totim). nitems is 2 for stage
@@ -327,9 +325,7 @@ class SwrFile(FlopyBinaryData):
         return gage_record
 
     def _read_connectivity(self):
-        self.conn_dtype = np.dtype(
-            [("reach", "i4"), ("from", "i4"), ("to", "i4")]
-        )
+        self.conn_dtype = np.dtype([("reach", "i4"), ("from", "i4"), ("to", "i4")])
         conn = np.zeros((self.nrecord, 3), int)
         icount = 0
         for nrg in range(self.flowitems):
@@ -543,7 +539,6 @@ class SwrFile(FlopyBinaryData):
         for irch in range(self.nrecord):
             klay = self.itemlist[irch]
             for k in range(klay):
-                # r[idx, 0] = irch
                 reaches[idx] = irch
                 idx += 1
 
@@ -608,9 +603,7 @@ class SwrFile(FlopyBinaryData):
             totim, dt, kper, kstp, kswr, success = self._read_header()
             if success:
                 if self.type == "exchange":
-                    bytes = self.nitems * (
-                        self.integerbyte + 8 * self.realbyte
-                    )
+                    bytes = self.nitems * (self.integerbyte + 8 * self.realbyte)
                 elif self.type == "structure":
                     bytes = self.nitems * (5 * self.realbyte)
                 else:
@@ -627,9 +620,7 @@ class SwrFile(FlopyBinaryData):
             else:
                 if self.verbose:
                     print()
-                self._recordarray = np.array(
-                    self._recordarray, dtype=self.header_dtype
-                )
+                self._recordarray = np.array(self._recordarray, dtype=self.header_dtype)
                 self._times = np.array(self._times)
                 self._kswrkstpkper = np.array(self._kswrkstpkper)
                 return
@@ -749,15 +740,14 @@ class SwrFlow(SwrFile):
     """
 
     def __init__(self, filename, precision="double", verbose=False):
-        super().__init__(
-            filename, swrtype="flow", precision=precision, verbose=verbose
-        )
+        super().__init__(filename, swrtype="flow", precision=precision, verbose=verbose)
         return
 
 
 class SwrExchange(SwrFile):
     """
-    Read binary SWR surface-water groundwater exchange output from MODFLOW SWR Process binary output files
+    Read binary SWR surface-water groundwater exchange output from
+    MODFLOW SWR Process binary output files
 
     Parameters
     ----------
