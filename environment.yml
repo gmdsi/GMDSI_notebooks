@@ -21,6 +21,7 @@ dependencies:
   - git
   - nbconvert
   - modflow-devtools
+  - scikit-learn
   - pip:
        - -e ./dependencies/flopy
        - -e ./dependencies/pyemu
