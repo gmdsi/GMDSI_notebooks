@@ -102,9 +102,12 @@ Check the executables arrived with `pixi run check-exes`. Start jupyter with
  - `mamba env create -f environment.yml` (or `conda env create -f
    environment.yml` if `mamba` doesn't work for you). This creates an
    environment called "gmdsitut". It may take a while.
+
+Then execute these commands:
+
  - `conda activate gmdsitut`
- - `python scripts/get_exes.py` - downloads the executables, exactly as
-   `pixi run get-exes` does.
+ -  `get-modflow --release-id 29.0 --subset mf6,mp7 :python`
+ -  `get-pestpp --release-id 5.2.27 :python`
 
 Then start jupyter with `jupyter lab`.
 
