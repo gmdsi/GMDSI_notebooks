@@ -13,7 +13,16 @@ import flopy.plot.styles as wtf
 WORKING_DIR = 'freyberg_mf6'
 MODEL_NAM = "freyberg.nam"
 PST_NAME = 'freyberg.pst'
-NUM_STEPS_RESPSURF = 40
+# Grid resolution of the response surface: NUM_STEPS_RESPSURF**2 forward runs per
+# surface, and three surfaces are built, so 40 means 4,800 model runs. That is the
+# single most expensive thing in part1 and it is what pushed the ubuntu CI job past
+# its 2-hour limit. autotest/run_notebooks.py sets RESPSURF_STEPS in CI mode to
+# coarsen it; the teaching default is unchanged.
+#
+# Both run_respsurf() and plot_response_surface() read this, so a run and its plot
+# always agree - but a directory swept at one resolution cannot be plotted at
+# another, which is why this is an env var rather than a per-call argument.
+NUM_STEPS_RESPSURF = int(os.environ.get("RESPSURF_STEPS", 40))
 
 def run_respsurf(par_names=None, pstfile='freyberg.pst', WORKING_DIR='freyberg_mf6',num_workers=8,port=4004):
     pst = pyemu.Pst(os.path.join(WORKING_DIR,pstfile))

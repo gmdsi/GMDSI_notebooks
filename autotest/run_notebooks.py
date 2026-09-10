@@ -397,6 +397,15 @@ def run_notebook(nb_path, keep_output=False):
             cap_num_workers(nb_path, WORKER_CAP)
 
     env = os.environ.copy()
+    if not keep_output:
+        # The response-surface notebook sweeps a NUM_STEPS_RESPSURF**2 grid for each
+        # of three surfaces - 4,800 forward runs at the teaching default of 40, which
+        # is most of what put the ubuntu part1 job over its 2-hour limit. 12 steps is
+        # 432 runs and still exercises the whole sweep/plot path. Setting the flag
+        # `run_response_surfaces = False` instead is not an option in CI: the
+        # *_respsurf directories are gitignored, so a fresh clone has nothing to plot
+        # and the follow-on IES notebook asserts on their existence.
+        env.setdefault("RESPSURF_STEPS", "12")
     if keep_output:
         # MPLBACKEND=Agg (set for CI, where output is thrown away anyway)
         # overrides ipykernel's inline backend, and every matplotlib figure is
